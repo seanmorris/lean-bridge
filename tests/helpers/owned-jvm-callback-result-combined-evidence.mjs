@@ -18,14 +18,14 @@ import { assertOwnedJvmCallbackPackageInputs, assertOwnedJvmCallbackInstalledExe
 const hash = value => sha256(canonicalJson(value));
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
-const cli = async report => {
+const cli = async (report, readSource) => {
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = report;
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
 	assert.equal(report.runtimeIncluded, true); assert.equal(report.javascriptWasmInputsIncluded, true);
 	assert.equal(report.phpWasmInputsIncluded, false);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const config = JSON.parse((await readSource("config/cli-package.v1.json")).toString());
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(report.sourceDateEpoch, config.sourceDateEpoch);
 	const inputPaths = ["source/.lean-wasm-patched", "source/LICENSE"
@@ -38,7 +38,7 @@ const cli = async report => {
 	for(const path of config.files)
 	{
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;
-		assert.deepEqual(report.files.find(file => file.path === path), { path, mode, ...identity(await readFile(path)) }, path);
+		assert.deepEqual(report.files.find(file => file.path === path), { path, mode, ...identity(await readSource(path)) }, path);
 	}
 	for(const file of report.files)
 	{ digest(file.sha256); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0); }
@@ -62,7 +62,6 @@ const cli = async report => {
 const fixture = {
 	source: ownedDotnetCallbackResultCombinedSource
 	, exports: [["receiverExports", 5], ["resultAnchors", 1], ["inputTransfers", 2]]
-	, cli
 	, cProbe: source => {
 		const original = "owned_aggregates_callback_record_argument1_t_host";
 		assert.equal(source.split(original).length, 3);
@@ -74,11 +73,13 @@ const fixture = {
  * Bind native/Wasm contracts, original archives and all installed peer runs.
  *
  * @param item - Original eight-target release report after producer removal.
+ * @param readSource - Current source reader, or authenticated frozen source bytes.
  */
-export const assertOwnedJvmCallbackCombinedRelease = async item => {
+export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = readFile) => {
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
-	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven"], fixture);
-	assert.equal(await cli(item.cli), item.compilerInputsIdentity);
+	const readCli = report => cli(report, readSource);
+	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven"], { ...fixture, cli: readCli });
+	assert.equal(await readCli(item.cli), item.compilerInputsIdentity);
 	for(const name of ["main.mjs", "main.wasm"])
 		assert.equal(item.cli.files.find(file => file.path === `runtime/wasm/${name}`).sha256, item.inventory[`@lean-bridge/runtime/internal/${name}`].sha256);
 	const targets = {

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPerlCallbackResults } from "./owned-perl-callback-result-history.mjs";
 
 export const ownedJvmCallbackHistoryPath = "docs/evidence/owned-jvm-callback-result-source-history-20261002.json";
 export const ownedJvmCallbackHistorySha256 = "5738bc2e884766b3bb05e52cf7ee93659a70a01ef5238898ebb796485086e211";
@@ -65,6 +66,7 @@ export const reverseOwnedJvmCallbackUpdate = (source, update) => {
  * @param expected - Optional stopping SHA-256.
  */
 export const beforeOwnedJvmCallbackResults = (path, source, expected) => {
+	source = beforeOwnedPerlCallbackResults(path, source, expected);
 	const update = readOwnedJvmCallbackHistory().updates.find(item => item.path === path);
 	const digest = sha256(source);
 	return update && digest !== expected && digest === update.currentSha256

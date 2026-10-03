@@ -7,14 +7,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedPerlCallbackResults } from "./helpers/owned-perl-callback-result-history.mjs";
 import { ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256
 	, ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
 	, beforeOwnedJvmCallbackResults, reverseOwnedJvmCallbackUpdate } from "./helpers/owned-jvm-callback-result-history.mjs";
 import "./helpers/owned-jvm-callback-result-acceptance-tests.mjs";
+import "./helpers/owned-perl-callback-result-history-tests.mjs";
 
 test("JVM callback source history authenticates complete transitions and rejects drift", async () => {
-	assert.match(await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8")
-		, /^import "\.\/helpers\/owned-jvm-callback-result-acceptance-tests\.mjs";$/mu);
+	const wrapper = await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8");
+	assert.match(wrapper, /^import "\.\/helpers\/owned-jvm-callback-result-acceptance-tests\.mjs";$/mu);
+	assert.match(wrapper, /^import "\.\/helpers\/owned-perl-callback-result-history-tests\.mjs";$/mu);
 	const bytes = await readFile(ownedJvmCallbackHistoryPath);
 	assert.equal(sha256(bytes), ownedJvmCallbackHistorySha256);
 	const history = JSON.parse(bytes);
@@ -24,7 +27,8 @@ test("JVM callback source history authenticates complete transitions and rejects
 	assert.equal(history.acceptance, undefined); assert.equal(history.scope, undefined);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), prior = beforeOwnedJvmCallbackResults(update.path, current);
+		const current = Buffer.from(beforeOwnedPerlCallbackResults(update.path, await readFile(update.path)));
+		const prior = beforeOwnedJvmCallbackResults(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedJvmCallbackResults(update.path, current, update.currentSha256), current);

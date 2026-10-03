@@ -19,6 +19,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import "./helpers/owned-perl-callback-result-xs-tests.mjs";
 import "./helpers/owned-perl-callback-result-runtime-tests.mjs";
+import "./helpers/owned-perl-callback-result-history-tests.mjs";
 
 const fixtures = {
 	callbacks: ownedHostCallbackReviewedIr

@@ -324,8 +324,8 @@ export const assertOwnedJvmCallbackInstalledExecution = async (item, projection,
 	await assertAssets(item.observations[0].jvm.inspection, manifest, libraries, jar);
 };
 
-const assertCli = async item => {
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+const assertCli = async (item, readSource) => {
+	const config = JSON.parse((await readSource("config/cli-package.v1.json")).toString());
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
 	assert.equal(item.cli.schemaVersion, 1); assert.equal(item.cli.kind, "lean-bridge-cli-package");
 	assert.equal(inventorySha256, hash(inventory)); assert.equal(item.cli.sourceDateEpoch, config.sourceDateEpoch);
@@ -338,7 +338,7 @@ const assertCli = async item => {
 	{
 		const file = item.cli.files.find(value => value.path === path);
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;
-		assert.deepEqual(file, { path, mode, ...identity(await readFile(path)) }, path);
+		assert.deepEqual(file, { path, mode, ...identity(await readSource(path)) }, path);
 	}
 };
 
@@ -346,8 +346,9 @@ const assertCli = async item => {
  * Require installed rebuild, negative, example and two-run runtime evidence.
  *
  * @param item - Original standalone callback package report.
+ * @param readSource - Current source reader, or authenticated frozen source bytes.
  */
-export const assertOwnedJvmCallbackPackageExecution = async item => {
+export const assertOwnedJvmCallbackPackageExecution = async (item, readSource = readFile) => {
 	const { model, projection, libraries, pom } = await assertOwnedJvmCallbackPackageInputs(item);
 	flags(item, ["compiledLean", "sourceRemovedBeforeInstallation", "deterministicReassembly", "independentProducerBuild"]);
 	assert.deepEqual(item.incapableReadersRejected, ["ownedCallbackResultAnchors"
@@ -410,6 +411,6 @@ export const assertOwnedJvmCallbackPackageExecution = async item => {
 		, packages: [{ ecosystem: "maven", name: pkg.name, target: "maven", version: pkg.version }]
 		, profiles: ["native-library-v1"], receiptSha256: hash(receipt)
 		, verificationType: "local-package-set", verified: true });
-	await assertCli(item);
+	await assertCli(item, readSource);
 	await assertOwnedJvmCallbackInstalledExecution(item, projection, libraries, pkg);
 };
