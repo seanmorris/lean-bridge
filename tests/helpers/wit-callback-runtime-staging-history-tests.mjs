@@ -97,7 +97,9 @@ test("WIT runtime staging authenticates complete source bytes and preserves stop
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		const bytes = await readFile(path); assert.equal(sha256(bytes), identity.currentSha256);
+		const bytes = beforeWitCallbackRuntimeStaging(path
+			, await readFile(path), identity.currentSha256);
+		assert.equal(sha256(bytes), identity.currentSha256);
 		assert.equal(identity.currentSha256, identity.integratedSha256);
 		assert.equal(beforeWitCallbackRuntimeStaging(path, bytes), bytes);
 	}

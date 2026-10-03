@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertOwnedWitCallbackAcceptance, ownedWitCallbackEvidencePath } from "./owned-wit-callback-result-acceptance.mjs";
+import { beforeWitCallbackInstalledAcceptance } from "./wit-callback-installed-acceptance-history.mjs";
 import { assertWitCallbackAcceptanceHistory, beforeWitCallbackAcceptance
 	, readWitCallbackAcceptanceHistory, reverseWitCallbackAcceptanceUpdate
 	, witCallbackAcceptanceBaseline, witCallbackAcceptanceIntegration
@@ -48,7 +49,8 @@ test("WIT callback acceptance history reconstructs baseline and receipt identiti
 	}
 	for(const update of history.readerUpdates)
 	{
-		const current = await readFile(update.path);
+		const current = beforeWitCallbackInstalledAcceptance(update.path
+			, await readFile(update.path), update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256);
 		assert.equal(sha256(beforeWitCallbackAcceptance(update.path, current, update.previousSha256))
 			, update.previousSha256);
@@ -56,7 +58,9 @@ test("WIT callback acceptance history reconstructs baseline and receipt identiti
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
 		assert.equal(sha256(at(witCallbackAcceptanceIntegration, path)), identity.integrationSha256);
-		assert.equal(sha256(await readFile(path)), identity.currentSha256);
+		const current = beforeWitCallbackInstalledAcceptance(path
+			, await readFile(path), identity.currentSha256);
+		assert.equal(sha256(current), identity.currentSha256);
 	}
 	await assertOwnedWitCallbackAcceptance(JSON.parse(await readFile(ownedWitCallbackEvidencePath)));
 });

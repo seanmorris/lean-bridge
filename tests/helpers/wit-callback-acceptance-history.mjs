@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitCallbackInstalledAcceptance } from "./wit-callback-installed-acceptance-history.mjs";
 
 export const witCallbackAcceptanceHistoryPath
 	= "docs/evidence/wit-callback-acceptance-source-history-20261003.json";
@@ -151,6 +152,7 @@ export const reverseWitCallbackAcceptanceUpdate = (source, update, category = "u
  * @param expected - Optional exact stopping SHA-256.
  */
 export const beforeWitCallbackAcceptance = (path, source, expected) => {
+	source = beforeWitCallbackInstalledAcceptance(path, source, expected);
 	for(const category of ["readerUpdates", "updates"])
 	{
 		const update = readWitCallbackAcceptanceHistory()[category].find(value => value.path === path);

@@ -67,6 +67,7 @@ export const ownedWitCallbackClosureRoots = freeze([
 ]);
 const ownedWitCallbackSuccessorPaths = new Set([
 	"tests/helpers/wit-callback-acceptance-history.mjs"
+	, "tests/helpers/wit-callback-installed-acceptance-history.mjs"
 ]);
 
 /** Include the completed predecessor and the complete local verifier closure. */

@@ -9,6 +9,7 @@ import { dirname, join } from "node:path";
 import ts from "typescript";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { beforeWitCallbackInstalledAcceptance } from "./wit-callback-installed-acceptance-history.mjs";
 
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort(), [...names].sort());
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
@@ -51,6 +52,9 @@ const closureRoots = [
 	, "tests/wit-owned-callback-result-installed-acceptance.test.mjs"
 	, "tests/helpers/owned-wit-callback-result-installed-acceptance.mjs"
 ];
+const successorPaths = new Set([
+	"tests/helpers/wit-callback-installed-acceptance-history.mjs"
+]);
 
 /** Bind the complete local verifier/build closure and its publication surfaces. */
 export const installedWitCallbackSourcePaths = async () => {
@@ -76,7 +80,10 @@ export const installedWitCallbackSourcePaths = async () => {
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword
 					? node.arguments[0] : null;
 			if(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith("."))
-				pending.push(join(dirname(path), specifier.text));
+			{
+				const dependency = join(dirname(path), specifier.text);
+				if(!successorPaths.has(dependency)) pending.push(dependency);
+			}
 			ts.forEachChild(node, visit);
 		};
 		visit(tree);
@@ -248,7 +255,8 @@ export const assertInstalledWitCallbackAcceptance = async record => {
 	assert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources), await installedWitCallbackSourcePaths());
 	for(const [path, identity] of Object.entries(record.sources))
-		assert.equal(sha256(await readFile(path)), identity, path);
+		assert.equal(sha256(beforeWitCallbackInstalledAcceptance(path, await readFile(path), identity))
+			, identity, path);
 	const reports = unpackOwnedCallbackReports(record.archive);
 	keys(reports, installedWitCallbackReports);
 	for(const name of installedWitCallbackReports) assertInstalledWitCallbackReport(name, reports[name]);
