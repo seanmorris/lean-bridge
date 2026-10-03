@@ -195,7 +195,9 @@ and the [C++](../publish/cpp.md#export-methods-and-properties),
 [native PHP and PHP-Wasm](../publish/php.md#export-methods-and-properties) and
 [JavaScript/TypeScript member APIs](../publish/npm.md#export-methods-and-properties).
 WIT/WASI exposes [typed functions with the receiver first](../publish/wit-wasi.md#export-methods-and-properties), preserving the member kind, owner and original parameter anchors.
-C, C++, Rust, Python, Ruby, C# and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP,
+JavaScript/TypeScript and WIT/WASI accept
+[callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).
 Configure them inside `callable.result`; argument names are local to that
 callback, and the selected argument's original owner controls expiration.
 Python's [publisher guide](../publish/pypi.md#anchor-a-callback-result-to-its-argument)
@@ -205,7 +207,10 @@ Ruby uses the same contract with a checked `Value`; its
 also describes thread exit and host reply conversion.
 C# uses a checked `Value<T>` argument and typed `CallbackResult<T>` host replies;
 see the [NuGet guide](../publish/nuget.md#anchor-a-callback-result-to-its-argument).
-Other callback-result targets, `{ "constructor": "Library.checked" }` and additional effect labels still
+WIT/WASI uses an original result-owner argument and validates the anchor on both
+sides of the Component Model call; see the
+[WIT publisher guide](../publish/wit-wasi.md#anchor-a-callback-result-to-an-argument).
+PHP-Wasm callback-result anchors, `{ "constructor": "Library.checked" }` and additional effect labels still
 require their [type-family implementation](../architecture/cross-language-authoring.md#stages).
 
 Analysis and both builders bind contracts into the compiler request and source identity. Target compilation checks them again. Generated Binding IR records them under `lean-lang.org/export-contract` for inspection without adding proof claims. Public `analyze` uses the scalar profile; check native-only contracts with a build for their supported consumer target.

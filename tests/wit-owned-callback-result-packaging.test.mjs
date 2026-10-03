@@ -116,9 +116,10 @@ for(const mode of ["ordinary", "reviewed"])
 					, "-Wextra", "-Werror"
 					, "-UNDEBUG", "consumer.c", ...flags, "-o", name], consumerRoot, env);
 				const result = await runCopied(join(consumerRoot, name), [], consumerRoot);
-				assert.equal(result.stderr, ""); return JSON.parse(result.stdout);
+				assert.equal(result.stderr, ""); return result;
 			};
-			const initial = await execute(installed, "consumer-initial");
+			const initialExecution = await execute(installed, "consumer-initial");
+			const initial = JSON.parse(initialExecution.stdout);
 			assert.ok(initial.checks > 100);
 			assert.deepEqual({ allocationFailures: initial.allocationFailures
 				, live: initial.live, identities: initial.identities }
@@ -126,7 +127,8 @@ for(const mode of ["ordinary", "reviewed"])
 			await rm(handoff, { recursive: true, force: true });
 			await assert.rejects(access(handoff), { code: "ENOENT" });
 			const relocated = join(directory, "relocated-package"); await rename(installed, relocated);
-			const relocatedResult = await execute(relocated, "consumer-relocated");
+			const relocatedExecution = await execute(relocated, "consumer-relocated");
+			const relocatedResult = JSON.parse(relocatedExecution.stdout);
 			assert.deepEqual(relocatedResult, initial);
 			const loader = mode === "reviewed" && variant === "combined"
 				? await checkOwnedWitInstalledDependencies({ root: consumerRoot
@@ -136,6 +138,7 @@ for(const mode of ["ordinary", "reviewed"])
 			await saveLakeFile(resolve("build/owned-wit-callback-result-packaging")
 				, `${mode}-${variant}.json`, canonicalJson({ schemaVersion: 1, mode, variant
 					, sourceSha256, result: initial, relocatedResult
+					, executions: { initial: initialExecution, relocated: relocatedExecution }
 					, bindingIrSha256: built.bindingIrSha256
 					, runtimeIdentity: built.nativeRuntimeIdentity, package: built.packages[0]
 					, ownedValues: compiled.ownedValues, dependencies: compiled.dependencies

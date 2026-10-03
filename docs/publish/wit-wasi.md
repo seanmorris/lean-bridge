@@ -163,7 +163,66 @@ rejects altered mappings, generated sources or dependency inventories. Combined
 C and WIT/WASI builds use the same Lean compilation and ownership declarations.
 
 The [consumer example](../consume/wit-wasi.md#borrowed-results) demonstrates
-expiration and independent retention. Callback-result anchors remain unsupported.
+expiration and independent retention.
+
+### Anchor a callback result to an argument
+
+Put the callback's result decision under `callable`. For a function
+`makeRecord (captured : Bundle) : Bool → Bundle → Bundle`, select one outer
+argument with `arities`, then anchor each invocation's result to that
+invocation's `Bundle` argument:
+
+```json
+{
+  "arities": { "Owned.makeRecord": 1 },
+  "contracts": {
+    "Owned.makeRecord": {
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null },
+        "callable": {
+          "result": {
+            "ownership": "borrow",
+            "lifetime": { "scope": "parameter", "anchor": "arg1" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+The callback counts its own arguments from zero: `Bool` is `arg0` and `Bundle`
+is `arg1`. Captured outer arguments and the private closure handle do not count.
+A reviewed contract uses the callback's local parameter names. The selected
+argument must have an owned representation and cannot be transferred by that
+callback invocation.
+
+The package records callback-local indices separately in
+`ownedValues.callbackResultAnchors`. The generated function accepts the selected
+argument's original owner; the result expires with that owner. For a host
+callback, put the same nested `callable.result` decision on the callback's entry
+in `parameters`. The adapter copies replies before the callback frame expires.
+
+Host callback descriptors are enabled by default. To publish a WIT package that
+accepts native Lean closures but does not expose host callback descriptors, set:
+
+```json
+{
+  "targets": {
+    "wit-wasi": {
+      "name": "owned-values",
+      "version": "1.2.3",
+      "hostCallbacks": false
+    }
+  }
+}
+```
+
+A no-host WIT package must be built as its own target because native projections
+in a combined build share one compiled component. The [consumer guide](../consume/wit-wasi.md#results-borrowed-from-a-callback-argument)
+describes lifetime and cleanup rules. Installed ordinary and reviewed packages
+are covered by the [callback-result acceptance](../evidence/owned-wit-callback-result-packages-20261003.md).
 
 ### Export methods and properties
 

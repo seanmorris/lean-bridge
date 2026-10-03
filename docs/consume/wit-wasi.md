@@ -225,10 +225,32 @@ until they return but cannot publish a result from that expired anchor.
 WIT uses owned handles for returned resources. The bundled host carries the
 original native owner through the Component Model call and checks it before
 publishing results. Those transport handles do not extend the source lifetime.
-Prepared packages do not yet expose callback-result anchors. The separate
-[direct runtime acceptance](../evidence/owned-wit-callback-results-20261003.md)
-executes the implementation through compiled Lean and Wasmtime; installed and
-relocated package acceptance remains the next support gate.
+
+### Results borrowed from a callback argument
+
+A returned Lean closure can borrow each invocation's result from one of that
+invocation's explicit arguments. Pass the selected argument's original result
+owner beside its typed value. The private closure handle and values captured by
+the outer export are not callback arguments and cannot serve as the anchor.
+
+The host validates the owner before entering the component and again before
+publishing the result. Releasing or consuming that owner expires the result and
+all transitive descendants; the result's storage owner and WIT transport handles
+do not extend it. Release the returned storage owner after use, including after
+expiry. Retain a resource or use its generated typed copy helper while the view
+is valid to create independent ownership.
+
+For host callbacks, a reply may contain a raw typed value with no result owner,
+or a value paired with an owned result. The adapter copies the reply before the
+callback's argument frame expires and releases a supplied reply owner after
+conversion. Packages built without host callback descriptors still support
+native Lean closures and the same callback-local lifetime checks.
+
+The installed acceptance covers ordinary source and reviewed IR, with and
+without host callbacks and combined with transfers, result anchors and receiver
+exports. Every case is compiled, installed without producer sources, run through
+the public pkg-config API, relocated and run again. See the
+[installed callback-result evidence](../evidence/owned-wit-callback-result-packages-20261003.md).
 
 ### Methods and properties
 
