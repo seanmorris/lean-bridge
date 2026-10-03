@@ -1401,9 +1401,9 @@ jobs:
         run: exit 1
 
   owned-php-callback-results:
-    name: Native PHP callback-result runtime
+    name: Native PHP callback-result acceptance
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 150
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -1417,7 +1417,7 @@ jobs:
       - name: Install native PHP callback tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake curl libgmp-dev libuv1-dev pkg-config php-cli php-common unzip zstd ripgrep
+          sudo apt-get install -y build-essential cmake composer curl libgmp-dev libuv1-dev pkg-config php-cli php-common php-mbstring php-zip unzip zstd ripgrep
           npm ci --ignore-scripts
           bash scripts/bootstrap-toolchains.sh --lean-only
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
@@ -1441,6 +1441,34 @@ jobs:
               test -s "build/owned-php-callback-results/$mode-$variant.json"
             done
           done
+      - name: Build and install all six native Composer package configurations
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_PHP="$(command -v php)"
+          export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
+          source scripts/env.sh
+          npm run test:owned-php-callback-packages 2>&1 | tee build/owned-php-callback-packages.log
+          rg '^# tests 6$' build/owned-php-callback-packages.log
+          rg '^# pass 6$' build/owned-php-callback-packages.log
+          rg '^# fail 0$' build/owned-php-callback-packages.log
+          rg '^# cancelled 0$' build/owned-php-callback-packages.log
+          rg '^# skipped 0$' build/owned-php-callback-packages.log
+          for mode in ordinary reviewed; do
+            for variant in no-host host combined; do
+              test -s "build/owned-php-callback-result-packaging/$mode-$variant.json"
+            done
+          done
+      - name: Verify frozen native PHP callback acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:owned-php-callback-evidence 2>&1 | tee build/owned-php-callback-evidence.log
+          rg '^# tests 10$' build/owned-php-callback-evidence.log
+          rg '^# pass 10$' build/owned-php-callback-evidence.log
+          rg '^# fail 0$' build/owned-php-callback-evidence.log
+          rg '^# cancelled 0$' build/owned-php-callback-evidence.log
+          rg '^# skipped 0$' build/owned-php-callback-evidence.log
       - name: Preserve native callback-result observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -1449,6 +1477,9 @@ jobs:
           path: |
             build/owned-php-callback-results/
             build/owned-php-callback-results.log
+            build/owned-php-callback-result-packaging/
+            build/owned-php-callback-packages.log
+            build/owned-php-callback-evidence.log
             build/owned-aggregate-native/php-callback-results-*-inputs.json
           if-no-files-found: warn
           retention-days: 30
@@ -3757,7 +3788,7 @@ jobs:
       - name: Enforce Perl callback-result acceptance
         if: needs.owned-perl-callback-results.result != 'success'
         run: exit 1
-      - name: Enforce native PHP callback-result runtime
+      - name: Enforce native PHP callback-result acceptance
         if: needs.owned-php-callback-results.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance

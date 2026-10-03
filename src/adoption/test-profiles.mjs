@@ -93,6 +93,7 @@ const profileManifest = Object.freeze({
 		, "owned-php-receiver-ci"
 		, "owned-php-receiver-evidence"
 		, "owned-php-callback-result-package-evidence"
+		, "owned-php-callback-result-acceptance"
 		, "owned-dotnet-transfer-evidence"
 		, "owned-dotnet-borrow-evidence"
 		, "owned-dotnet-receiver-contract", "owned-dotnet-receiver-evidence"

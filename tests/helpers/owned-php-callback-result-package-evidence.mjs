@@ -287,9 +287,11 @@ const assertRaw = (item, baseline) => {
  * @param name - Selected report filename.
  * @param item - Untrusted report observation.
  * @param readSource - Repository source reader.
+ * @param readBaseline - Reader for the separately retained original report.
  */
-export const assertOwnedPhpInstalledReport = async (name, item, readSource = readOwnedPhpInstalledSource) => {
-	const pin = selected(name), baseline = await original(name); shape(item, baseline);
+export async function assertOwnedPhpInstalledReport(name, item, readSource = readOwnedPhpInstalledSource, readBaseline = original)
+{
+	const pin = selected(name), baseline = await readBaseline(name); shape(item, baseline);
 	assert.equal(item.schemaVersion, 1); assert.equal(item.kind, "owned-php-callback-result-installed-observations");
 	assert.equal(item.mode, pin.mode); assert.equal(item.variant, pin.variant); assert.equal(item.stage, "complete");
 	assert.equal(item.producerInterface, pin.variant === "no-host" ? "native-build-api" : "installed-cli");
@@ -329,7 +331,7 @@ export const assertOwnedPhpInstalledReport = async (name, item, readSource = rea
 		assert.deepEqual(item.producerDriver, { path, source, ...identity(source) });
 	} else assert.equal(item.producerDriver, null);
 	return assertOwnedPhpCallbackPackageSources(pin.mode, pin.variant, item, readSource);
-};
+}
 
 /**
  * Authenticate both physical handoffs and inspect ZIP entries without extraction.

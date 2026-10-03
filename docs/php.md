@@ -429,6 +429,15 @@ exceptions return as the original `Throwable` after native cleanup. Callbacks
 without a type-safe automatic recovery value require
 `with_recovery($callback, $fallback)`, using a valid result of the declared type.
 
+The [native PHP callback-result acceptance](evidence/owned-php-callback-results-20261003.md)
+covers ordinary and reviewed packages in no-host, host, and combined modes. Two
+independent builds per mode produce matching Composer handoffs. Offline,
+source-free consumers run 24 relocated weak and strict calls with 3,344 public
+assertions, plus 180 cold and warm asset-tamper cases. The receipt records
+result-slot, state, and broker-identity cleanup. It does not claim a native
+allocation ledger, sanitizer coverage, retained host callbacks, or asynchronous
+delivery.
+
 Records remain readonly, arrays and Lists use consecutive-key PHP arrays,
 `Option` uses `null` or `Some`, and `Except` uses `Ok` or `Err`. Aliases keep
 their underlying PHP values. The existing nineteen primitive mappings apply.
