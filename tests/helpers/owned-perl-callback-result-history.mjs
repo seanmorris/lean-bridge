@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 export const ownedPerlCallbackHistoryPath = "docs/evidence/owned-perl-callback-result-source-history-20261003.json";
-export const ownedPerlCallbackHistorySha256 = "75a55e30caf8c2a6752601c9a5a2785d24a14789c3ac593b758a18f31d55d776";
+export const ownedPerlCallbackHistorySha256 = "dbc88edee9b285275acf8d3807685deec2b0ae7dfed61812d1e86c764e1ea9f9";
 export const ownedPerlCallbackBaseline = "95978558fed7e305833175f36a93a140ff84be9e";
 export const ownedPerlCallbackPrevious = Object.freeze({
 	path: "docs/evidence/owned-jvm-callback-result-source-history-20261002.json"

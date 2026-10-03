@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Config;
 use JSON::PP;
 use Math::BigInt;
 use Scalar::Util qw(blessed refaddr);
@@ -264,4 +265,5 @@ check(!(grep { $_ } @$final[0..3,6,7]), 'final managed/native owner and identity
 print JSON::PP->new->canonical->encode({checks => $checks, phases => \%phases,
     variant => $variant, actualLean => JSON::PP::true, installedPackage => JSON::PP::false,
     managedLive => $final->[0], nativeLive => $final->[1], identities => $final->[2],
-    owners => $final->[3], active => $final->[6], cleanupStatus => $final->[7]}), "\n";
+    owners => $final->[3], active => $final->[6], cleanupStatus => $final->[7],
+    perlVersion => "$^V", threaded => $Config{useithreads} ? 1 : 0}), "\n";

@@ -16,6 +16,7 @@ import { prepareOwnedPerlNative } from "./owned-perl-native.mjs";
 import { perlGraphCommands } from "./perl-graph-probes.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { ownedPerlReceiverVariant } from "./owned-perl-receiver-evidence.mjs";
 
 for(const mode of ["ordinary", "reviewed"])
 for(const variant of ["no-host", "host", "combined"])
@@ -54,6 +55,9 @@ test(`Perl callback-result owners execute real Lean (${mode}, ${variant})`, {
 		{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
 		assert.equal(execution.code, 0); assert.equal(execution.stderr, "");
 		const observed = JSON.parse(execution.stdout);
+		const abi = ownedPerlReceiverVariant(perl);
+		assert.equal(observed.perlVersion, "v" + abi.split("-")[0]);
+		assert.equal(observed.threaded, Number(!abi.endsWith("unthreaded")));
 		assert.equal(observed.variant, variant);
 		assert.equal(observed.actualLean, true); assert.equal(observed.installedPackage, false);
 		assert.deepEqual(Object.keys(observed.phases).sort(), ["native", ...hostCallbacks ? ["host"] : [], ...combined ? ["combined"] : []].sort());

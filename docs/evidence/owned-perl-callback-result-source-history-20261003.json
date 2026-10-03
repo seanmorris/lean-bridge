@@ -325,13 +325,13 @@
     },
     {
       "path": "tests/owned-perl-xs.test.mjs",
-      "currentSha256": "f257f530986f9f14ee334c90eeead90e48d71cd2545ad61e31e11e8f61c7b824",
+      "currentSha256": "eb9d877c7f403427c7fa86dd714c7ef2c25106a252f47fec777ebb366c9ba768",
       "previousSha256": "4accf2bede17419a6215272f137d07ed0643df6fea213cd90ca47a0ea7a100cb",
       "strategy": "spans",
       "edits": [
         {
           "start": 999,
-          "current": "import \"./helpers/owned-perl-callback-result-xs-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-runtime-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-history-tests.mjs\";\n",
+          "current": "import \"./helpers/owned-perl-callback-result-xs-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-runtime-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-fault-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-runtime-evidence-tests.mjs\";\nimport \"./helpers/owned-perl-callback-result-installed-smoke.mjs\";\nimport \"./helpers/owned-perl-callback-result-history-tests.mjs\";\n",
           "previous": ""
         }
       ]

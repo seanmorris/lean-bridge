@@ -48,8 +48,14 @@ const added = new Set([
 	, "src/backends/perl/owned-callback-build.mjs"
 	, "tests/owned-perl-callback-result-contract.test.mjs"
 	, "tests/helpers/owned-perl-callback-result-package-fixture.mjs"
+	, "tests/helpers/owned-perl-callback-result-installed.mjs"
+	, "tests/helpers/owned-perl-callback-result-installed-smoke.mjs"
+	, "tests/helpers/owned-perl-callback-result-runtime-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-runtime-evidence-tests.mjs"
+	, "tests/fixtures/structured-types/owned-perl-callback-results-installed.pl"
+	, "tests/fixtures/structured-types/owned-perl-callback-result-faults.pl"
 	, "tests/fixtures/structured-types/owned-perl-callback-results.pl"
-	, ...["contract", "factory", "history", "installer", "package", "runtime", "xs"]
+	, ...["contract", "factory", "fault", "history", "installer", "package", "runtime", "xs"]
 		.map(name => `tests/helpers/owned-perl-callback-result-${name}-tests.mjs`)
 ]);
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });

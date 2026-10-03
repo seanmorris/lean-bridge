@@ -29,14 +29,33 @@ counters are zero at the end of each execution.
 The reports are the six `{ordinary,reviewed}-{no-host,host,combined}.json` files
 under `build/owned-perl-callback-results/`. They retain the compiler inputs,
 source identities, generated-source hashes, probe hash, and original process
-stdout/stderr. These are direct runtime observations, not an independently
-reconstructed or frozen Perl acceptance receipt.
+stdout/stderr. Each process reports its actual Perl version and threading mode.
+The evidence verifier reconstructs the six generated C/XS configurations from
+the pinned compiler inputs and rejects 253 altered report or matrix claims.
+These direct runtime observations are not a frozen Perl acceptance receipt.
 
 Focused CLI packaging and installation, filtered Perl engine import closure,
 checked-JavaScript disposition, and strict typechecking passed after registering
 the new callback-argument module. No native package producer was run for that
 inventory check. Existing generated APIs remain covered by explicit legacy-byte
 regressions when callback-result anchors are absent.
+
+## Failure injection
+
+Ordinary and reviewed combined configurations passed allocator, managed
+exception, and native allocation sweeps on all four Perl variants. The probes
+exercise raw host replies, whole-value replies, and whole-value recovery through
+consuming receivers. Every case includes failures before and after the native
+ownership transfer, followed by a restored control run.
+
+Each interpreter completed 12,015 assertions over 1,294 attempts and kept 1,273
+errors alive through cleanup. The eight executions total 96,120 assertions.
+Independent retains remained usable; original aliases expired only after the
+recorded transfer. All six final cleanup counters returned to zero.
+
+The two reports under `build/owned-perl-callback-result-faults/` retain every
+attempt and its original process output. They do not complete the process,
+thread, sanitizer, or installed-package acceptance requirements.
 
 ## CPAN contract checks
 
@@ -65,11 +84,27 @@ closure, strict typechecking, and scoped lint pass with the new template and
 renderer included. The callback contract wrapper belongs to the mandatory core
 test profile; the four-ABI installer cases require the opt-in variable below.
 
+## Installed public consumer
+
+One ordinary combined package set passed source-free, prebuilt-only installation
+on all four Perl variants. After removing the author, handoff, and build tools,
+the runner relocated each installation and ran its public consumer twice.
+Each process passed 79 assertions, for 632 assertions across eight fresh
+processes. The runner verifies the installed XS image hashes against their
+architecture-specific receipts.
+
+The consumer exercises native and host callbacks, callback order, whole replies
+and recovery, transitive expiry, independent retains, and consuming receiver
+preflight. It uses no private cleanup counters. The saved report binds the
+original CLI, package receipts, and final consumer executions. This is a
+single-producer smoke test; independent rebuilds and XS compilation during
+consumer installation remain separate requirements.
+
 ## Still open
 
-Installed CPAN callback packages, independent producer rebuilds, shared releases,
-callback-specific lifetime and failure-injection acceptance, independent report
-reconstruction, and frozen Perl acceptance remain open. This stage makes no new
+Full installed CPAN coverage, independent producer rebuilds, shared releases,
+callback-specific process and thread lifetimes, sanitizer checks, complete
+report reconstruction, and frozen Perl acceptance remain open. This stage makes no new
 installed-support claim and does not publish a registry package. Existing
 type-surface support cells and completed predecessor receipts remain unchanged;
 only authenticated current-source file hashes are refreshed.
@@ -83,6 +118,17 @@ LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
 
 LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
   tests/owned-perl-callback-result-contract.test.mjs
+
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-runtime-evidence-tests.mjs
+
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-fault-tests.mjs
+
+LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 \
+LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 \
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_PACKAGE_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-installed-smoke.mjs
 
 node scripts/update-owned-perl-callback-history.mjs
 
