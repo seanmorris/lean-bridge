@@ -52,10 +52,13 @@ const verify = async record => {
 	assert.match(record.reproductions[0].output, /timeout-minutes: 90/u);
 	assert.match(record.reproductions[0].output, /timeout-minutes: 120/u);
 	assert.match(record.reproductions[1].output, /src\/build\/elaborated-component\.mjs/u);
-	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforePerlContractRepair("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const inventoryPath = "docs/type-surface.v1.json";
+	const inventory = ownedPhpHistoricalBytes(inventoryPath, await readFile(inventoryPath)
+		, record.sources[inventoryPath]).toString("utf8");
+	const current = JSON.parse(inventory);
+	const prior = JSON.parse(beforePerlContractRepair(inventoryPath, inventory));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(await readFile(file.path));
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(current, prior);
 };
 

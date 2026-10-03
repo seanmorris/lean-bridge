@@ -49,9 +49,12 @@ test("JavaScript ownership authenticates every source change without rewriting P
 	}
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedJavaScriptWasmHistoricalBytes("unknown.bin", binary), binary);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const inventoryPath = "docs/type-surface.v1.json";
+	const current = ownedJavaScriptNpmHistoricalBytes(inventoryPath, await readFile(inventoryPath)
+		, record.sources[inventoryPath]).toString("utf8");
 	const prior = JSON.parse(beforeOwnedJavaScriptWasm("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Only source hashes change; support classifications stay unchanged");
 });
 

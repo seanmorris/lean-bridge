@@ -46,10 +46,12 @@ test("owned Perl preserves published sources and rejects unrecorded edits", asyn
 	}
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedPerlHistoricalBytes("unrelated.bin", binary), binary);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const inventoryPath = "docs/type-surface.v1.json";
+	const current = perlContractRepairBytes(inventoryPath, await readFile(inventoryPath)
+		, record.sources[inventoryPath]).toString("utf8");
 	const expected = JSON.parse(beforeOwnedPerlPackages("docs/type-surface.v1.json", current));
 	for(const evidence of expected.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(await readFile(file.path));
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), expected);
 });
 

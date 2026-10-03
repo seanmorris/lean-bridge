@@ -42,9 +42,12 @@ test("ownership analysis receipt binds current sources and preserves earlier pac
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }, { ...update, path: "unknown.mjs" }, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedAnalysisUpdate(current, changed));
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const inventoryPath = "docs/type-surface.v1.json";
+	const current = ownedZendBailoutHistoricalBytes(inventoryPath, await readFile(inventoryPath)
+		, record.sources[inventoryPath]).toString("utf8");
 	const prior = JSON.parse(beforeOwnedAnalysis("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Compiler analysis must not promote untested installed support");
 });
 

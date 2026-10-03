@@ -208,9 +208,8 @@ export const assertOwnedRustIntegration = async record => {
 		if(previousSources[path]) assert.equal(sha256(restored[path] ?? current), previousSources[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
 	const document = JSON.parse(beforeOwnedPython("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
-	assert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));
 	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)

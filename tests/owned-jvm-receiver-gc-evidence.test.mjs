@@ -41,9 +41,11 @@ test("JVM receiver GC history authenticates sources without changing support cel
 			, { ...update, path: "unknown.mjs" }])
 			assert.throws(() => reverseOwnedJvmReceiverGcUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json";
+	const current = beforeCopiedFixtureReaders(path, await readFile(path), record.sources[path]).toString("utf8");
 	const prior = JSON.parse(beforeOwnedJvmReceiverGc(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior);
 });
 

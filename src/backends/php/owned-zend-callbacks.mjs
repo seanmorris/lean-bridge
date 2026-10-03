@@ -14,6 +14,7 @@
 export const ownedZendCallbacks = (model, carriers) => {
 	if(model.hostCallbacks === false) return "";
 	const wholeOwners = model.anchoredResults || model.wholeOwners;
+	const callbackResultAnchors = Boolean(model.callbackResultAnchors);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	return model.callbacks.map(callback => {
 		const node = nodes.get(callback.id), result = nodes.get(callback.result);
@@ -29,9 +30,9 @@ typedef struct {
   zval values[${parameters.length + 1}];
   ${parameters.map((node, index) => `${node.cName} a${index};`).join("\n  ")}
   ${result.cName} reply;
-	  lean_object *returned;
-	${anchored ? "  lgo_lease *reply_pin;\n" : ""}\
-	  int status;
+${callbackResultAnchors
+		? `\t  lean_object *returned;\n${anchored ? "\t  lgo_lease *reply_pin;\n" : ""}${anchored ? "\t  int status;" : "\t\t  int status;"}`
+		: "  lean_object *returned;\n  int status;"}
 } ${name}_frame;
 static lean_object *${name}_invoke(void *context${parameters.map((_, index) => `, lean_object *a${index}`).join("")}) {
   lgo_host *host = context; lgo_call *call = host->call;
@@ -63,28 +64,31 @@ ${parameters.map((node, index) => `      if (!lgo_from(&call->walk, ${node.index
       if (call_user_function(EG(function_table), NULL, &host->callback, &frame->values[${parameters.length}], ${parameters.length}, frame->values) != SUCCESS || EG(exception)) {
         frame->status = OV_CALLBACK; break;
       }
-	      frame->status = lb_owned_scope_ready(&frame->arguments.scope);
-	      zval *reply = &frame->values[${parameters.length}];${anchored ? `
-	      ZVAL_DEREF(reply);
-	      if (!frame->status && Z_TYPE_P(reply) == IS_ARRAY && !zend_array_is_list(Z_ARRVAL_P(reply))
-	          && zend_hash_num_elements(Z_ARRVAL_P(reply)) == 2) {
-	        zval *owner = zend_hash_str_find(Z_ARRVAL_P(reply), "owner", sizeof("owner") - 1);
-	        zval *value = zend_hash_str_find(Z_ARRVAL_P(reply), "value", sizeof("value") - 1);
-	        lgo_root *root = NULL;
-	        if (!owner || !value) frame->status = LB_OWNED_INVALID;
-	        else frame->status = lgo_root_fetch(owner, ${result.index}, call->walk.state, 0, &root);
-	        if (!frame->status) frame->status = lgo_lease_pin(root->lease);
-	        if (!frame->status) { frame->reply_pin = root->lease; reply = value; }
-	      }` : ""}
-	      if (frame->status || !lgo_to(&call->walk, ${result.index}, reply, &frame->reply)) break;
+${callbackResultAnchors ? `\t      frame->status = lb_owned_scope_ready(&frame->arguments.scope);
+\t      zval *reply = &frame->values[${parameters.length}];${anchored ? `
+\t      ZVAL_DEREF(reply);
+\t      if (!frame->status && Z_TYPE_P(reply) == IS_ARRAY && !zend_array_is_list(Z_ARRVAL_P(reply))
+\t          && zend_hash_num_elements(Z_ARRVAL_P(reply)) == 2) {
+\t        zval *owner = zend_hash_str_find(Z_ARRVAL_P(reply), "owner", sizeof("owner") - 1);
+\t        zval *value = zend_hash_str_find(Z_ARRVAL_P(reply), "value", sizeof("value") - 1);
+\t        lgo_root *root = NULL;
+\t        if (!owner || !value) frame->status = LB_OWNED_INVALID;
+\t        else frame->status = lgo_root_fetch(owner, ${result.index}, call->walk.state, 0, &root);
+\t        if (!frame->status) frame->status = lgo_lease_pin(root->lease);
+\t        if (!frame->status) { frame->reply_pin = root->lease; reply = value; }
+\t      }` : ""}
+\t      if (frame->status || !lgo_to(&call->walk, ${result.index}, reply, &frame->reply)) break;`
+		: `      frame->status = lb_owned_scope_ready(&frame->arguments.scope);
+      if (frame->status || !lgo_to(&call->walk, ${result.index}, &frame->values[${parameters.length}], &frame->reply)) break;`}
       frame->status = ${result.walker}_in(&frame->reply, 0, 1, &frame->arguments, &frame->returned);
     } while (0);
   } zend_catch { call->bailout = 1; frame->status = OV_CALLBACK; } zend_end_try();
   if (!frame->status) frame->status = call->walk.status;
   if (frame->arguments.scope.context) parent->transaction->budget = frame->arguments.budget;
-	  frame->status = lgo_borrow_finish(&frame->borrow, &frame->arguments, frame->values, ${parameters.length + 1}, frame->status, &call->bailout);
-	${anchored ? "  lgo_lease_unpin(frame->reply_pin); frame->reply_pin = NULL;\n" : ""}\
-	  call->walk.borrow = frame->previous_borrow; call->walk.inputs = frame->previous_inputs;
+${callbackResultAnchors
+		? `\t  frame->status = lgo_borrow_finish(&frame->borrow, &frame->arguments, frame->values, ${parameters.length + 1}, frame->status, &call->bailout);\n${anchored ? "\t  lgo_lease_unpin(frame->reply_pin); frame->reply_pin = NULL;\n\t  " : "\t\t  "}call->walk.borrow = frame->previous_borrow; call->walk.inputs = frame->previous_inputs;`
+		: `  frame->status = lgo_borrow_finish(&frame->borrow, &frame->arguments, frame->values, ${parameters.length + 1}, frame->status, &call->bailout);
+  call->walk.borrow = frame->previous_borrow; call->walk.inputs = frame->previous_inputs;`}
 ${wholeOwners ? "" : releaseArguments + "\n"}\
   if (!frame->status && (call->bailout || EG(exception))) frame->status = OV_CALLBACK;
   if (frame->status) {

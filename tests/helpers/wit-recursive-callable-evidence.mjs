@@ -143,7 +143,9 @@ export const assertWitRecursiveCallableIntegration = async record => {
 		restored[update.path] = reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
+	const document = JSON.parse(await historicalSource("docs/type-surface.v1.json", true));
+	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.107.0"); assert.equal(old.contractVersion, "0.106.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === "passed").length;

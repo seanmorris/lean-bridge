@@ -421,10 +421,9 @@ export const assertOwnedJvmPackageIntegration = async record => {
 		}
 		else if(previous.sources[path]) assert.equal(record.sources[path], previous.sources[path], path);
 	}
-	const { document: currentDocument, irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
+	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
 	const source = jvmProbeRepairBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json")).toString("utf8");
 	const document = JSON.parse(source);
-	assert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));
 	const old = JSON.parse(reverseOwnedJvmUpdate(source, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -161,9 +161,9 @@ export const assertOwnedAggregateIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document: currentDocument, ...contracts } = await readTypeSurface();
-	assert.equal(currentDocument.contractVersion, record.inventory.version);
+	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
 	const document = JSON.parse(await source("docs/type-surface.v1.json"));
+	assert.equal(document.contractVersion, record.inventory.version);
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]), expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

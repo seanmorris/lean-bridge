@@ -6,8 +6,15 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
-import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
+import { perlVariantChangedPaths } from "./owned-perl-callback-result-variant-history.mjs";
+import { phpCallbackAcceptanceModifiedPaths } from "./php-callback-acceptance-history.mjs";
+import { beforePhpCallbackInstalledStaging
+	, phpCallbackInstalledChangedPaths } from "./php-callback-installed-staging-history.mjs";
+import { witCallbackAcceptanceIntegrationModifiedPaths
+	, witCallbackAcceptanceReaderPaths } from "./wit-callback-acceptance-history.mjs";
+import { witCallbackInstalledNormalizationPaths } from "./wit-callback-installed-acceptance-history.mjs";
+import { beforeWitCallbackRuntimeStaging
+	, witCallbackRuntimeChangedPaths } from "./wit-callback-runtime-staging-history.mjs";
 
 export const postPerlCallbackHistoryPath = "docs/evidence/post-perl-callback-staging-source-history-20261003.json";
 export const postPerlCallbackHistorySha256 = "710955098bb7ee148093d5e7f9c266f27be334d642d6ad06d9020202825850f4";
@@ -68,6 +75,16 @@ export const readPostPerlCallbackHistory = () => {
 	return history;
 };
 export const postPerlCallbackChangedPaths = Object.freeze(readPostPerlCallbackHistory().updates.map(update => update.path));
+export const postPerlCallbackNormalizationPaths = Object.freeze([...new Set([
+	...postPerlCallbackChangedPaths
+	, ...phpCallbackInstalledChangedPaths
+	, ...phpCallbackAcceptanceModifiedPaths
+	, ...witCallbackInstalledNormalizationPaths
+	, ...witCallbackAcceptanceIntegrationModifiedPaths
+	, ...witCallbackAcceptanceReaderPaths
+	, ...witCallbackRuntimeChangedPaths
+	, ...perlVariantChangedPaths
+])].sort());
 
 /**
  * Reverse one registered complete transition, never partial or unknown bytes.

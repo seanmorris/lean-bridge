@@ -192,8 +192,8 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
 		parameters[`${fn.publicName}/${index}`] = nodes.get(id).index;
 		parameters[`${fn.publicName}/${fn.publicParameters[index]}`] = nodes.get(id).index;
 	}
-	const ownedTypes = Object.fromEntries(model.types.filter(node => node.representation !== "copied")
-		.map(node => [node.index, true]));
+	const ownedTypes = model.callbackResultAnchors ? Object.fromEntries(model.types
+		.filter(node => node.representation !== "copied").map(node => [node.index, true])) : null;
 	source = replace(source, "    // The Zend resource destructor handles implicit release", String.raw`    public function sameIdentity(self $other): bool {
         $this->check(); $other->check();
         return $this->type === $other->type && Native::sameIdentity($this->type, $this->resource, $other->resource);
@@ -202,8 +202,7 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
 	source = replace(source, "    private static int $depth = 0;", `    private const NOMINALS = ${literal(nominals)};
     private const RESULTS = ${literal(results)};
     private const PARAMETERS = ${literal(parameters)};
-    private const OWNED_TYPES = ${literal(ownedTypes)};
-    private static int $depth = 0;`);
+${model.callbackResultAnchors ? `    private const OWNED_TYPES = ${literal(ownedTypes)};\n` : ""}    private static int $depth = 0;`);
 	source = replace(source, "    private static function malformed(GraphInvalidWire $error): never {", String.raw`    public static function owner(string $entry, int $type, mixed $owner): mixed {
         self::main();
         if (!in_array($entry, ['check', 'close', 'share'], true)) throw new \TypeError('Unknown whole-owner operation');
@@ -297,13 +296,13 @@ ${model.callbackResultAnchors ? String.raw`    public static function copyCallba
         foreach ($fn['wholeParameters'] as $position) {
             $wholeInputs[$position] = $arguments[$position];
             [$owners[$position], , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $fn['parameters'][$position]);
-		}
+${model.callbackResultAnchors ? String.raw`		}
 		foreach ($fn['parameters'] as $position => $type) {
 			if ($fn['host'][$position] || !isset(self::CALLBACKS[$type])
 				|| !$arguments[$position] instanceof @NAMESPACE@\Value) continue;
 			$wholeInputs[$position] = $arguments[$position];
 			[, , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $type);
-        }`);
+        }` : "        }"}`);
 	source = replace(source, `            foreach ($fn['parameters'] as $index => $type)
                 $inputs[] = $fn['host'][$index] ? self::host($type, $prepared[$index], $frame)
                     : GraphWire::transfer($type, $arguments[$index], false, $frame->writing);`, String.raw`            foreach ($fn['parameters'] as $index => $type) {

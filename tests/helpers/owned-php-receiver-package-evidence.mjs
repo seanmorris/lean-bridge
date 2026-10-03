@@ -193,7 +193,10 @@ export const assertOwnedPhpReceiverDocumentation = async doc => {
 	flags(doc, ["cliIntegrated", "receiverExports", "producerRemoved"
 		, "handoffRemoved", "sourceUnchanged", "relocated"]);
 	assert.deepEqual(doc.mixedTargets, ["c", "php-native"]);
-	const author = await readFile("docs/publish/php.md", "utf8"), consumer = await readFile("docs/php.md", "utf8");
+	const author = ownedPhpWasmReceiverHistoricalBytes("docs/publish/php.md"
+		, await readFile("docs/publish/php.md")).toString("utf8");
+	const consumer = ownedPhpWasmReceiverHistoricalBytes("docs/php.md"
+		, await readFile("docs/php.md")).toString("utf8");
 	const config = canonicalJson({ ...JSON.parse(block(author, "### Export resource-containing values", "json"))
 		, ...JSON.parse(block(author, "### Export methods and properties", "json")) });
 	assert.deepEqual(doc.sourceHashes, {

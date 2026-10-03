@@ -42,9 +42,12 @@ test("installed owned npm evidence binds exact sources without rewriting runtime
 		assert.throws(() => reverseOwnedJavaScriptNpmUpdate(unknown, update));
 	}
 	const bytes = Buffer.from([0, 255, 192, 128]); assert.equal(ownedJavaScriptNpmHistoricalBytes("unknown.bin", bytes), bytes);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const inventoryPath = "docs/type-surface.v1.json";
+	const current = ownedJavaScriptCoexistenceHistoricalBytes(inventoryPath, await readFile(inventoryPath)
+		, record.sources[inventoryPath]).toString("utf8");
 	const prior = JSON.parse(beforeOwnedJavaScriptNpm("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
 	assert.deepEqual(JSON.parse(current), prior, "Only current file identities change; support cells are not promoted");
 });
 

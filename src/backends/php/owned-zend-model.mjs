@@ -104,7 +104,7 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
 		, ...anchoredResults ? { anchoredResults: true } : {}
 		, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}
-		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : wholeOwners ? { wholeOwners: true, ...!hostCallbacks ? { hostCallbacks: false } : {} } : !hostCallbacks ? { hostCallbacks: false } : {}
+		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : callbackResultAnchors ? { wholeOwners: true, ...!hostCallbacks ? { hostCallbacks: false } : {} } : !hostCallbacks ? { hostCallbacks: false } : {}
 		, files: values.files, aliases: values.aliases
 		, publicFiles: values.publicFiles
 		, layout, types, descriptors, functions, callbacks

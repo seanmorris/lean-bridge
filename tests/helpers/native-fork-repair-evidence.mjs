@@ -100,8 +100,9 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	assert.notEqual(record.transport.reports[0].bindingIrSha256, record.transport.reports[1].bindingIrSha256);
 	assert.deepEqual(record.transport.reports[0].nativeLibrary, record.transport.reports[1].nativeLibrary);
 	assert.deepEqual(record.inventory, previous.inventory); assert.equal(record.inventory.promoted, 0);
-	const { document, ...contracts } = await readTypeSurface();
+	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
 	const inventory = beforeManagedCiIsolation("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const document = JSON.parse(inventory);
 	const old = JSON.parse(reverseNativeForkRepair(inventory, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
@@ -110,7 +111,7 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 		if(update)
 		{ assert.equal(file.sha256, update.previousSha256); file.sha256 = update.currentSha256; }
 	}
-	assert.deepEqual(JSON.parse(inventory), expected);
+	assert.deepEqual(document, expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
 	if(replay) await assertOwnedDotnetProcess(previous);
 };

@@ -10,7 +10,7 @@ import { beforeOwnedCallbackResults, ownedCallbackResultChangedPaths } from "./o
 import { ownedDotnetCallbackChangedPaths } from "./owned-dotnet-callback-result-history.mjs";
 import { ownedJvmCallbackChangedPaths } from "./owned-jvm-callback-result-history.mjs";
 import { ownedPerlCallbackChangedPaths } from "./owned-perl-callback-result-history.mjs";
-import { postPerlCallbackChangedPaths } from "./post-perl-callback-staging-history.mjs";
+import { postPerlCallbackNormalizationPaths } from "./post-perl-callback-staging-history.mjs";
 import { witCallbackRuntimeChangedPaths } from "./wit-callback-runtime-staging-history.mjs";
 import { perlVariantChangedPaths } from "./owned-perl-callback-result-variant-history.mjs";
 import { callbackInventoryRepairPaths } from "./owned-callback-inventory-history.mjs";
@@ -40,7 +40,7 @@ export const copiedFixtureReaderPaths = Object.freeze([...new Set([
 	, ...ownedDotnetCallbackChangedPaths
 	, ...ownedJvmCallbackChangedPaths
 	, ...ownedPerlCallbackChangedPaths
-	, ...postPerlCallbackChangedPaths
+	, ...postPerlCallbackNormalizationPaths
 	, ...witCallbackRuntimeChangedPaths
 	, ...perlVariantChangedPaths
 	, ...callbackInventoryRepairPaths

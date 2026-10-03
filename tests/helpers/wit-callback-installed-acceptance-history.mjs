@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpWasmCallbackResultAcceptance
+	, phpWasmCallbackResultNormalizationPaths } from "./php-wasm-callback-result-acceptance-history.mjs";
 
 export const witCallbackInstalledHistoryPath
 	= "docs/evidence/wit-callback-installed-acceptance-source-history-20261003.json";
@@ -57,6 +59,10 @@ export const witCallbackInstalledReaderPaths = Object.freeze([
 	, "tests/helpers/wit-callback-runtime-staging-history-tests.mjs"
 	, "tests/helpers/wit-callback-runtime-staging-history.mjs"
 ].sort());
+export const witCallbackInstalledNormalizationPaths = Object.freeze([...new Set([
+	...witCallbackInstalledModifiedPaths, ...witCallbackInstalledReaderPaths
+	, ...phpWasmCallbackResultNormalizationPaths
+])].sort());
 const categories = Object.freeze({
 	".github/workflows/consumer-matrix.yml": "administrative"
 	, "docs/consume/wit-wasi.md": "documentation"
@@ -188,6 +194,7 @@ export const reverseWitCallbackInstalledUpdate = (source, update, category = "up
  * @param {string} [expected] - Optional stopping SHA-256.
  */
 export const beforeWitCallbackInstalledAcceptance = (path, source, expected) => {
+	source = beforePhpWasmCallbackResultAcceptance(path, source, expected);
 	for(const category of ["readerUpdates", "updates"])
 	{
 		const update = readWitCallbackInstalledHistory()[category].find(value => value.path === path);

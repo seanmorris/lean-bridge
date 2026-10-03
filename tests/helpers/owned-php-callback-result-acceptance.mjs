@@ -78,6 +78,9 @@ export const ownedPhpCallbackClosureRoots = freeze([
 ]);
 const ownedPhpCallbackSuccessorPaths = new Set([
 	"tests/helpers/php-callback-acceptance-history.mjs"
+	, "tests/helpers/php-wasm-callback-result-acceptance-history.mjs"
+	, "tests/helpers/wit-callback-acceptance-history.mjs"
+	, "tests/helpers/wit-callback-installed-acceptance-history.mjs"
 ]);
 
 /** Include the completed predecessor and the complete local acceptance closure. */
@@ -98,7 +101,8 @@ export const ownedPhpCallbackSourcePaths = async () => {
 	{
 		const path = pending.pop();
 		if(visited.has(path)) continue;
-		visited.add(path); paths.add(path);
+		visited.add(path);
+		if(!ownedPhpCallbackSuccessorPaths.has(path)) paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
 		const tree = ts.createSourceFile(path, await readFile(path, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
@@ -107,7 +111,7 @@ export const ownedPhpCallbackSourcePaths = async () => {
 			if(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith("."))
 			{
 				const dependency = join(dirname(path), specifier.text);
-				if(!ownedPhpCallbackSuccessorPaths.has(dependency)) pending.push(dependency);
+				pending.push(dependency);
 			}
 			ts.forEachChild(node, visit);
 		};

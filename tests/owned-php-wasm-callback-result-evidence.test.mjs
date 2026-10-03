@@ -9,6 +9,7 @@ import test from "node:test";
 import { assertOwnedPhpWasmCallbackResultEvidence, ownedPhpWasmCallbackResultEvidencePath,
 	packOwnedPhpWasmCallbackResultReports,
 	unpackOwnedPhpWasmCallbackResultReports } from "./helpers/owned-php-wasm-callback-result-evidence.mjs";
+import "./helpers/php-wasm-callback-result-acceptance-history-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedPhpWasmCallbackResultEvidencePath, "utf8"));
 

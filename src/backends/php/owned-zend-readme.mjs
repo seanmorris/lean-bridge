@@ -75,7 +75,7 @@ export const ownedPhpWasmReceiverReadme = model => {
 			? "This package preserves both receiver/export anchors and callback-result anchors."
 			: "This package preserves callback-result anchors and declares no export-result anchors.")
 			: model.anchoredResults ? "Callback-result-anchored lifetimes are not implemented by this profile."
-			: "This package declares no borrowed-result anchors."
+				: "This package declares no borrowed-result anchors."
 	).replace("These mappings apply inside aggregates and callbacks.", model.hostCallbacks
 		? "These mappings apply inside aggregates and callbacks." : "These mappings apply inside aggregates."));
 	paragraphs.push(`Methods use camelCase names; properties use read-only PHP property syntax. Resources and named aggregates have nominal owners such as TicketValue and BundleValue. share(), retain() and copy_value() preserve the owner class. Public functions remain available with snake_case names. Raw resource views omit members that require an original whole owner. Property assignment and deletion reject.`);

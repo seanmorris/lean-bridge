@@ -25,6 +25,7 @@ import { assertOwnedPhpWasmBorrowCi } from "./owned-php-wasm-borrow-ci.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
 import { ownedPhpInstalledReceiverProbe } from "./owned-php-receiver-fixture.mjs";
 import { ownedPhpWasmInstalledHost } from "./owned-php-wasm-packages.mjs";
+import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedPhpWasmBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-php-wasm-borrows";
 
@@ -316,7 +317,10 @@ export const assertOwnedPhpWasmBorrowExecution = async record => {
 	}
 	await assertOwnedPhpWasmBorrowFibers(record.nativeFibers);
 	await assertOwnedPhpWasmBorrowPackages(record.packages, lean + ownedRustBorrowSource);
-	const author = await readFile("docs/publish/php.md", "utf8"), consumer = await readFile("docs/php.md", "utf8");
+	const author = ownedPhpWasmReceiverHistoricalBytes("docs/publish/php.md"
+		, await readFile("docs/publish/php.md"), record.sources["docs/publish/php.md"]).toString("utf8");
+	const consumer = ownedPhpWasmReceiverHistoricalBytes("docs/php.md"
+		, await readFile("docs/php.md"), record.sources["docs/php.md"]).toString("utf8");
 	const config = canonicalJson({ ...JSON.parse(block(author, "### Export resource-containing values", "json"))
 		, ...JSON.parse(block(author, "### Anchor a result to an input", "json")) });
 	const doc = record.documentation;

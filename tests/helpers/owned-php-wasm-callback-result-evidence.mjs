@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
 import { generateCompiledPhpWasmOwned } from "../../src/build/php-wasm-owned-component.mjs";
 import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
+import { beforePhpWasmCallbackResultAcceptance } from "./php-wasm-callback-result-acceptance-history.mjs";
 
 export const ownedPhpWasmCallbackResultEvidencePath = "docs/evidence/owned-php-wasm-callback-results-20261003.json";
 export const ownedPhpWasmCallbackResultCommand = "LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=$PWD/build/type-corpus/php-wasm-current-runtime npm run test:owned-php-wasm-callback-results";
@@ -140,7 +141,11 @@ export const assertOwnedPhpWasmCallbackResultEvidence = async record => {
 	assert.deepEqual(record.scope, ownedPhpWasmCallbackResultScope);
 	assert.equal(record.command, ownedPhpWasmCallbackResultCommand);
 	for(const [path, value] of Object.entries(record.sources))
-	{ digest(value); assert.equal(sha256(await readFile(path)), value, path); }
+	{
+		digest(value);
+		assert.equal(sha256(beforePhpWasmCallbackResultAcceptance(path
+			, await readFile(path), value)), value, path);
+	}
 	const reports = unpackOwnedPhpWasmCallbackResultReports(record.reports);
 	assert.deepEqual(Object.keys(reports), Object.keys(ownedPhpWasmCallbackResultVariants).map(name => `${name}-packages.json`));
 	let runtimeIdentity;
