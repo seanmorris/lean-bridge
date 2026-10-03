@@ -15,6 +15,7 @@ test(`eight-target callback release reconstructs ${mode} inputs and execution`, 
 	, timeout: 300000
 }, async t => {
 	const original = JSON.parse(await readFile(`build/owned-jvm-callback-results/${mode}-combined-release.json`, "utf8"));
+	assert.equal(original.mode, mode);
 	await assertOwnedJvmCallbackCombinedRelease(original);
 	const changes = [
 		item => { item.installedJvm.manifest.runtimeIdentity = zero; }

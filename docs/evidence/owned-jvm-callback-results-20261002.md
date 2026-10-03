@@ -15,7 +15,7 @@ The implementation covers Java and Kotlin. Native-only packages omit host
 upcalls. The combined fixture exercises callback replies alongside input
 transfers, export anchors, receiver methods, and mixed host/native callbacks.
 
-## Verified so far
+## Ownership checks
 
 - Real Lean-backed Java and Kotlin probes execute raw and whole callback replies,
   direct native closure calls, higher-order closures, mixed consuming receiver
@@ -33,7 +33,7 @@ transfers, export anchors, receiver methods, and mixed host/native callbacks.
   disabled.
 - The standalone CLI and type-support inventory pass 99 contract tests. All 26
   frozen .NET callback reports still reconstruct against their original source
-  identities. The JVM source-history ledger records this stage without changing
+  identities. The JVM source-history ledger records these changes without changing
   those receipts or promoting any type-support cells.
 
 The first package run exposed a missing v5 entry in the Kotlin compiler profile.
@@ -45,7 +45,7 @@ closures unnecessarily required a raw invocation argument, and native-only
 higher-order calls converted nested closures to host callback interfaces. Both
 fixes have compilation regressions.
 
-## Acceptance still in progress
+## Installed Maven checks
 
 All four installed Maven cases pass: ordinary Lean configuration and independently
 reviewed IR, each with native-only and combined ownership capabilities. The matrix
@@ -113,15 +113,16 @@ The test restores the generated source and requires identical Java and Kotlin
 output. The report verifiers reconstruct all six runtime reports and reject 478
 altered variants. The lifetime verifier reconstructs 12 reports and rejects 472.
 
-## Remaining acceptance
+## Shared-release checks
 
-The installed matrix now also requires an independent producer build with
-byte-identical archives and 40 installed-asset forgery rejections. The initial
-native-only case passes those additions; the complete matrix is being rerun with
-the executable guide examples and captured runtime output.
+All four installed Maven cases also pass an independent producer rebuild with
+byte-identical archives, 40 installed-asset forgery rejections, executable guide
+examples, and captured runtime output. The independent package verifier checks
+all four reports and rejects 208 altered input or execution claims.
 
 The shared release builds C, C++, Cargo, PyPI, RubyGems, NuGet, Maven, and npm from
-one Lean API. Both independent ordinary builds produced matching archives. The
+one Lean API. Both ordinary and reviewed modes pass independent builds with
+matching archives and installed consumers across all eight targets. The
 first local installation run stopped because the wheel advertised glibc 2.38 on
 a glibc 2.36 machine. The rerun uses the existing 2.36 test setting, which checks
 every compiled library's required symbols before packaging. This does not change
@@ -132,25 +133,28 @@ The generator now preserves those older outputs. A comparison of six runtime and
 four package fixtures confirms that all 964 callback-enabled generated files and
 their contracts remain byte-identical. The CLI source inventory changes, so
 packages built before this correction cannot serve as final current-CLI evidence.
-Those package cases need a fresh build; their reports are not relabeled.
+The final package reports come from fresh current-source builds; the earlier
+reports are retained separately as diagnostics.
 
-Shared-release execution, independent report reconstruction, frozen acceptance,
-and the full contract suite remain open. This staging milestone does not change
-the published type-support inventory or publish a registry package.
+The [frozen acceptance record](owned-jvm-callback-results-20261003.json) embeds all
+24 original reports, the complete logs for 28 execution tests, and the ten-test
+verification log. It pins the predecessor receipt and every source used by the
+implementation and its verifiers. Verification does not need the temporary
+producer directories or the original log files.
+
+The acceptance tests reject omitted reports, swapped source modes, substituted
+test logs, stale source identities, and unsupported lifetime claims. Lean-emitted
+C and metadata identities are recorded compiler outputs bound to the pinned Lean
+compiler and authored inputs. Adapter and probe sources are regenerated from the
+saved inputs. Core quality CI passes for checkpoint `e8186d2`.
+
+This milestone does not change the published type-support inventory or publish a
+registry package.
 
 ## Commands
 
 ```sh
-LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 \
-  tests/owned-jvm-callback-results.test.mjs \
-  tests/owned-jvm-callback-mixed-signatures.test.mjs \
-  tests/owned-jvm-callback-result-faults.test.mjs \
-  tests/owned-jvm-callback-result-gc.test.mjs \
-  tests/owned-jvm-callback-result-sanitizers.test.mjs
-
-LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_PROCESS_TEST=1 node --test \
-  tests/owned-jvm-callback-result-process.test.mjs
-
-LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_PACKAGE_TEST=1 node --test --test-concurrency=1 \
-  tests/owned-jvm-callback-result-packaging.test.mjs
+npm run test:owned-jvm-callback-results
+npm run test:owned-jvm-callback-evidence
+node --test tests/owned-jvm-callback-result-history.test.mjs
 ```

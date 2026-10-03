@@ -10,7 +10,11 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJvmCallbackPackageInputs, assertOwnedJvmCallbackPackageExecution } from "./helpers/owned-jvm-callback-result-package-evidence.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_TEST === "1";
-const report = async (mode, variant) => JSON.parse(await readFile(`build/owned-jvm-callback-results/${mode}-${variant}-package.json`, "utf8"));
+const report = async (mode, variant) => {
+	const item = JSON.parse(await readFile(`build/owned-jvm-callback-results/${mode}-${variant}-package.json`, "utf8"));
+	assert.equal(item.mode, mode); assert.equal(item.combined, variant === "combined");
+	return item;
+};
 const zero = "0".repeat(64);
 
 test("JVM callback package reports reconstruct all native and managed contracts", {

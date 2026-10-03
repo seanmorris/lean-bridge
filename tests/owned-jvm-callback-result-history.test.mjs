@@ -10,8 +10,11 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256
 	, ownedJvmCallbackBaseline, ownedJvmCallbackChangedPaths
 	, beforeOwnedJvmCallbackResults, reverseOwnedJvmCallbackUpdate } from "./helpers/owned-jvm-callback-result-history.mjs";
+import "./helpers/owned-jvm-callback-result-acceptance-tests.mjs";
 
 test("JVM callback source history authenticates complete transitions and rejects drift", async () => {
+	assert.match(await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8")
+		, /^import "\.\/helpers\/owned-jvm-callback-result-acceptance-tests\.mjs";$/mu);
 	const bytes = await readFile(ownedJvmCallbackHistoryPath);
 	assert.equal(sha256(bytes), ownedJvmCallbackHistorySha256);
 	const history = JSON.parse(bytes);
