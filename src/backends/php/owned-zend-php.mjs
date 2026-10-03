@@ -198,8 +198,10 @@ export const generateOwnedPhpZendPhp = model => {
 		, host: fn.hostArguments, result: nodes.get(fn.result).index
 		, ...wholeOwners ? {
 			whole: nodes.get(fn.result).representation !== "copied"
-			, wholeParameters: fn.parameters.flatMap((_, index) => fn.anchor === index || fn.transfers?.includes(index) ? [index] : [])
-		} : {}
+				, wholeParameters: fn.parameters.flatMap((_, index) => fn.anchor === index || fn.transfers?.includes(index) ? [index] : [])
+			} : {}
+		, ...model.callbackResultAnchors && Object.hasOwn(fn, "automaticRecovery")
+			? { anchor: fn.anchor === undefined ? null : fn.anchor - 1 } : {}
 		, ...Object.hasOwn(fn, "automaticRecovery") ? { automaticRecovery: fn.automaticRecovery } : {} });
 	const functions = model.functions.map(fn => signature(fn, `call${fn.index}`));
 	const callbacks = Object.fromEntries(model.callbacks.map(fn => [fn.type, signature(fn, `invoke${fn.index}`)]));

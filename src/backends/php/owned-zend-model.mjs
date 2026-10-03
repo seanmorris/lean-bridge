@@ -18,14 +18,16 @@ import { generateOwnedPhpValues } from "./owned-values.mjs";
  * @param options.transferredInputs - Admit atomic consuming arguments.
  * @param options.anchoredResults - Carry exact whole-result owner lifetimes.
  * @param options.receiverExports - Admit typed receiver methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous PHP callback transport.
  */
-export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, hostCallbacks });
-	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults, receiverExports });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
+	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	anchoredResults = values.c.anchoredResults;
 	receiverExports = values.receiverExports;
-	const wholeOwners = Boolean(anchoredResults || receiverExports);
+	callbackResultAnchors = values.callbackResultAnchors;
+	const wholeOwners = Boolean(anchoredResults || receiverExports || callbackResultAnchors);
 	const fail = message => { throw new TypeError(`Owned PHP-Wasm values: ${message}`); };
 	const types = layout.nodes.map((node, index) => {
 		const php = values.types[index];
@@ -101,7 +103,8 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 	const identity = layout.model.bindingIrSha256, stem = `lb_owned_${identity.slice(0, 20)}`;
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
 		, ...anchoredResults ? { anchoredResults: true } : {}
-		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : !hostCallbacks ? { hostCallbacks: false } : {}
+		, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}
+		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : wholeOwners ? { wholeOwners: true, ...!hostCallbacks ? { hostCallbacks: false } : {} } : !hostCallbacks ? { hostCallbacks: false } : {}
 		, files: values.files, aliases: values.aliases
 		, publicFiles: values.publicFiles
 		, layout, types, descriptors, functions, callbacks

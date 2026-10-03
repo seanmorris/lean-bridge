@@ -117,6 +117,7 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 			, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 			, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 			, receiverExports: Boolean(model.ownedGraph.receiverExports)
+			, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 		} : {} });
 	const adapters = generateCompiledPhpWasmLeanAdapters(reconstructed);
 	const graph = reconstructed.ownedGraph ? generateCompiledPhpWasmOwned(reconstructed, metadata, adapters)

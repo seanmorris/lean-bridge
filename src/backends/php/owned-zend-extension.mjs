@@ -129,9 +129,10 @@ export const generateOwnedPhpZendExtension = generated => {
 	const transferredInputs = generated.layout.functions.some(fn => fn.transfers?.length);
 	const anchoredResults = generated.layout.functions.some(fn => fn.anchor !== undefined);
 	const receiverExports = generated.layout.functions.some(fn => fn.receiver === 0);
+	const callbackResultAnchors = generated.layout.callbacks.some(fn => fn.anchor !== undefined);
 	const hostCallbacks = Boolean(generated.carriers.callbackSource);
-	const wholeOwners = anchoredResults || receiverExports;
-	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
+	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	if(canonicalJson(model.layout) !== canonicalJson(generated.layout)) throw new TypeError("Zend transport requires its exact wasm32 native layout");
 	if(hostCallbacks ? generated.carriers.hostCallbacks?.length !== model.callbacks.length : generated.carriers.hostCallbacks !== undefined)
 		throw new TypeError("Zend transport requires compiler-authenticated host callback carriers");

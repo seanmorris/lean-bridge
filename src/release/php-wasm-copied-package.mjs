@@ -14,7 +14,7 @@ import { hasStructuredZendCallables } from "../backends/php/zend-callables.mjs";
 import { compileCopiedPhpGraphZendModel } from "../backends/php/copied-graph-zend.mjs";
 import { compileCallablePhpGraphZendModel } from "../backends/php/callable-graph-zend-model.mjs";
 import { compileOwnedPhpZendModel } from "../backends/php/owned-zend-model.mjs";
-import { ownedPhpWasmReadme, ownedPhpWasmTransferReadme, ownedPhpWasmBorrowReadme, ownedPhpWasmReceiverReadme } from "../backends/php/owned-zend-readme.mjs";
+import { ownedPhpWasmReadme, ownedPhpWasmTransferReadme, ownedPhpWasmBorrowReadme, ownedPhpWasmCallbackResultReadme, ownedPhpWasmReceiverReadme } from "../backends/php/owned-zend-readme.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
@@ -65,6 +65,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 		, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 		, receiverExports: Boolean(model.ownedGraph.receiverExports)
+		, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 	})
 		: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)
 			: model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
@@ -113,7 +114,7 @@ For first-call loading, import \`{ lazy as api }\` from this package and pass \`
 
 This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node or Chromium. Register descriptors before constructing the host. Lazy loading requires \`enable_dl=1\`; await each host request before starting another. After an extension-loading failure, create a new PHP instance. No compiler, FFI extension or install script is required. The handoff receipt verifies package bytes; the descriptor checks compatibility identities, not downloaded byte integrity.
 
-${model.ownedGraph ? model.ownedGraph.receiverExports ? ownedPhpWasmReceiverReadme(projection) : model.ownedGraph.resultAnchors ? ownedPhpWasmBorrowReadme : model.ownedGraph.inputTransfers ? ownedPhpWasmTransferReadme : ownedPhpWasmReadme : model.copiedGraph ? `Records and variant cases are final readonly classes. List and Array use consecutive-key PHP arrays while retaining distinct Lean types. Products use nested two-element arrays. Option uses null for None and Some(value) for Some; Some(null) and nested Some preserve their declared nesting. Except uses Ok(value) or Err(error). Aliases use their target PHP values without extra wrappers. Generated PHPDoc describes nested types. Functions and constructors check exact arity and values in both weak and strict callers.
+${model.ownedGraph ? model.ownedGraph.receiverExports ? ownedPhpWasmReceiverReadme(projection) : model.ownedGraph.callbackResultAnchors ? ownedPhpWasmCallbackResultReadme(projection) : model.ownedGraph.resultAnchors ? ownedPhpWasmBorrowReadme : model.ownedGraph.inputTransfers ? ownedPhpWasmTransferReadme : ownedPhpWasmReadme : model.copiedGraph ? `Records and variant cases are final readonly classes. List and Array use consecutive-key PHP arrays while retaining distinct Lean types. Products use nested two-element arrays. Option uses null for None and Some(value) for Some; Some(null) and nested Some preserve their declared nesting. Except uses Ok(value) or Err(error). Aliases use their target PHP values without extra wrappers. Generated PHPDoc describes nested types. Functions and constructors check exact arity and values in both weak and strict callers.
 
 On this 32-bit host, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\BigInteger. ISize is a signed 32-bit PHP int. Unit is null; Char is one UTF-8 Unicode scalar. String preserves UTF-8 and NUL; Bytes::fromString preserves arbitrary bytes. Float values require PHP float; Float32 rounds to binary32. Big integers have a 16384-decimal-digit limit.
 

@@ -43,6 +43,21 @@ Consuming calls move the original whole owner at the Lean boundary. Shares and e
 `;
 
 /**
+ * Explain callback-local owners without claiming receiver or export anchors.
+ *
+ * @param model - Checked callback-result model and its optional capabilities.
+ */
+export const ownedPhpWasmCallbackResultReadme = model => ownedPhpWasmBorrowReadme.replace(
+	"Receiver-anchored and callback-result-anchored lifetimes are not implemented by this profile."
+	, model.anchoredResults ? "This package also preserves its declared export-result anchors."
+		: "This package declares no export-result or receiver anchors."
+) + `
+Borrowed results from a generated Lean closure follow the closure argument identified by the Lean contract. Closing that original whole argument expires the returned Value, including empty containers and results with no resource leaf. Host callback replies and recovery values may be raw PHP values or matching whole Values; a whole owner stays pinned until native code has copied the reply.
+
+Generated callback resources and whole callback Values expose copyArg(index, payload) and copyResult(payload). Argument indices are zero-based and exclude the private closure parameter. These factories create independent whole Values for resource-bearing callback arguments and results. They reject copied-only selectors, foreign or closed closures, and mismatched whole Values before entering Lean.
+`;
+
+/**
  * Describe only the ownership capabilities present in this receiver package.
  *
  * @param model - Checked Zend receiver model and enabled transport features.
@@ -56,12 +71,16 @@ export const ownedPhpWasmReceiverReadme = model => {
 		return true;
 	}).map(paragraph => paragraph.replace(
 		"Receiver-anchored and callback-result-anchored lifetimes are not implemented by this profile."
-		, model.anchoredResults ? "Callback-result-anchored lifetimes are not implemented by this profile."
+		, model.callbackResultAnchors ? (model.anchoredResults
+			? "This package preserves both receiver/export anchors and callback-result anchors."
+			: "This package preserves callback-result anchors and declares no export-result anchors.")
+			: model.anchoredResults ? "Callback-result-anchored lifetimes are not implemented by this profile."
 			: "This package declares no borrowed-result anchors."
 	).replace("These mappings apply inside aggregates and callbacks.", model.hostCallbacks
 		? "These mappings apply inside aggregates and callbacks." : "These mappings apply inside aggregates."));
 	paragraphs.push(`Methods use camelCase names; properties use read-only PHP property syntax. Resources and named aggregates have nominal owners such as TicketValue and BundleValue. share(), retain() and copy_value() preserve the owner class. Public functions remain available with snake_case names. Raw resource views omit members that require an original whole owner. Property assignment and deletion reject.`);
 	paragraphs.push(`get() returns a borrowed payload. Pass a whole Value to parameters marked as whole-owner parameters in PHPDoc; pass get() to an ordinary call-scoped parameter. Closing the last shared root expires its raw resource views. retain() keeps an independent whole value. Canonical resource equality and hashes do not depend on PHP wrapper identity.`);
 	if(model.anchoredResults) paragraphs.push(`A borrowed result follows its original receiver or selected parameter owner. Closing the last shared root or consuming that owner expires borrowed descendants, including empty values and returned Lean closures. Retaining a borrowed value keeps an independent copy.`);
+	if(model.callbackResultAnchors) paragraphs.push(`A borrowed callback result follows the original whole callback argument selected by the Lean contract. Generated callback resources and whole callback Values provide copyArg() and copyResult() factories for independent owners. Host replies and recovery Values stay pinned through native handoff.`);
 	return paragraphs.join("\n\n") + "\n";
 };

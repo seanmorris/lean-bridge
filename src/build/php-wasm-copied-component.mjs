@@ -135,7 +135,8 @@ export const buildPhpWasmCopiedComponent = async options => {
 			, hostCallbacks: options.hostCallbacks
 			, transferredInputs: options.transferredInputs
 			, anchoredResults: options.anchoredResults
-			, receiverExports: options.receiverExports })
+			, receiverExports: options.receiverExports
+			, callbackResultAnchors: options.callbackResultAnchors })
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
 			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, {
@@ -143,6 +144,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 				, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 				, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 				, receiverExports: Boolean(model.ownedGraph.receiverExports)
+				, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 			});
 			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
 			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);

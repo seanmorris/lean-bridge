@@ -44,7 +44,7 @@ export const buildPhpWasmProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "PHP-Wasm output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
+	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"], targetFields: ["npm", "composer", "hostCallbacks"] });
 	const config = record.configuration.targets?.["php-wasm"] ?? {};
 	// Source-only capture admits declarations; the wasm32 compiler admits types.
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis", ownedGraphs: true });
@@ -89,7 +89,11 @@ export const buildPhpWasmProject = async options => {
 			if((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity !== expected.identity) throw new Error("Prepared PHP-Wasm runtime changed while copying");
 		} else await buildPhpWasmCopiedRuntime({ outputRoot: runtimeRoot, leanRuntimeRoot, emsdkRoot, signal });
 		onProgress?.({ phase: "build", state: "info", message: "Compiling checked PHP-Wasm Lean exports" });
-		const built = await buildPhpWasmCopiedComponent({ projectRoot: project, outputRoot: componentRoot, runtimeRoot, leanPrefix, emsdkRoot, phpSource, configurationSha256: record.sha256, lakeSnapshot: intent.lakeSnapshot, signal });
+		const built = await buildPhpWasmCopiedComponent({ projectRoot: project
+			, outputRoot: componentRoot, runtimeRoot, leanPrefix
+			, emsdkRoot, phpSource, configurationSha256: record.sha256
+			, lakeSnapshot: intent.lakeSnapshot, signal
+			, hostCallbacks: config.hostCallbacks });
 		if(inputs)
 		{
 			if(built.receipt.phpHeadersSha256 !== inputs.manifest.phpHeadersSha256) throw new Error("Prepared PHP-Wasm headers changed while staging");

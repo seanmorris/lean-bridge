@@ -183,9 +183,14 @@ export const validateExportConfiguration = configuration => {
 		{
 			if(target === "php-wasm")
 			{
-				closed(settings, ["npm", "composer"], "targets.php-wasm");
+				closed(settings, ["npm", "composer", "hostCallbacks"], "targets.php-wasm");
 				for(const [ecosystem, values] of Object.entries(settings))
 				{
+					if(ecosystem === "hostCallbacks")
+					{
+						if(typeof values !== "boolean") fail("invalid-export-configuration", "targets.php-wasm.hostCallbacks must be Boolean");
+						continue;
+					}
 					closed(values, ["name", "version"], `targets.php-wasm.${ecosystem}`);
 					try
 					{

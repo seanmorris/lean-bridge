@@ -135,11 +135,25 @@ export const ownedZendBorrowFiles = model => {
 	const files = { ...model.files };
 	if(!model.anchoredResults && !model.wholeOwners) return files;
 	const namespace = `\\${model.namespace}`;
-	const native = model.receiverExports ? ownedPhpReceiverOwners(model.namespace, model.types, model.functions)
-		: { value: ownedPhpBorrowValue, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
+	const callbackValue = source => !model.callbackResultAnchors ? source : source.replace(
+		"    public function __invoke(mixed ...$arguments): mixed"
+		, String.raw`    public function copyArg(mixed $index, mixed $value): Value {
+        if (\func_num_args() !== 2 || !\is_int($index)) throw new \TypeError('copyArg requires an argument index and value');
+        return Internal\Native::copyCallback($this, $index, $value);
+    }
+    public function copyResult(mixed $value): Value {
+        if (\func_num_args() !== 1) throw new \ArgumentCountError('copyResult requires one value');
+        return Internal\Native::copyCallback($this, null, $value);
+    }
+    public function __invoke(mixed ...$arguments): mixed`);
+	const nativeValue = callbackValue(ownedPhpBorrowValue), zendValue = callbackValue(ownedZendBorrowValue);
+	const native = model.receiverExports ? ownedPhpReceiverOwners(model.namespace, model.types, model.functions, {
+		valueSource: nativeValue, callbackResultAnchors: model.callbackResultAnchors
+	}) : { value: nativeValue, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
 	const zend = model.receiverExports ? ownedPhpReceiverOwners(model.namespace, model.types, model.functions, {
-		valueSource: ownedZendBorrowValue, accessSource: ownedZendBorrowAccess
-	}) : { value: ownedZendBorrowValue, access: ownedZendBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
+		valueSource: zendValue, accessSource: ownedZendBorrowAccess
+		, callbackResultAnchors: model.callbackResultAnchors
+	}) : { value: zendValue, access: ownedZendBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
 	files["src/Api.php"] = replace(files["src/Api.php"], native.value, zend.value);
 	files["src/Internal/Values.php"] = replace(files["src/Internal/Values.php"], native.access, zend.access);
 	files["src/Internal/Values.php"] = files["src/Internal/Values.php"]
@@ -178,6 +192,8 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
 		parameters[`${fn.publicName}/${index}`] = nodes.get(id).index;
 		parameters[`${fn.publicName}/${fn.publicParameters[index]}`] = nodes.get(id).index;
 	}
+	const ownedTypes = Object.fromEntries(model.types.filter(node => node.representation !== "copied")
+		.map(node => [node.index, true]));
 	source = replace(source, "    // The Zend resource destructor handles implicit release", String.raw`    public function sameIdentity(self $other): bool {
         $this->check(); $other->check();
         return $this->type === $other->type && Native::sameIdentity($this->type, $this->resource, $other->resource);
@@ -186,6 +202,7 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
 	source = replace(source, "    private static int $depth = 0;", `    private const NOMINALS = ${literal(nominals)};
     private const RESULTS = ${literal(results)};
     private const PARAMETERS = ${literal(parameters)};
+    private const OWNED_TYPES = ${literal(ownedTypes)};
     private static int $depth = 0;`);
 	source = replace(source, "    private static function malformed(GraphInvalidWire $error): never {", String.raw`    public static function owner(string $entry, int $type, mixed $owner): mixed {
         self::main();
@@ -218,7 +235,63 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
         if ($value instanceof @NAMESPACE@\Value) { ValueAccess::snapshot($value, $type); return $value->retain(); }
         return self::copyTyped($type, $value);
     }
-    private static function malformed(GraphInvalidWire $error): never {`);
+${model.callbackResultAnchors ? String.raw`    public static function copyCallback(mixed $closure, ?int $index, mixed $value): @NAMESPACE@\Value {
+        self::main(); $whole = $closure;
+        if ($closure instanceof @NAMESPACE@\Value) [, , $closure] = ValueAccess::snapshot($closure);
+        if (!$closure instanceof Resource) throw new \TypeError('Expected an authentic generated Lean closure');
+        $binding = ResourceAccess::binding($closure);
+        if (!$binding instanceof ZendBinding) throw new \TypeError('Expected a Zend Lean closure');
+        $callbackType = GraphTypes::IDENTITIES[$closure::class] ?? null;
+        $signature = $callbackType === null ? null : (self::CALLBACKS[$callbackType] ?? null);
+        if ($signature === null) throw new \TypeError('Expected an authentic generated Lean closure');
+        $type = $index === null ? $signature['result'] : ($signature['parameters'][$index + 1] ?? null);
+        if ($type === null || !isset(self::OWNED_TYPES[$type]))
+            throw new \TypeError('Callback selector requires a resource-bearing argument or result');
+        if ($value instanceof @NAMESPACE@\Value) { ValueAccess::snapshot($value, $type); return $value->retain(); }
+        return self::copyTyped($type, $value);
+    }
+` : ""}    private static function malformed(GraphInvalidWire $error): never {`);
+	if(model.callbackResultAnchors && model.hostCallbacks !== false)
+	{
+		source = replace(source, String.raw`        $signature = self::CALLBACKS[$type];
+        $explicit = $value instanceof @NAMESPACE@\WithRecovery;
+        $fallback = $explicit ? $value->value : null; $value = $explicit ? $value->callback : $value;
+        if ($value instanceof Resource) {
+            if ($explicit) throw new \TypeError('A returned Lean closure does not accept a PHP recovery wrapper');
+            $frame->check($type, $value); return ['closure' => $value];
+        }`, String.raw`        $signature = self::CALLBACKS[$type];
+        $explicit = $value instanceof @NAMESPACE@\WithRecovery;
+        $fallback = $explicit ? $value->value : null; $value = $explicit ? $value->callback : $value;
+        $native = $value;
+        if ($native instanceof @NAMESPACE@\Value) [, , $native] = ValueAccess::snapshot($native, $type);
+        if ($native instanceof Resource) {
+            if ($explicit) throw new \TypeError('A returned Lean closure does not accept a PHP recovery wrapper');
+            $frame->check($type, $native); return ['closure' => $value];
+        }`);
+		source = replace(source, "        if ($explicit) $frame->check($signature['result'], $fallback);", String.raw`        if ($explicit) {
+            $checked = $fallback;
+            if ($signature['anchor'] !== null && $checked instanceof @NAMESPACE@\Value)
+                [, , $checked] = ValueAccess::snapshot($checked, $signature['result']);
+            $frame->check($signature['result'], $checked);
+        }`);
+		source = replace(source, "        if (isset($prepared['closure'])) return GraphWire::transfer($type, $prepared['closure'], false, $frame->writing);", String.raw`        if (isset($prepared['closure'])) {
+            $closure = $prepared['closure'];
+            if ($closure instanceof @NAMESPACE@\Value) [, , $closure] = ValueAccess::snapshot($closure, $type);
+            return GraphWire::transfer($type, $closure, false, $frame->writing);
+        }`);
+		source = replace(source, String.raw`                $reply = $callback(...$arguments);
+                $frame->check($signature['result'], $reply);
+                return GraphWire::transfer($signature['result'], $reply, false, $frame->writing);`, String.raw`                $reply = $callback(...$arguments); $owner = null;
+                if ($signature['anchor'] !== null && $reply instanceof @NAMESPACE@\Value)
+                    [$owner, , $reply] = ValueAccess::snapshot($reply, $signature['result']);
+                $frame->check($signature['result'], $reply);
+                $wire = GraphWire::transfer($signature['result'], $reply, false, $frame->writing);
+                return $owner === null ? $wire : ['owner' => $owner, 'value' => $wire];`);
+		source = replace(source, "        $fallback = $prepared['explicit'] ? GraphWire::transfer($signature['result'], $prepared['fallback'], false, $frame->writing) : null;", String.raw`        $fallback = $prepared['fallback'];
+        if ($prepared['explicit'] && $signature['anchor'] !== null && $fallback instanceof @NAMESPACE@\Value)
+            [, , $fallback] = ValueAccess::snapshot($fallback, $signature['result']);
+        $fallback = $prepared['explicit'] ? GraphWire::transfer($signature['result'], $fallback, false, $frame->writing) : null;`);
+	}
 	source = replace(source, "        $frame = new ZendFrame(); $prepared = [];", String.raw`        $frame = new ZendFrame(); $prepared = []; $owners = []; $wholeInputs = [];
         $unpublishedOwner = null; $wire = null; $payload = null;
         foreach ($fn['wholeParameters'] as $position) {

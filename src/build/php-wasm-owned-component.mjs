@@ -23,9 +23,10 @@ import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from "./php
 export const generateCompiledPhpWasmOwned = (model, metadata, adapters) => {
 	const anchoredResults = Boolean(model.ownedGraph?.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph?.receiverExports);
+	const callbackResultAnchors = Boolean(model.ownedGraph?.callbackResultAnchors);
 	const hostCallbacks = Boolean(model.ownedGraph?.hostCallbacks);
-	const wholeOwners = anchoredResults || receiverExports;
-	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults, receiverExports, hostCallbacks };
+	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
+	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
 	if(canonicalJson(createOwnedPhpWasmModel(inputs)) !== canonicalJson(model)
 		|| canonicalJson(generateOwnedPhpWasmLeanAdapters(model)) !== canonicalJson(adapters))
 		throw new TypeError("PHP-Wasm ownership sources differ from compiler inputs");
@@ -34,13 +35,14 @@ export const generateCompiledPhpWasmOwned = (model, metadata, adapters) => {
 	const extension = generateOwnedPhpZendExtension(native), php = generateOwnedPhpZendPhp(extension.model);
 	if(native.carriers.leanSource !== adapters.leanSource || native.carriers.module !== adapters.module)
 		throw new TypeError("PHP-Wasm ownership carrier source drift");
-	const manifest = { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	const manifest = { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, profile: "php-wasm-owned-zend-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, layoutSha256: extension.model.layoutSha256
 		, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 		, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 		, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
+		, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}
 		, integerBits: 32, wordBits: 32, namespace: extension.model.namespace
 		, extension: extension.model.stem
 		, phpFiles: Object.keys(php).sort()
@@ -60,11 +62,12 @@ export const generateCompiledPhpWasmOwned = (model, metadata, adapters) => {
 	return { files, manifest, zendManifestPath: "owned-zend-manifest.json"
 		, allocationGuard: "owned/allocation-guard.h"
 		, sources: [...hostCallbacks ? ["owned/callbacks.c"] : [], `extension/${manifest.extension}.c`]
-		, receipt: { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+		, receipt: { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 			, transport: "owned-zend-v1"
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 			, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
+			, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}
 			, layoutSha256: manifest.layoutSha256
 			, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) } };
 };
