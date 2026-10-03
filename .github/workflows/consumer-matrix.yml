@@ -1395,6 +1395,59 @@ jobs:
         if: steps.consumer.outcome != 'success'
         run: exit 1
 
+  owned-php-callback-results:
+    name: Native PHP callback-result runtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install native PHP callback tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl libgmp-dev libuv1-dev pkg-config php-cli php-common unzip zstd ripgrep
+          npm ci --ignore-scripts
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
+            sudo phpdismod -s cli xdebug
+          fi
+      - name: Execute ordinary and reviewed native callback-result shapes
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_PHP="$(command -v php)"
+          source scripts/env.sh
+          mkdir -p build
+          npm run test:owned-php-callback-results 2>&1 | tee build/owned-php-callback-results.log
+          rg '^# tests 12$' build/owned-php-callback-results.log
+          rg '^# pass 12$' build/owned-php-callback-results.log
+          rg '^# fail 0$' build/owned-php-callback-results.log
+          rg '^# cancelled 0$' build/owned-php-callback-results.log
+          rg '^# skipped 0$' build/owned-php-callback-results.log
+          for mode in ordinary reviewed; do
+            for variant in no-host host combined; do
+              test -s "build/owned-php-callback-results/$mode-$variant.json"
+            done
+          done
+      - name: Preserve native callback-result observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-php-callback-results-${{ github.sha }}
+          path: |
+            build/owned-php-callback-results/
+            build/owned-php-callback-results.log
+            build/owned-aggregate-native/php-callback-results-*-inputs.json
+          if-no-files-found: warn
+          retention-days: 30
+
   php-receivers:
     name: Native PHP receiver methods and properties
     runs-on: ubuntu-24.04
@@ -3639,6 +3692,7 @@ jobs:
       - owned-dotnet-callback-results
       - owned-jvm-callback-results
       - owned-perl-callback-results
+      - owned-php-callback-results
       - owned-python-callback-results
       - owned-rust-callback-results
       - owned-callback-results
@@ -3697,6 +3751,9 @@ jobs:
         run: exit 1
       - name: Enforce Perl callback-result acceptance
         if: needs.owned-perl-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce native PHP callback-result runtime
+        if: needs.owned-php-callback-results.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance
         if: needs.owned-python-callback-results.result != 'success'

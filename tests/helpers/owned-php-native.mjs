@@ -26,13 +26,16 @@ export const compileOwnedPhpFixture = async (t, options = {}) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
 	const transferredInputs = Boolean(options.transferredInputs);
 	const anchoredResults = Boolean(options.anchoredResults);
+	const callbackResultAnchors = Boolean(options.callbackResultAnchors);
 	const receiverExports = Boolean(options.receiverExports);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component
-		, hostCallbacks, transferredInputs, anchoredResults, receiverExports
+		, hostCallbacks, transferredInputs, anchoredResults
+		, callbackResultAnchors, receiverExports
+		, valueCopies: callbackResultAnchors
 		, identityEquality: receiverExports });
-	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { hostCallbacks, transferredInputs, anchoredResults, callbackResultAnchors, receiverExports });
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const implementation = `#include <stdlib.h>
@@ -57,7 +60,7 @@ size_t owned_test_identities(void) {
 `;
 	for(const [path, source] of Object.entries(c.files))
 		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "public-api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : source);
-	await runCopied("/usr/bin/cc", ["-std=c11", "-O1", "-g", "-Wall"
+	const compilerArguments = ["-std=c11", "-O1", "-g", "-Wall"
 		, "-Wextra", "-Werror", "-fPIC", "-shared"
 		, "-I", join(compiled.directory, "runtime/include")
 		, "public-api.c", "Owned.o", "Carriers.o", "Witness.o"
@@ -65,7 +68,8 @@ size_t owned_test_identities(void) {
 		, "-L", join(compiled.directory, "runtime/lib")
 		, "-llean_bridge_native", "-lleanshared", "-lgmp"
 		, "-Wl,-rpath," + join(compiled.directory, "runtime/lib")
-		, "-o", "libowned-php.so"], compiled.directory, { PATH: "/usr/bin:/bin" });
+		, "-o", "libowned-php.so"];
+	const compilation = await runCopied("/usr/bin/cc", compilerArguments, compiled.directory, { PATH: "/usr/bin:/bin" });
 	await copyFile(join(compiled.directory, "libowned-php.so"), join(compiled.directory, "runtime/lib/libowned-php.so"));
 	for(const [path, source] of Object.entries({ ...model.files, ...bundledBrickMath() })) await saveLakeFile(compiled.directory, path, source);
 	await saveLakeFile(compiled.directory, "loader.php", copiedPhpLoader);
@@ -88,5 +92,6 @@ size_t owned_test_identities(void) {
 		const result = await runCopied(process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php", ["-d", "ffi.enable=1", "-d", "display_errors=stderr", "consumer.php", mode], compiled.directory);
 		assert.equal(result.stderr, ""); return JSON.parse(result.stdout);
 	};
-	return { ...compiled, model, implementation, helpers, execute };
+	return { ...compiled, model, implementation, helpers, execute
+		, compilation: { command: "/usr/bin/cc", args: compilerArguments, cwd: compiled.directory, env: { PATH: "/usr/bin:/bin" }, result: compilation } };
 };

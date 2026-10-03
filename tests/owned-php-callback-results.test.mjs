@@ -1,5 +1,5 @@
 /**
- * Callback-local PHP owners and factories, without native Lean build claims.
+ * Callback-local PHP generators, factories and opt-in real Lean execution.
  *
  * @file
  */
@@ -18,6 +18,7 @@ import { ownedRustReceiverReviewedIr } from "./helpers/owned-rust-receiver-fixtu
 import { ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultCombinedReviewedIr } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import "./helpers/owned-php-callback-result-runtime-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_PHP_CALLBACK_RESULT_TEST === "1";
 const combinedOptions = { transferredInputs: true, anchoredResults: true, receiverExports: true };

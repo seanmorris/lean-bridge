@@ -572,6 +572,7 @@ const profileManifest = Object.freeze({
 		, "owned-perl-documentation"
 		, "owned-php-values", "owned-php-runtime", "owned-php-conversions"
 		, "owned-php-calls", "owned-php-package", "owned-php-packaging"
+		, "owned-php-callback-results"
 		, "owned-php-transfers", "owned-php-transfer-packaging"
 		, "owned-php-borrows", "owned-php-borrow-packaging"
 		, "owned-php-borrow-documentation"
