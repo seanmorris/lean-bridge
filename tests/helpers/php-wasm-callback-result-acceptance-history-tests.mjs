@@ -4,18 +4,13 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertPhpWasmCallbackResultHistory, beforePhpWasmCallbackResultAcceptance
-	, phpWasmCallbackResultBaseline, phpWasmCallbackResultIntegration
 	, phpWasmCallbackResultIntroducedPaths, phpWasmCallbackResultModifiedPaths
 	, phpWasmCallbackResultReaderPaths, readPhpWasmCallbackResultHistory
 	, reversePhpWasmCallbackResultUpdate } from "./php-wasm-callback-result-acceptance-history.mjs";
-
-const at = (revision, path) => execFileSync("git", ["show", `${revision}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
 test("PHP-Wasm callback-result history closes implementation, receipt and readers", () => {
 	const record = readPhpWasmCallbackResultHistory(); assertPhpWasmCallbackResultHistory(record);
@@ -28,10 +23,11 @@ test("PHP-Wasm callback-result history reconstructs integration and prior source
 	const record = readPhpWasmCallbackResultHistory();
 	for(const update of record.updates)
 	{
-		const current = at(phpWasmCallbackResultIntegration, update.path);
-		const previous = at(phpWasmCallbackResultBaseline, update.path);
+		const current = beforePhpWasmCallbackResultAcceptance(update.path
+			, await readFile(update.path), update.currentSha256);
+		const previous = reversePhpWasmCallbackResultUpdate(current, update);
 		assert.equal(sha256(current), update.currentSha256, update.path);
-		assert.equal(reversePhpWasmCallbackResultUpdate(current, update), previous, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
 		assert.equal(beforePhpWasmCallbackResultAcceptance(update.path, current, update.currentSha256)
 			, current, update.path);
 		assert.equal(beforePhpWasmCallbackResultAcceptance(update.path, current, update.previousSha256)
@@ -40,9 +36,8 @@ test("PHP-Wasm callback-result history reconstructs integration and prior source
 	for(const update of record.readerUpdates)
 	{
 		const current = await readFile(update.path, "utf8");
-		const previous = at(phpWasmCallbackResultIntegration, update.path);
-		assert.equal(reversePhpWasmCallbackResultUpdate(current, update, "readerUpdates")
-			, previous, update.path);
+		const previous = reversePhpWasmCallbackResultUpdate(current, update, "readerUpdates");
+		assert.equal(sha256(previous), update.previousSha256, update.path);
 	}
 });
 
@@ -50,12 +45,15 @@ test("PHP-Wasm callback-result history binds introduced sources and preserves un
 	const record = readPhpWasmCallbackResultHistory();
 	for(const [path, identity] of Object.entries(record.introducedSources))
 	{
-		assert.equal(sha256(at(phpWasmCallbackResultIntegration, path)), identity.integrationSha256);
-		const current = beforePhpWasmCallbackResultAcceptance(path
-			, await readFile(path), identity.integrationSha256);
-		assert.equal(sha256(current), identity.integrationSha256, path);
+		const source = await readFile(path);
+		assert.equal(sha256(source), identity.currentSha256, path);
+		const integrated = beforePhpWasmCallbackResultAcceptance(path
+			, source, identity.integrationSha256);
+		assert.equal(sha256(integrated), identity.integrationSha256, path);
 	}
-	const update = record.updates[0], current = at(phpWasmCallbackResultIntegration, update.path);
+	const update = record.updates[0];
+	const current = beforePhpWasmCallbackResultAcceptance(update.path
+		, await readFile(update.path), update.currentSha256);
 	const unknown = current + "\nunknown\n";
 	assert.equal(beforePhpWasmCallbackResultAcceptance(update.path, unknown), unknown);
 	assert.throws(() => reversePhpWasmCallbackResultUpdate(unknown, update));

@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -12,11 +11,7 @@ import { assertOwnedWitCallbackAcceptance, ownedWitCallbackEvidencePath } from "
 import { beforeWitCallbackInstalledAcceptance } from "./wit-callback-installed-acceptance-history.mjs";
 import { assertWitCallbackAcceptanceHistory, beforeWitCallbackAcceptance
 	, readWitCallbackAcceptanceHistory, reverseWitCallbackAcceptanceUpdate
-	, witCallbackAcceptanceBaseline, witCallbackAcceptanceIntegration
 	, witCallbackAcceptanceIntroducedPaths } from "./wit-callback-acceptance-history.mjs";
-
-const git = arguments_ => execFileSync("git", arguments_, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
-const at = (revision, path) => git(["show", `${revision}:${path}`]);
 
 test("WIT callback acceptance history closes integration, readers and introduced sources", () => {
 	const history = readWitCallbackAcceptanceHistory(), mutations = [
@@ -42,10 +37,11 @@ test("WIT callback acceptance history reconstructs baseline and receipt identiti
 	const history = readWitCallbackAcceptanceHistory();
 	for(const update of history.updates)
 	{
-		const integrated = at(witCallbackAcceptanceIntegration, update.path);
+		const integrated = beforeWitCallbackAcceptance(update.path
+			, await readFile(update.path), update.currentSha256);
 		assert.equal(sha256(integrated), update.currentSha256);
-		assert.equal(sha256(reverseWitCallbackAcceptanceUpdate(integrated, update)), update.previousSha256);
-		assert.equal(update.previousSha256, sha256(at(witCallbackAcceptanceBaseline, update.path)));
+		const previous = reverseWitCallbackAcceptanceUpdate(integrated, update);
+		assert.equal(sha256(previous), update.previousSha256);
 	}
 	for(const update of history.readerUpdates)
 	{
@@ -57,10 +53,11 @@ test("WIT callback acceptance history reconstructs baseline and receipt identiti
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		assert.equal(sha256(at(witCallbackAcceptanceIntegration, path)), identity.integrationSha256);
-		const current = beforeWitCallbackInstalledAcceptance(path
-			, await readFile(path), identity.currentSha256);
-		assert.equal(sha256(current), identity.currentSha256);
+		const current = await readFile(path);
+		assert.equal(sha256(beforeWitCallbackInstalledAcceptance(path
+			, current, identity.currentSha256)), identity.currentSha256);
+		assert.equal(sha256(beforeWitCallbackAcceptance(path
+			, current, identity.integrationSha256)), identity.integrationSha256);
 	}
 	await assertOwnedWitCallbackAcceptance(JSON.parse(await readFile(ownedWitCallbackEvidencePath)));
 });

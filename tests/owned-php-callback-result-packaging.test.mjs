@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, rename, rm, statfs } from "node:fs/promises";
+import { access, cp, mkdir, mkdtemp, readFile, realpath, rename, rm, statfs } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -102,7 +102,8 @@ test(`installed Composer callback-result owners (${mode}, ${variant})`, {
 		const candidate = await buildCliNpmPackage({ outputRoot: join(directory, "cli") });
 		report.cli = candidate.report;
 		await saveLakeFile(author, "package.json", canonicalJson({ private: true }));
-		await capture("/usr/bin/npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", candidate.archive], author
+		const npm = await realpath(join(process.execPath, "../../bin/npm"));
+		await capture(process.execPath, [npm, "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", candidate.archive], author
 			, { PATH: "/usr/bin:/bin", npm_config_cache: join(directory, "npm-cache") });
 		const cliRoot = join(author, "node_modules", candidate.report.package.name), cli = join(author, "node_modules/.bin/lean-bridge");
 		for(const file of candidate.report.files) assert.deepEqual(identity(await readFile(join(cliRoot, file.path))), { bytes: file.bytes, sha256: file.sha256 });

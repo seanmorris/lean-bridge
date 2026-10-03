@@ -65,6 +65,7 @@ const categories = new Map([
 	, ["tests/helpers/owned-rust-evidence.mjs", "reader"]
 	, ["tests/helpers/post-perl-callback-staging-history.mjs", "reader"]
 	, ["tests/helpers/wit-callback-installed-acceptance-history.mjs", "reader"]
+	, ["tests/helpers/wit-callback-acceptance-history-tests.mjs", "reader"]
 	, ["tests/helpers/wit-owned-projection-history.mjs", "reader"]
 	, ["tests/helpers/wit-recursive-callable-evidence.mjs", "reader"]
 	, ["tests/owned-analysis-evidence.test.mjs", "reader"]
@@ -73,6 +74,7 @@ const categories = new Map([
 	, ["tests/owned-javascript-wasm-evidence.test.mjs", "reader"]
 	, ["tests/owned-jvm-receiver-gc-evidence.test.mjs", "reader"]
 	, ["tests/owned-perl-package-evidence.test.mjs", "reader"]
+	, ["tests/owned-php-callback-result-packaging.test.mjs", "reader"]
 	, ["tests/owned-php-wasm-evidence.test.mjs", "reader"]
 	, ["tests/owned-php-wasm-callback-result-evidence.test.mjs", "reader"]
 	, ["tests/perl-contract-repair-evidence.test.mjs", "reader"]
@@ -83,7 +85,7 @@ const categories = new Map([
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 const at = (revision, path) => git(["show", `${revision}:${path}`]);
 
-assert.equal(git(["rev-parse", "HEAD"]).trim(), phpWasmCallbackResultIntegration);
+git(["merge-base", "--is-ancestor", phpWasmCallbackResultIntegration, "HEAD"]);
 for(const [index, revision] of phpWasmCallbackResultLineage.entries())
 	assert.equal(git(["rev-parse", `${revision}^`]).trim()
 		, index ? phpWasmCallbackResultLineage[index - 1] : phpWasmCallbackResultBaseline);

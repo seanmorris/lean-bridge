@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "22223055144b5427ca411afd4e473e8cb3acd4f975d47927de83b36511d0540b";
+export const phpWasmCallbackResultHistorySha256 = "ffdd861a64f1fd74f240edd7d950586b7f935787e01908e77e1f5e6fac95ae7b";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -84,6 +84,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/helpers/owned-rust-evidence.mjs"
 	, "tests/helpers/post-perl-callback-staging-history.mjs"
 	, "tests/helpers/wit-callback-installed-acceptance-history.mjs"
+	, "tests/helpers/wit-callback-acceptance-history-tests.mjs"
 	, "tests/helpers/wit-owned-projection-history.mjs"
 	, "tests/helpers/wit-recursive-callable-evidence.mjs"
 	, "tests/owned-analysis-evidence.test.mjs"
@@ -92,6 +93,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/owned-javascript-wasm-evidence.test.mjs"
 	, "tests/owned-jvm-receiver-gc-evidence.test.mjs"
 	, "tests/owned-perl-package-evidence.test.mjs"
+	, "tests/owned-php-callback-result-packaging.test.mjs"
 	, "tests/owned-php-wasm-evidence.test.mjs"
 	, "tests/owned-php-wasm-callback-result-evidence.test.mjs"
 	, "tests/perl-contract-repair-evidence.test.mjs"
@@ -144,6 +146,7 @@ const categories = Object.freeze({
 	, "tests/helpers/owned-rust-evidence.mjs": "reader"
 	, "tests/helpers/post-perl-callback-staging-history.mjs": "reader"
 	, "tests/helpers/wit-callback-installed-acceptance-history.mjs": "reader"
+	, "tests/helpers/wit-callback-acceptance-history-tests.mjs": "reader"
 	, "tests/helpers/wit-owned-projection-history.mjs": "reader"
 	, "tests/helpers/wit-recursive-callable-evidence.mjs": "reader"
 	, "tests/owned-analysis-evidence.test.mjs": "reader"
@@ -152,6 +155,7 @@ const categories = Object.freeze({
 	, "tests/owned-javascript-wasm-evidence.test.mjs": "reader"
 	, "tests/owned-jvm-receiver-gc-evidence.test.mjs": "reader"
 	, "tests/owned-perl-package-evidence.test.mjs": "reader"
+	, "tests/owned-php-callback-result-packaging.test.mjs": "reader"
 	, "tests/owned-php-wasm-evidence.test.mjs": "reader"
 	, "tests/owned-php-wasm-callback-result-evidence.test.mjs": "reader"
 	, "tests/perl-contract-repair-evidence.test.mjs": "reader"
