@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
+import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforePostPerlCallbackStaging, postPerlCallbackChangedPaths
 	, postPerlCallbackHistoryPath, postPerlCallbackHistorySha256
 	, readPostPerlCallbackHistory, reversePostPerlCallbackUpdate } from "./post-perl-callback-staging-history.mjs";
@@ -59,7 +60,7 @@ test("post-Perl staging preserves completed receipts and type-surface support wh
 	const history = readPostPerlCallbackHistory();
 	for(const predecessor of [history.previous, history.completedPredecessor])
 		assert.equal(sha256(await readFile(predecessor.path)), predecessor.sha256);
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforePerlCallbackVariants(path, await readFile(path, "utf8"));
 	const prior = JSON.parse(beforePostPerlCallbackStaging(path, current));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, await readFile(file.path)));

@@ -597,8 +597,12 @@ back to Lean.
 
 The [Perl callback-result evidence](../evidence/owned-perl-callback-results-20261003.md)
 records direct-runtime checks and installed combined-capability CPAN packages.
-Native-only and host-only installed variants remain to be validated. This
-receipt does not promote the versioned type-conversion table below.
+The [optional installed extension](../evidence/owned-perl-callback-result-variants-20261003.md)
+also validates ordinary-source and reviewed-IR no-host and host-only packages
+on four pinned Perl ABIs, using both prebuilt-only and build-XS installation.
+The no-host producer uses the installed native build API, not a CLI build flag.
+Neither receipt promotes the versioned type-conversion table below or claims
+installed native allocation counters.
 
 ### Methods and properties
 

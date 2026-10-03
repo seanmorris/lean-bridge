@@ -74,6 +74,8 @@ export const ownedPerlCallbackScope = frozen({
 });
 
 const helper = name => `tests/helpers/owned-perl-callback-result-${name}.mjs`;
+const originalReports = ownedPerlCallbackResultReports.filter(path => !path.startsWith("build/owned-perl-callback-result-variants/"));
+const originalEvidence = ownedPerlCallbackEvidencePaths.filter(path => path !== helper("variant-evidence-tests"));
 const addedPaths = [
 	ownedPerlCallbackHistoryPath
 	, "docs/evidence/owned-perl-callback-results-20261003.md"
@@ -170,7 +172,7 @@ const passed = (run, count, titles) => {
  * @param readSource - Current source or independently authenticated historical bytes.
  */
 export const assertOwnedPerlCallbackReport = async (path, item, readSource = readFile) => {
-	assert.ok(ownedPerlCallbackResultReports.includes(path), path);
+	assert.ok(originalReports.includes(path), path);
 	const name = path.split("/").at(-1), mode = name.startsWith("ordinary") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
 	if(name.endsWith("-combined-release.json")) return assertOwnedPerlCallbackCombinedRelease(name, item, readSource);
@@ -215,11 +217,11 @@ export const assertOwnedPerlCallbackAcceptance = async record => {
 	}
 	keys(record.verification, "command exitCode sha256 text");
 	assert.equal(record.verification.command, "npm run test:owned-perl-callback-evidence");
-	passed(record.verification, 14, await literalTitles([...ownedPerlCallbackEvidencePaths].sort()));
+	passed(record.verification, 14, await literalTitles([...originalEvidence].sort()));
 	keys(record.archive, "format nodes reports");
 	for(const entry of Object.values(record.archive.reports)) keys(entry, "bytes sha256 data");
 	const reports = unpackOwnedCallbackReports(record.archive);
-	assert.deepEqual(Object.keys(reports).sort(), [...ownedPerlCallbackResultReports].sort());
+	assert.deepEqual(Object.keys(reports).sort(), [...originalReports].sort());
 	for(const [path, item] of Object.entries(reports)) await assertOwnedPerlCallbackReport(path, item, readSource);
-	assertOwnedPerlCallbackResultCi((await readSource(".github/workflows/consumer-matrix.yml")).toString(), JSON.parse(await readSource("package.json")));
+	assertOwnedPerlCallbackResultCi((await readSource(".github/workflows/consumer-matrix.yml")).toString(), JSON.parse(await readSource("package.json")), true);
 };

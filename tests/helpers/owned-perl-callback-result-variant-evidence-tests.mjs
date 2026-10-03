@@ -13,12 +13,22 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertOwnedPerlCallbackVariant, assertOwnedPerlCallbackVariantMatrix
 	, ownedPerlCallbackVariantReports } from "./owned-perl-callback-result-variant-evidence.mjs";
 import { assertOwnedPerlCallbackVariantHandoff, readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
+import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST === "1";
 const directory = process.env.LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_VARIANT_REPORTS ?? "build/owned-perl-callback-result-variants";
 const reports = async () => Object.fromEntries(await Promise.all(ownedPerlCallbackVariantReports.map(async name =>
 	[name, JSON.parse(await readFile(join(directory, name), "utf8"))])));
-const source = readFile;
+let recordedSources;
+const source = async path => {
+	if(!recordedSources)
+	{
+		const first = (await reports())[ownedPerlCallbackVariantReports[0]];
+		recordedSources = new Map(first.cli.files.map(value => [value.path, value.sha256]));
+	}
+	const bytes = await readFile(path), expected = recordedSources.get(path);
+	return expected ? beforePostPerlCallbackStaging(path, bytes, expected) : bytes;
+};
 const first = item => item.observations[0];
 const xs = item => item.observations[1];
 const zero = "0".repeat(64);
@@ -136,14 +146,17 @@ test("Perl optional CPAN evidence rejects partial matrices, false capabilities a
 			// Adding the already-present correct host phase is not a mutation.
 			if(label === "host phase and raw" && report.variant === "host") continue;
 			const altered = structuredClone(report); change(altered);
+			assert.notEqual(JSON.stringify(altered), JSON.stringify(report), `${name}: ${label}`);
 			await assert.rejects(() => assertOwnedPerlCallbackVariant(name, altered, source), undefined, `${name}: ${label}`); rejected++;
 		}
 		await assert.rejects(() => assertOwnedPerlCallbackVariant(name + ".unrecorded", report, source)); rejected++;
 		for(const other of ownedPerlCallbackVariantReports.filter(value => value !== name))
 		{ await assert.rejects(() => assertOwnedPerlCallbackVariant(other, report, source)); rejected++; }
 		const incomplete = { ...original }; delete incomplete[name];
+		assert.notEqual(JSON.stringify(incomplete), JSON.stringify(original));
 		await assert.rejects(() => assertOwnedPerlCallbackVariantMatrix(incomplete, source)); rejected++;
 		const additional = { ...original, "preliminary-failed.json": report };
+		assert.notEqual(JSON.stringify(additional), JSON.stringify(original));
 		await assert.rejects(() => assertOwnedPerlCallbackVariantMatrix(additional, source)); rejected++;
 		await assert.rejects(() => assertOwnedPerlCallbackVariant(name, report, async path => {
 			const bytes = await source(path); return path === "src/backends/perl/Build.pm" ? Buffer.concat([Buffer.from(bytes), Buffer.from("\nchanged source\n")]) : bytes;
@@ -155,6 +168,7 @@ test("Perl optional CPAN evidence rejects partial matrices, false capabilities a
 			{
 				run.response.capabilities.ownedHostCallbacks = true; run.stdout = canonicalJson(run.response);
 			}
+			assert.notEqual(JSON.stringify(altered), JSON.stringify(report));
 			await assert.rejects(() => assertOwnedPerlCallbackVariant(name, altered, source)); rejected++;
 		}
 	}
@@ -177,6 +191,7 @@ test("Perl optional CPAN evidence rejects partial matrices, false capabilities a
 		altered.fill(32, 148, 156);
 		const checksum = altered.subarray(0, 512).reduce((sum, byte) => sum + byte, 0);
 		altered.write(checksum.toString(8).padStart(6, "0") + "\0 ", 148, "ascii");
+		assert.equal(altered.equals(tar), false);
 		assert.throws(() => readOwnedPerlCallbackVariantTar(gzipSync(altered), "LeanBridge-OwnedProbe-0.010")); rejected++;
 	}
 	const blockSize = offset => 512 + Math.ceil(Number.parseInt(tar.subarray(offset + 124, offset + 136).toString(), 8) / 512) * 512;
@@ -192,6 +207,7 @@ test("Perl optional CPAN evidence rejects partial matrices, false capabilities a
 	];
 	for(const changedTar of malformed)
 	{
+		assert.equal(changedTar.equals(tar), false);
 		const altered = structuredClone(item), archive = gzipSync(changedTar);
 		Object.assign(altered.packageSetReceipt.packages[0].artifacts[0], { bytes: archive.length, sha256: sha256(archive) });
 		const receipt = Buffer.from(canonicalJson(altered.packageSetReceipt));

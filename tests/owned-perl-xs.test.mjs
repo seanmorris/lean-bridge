@@ -34,6 +34,9 @@ import "./helpers/owned-perl-callback-result-installed-smoke.mjs";
 import "./helpers/owned-perl-callback-result-history-tests.mjs";
 import "./helpers/owned-perl-callback-result-ci-tests.mjs";
 import "./helpers/owned-perl-callback-result-acceptance-tests.mjs";
+import "./helpers/owned-perl-callback-result-variant-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-variant-history-tests.mjs";
+import "./helpers/owned-perl-callback-result-variant-acceptance-tests.mjs";
 
 const fixtures = {
 	callbacks: ownedHostCallbackReviewedIr

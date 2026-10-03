@@ -18,8 +18,8 @@ import { ownedPerlCallbackExecutionPaths, ownedPerlCallbackEvidencePaths } from 
 const receipt = async () => JSON.parse(await readFile(ownedPerlCallbackEvidencePath, "utf8"));
 test("Perl acceptance covers the execution and verifier import closure", async () => {
 	const paths = new Set(await ownedPerlCallbackSourcePaths());
-	const pending = [...ownedPerlCallbackExecutionPaths
-		, ...ownedPerlCallbackEvidencePaths
+	const pending = [...ownedPerlCallbackExecutionPaths.filter(path => !path.includes("-variant-"))
+		, ...ownedPerlCallbackEvidencePaths.filter(path => !path.includes("-variant-"))
 		, "scripts/record-owned-perl-callback-results.mjs"
 		, "tests/helpers/owned-perl-callback-result-acceptance-tests.mjs"];
 	const visited = new Set();

@@ -46,10 +46,17 @@ const setup = ["java-version: '22.0.2'", "python-version: \"3.11\""
  *
  * @param workflow - Complete downstream workflow source.
  * @param manifest - Repository package manifest.
+ * @param legacy - Check only the immutable predecessor's combined-only gate.
  */
-export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
-	assert.equal(manifest.scripts["test:owned-perl-callback-results"], ownedPerlCallbackResultScript);
-	assert.equal(manifest.scripts["test:owned-perl-callback-evidence"], ownedPerlCallbackEvidenceScript);
+export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = false) => {
+	assert.equal(typeof legacy, "boolean");
+	const resultScript = legacy ? ownedPerlCallbackResultScript
+		.replace("LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_VARIANT_PACKAGE_TEST=1 ", "")
+		.replace(" " + helper("variant-packaging-tests"), "") : ownedPerlCallbackResultScript;
+	const evidenceScript = legacy ? ownedPerlCallbackEvidenceScript.replace(" " + helper("variant-evidence-tests"), "") : ownedPerlCallbackEvidenceScript;
+	const reports = legacy ? ownedPerlCallbackResultReports.filter(path => !path.startsWith("build/owned-perl-callback-result-variants/")) : ownedPerlCallbackResultReports;
+	assert.equal(manifest.scripts["test:owned-perl-callback-results"], resultScript);
+	assert.equal(manifest.scripts["test:owned-perl-callback-evidence"], evidenceScript);
 	const job = workflow.split("  owned-perl-callback-results:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 	assert.ok(job); assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
@@ -69,7 +76,7 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	assert.ok(job.includes("key: perl-callback-abis-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}"));
 	const runtime = job.split("      - name: Verify Perl callback-result lifetimes and installed consumers\n")[1]?.split("      - name: ")[0];
 	const evidence = job.split("      - name: Reconstruct Perl callback execution evidence\n")[1]?.split("      - name: ")[0];
-	for(const [step, count, kind] of [[runtime, 41, "results"], [evidence, 16, "evidence"]])
+	for(const [step, count, kind] of [[runtime, legacy ? 37 : 41, "results"], [evidence, legacy ? 14 : 16, "evidence"]])
 	{
 		assert.ok(step); assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 		assert.match(step, /^ {8}shell: bash$/mu);
@@ -86,7 +93,7 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 			, `npm run test:owned-perl-callback-${kind} 2>&1 | tee ${log}`
 			, ...[`tests ${count}`, `pass ${count}`, "fail 0", "cancelled 0", "skipped 0"]
 				.map(value => `rg '^# ${value}$' ${log}`)
-			, ...kind === "results" ? ownedPerlCallbackResultReports.map(path => "test -s " + path) : []];
+			, ...kind === "results" ? reports.map(path => "test -s " + path) : []];
 		assert.equal(step.split("        run: |\n")[1]?.trim().replace(/^ {10}/gmu, ""), lines.join("\n"));
 	}
 	assert.ok(runtime.includes('          LEAN_BRIDGE_COLLECTION_PYTHONS: \'["${{ steps.perl_callback_python311.outputs.python-path }}", "${{ steps.perl_callback_python312.outputs.python-path }}"]\'\n'));
@@ -98,7 +105,7 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	const reportPaths = ["owned-perl-callback-results/"
 		, ...["faults", "lifetime", "mutants", "sanitizers"]
 		.map(name => `owned-perl-callback-result-${name}/`)
-		, "owned-perl-callback-result-variants/"
+		, ...legacy ? [] : ["owned-perl-callback-result-variants/"]
 		, "owned-perl-callback-results.log", "owned-perl-callback-evidence.log"
 		, "owned-perl-callback-result-runtime.log"];
 	for(const path of reportPaths)
@@ -106,5 +113,6 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	const summary = workflow.split("  support-summary:\n")[1];
 	assert.match(summary, /^ {6}- owned-perl-callback-results$/mu);
 	assert.ok(summary.includes("        if: needs.owned-perl-callback-results.result != 'success'\n        run: exit 1\n"));
-	return { tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true };
+	return { tests: legacy ? 37 : 41, evidenceTests: legacy ? 14 : 16
+		, reports: reports.length, perls: 4, failurePropagated: true };
 };

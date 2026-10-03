@@ -12,6 +12,7 @@ import { ownedJvmCallbackChangedPaths } from "./owned-jvm-callback-result-histor
 import { ownedPerlCallbackChangedPaths } from "./owned-perl-callback-result-history.mjs";
 import { postPerlCallbackChangedPaths } from "./post-perl-callback-staging-history.mjs";
 import { witCallbackRuntimeChangedPaths } from "./wit-callback-runtime-staging-history.mjs";
+import { perlVariantChangedPaths } from "./owned-perl-callback-result-variant-history.mjs";
 import { callbackInventoryRepairPaths } from "./owned-callback-inventory-history.mjs";
 import { ownedCppCallbackChangedPaths } from "./owned-cpp-callback-result-history.mjs";
 import { ownedRustCallbackChangedPaths } from "./owned-rust-callback-result-history.mjs";
@@ -41,6 +42,7 @@ export const copiedFixtureReaderPaths = Object.freeze([...new Set([
 	, ...ownedPerlCallbackChangedPaths
 	, ...postPerlCallbackChangedPaths
 	, ...witCallbackRuntimeChangedPaths
+	, ...perlVariantChangedPaths
 	, ...callbackInventoryRepairPaths
 	, ...ownedCppCallbackChangedPaths
 	, ...ownedRustCallbackChangedPaths

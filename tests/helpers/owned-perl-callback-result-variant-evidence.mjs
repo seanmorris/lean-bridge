@@ -306,6 +306,36 @@ export const assertOwnedPerlCallbackVariantMatrix = async (reports, readSource =
 };
 
 /**
+ * Parse complete ordered Node TAP, including metadata and the captured shell exit.
+ *
+ * @param text - Unmodified actual TAP and external exit marker.
+ * @param blocks - Independently expected titles and per-test diagnostics.
+ */
+export const assertOwnedPerlCallbackVariantTap = (text, blocks) => {
+	assert.equal(typeof text, "string"); assert.ok(blocks.length > 0);
+	const lines = text.split("\n"); let cursor = 0;
+	const take = expected => assert.equal(lines[cursor++], expected, `TAP line ${cursor}`);
+	const duration = prefix => {
+		const line = lines[cursor++]; assert.equal(typeof line, "string");
+		assert.ok(line.startsWith(prefix)); const number = line.slice(prefix.length);
+		assert.match(number, /^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/u);
+		assert.ok(Number.isFinite(Number(number)) && Number(number) > 0);
+	};
+	take("TAP version 13");
+	for(const [index, { title, diagnostics }] of blocks.entries())
+	{
+		take("# Subtest: " + title); take(`ok ${index + 1} - ${title}`);
+		take("  ---"); duration("  duration_ms: "); take("  type: 'test'"); take("  ...");
+		for(const diagnostic of diagnostics) take(diagnostic);
+	}
+	take("1.." + blocks.length);
+	for(const [key, value] of Object.entries({ tests: blocks.length, suites: 0, pass: blocks.length, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
+		take("# " + key + " " + value);
+	duration("# duration_ms "); take("ACTUAL_NODE_EXIT=0"); take("");
+	assert.equal(cursor, lines.length, "Trailing or duplicated TAP content");
+};
+
+/**
  * Bind each selected actual TAP log, observed exit, and diagnostic to its reports.
  *
  * @param run - Original raw TAP with observed exit and SHA-256.
@@ -317,30 +347,16 @@ export const assertOwnedPerlCallbackVariantLog = (run, names, reports) => {
 	assert.equal(run.sha256, sha256(run.text));
 	assert.ok(names.length > 0 && names.every(name => ownedPerlCallbackVariantReports.includes(name)));
 	assert.equal(new Set(names).size, names.length);
-	const titles = names.map(name => {
-		const item = reports[name]; return `installed CPAN callback-result owners (${item.mode}, ${item.variant})`;
-	});
-	const count = names.length, lines = run.text.split("\n");
-	assert.equal(lines[0], "TAP version 13");
-	assert.deepEqual(lines.slice(-2), ["ACTUAL_NODE_EXIT=0", ""]);
-	assert.deepEqual(lines.filter(line => line.startsWith("ACTUAL_NODE_EXIT=")), ["ACTUAL_NODE_EXIT=0"]);
-	assert.deepEqual(lines.filter(line => /^1\.\./u.test(line)), [`1..${count}`]);
-	assert.deepEqual(lines.filter(line => line.startsWith("# Subtest: ")), titles.map(title => "# Subtest: " + title));
-	assert.deepEqual(lines.filter(line => /^ok [0-9]/u.test(line)), titles.map((title, index) => `ok ${index + 1} - ${title}`));
-	for(const [key, value] of Object.entries({ tests: count, suites: 0, pass: count, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
-		assert.deepEqual(lines.filter(line => line.startsWith("# " + key + " ")), ["# " + key + " " + value]);
-	assert.doesNotMatch(run.text, /^not ok|# SKIP|# TODO|Bail out!/mu);
-	const diagnostics = names.flatMap(name => {
+	const blocks = names.map(name => {
 		const item = reports[name], prefix = `# ${item.mode}/${item.variant}: `;
-		return [prefix + `first real ${item.producerInterface} producer`
+		return { title: `installed CPAN callback-result owners (${item.mode}, ${item.variant})`
+			, diagnostics: [prefix + `first real ${item.producerInterface} producer`
 			, prefix + "independent second real producer"
 			, prefix + `saved original archives at ${item.savedHandoff}; source-free installed matrix`
 			, ...item.observations.map(value => "# " + JSON.stringify({ variant: item.variant
 				, perl: value.perl, mode: value.mode
 				, checks: item.variant === "host" ? 64 : 39
-				, runtimeExecutions: 2, assetRejections: 6 }))];
+				, runtimeExecutions: 2, assetRejections: 6 }))] };
 	});
-	assert.deepEqual(lines.filter(line => /^# (?:ordinary|reviewed)\/|^# \{/u.test(line)), diagnostics);
-	for(const line of lines) assert.ok(line === "" || line === "TAP version 13" || line === "ACTUAL_NODE_EXIT=0"
-		|| diagnostics.includes(line) || /^# Subtest: |^ok [0-9]+ - |^1\.\.[0-9]+$|^# (?:tests|suites|pass|fail|cancelled|skipped|todo) [0-9]+$|^# duration_ms [0-9.]+$|^ {2}(?:---|\.\.\.|duration_ms: [0-9.]+|type: 'test')$/u.test(line), line);
+	assertOwnedPerlCallbackVariantTap(run.text, blocks);
 };

@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 
 export const witCallbackRuntimeHistoryPath = "docs/evidence/wit-callback-runtime-staging-source-history-20261003.json";
 export const witCallbackRuntimeHistorySha256 = "549d27efb22d36d55249cbc01221cc441af367ef301ecdabeb3e71f6dc8b50b7";
@@ -150,6 +151,7 @@ export const reverseWitCallbackRuntimeUpdate = (source, update, category = "upda
  * @param expected - Optional exact stopping SHA-256.
  */
 export const beforeWitCallbackRuntimeStaging = (path, source, expected) => {
+	source = beforePerlCallbackVariants(path, source, expected);
 	for(const category of ["readerUpdates", "updates"])
 	{
 		const update = readWitCallbackRuntimeHistory()[category].find(item => item.path === path);

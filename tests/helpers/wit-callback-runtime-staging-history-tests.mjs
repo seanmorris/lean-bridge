@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforeCopiedFixtureReaders, copiedFixtureReaderPaths } from "./copied-fixture-source-history.mjs";
 import { beforePostPerlCallbackStaging, readPostPerlCallbackHistory } from "./post-perl-callback-staging-history.mjs";
 import { assertWitCallbackRuntimeHistory, beforeWitCallbackRuntimeStaging
@@ -67,7 +68,8 @@ test("WIT runtime staging authenticates complete source bytes and preserves stop
 	const history = readWitCallbackRuntimeHistory(); let rejected = 0;
 	for(const category of ["readerUpdates", "updates"]) for(const update of history[category])
 	{
-		const current = await readFile(update.path), prior = reverseWitCallbackRuntimeUpdate(current, update, category);
+		const current = Buffer.from(beforePerlCallbackVariants(update.path, await readFile(update.path), update.currentSha256));
+		const prior = reverseWitCallbackRuntimeUpdate(current, update, category);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeWitCallbackRuntimeStaging(update.path, current, update.currentSha256), current);
@@ -125,23 +127,19 @@ test("WIT runtime staging composes latest-first into post-Perl and copied reader
 	assert.match(wrapper, /^import "\.\/helpers\/wit-callback-runtime-staging-history-tests\.mjs";$/mu);
 });
 
-test("WIT runtime staging leaves all eight successor Perl inputs unchanged and unaccepted", async () => {
-	const history = readWitCallbackRuntimeHistory(), previous = readPostPerlCallbackHistory();
+test("frozen WIT runtime stage excludes Perl successors now closed by a separate extension", async () => {
+	const history = readWitCallbackRuntimeHistory();
 	for(const path of witCallbackRuntimeSuccessorPaths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), history.successorInputs[path].sha256, path);
-		assert.equal(beforeWitCallbackRuntimeStaging(path, current), current);
-		assert.equal(beforePostPerlCallbackStaging(path, current), current);
-		assert.equal(beforeCopiedFixtureReaders(path, current), current);
+		const expected = history.successorInputs[path].sha256;
+		const current = beforePerlCallbackVariants(path, await readFile(path), expected);
+		assert.equal(sha256(current), expected, path);
+		assert.equal(beforeWitCallbackRuntimeStaging(path, current, expected), current);
+		assert.equal(beforePostPerlCallbackStaging(path, current, expected), current);
+		assert.equal(beforeCopiedFixtureReaders(path, current, expected), current);
 		assert.ok(!history.updates.some(update => update.path === path));
 		assert.ok(!history.readerUpdates.some(update => update.path === path));
 		assert.equal(history.introducedSources[path], undefined);
-		const earlier = previous.updates.find(update => update.path === path);
-		if(earlier)
-		{
-			assert.notEqual(sha256(current), earlier.currentSha256);
-			assert.equal(beforePostPerlCallbackStaging(path, current, earlier.previousSha256), current);
-		}
 		assert.throws(() => reverseWitCallbackRuntimeUpdate(current, { ...history.updates[0], path }));
 	}
 });
