@@ -12,18 +12,19 @@ test("CI requires four-ABI Perl callback execution and reconstructed reports", a
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const manifest = JSON.parse(await readFile("package.json", "utf8"));
 	assert.deepEqual(assertOwnedPerlCallbackResultCi(workflow, manifest), {
-		tests: 37, evidenceTests: 14, reports: 18, perls: 4, failurePropagated: true
+		tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true
 	});
 	for(const line of [
 		...ownedPerlCallbackResultReports.map(path => "          test -s " + path)
 		, ...["results", "evidence"].flatMap(kind => [
 			`          npm run test:owned-perl-callback-${kind} 2>&1 | tee build/owned-perl-callback-${kind}.log`
 			, ...["tests", "pass", "fail", "cancelled", "skipped"].map(summary =>
-				`          rg '^# ${summary} ${["tests", "pass"].includes(summary) ? kind === "results" ? 37 : 14 : 0}$' build/owned-perl-callback-${kind}.log`)
+				`          rg '^# ${summary} ${["tests", "pass"].includes(summary) ? kind === "results" ? 41 : 16 : 0}$' build/owned-perl-callback-${kind}.log`)
 		])
 		, ...["5.36.3", "5.38.2"].flatMap(version => ["threaded", "unthreaded"]
 			.map(mode => `          node scripts/build-perl-toolchains.mjs ${version} ${mode}`))
 		, "            build/owned-perl-callback-results/"
+		, "            build/owned-perl-callback-result-variants/"
 		, "            build/owned-perl-callback-evidence.log"
 		, "      - owned-perl-callback-results"
 	]) {
@@ -47,7 +48,7 @@ test("CI requires four-ABI Perl callback execution and reconstructed reports", a
 		disabled.scripts[name] = disabled.scripts[name].replace("_TEST=1", "_TEST=0");
 		assert.throws(() => assertOwnedPerlCallbackResultCi(workflow, disabled));
 	}
-	for(const suffix of ["REPORTS", "FAULT_REPORTS", "LIFETIME_REPORTS", "MUTANT_REPORTS", "SANITIZER_REPORTS", "PACKAGE_REPORTS"])
+	for(const suffix of ["REPORTS", "FAULT_REPORTS", "LIFETIME_REPORTS", "MUTANT_REPORTS", "SANITIZER_REPORTS", "PACKAGE_REPORTS", "VARIANT_PACKAGE_REPORTS"])
 	{
 		const variable = "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_" + suffix;
 		for(const [before, after] of [

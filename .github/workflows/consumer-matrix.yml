@@ -567,8 +567,8 @@ jobs:
           export LEAN_BRIDGE_RUBY="$(command -v ruby)"
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           npm run test:owned-perl-callback-results 2>&1 | tee build/owned-perl-callback-results.log
-          rg '^# tests 37$' build/owned-perl-callback-results.log
-          rg '^# pass 37$' build/owned-perl-callback-results.log
+          rg '^# tests 41$' build/owned-perl-callback-results.log
+          rg '^# pass 41$' build/owned-perl-callback-results.log
           rg '^# fail 0$' build/owned-perl-callback-results.log
           rg '^# cancelled 0$' build/owned-perl-callback-results.log
           rg '^# skipped 0$' build/owned-perl-callback-results.log
@@ -590,13 +590,17 @@ jobs:
           test -s build/owned-perl-callback-result-mutants/reviewed.json
           test -s build/owned-perl-callback-result-sanitizers/ordinary.json
           test -s build/owned-perl-callback-result-sanitizers/reviewed.json
+          test -s build/owned-perl-callback-result-variants/ordinary-no-host-package.json
+          test -s build/owned-perl-callback-result-variants/ordinary-host-package.json
+          test -s build/owned-perl-callback-result-variants/reviewed-no-host-package.json
+          test -s build/owned-perl-callback-result-variants/reviewed-host-package.json
       - name: Reconstruct Perl callback execution evidence
         shell: bash
         run: |
           set -euo pipefail
           npm run test:owned-perl-callback-evidence 2>&1 | tee build/owned-perl-callback-evidence.log
-          rg '^# tests 14$' build/owned-perl-callback-evidence.log
-          rg '^# pass 14$' build/owned-perl-callback-evidence.log
+          rg '^# tests 16$' build/owned-perl-callback-evidence.log
+          rg '^# pass 16$' build/owned-perl-callback-evidence.log
           rg '^# fail 0$' build/owned-perl-callback-evidence.log
           rg '^# cancelled 0$' build/owned-perl-callback-evidence.log
           rg '^# skipped 0$' build/owned-perl-callback-evidence.log
@@ -611,6 +615,7 @@ jobs:
             build/owned-perl-callback-result-lifetime/
             build/owned-perl-callback-result-mutants/
             build/owned-perl-callback-result-sanitizers/
+            build/owned-perl-callback-result-variants/
             build/owned-perl-callback-results.log
             build/owned-perl-callback-evidence.log
             build/owned-perl-callback-result-runtime.log

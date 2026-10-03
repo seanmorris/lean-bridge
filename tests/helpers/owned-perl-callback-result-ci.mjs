@@ -11,13 +11,15 @@ export const ownedPerlCallbackExecutionPaths = [
 	"tests/owned-perl-callback-result-contract.test.mjs"
 	, ...["factory", "xs", "runtime", "fault", "lifetime", "mutant", "sanitizer", "packaging", "combined-packaging"]
 		.map(name => helper(name + "-tests"))
+	, helper("variant-packaging-tests")
 ];
 export const ownedPerlCallbackEvidencePaths = ["runtime", "fault", "lifetime", "mutant", "sanitizer", "package", "combined"]
-	.map(name => helper(name + "-evidence-tests"));
+	.map(name => helper(name + "-evidence-tests")).concat(helper("variant-evidence-tests"));
 export const ownedPerlCallbackResultScript = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 "
 	+ "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 "
 	+ "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_MUTANT_TEST=1 "
 	+ "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_PACKAGE_TEST=1 "
+	+ "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_VARIANT_PACKAGE_TEST=1 "
 	+ command(ownedPerlCallbackExecutionPaths);
 export const ownedPerlCallbackEvidenceScript = "LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST=1 "
 	+ command(ownedPerlCallbackEvidencePaths);
@@ -26,6 +28,8 @@ export const ownedPerlCallbackResultReports = [
 		.map(variant => `build/owned-perl-callback-results/${mode}-${variant}.json`))
 	, ...["faults", "lifetime", "mutants", "sanitizers"].flatMap(kind => ["ordinary", "reviewed"]
 		.map(mode => `build/owned-perl-callback-result-${kind}/${mode}.json`))
+	, ...["ordinary", "reviewed"].flatMap(mode => ["no-host", "host"]
+		.map(variant => `build/owned-perl-callback-result-variants/${mode}-${variant}-package.json`))
 ];
 const tools = ["build-essential", "cmake", "libgmp-dev", "libuv1-dev"
 	, "m4", "maven", "ripgrep"
@@ -65,7 +69,7 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	assert.ok(job.includes("key: perl-callback-abis-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}"));
 	const runtime = job.split("      - name: Verify Perl callback-result lifetimes and installed consumers\n")[1]?.split("      - name: ")[0];
 	const evidence = job.split("      - name: Reconstruct Perl callback execution evidence\n")[1]?.split("      - name: ")[0];
-	for(const [step, count, kind] of [[runtime, 37, "results"], [evidence, 14, "evidence"]])
+	for(const [step, count, kind] of [[runtime, 41, "results"], [evidence, 16, "evidence"]])
 	{
 		assert.ok(step); assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 		assert.match(step, /^ {8}shell: bash$/mu);
@@ -94,6 +98,7 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	const reportPaths = ["owned-perl-callback-results/"
 		, ...["faults", "lifetime", "mutants", "sanitizers"]
 		.map(name => `owned-perl-callback-result-${name}/`)
+		, "owned-perl-callback-result-variants/"
 		, "owned-perl-callback-results.log", "owned-perl-callback-evidence.log"
 		, "owned-perl-callback-result-runtime.log"];
 	for(const path of reportPaths)
@@ -101,5 +106,5 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {
 	const summary = workflow.split("  support-summary:\n")[1];
 	assert.match(summary, /^ {6}- owned-perl-callback-results$/mu);
 	assert.ok(summary.includes("        if: needs.owned-perl-callback-results.result != 'success'\n        run: exit 1\n"));
-	return { tests: 37, evidenceTests: 14, reports: 18, perls: 4, failurePropagated: true };
+	return { tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true };
 };
