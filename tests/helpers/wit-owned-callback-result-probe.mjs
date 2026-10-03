@@ -34,13 +34,14 @@ uint64_t owned_test_closure_mask(void) { return test_closures; }
  * @param generated - Generated WIT package with public C names.
  * @param combined - Include consuming receivers and export anchors.
  * @param hostCallbacks - Explicit case contract for host descriptor signatures.
+ * @param readSource - Source reader supplied by a later authenticated evidence layer.
  */
-export const ownedWitCallbackResultProbe = async (generated, combined, hostCallbacks) => {
+export const ownedWitCallbackResultProbe = async (generated, combined, hostCallbacks, readSource = readFile) => {
 	assert.equal(typeof hostCallbacks, "boolean");
 	assert.equal(generated.publicHeader.includes("_host {"), hostCallbacks);
-	const base = await readFile("tests/fixtures/structured-types/owned-callback-results.c", "utf8");
-	const mixed = await readFile("tests/fixtures/structured-types/owned-wit-callback-mixed.c", "utf8");
-	const combinations = combined ? await readFile("tests/fixtures/structured-types/owned-installed-callback-combinations.c", "utf8") : "";
+	const base = await readSource("tests/fixtures/structured-types/owned-callback-results.c", "utf8");
+	const mixed = await readSource("tests/fixtures/structured-types/owned-wit-callback-mixed.c", "utf8");
+	const combinations = combined ? await readSource("tests/fixtures/structured-types/owned-installed-callback-combinations.c", "utf8") : "";
 	const fn = generated.values.functions.find(item => item.name === "callbackRecord");
 	const node = generated.values.nodes.find(item => item.id === fn.parameters[1]);
 	assert.ok(node.cName.endsWith("_apply_twice_argument1_t"));
