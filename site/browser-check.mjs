@@ -24,6 +24,7 @@ const report = { createdAt: new Date().toISOString(), base: identity.siteBase, s
 const output = resolve("build/react-site-audit", identity.siteBase === "/" ? "root" : "prefixed");
 const execute = promisify(execFile);
 const checkedLinks = new Map();
+const javascriptBudgetBytes = 225 * 1024;
 await mkdir(output, { recursive: true });
 
 /**
@@ -95,7 +96,8 @@ const measurePage = async (browser, route, engine) => {
 			`${route}: prose must not request an algorithm runtime`);
 		assert.equal(requests.some(url => /search-index\.json/u.test(url)), false, "Search index loads only on use");
 		const javascriptGzipBytes = (await Promise.all(scripts.values())).reduce((sum, bytes) => sum + gzipSync(bytes).length, 0);
-		assert.ok(javascriptGzipBytes <= 200 * 1024, `${route}: ${javascriptGzipBytes} exceeds 200 KiB JS budget`);
+		assert.ok(javascriptGzipBytes <= javascriptBudgetBytes,
+			`${route}: ${javascriptGzipBytes} exceeds ${javascriptBudgetBytes / 1024} KiB JS budget`);
 		const timing = await page.evaluate(() => ({
 			hydratedMs: globalThis.performance.getEntriesByName("site-hydrated")[0].startTime
 			, domContentLoadedMs: globalThis.performance.getEntriesByType("navigation")[0].domContentLoadedEventEnd

@@ -38,6 +38,7 @@ Turn a rectangle of unequal squares into a circuit. Inspect current balance, bre
 
 | Export / call parameters | Purpose |
 | --- | --- |
+| `initRuntime()` | Load and initialize the shared Lean runtime module. |
 | `createChecker()` | Load the Lean runtime and return a synchronous exact certificate checker. |
 
 Selected theorems: `exported_certificate`, `threeConnectedCheck_sound`, `closed_walk_zero`.

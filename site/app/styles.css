@@ -83,11 +83,21 @@ code { overflow-wrap: anywhere; }
 .doc-content h1 { font-size: clamp(2rem, 3vw, 2.75rem); margin-bottom: 24px; overflow-wrap: anywhere; }
 .doc-content h2 { font-size: 1.6rem; margin: 42px 0 18px; padding-top: 14px; border-top: 1px solid var(--line); }
 .doc-content h3 { margin-top: 30px; font-size: 1.2rem; }
-.doc-content p, .doc-content li { color: #bdccdd; }
+.doc-content p, .doc-content li { color: #bdccdd; overflow-wrap: anywhere; }
 .doc-content li { margin-block: 6px; }
 .doc-content :not(pre) > code { color: var(--mint); font-size: .88em; background: #142136; padding: 2px 5px; border-radius: 3px; }
 .doc-content pre { overflow: auto; border: 1px solid var(--line); border-radius: 6px; padding: 18px; font-size: .85rem; line-height: 1.65; max-width: 100%; }
 .doc-content pre code { overflow-wrap: normal; }
+.doc-content .shiki { color: #e6edf3; background: #0d1117; }
+.shiki .syntax-blue { color: #79c0ff; }
+.shiki .syntax-green { color: #7ee787; }
+.shiki .syntax-muted { color: #8b949e; }
+.shiki .syntax-cyan { color: #a5d6ff; }
+.shiki .syntax-purple { color: #d2a8ff; }
+.shiki .syntax-text { color: #e6edf3; }
+.shiki .syntax-red { color: #ff7b72; }
+.shiki .syntax-coral { color: #ffa198; }
+.shiki .syntax-orange { color: #ffa657; }
 .doc-content table { display: block; overflow: auto; border-collapse: collapse; font-size: .875rem; max-width: 100%; margin-block: 24px; }
 .doc-content th, .doc-content td { text-align: left; border: 1px solid var(--line); padding: 9px 12px; min-width: 130px; vertical-align: top; }
 .doc-content th { background: var(--panel); }

@@ -132,7 +132,8 @@ test('Markdown metadata matches generated headings and keeps search text separat
 	assert.match(compiled.code, /id: "install-1"/u);
 	assert.match(compiled.code, /table: "table"/u);
 	assert.match(compiled.code, /shiki github-dark-default/u);
-	assert.match(compiled.code, /color: "#/u);
+	assert.match(compiled.code, /syntax-(?:blue|green|text)/u);
+	assert.doesNotMatch(compiled.code, /color: "#/u);
 	assert.match(compiled.code, /"data-language": "lean"/u);
 	assert.match(compiled.searchText, /def answer : Nat := 42/u);
 	assert.equal(Object.hasOwn(compiled.metadata, 'searchText'), false);

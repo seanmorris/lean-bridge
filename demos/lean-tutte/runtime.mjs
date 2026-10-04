@@ -6,8 +6,8 @@
 let pending;
 let loadAttempt = 0;
 
-/** Load the Lean runtime and return a synchronous exact certificate checker. */
-export const createChecker = async () => {
+/** Load and initialize the shared Lean runtime module. */
+export const initRuntime = () => {
 	// Failed module imports are cached. Retry both this adapter and its generated loader.
 	const loader = new URL("./runtime/lean-tutte.mjs", import.meta.url);
 	loader.search = new URL(import.meta.url).search;
@@ -18,7 +18,12 @@ export const createChecker = async () => {
 			if(module._tutte_init() !== 1) throw new Error("Lean initialization failed");
 			return module;
 		}).catch(error => { pending = undefined; loadAttempt++; throw error; });
-	const module = await loading;
+	return loading;
+};
+
+/** Load the Lean runtime and return a synchronous exact certificate checker. */
+export const createChecker = async () => {
+	const module = await initRuntime();
 	return ({ width, height, levels, squares }) => {
 		if(![width, height].every(n => Number.isInteger(n) && n > 0 && n <= 256)) throw new RangeError("Dimensions must be integers from 1 to 256");
 		if(!(levels instanceof Uint32Array) || !(squares instanceof Uint32Array)) throw new TypeError("Levels and squares must be Uint32Array values");
