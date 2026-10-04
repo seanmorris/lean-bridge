@@ -584,15 +584,21 @@ test("CI result contract detects support loss", async () => {
 });
 
 test("dedicated CI covers every consumer with Node 22 and pinned build paths", async () => {
-  const [workflow, packageDocument, perlWorkflow] = await Promise.all([
+  const [workflow, packageDocument, perlWorkflow, toolchainBootstrap] = await Promise.all([
     readFile(".github/workflows/consumer-matrix.yml", "utf8")
     , readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
+    , readFile("scripts/bootstrap-toolchains.sh", "utf8")
   ]);
   assert.match(workflow, /^\s*push:\s*$/m);
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);
   assert.match(workflow, /NODE_VERSION: "22"/);
+  assert.match(toolchainBootstrap, /--retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300/);
+  assert.match(toolchainBootstrap, /--connect-timeout 30 --max-time 600 --remove-on-error/);
+  assert.equal([...toolchainBootstrap.matchAll(/download_archive "\$(?:ELAN|WASM_TOOLS|WABT)_URL"/gu)].length, 3);
+  assert.match(toolchainBootstrap, /local partial="\$destination\.part"/);
+  assert.match(toolchainBootstrap, /mv "\$partial" "\$destination"/);
   const nodeJob = workflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
   assert.match(nodeJob, /^ {4}timeout-minutes: 180$/m);
   assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);

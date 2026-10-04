@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "8bc5e794004e825c7e2e09cc664558c12453d8a68a98a840b70e1c4e4f4cbf51";
+export const phpWasmCallbackResultHistorySha256 = "d1e686bd3f59b3b247f95c6ab47f201c1ff1278b7aebea09680723f99a070656";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -63,6 +63,7 @@ export const phpWasmCallbackResultIntroducedPaths = Object.freeze([
 export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	".github/workflows/consumer-matrix.yml"
 	, "docs/type-surface.v1.json"
+	, "scripts/bootstrap-toolchains.sh"
 	, "src/backends/perl/runtime.h"
 	, "src/backends/php/owned-zend-borrows.mjs"
 	, "src/backends/php/owned-zend-callbacks.mjs"
@@ -123,6 +124,7 @@ const categories = Object.freeze({
 	, "docs/publish/php.md": "documentation"
 	, "docs/type-surface.v1.json": "administrative"
 	, "package.json": "administrative"
+	, "scripts/bootstrap-toolchains.sh": "administrative"
 	, "scripts/record-owned-php-wasm-callback-results.mjs": "recorder"
 	, "src/adoption/test-profiles.mjs": "administrative"
 	, "src/analyze/export-configuration.mjs": "implementation"

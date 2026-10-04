@@ -28,6 +28,7 @@ const categories = new Map([
 	, ["docs/publish/php.md", "documentation"]
 	, [inventoryPath, "administrative"]
 	, ["package.json", "administrative"]
+	, ["scripts/bootstrap-toolchains.sh", "administrative"]
 	, ["scripts/record-owned-php-wasm-callback-results.mjs", "recorder"]
 	, ["src/adoption/test-profiles.mjs", "administrative"]
 	, ["src/analyze/export-configuration.mjs", "implementation"]
