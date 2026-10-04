@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "96c7b4161304bfabf137729b5cc240faaa90c0ce74da0922ec261f517b38b172";
+export const phpWasmCallbackResultHistorySha256 = "8bc5e794004e825c7e2e09cc664558c12453d8a68a98a840b70e1c4e4f4cbf51";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -61,7 +61,8 @@ export const phpWasmCallbackResultIntroducedPaths = Object.freeze([
 	, "tests/owned-php-wasm-callback-results.test.mjs"
 ].sort());
 export const phpWasmCallbackResultReaderPaths = Object.freeze([
-	"docs/type-surface.v1.json"
+	".github/workflows/consumer-matrix.yml"
+	, "docs/type-surface.v1.json"
 	, "src/backends/perl/runtime.h"
 	, "src/backends/php/owned-zend-borrows.mjs"
 	, "src/backends/php/owned-zend-callbacks.mjs"
@@ -70,6 +71,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "src/backends/php/owned-zend-readme.mjs"
 	, "tests/helpers/copied-fixture-source-history.mjs"
 	, "tests/helpers/native-fork-repair-evidence.mjs"
+	, "tests/helpers/native-ci-isolation.mjs"
 	, "tests/helpers/owned-aggregate-evidence.mjs"
 	, "tests/helpers/owned-cpp-evidence.mjs"
 	, "tests/helpers/owned-dotnet-process-evidence.mjs"
@@ -96,6 +98,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/helpers/wit-callback-acceptance-history-tests.mjs"
 	, "tests/helpers/wit-owned-projection-history.mjs"
 	, "tests/helpers/wit-recursive-callable-evidence.mjs"
+	, "tests/documentation.test.mjs"
 	, "tests/owned-analysis-evidence.test.mjs"
 	, "tests/owned-javascript-coexistence-evidence.test.mjs"
 	, "tests/owned-javascript-npm-evidence.test.mjs"

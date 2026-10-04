@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { runInNewContext } from "node:vm";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedTransferC } from "./owned-transfer-c-history.mjs";
+import { beforePhpWasmCallbackResultAcceptance } from "./php-wasm-callback-result-acceptance-history.mjs";
 
 export const nativeCiProfiles = {
 	"c-family": {
@@ -88,9 +89,11 @@ export const nativeCiRecordScript = (workflow, profile, overrides = {}) => nativ
 export const assertNativeCiIsolation = (workflow, baseline) => {
 	// The transfer receipt authenticates its added gates separately. Rewind only
 	// that exact full-file transition when checking the original shard commands.
-	// The PHP-Wasm callback-result lane is a disjoint job, so remove that exact
-	// block before authenticating the older full-workflow transition.
-	const withoutCallbackResults = workflow
+	// Peel the authenticated PHP-Wasm integration and its successor CI layout
+	// before authenticating the older full-workflow transition.
+	const withoutCallbackResults = beforePhpWasmCallbackResultAcceptance(
+		".github/workflows/consumer-matrix.yml", workflow
+	)
 		.replace(/^ {2}php-wasm-callback-results:\n[\s\S]*?(?=^ {2}php-consumers:\n)/mu, "")
 		.replace(/^ {6}- php-wasm-callback-results\n/mu, "")
 		.replace(/^ {6}- name: Enforce PHP-Wasm callback-result acceptance\n {8}if: needs\.php-wasm-callback-results\.result != 'success'\n {8}run: exit 1\n/mu, "");

@@ -603,9 +603,16 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);
   assert.match(wasiJob, /npm run test:owned-wit-transfers/);
   assert.match(wasiJob, /npm run test:owned-wit-borrows/);
-  const phpJob = workflow.split("  php-consumers:\n")[1].split("\n  native-consumers:\n")[0];
+  const phpJob = workflow.match(/^ {2}php-consumers:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(phpJob);
   assert.match(phpJob, /^ {4}timeout-minutes: 360$/m);
-  assert.match(phpJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
+  assert.doesNotMatch(phpJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
+  const phpMultiProfileJob = workflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(phpMultiProfileJob);
+  assert.match(phpMultiProfileJob, /^ {4}timeout-minutes: 180$/m);
+  assert.match(phpMultiProfileJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
+  assert.match(workflow, /^ {6}- php-multi-profile$/m);
+  assert.match(workflow, /if: needs\.php-multi-profile\.result != 'success'/);
   const phpWasmCallbackJob = workflow.split("  php-wasm-callback-results:\n")[1].split("\n  php-consumers:\n")[0];
   assert.match(phpWasmCallbackJob, /^ {4}timeout-minutes: 180$/m);
   assert.match(phpWasmCallbackJob, /npm run test:owned-php-wasm-callback-results/);
@@ -864,7 +871,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /id: type_corpus_php_wasm\n\s*continue-on-error: true/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome }}" != success/);
-  assert.match(workflow, /node --test tests\/php-wasm-multi-profile\.test\.mjs && npm run test:type-corpus:php-wasm/);
+  assert.doesNotMatch(workflow, /node --test tests\/php-wasm-multi-profile\.test\.mjs && npm run test:type-corpus:php-wasm/);
+  assert.match(workflow, /--command "npm run test:consumer:php[^\n]+npm run test:type-corpus:php-wasm/);
   assert.match(workflow, /name: type-corpus-php-wasm-\$\{\{ github\.sha \}\}/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests\/php-wasm-callables\.test\.mjs tests\/php-wasm-callable-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests\/php-wasm-structured-callables\.test\.mjs tests\/php-wasm-structured-callable-zend\.test\.mjs/);

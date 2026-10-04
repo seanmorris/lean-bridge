@@ -1708,8 +1708,8 @@ jobs:
   php-consumers:
     name: Native PHP and PHP-Wasm
     runs-on: ubuntu-24.04
-    # Installed acceptance plus the final cold mixed-profile Nix build exceeded
-    # five hours. Keep every gate enabled and allow the runner's six-hour limit.
+    # Installed native and Wasm acceptance approaches six hours. The independent
+    # mixed-profile release gate runs in parallel so this job can finish in time.
     timeout-minutes: 360
     steps:
       - name: Check out the exact revision
@@ -2064,19 +2064,6 @@ jobs:
             build/owned-wasm32/owned-aggregates.json
           if-no-files-found: error
           retention-days: 30
-      - name: Combine PHP-Wasm with native PHP and JavaScript from one captured API
-        id: php_multi_profile
-        continue-on-error: true
-        env:
-          LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST: "1"
-          LEAN_BRIDGE_LAKE_ENGINE: build/php-multi-engine/bin/lean-bridge-component-engine
-          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/php-multi-runtime/lazy
-        run: |
-          nix build .#universal-core-artifacts --out-link build/php-multi-runtime
-          nix build .#component-build-engine --out-link build/php-multi-engine
-          source scripts/env.sh
-          node --test tests/php-wasm-multi-profile.test.mjs
-          LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs
       - name: Record PHP observations
         if: always()
         shell: bash
@@ -2091,12 +2078,12 @@ jobs:
           fi
           wasm_result="$test_result"
           wasm_executed="$executed"
-          if [ "${{ steps.ordinary_php_wasm.outcome }}" != success ] || [ "${{ steps.copied_zend.outcome }}" != success ] || [ "${{ steps.php_multi_profile.outcome }}" != success ] || [ "${{ steps.owned_php_wasm.outcome }}" != success ] || [ "${{ steps.type_corpus_php_wasm.outcome }}" != success ]; then
+          if [ "${{ steps.ordinary_php_wasm.outcome }}" != success ] || [ "${{ steps.copied_zend.outcome }}" != success ] || [ "${{ steps.owned_php_wasm.outcome }}" != success ] || [ "${{ steps.type_corpus_php_wasm.outcome }}" != success ]; then
             wasm_result=failed
             wasm_executed=false
           fi
           node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows"
-          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows"
+          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows"
       - name: Upload PHP observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -2107,8 +2094,65 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success' || steps.type_corpus_php_native.outcome != 'success' || steps.owned_php.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.php_multi_profile.outcome != 'success' || steps.type_corpus_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.ordinary_php.outcome != 'success' || steps.type_corpus_php_native.outcome != 'success' || steps.owned_php.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.type_corpus_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success'
         run: exit 1
+
+  php-multi-profile:
+    name: PHP-Wasm mixed-profile release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_WASM_RUNTIME_PROFILE: browser
+      LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
+      LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
+      LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST: "1"
+      LEAN_BRIDGE_LAKE_ENGINE: build/php-multi-engine/bin/lean-bridge-component-engine
+      LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/php-multi-runtime/lazy
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Restore pinned PHP and compiler inputs
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains
+            build/php-wasm-sdk
+            build/php-wasm-host
+          key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install PHP and compiler tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+          bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
+          if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
+            sudo phpdismod -s cli xdebug
+          fi
+          env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\n"); exit(1); }'
+      - name: Prepare the pinned PHP-Wasm and Lean runtimes
+        run: |
+          bash scripts/bootstrap-php-wasm-ci.sh
+          bash scripts/bootstrap-toolchains.sh
+          export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
+          bash scripts/build-lean-runtime.sh
+      - name: Combine PHP-Wasm with native PHP and JavaScript from one captured API
+        run: |
+          nix build .#universal-core-artifacts --out-link build/php-multi-runtime
+          nix build .#component-build-engine --out-link build/php-multi-engine
+          source scripts/env.sh
+          node --test tests/php-wasm-multi-profile.test.mjs
+          LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs
 
   native-consumers:
     name: Native consumer (${{ matrix.profile }})
@@ -3839,6 +3883,7 @@ jobs:
       - owned-cpp-callback-results
       - browser-consumer
       - php-wasm-callback-results
+      - php-multi-profile
       - php-consumers
       - php-receivers
       - php-wasm-receivers
@@ -3898,6 +3943,9 @@ jobs:
         run: exit 1
       - name: Enforce PHP-Wasm callback-result acceptance
         if: needs.php-wasm-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce PHP-Wasm mixed-profile release
+        if: needs.php-multi-profile.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance
         if: needs.owned-python-callback-results.result != 'success'
