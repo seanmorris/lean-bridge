@@ -6,6 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { callbackCompilerInputAtBaseline } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
 import { basename, isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -95,7 +96,9 @@ const packageMetadata = (pkg, sourceIdentity) => {
 const assertSources = async (mode, item, readSource) => {
 	keys(item.input, ["metadata", "sourceIdentity", "component"]);
 	const { metadata, sourceIdentity: identity } = item.input;
-	assert.equal(hash(metadata), pins[mode].metadata); assert.equal(hash(identity), pins[mode].identity);
+	assert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);
+	const baseline = await callbackCompilerInputAtBaseline(item.input, readSource);
+	assert.equal(hash(baseline.metadata), pins[mode].metadata); assert.equal(hash(baseline.sourceIdentity), pins[mode].identity);
 	assert.deepEqual(item.input.component, { id: "owned-aggregates@1.0.0", name: "owned-aggregates", version: "1.0.0" });
 	assert.equal(identity.leanVersion, "4.32.2");
 	assert.equal(identity.leanCommit, "f3b06c705e6c85f5314019d5d3baab0fec5b580c");

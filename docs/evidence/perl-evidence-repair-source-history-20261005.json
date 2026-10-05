@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-live-receipt-repair-v1",
+  "predecessorCommit": "4affa1bcf6727a550db59ab845394f425cc26882",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "5238df119d42950dc3e30314bfce8cd3f8694fb7f58ebde7da3cd8e07ace276f",
+      "previousSha256": "79fd77bb095ffc11bfdff86482f1bf1207135b220f56cc60fc86398c22bca722",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n",
+          "current": "          \"sha256\": \"0ff395b49dc9e123397c2fc7fb0093418d4d015490b373d02226fa7ff8a0db24\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n",
+          "current": "          \"sha256\": \"0ff395b49dc9e123397c2fc7fb0093418d4d015490b373d02226fa7ff8a0db24\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n",
+          "current": "          \"sha256\": \"0ff395b49dc9e123397c2fc7fb0093418d4d015490b373d02226fa7ff8a0db24\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "0ff395b49dc9e123397c2fc7fb0093418d4d015490b373d02226fa7ff8a0db24",
+      "previousSha256": "fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5",
+      "edits": [
+        {
+          "start": 2031,
+          "previous": "",
+          "current": "import \"./helpers/perl-evidence-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-compiler-identity-tests.mjs",
+      "currentSha256": "d480b98773211999aee42898a908c961d5ac30803dd8cd7b4d8a7ab9be3c9111",
+      "previousSha256": "fce952b8d1274d782bbc7a3467c6b8b4722af2b13bcdf2994276bf9968416f9e",
+      "edits": [
+        {
+          "start": 2719,
+          "previous": "",
+          "current": "\ntest(\"historical callback validators normalize through the injected source reader only\", async () => {\n\tconst receipt = JSON.parse(await readFile(\"docs/evidence/owned-jvm-callback-results-20261003.json\", \"utf8\"));\n\tconst [original] = Object.entries(unpackOwnedCallbackReports(receipt.archive))\n\t\t.filter(([name]) => name.endsWith(\"-runtime.json\")).map(([, report]) => report.input);\n\tconst current = await readFile(\"src/analyze/NativeExports.lean\"), extractor = sha256(current);\n\tconst pins = { metadata: sha256(canonicalJson(original.metadata)), identity: sha256(canonicalJson(original.sourceIdentity)) };\n\tconst fresh = (mutate = () => {}) => {\n\t\tconst input = structuredClone(original), identity = input.sourceIdentity;\n\t\tmutate(input);\n\t\tidentity.extractorSha256 = extractor;\n\t\tconst selection = structuredClone(identity.request); delete selection.metadata;\n\t\tidentity.request = createMetadataRequest(selection, {\n\t\t\ttoolchain: `leanprover/lean4:v${identity.leanVersion}`\n\t\t\t, modules: identity.modules.map(item => ({\n\t\t\t\tname: item.module\n\t\t\t\t, sourcePath: item.source.path\n\t\t\t\t, sourceSha256: item.source.sha256\n\t\t\t\t, interfaceSha256: item.interface.interfaceSha256\n\t\t\t}))\n\t\t\t, leanCompilerSha256: identity.leanCompilerSha256\n\t\t\t, ...identity.reviewedBindingIr === undefined ? {} : { reviewedBindingIrSha256: sha256(canonicalJson(identity.reviewedBindingIr)) }\n\t\t\t, extractorSha256: extractor\n\t\t});\n\t\tinput.metadata.producer.invocationIdentitySha256 = identity.request.metadata.invocationIdentitySha256;\n\t\treturn input;\n\t};\n\tconst pinned = async (input, readSource) => {\n\t\tconst baseline = await callbackCompilerInputAtBaseline(input, readSource);\n\t\treturn sha256(canonicalJson(baseline.metadata)) === pins.metadata\n\t\t\t&& sha256(canonicalJson(baseline.sourceIdentity)) === pins.identity;\n\t};\n\tconst read = [];\n\tconst spy = async path => { read.push(path); return current; };\n\tassert.ok(await pinned(fresh(), spy));\n\tassert.deepEqual(read, [\"src/analyze/NativeExports.lean\"]);\n\t// Bytes come from the injected reader, never implicitly from the working tree.\n\tawait assert.rejects(() => callbackCompilerInputAtBaseline(fresh(), async () => Buffer.concat([current, Buffer.from(\"\\n-- forged\\n\")])));\n\t// Coordinated semantic edits remain bound to the original pins even with consistent invocation hashes.\n\tfor(const mutate of [\n\t\titem => { item.metadata.modules[0].declarations.pop(); }\n\t\t, item => { item.metadata.modules[0].interfaceSha256 = \"0\".repeat(64); item.sourceIdentity.modules[0].interface.interfaceSha256 = \"0\".repeat(64); }\n\t\t, item => { item.sourceIdentity.request.exports = [...item.sourceIdentity.request.exports].slice(1); }\n\t]) {\n\t\tconst altered = fresh(mutate);\n\t\tassert.equal(altered.metadata.producer.invocationIdentitySha256, altered.sourceIdentity.request.metadata.invocationIdentitySha256);\n\t\tassert.equal(await pinned(altered).catch(() => false), false);\n\t}\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-compiler-identity.mjs",
+      "currentSha256": "fc3a862c46a1ecb6a9f233352c9a5b70e05b236bf0d70f12caf1291766f60f82",
+      "previousSha256": "fb26135ca46fc8046dc49f65a4d608166c15141fc63246203fa1407dab853c46",
+      "edits": [
+        {
+          "start": 1216,
+          "previous": "",
+          "current": " * @param readSource - Current source or authenticated historical source reader.\n"
+        },
+        {
+          "start": 1301,
+          "previous": "export const callbackCompilerInputAtBaseline = async input => {\n\tconst path = \"src/analyze/NativeExports.lean\", bytes = await readFile(path);\n",
+          "current": "export const callbackCompilerInputAtBaseline = async (input, readSource = readFile) => {\n\tconst path = \"src/analyze/NativeExports.lean\", bytes = await readSource(path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-fin-source-history-tests.mjs",
+      "currentSha256": "40cd3c7298406063ebec62eb307547e38ef092a0c0affa48960c070ba9f0c3b8",
+      "previousSha256": "c7dbccf573e434c56d4906540299aafed4e0d699ebe35c4cdf3eac65dd4970f0",
+      "edits": [
+        {
+          "start": 357,
+          "previous": "",
+          "current": "import { beforePerlEvidenceRepairSource } from \"./perl-evidence-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 986,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePerlEvidenceRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-fin-source-history.mjs",
+      "currentSha256": "4cb55a97d715e84c5d51ede7beb404f0d89db803ef843a8225b0ad6b0185ed24",
+      "previousSha256": "c7c770cbd2c004c8196e3ca60a3de475bc33980b6fc1a75b9911d4d40bab81b8",
+      "edits": [
+        {
+          "start": 220,
+          "previous": "",
+          "current": "import { beforePerlEvidenceRepairSource } from \"./perl-evidence-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3255,
+          "previous": "",
+          "current": "\tsource = beforePerlEvidenceRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "4221819a87b442b15de4da33d98da755650410e5a7608c87a17f7f6083ae5cb5",
+      "previousSha256": "701eee0f2aca3c123504c1f2f5f386dfbe020f550a727eb09250dc7ab18ddbe9",
+      "edits": [
+        {
+          "start": 890,
+          "previous": "",
+          "current": "import { perlEvidenceRepairChangedPaths } from \"./perl-evidence-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 34319,
+          "previous": "",
+          "current": "\t, ...perlEvidenceRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence.mjs",
+      "currentSha256": "01a485ac34d5b95a500ca15ee1989c482d8297581862497bc0622958b171d393",
+      "previousSha256": "8e4a39f99192b7b3955c7452b560cdab6c611af7080c5fc530c968868423c6a0",
+      "edits": [
+        {
+          "start": 302,
+          "previous": "",
+          "current": "import { callbackCompilerInputAtBaseline } from \"./callback-compiler-identity.mjs\";\n"
+        },
+        {
+          "start": 5048,
+          "previous": "\tassert.equal(hash(metadata), pins[mode].metadata); assert.equal(hash(identity), pins[mode].identity);\n",
+          "current": "\tassert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);\n\tconst baseline = await callbackCompilerInputAtBaseline(item.input, readSource);\n\tassert.equal(hash(baseline.metadata), pins[mode].metadata); assert.equal(hash(baseline.sourceIdentity), pins[mode].identity);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-variant-evidence.mjs",
+      "currentSha256": "0dca2ed36dc49daaa9c049afeeeb216e6f4ccae99280c4337dfc816dc51ea6ba",
+      "previousSha256": "bdd6d6595139e697f5ad2e3a7cdca3c32fc6c3285c91ace058d29847f450cbea",
+      "edits": [
+        {
+          "start": 302,
+          "previous": "",
+          "current": "import { callbackCompilerInputAtBaseline } from \"./callback-compiler-identity.mjs\";\n"
+        },
+        {
+          "start": 3772,
+          "previous": "\tassert.equal(hash(item.input.metadata), pins[mode].metadata);\n\tassert.equal(hash(source), pins[mode].identity);\n",
+          "current": "\tassert.equal(item.input.metadata.producer.invocationIdentitySha256, source.request.metadata.invocationIdentitySha256);\n\tconst baseline = await callbackCompilerInputAtBaseline(item.input, readSource);\n\tassert.equal(hash(baseline.metadata), pins[mode].metadata);\n\tassert.equal(hash(baseline.sourceIdentity), pins[mode].identity);\n"
+        }
+      ]
+    }
+  ]
+}

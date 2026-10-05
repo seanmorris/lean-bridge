@@ -6,6 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { callbackCompilerInputAtBaseline } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
 import { basename, isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -61,8 +62,10 @@ const sourceRecord = async (record, path, readSource) => {
 const sources = async (mode, variant, item, readSource) => {
 	keys(item.input, "metadata sourceIdentity component");
 	const { sourceIdentity: source } = item.input;
-	assert.equal(hash(item.input.metadata), pins[mode].metadata);
-	assert.equal(hash(source), pins[mode].identity);
+	assert.equal(item.input.metadata.producer.invocationIdentitySha256, source.request.metadata.invocationIdentitySha256);
+	const baseline = await callbackCompilerInputAtBaseline(item.input, readSource);
+	assert.equal(hash(baseline.metadata), pins[mode].metadata);
+	assert.equal(hash(baseline.sourceIdentity), pins[mode].identity);
 	const configuration = mode === "ordinary" ? await ownedDotnetCallbackResultConfiguration() : { schemaVersion: 1, modules: ["Owned"] };
 	configuration.targets = { cpan: { module: "LeanBridge::OwnedProbe", version: "0.010" } };
 	const lean = (await readSource("tests/fixtures/onboarding/owned-aggregates/Owned.lean")).toString() + ownedDotnetCallbackResultSource;

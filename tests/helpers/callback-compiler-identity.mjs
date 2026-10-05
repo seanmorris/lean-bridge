@@ -22,9 +22,10 @@ const baselineExtractor = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9d
  * Every declaration, interface, diagnostic and selection remains unchanged.
  *
  * @param input - Observed metadata and independently recorded source identity.
+ * @param readSource - Current source or authenticated historical source reader.
  */
-export const callbackCompilerInputAtBaseline = async input => {
-	const path = "src/analyze/NativeExports.lean", bytes = await readFile(path);
+export const callbackCompilerInputAtBaseline = async (input, readSource = readFile) => {
+	const path = "src/analyze/NativeExports.lean", bytes = await readSource(path);
 	assert.equal(sha256(beforeFinRefinementSource(path, bytes, input.sourceIdentity.extractorSha256)), input.sourceIdentity.extractorSha256);
 	assert.equal(sha256(beforeFinRefinementSource(path, bytes, baselineExtractor)), baselineExtractor);
 	projectNativeMetadata(input.metadata, input.sourceIdentity, { ownedGraphs: true, copiedGraphs: true });

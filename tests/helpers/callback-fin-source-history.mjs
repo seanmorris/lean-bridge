@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlEvidenceRepairSource } from "./perl-evidence-repair-source-history.mjs";
 
 export const callbackFinHistoryPath = "docs/evidence/npm-callback-fin-source-history-20261005.json";
 export const callbackFinChangedPaths = [
@@ -77,6 +78,7 @@ export const reverseCallbackFinUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCallbackFinSource = (path, source, expected) => {
+	source = beforePerlEvidenceRepairSource(path, source, expected);
 	if(typeof source !== "string" || !callbackFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

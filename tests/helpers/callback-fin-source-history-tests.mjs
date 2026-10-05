@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePerlEvidenceRepairSource } from "./perl-evidence-repair-source-history.mjs";
 import { beforeCallbackFinSource, callbackFinChangedPaths
 	, callbackFinHistoryPath, reverseCallbackFinUpdate } from "./callback-fin-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("callback Fin history authenticates predecessors and rejects unrelated edit
 	assert.deepEqual(record.updates.map(item => item.path), callbackFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePerlEvidenceRepairSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCallbackFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackFinSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
