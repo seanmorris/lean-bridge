@@ -15,10 +15,13 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { writeAnalysisOutput } from "../src/analyze/output.mjs";
 import { hashBindingIr, parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
-import { cliHandlers } from "../src/cli/commands.mjs";
+import { createCliHandlers } from "../src/cli/commands.mjs";
 import { runCli } from "../src/cli/run.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
+// These internal scanner/presentation tests inject their legacy analysis input.
+// compiler-analysis.test.mjs covers the public compiler-backed CLI contract.
+const cliHandlers = createCliHandlers({ analyze: analyzeLeanProject });
 
 const snapshot = async root => {
 	const names = (await readdir(root)).sort();
@@ -252,7 +255,13 @@ test("the published analysis schema closes the report and adapter questions", as
   assert.equal(schema.properties.project.additionalProperties, false);
   assert.equal(schema.$defs.candidate.additionalProperties, false);
   assert.equal(schema.$defs.hint.additionalProperties, false);
-  assert.equal(schema.properties.bindingIr.oneOf[1].properties.document.$ref, "binding-ir.schema.json");
+  assert.deepEqual(schema.properties.bindingIr.oneOf[1].properties.document, {
+    oneOf: [{ $ref: "binding-ir.schema.json" }, { $ref: "binding-ir-owned.schema.json" }]
+  });
+  assert.deepEqual(schema.properties.bindingIr.oneOf[1].allOf, [{
+    if: { properties: { document: { properties: { schemaVersion: { const: 4 } } } } }
+    , then: { properties: { origin: { const: "lean-elaborated" } } }
+  }]);
 
   const policySchema = JSON.parse(await readFile("schema/analysis-policy.schema.json", "utf8"));
   assert.equal(policySchema.additionalProperties, false);
@@ -265,7 +274,7 @@ test("the published analysis schema closes the report and adapter questions", as
 	const elaboratedSchema = JSON.parse(await readFile("schema/elaborated-export-metadata.schema.json", "utf8"));
 	assert.equal(elaboratedSchema.$schema, "https://json-schema.org/draft/2020-12/schema");
 	assert.equal(elaboratedSchema.additionalProperties, false);
-	assert.equal(elaboratedSchema.properties.schemaVersion.const, 1);
+	assert.equal(elaboratedSchema.properties.schemaVersion.const, 2);
 	assert.equal(elaboratedSchema.$defs.producer.additionalProperties, false);
 	assert.equal(elaboratedSchema.$defs.module.additionalProperties, false);
 	assert.equal(elaboratedSchema.$defs.declaration.additionalProperties, false);

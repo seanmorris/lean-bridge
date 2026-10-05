@@ -24,7 +24,10 @@ test("language searches rank the primary guide ahead of body and partial-name ma
 		, ["Rust", "rust"], ["Kotlin", "kotlin"], ["Ruby", "ruby"]
 		, ...["JavaScript", "JS", "TypeScript", "TS", "Browser", "Browser JavaScript", "React", "worker", "Workers", "Browser Workers", "Node.js"]
 			.map(query => [query, "javascript-typescript"])
-		, ...["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "Composer", "Nix"].map(query => [query, `publish-${query.toLowerCase()}`])
+		, ...["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "CPAN", "Nix"].map(query => [query, `publish-${query.toLowerCase()}`])
+		, ["Composer", "publish-php"], ["Packagist", "publish-php"]
+		, ["PHP", "php"], ["PHP-Wasm", "php"], ["Native PHP", "php"], ["Perl", "perl"]
+		, ["Publish Python", "publish-pypi"], ["Publish PHP", "publish-php"]
 		, ["Contributing", "contributing"]
 		, ["Site development", "contributing-documentation"]
 		, ["Demo testing", "contributing-demos"]

@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "verified-source-inventory-refresh",
+  "finalAcceptance": false,
+  "previousInventorySha256": "e7c6387ecadacfbb7da0d498ca2b4ab6b0e45b3ba88c6fe9678370d30d5c4eaa",
+  "method": "Current compiled regressions, exact checker upgrades, reviewed documentation and additive registrations",
+  "entries": [
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "bc1c0c8cf31b7a9e91f0cbf1b5f3ca782a1376cd5010011420ec56125440ba2e",
+      "currentSha256": "20d917b9b75afd8d895e2d30764be3c939380cb22b871d8e1708830c9ec998ce",
+      "verification": "administrative"
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "b383bcf21b1740c41c4315f89b3efbe740d9c6d5bd6e4ab628997c0cc39dd639",
+      "currentSha256": "e4f1759774e0fff3415ebf4264a31cd36e4c619e541bac0c4e8bdabcc5d5dc03",
+      "verification": "administrative"
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "21c861cc0b928389bf10988689ee2b3c53408b2821683efc1f81dc2c407e09fa",
+      "currentSha256": "6b89f0dc7edb7d5c13bd69373c057f75a5bfef1da332a95aa95759a9e59ed299",
+      "verification": "administrative"
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "1a79cf1802cfa0ec1fae20e2374f438c3c23780b51bed3ca90f4d1073c13e239",
+      "currentSha256": "b8f9e3c7062280246939714dbf38b65d1103856b9797f563e66babb1b3f7648e",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8",
+      "currentSha256": "5a56a334752d19736c01e23a8b48a14f998a3128435b04af340f554659114ca5",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/backends/c/copied-graph-layout.mjs",
+      "previousSha256": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+      "currentSha256": "4873e56471efc4d44d0c8e71b2cb1b35ad5dbee77d5f1ae2d21eabfc63d709cc",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/backends/c/native-graph-adapters.mjs",
+      "previousSha256": "6fc401617a64e628f188ca87d7ef5aba179402a8653a3cb0077331bb5eb2820d",
+      "currentSha256": "1c1d36a558a121105390ed5986c3864eabf28a43de385a62566877ea6e3610df",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/compile-jvm-sources.mjs",
+      "previousSha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c",
+      "currentSha256": "2ddecb5b4de2a9bba9d7a70d6788c422b03350d5257d31a58119281d9dccd876",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "3c4af09ebd1a471bb77011516debd4e4978eb460671180f0449a2710ad673c73",
+      "currentSha256": "76c4a4dd66ce395b9d7b1fc2cd6120808707857ac746902f472bb35b170f360d",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/native-graph-projection.mjs",
+      "previousSha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044",
+      "currentSha256": "691429007b218b2f3e65b7f42e73a6c2c3ade12f44fa1be33d8488f92e12c44b",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/native-jvm-artifacts.mjs",
+      "previousSha256": "69f360fcd6c7c6e870c683025bc3357deb46c7ef472d061169b2afd93c47dd7a",
+      "currentSha256": "9a5a6c2e6b493a19f15981cdcac75aed60f889b206fdebdc4b94c63da0cc38e6",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/native-jvm-projection.mjs",
+      "previousSha256": "0cef5c5761c81cd4709db554b5fd3cbfe10dd2e16709a13fb0f575dfab9c7b73",
+      "currentSha256": "58a7164b152c3c562bd30e27a33c912840da0e5e2e8e802eed7993624d5a52b0",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9",
+      "currentSha256": "43645b75de02f6f66de8848bde8d8d171cfe55ae84244a605861f92144cd720f",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/release/native-maven.mjs",
+      "previousSha256": "e37fbda26182e3014a560a0d09fc8e94059b221b4200431bb9d7542cb28d51d2",
+      "currentSha256": "a08bfb7bc2b7196668e22f73c4bcdc8ab405b6b531e924b0e867b9598eb95535",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/native-perl-graph-regression.mjs",
+      "previousSha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3",
+      "currentSha256": "ab4bf52e6684de53204fffafac4e4a3abf8c49ddac3b1387aaeb6e9050b1adeb",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/perl-graph-documentation.mjs",
+      "previousSha256": "9eeced0ef9666af2191784bc2200408db6279bb6cd4fad874fe7b5e6fe16ef81",
+      "currentSha256": "b7d333d10f81a0b93bc0aa0ee5ce11bfbc3858c4c876fc744c54885f6beee4bb",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/source-registration-history.mjs",
+      "previousSha256": "be27498e39a878f32d49c1a566aac99f34182b7a6d979b46e3d030dbda81f1dc",
+      "currentSha256": "e59be565220d7655439ab1d5507a9d534cfdad2cccd60f740653839e52d3474a",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/test-registration-history.mjs",
+      "previousSha256": "dea17c3abf47768810303525a87e63cfd146dbef0c6088ba6b6952eb8e9145d8",
+      "currentSha256": "1ce08c2f5b0b8efbe780ae2129a475bba984a405a914c1b2e157793d9b80b39f",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/perl-graph-package.test.mjs",
+      "previousSha256": "4f86e10b76683b1e8f72485bc39bbfa8f4671e4f8608443be372df758f5c2913",
+      "currentSha256": "0ca4a5f0f46bbacfc178e1b8e7b86af8ebfd1c7e43412a1613feccf300eb62ec",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/source-registration-history.test.mjs",
+      "previousSha256": "4ea2baeb91efe1d3056eddf4accb529cfb3eb713a0d1e791fd814e0bcfea2380",
+      "currentSha256": "85331b2d1606dd7bed697b4cfdc719cc8a18eda574ec25534a3e32915dcb999b",
+      "verification": "administrative"
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "cc50b17f95e9543ae07fd39f58c36d09c0c8eb33725382495442838452e6921a",
+      "currentSha256": "8675b1956a80e0e3a75f0702abd91e52f8076e549d164c5bec03fe3c15b588ca",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/native-ruby-graph-regression.mjs",
+      "previousSha256": "98cdf1c34c692fbb49136ed6067746d8fe82c6369f95014db12a891badd4085e",
+      "currentSha256": "988532ef71ff4288b8acb98eb6e8444ae5182635a28cf244698199a4387a21ac",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/ruby-graph-package.test.mjs",
+      "previousSha256": "d7e67e0c932d25fd7e9563f70bba50e61bad350dfa6311f3714e9c19d267c230",
+      "currentSha256": "d4a4d5b024dd9e23af91b4207cdb5d458b4091e6088ac953de7cd6102a30a935",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/helpers/native-python-graph-regression.mjs",
+      "previousSha256": "997123ae90a7224e2d692733187ddf3d177a641635e97fadde3ed2f3468254d8",
+      "currentSha256": "e79dc98869a10187383434c0d4d7bd07dd5c88f1226c264f828e6f21061b92a8",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/python-graph-package.test.mjs",
+      "previousSha256": "c14636a59e6325c95826fdf3800ae09bf56ee1f0eb71c94e147d9dab37c455f5",
+      "currentSha256": "13dcff3a0779e5490c699740701313a0c764d7006ea3b0a59d9b81531921ebdd",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/rust-graph-package.test.mjs",
+      "previousSha256": "b4d013ea6c59b5eb5fe1f0bbbcbfa3050f14404c9b8db116c65c25ca5bfa519d",
+      "currentSha256": "12f0dcd58ae7cbfb828068379f9ed709fe2fe04201ec6d47052a5149ba759109",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/backends/php/php-wasm-copied-host.mjs",
+      "previousSha256": "bf82d936b654e17662aece07bb5f332c589a3c82e1d0fd1ffbf14f4fcc448b36",
+      "currentSha256": "293fe19a7bbe5465faf8644e6b89485b609fc5c7efbf231c45da72cec8f4f41c",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/php-wasm-copied-artifacts.mjs",
+      "previousSha256": "0fd9d83967e52bfa25da901dc0a6acfedfb861707ad154639128334b3fe273f2",
+      "currentSha256": "0d381c705cab4fc0f463c34f3a01a5b7698fa9a1a930512e057884745eec6dbf",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/build/php-wasm-copied-component.mjs",
+      "previousSha256": "d7a1b118717e7c5988d02696ad66fe53fec8a7697833e57dd311407fd599a5cc",
+      "currentSha256": "6ed86d6a337107b1e89003d84c7c76a7800957531eb570138983270b3cf89bc1",
+      "verification": "administrative"
+    },
+    {
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "previousSha256": "17e8964ef26a90fffc334cf970206f74f6f222367fba3ffc0157c2b5c3e79abc",
+      "currentSha256": "0a72f4de9ea4d814d0081e71c60f9aecb690e6f82459fd526474901b915a446e",
+      "verification": "administrative"
+    },
+    {
+      "path": "tests/php-wasm-ordinary.test.mjs",
+      "previousSha256": "f943de4c8f61063b2330db0a2162a5258bec4df81e5a206252b75887597f474c",
+      "currentSha256": "2c0b075b66b7547b1a241e831e1169163899fd3fbdaec5f540a97cf49501783d",
+      "verification": "administrative"
+    },
+    {
+      "path": "docs/evidence/recursive-npm-source-lineage-20260922.json",
+      "previousSha256": "310bd528a3f8a45ca9cab10e0a3f664a77a959ca8695315713b1380987408869",
+      "currentSha256": "2c3cb202dd78d5fcb0212dc76927f5ed1169549c1ce29b134ad55fd5283d61eb",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "52f32a0e829d1d7074f2a9ba3acf0777e5da452af1f24cd7b7874cf67b24efa7",
+      "currentSha256": "dfa80f75a2b568ac73ec225939fe0532af89519123ccab2b3b54a14b952f60f8",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "tests/kotlin-collection-evidence.test.mjs",
+      "previousSha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72",
+      "currentSha256": "965b8cea4bc26273aa2b9935ff6c257905515287c0df9950d6ea4a64b8464f4f",
+      "verification": "exact-collection-checker-upgrade"
+    },
+    {
+      "path": "docs/php.md",
+      "previousSha256": "63bdc0fa2cb629b6e780166b90d4c96a0e399c260c4468dd3aa276de944d9503",
+      "currentSha256": "71889bf6c1e613fdac4c4c931af41f8939b441a68c32ae246e3251848ee47d3c",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "tests/php-wasm-collection-evidence.test.mjs",
+      "previousSha256": "c6d73aedd70014e2a05f4f079f814edb15f26edcc92567a602bcbe60c70a8030",
+      "currentSha256": "e91b91360cd32bc123d6ec85e5b91e3e67f9e140cf19e4e5e530ab497d655bd3",
+      "verification": "exact-collection-checker-upgrade"
+    },
+    {
+      "path": "src/build/native-php-artifacts.mjs",
+      "previousSha256": "b3ca638d2d0997a6dbec55bc1b6741aa806515c0dc87bc261b1a8248cc80b523",
+      "currentSha256": "76aa75d9ec894451a5074e6cc5cebd3fa8dbc89b7af2342796719cd0eb60a4cd",
+      "verification": "php-family-regressions"
+    },
+    {
+      "path": "src/release/native-composer.mjs",
+      "previousSha256": "16418dc9c3b942874204c28902a056b29d6926e7d8ee4d259f01e5154c7dbf1b",
+      "currentSha256": "10e9fbfd62c1c8e48749c8b36824635b3a077e1e51a177847c80aa6c26df4420",
+      "verification": "php-family-regressions"
+    },
+    {
+      "path": "docs/consume/java.md",
+      "previousSha256": "7337540c870a5630d639d5851fb5fc00a8a5130a847546bb0a79bbe8a221b150",
+      "currentSha256": "1e4d68fc61018ad38552ec2878ac9766d8b68f2b2c020b1934085abd616dfc96",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "f81f2de427ef578b9db89b5d2c3f618527bd345625a23566ff411763c337bfec",
+      "currentSha256": "695d6ac8b49b469126a5bd8f607ecf0558bc7c6faee2674fff05672003ba5b93",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "src/release/native-nuget.mjs",
+      "previousSha256": "40e9d28d56f865f51b5092f05dbf9427b34f94a4e71889c0b943eab5ba94bee9",
+      "currentSha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae",
+      "verification": "dotnet-family-regressions"
+    },
+    {
+      "path": "src/build/native-dotnet-artifacts.mjs",
+      "previousSha256": "7a51ec5953cf43473bd8110401c922a764ee854af39c4bba09a82434bfafa640",
+      "currentSha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9",
+      "verification": "dotnet-family-regressions"
+    },
+    {
+      "path": "src/build/native-dotnet-projection.mjs",
+      "previousSha256": "0251e2977aa7fabae75b346d73863119057aa82c7640a32780db756c62a22741",
+      "currentSha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0",
+      "verification": "dotnet-family-regressions"
+    },
+    {
+      "path": "src/backends/php/package-audit.mjs",
+      "previousSha256": "3073dc6677fe27aca7c13a235df07f0ab6ed372ff27b3e7883a99ba86c738793",
+      "currentSha256": "2b2912c62e226513e917dce7cc41c8e7ee114d7c63f9f2b754b9ee1bd5b79a8f",
+      "verification": "php-family-regressions"
+    },
+    {
+      "path": "src/backends/managed/package-audit.mjs",
+      "previousSha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4",
+      "currentSha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a",
+      "verification": "dotnet-family-regressions"
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "6b9fcf463af793605ef97a446db6a3b850f4f7a111689893841b1419ef2a3980",
+      "currentSha256": "ce9e570078c20c074c8344c94ce3f71755e2d9c5281d66e831745fa3807e0802",
+      "verification": "reviewed-documentation"
+    },
+    {
+      "path": "docs/architecture/binding-ir.md",
+      "previousSha256": "2a0d0009cd17c02de3b92dc6f088193b02252d31cab266d592f4a43748826c7f",
+      "currentSha256": "7202496cee150082ceb1a3453d284459a683979586b5ce0a59b3234449753bf8",
+      "verification": "reviewed-documentation"
+    }
+  ],
+  "dotnetPredecessors": {
+    "src/release/native-nuget.mjs": {
+      "sha256": "40e9d28d56f865f51b5092f05dbf9427b34f94a4e71889c0b943eab5ba94bee9",
+      "text": "/**\n * Assemble deterministic ordinary NuGet archives without compiler access.\n *\n * @file\n */\nimport { mkdir, readFile, writeFile } from \"node:fs/promises\";\nimport { dirname, join } from \"node:path\";\nimport { fileURLToPath } from \"node:url\";\nimport { canonicalJson, sha256 } from \"../capsule/node.mjs\";\nimport { nativeArtifactPaths, verifyNativeFiles } from \"../build/native-artifacts.mjs\";\nimport { ordinaryDotnetEvidence } from \"../build/native-dotnet-artifacts.mjs\";\nimport { generateCopiedDotnetPackage } from \"../backends/dotnet/copied-values.mjs\";\nimport { validateOrdinaryNugetSettings } from \"../backends/dotnet/copied-model.mjs\";\nimport { createDeterministicZip } from \"./deterministic-zip.mjs\";\nimport { readVerifiedSourceNotices } from \"./source-notices.mjs\";\nimport { compiledPackageMetadata, nugetPackageMetadata } from \"../analyze/package-metadata.mjs\";\n\n/**\n * Package exact managed/native artifacts, provenance, and dependency licenses.\n *\n * @param options - Verified inputs and optional NuGet coordinates.\n * @param options.working - Private output staging directory.\n * @param options.dotnetRoot - Compiled managed artifacts and inventory.\n * @param options.nativeRoot - Compiled component and source evidence.\n * @param options.runtimeRoot - Shared runtime and identity.\n * @param options.adapterRoot - Checked compiled C adapter.\n * @param options.leanPrefix - Lean license notices.\n * @param options.settings - Optional NuGet name and version.\n * @param options.glibcMinimumVersion - Validated Linux ABI floor.\n */\nexport const packageOrdinaryNuget = async ({ working, dotnetRoot, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings = {}, glibcMinimumVersion }) => {\n\tvalidateOrdinaryNugetSettings(settings);\n\tconst { model, projection, evidence, receipt } = await ordinaryDotnetEvidence({ nativeRoot, runtimeRoot, adapterRoot });\n\tconst compiled = JSON.parse(await readFile(join(dotnetRoot, \"native-dotnet.json\"), \"utf8\"));\n\tawait verifyNativeFiles(dotnetRoot, compiled.files);\n\tif(compiled.schemaVersion !== 1 || compiled.profile !== \"native-library-v1\" || compiled.bindingIrSha256 !== model.bindingIrSha256\n\t\t|| compiled.assembly !== projection.assembly || canonicalJson(compiled.evidence) !== canonicalJson(evidence)\n\t\t|| !/^8\\.0\\.\\d+$/.test(compiled.sdk)\n\t\t|| (await nativeArtifactPaths(dotnetRoot)).some(path => path !== \"native-dotnet.json\" && !Object.hasOwn(compiled.files, path))) throw new Error(\"Compiled .NET projection differs from the source model or native evidence\");\n\tfor(const [path, contents] of Object.entries(generateCopiedDotnetPackage(model.bindingIr, evidence)))\n\t\tif(await readFile(join(dotnetRoot, path), \"utf8\") !== contents) throw new Error(\"Generated .NET source differs from the compiled package model\");\n\tif(await readFile(join(dotnetRoot, \"global.json\"), \"utf8\") !== canonicalJson({ sdk: { version: compiled.sdk, rollForward: \"disable\", allowPrerelease: false } })) throw new Error(\".NET SDK selection differs from the compiled projection\");\n\tconst name = settings.name ?? projection.assembly, version = settings.version ?? model.component.version;\n\tvalidateOrdinaryNugetSettings({ name, version });\n\tconst root = join(working, \"packages/nuget\", `${name}.${version}`);\n\tconst save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: \"wx\" }); };\n\tconst copy = async (source, path) => save(path, await readFile(source));\n\tfor(const extension of [\"dll\", \"xml\"]) await copy(join(dotnetRoot, `lib/net8.0/${projection.assembly}.${extension}`), `lib/net8.0/${projection.assembly}.${extension}`);\n\tfor(const file of Object.keys(evidence.libraries))\n\t{\n\t\tconst source = file === evidence.library ? join(adapterRoot, \"lib\", file) : file === receipt.library ? join(nativeRoot, file) : join(runtimeRoot, \"lib\", file);\n\t\tawait copy(source, `runtimes/linux-x64/native/${file}`);\n\t}\n\tfor(const path of Object.keys(compiled.files).filter(path => path.startsWith(\"src/\") || path === \"binding-manifest.json\")) await copy(join(dotnetRoot, path), `lean-bridge/dotnet/${path}`);\n\tawait copy(join(dotnetRoot, \"native-dotnet.json\"), \"lean-bridge/native-dotnet.json\");\n\tawait copy(join(dotnetRoot, \"global.json\"), \"lean-bridge/dotnet/global.json\");\n\tfor(const path of [\"native-component.json\", \"model.json\", \"metadata.json\", \"binding-ir.json\", \"generated.lean\", \"component.h\", \"allocation-guard.h\", \"artifacts.json\"])\n\t\tawait copy(join(nativeRoot, path), `lean-bridge/component/${path}`);\n\tif(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, \"lake-generated-sources.json\"), \"lean-bridge/component/lake-generated-sources.json\");\n\tawait copy(join(adapterRoot, \"native-c-adapter.json\"), \"lean-bridge/native-c-adapter.json\");\n\tawait copy(join(runtimeRoot, \"runtime.json\"), \"lean-bridge/runtime.json\");\n\tawait copy(join(leanPrefix, \"LICENSE\"), \"lean-bridge/licenses/Lean-LICENSE\");\n\tawait copy(join(leanPrefix, \"LICENSES\"), \"lean-bridge/licenses/Lean-LICENSES\");\n\tfor(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`lean-bridge/licenses/${path}`, bytes);\n\tawait copy(fileURLToPath(new URL(\"../../LICENSE\", import.meta.url)), \"lean-bridge/licenses/LeanBridge-LICENSE\");\n\tawait save(\"README.md\", `# ${name} ${version}\\n\\nInstall this prepared NuGet archive and call ${projection.namespace}.Api. Requires .NET 8 and Linux x86-64 with glibc ${glibcMinimumVersion} or newer. The native component and compatible shared runtime are included and loaded automatically. Consumers do not need Lean, Node, a C compiler or handwritten marshalling.\\n\\n${await readFile(join(dotnetRoot, \"README.md\"), \"utf8\")}\\n`);\n\tawait save(`${name}.nuspec`, `<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<package xmlns=\"http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd\"><metadata><id>${name}</id><version>${version}</version>${nugetPackageMetadata(compiledPackageMetadata(model.sourceIdentity))}<readme>README.md</readme><requireLicenseAcceptance>false</requireLicenseAcceptance><dependencies><group targetFramework=\"net8.0\" /></dependencies></metadata></package>\\n`);\n\tawait save(\"_rels/.rels\", `<?xml version=\"1.0\" encoding=\"utf-8\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Type=\"http://schemas.microsoft.com/packaging/2010/07/manifest\" Target=\"/${name}.nuspec\" Id=\"R1\" /></Relationships>\\n`);\n\tawait save(\"[Content_Types].xml\", `<?xml version=\"1.0\" encoding=\"utf-8\"?><Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\">${[\"rels\", \"dll\", \"so\", \"xml\", \"json\", \"md\", \"txt\", \"nuspec\", \"cs\", \"csproj\", \"lean\", \"h\"].map(extension => `<Default Extension=\"${extension}\" ContentType=\"${extension === \"rels\" ? \"application/vnd.openxmlformats-package.relationships+xml\" : \"application/octet-stream\"}\"/>`).join(\"\")}</Types>\\n`);\n\tconst inventory = {};\n\tfor(const path of await nativeArtifactPaths(root))\n\t{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }\n\tawait save(\"lean-bridge/package-receipt.json\", canonicalJson({ schemaVersion: 1, kind: \"lean-bridge-ordinary-nuget-package\", ecosystem: \"nuget\", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, assembly: projection.assembly, compiledProjectionSha256: sha256(canonicalJson(compiled)), files: inventory }));\n\tconst archive = `${name}.${version}.nupkg`, bytes = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });\n\tawait mkdir(join(working, \"archives\"), { recursive: true });\n\tawait writeFile(join(working, \"archives\", archive), bytes, { flag: \"wx\" });\n\treturn { ecosystem: \"nuget\", backend: \"ordinary-dotnet-v1\", runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, namespace: projection.namespace, assembly: projection.assembly, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };\n};\n"
+    },
+    "src/build/native-dotnet-artifacts.mjs": {
+      "sha256": "7a51ec5953cf43473bd8110401c922a764ee854af39c4bba09a82434bfafa640",
+      "text": "/**\n * Verify ordinary .NET loader inputs against native compiler artifacts.\n *\n * @file\n */\nimport { readFile } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { canonicalJson, sha256 } from \"../capsule/node.mjs\";\nimport { compileCopiedDotnetModel } from \"../backends/dotnet/copied-model.mjs\";\nimport { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from \"./native-artifacts.mjs\";\n\n/**\n * Derive loader evidence only from verified native component and C adapter bytes.\n *\n * @param options - Closed native staging roots.\n * @param options.nativeRoot - Native component artifacts.\n * @param options.runtimeRoot - Shared native runtime.\n * @param options.adapterRoot - Compiled C adapter artifacts.\n */\nexport const ordinaryDotnetEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {\n\tconst { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);\n\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity);\n\tconst projection = compileCopiedDotnetModel(model.bindingIr);\n\tconst adapter = JSON.parse(await readFile(join(adapterRoot, \"native-c-adapter.json\"), \"utf8\"));\n\tawait verifyNativeFiles(adapterRoot, adapter.files);\n\tif(adapter.schemaVersion !== 1 || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n\t\t|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))\n\t\t|| adapter.library !== `lib${projection.surface.prefix}.so`\n\t\t|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== \"native-c-adapter.json\" && !Object.hasOwn(adapter.files, path))) throw new Error(\".NET C adapter differs from compiled component\");\n\tconst evidence = { runtimeIdentity: identity\n\t\t, componentId: model.component.id\n\t\t, componentReceiptSha256: sha256(canonicalJson(receipt))\n\t\t, library: adapter.library\n\t\t, libraries: { [adapter.library]: adapter.files[`lib/${adapter.library}`].sha256\n\t\t\t, [receipt.library]: receipt.nativeLibrary.sha256\n\t\t\t, ...Object.fromEntries(Object.entries(runtime.files).filter(([path]) => path.startsWith(\"lib/\")).map(([path, file]) => [path.slice(4), file.sha256])) } };\n\treturn { model, receipt, projection, evidence, adapter, runtime };\n};\n"
+    },
+    "src/build/native-dotnet-projection.mjs": {
+      "sha256": "0251e2977aa7fabae75b346d73863119057aa82c7640a32780db756c62a22741",
+      "text": "/**\n * Compile generated C# once against verified ordinary native artifacts.\n *\n * @file\n */\nimport { mkdir, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { dirname, join } from \"node:path\";\nimport { canonicalJson, sha256 } from \"../capsule/node.mjs\";\nimport { generateCopiedDotnetPackage } from \"../backends/dotnet/copied-values.mjs\";\nimport { auditManagedBindingPackage } from \"../backends/managed/package-audit.mjs\";\nimport { nativeArtifactPaths } from \"./native-artifacts.mjs\";\nimport { ordinaryDotnetEvidence } from \"./native-dotnet-artifacts.mjs\";\nimport { processBuildRunner } from \"./process-runner.mjs\";\nimport { packageOrdinaryNuget } from \"../release/native-nuget.mjs\";\n\n/**\n * Compile C# before invoking compiler-free NuGet assembly.\n *\n * @param options - Native roots and selected NuGet metadata.\n * @param options.working - Private staging directory.\n * @param options.nativeRoot - Verified native component directory.\n * @param options.runtimeRoot - Verified native runtime directory.\n * @param options.adapterRoot - Verified C adapter directory.\n * @param options.leanPrefix - Compiler license notices.\n * @param options.settings - Optional NuGet name and version.\n * @param options.glibcMinimumVersion - Validated native glibc floor.\n * @param options.environment - Explicit compiler environment.\n * @param options.signal - Optional cancellation signal.\n */\nexport const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion, environment, signal }) => {\n\tconst { model, projection, evidence } = await ordinaryDotnetEvidence({ nativeRoot, runtimeRoot, adapterRoot });\n\tconst root = join(working, \"native/dotnet\"), scratch = join(working, \"dotnet-compiler\");\n\tconst files = generateCopiedDotnetPackage(model.bindingIr, evidence);\n\tauditManagedBindingPackage(model.bindingIr, files, \"dotnet\");\n\tfor(const [path, contents] of Object.entries(files))\n\t{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents, { flag: \"wx\" }); }\n\tconst env = { ...environment, DOTNET_CLI_HOME: join(scratch, \"cli\"), DOTNET_CLI_TELEMETRY_OPTOUT: \"1\", DOTNET_NOLOGO: \"1\", DOTNET_SKIP_FIRST_TIME_EXPERIENCE: \"1\", NUGET_PACKAGES: join(scratch, \"packages\") };\n\tconst run = args => processBuildRunner.capture({ command: environment.LEAN_BRIDGE_DOTNET ?? \"dotnet\", args, cwd: root, env, signal });\n\tconst sdks = (await run([\"--list-sdks\"])).stdout.split(\"\\n\").map(line => /^(8\\.0\\.\\d+) \\[/.exec(line)?.[1]).filter(Boolean);\n\tconst version = sdks.sort((a, b) => Number(a.split(\".\")[2]) - Number(b.split(\".\")[2])).at(-1);\n\tif(!version) throw new Error(\"Ordinary .NET packages require a .NET 8 SDK\");\n\tawait writeFile(join(root, \"global.json\"), canonicalJson({ sdk: { version, rollForward: \"disable\", allowPrerelease: false } }), { flag: \"wx\" });\n\tif((await run([\"--version\"])).stdout.trim() !== version) throw new Error(\"The generated .NET project did not use its selected SDK\");\n\tconst output = join(root, \"lib/net8.0\");\n\tawait run([\"build\", `src/${projection.assembly}/${projection.assembly}.csproj`\n\t\t, \"--configuration\", \"Release\", \"--output\", output\n\t\t, \"--nologo\", \"--disable-build-servers\"\n\t\t, \"-noAutoResponse\"\n\t\t, \"/p:ImportDirectoryBuildProps=false\"\n\t\t, \"/p:ImportDirectoryBuildTargets=false\"\n\t\t, \"/p:ImportDirectoryPackagesProps=false\"\n\t\t, \"/p:ContinuousIntegrationBuild=true\", \"/p:UseSharedCompilation=false\"\n\t\t, `/p:BaseIntermediateOutputPath=${scratch}/obj/`\n\t\t, `/p:PathMap=${working}=/build/ordinary-dotnet`]);\n\tawait rm(scratch, { recursive: true, force: true });\n\tconst inventory = {};\n\tfor(const path of await nativeArtifactPaths(root))\n\t{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }\n\tawait writeFile(join(root, \"native-dotnet.json\"), canonicalJson({ schemaVersion: 1, profile: \"native-library-v1\", bindingIrSha256: model.bindingIrSha256, evidence, sdk: version, assembly: projection.assembly, files: inventory }), { flag: \"wx\" });\n\treturn packageOrdinaryNuget({ working, dotnetRoot: root, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion });\n};\n"
+    },
+    "src/backends/managed/package-audit.mjs": {
+      "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4",
+      "text": "/**\n * Implements the package audit module in the managed backend.\n *\n * @file\n */\n\nimport { hashBindingIr } from \"../../binding-ir/canonical.mjs\";\n\n/**\n * Reports managed package audit failures with stable machine-readable codes and structured diagnostic context.\n */\nexport class ManagedPackageAuditError extends Error\n{\n\t/**\n   * Initializes the error used to report managed package audit failures, preserving its code, message, and diagnostic context.\n   *\n   * @param code - Stable machine-readable code that identifies the failure category.\n   * @param message - Human-readable explanation of the failure.\n   * @param details - Structured diagnostic fields associated with the failure.\n   */\n\tconstructor(code, message, details = {})\n\t{\n\t\tsuper(message);\n\t\tthis.name = \"ManagedPackageAuditError\";\n\t\tthis.code = code;\n\t\tthis.details = Object.freeze({ ...details });\n\t}\n}\n\nconst fail = (code, message, details = {}) => {\n\tthrow new ManagedPackageAuditError(code, message, details);\n};\n\nconst forbiddenPublic = Object.freeze({\n\tdotnet: /\\b(?:IntPtr|nint|LibraryImport|DllImport|NativeLibrary|unsafe|void\\*)\\b|generic\\s+dispatch/i\n\t, jvm: /\\b(?:MemorySegment|MemoryLayout|Linker|SymbolLookup|Arena|JNI)\\b|generic\\s+dispatch/i\n\t, ruby: /\\b(?:Fiddle|dlopen|Pointer|Closure)\\b|generic\\s+dispatch/i\n});\n\n/**\n * Checks managed binding package and returns structured evidence instead of relying on prose diagnostics in the generated native-language binding pipeline.\n *\n * @param ir - Binding IR document that defines the source types and operations.\n * @param files - Generated file map or inventory checked for required paths, content, and public-surface constraints.\n * @param target - Managed runtime target whose required package surface is audited.\n */\nexport const auditManagedBindingPackage = (ir, files, target) => {\n\tconst manifestText = files[\"binding-manifest.json\"];\n\tif(typeof manifestText !== \"string\") fail(\"missing-manifest\", `the generated ${target} package has no binding manifest`);\n\tlet manifest;\n\ttry\n\t{\n\t\tmanifest = JSON.parse(manifestText);\n\t} catch\n\t{\n\t\tfail(\"invalid-manifest\", `the generated ${target} binding manifest is not valid JSON`);\n\t}\n\tif(manifest.bindingIrSha256 !== hashBindingIr(ir) || manifest.target !== target)\n\t{\n\t\tfail(\"binding-ir-drift\", `the generated ${target} package identity differs from its Binding IR`);\n\t}\n\tconst expected = new Set(manifest.files ?? []);\n\tif(expected.size !== manifest.files?.length) fail(\"duplicate-file\", `the generated ${target} manifest repeats a file`);\n\tfor(const path of expected)\n\t{\n\t\tif(typeof files[path] !== \"string\") fail(\"missing-file\", `the generated ${target} package is missing ${path}`, { path });\n\t}\n\tfor(const path of manifest.publicFiles ?? [])\n\t{\n\t\tconst source = files[path];\n\t\tif(typeof source !== \"string\") fail(\"missing-public-file\", `the generated ${target} package is missing public source ${path}`);\n\t\t// Ruby contract comments may name a copied alias Pointer or Fiddle. They are not declarations.\n\t\tconst declarations = target === \"ruby\" ? source.replace(/^[\\t ]*#[^\\r\\n]*/gm, \"\") : source;\n\t\tif(forbiddenPublic[target].test(declarations)) fail(\"private-ffi-public\", `${path} exposes private ${target} FFI terms`);\n\t}\n\tif(!Array.isArray(manifest.capabilityGaps) || manifest.capabilityGaps.length === 0)\n\t{\n\t\tfail(\"missing-capability-report\", `the generated ${target} package has no closed capability report`);\n\t}\n\tif(!manifest.supportedFeatures?.includes(\"direct-functions\") || !manifest.supportedFeatures?.includes(\"deterministic-close\"))\n\t{\n\t\tfail(\"missing-managed-semantics\", `the generated ${target} package omits required public semantics`);\n\t}\n\treturn Object.freeze({\n\t\tbindingIrSha256: manifest.bindingIrSha256\n\t\t, publicFiles: Object.freeze([...manifest.publicFiles])\n\t\t, capabilityGaps: Object.freeze(manifest.capabilityGaps.map(gap => Object.freeze({ ...gap })))\n\t});\n};\n"
+    }
+  },
+  "proofs": {
+    "dotnet": {
+      "path": "docs/evidence/dotnet-current-family-regressions-20260924.json",
+      "sha256": "c793a49c2ff2b35ea8bf0e04eae4b0c020e523780f47237fa4701d89b7f6ab8c"
+    },
+    "php": {
+      "path": "docs/evidence/php-current-family-regressions-20260924.json",
+      "sha256": "b1d1d81511582800818f503ce827588d349debd2c019d00a04769f16f9c4d7d4"
+    },
+    "documentation": {
+      "path": "docs/evidence/recursive-documentation-updates-20260924.json",
+      "sha256": "9f5846764a2190e6bcb314dabfad1c7b87c07f072218b32207b2d2c3e91e3c9a"
+    },
+    "shared": {
+      "path": "docs/evidence/native-shared-regressions-20260924.json",
+      "sha256": "dea040a6dcc1c4450a4fc743b559741302760618fd8d97db2e5571e0cff85669"
+    }
+  }
+}

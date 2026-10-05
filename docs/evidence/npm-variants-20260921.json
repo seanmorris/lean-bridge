@@ -1,0 +1,254 @@
+{
+  "runs": [
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "153.0"
+        },
+        {
+          "engine": "webkit",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "26.5"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "f50b8009f1b9db916c8551a1b87334c6035a198a834737848179e09f739c1a3c",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "ordinary-source",
+      "receipt": {
+        "bindingIrSha256": "a4ba3165c191ba8e5796c144d64c2ab808716597ef436bc37cc391dee8a2e6e8",
+        "component": {
+          "id": "variants@1.0.0",
+          "name": "variants",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "7bea3b0087e4c12bfad7893d027566a6af2adb1f8fe2ae8eed02bcf62afa160e",
+        "componentBundleSha256": "f8b6b9571a3ca99a5b84011ee8d2d91285df753a6441352900f5fd9a71a96ce5",
+        "componentIdentitySha256": "4484224fa11c2df423550b2d41ce9e5c95135f633c582aab281abd58963751c6",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "variants-1.0.0.tgz",
+          "package": "variants@1.0.0",
+          "sha256": "bb993ad73ad076200c8922d773cf62d419685e3765075a9ccbadce35e9b74f6d"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "6cc537b57bac9dd21e08eac4c59dda5bf9ef36a13c19f98d1e4b1c928e5791a5",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1",
+          "sha256": "7d6edaa55fa3e285b1fd910a705e5e76ad0eb31efbd85765f3adcaaea857f337"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "320cf8593b3c6af962fde006ac7d604549753447a2f5f58cec5b703370d0c134"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 2363,
+        "primitives": 19,
+        "rejections": 38
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "223f65daaedc2ccae6a08782dd837481e4e798c36e25ab0fb1fb803332a22a8f",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    },
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "153.0"
+        },
+        {
+          "engine": "webkit",
+          "result": {
+            "page": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "react": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            },
+            "worker": {
+              "checks": 2363,
+              "primitives": 19,
+              "rejections": 38
+            }
+          },
+          "version": "26.5"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "f50b8009f1b9db916c8551a1b87334c6035a198a834737848179e09f739c1a3c",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "reviewed-ir",
+      "receipt": {
+        "bindingIrSha256": "67281d86fc21016f213e70d642eeda7ce1245f5fca1180213da7fda12086cd25",
+        "component": {
+          "id": "variants@1.0.0",
+          "name": "variants",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "7bea3b0087e4c12bfad7893d027566a6af2adb1f8fe2ae8eed02bcf62afa160e",
+        "componentBundleSha256": "86ab365ef783a5928302c93150e2e5f9d958d17815836cb01a55426481a69cfc",
+        "componentIdentitySha256": "6c033130643618af91171f4b32755ea83b814fa0b720a671666ed801e78192d6",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "variants-1.0.0.tgz",
+          "package": "variants@1.0.0",
+          "sha256": "942aa5a89993d3b5c4dd958d3c7b274207e6ff6fede12212529d1536e3d0aab9"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "b1de5d52875240c3d4230e112b8998e2cfe0874cd7f959bc37dc163fb8d00339",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1",
+          "sha256": "7d6edaa55fa3e285b1fd910a705e5e76ad0eb31efbd85765f3adcaaea857f337"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "1e92cac57c4623090d780dc6fd731b52a5892e9e67052e589070379a643a6022"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 2363,
+        "primitives": 19,
+        "rejections": 38
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "223f65daaedc2ccae6a08782dd837481e4e798c36e25ab0fb1fb803332a22a8f",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "tests/component-variants.test.mjs": "c6586cccecf6b437d592f2f55ae815f24a6a550330d658601bfa9578ea843d94",
+    "tests/component-variant-runtime.test.mjs": "bb2a8a46923e158018da30906ba0520fabdce8ab2da61f37e61fdd16324dc322",
+    "tests/component-variant-contract.test.mjs": "d67656f36d1eb6b935e3f1a81a6a65ab92a4bb7cc15d090b41ef2f1c3136387f",
+    "tests/helpers/variant-fixture.mjs": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754",
+    "tests/helpers/component-scalar-install.mjs": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779",
+    "tests/fixtures/variant-consumers/npm.mjs": "f50b8009f1b9db916c8551a1b87334c6035a198a834737848179e09f739c1a3c",
+    "tests/fixtures/onboarding/npm-variants/Variants.lean": "223f65daaedc2ccae6a08782dd837481e4e798c36e25ab0fb1fb803332a22a8f",
+    "tests/fixtures/onboarding/npm-variants/lakefile.toml": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31",
+    "tests/fixtures/onboarding/npm-variants/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-variants/package.json": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85",
+    "tests/fixtures/onboarding/npm-variants/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  }
+}

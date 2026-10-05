@@ -4,6 +4,7 @@
  * @file
  */
 
+import { phpWasmUnsupportedLibuvC } from "./php-wasm-libuv.mjs";
 import { createHash } from "node:crypto";
 import { posix } from "node:path";
 
@@ -439,70 +440,7 @@ EM_JS(void, lean_bridge_php_wasm_request_end, (), {
 });
 `;
 
-const phpWasmLibuvC = `#include <stddef.h>
-#include <stdint.h>
-#include <lean/lean.h>
-#include <uv.h>
-
-/*
- * Lean's pinned WebAssembly libuv build deliberately leaves part of its
- * platform layer undefined. A main Emscripten module can tolerate those
- * symbols, but a dynamically loaded side module cannot. The PHP-Wasm
- * profile does not advertise Lean file-system support, so these entry points
- * form an explicit unsupported-operation boundary instead of pulling a
- * second system runtime into the shared PHP memory.
- */
-
-static int lean_bridge_uv_unsupported(uv_fs_t *request) {
-  if (request != NULL) request->result = UV_ENOSYS;
-  return UV_ENOSYS;
-}
-
-const char *uv_strerror(int error) {
-  (void)error;
-  return "operation is unavailable in the PHP-Wasm Lean runtime profile";
-}
-
-void uv_fs_req_cleanup(uv_fs_t *request) {
-  (void)request;
-}
-
-int uv_fs_stat(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
-  (void)loop; (void)path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_fs_lstat(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
-  (void)loop; (void)path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_fs_link(uv_loop_t *loop, uv_fs_t *request, const char *path, const char *new_path, uv_fs_cb callback) {
-  (void)loop; (void)path; (void)new_path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_fs_unlink(uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback) {
-  (void)loop; (void)path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_fs_mkdtemp(uv_loop_t *loop, uv_fs_t *request, const char *template_path, uv_fs_cb callback) {
-  (void)loop; (void)template_path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_fs_mkstemp(uv_loop_t *loop, uv_fs_t *request, const char *template_path, uv_fs_cb callback) {
-  (void)loop; (void)template_path; (void)callback;
-  return lean_bridge_uv_unsupported(request);
-}
-
-int uv_os_tmpdir(char *buffer, size_t *size) {
-  (void)buffer; (void)size;
-  return UV_ENOSYS;
-}
-
-/*
+const phpWasmLibuvC = `${phpWasmUnsupportedLibuvC}/*
  * The link-spike components retain their JavaScript-main registration
  * constructors. PHP binds their exported Lean symbols directly, so these
  * compatibility hooks only let independently built components complete
@@ -646,7 +584,7 @@ const adaptZend = (source, profile) => {
 	if(!adapted.includes(externMarker)) fail("zend-adaptation-failed", "Zend adapter lacks the native runtime declarations");
 	adapted = adapted.replace(externMarker, betaExterns);
 	const methodMarker = "PHP_METHOD(LeanAlpha_NativeTransport, leanAlphaRoundTrip)";
-	const betaMethods = `PHP_METHOD(LeanAlpha_NativeTransport, leanBetaRead)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    uint32_t result = 0;\n    if (box == 0 || !lean_bridge_php_wasm_beta_read((void *)box, &result)) {\n        zend_throw_exception(zend_ce_error, \"Beta is unavailable in the locked PHP-Wasm component graph\", 0);\n        RETURN_THROWS();\n    }\n    RETURN_LONG(result);\n}\n\nPHP_METHOD(LeanAlpha_NativeTransport, leanBetaIdentity)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    if (box == 0 || !lean_bridge_php_wasm_beta_identity((void *)box)) {\n        zend_throw_exception(zend_ce_error, \"Beta broke canonical Lean object identity\", 0);\n        RETURN_THROWS();\n    }\n    RETURN_ZVAL(self, 1, 0);\n}\n\n${methodMarker}`;
+	const betaMethods = `PHP_METHOD(LeanAlpha_NativeTransport, leanBetaRead)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    uint32_t result = 0;\n    if (box == 0 || !lean_bridge_php_wasm_beta_read((void *)box, &result)) {\n        zend_throw_exception(zend_ce_error, \"Beta is unavailable in the locked PHP-Wasm component graph\", 0);\n        RETURN_THROWS();\n    }\n    if (uint32_result(result, return_value) != SUCCESS) RETURN_THROWS();\n}\n\nPHP_METHOD(LeanAlpha_NativeTransport, leanBetaIdentity)\n{\n    zval *self;\n    ZEND_PARSE_PARAMETERS_START(1, 1) Z_PARAM_OBJECT_OF_CLASS(self, identity_ce) ZEND_PARSE_PARAMETERS_END();\n    lean_php_identity *identity = identity_argument(self, LEAN_PHP_IDENTITY_RESOURCE);\n    if (identity == NULL) RETURN_THROWS();\n    if (!lean_bridge_native_component_initialize(lean_beta_component_id, NULL) ||\n        !lean_bridge_php_wasm_component_ready(lean_beta_component_id)) {\n        zend_throw_exception(zend_ce_error, \"the shared PHP-Wasm runtime rejected Beta initialization\", 0);\n        RETURN_THROWS();\n    }\n    uintptr_t box = lean_bridge_php_wasm_alpha_box_value(identity->value.resource);\n    if (box == 0 || !lean_bridge_php_wasm_beta_identity((void *)box)) {\n        zend_throw_exception(zend_ce_error, \"Beta broke canonical Lean object identity\", 0);\n        RETURN_THROWS();\n    }\n    RETURN_ZVAL(self, 1, 0);\n}\n\n${methodMarker}`;
 	if(!adapted.includes(methodMarker)) fail("zend-adaptation-failed", "Zend adapter method shape changed");
 	const betaInitialization = profile === "side-lazy"
 		? "if (!lean_bridge_php_wasm_beta_load() ||\n        !lean_bridge_native_component_initialize(lean_beta_component_id, lean_bridge_php_wasm_beta_initialize)"
@@ -781,7 +719,7 @@ export const generatePhpWasmAdapterPackage = ({
 	}
 	for(const version of versions) requireArtifact(extensions[version], `extensions.${version}`);
 
-	const projection = compilePhpProjection(ir);
+	const projection = compilePhpProjection(ir, { integerBits: 32 });
 	const transport = assertPhpTransportSupported(compilePhpTransportManifest(projection, {
 		id: "php-wasm-v1"
 		, capabilities: projection.requiredCapabilities
@@ -873,7 +811,7 @@ export const generatePhpWasmAdapterPackage = ({
 		, versions: versionRecords
 	};
 
-	const nativeZend = generatePhpZendExtensionPackage(ir);
+	const nativeZend = generatePhpZendExtensionPackage(ir, { integerBits: 32 });
 	const nativeRuntime = generatePhpNativeRuntimePackage(ir);
 	const files = {
 		"host.mjs": hostSource

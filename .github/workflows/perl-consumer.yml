@@ -1,0 +1,388 @@
+name: Perl native packages
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nix-engine:
+    name: Pinned Nix Perl engine and installed consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - uses: cachix/install-nix-action@v31
+      - name: Build the ordinary project with the pinned engine
+        run: nix run .#perl-build-engine -- --project tests/fixtures/perl/ordinary --output build/perl-nix
+      - name: Install the prepared archives with the pinned Perl
+        run: |
+          LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE=$(node -p 'require("./build/perl-nix/native-release.json").packages[0].archive')
+          LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE=$(node -p 'require("./build/perl-nix/native-release.json").packages[1].archive')
+          export LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE
+          # Expand PWD inside the Nix shell.
+          # shellcheck disable=SC2016
+          nix shell --inputs-from . nixpkgs#perl nixpkgs#gnumake --command bash -eu -c '
+            node scripts/test-perl-package-consumer.mjs \
+              --archive "build/perl-nix/archives/$LEAN_BRIDGE_NIX_RUNTIME_ARCHIVE" \
+              --prefix build/perl-nix-installed --mode prebuilt-only
+            node scripts/test-perl-package-consumer.mjs \
+              --archive "build/perl-nix/archives/$LEAN_BRIDGE_NIX_COMPONENT_ARCHIVE" \
+              --prefix build/perl-nix-installed --mode prebuilt-only
+            export PERL5LIB="$PWD/build/perl-nix-installed/lib/perl5"
+            perl tests/fixtures/perl/consumer.t
+            perl tests/fixtures/documentation/consumers/perl/consumer.pl
+          '
+
+  compiler-checks:
+    name: Shared compiler and Lake acceptance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Check locked Lake resolution and installed dependency packages
+        env:
+          LEAN_BRIDGE_LAKE_WORKSPACE_TEST: "1"
+        run: |
+          # JavaScript evaluates the template literal in the resource monitor.
+          # shellcheck disable=SC2016
+          node --input-type=module -e '
+            import { execFileSync } from "node:child_process";
+            const report = () => {
+              console.log(`Workspace resource sample: ${new Date().toISOString()}`);
+              for (const [command, args] of [["free", ["-m"]], ["ps", ["-eo", "pid,ppid,rss,comm", "--sort=-rss"]]]) {
+                const output = execFileSync(command, args, { encoding: "utf8" });
+                console.log(output.split("\n").slice(0, 9).join("\n"));
+              }
+            };
+            report();
+            setInterval(report, 15000);
+          ' &
+          monitor_pid=$!
+          trap 'kill "$monitor_pid" 2>/dev/null || true; wait "$monitor_pid" 2>/dev/null || true' EXIT
+          node --test tests/lake-workspace.test.mjs
+      - name: Reject unsupported and changed compiler-owned APIs before linking
+        env:
+          LEAN_BRIDGE_LAKE_WASM_TEST: "1"
+          LEAN_BRIDGE_ELABORATED_METADATA_TEST: "1"
+          LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
+        run: |
+          node --test --test-name-pattern='captured entry metadata|captured APIs' tests/lake-wasm.test.mjs
+          node --test --test-name-pattern='unlocked builds reject (new dependencies|target metadata|export contract)' tests/unlocked-component.test.mjs
+          node --test tests/elaborated-metadata.test.mjs tests/compiler-variant-metadata.test.mjs tests/compiler-alias-metadata.test.mjs tests/compiler-callable-aliases.test.mjs tests/reviewed-telemetry-aliases.test.mjs tests/owned-aggregate-metadata.test.mjs
+          node --test tests/compiler-analysis.test.mjs
+      - name: Check captured Lean text generators and generated Lean/C consumers
+        env:
+          LEAN_BRIDGE_LAKE_GENERATOR_TEST: "1"
+        run: node --test --test-concurrency=1 tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs tests/lake-generated-workspace.test.mjs
+      - name: Install relocated packages with generated Lean and C values
+        env:
+          LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST: "1"
+        run: node --test --test-name-pattern='generated native' tests/lake-generated-packages.test.mjs
+
+  perl:
+    name: Perl XS (${{ matrix.configuration }})
+    runs-on: ubuntu-24.04
+    # Copied and owned package families run sequentially on each Perl ABI.
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - 5.36.3-threaded
+          - 5.36.3-unthreaded
+          - 5.38.2-threaded
+          - 5.38.2-unthreaded
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore this checksummed Perl toolchain
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl/${{ matrix.configuration }}
+          key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Test both install paths on this Perl configuration
+        run: npm run test:consumer:perl -- --configuration "${{ matrix.configuration }}"
+      - name: Compare installed Perl corpus packages with fresh Lean results
+        env:
+          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          npm run test:type-corpus:perl && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs
+          LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs
+          LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs
+          LEAN_BRIDGE_PERL_STRUCTURED_CALLABLE_TEST=1 node --test tests/perl-structured-callables.test.mjs
+          LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/perl-recursive-callables.test.mjs tests/perl-recursive-callable-contract.test.mjs
+          LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
+          LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs
+          LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs
+          LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs tests/perl-alias-contract.test.mjs
+          LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs
+          LEAN_BRIDGE_PERL_GRAPH_TEST=1 node --test tests/perl-copied-graph-values.test.mjs
+          LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs
+          LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs
+          test -s build/type-corpus/perl.json
+          test -s build/type-corpus/reviewed-native-perl.json
+          test -s build/structured-callables/perl.json
+          test -s build/recursive-callables/perl.json
+          test -s build/compounds/perl.json
+          test -s build/lists/perl.json
+          test -s build/collections/perl.json
+          test -s build/aliases/perl.json
+          test -s build/variants/perl.json
+          test -s build/recursive/perl-values.json
+          test -s build/recursive/perl-conversions.json
+          test -s build/recursive/perl-native.json
+          test -s build/recursive/perl-packages.json
+          test -s build/recursive/perl-component-collision.json
+          test -s build/recursive/perl-composition.json
+          test -s build/recursive/perl-documentation.json
+      - name: Verify owned Perl values and installed CPAN archives
+        env:
+          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          export LEAN_BRIDGE_OWNED_NATIVE_TEST=1
+          node --test --test-concurrency=1 tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs tests/owned-perl-conversions.test.mjs
+          node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs
+          node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs
+          npm run test:owned-perl-transfers
+          npm run test:owned-perl-borrows
+          for report in ordinary reviewed complete-ordinary complete-reviewed; do
+            test -s "build/owned-perl-runtime/$report.json"
+            test -s "build/owned-perl-conversions/$report.json"
+            test -s "build/owned-perl-calls/$report.json"
+          done
+          test -s build/owned-perl-scalars/ordinary.json
+          test -s build/owned-perl-scalars/reviewed.json
+          test -s build/owned-perl-loader/installed.json
+          test -s build/owned-perl-package/ordinary.json
+          test -s build/owned-perl-package/reviewed.json
+          test -s build/owned-perl-package/callbacks-ordinary.json
+          test -s build/owned-perl-package/callbacks-reviewed.json
+          test -s build/owned-perl-package/coexistence.json
+          test -s build/owned-perl-package/documentation.json
+          test -s build/owned-perl-transfers/ordinary.json
+          test -s build/owned-perl-transfers/reviewed.json
+          test -s build/owned-perl-transfer-packaging/ordinary.json
+          test -s build/owned-perl-transfer-packaging/reviewed.json
+          test -s build/owned-perl-transfer-packaging/documentation.json
+          test -s build/owned-perl-borrows/ordinary.json
+          test -s build/owned-perl-borrows/reviewed.json
+          test -s build/owned-perl-borrows/borrow-only.json
+          test -s build/owned-perl-borrow-packaging/ordinary.json
+          test -s build/owned-perl-borrow-packaging/reviewed.json
+          test -s build/owned-perl-borrow-packaging/documentation.json
+      - name: Upload this configuration's real-Lean corpus report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-corpus-perl-${{ matrix.configuration }}-${{ github.sha }}
+          path: |
+            build/type-corpus/perl.json
+            build/type-corpus/reviewed-native-perl.json
+            build/char-native/perl.json
+            build/word-native/perl.json
+            build/callables/perl.json
+            build/structured-callables/perl.json
+            build/recursive-callables/perl.json
+            build/compounds/perl.json
+            build/lists/perl.json
+            build/collections/perl.json
+            build/aliases/perl.json
+            build/variants/perl.json
+            build/recursive/perl-values.json
+            build/recursive/perl-conversions.json
+            build/recursive/perl-native.json
+            build/recursive/perl-packages.json
+            build/recursive/perl-component-collision.json
+            build/recursive/perl-composition.json
+            build/recursive/perl-documentation.json
+            build/owned-perl-runtime/
+            build/owned-perl-conversions/
+            build/owned-perl-calls/
+            build/owned-perl-scalars/
+            build/owned-perl-loader/
+            build/owned-perl-package/
+            build/owned-perl-transfers/
+            build/owned-perl-transfer-packaging/
+            build/owned-perl-borrows/
+            build/owned-perl-borrow-packaging/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Upload this configuration's acceptance and benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-abi-${{ matrix.configuration }}-${{ github.sha }}
+          # Preserve the configuration directory when the four artifacts merge.
+          path: |
+            build/consumer-ci/perl/*/benchmark.json
+            build/consumer-ci/perl/*/acceptance.json
+            build/consumer-ci/perl/*/perl.json
+          if-no-files-found: error
+          overwrite: true
+
+  perl-receivers:
+    name: Perl receiver packages (${{ matrix.configuration }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - 5.36.3-threaded
+          - 5.36.3-unthreaded
+          - 5.38.2-threaded
+          - 5.38.2-unthreaded
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd ripgrep
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore this checksummed Perl toolchain
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl/${{ matrix.configuration }}
+          key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Build this checksummed Perl configuration
+        env:
+          RECEIVER_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: node scripts/build-perl-toolchains.mjs "${RECEIVER_PERL_CONFIGURATION%-*}" "${RECEIVER_PERL_CONFIGURATION##*-}"
+      - name: Verify receiver lifetimes and installed CPAN releases
+        env:
+          RECEIVER_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$RECEIVER_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          mkdir -p build
+          npm run test:owned-perl-receivers > build/owned-perl-receivers.log 2>&1
+          cat build/owned-perl-receivers.log
+          rg '^# tests 16$' build/owned-perl-receivers.log
+          rg '^# pass 16$' build/owned-perl-receivers.log
+          rg '^# fail 0$' build/owned-perl-receivers.log
+          rg '^# cancelled 0$' build/owned-perl-receivers.log
+          rg '^# skipped 0$' build/owned-perl-receivers.log
+          test -s build/owned-perl-receiver-core/ordinary.json
+          test -s build/owned-perl-receiver-core/ordinary-plain.json
+          test -s build/owned-perl-receiver-core/ordinary-consuming.json
+          test -s build/owned-perl-receiver-core/ordinary-unanchored.json
+          test -s build/owned-perl-receiver-core/ordinary-package.json
+          test -s build/owned-perl-receiver-core/ordinary-resource-package.json
+          test -s build/owned-perl-receiver-core/reviewed.json
+          test -s build/owned-perl-receiver-core/reviewed-plain.json
+          test -s build/owned-perl-receiver-core/reviewed-consuming.json
+          test -s build/owned-perl-receiver-core/reviewed-unanchored.json
+          test -s build/owned-perl-receiver-core/reviewed-package.json
+          test -s build/owned-perl-receiver-core/reviewed-resource-package.json
+          test -s build/owned-perl-receiver-core/documentation.json
+      - name: Upload this configuration's receiver acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-receivers-${{ matrix.configuration }}-${{ github.sha }}
+          path: |
+            build/owned-perl-receiver-core/
+            build/owned-perl-receivers.log
+          if-no-files-found: error
+          retention-days: 30
+
+  perl-summary:
+    name: Combined Perl consumer observation
+    if: always()
+    needs:
+      - compiler-checks
+      - nix-engine
+      - perl
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download all four configurations' evidence
+        id: evidence
+        uses: actions/download-artifact@v5
+        with:
+          pattern: perl-abi-*-${{ github.sha }}
+          path: build/consumer-ci/perl
+          merge-multiple: true
+      - name: Record Perl consumer observation
+        if: always()
+        env:
+          PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}
+        run: |
+          test_result=failed
+          if [[ "$PERL_ACCEPTED" == true ]]; then test_result=passed; fi
+          node scripts/consumer-ci.mjs record --consumer perl \
+            --test-result "$test_result" \
+            --package-installation "$PERL_ACCEPTED" \
+            --real-lean-execution "$PERL_ACCEPTED" \
+            --performance build/consumer-ci/perl/5.38.2-threaded/perl.json \
+            --output build/consumer-ci/results/perl.json
+          test "$PERL_ACCEPTED" = true
+      - name: Upload consumer observation
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-perl-${{ github.sha }}
+          path: build/consumer-ci/results/perl.json
+          if-no-files-found: error
+          overwrite: true
+      - name: Upload warmed benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-benchmarks-${{ github.sha }}
+          path: |
+            build/consumer-ci/perl/**/benchmark.json
+            build/consumer-ci/perl/**/acceptance.json
+            build/consumer-ci/perl/**/perl.json
+          if-no-files-found: warn
+          overwrite: true

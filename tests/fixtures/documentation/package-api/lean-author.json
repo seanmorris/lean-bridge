@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "inputs": [
+    {
+      "path": "lakefile.toml",
+      "bytes": 83,
+      "sha256": "9e1cbd2a7a690c0d0e5e04da187b9908a877d5d9d42f4d73a12bdc530350cd4b"
+    },
+    {
+      "path": "lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "OnboardingSmall.lean",
+      "bytes": 425,
+      "sha256": "d4f4b4fe9141a24726b11bc665420909f4ab3aa875c661e1371a66d4c2af2816"
+    },
+    {
+      "path": "package.json",
+      "bytes": 21,
+      "sha256": "da95e2337da313ce561e519365e3d7279532abcfe0bb1d59946269d4a5e92187"
+    }
+  ],
+  "ir": {
+    "schemaVersion": 3,
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "producers": [
+      {
+        "id": "lean",
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "tool": "Lean",
+        "toolVersion": "4.32.2",
+        "extensions": {
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        }
+      }
+    ],
+    "types": [],
+    "declarations": [
+      {
+        "id": "lean:OnboardingSmall.add",
+        "name": "add",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingSmall.add",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          },
+          {
+            "name": "arg1",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Add two natural numbers. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingSmall.add",
+          "extensions": {
+            "lean-lang.org/theorem-references": [
+              "OnboardingSmall.add_commutative"
+            ]
+          }
+        }
+      },
+      {
+        "id": "lean:OnboardingSmall.isEmpty",
+        "name": "isEmpty",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "OnboardingSmall.isEmpty",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "string"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "bool"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Return whether a copied UTF-8 string is empty. ",
+          "details": ""
+        },
+        "source": {
+          "producer": "lean",
+          "declaration": "OnboardingSmall.isEmpty",
+          "extensions": {
+            "lean-lang.org/theorem-references": []
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "capabilities": [],
+    "assurance": [],
+    "documentation": {
+      "summary": "Compiler-checked exports for onboarding-small.",
+      "details": ""
+    }
+  }
+}

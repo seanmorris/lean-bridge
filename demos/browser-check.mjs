@@ -164,7 +164,7 @@ const auditFailures = async browser => {
 	page.on("pageerror", error => errors.push(error.message));
 	await page.route("**/build-identity.json", route => route.abort());
 	await page.goto(base);
-	await page.waitForFunction(() => globalThis.document.querySelectorAll(".demo-card").length === 12);
+	await page.waitForFunction(count => globalThis.document.querySelectorAll(".demo-card").length === count, manifest.demos.length);
 	await page.route("**/manifest.json", route => route.fulfill({ status: 503, body: "Unavailable" }));
 	await page.reload();
 	await page.waitForFunction(() => globalThis.document.querySelector("#build-identity").textContent.includes("Source"));

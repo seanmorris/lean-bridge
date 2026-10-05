@@ -8,10 +8,14 @@ import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { componentNpmIdentity, parseNpmPackageCoordinate, verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
+import { assertExportConfigurationCapabilities, exportConfigurationFile } from "../analyze/export-configuration.mjs";
 import { validateComponentReleaseBundleManifest } from "./component-release-bundle.mjs";
 import { collectReleaseInventory, hashReleaseInventory } from "./reproducibility.mjs";
 import { publicRepositoryIdentity } from "./source-identity.mjs";
+import { isSourceLicense, isSourceNotice } from "./source-notices.mjs";
+import { componentLicense } from "../analyze/package-license.mjs";
+import { readVerifiedOwnedJavaScriptRelease } from "./owned-javascript-publication.mjs";
 
 const kind = "lean-bridge-component-publish-plan";
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-component-publication" }); };
@@ -57,36 +61,8 @@ const evidenceFor = async root => {
 	const inventorySha256 = hashReleaseInventory(artifacts);
 	const id = sha256(canonicalJson({ source: report.source, component: report.component, inventorySha256 }));
 	equal(report.candidate, { id, inventorySha256 }, "Component candidate identity has changed");
-	const receiptPath = "release/packages/npm/component-package-receipt.json";
-	const checked = await verifyComponentPackageReceipt({ receiptPath: join(root, receiptPath) });
-	const receipt = JSON.parse(await readFile(join(root, receiptPath), "utf8"));
-	const bundleSource = inventory.get("bundle/component-release-bundle.json")?.bytes;
-	const bundle = JSON.parse(bundleSource);
-	validateComponentReleaseBundleManifest(bundle);
-	if(bundleSource.toString() !== canonicalJson(bundle) || sha256(bundleSource) !== receipt.componentBundleSha256
-		|| bundle.identitySha256 !== receipt.componentIdentitySha256 || bundle.bindingIrSemanticSha256 !== receipt.bindingIrSha256) fail("Bundle identities differ from the package receipt");
-	equal(bundle.component, receipt.component, "Bundle and package name different components");
-	equal(bundle.files.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })).sort((left, right) => left.path.localeCompare(right.path)),
-		artifacts.filter(item => item.path.startsWith("bundle/") && item.path !== "bundle/component-release-bundle.json")
-			.map(({ path, bytes, sha256 }) => ({ path: path.slice("bundle/".length), bytes, sha256 })),
-		"Bundle inventory differs from the authorized files");
-	for(const [path, expected] of [
-		["metadata/provenance.json", receipt.provenanceSha256]
-		, ["metadata/runtime-requirement.json", receipt.runtimeRequirementSha256]
-		, ["metadata/component-artifact-manifest.json", bundle.componentArtifactManifestSha256]
-		, [bundle.files.find(item => item.role === "component").path, receipt.componentArtifactSha256]
-	])
-		if(sha256(inventory.get(`bundle/${path}`).bytes) !== expected) fail("Package receipt differs from the bundled evidence");
-	const buildPlan = JSON.parse(inventory.get("bundle/locks/component-build-plan.json").bytes);
-	const sbom = JSON.parse(inventory.get("bundle/metadata/sbom.json").bytes);
-	equal(sbom.component, bundle.component, "SBOM names a different component");
-	equal(sbom.runtime, JSON.parse(inventory.get("bundle/metadata/runtime-requirement.json").bytes), "SBOM runtime differs from the bundle");
-	if(sbom.kind !== "lean-bridge-component-sbom" || sbom.schemaVersion !== 1
-		|| sbom.sourceTreeSha256 !== receipt.source.treeSha256 || buildPlan.source.treeSha256 !== receipt.source.treeSha256) fail("Component source evidence differs from the receipt");
-	for(const notice of sbom.notices)
-		if(!/^source\/(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(notice.path)
-			|| sha256(inventory.get(`bundle/${notice.path}`)?.bytes ?? "") !== notice.sha256) fail("Component notice differs from the SBOM");
-	if(sbom.license === "UNLICENSED" || !sbom.license || !sbom.notices.some(item => /\/LICENSE(?:\.|$)/.test(item.path))) fail("Declare the component license in package.json and include its LICENSE file before publishing");
+	const { receiptPath, checked, receipt } = inventory.has("javascript-wasm-release.json")
+		? await ownedEvidenceFor(root, inventory) : await copiedEvidenceFor(root, inventory, artifacts);
 	for(const build of report.builds)
 	{
 		if(build.receiptSha256 !== checked.receiptSha256 || build.componentIdentitySha256 !== checked.componentIdentitySha256
@@ -109,6 +85,71 @@ const evidenceFor = async root => {
 	return { authorization, attestation, receipt, receiptPath, createdAt: report.createdAt };
 };
 
+const ownedEvidenceFor = async (root, inventory) => {
+	const release = await readVerifiedOwnedJavaScriptRelease({ root: join(root, "release"), inventory });
+	const report = JSON.parse(await readFile(join(root, "evidence/reproducibility.json"), "utf8"));
+	if(report.builds.some(build => build.engineIdentitySha256 !== release.manifest.engineIdentitySha256 || build.backend !== release.manifest.backend))
+		fail("Owned build evidence differs from its compiler engine");
+	return { receiptPath: `release/${release.receiptPath}`, receipt: release.receipt, checked: release.checked };
+};
+
+const copiedEvidenceFor = async (root, inventory, artifacts) => {
+	const receiptPath = "release/packages/npm/component-package-receipt.json";
+	const checked = await verifyComponentPackageReceipt({ receiptPath: join(root, receiptPath) });
+	const receipt = JSON.parse(await readFile(join(root, receiptPath), "utf8"));
+	const bundleSource = inventory.get("bundle/component-release-bundle.json")?.bytes;
+	const bundle = JSON.parse(bundleSource);
+	validateComponentReleaseBundleManifest(bundle);
+	if(bundleSource.toString() !== canonicalJson(bundle) || sha256(bundleSource) !== receipt.componentBundleSha256
+		|| bundle.identitySha256 !== receipt.componentIdentitySha256 || bundle.bindingIrSemanticSha256 !== receipt.bindingIrSha256) fail("Bundle identities differ from the package receipt");
+	equal(bundle.component, receipt.component, "Bundle and package name different components");
+	const configBytes = inventory.get(`bundle/source/${exportConfigurationFile}`)?.bytes;
+	const configuration = configBytes ? JSON.parse(configBytes) : { schemaVersion: 1 };
+	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	equal(receipt.package.package, componentNpmIdentity(bundle.component, configuration.targets?.npm).coordinate,
+		"npm package coordinate differs from the bundled author configuration");
+	equal(bundle.files.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })).sort((left, right) => left.path.localeCompare(right.path)),
+		artifacts.filter(item => item.path.startsWith("bundle/") && item.path !== "bundle/component-release-bundle.json")
+			.map(({ path, bytes, sha256 }) => ({ path: path.slice("bundle/".length), bytes, sha256 })),
+		"Bundle inventory differs from the authorized files");
+	for(const [path, expected] of [
+		["metadata/provenance.json", receipt.provenanceSha256]
+		, ["metadata/runtime-requirement.json", receipt.runtimeRequirementSha256]
+		, ["metadata/component-artifact-manifest.json", bundle.componentArtifactManifestSha256]
+		, [bundle.files.find(item => item.role === "component").path, receipt.componentArtifactSha256]
+	])
+		if(sha256(inventory.get(`bundle/${path}`).bytes) !== expected) fail("Package receipt differs from the bundled evidence");
+	const buildPlan = JSON.parse(inventory.get("bundle/locks/component-build-plan.json").bytes);
+	const configurationInput = buildPlan.source.inputs.find(item => item.path === exportConfigurationFile);
+	if(configurationInput ? !configBytes || configBytes.length !== configurationInput.bytes || sha256(configBytes) !== configurationInput.sha256 : configBytes)
+		fail("Component export configuration differs from the captured source bytes");
+	const sbom = JSON.parse(inventory.get("bundle/metadata/sbom.json").bytes);
+	equal(sbom.component, bundle.component, "SBOM names a different component");
+	equal(sbom.runtime, JSON.parse(inventory.get("bundle/metadata/runtime-requirement.json").bytes), "SBOM runtime differs from the bundle");
+	if(sbom.kind !== "lean-bridge-component-sbom" || sbom.schemaVersion !== 1
+		|| sbom.sourceTreeSha256 !== receipt.source.treeSha256 || buildPlan.source.treeSha256 !== receipt.source.treeSha256) fail("Component source evidence differs from the receipt");
+	const declared = configuration.package ?? {};
+	const notices = buildPlan.source.inputs.filter(item => isSourceNotice(item.path, declared));
+	equal(sbom.notices, notices.map(({ path, sha256 }) => ({ path: `source/${path}`, sha256 })), "Component notices differ from the captured source inventory");
+	for(const notice of notices)
+	{
+		const file = inventory.get(`bundle/source/${notice.path}`);
+		if(!file || file.bytes.length !== notice.bytes || sha256(file.bytes) !== notice.sha256) fail("Component notice differs from the captured source bytes");
+	}
+	const metadataBytes = inventory.get("bundle/source/package.json")?.bytes;
+	const metadataInput = buildPlan.source.inputs.find(item => item.path === "package.json");
+	if(metadataInput ? !metadataBytes || metadataBytes.length !== metadataInput.bytes || sha256(metadataBytes) !== metadataInput.sha256 : metadataBytes)
+		fail("Component package.json differs from the captured source bytes");
+	const metadata = metadataBytes ? JSON.parse(metadataBytes) : {};
+	const license = componentLicense(declared, metadata);
+	equal(sbom.license, license, "Component license differs from the captured package.json or shared declaration");
+	if(license === "UNLICENSED" || !notices.some(item => isSourceLicense(item.path, declared) && inventory.get(`bundle/source/${item.path}`).bytes.toString().trim()))
+		fail("Declare the component license in lean-bridge.exports.json (package.license) or package.json and include nonempty license terms before publishing");
+	for(const path of declared.licenseFiles ?? [])
+		if(!notices.some(item => item.path === path && inventory.get(`bundle/source/${path}`).bytes.toString().trim())) fail(`Declared license file is missing or empty: ${path}`);
+	return { receiptPath, checked, receipt };
+};
+
 const manifestFor = ({ authorization, receipt, receiptPath, createdAt }, options, requestedTargets) => {
 	const publication = publicationOptions(options);
 	const requested = [...new Set(requestedTargets)].sort();
@@ -122,8 +163,8 @@ const manifestFor = ({ authorization, receipt, receiptPath, createdAt }, options
 		order: 1
 		, candidateId: authorization.candidate.id
 		, ecosystem: "npm"
-		, name: receipt.component.name
-		, version: receipt.component.version
+		, name: parseNpmPackageCoordinate(receipt.package.package).name
+		, version: parseNpmPackageCoordinate(receipt.package.package).version
 		, target: "javascript"
 		, operation: "publish"
 		, destination: { kind: "registry", endpoint: publication.registry, tag: publication.tag, access: publication.access, authMode: publication.authMode }

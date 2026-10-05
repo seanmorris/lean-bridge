@@ -44,6 +44,33 @@ const snake = value => value
   .toLowerCase();
 
 const upper = value => snake(value).toUpperCase();
+export const cKeywords = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq restrict _Alignas _Alignof _Atomic _Bool _Complex _Generic _Imaginary _Noreturn _Static_assert _Thread_local").split(" "));
+/**
+ * Preserve compiler-disambiguated trailing underscores in constructor fields.
+ *
+ * @param value - Validated source member name.
+ */
+export const cVariantIdentifier = value => {
+	const name = value.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
+	return cKeywords.has(name) ? `${name}_` : name;
+};
+/**
+ * Keep record snake-case normalization and escape C/C++ member keywords.
+ *
+ * @param value - Source record field name.
+ */
+export const cRecordIdentifier = value => {
+	const name = snake(value);
+	return cKeywords.has(name) ? `${name}_` : name;
+};
+/**
+ * Name a public constructor tag without exposing Lean's runtime representation.
+ *
+ * @param name - Generated C type name.
+ * @param branch - Source constructor name.
+ */
+export const cVariantTag = (name, branch) => `${name.toUpperCase()}_KIND_${cVariantIdentifier(branch).toUpperCase()}`;
+const valueFields = type => type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : type.fields;
 const packageName = ir => ir.component.id.slice(0, ir.component.id.lastIndexOf("@"));
 const packageStem = ir => snake(packageName(ir).split("/").at(-1));
 const prefix = ir => packageStem(ir);
@@ -55,11 +82,15 @@ const implementationPath = ir => `src/${prefix(ir)}.c`;
 
 const primitiveCType = name => {
 	const types = {
-		unit: "void"
+		unit: "uint8_t"
 		, bool: "bool"
 		, uint8: "uint8_t"
 		, uint16: "uint16_t"
 		, uint32: "uint32_t"
+		, char: "uint32_t"
+		// Stable copied carriers; the compiled adapter enforces its target's word range.
+		, usize: "uint64_t"
+		, isize: "int64_t"
 		, uint64: "uint64_t"
 		, int8: "int8_t"
 		, int16: "int16_t"
@@ -75,10 +106,12 @@ const isDynamicPrimitive = name => new Set(["string", "bytes", "nat", "int"]).ha
 const namedType = (ir, id) => ir.types.find(type => type.id === id);
 
 const resolveAlias = (ir, ref, seen = new Set()) => {
+	if(ref.kind === "apply") return { ...ref, arguments: ref.arguments.map(argument => resolveAlias(ir, argument, new Set(seen))) };
 	if(ref.kind !== "named") return ref;
 	const type = namedType(ir, ref.id);
 	if(type?.kind !== "alias") return ref;
 	if(seen.has(type.id)) fail("alias-cycle", `C projection found an alias cycle at ${type.id}`);
+	if(seen.size >= 32) fail("alias-depth", "C copied aliases may be at most 32 types deep");
 	seen.add(type.id);
 	return resolveAlias(ir, type.target, seen);
 };
@@ -150,6 +183,7 @@ const collectUsedTypes = ir => {
 	for(const type of ir.types)
 	{
 		if(type.kind === "record") type.fields.forEach(field => walkType(field.type, push));
+		if(type.kind === "variant") valueFields(type).forEach(field => walkType(field.type, push));
 		if(type.kind === "alias") walkType(type.target, push);
 		if(type.kind === "callback")
 		{
@@ -184,6 +218,9 @@ const validateCoverage = ir => {
 	};
 	for(const type of ir.types)
 	{
+		if(type.kind === "alias" && (type.representation !== "copied" || type.mutability !== "immutable"
+			|| !/^[A-Za-z][A-Za-z0-9_]*$/.test(type.name) || type.name.includes("__")))
+			fail("unsupported-alias", `${type.id} requires a concrete immutable copied alias with a valid C name`);
 		if(type.typeParameters.length > 0)
 		{
 			fail("unsupported-generic-type", `${type.id} requires a generic C type projection`, {
@@ -214,25 +251,29 @@ const validateCoverage = ir => {
 	for(const ref of collectUsedTypes(ir))
 	{
 		const resolved = resolveAlias(ir, ref);
+		if(resolved.kind === "primitive" && primitiveCType(resolved.name) === null && !isDynamicPrimitive(resolved.name))
+			fail("unsupported-primitive", `C projection does not define ${resolved.name}`, { primitive: resolved.name });
 		if(resolved.kind === "parameter")
 		{
 			fail("unresolved-generic", `C projection left ${resolved.id} unresolved`);
 		}
 		if(resolved.kind === "apply")
 		{
-			if(resolved.constructor !== "array" || resolved.arguments.length !== 1)
+			if(!["array", "list", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "list", "option"].includes(resolved.constructor) ? 1 : 2))
 			{
 				fail("unsupported-type-application", `C projection does not support ${resolved.constructor}`, {
 					constructor: resolved.constructor
 				});
 			}
-			const element = resolveAlias(ir, resolved.arguments[0]);
-			if(element.kind !== "primitive" || primitiveCType(element.name) === null)
-			{
-				fail("unsupported-array-element", "the C POC supports arrays of fixed-width primitives", {
-					element
-				});
-			}
+			const copied = (ref, seen = new Set()) => {
+				const value = resolveAlias(ir, ref);
+				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
+				if(value.kind === "apply") return ["array", "list", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "list", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
+				const type = value.kind === "named" && namedType(ir, value.id);
+				if(!type || !["record", "variant"].includes(type.kind) || seen.has(type.id)) return false;
+				return valueFields(type).every(field => copied(field.type, new Set([...seen, type.id])));
+			};
+			if(!resolved.arguments.every(child => copied(child))) fail("unsupported-array-element", "C containers require acyclic copied elements");
 		}
 	}
 	for(const declaration of ir.declarations)
@@ -313,11 +354,11 @@ const validateCoverage = ir => {
 			addName(publicFunctionName(ir, variant), declaration.id);
 		}
 	}
-	const records = ir.types.filter(type => type.kind === "record");
+	const records = ir.types.filter(type => ["record", "variant"].includes(type.kind));
 	const dependencies = new Map(records.map(type => [type.id, new Set()]));
 	for(const type of records)
 	{
-		for(const field of type.fields)
+		for(const field of valueFields(type))
 		{
 			const resolved = resolveAlias(ir, field.type);
 			if(resolved.kind === "named" && dependencies.has(resolved.id))
@@ -337,6 +378,27 @@ const validateCoverage = ir => {
 		visited.add(id);
 	};
 	dependencies.forEach((_, id) => visit(id));
+	const aliases = describeCopiedCAliases(ir);
+	if(aliases.length)
+	{
+		const occupied = new Set(["status", "error_code", "error", "initialize", "runtime", "runtime_v1", "runtime_install_v1", "ready", "fail", "attempted_runtime", "initialization_failure", "detail"].map(name => `${prefix(ir)}_${name}`));
+		for(const ref of [...collectUsedTypes(ir), ...ir.types.filter(type => type.kind !== "alias").map(type => ({ kind: "named", id: type.id }))])
+		{
+			const name = cType(ir, ref);
+			for(const value of [name, `${name}_init`, `${name}_clear`]) occupied.add(value);
+		}
+		for(const alias of aliases)
+		{
+			const ref = resolveAlias(ir, alias.definition.target);
+			if(ref.kind === "named" && !["record", "variant"].includes(namedType(ir, ref.id)?.kind))
+				fail("unsupported-alias-target", `${alias.definition.id} requires a copied primitive, container, record or variant target`);
+			for(const name of [alias.name, ...alias.target.aggregate ? [`${alias.name}_init`, `${alias.name}_clear`] : []])
+			{
+				if(occupied.has(name) || names.has(name)) fail("public-name-collision", `C alias name collision: ${name}`, { type: alias.definition.id });
+				occupied.add(name);
+			}
+		}
+	}
 };
 
 const cType = (ir, ref) => {
@@ -354,7 +416,7 @@ const cType = (ir, ref) => {
 	}
 	if(resolved.kind === "apply")
 	{
-		return `${prefix(ir)}_${typeKey(resolved)}_span`;
+		return `${prefix(ir)}_${typeKey(resolved)}${["array", "list"].includes(resolved.constructor) ? "_span" : "_value"}`;
 	}
 	fail("unresolved-generic", `C projection cannot name ${resolved.id}`);
 };
@@ -363,7 +425,7 @@ const isAggregate = (ir, ref) => {
 	const resolved = resolveAlias(ir, ref);
 	if(resolved.kind === "primitive") return isDynamicPrimitive(resolved.name);
 	if(resolved.kind === "apply") return true;
-	if(resolved.kind === "named") return namedType(ir, resolved.id)?.kind === "record";
+	if(resolved.kind === "named") return ["record", "variant"].includes(namedType(ir, resolved.id)?.kind);
 	return false;
 };
 
@@ -371,6 +433,31 @@ const isUnit = (ir, ref) => {
 	const resolved = resolveAlias(ir, ref);
 	return resolved.kind === "primitive" && resolved.name === "unit";
 };
+
+/**
+ * Describe one copied C value using the public generator's names and layout.
+ *
+ * @param ir - Canonical Binding IR.
+ * @param ref - Validated type reference.
+ */
+export const describeCType = (ir, ref) => ({ name: cType(ir, ref), aggregate: isAggregate(ir, ref) });
+
+/**
+ * Preserve public alias names while sharing their targets' storage and converters.
+ *
+ * @param ir - Canonical Binding IR with checked alias graphs.
+ */
+export const describeCopiedCAliases = ir => ir.types.filter(type => type.kind === "alias").map(definition => ({
+	definition, name: `${prefix(ir)}_${snake(definition.name)}_t`
+	, target: describeCType(ir, definition.target)
+}));
+
+/**
+ * Normalize a public C identifier.
+ *
+ * @param value - Semantic name.
+ */
+export const cIdentifier = value => snake(value);
 
 const siteInput = (ir, site, name, { runtime = false } = {}) => {
 	const resolved = resolveAlias(ir, site.type);
@@ -465,8 +552,12 @@ const runtimeParameters = (ir, variant) => {
 
 const dynamicTypes = ir => collectUsedTypes(ir).filter(ref => {
   const resolved = resolveAlias(ir, ref);
-  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || resolved.kind === "apply";
+  return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || (resolved.kind === "apply" && ["array", "list"].includes(resolved.constructor));
 });
+
+const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor)), ref => cType(ir, ref));
+const compoundFields = ref => ref.arguments.map((type, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[ref.constructor][i], type }));
+const compoundFlag = kind => ({ option: "has_value", result: "is_ok" })[kind];
 
 const uniqueBy = (items, key) => {
 	const seen = new Set();
@@ -489,6 +580,7 @@ const emitPublicHeader = ir => {
 		, "#include <stdbool.h>"
 		, "#include <stddef.h>"
 		, "#include <stdint.h>"
+		, ...ir.types.some(type => type.kind === "alias") ? ["#include <string.h>"] : []
 		, ""
 		, "#ifdef __cplusplus"
 		, 'extern "C" {'
@@ -522,12 +614,36 @@ const emitPublicHeader = ir => {
 		, ""
 	];
 
-	for(const ref of uniqueBy(dynamicTypes(ir), ref => cType(ir, ref)))
+	const dynamic = uniqueBy(dynamicTypes(ir), ref => cType(ir, ref));
+	const records = [], visited = new Set(), compounds = compoundTypes(ir);
+	const compound = ref => ({ id: cType(ir, ref), ref, fields: compoundFields(ref) });
+	const visitRecord = type => {
+		if(visited.has(type.id)) return;
+		visited.add(type.id);
+		for(const field of valueFields(type))
+		{
+			const ref = resolveAlias(ir, field.type);
+			if(ref.kind === "named" && ["record", "variant"].includes(namedType(ir, ref.id)?.kind)) visitRecord(namedType(ir, ref.id));
+			if(ref.kind === "apply" && !["array", "list"].includes(ref.constructor)) visitRecord(compound(ref));
+		}
+		records.push(type);
+	};
+	ir.types.filter(type => ["record", "variant"].includes(type.kind)).forEach(visitRecord);
+	compounds.forEach(ref => visitRecord(compound(ref)));
+	// Array elements may be records or other arrays. Pointers need declarations,
+	// while by-value record fields need definitions in dependency order.
+	if(dynamic.some(ref => resolveAlias(ir, ref).kind === "apply" && isAggregate(ir, resolveAlias(ir, ref).arguments[0])))
+	{
+		for(const ref of [...dynamic, ...records.map(type => type.ref ?? ({ kind: "named", id: type.id }))])
+			lines.push(`typedef struct ${cType(ir, ref)} ${cType(ir, ref)};`);
+		lines.push("");
+	}
+	for(const ref of dynamic)
 	{
 		const resolved = resolveAlias(ir, ref);
 		const type = cType(ir, resolved);
 		const element = resolved.kind === "apply"
-			? primitiveCType(resolveAlias(ir, resolved.arguments[0]).name)
+			? cType(ir, resolved.arguments[0])
 			: resolved.name === "string" ? "char" : resolved.name === "bytes" ? "uint8_t" : "uint32_t";
 		lines.push(
 			`typedef struct ${type} {`,
@@ -543,14 +659,30 @@ const emitPublicHeader = ir => {
 		);
 	}
 
-	const records = ir.types.filter(type => type.kind === "record");
 	for(const type of records)
 	{
-		const name = cType(ir, { kind: "named", id: type.id });
+		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
+		if(type.kind === "variant") lines.push(`typedef enum ${name}_tag { ${type.cases.map((branch, i) => `${cVariantTag(name, branch.name)} = ${i}`).join(", ")} } ${name}_tag;`);
 		lines.push(`typedef struct ${name} {`);
+		if(type.kind === "variant")
+		{
+			lines.push("  uint32_t kind;", "  union {");
+			for(const branch of type.cases)
+			{
+				lines.push("    struct {");
+				if(!branch.fields.length) lines.push("      uint8_t empty;");
+				for(const field of branch.fields) lines.push(`      ${cType(ir, field.type)} ${cVariantIdentifier(field.name)};`);
+				lines.push(`    } ${cVariantIdentifier(branch.name)};`);
+			}
+			lines.push("  } cases;", `} ${name};`, "", `void ${name}_init(${name} *value);`, `void ${name}_clear(${name} *value);`
+				, `${p}_status ${name}_select(${name} *value, uint32_t kind);`, "");
+			continue;
+		}
+		if(compoundFlag(type.ref?.constructor)) lines.push(`  uint8_t ${compoundFlag(type.ref.constructor)};`);
+		if(!type.fields.length) lines.push("  uint8_t empty;");
 		for(const field of type.fields)
 		{
-			lines.push(`  ${cType(ir, field.type)} ${snake(field.name)};`);
+			lines.push(`  ${cType(ir, field.type)} ${cRecordIdentifier(field.name)};`);
 		}
 		lines.push(`} ${name};`, "", `void ${name}_clear(${name} *value);`, "");
 	}
@@ -584,6 +716,14 @@ const emitPublicHeader = ir => {
 		);
 	}
 
+	for(const alias of describeCopiedCAliases(ir))
+	{
+		lines.push(`typedef ${alias.target.name} ${alias.name};`);
+		if(alias.target.aggregate) lines.push(
+			`static inline void ${alias.name}_init(${alias.name} *value) { if (value) memset(value, 0, sizeof(*value)); }`
+			, `static inline void ${alias.name}_clear(${alias.name} *value) { ${alias.target.name}_clear(value); }`);
+		lines.push("");
+	}
 	const exports = [];
 	for(const declaration of ir.declarations)
 	{
@@ -753,18 +893,34 @@ const emitImplementation = ir => {
 		);
 	}
 
-	for(const type of ir.types.filter(type => type.kind === "record"))
+	for(const type of [...ir.types.filter(type => ["record", "variant"].includes(type.kind)), ...compoundTypes(ir).map(ref => ({ ref, fields: compoundFields(ref) }))])
 	{
-		const name = cType(ir, { kind: "named", id: type.id });
+		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
+		if(type.kind === "variant")
+		{
+			lines.push(`void ${name}_init(${name} *value) { if (value) memset(value, 0, sizeof(*value)); }`);
+			lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;", "  switch (value->kind) {");
+			type.cases.forEach((branch, i) => {
+				lines.push(`    case ${i}:`);
+				for(const field of branch.fields.filter(field => isAggregate(ir, field.type)))
+					lines.push(`      ${cType(ir, field.type)}_clear(&value->cases.${cVariantIdentifier(branch.name)}.${cVariantIdentifier(field.name)});`);
+				lines.push("      break;");
+			});
+			lines.push("    default: break;", "  }", "  memset(value, 0, sizeof(*value));", "}", "");
+			lines.push(`${p}_status ${name}_select(${name} *value, uint32_t kind) {`
+				, `  if (!value || kind >= ${type.cases.length} || value->kind >= ${type.cases.length}) return ${macro}_STATUS_INVALID_ARGUMENT;`
+				, `  ${name}_clear(value); value->kind = kind; return ${macro}_STATUS_OK;`, "}", "");
+			continue;
+		}
 		const clearable = type.fields.filter(field => {
       const resolved = resolveAlias(ir, field.type);
       if((resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || resolved.kind === "apply") return true;
-      return resolved.kind === "named" && namedType(ir, resolved.id)?.kind === "record";
+      return resolved.kind === "named" && ["record", "variant"].includes(namedType(ir, resolved.id)?.kind);
 		});
 		lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;");
 		for(const field of clearable)
 		{
-			lines.push(`  ${cType(ir, field.type)}_clear(&value->${snake(field.name)});`);
+			lines.push(`  ${cType(ir, field.type)}_clear(&value->${cRecordIdentifier(field.name)});`);
 		}
 		lines.push("  memset(value, 0, sizeof(*value));", "}", "");
 	}
@@ -829,7 +985,10 @@ const emitImplementation = ir => {
 				lines.push(
 					`  if (status == ${macro}_STATUS_OK) {`,
 					`    ${resultType} *owned = (${resultType} *)malloc(sizeof(*owned));`,
-					`    if (owned == NULL) return ${p}_fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, \"callable wrapper allocation failed\", error);`,
+					`    if (owned == NULL) {`,
+					`      if (${p}_runtime->${snake(resultNamed.name)}_dispose != NULL) ${p}_runtime->${snake(resultNamed.name)}_dispose(${p}_runtime->context, result_identity);`,
+					`      return ${p}_fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, \"callable wrapper allocation failed\", error);`,
+					`    }`,
 					"    owned->value = result_identity;",
 					"    *out = owned;",
 					"  }",
@@ -868,7 +1027,7 @@ const emitImplementation = ir => {
 			`${p}_status ${owned}_call(${publicArgs.join(", ")}) {`,
 			`  ${p}_status ready = ${p}_ready(error);`,
 			`  if (ready != ${macro}_STATUS_OK) return ready;`,
-			`  if (self == NULL${output ? " || out == NULL" : ""}) return ${p}_fail(${macro}_STATUS_INVALID_ARGUMENT, ${macro}_ERROR_INVALID_ARGUMENT, \"a required C argument is null\", error);`,
+			`  if (self == NULL${output ? " || out == NULL" : ""}${callable.parameters.filter(site => isAggregate(ir, site.type)).map(site => ` || ${snake(site.name)} == NULL`).join("")}) return ${p}_fail(${macro}_STATUS_INVALID_ARGUMENT, ${macro}_ERROR_INVALID_ARGUMENT, \"a required C argument is null\", error);`,
 			`  if (${p}_runtime->${snake(type.name)}_call == NULL) return ${p}_fail(${macro}_STATUS_RUNTIME_REJECTED, ${macro}_ERROR_RUNTIME_UNAVAILABLE, \"the runtime does not implement callable invocation\", error);`,
 			`  return ${p}_runtime->${snake(type.name)}_call(${args.join(", ")});`,
 			"}",
@@ -1000,3 +1159,18 @@ export const generateCBindingPackage = ir => {
 	auditCPackage(ir, files);
 	return files;
 };
+
+/**
+ * Share the C generator's exact spellings with compiled native adapters.
+ *
+ * @param ir - Validated Binding IR.
+ * @param declaration - A concrete function declaration from that IR.
+ */
+export const describeCFunction = (ir, declaration) => ({
+	prefix: prefix(ir)
+	, name: publicFunctionName(ir, declarationVariants(declaration)[0])
+	, field: runtimeFieldName(ir, declarationVariants(declaration)[0])
+	, signature: runtimeParameters(ir, declarationVariants(declaration)[0]).join(", ")
+	, parameters: declaration.parameters.map(site => ({ name: snake(site.name), type: cType(ir, site.type) }))
+	, resultType: isUnit(ir, declaration.result.type) ? "void" : cType(ir, declaration.result.type)
+});

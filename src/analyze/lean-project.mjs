@@ -5,12 +5,15 @@
  */
 
 import { createHash } from "node:crypto";
-import { readFile, readdir } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath } from "node:fs/promises";
 import { basename, join, relative, resolve } from "node:path";
 
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentSignatureProblem } from "../abi/component-scalars.mjs";
+import { assertExportConfigurationSnapshot, exportConfigurationFile, readExportConfiguration, selectExportDeclarations, selectSourceModules } from "./export-configuration.mjs";
+import { isSourceNotice } from "../release/source-notices.mjs";
+import { componentLicense } from "./package-license.mjs";
 
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const ignoredDirectories = new Set([
@@ -37,6 +40,7 @@ const relevantProjectFiles = new Set([
 	, "lean-toolchain"
 	, "package-lock.json"
 	, "package.json"
+	, exportConfigurationFile
 ]);
 
 /**
@@ -293,6 +297,8 @@ const primitiveTypes = new Map([
 	, ["Float", "float64"]
 	, ["String", "string"]
 	, ["ByteArray", "bytes"]
+	, ["Char", "char"]
+	, ["USize", "usize"], ["ISize", "isize"]
 ]);
 
 const splitTopLevel = value => {
@@ -505,13 +511,13 @@ const proposedIr = ({ facts, exports, theorems }) => {
 };
 
 /**
- * Inventories a Lean project, correlates source declarations with compiled exports, and emits diagnostics plus a proposed Binding IR.
+ * Inventory original source and package facts without selecting declarations or assigning types.
  *
  * @param projectRoot - Lean project root inspected without modifying its source or build outputs.
  * @param root0 - Optional controls for the project scan.
  * @param root0.signal - Abort signal checked throughout filesystem and environment analysis.
  */
-export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {}) => {
+export const inspectLeanProject = async (projectRoot, { signal = undefined } = {}) => {
 	const root = resolve(projectRoot);
 	signal?.throwIfAborted();
 	let files;
@@ -523,11 +529,21 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		if(error.code === "ENOENT") fail("project-absent", `Lean project does not exist: ${root}`);
 		throw error;
 	}
+	const configurationRecord = await readExportConfiguration(root, { signal });
+	const packageMetadata = configurationRecord.configuration.package ?? {};
+	if(packageMetadata.license && files.includes(join(root, "package.json"))) componentLicense(packageMetadata, JSON.parse(await readFile(join(root, "package.json"), "utf8")));
+	for(const path of packageMetadata.licenseFiles ?? [])
+	{
+		const absolute = join(root, path);
+		if(!files.includes(absolute) || !(await lstat(absolute)).isFile() || await realpath(absolute) !== absolute)
+			fail("invalid-license-file", `Declared license file is missing, excluded or symlinked: ${path}`);
+		if(!(await readFile(absolute, "utf8")).trim()) fail("invalid-license-file", `Declared license file is empty: ${path}`);
+	}
 	const relevant = files.filter(path =>
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
     || relevantProjectFiles.has(basename(path))
-    || /^(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(basename(path))
+    || isSourceNotice(relative(root, path).replaceAll("\\", "/"), packageMetadata)
 	);
 	const inputs = [];
 	for(const absolute of relevant)
@@ -537,8 +553,32 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		inputs.push({ path: relative(root, absolute).replaceAll("\\", "/"), bytes: bytes.length, sha256: sha256(bytes) });
 	}
 	inputs.sort((left, right) => left.path.localeCompare(right.path));
-	const treeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
-	const [facts, environment] = await Promise.all([packageFacts(root), compiledEnvironment(root, { signal })]);
+	assertExportConfigurationSnapshot(configurationRecord, inputs);
+	const sourceTreeSha256 = sha256(inputs.map(input => `${input.sha256}  ${input.path}\n`).join(""));
+	return { inputs, sourceTreeSha256, project: await packageFacts(root), configurationRecord };
+};
+
+/**
+ * Analyze captured source declarations without executing a project or its generators.
+ *
+ * @param projectRoot - Ordinary Lean project directory.
+ * @param options - Optional cancellation settings.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {}) => {
+	const root = resolve(projectRoot);
+	const inspected = await inspectLeanProject(root, { signal });
+	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
+	const configuration = configurationRecord.configuration;
+	if(configuration.ownedAggregates !== undefined)
+		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
+	if(Object.keys(configuration.arities ?? {}).length)
+		fail("arity-requires-elaboration", "Explicit function arities require compiler-backed analysis; source discovery cannot distinguish returned functions");
+	if(configuration.specializations?.length)
+		fail("specialization-requires-elaboration", "Finite specializations require compiler-backed analysis; source discovery cannot assign their types");
+	if(Object.keys(configuration.contracts ?? {}).length)
+		fail("contracts-require-elaboration", "Export contracts require compiler-backed analysis; source discovery cannot authorize ownership, refinements or effects");
+	const environment = await compiledEnvironment(root, { signal });
 	signal?.throwIfAborted();
 	const compiledDeclarations = new Set(environment.modules.flatMap(module => module.declarations));
 	const declarations = [];
@@ -551,13 +591,18 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		imports.push(...scanned.imports.map(module => ({ module, source: input.path })));
 	}
 	declarations.sort((left, right) => left.fullName.localeCompare(right.fullName) || left.path.localeCompare(right.path));
+	const sourceModules = selectSourceModules(configuration, inputs);
+	const selectedDeclarations = selectExportDeclarations(configuration, declarations, sourceModules);
+	for(const name of configuration.exports ?? [])
+		if(!selectedDeclarations.some(item => item.fullName === name && exportableDeclarationKinds.has(item.kind)))
+			fail("invalid-export-declaration", `${name} is not a callable export; theorems and type declarations are not host functions`);
 	const theorems = declarations.filter(item => item.kind === "theorem");
 	const diagnostics = [];
 	const adapterHints = [];
 	const candidates = [];
 	const preliminaryShapes = new Map();
 	const projectedNameCounts = new Map();
-	for(const declaration of declarations.filter(item => exportableDeclarationKinds.has(item.kind)))
+	for(const declaration of selectedDeclarations.filter(item => exportableDeclarationKinds.has(item.kind)))
 	{
 		const shape = functionShape(declaration);
 		preliminaryShapes.set(declaration.fullName, shape);
@@ -569,7 +614,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
       && !shape.blocker
 		) projectedNameCounts.set(declaration.name, (projectedNameCounts.get(declaration.name) ?? 0) + 1);
 	}
-	for(const declaration of declarations)
+	for(const declaration of selectedDeclarations)
 	{
 		signal?.throwIfAborted();
 		if(!exportableDeclarationKinds.has(declaration.kind)) continue;
@@ -626,6 +671,7 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 			declaration: declaration.fullName
 			, kind: declaration.kind
 			, path: declaration.path
+			, sourceModule: sourceModules.find(module => module.path === declaration.path)?.module ?? declaration.path.replace(/\.lean$/, "").replaceAll("/", ".")
 			, line: declaration.line
 			, documentation: declaration.documentation
 			, externSymbol: declaration.externSymbol
@@ -642,6 +688,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	}
 
 	const existingPaths = inputs.filter(input => input.path.endsWith(".binding-ir.json"));
+	if(existingPaths.length && ["exports", "resources", "arities", "specializations", "contracts"].some(key => configuration[key] !== undefined))
+		fail("export-configuration-reviewed-ir", "Keep export decisions in the reviewed Binding IR; modules may select its Lean source roots");
 	let bindingIr = null;
 	if(existingPaths.length === 1)
 	{

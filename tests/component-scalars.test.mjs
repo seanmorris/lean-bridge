@@ -61,9 +61,15 @@ for(const bits of [8, 16, 32, 64]) {
   assert.throws(() => api["u" + bits](host(max + 1n)), TypeError);
   assert.throws(() => api["i" + bits](host(min - 1n)), TypeError);
 }
+assert.equal(api.usize(0xffffffff), 0xffffffff);
+assert.equal(api.isize(-0x80000000), -0x80000000);
+assert.throws(() => api.usize(0x100000000), TypeError);
+assert.throws(() => api.isize(0x80000000), TypeError);
 for(const name of ["f32", "f64"]) for(const value of [1.25, -0, Infinity, -Infinity, NaN]) assert.ok(Object.is(api[name](value), value));
-for(const value of ["", "🌱\\0end", "λ中文é"]) assert.equal(api.text(value), value);
+for(const value of ["", "🌱\\0end", "λ中文é", "\\uFEFF", "\\uFEFF\\0🌱\\uFEFF"]) assert.equal(api.text(value), value);
 assert.throws(() => api.text("\\ud800"), /surrogate/);
+for(const value of ["a", "\\0", "🌱", "\\u{10ffff}"]) assert.equal(api.character(value), value);
+for(const value of ["", "ab", "e\\u0301", "\\ud800", "\\udfff", 65]) assert.throws(() => api.character(value), TypeError);
 const input = new Uint8Array([0, 128, 255]);
 const output = api.bytes(input); assert.deepEqual(output, input); assert.notEqual(output, input);
 input[0] = 9; assert.equal(output[0], 0);

@@ -1,0 +1,14 @@
+[
+  {"name":"alias-scalar","statement":"Api.Increment(true);","code":"CS1503"},
+  {"name":"alias-nat","statement":"Api.EchoNat(\"negative\");","code":"CS1503"},
+  {"name":"alias-unit","statement":"Api.EchoUnit(0);","code":"CS1503"},
+  {"name":"wrong-option","statement":"Api.EchoMaybe(Option<Unit>.Some(default));","code":"CS1503"},
+  {"name":"wrong-result","statement":"Api.EchoOutcome(Result<(uint, bool), string>.Ok((1, true)));","code":"CS1503"},
+  {"name":"wrong-field","statement":"var p = default(Packet)!; _ = p with { Count = true };","code":"CS0029"},
+  {"name":"wrong-row","statement":"Api.ReverseRows(new bool[][] { new[] { true } });","code":"CS1503"},
+  {"name":"wrong-byte","statement":"Api.EchoBytes(new uint[] { 1 });","code":"CS1503"},
+  {"name":"domain-versus-boundary","statement":"LeanBridgeException value = Api.EchoOutcome(Result<(uint, byte[]), string>.Err(\"domain\"));","code":"CS0029"},
+  {"name":"fixed-overflow","statement":"Api.EchoUint8(256);","code":"CS1503"},
+  {"name":"word-overflow","statement":"Api.EchoUsize(18446744073709551616UL);","code":"CS1021"},
+  {"name":"no-wrapper-identity","statement":"LeanBridge.Aliases.Count value = default; _ = value;","code":"CS0234"}
+]

@@ -1,6 +1,6 @@
 # Java
 
-Resolve Alpha from a Maven repository and call its public Java API. The JAR carries compiled Lean libraries and uses JDK 22's finalized Foreign Function and Memory API.
+Install a prepared Maven JAR and call its generated Java API. The JAR carries the compiled Lean component and shared runtime. Consumers need Java, not Lean or handwritten native conversions.
 
 ## Use a prepared release
 
@@ -8,9 +8,694 @@ Resolve Alpha from a Maven repository and call its public Java API. The JAR carr
 
 Use JDK 22 and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `javac -version`, `mvn -version`, and `ldd --version`; Maven must also run on JDK 22. The [support contract](../consumer-support.v1.json) records this JVM profile.
 
-This example uses `org.leanbridge:lean-alpha:0.0.0`, the Alpha interoperability package. Follow [Use a prepared release](receive-package.md) to obtain and authenticate its Maven release. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the absolute release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`. Keep the repository's POM and JAR together. No Maven Central publication is assumed.
+Follow [Use a prepared release](receive-package.md) to obtain and authenticate the package. Keep its POM and JAR together. No Maven Central publication is assumed.
 
-### Resolve the package
+### Call an ordinary Lean package
+
+The package README names its Maven coordinate, Java package and functions. The local acceptance package uses `com.acme:maple-api:2.0.0-rc.1` and `org.leanbridge.maple.Api`. These coordinates identify a test archive, not a Maven Central release.
+
+Install the original JAR and POM into your local Maven repository:
+
+```sh
+export LEAN_BRIDGE_MAVEN_RELEASE=/absolute/path/to/maple-release
+export LEAN_BRIDGE_M2="$PWD/.m2"
+mvn --batch-mode --quiet "-Dmaven.repo.local=$LEAN_BRIDGE_M2" \
+  org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file \
+  "-Dfile=$LEAN_BRIDGE_MAVEN_RELEASE/archives/maple-api-2.0.0-rc.1.jar" \
+  "-DpomFile=$LEAN_BRIDGE_MAVEN_RELEASE/archives/maple-api-2.0.0-rc.1.pom"
+export LEAN_BRIDGE_JAR="$LEAN_BRIDGE_M2/com/acme/maple-api/2.0.0-rc.1/maple-api-2.0.0-rc.1.jar"
+```
+
+Maven downloads its install plugin on the first run. The Lean package comes from the supplied archives. Save `Example.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.maple.Api;
+
+class Example {
+    public static void main(String[] args) {
+        System.out.println(Api.echoNat(BigInteger.ONE.shiftLeft(200)));
+        System.out.println(Api.echoText("Lean λ🌿"));
+        System.out.println(Api.matrix(new long[] {1, 2, 3})[1][2]);
+    }
+}
+```
+
+```sh
+javac --release 22 -encoding UTF-8 -cp "$LEAN_BRIDGE_JAR" Example.java
+java --enable-native-access=ALL-UNNAMED -cp ".:$LEAN_BRIDGE_JAR" Example
+```
+
+UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt64, Nat and Int use `BigInteger`. Signed integers and floating-point values use their corresponding Java primitives. Arrays and Lists use typed Java arrays, ByteArray uses `byte[]`, and copied structures become Java records. Unit inputs use the generated `Unit.INSTANCE`; Unit results return `void`.
+
+Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
+
+### Arrays and records
+
+Lean `Array T` uses a typed Java array. Primitive elements use primitive arrays, such as `long[]` for `Array UInt32`. Named copied structures become Java records with typed component accessors. Arrays and records can nest; calls copy their contents into independent returned values.
+
+For the `org.leanbridge:collections:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import java.util.Arrays;
+import org.leanbridge.collections.Api;
+
+class Example {
+    public static void main(String[] args) {
+        long[][] input = {{1, 2, 3}, {}};
+        long[][] reversed = Api.arrayReverseUint32(input);
+        System.out.println(Arrays.deepToString(reversed)); // [[], [3, 2, 1]]
+        reversed[1][0] = 99;
+        System.out.println(input[0][2]); // 3: the input is unchanged
+        System.out.println(Api.recordMake().first()); // 42
+    }
+}
+```
+
+Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package), with the collections archive installed and selected as `LEAN_BRIDGE_JAR`. Pass typed arrays, not `java.util.List` or JSON. Nulls, invalid element values, malformed text and copies over the 16 MiB conversion budget throw. The 32-level type limit applies to nested arrays and records.
+
+Generated records compare nested array contents and produce matching hash codes. Standalone arrays keep Java reference equality; use `Arrays.equals` or `Arrays.deepEquals` to compare their contents. Array contents remain mutable, so do not mutate a record's arrays while using that record as a map key or set member. The [installed collection checks](../evidence/java-collections-20260922.md) cover both source paths, compiler rejections, failure cleanup and runtime-only execution of this example.
+
+### Lists
+
+Lean `List T` uses a typed Java array in inputs, results and record fields. Primitive elements use primitive arrays, such as `long[]` for `List UInt32`. Reference elements use arrays such as `BigInteger[]` for `List Nat`. Lists can nest with arrays, records, options, results and products. Lean List and Array retain distinct contract identities.
+
+For the `org.leanbridge:lists:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import java.util.Arrays;
+import org.leanbridge.lists.Api;
+
+class Example {
+    public static void main(String[] args) {
+        long[] input = {1, 2, 2, 3};
+        long[] reversed = Api.reverseUint32(input);
+        System.out.println(Arrays.toString(reversed)); // [3, 2, 2, 1]
+        reversed[0] = 99; // input is unchanged
+        System.out.println(Api.reverseUint32(new long[0]).length); // 0
+    }
+}
+```
+
+Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package). Pass arrays, not `java.util.List`, boxed numeric arrays or streams. Copies preserve order, duplicates and every nesting level; returned mutable values have independent storage. Nulls, invalid payloads and oversized copies throw. Native sequence lengths and buffer alignment are checked before allocation or element reads. The existing budgets and 32-level type limit apply. [Installed List checks](../evidence/jvm-lists-20260920.md) cover both source paths, compiler rejections, cleanup and runtime-only deployment. Acyclic Lists also work in [callbacks and returned closures](#structured-callback-values).
+
+### Named copied aliases
+
+Copied Lean aliases use ordinary Java target types. An alias of UInt32 uses
+checked `long`, an alias of Nat uses `BigInteger`, and an alias of
+`Array (List UInt32)` uses `long[][]`. The prepared JAR retains alias names,
+original targets and chains in its manifest, README and generated Java source
+documentation. Parameters, results and record components retain their contract
+names. Aliases add no wrapper classes.
+
+For the `org.leanbridge:aliases:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.aliases.Api;
+
+class Example {
+    public static void main(String[] args) {
+        long count = Api.make();
+        System.out.println(Api.increment(count)); // 42
+        System.out.println(Api.echoNat(BigInteger.ONE.shiftLeft(200)));
+        long[][] rows = Api.reverseRows(new long[][] {{1, 2, 3}, {}});
+        System.out.println(rows[0][0]); // 3
+    }
+}
+```
+
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package).
+Nat still rejects negative `BigInteger` values while Int accepts them; UInt32
+rejects values outside `0..4294967295`. Arrays and record contents remain copied.
+See the [installed alias checks](../evidence/jvm-aliases-20260921.md).
+
+### Options, results and products
+
+Ordinary-source and reviewed Maven packages support `Option`, `Except` and nested binary products, including mixtures with arrays, Lists and copied records. The JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches, plus a `Pair<A, B>` record.
+
+For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import org.leanbridge.compounds.Api;
+import org.leanbridge.compounds.Option;
+import org.leanbridge.compounds.Pair;
+import org.leanbridge.compounds.Unit;
+
+class Example {
+    public static void main(String[] args) {
+        var present = Api.optionUint32(Option.some(42L));
+        System.out.println(present.value()); // 42
+        System.out.println(Api.classify(Option.some(Option.<Unit>none()))); // 1
+        System.out.println(Api.tupleUint32(new Pair<>(1L, 2L)).first()); // 2
+        var result = Api.duplicate(Option.none());
+        if (!result.isOk()) System.out.println(result.error()); // empty
+    }
+}
+```
+
+Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package). Generic payloads use boxed Java primitives: `Option<Long>` for `Option UInt32`, for example. `ByteArray` remains `byte[]`, and arbitrary integers retain `BigInteger`.
+
+`Option.none()` and `Option.some(Unit.INSTANCE)` are different values. Nested options retain every branch. Read `value()` when `isSome()` is true. `Result.ok(value)` and `Result.err(error)` preserve Lean `Except E T` as `Result<T, E>`; read `value()` when `isOk()` is true, otherwise `error()`. An inactive accessor throws `IllegalStateException`. Domain errors return `Err`; bridge failures throw exceptions. Both sealed hierarchies support exhaustive Java switches.
+
+Compound factories and constructors reject null payloads; calls reject null containers. A `Pair` always has two typed elements and retains product nesting. Returned arrays own independent copies. Generated records, `Option`, `Result` and `Pair` compare nested payloads by contents and produce matching hash codes, including array fields. The 32-level type limit and existing copy budgets apply to compounds. See the [installed Java/Kotlin checks](../evidence/jvm-compounds-20260920.md).
+
+Standalone arrays retain Java reference equality. Use `Arrays.equals` for primitive arrays and `Arrays.deepEquals` for nested arrays. Generated value equality follows Java floating-point rules: NaNs compare equal and positive and negative zero differ. Do not mutate nested arrays while a containing value is a map key or set member.
+
+### Tagged variants
+
+Concrete copied Lean inductives use a sealed Java interface and one named record
+per constructor. The compiler checks exhaustive switches over these cases.
+Numeric tags and native layouts stay inside the package.
+
+For the `org.leanbridge:variants:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import org.leanbridge.variants.*;
+
+class Example {
+    public static void main(String[] args) {
+        Signal result = Api.next(new SignalData(42, "ready"));
+        String label = switch (result) {
+            case SignalIdle idle -> "idle";
+            case SignalStopped stopped -> "stopped";
+            case SignalData data -> data.count() + ": " + data.label();
+            case SignalMarker marker -> "marker";
+        };
+        System.out.println(label); // 43: ready!
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package). Constructor
+names use PascalCase; payload accessors use camelCase. Java keywords gain a
+trailing underscore, and existing trailing underscores remain when they
+distinguish source names. Name collisions reject during generation.
+
+Payloads can contain all nineteen primitives, copied records, arrays, Lists,
+options, results, products and other admitted variants. Only the active case
+is converted. Empty cases and cases carrying `Unit.INSTANCE` remain distinct.
+Calls reject null cases, active null fields and invalid primitive values.
+
+Record components are final, but contained arrays remain mutable. Results own
+independent copied storage. Generated records compare nested contents and retain
+each constructor's identity. The existing 32-level type
+limit and managed/native copy budgets apply. Scoped arenas and native output
+guards release partial conversions on failure. See the
+[installed variant checks](../evidence/jvm-variants-20260921.md).
+Callback identities and resources cannot be copied variant fields.
+
+### Recursive values
+
+Recursive records and constructor families retain their named Java types. A
+recursive field points to its generated family, without numeric tags or JSON.
+The `org.leanbridge:recursive:1.0.0` acceptance archive supplies this example.
+Save `Example.java`:
+
+```java
+import org.leanbridge.recursive.*;
+
+class Example {
+    public static void main(String[] args) {
+        Spine input = new SpineNext(new SpineLeaf(41));
+        Spine copy = Api.spine(input);
+        System.out.println(copy.equals(input)); // true
+        System.out.println(copy == input);      // false
+        Tree[] trees = {Api.empty()};
+        Tree[] copies = Api.forest(trees);
+        System.out.println(copies != trees);       // true
+        System.out.println(copies[0] != trees[0]); // true
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package) with the recursive
+archive. Java and Kotlin use the same JAR and native runtime. Package loading
+and result cleanup remain automatic.
+
+Calls support direct and mutual recursion, nested containers, options, results
+and products. Results own independent copied storage. Arrays remain mutable;
+do not mutate an argument during a call. Cycles and uninhabited values reject.
+Generated equality and hashing traverse nested contents and reject cycles too.
+
+The recursive profile allows 128 value levels and 262,144 visited values, with
+a 16 MiB native-copy budget and a separate 16 MiB scratch/output budget. These
+limits do not measure Lean working memory or all JVM heap overhead. A constructor
+that exceeds the JVM argument-slot limit becomes an immutable final class with
+typed accessors and a typed `builder()`. Set every field before `build()`.
+
+The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
+execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. For values containing resources, use the [owned profile](#owned-resources-and-aggregates).
+
+### Callbacks and returned Lean functions
+
+Ordinary-source and compiler-checked reviewed Maven packages support synchronous callbacks and returned functions across all nineteen primitives. Generated functional interfaces carry the exact parameter and result types. Pass a Java lambda directly:
+
+```java
+System.out.println(Api.callWord(40, value -> value + 1)); // applies twice: 42
+try (var addTwo = Api.makeWord(2)) {
+    System.out.println(addTwo.invoke(40));              // 42
+    System.out.println(Api.callWord(40, addTwo));        // 44
+}
+```
+
+Add these calls to the Maple example's `main` method. `makeWord` returns `FnUInt32ToUInt32.LeanClosure`, which implements the same functional interface as the callback parameter and `AutoCloseable`. Other signatures use corresponding `Fn...To...` interfaces. Primitive mappings do not change: UInt64, Nat and Int still use `BigInteger`, and a Unit result returns `void`.
+
+Callbacks borrow one synchronous call. Their copied arguments remain valid afterward, but Lean must not retain the host function; invoking an expired borrow throws. Exceptions and errors from a callback return to the caller as the same `Throwable`, with the original stack and suppressed exceptions. Later callbacks in that failed call do not run. This includes checked exceptions thrown by Kotlin callbacks; the Java signatures do not declare checked exceptions.
+
+Call `invoke` on the closure's creating platform thread. Java virtual threads are rejected for callable operations because they can move between native threads. `close` is idempotent, may run on another thread, and defers native release while a call is active. All references and saved method references reject invocation after closing. `isClosed` reports explicit closure; a Cleaner releases abandoned leases as a fallback. Use try-with-resources for deterministic cleanup.
+
+Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions and retained host callbacks remain unsupported. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
+
+### Structured callback values
+
+Callbacks and returned closures accept arrays, Lists, options, results, nested
+binary products, copied records, variants and aliases with acyclic copied
+payloads. They use the same Java types as direct calls. Nested mutable storage
+is copied independently, including captured values and callback results. The
+[installed checks](../evidence/jvm-structured-callables-20260925.md) cover both
+authoring paths and cleanup after failed conversions.
+
+For the `org.leanbridge:structured:1.0.0` acceptance archive, save
+`StructuredExample.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.structured.Api;
+import org.leanbridge.structured.Option;
+import org.leanbridge.structured.Payload;
+
+class StructuredExample {
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args) {
+        Option<String>[] rows = (Option<String>[]) new Option<?>[] {
+            Option.none(), Option.some("row")
+        };
+        var input = new Payload("source", rows, BigInteger.ONE.shiftLeft(200), Option.none());
+        var copied = Api.callRecord(input, value ->
+            new Payload("copied", value.rows(), value.count(), value.nested()));
+        System.out.println(copied.text()); // copied
+        try (var held = Api.makeRecord(input)) {
+            rows[0] = Option.some("edited");
+            System.out.println(held.invoke(true, input).rows()[0].isSome()); // false
+        }
+        System.out.println(Api.callArray(rows, values -> values).length); // 2
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`StructuredExample.java` and the main class `StructuredExample`. The package
+README names the functional interface for each signature; lambdas and `var`
+avoid spelling those generated names. The [author recipe](../publish/maven.md#structured-callback-values)
+defines the Lean API used here.
+
+The copy boundary preserves `None`, nested options, result branches and variant
+constructors. Java and Kotlin use distinct generated value types in the same
+JAR. Do not mix Java records with the companion Kotlin API. Both adapters share
+the native runtime, process guards and closure leases. The callback lifetime,
+thread and cleanup rules above also apply to structured payloads.
+
+### Recursive callback values
+
+Recursive values can cross callback arguments, callback results and returned
+functions in the prepared Maven package. Import the Java API and its Java value
+classes together. For the `org.leanbridge:structured:1.0.0` acceptance package,
+save `RecursiveExample.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.structured.*;
+
+public final class RecursiveExample {
+    private static BigInteger first(Tree tree) {
+        return ((TreeLeaf) ((TreeBranch) tree).children()[0]).value();
+    }
+
+    public static void main(String[] args) {
+        Tree[] children = { new TreeLeaf(BigInteger.valueOf(20)) };
+        Tree input = new TreeBranch(children);
+        Tree result = Api.callRecursive(input, value ->
+            new TreeBranch(new Tree[] { new TreeLeaf(BigInteger.valueOf(42)) }));
+        System.out.println(first(result)); // 42
+        try (var held = Api.makeRecursive(input)) {
+            children[0] = new TreeLeaf(BigInteger.valueOf(99));
+            System.out.println(first(held.invoke(true, result)));  // 20
+            System.out.println(first(held.invoke(false, result))); // 42
+        }
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`RecursiveExample.java` and the main class `RecursiveExample`. The
+[author recipe](../publish/maven.md#recursive-callback-values) defines this API.
+The package loads and verifies its bundled Lean runtime automatically.
+
+Callbacks receive independent copies. Their returned values and closure
+captures also own independent storage. Editing the input array after
+`makeRecursive` does not change the captured tree. Use `try` with resources to
+close returned functions. Invocation requires the creating platform thread.
+Closing from another thread is safe. A close during an active call marks the
+function closed immediately and releases its native ownership when active
+calls finish.
+
+Recursive callable conversions allow 128 value levels and 262,144 visited
+values, with separate 16 MiB native-copy and accounted host-storage budgets.
+These budgets do not measure Lean working memory or every JVM allocation.
+Cycles, null values, negative Nat values and invalid branches reject. Callback
+exceptions preserve the original Throwable after cleanup. Malformed native
+results retire the runtime; conversion limits and allocation failures allow
+later calls. Resources or callable identities inside copied aggregates,
+retained host callbacks and asynchronous delivery remain unsupported.
+
+[Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
+cover both authoring paths, typed callers, failure cleanup and runtime-only execution.
+
+### Owned resources and aggregates
+
+The owned-value Maven profile supports resources inside records, arrays, Lists,
+options, results, products and recursive variants. Its JAR contains the Java API,
+the Kotlin API and their native dependencies. Consumers do not install Lean or
+configure a shared-runtime path.
+
+For a package without borrowed-result declarations, save `OwnedExample.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+public final class OwnedExample {
+    public static void main(String[] args) {
+        try (var ticket = Api.newTicket(BigInteger.valueOf(42), "demo")) {
+            var input = new Bundle(ticket, Option.none(), new Ticket[0],
+                new Ticket[0], new Payload(BigInteger.ZERO, new byte[0]));
+            var output = Api.callbackRecord(input, borrowed -> borrowed);
+            try (var returned = output.primary()) {
+                System.out.println(Api.serial(returned)); // 42
+            }
+        }
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`OwnedExample.java` and `OwnedExample`. The
+[author recipe](../publish/maven.md#owned-resources-and-aggregates) defines this API.
+
+Each resource or returned closure implements `AutoCloseable`. Close every
+returned owner, including owners inside containers. `retain()` creates a new
+owner that remains usable after the original closes. Copying a Java record or
+array shares its existing wrappers and does not retain them. Value equality
+compares copied contents, but resource leaves compare wrapper identity.
+
+Callbacks borrow resource and closure arguments until the callback returns.
+Call `retain()` inside the callback to keep an argument. A returned Lean closure's
+`asCallback()` preserves its native identity when passed back to Lean.
+`OwnedCallbacks.withRecovery(callback, recoveryValue)` supplies cleanup recovery
+for callbacks without a default result. A thrown callback still reaches the
+caller as the original exception; the recovery value is not a successful result.
+
+Calls, closure invocation and `retain()` require the creating platform thread.
+Cross-thread close and Cleaner cleanup queue releases for that thread. Native
+thread-exit cleanup releases outstanding ownership even if Java still holds the
+wrappers. Virtual threads and use after fork reject.
+
+Conversions share a limit of 128 value levels, 262,144 visits, a 16 MiB
+native-copy budget and a separate 16 MiB accounted Java-storage budget per call.
+These limits do not measure Lean working memory or every JVM allocation.
+For parameter-anchored results, use the [whole-owner API](#borrowed-results-and-whole-owners).
+Asynchronous callbacks require separate lifetime support.
+A saved host callback does not remain callable after its enclosing call.
+
+#### Consuming inputs
+
+An author can mark an argument as transferred. The generated Javadoc names the
+consuming arguments. Pass ordinary Java values; no move wrapper is required.
+For the [transfer-enabled example](../publish/maven.md#transfer-input-ownership),
+save `OwnedTransferExample.java`:
+
+```java file=java/OwnedTransferExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+public final class OwnedTransferExample {
+    public static void main(String[] args) {
+        try (var original = Api.newTicket(BigInteger.valueOf(42), "task");
+             var kept = original.retain();
+             var received = Api.retainTicket(original)) {
+            if (!original.isClosed() || Api.serial(received).intValueExact() != 42
+                || Api.serial(kept).intValueExact() != 42)
+                throw new IllegalStateException("Transfer lost a retained reference.");
+            System.out.println("transferred");
+        }
+    }
+}
+```
+
+Validation and snapshot preparation finish before Lean runs. At handoff, all
+aliases sharing the input's resource lease close. Sibling resources from the
+same returned aggregate share that lease, so transferring one closes the
+others. An independent `retain()` survives. Copied fields keep their values.
+
+Two consuming arguments cannot share a resource lease. Retain a callback borrow
+before passing it to a consuming argument. Pre-handoff errors preserve ownership;
+callback exceptions and result-conversion failures after handoff leave the input
+consumed. `isClosed()` reports consumption during callback reentry, including
+when another thread checks it. Calls still require the creating platform thread.
+
+#### Borrowed results and whole owners
+
+Packages with parameter-anchored results return `Value<T>` for resource-bearing
+values. `get()` checks the owner before exposing its contents. A borrowed result
+expires when its original owner closes or transfers, including empty arrays and
+absent options. `share()` keeps another guard on that same owner; `retain()`
+creates an independent owner.
+
+For the owned-aggregates package with `retainTicket` anchored to its input, save
+`OwnedBorrowExample.java`:
+
+```java file=java/OwnedBorrowExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+@SuppressWarnings("try")
+public final class OwnedBorrowExample {
+    public static void main(String[] args) {
+        try (var owner = Api.newTicket(BigInteger.valueOf(42), "order");
+             var view = Api.retainTicket(owner);
+             var kept = view.retain()) {
+            owner.close();
+            if (!view.isClosed()) throw new AssertionError("Borrowed view is still open");
+            System.out.println(Api.serial(kept.get()));
+        }
+    }
+}
+```
+
+`Api.copyValue(raw)` creates a whole owner where the erased JVM type identifies
+one Lean type. Otherwise use a declaration-specific factory, such as
+`Api.copyEchoArrayResult(raw)` or `Api.copyEchoListResult(raw)`. Both Lean types
+use Java arrays, so their factories preserve the intended Lean representation.
+
+In these packages, consuming arguments also accept `Value<T>`. They consume the
+original owner, not a snapshot. Shared guards and borrowed descendants expire
+together. Borrowed results, duplicate consuming owners, and conflicts between
+an anchor and its consuming ancestor reject before handoff. Independent retains
+survive. Raw views from `get()` do not keep the whole owner alive; retain a
+resource explicitly when it must outlive that owner. Resource `equals` and
+`sameIdentity` compare native identity and reject expired views. Whole owners
+and resources do not support hashing.
+
+#### Methods and properties
+
+When the Lean author declares receivers, the package exposes nominal owners
+such as `TicketValue` and `BundleValue`, each extending `Value<T>`. Methods use
+camel case; read-only properties use JavaBean getters. The static `Api`
+functions remain available.
+
+For the owned-aggregates package with `serial` declared as a property and
+`retainTicket` as a receiver-anchored method, save `OwnedReceiverExample.java`:
+
+```java file=java/OwnedReceiverExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+@SuppressWarnings("try")
+public final class OwnedReceiverExample {
+    public static void main(String[] args) {
+        try (var owner = Api.newTicket(BigInteger.valueOf(42), "order");
+             var view = owner.retainTicket();
+             var kept = view.retain()) {
+            System.out.println(owner.getSerial());
+            owner.close();
+            if (!view.isClosed()) throw new AssertionError("Borrowed view is still open");
+            System.out.println(kept.getSerial());
+        }
+    }
+}
+```
+
+This prints `42` twice. The method's declared lifetime makes `view` borrow from
+`owner`; `retain()` creates the independent `kept` owner. `share()` and `retain()`
+preserve the nominal owner type. Raw resource views expose members that do not
+borrow from or consume the receiver. Use the whole owner for those operations.
+If a method borrows from another argument, that argument controls the result's
+lifetime. Consuming methods invalidate the original owner and its shared guards
+before Lean runs, including before a host callback executes.
+
+Callback results anchored to a callback argument remain unsupported.
+
+#### Receiver lifetimes and garbage collection
+
+Keep the whole owner or one of its `share()` wrappers reachable while using a
+borrowed result. Raw values from `get()` and borrowed descendants do not keep
+that owner alive. Collecting its last shared wrapper expires those descendants;
+an independently retained owner remains valid.
+
+Generated methods and getters keep their receiver alive until the call returns,
+including after JIT optimization. A bound method reference also keeps its
+receiver reachable until you release that reference. The cleaner queues native
+releases for the creating thread. Use `try`-with-resources for prompt cleanup.
+
+#### Callback-result owners (unreleased)
+
+This profile is under development. These examples target the callback-result
+owned-aggregates fixture, whose returned callable borrows its result from the
+whole invocation argument. Use the package and generated API for that contract;
+ordinary leased callback results have different signatures.
+
+Pass the original whole owner to the returned native closure. Closing that owner
+expires the callback result and its borrowed descendants. Retain the result
+before closing the original when an independent lifetime is needed.
+
+```java file=java/OwnedCallbackResultExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+@SuppressWarnings("try")
+public final class OwnedCallbackResultExample {
+    public static void main(String[] args) {
+        try (var seed = Api.newTicket(BigInteger.valueOf(42), "callback-owner")) {
+            var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                new Payload(BigInteger.ZERO, new byte[0]));
+            try (var original = Api.echoRecord(input);
+                 var closureOwner = Api.makeRecordCallback(input);
+                 var borrowed = closureOwner.get().invoke(original);
+                 var independent = borrowed.retain()) {
+                original.close();
+                if (!borrowed.isClosed() || independent.isClosed()) throw new AssertionError("Owner lifetime");
+                if (Api.serial(independent.get().primary()).intValueExact() != 42)
+                    throw new AssertionError("Retained callback result");
+                try {
+                    borrowed.get();
+                    throw new AssertionError("Expired callback result was accepted");
+                } catch (LeanBridgeException error) {
+                    if (error.status() != 4) throw error;
+                }
+            }
+        }
+        System.out.println("callback-result-retained");
+    }
+}
+```
+
+Host-enabled packages accept `CallbackResult.value(raw)` or
+`CallbackResult.owner(wholeOwner)` from synchronous callbacks. The bridge copies
+the reply before the callback argument frame expires. This host-reply example
+requires the host-enabled profile; the native-only profile omits those callback
+interfaces and `CallbackResult`.
+
+```java file=java/OwnedCallbackReplyExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+@SuppressWarnings("try")
+public final class OwnedCallbackReplyExample {
+    public static void main(String[] args) {
+        try (var seed = Api.newTicket(BigInteger.valueOf(42), "callback-reply")) {
+            var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                new Payload(BigInteger.ZERO, new byte[0]));
+            try (var replyOwner = Api.echoRecord(input);
+                 var raw = Api.callbackRecord(input,
+                     (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.value(value));
+                 var whole = Api.callbackRecord(input,
+                     (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.owner(replyOwner))) {
+                replyOwner.close();
+                if (Api.serial(raw.get().primary()).intValueExact() != 42
+                    || Api.serial(whole.get().primary()).intValueExact() != 42)
+                    throw new AssertionError("Callback reply was not copied before expiry");
+            }
+        }
+        System.out.println("callback-replies-copied");
+    }
+}
+```
+
+#### Callback owners and creator-thread exit (unreleased)
+
+Callback-result owners and independent retains still belong to their creating
+platform thread. The next example keeps all wrappers and the `Thread` reachable
+after that thread exits, checks `isClosed`, and verifies status 4 on later reads.
+It uses only the installed public API.
+
+```java file=java/OwnedCallbackThreadExample.java
+import java.lang.ref.Reference;
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import org.leanbridge.owned_aggregates.*;
+
+public final class OwnedCallbackThreadExample {
+    public static void main(String[] args) throws InterruptedException {
+        var held = new AtomicReference<Value<?>[]>();
+        var failure = new AtomicReference<Throwable>();
+        var worker = new Thread(() -> {
+            try {
+                var seed = Api.newTicket(BigInteger.valueOf(42), "callback-thread");
+                var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                    new Payload(BigInteger.ZERO, new byte[0]));
+                var original = Api.echoRecord(input);
+                var closureOwner = Api.makeRecordCallback(input);
+                var borrowed = closureOwner.get().invoke(original);
+                var descendant = closureOwner.get().invoke(borrowed);
+                var independent = descendant.retain();
+                held.set(new Value<?>[] { seed, original, closureOwner, borrowed, descendant, independent });
+            } catch (Throwable error) { failure.set(error); }
+        });
+        worker.start(); worker.join(10000);
+        if (worker.isAlive()) throw new AssertionError("Worker did not exit");
+        if (failure.get() != null) throw new AssertionError(failure.get());
+        var owners = held.get();
+        long deadline = System.nanoTime() + 5_000_000_000L;
+        while (java.util.Arrays.stream(owners).anyMatch(owner -> !owner.isClosed())
+            && System.nanoTime() < deadline) Thread.sleep(5);
+        for (var owner : owners) {
+            if (!owner.isClosed()) throw new AssertionError("Creator-thread owner remains open");
+            try {
+                owner.get();
+                throw new AssertionError("Dead-thread owner was accepted");
+            } catch (LeanBridgeException error) {
+                if (error.status() != 4) throw error;
+            }
+        }
+        Reference.reachabilityFence(owners); Reference.reachabilityFence(worker);
+        System.out.println("callback-thread-owners-closed");
+    }
+}
+```
+
+These public checks establish wrapper expiry. Neither thread joining nor
+`isClosed` proves completion of native TLS cleanup. The direct JVM process probes
+wait for the native exit counter and check restored allocation and identity
+counts separately. Installed packages expose no runtime-retirement operation;
+retirement checks use private test instrumentation. These checks make no general
+JVM fork-support claim.
+
+### Alpha interoperability example
+
+The remaining example uses the separate `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the authenticated Alpha release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`.
+
+## Resolve the package
 
 Run these commands from an empty application directory. Maven downloads its pinned dependency plugin, then resolves Alpha from the local release into an application-local cache:
 
@@ -118,6 +803,8 @@ Callable: 42
 Errors and cleanup: passed
 ```
 
+## Values and cleanup
+
 ### Type conversions
 
 Profiles: Java. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -126,39 +813,39 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `boolean` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `long` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Inspected: no host mapping | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `String` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `byte[]` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `long[]` (field) | Ordinary source: Not audited. Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Payload` (input, result) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Unit` | `Unit` (input, field, callback input); `void` (result, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass Unit.INSTANCE; Unit results return void. Unit fields and array elements use the generated enum. Pass Unit.INSTANCE; Unit callback results return void. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `boolean` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative integer, at most 255. Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative integer, at most 65535. Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative long, at most 4294967295. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `byte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `short` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact BigInteger magnitude; negative input throws. Exact java.math.BigInteger. Negative Nat values and callback results reject; captured values retain every bit. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact signed BigInteger with no narrowing. Signed exact java.math.BigInteger without fixed-width or floating-point narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `byte[]` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `Typed Java array` (input, result, field); `Primitive arrays or T[] with independently copied contents` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Typed Java arrays preserve all nineteen primitives, element order, empty rows, duplicates and nested arrays or records. Wrong element types and nesting depths fail compilation. Calls copy inputs and outputs independently. Native buffer lengths, null pointers, alignment, scalar markers and cumulative copy limits are checked before unsafe reads or allocation. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `Option<T>` (input, result, field); `Option<T> via Option.none() or Option.some(value)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated sealed interface with None/Some branches (Java records or final Kotlin classes), none()/some(value) factories, isSome() and guarded value(). Boxed primitive payloads preserve JVM generic types. Some(None) and Some(Some(Unit)) remain distinct. Null containers and payloads reject. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result<T, E>` (input, result, field); `Result<T, E> via Result.ok(value) or Result.err(error)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err branches support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses the generated covariant class, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Generated records compare and hash nested array contents. Arrays remain mutable; do not mutate them while a containing record is a map key or set member. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Copied structure` | `Generated Java record` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Generated nominal Java records preserve field order, declared types, empty and single-field records, and nested array contents. Component accessors preserve distinguishing trailing underscores and escape Java keywords. Equality and hashing use nested contents, including arrays. Wrong record types fail compilation; null and malformed fields reject on calls. Consumers need no foreign-memory layouts or private transport types. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Type alias` | `Java target value; named Lean contract in Maven metadata and Java source docs` (input, result, field); `JVM target value without an extra wrapper` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Aliases retain exact target ranges and copied storage. Nat rejects negative BigInteger while Int accepts it; UInt32 uses range-checked long/Long. Generic compound payloads box primitives; arrays retain primitive storage. Generated Unit inputs and void outputs stay distinct. The original List/Array identities, nested Option/Result presence and copy limits remain unchanged. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Inductive sum` | `sealed Java interface with named constructor records` (input, result, field); `Sealed Java interface with constructor records` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
-| `Host function passed to Lean` | `Transform` (input) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering. |
-| `Char` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
-| `USize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
-| `ISize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
+| `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
+| `List α` | `T[] (primitive arrays for primitive elements)` (input, result, field); `Primitive arrays or T[] with independently copied contents` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Typed JVM arrays preserve empty Lists, order, duplicates and nesting. Primitive elements retain primitive array storage; Kotlin uses LongArray for List UInt32, for example. Returned arrays and mutable payloads own independent storage. Nulls, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scoped arenas and native output clears run on conversion failure. Generated values preserve option presence, domain branches, constructor identity and independent storage. Java and Kotlin keep distinct public value types. Callback exceptions retain their identity after native cleanup. Faults, expired borrows and over-budget values reject without retaining partial owners or closure leases. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `Char` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char. A checked Unicode scalar code point including NUL and supplementary values. Surrogates and out-of-range integers reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
+| `USize` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Exact BigInteger for the 64-bit compiled Lean target, checked in 0..2^64-1. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
+| `ISize` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed JVM value for the 64-bit compiled Lean target; both endpoints are preserved. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>` (input, result, field); `Named Java records and constructors, typed arrays, SAM callbacks and AutoCloseable LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure. Recursive records, variants and aliases retain distinct typed Java and Kotlin representations and independently copied storage. Reply scopes retain buffers until native copying finishes. Throwable identity survives cleanup. Malformed native output retires the shared runtime. Owned closures defer release during active calls and Cleaner reclamation releases abandoned identities. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
@@ -170,7 +857,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Declared failure contract` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Project every declared error and payload; preserve trap or poisoned-runtime handling separately. |
 | `Task α / asynchronous result` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Keep completion, rejection, cancellation and runtime lifetime distinct; do not block a browser event loop. |
 | `Declared host object` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate typed members and preserve receiver identity, dynamic-access policy and lifetime. |
-| `Lean function returned to the host` | `OwnedTransform` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve captured state, call signature, errors and deterministic disposal. |
+| `Lean function returned to the host` | `Signature-specific LeanClosure (AutoCloseable)` (result) | Ordinary source: Not audited (input, field, callback input, callback result); Installed checks passed (result). Reviewed IR: Not audited (input, field, callback input, callback result); Installed checks passed (result) | The signature-specific LeanClosure implements its functional interface and AutoCloseable. Invoke on the creating platform thread. Use invoke, isClosed and close; saved method references share its lifetime. Required: Preserve captured state, call signature, errors and deterministic disposal. |
 | `Cancellation protocol` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specify acknowledgement and late completion; release pending work exactly once. |
 | `Synchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve values, end-of-sequence, failure, early return and cleanup. |
 | `Asynchronous iterator` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Preserve backpressure, pending-pull cancellation and terminal cleanup. |
@@ -193,7 +880,7 @@ These mappings describe the prepared Alpha JAR's `org.leanbridge.alpha` API.
 
 Invalid unsigned values raise `IllegalArgumentException`. Its `long` mapping is specifically for `UInt32`, not arbitrary Lean integers.
 
-### Types, callbacks, and cleanup
+## Types, callbacks, and cleanup
 
 The JVM API represents Lean `UInt32` as a `long` in the range `0..0xffff_ffffL`. It rejects negative or larger input values with `IllegalArgumentException`. Java bytes are signed, so use `(byte)255` to supply the byte `0xff`. `Payload` copies input arrays and returns copies from its array accessors.
 
@@ -201,7 +888,7 @@ Alpha's `roundTrip` flips the Boolean and increments the count while preserving 
 
 `Box` and `OwnedTransform` implement `AutoCloseable`. Use try-with-resources so an exception still releases both. Repeated `close()` is harmless; a later operation raises `DisposedResourceException`. `Box.identity()` returns the original wrapper.
 
-### Errors and troubleshooting
+## Errors and troubleshooting
 
 - Callback failures raise `CallbackThrewException`; `getCause()` retains the original Java exception. The example verifies that cause.
 - Other reported Lean/native failures raise `LeanBridgeException` or its generated subclasses.
@@ -212,16 +899,12 @@ Alpha's `roundTrip` flips the Boolean and increments the count while preserving 
 
 ## Start from a raw Lean package
 
-For Alpha, [build the managed Maven package](../contributing/testing.md#managed-packages) to produce the release repository containing its JAR and POM. Set `LEAN_BRIDGE_MAVEN_RELEASE` to that output and follow [Resolve the package](#resolve-the-package).
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Java build-and-publish guide](../publish/maven.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Related workflows and acceptance
 
-The same JAR has a separate [Kotlin guide](kotlin.md). Alpha's JVM surface uses the [managed target profile](../architecture/adr/23-managed-runtime-target-profiles.md).
-
-Contributors can [build the managed examples](../contributing/testing.md#managed-packages) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See the [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to Maven repositories](../publish/maven.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/maven.md).

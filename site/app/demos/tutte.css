@@ -1,0 +1,95 @@
+.tutte-page { --accent:#e9bf76; --ink:#edf5ff; --muted:#adbed1; --line:#304258; --panel:#101e31; color:var(--ink); }
+.tutte-page * { box-sizing:border-box; }
+.tutte-page .hero h1 { font-size:clamp(42px,5.5vw,76px)!important; }
+.tutte-page button,.tutte-page select { font:inherit; }
+.tutte-page button { min-height:38px; padding:9px 13px; border:1px solid transparent; border-radius:4px; background:var(--accent); color:#1b2029; font-size:13px; font-weight:700; cursor:pointer; }
+.tutte-page button.secondary { color:var(--ink); border-color:var(--line); background:#15243a; }
+.tutte-page button:disabled { opacity:.5; cursor:default; }
+.tutte-page button:hover:not(:disabled) { filter:brightness(1.12); }
+.tutte-page :is(button,select,input,[role=button]):focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.tutte-page select { display:block; min-height:38px; max-width:100%; margin-top:7px; padding:6px 30px 6px 10px; background:#111e30; border:1px solid var(--line); border-radius:4px; color:var(--ink); font-size:14px; }
+.tutte-page label { color:var(--muted); font-size:13px; }
+.tutte-lab { overflow:hidden; margin-top:32px; border:1px solid var(--line); border-radius:10px; background:linear-gradient(140deg,#12233a,#091320); }
+.tutte-toolbar { display:flex; align-items:end; gap:24px; padding:20px 24px; border-bottom:1px solid var(--line); }
+.tutte-construction { flex:1 1 350px; min-width:0; max-width:540px; }
+.tutte-construction label { display:block; }
+.tutte-construction-picker { display:grid; grid-template-columns:38px minmax(0,1fr) 38px; gap:8px; align-items:center; margin-top:7px; }
+.tutte-construction-picker select { width:100%; min-width:0; margin:0; }
+.tutte-page .tutte-construction-picker button { padding:6px; font-size:19px; }
+.tutte-play { margin-left:auto; }
+.tutte-steps { display:grid; grid-template-columns:repeat(3,1fr); list-style:none; margin:0; padding:0; border-bottom:1px solid var(--line); }
+.tutte-steps li { display:flex; min-width:0; }
+.tutte-steps li+li { border-left:1px solid var(--line); }
+.tutte-page .tutte-steps button { display:flex; align-items:center; gap:12px; width:100%; height:60px; padding:12px 20px; text-align:left; border:0; border-radius:0; color:var(--muted); background:transparent; font-size:14px; }
+.tutte-steps span { display:grid; place-items:center; flex:0 0 27px; width:27px; height:27px; border:1px solid var(--line); border-radius:50%; font:700 12px ui-monospace,monospace; }
+.tutte-page .tutte-steps button[aria-current] { background:#e9bf7610; color:var(--accent); box-shadow:inset 0 -2px var(--accent); }
+.tutte-steps button[aria-current] span { border-color:var(--accent); }
+.tutte-body { display:grid; grid-template-columns:minmax(0,1fr) 315px; }
+.tutte-diagrams { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; padding:23px 8px 12px; }
+.tutte-diagrams figure { min-width:0; margin:0; }
+.tutte-diagrams figure+figure { border-left:1px solid var(--line); }
+.tutte-diagrams figcaption { display:flex; flex-direction:column; gap:7px; padding:0 20px; }
+.tutte-diagrams figcaption b { font-size:18px; letter-spacing:-.02em; }
+.tutte-diagrams figcaption span { color:var(--muted); font-size:12px; }
+.tutte-diagrams svg { display:block; width:100%; height:auto; overflow:visible; }
+.tutte-diagrams svg text { font:700 14px ui-monospace,monospace; text-anchor:middle; dominant-baseline:central; pointer-events:none; }
+.tutte-square { cursor:pointer; transition:opacity .18s; }
+.tutte-square rect { fill:var(--square); fill-opacity:.77; stroke:#0c1727; stroke-width:1.5; }
+.tutte-square text { fill:#09111f; font-size:19px!important; }
+.tutte-square.dim { opacity:.65; }
+.tutte-square.dim text { fill:#f0f4fa; }
+.tutte-square.selected rect { fill-opacity:1; stroke:#eff8ff; stroke-width:2; }
+.tutte-square.broken rect { fill:#ff827d; stroke:#ffdfd3; stroke-width:3; }
+.rectangle-frame { fill:#1c101b; stroke:var(--line); stroke-width:2; }
+.tile-overlay { pointer-events:none; }
+.tile-overlay polyline { fill:none; stroke:#071018; stroke-width:2; }
+.tile-overlay circle { fill:#fff5dc; stroke:#071018; stroke-width:1.5; }
+.selected-seam { pointer-events:none; }
+.selected-seam path { stroke:#fff8dd; stroke-width:4; }
+.selected-seam text { fill:var(--accent); text-anchor:end!important; }
+.compound-outline { pointer-events:none; fill:none; stroke:#fff5d7; stroke-width:4; stroke-dasharray:7 4; }
+.wire-hit { stroke:transparent; stroke-width:20; fill:none; }
+.tutte-wire { cursor:pointer; transition:opacity .18s; }
+.tutte-wire.dim { opacity:.45; }
+.wire-line { fill:none; stroke:var(--square); stroke-width:3; }
+.wire-motion { fill:none; stroke:#fff7e7; stroke-width:3; stroke-dasharray:3 19; animation:tutte-current 2s linear infinite; pointer-events:none; }
+@keyframes tutte-current { to { stroke-dashoffset:-88; } }
+.wire-value rect { fill:#0c1727; stroke:var(--square); stroke-width:1; }
+.wire-value text { fill:var(--square); font-size:12px!important; }
+.tutte-node { cursor:pointer; }
+.tutte-node[aria-disabled=true] { cursor:default; }
+.tutte-node circle { fill:#0c1727; stroke:var(--square); stroke-width:2; }
+.tutte-node text { fill:var(--ink); }
+.tutte-node.selected circle { fill:#e9bf76; stroke:#fff5d7; }
+.tutte-node.selected text:not(.potential-label) { fill:#09111f; }
+.tutte-node .potential-label { text-anchor:end; font-size:11px; fill:var(--muted); paint-order:stroke; stroke:#101e31; stroke-width:4; stroke-linejoin:round; }
+.tutte-wire.removed,.battery-edge.removed { opacity:.09; }
+.tutte-node.removed circle { stroke:#ed9993; fill:#40202b; }
+.tutte-node.removed text { fill:#ffa7a1; }
+.battery-edge { fill:none; stroke:#94a7c0; stroke-width:1.5; stroke-dasharray:5 5; }
+.battery-label { fill:var(--muted); font-size:11px!important; font-weight:400!important; }
+.overlay-toggle,.diagram-hint { display:flex; gap:9px; align-items:center; justify-content:center; min-height:35px; padding:0 8px; margin:0; color:var(--muted); font-size:12px!important; line-height:1.5; text-align:center; }
+.overlay-toggle input { accent-color:var(--accent); }
+.tutte-inspector { display:flex; flex-direction:column; min-height:525px; padding:25px; border-left:1px solid var(--line); background:#08111f55; }
+.tutte-inspector h2 { margin:0 0 16px; font-size:26px; letter-spacing:-.035em; line-height:1.1; }
+.tutte-inspector p:not(.eyebrow) { margin:0 0 17px; color:var(--muted); font-size:14px; line-height:1.6; }
+.tutte-equation { padding:17px 0; margin:8px 0 19px; border-block:1px solid var(--line); }
+.tutte-equation span { display:block; color:var(--muted); font-size:12px; line-height:1.5; }
+.tutte-equation b { display:block; padding:8px 0; color:var(--accent); font:600 23px/1.25 ui-monospace,monospace; letter-spacing:-.05em; }
+.tile-picker { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px; }
+.tutte-page .tile-picker button { min-width:37px; padding:7px; border:1px solid var(--square); background:transparent; color:var(--square); font:700 14px ui-monospace,monospace; }
+.tutte-page .tile-picker button[aria-pressed=true] { background:var(--square); color:#0b1420; }
+.tutte-page .next-proof-step { margin-top:auto; width:100%; text-align:left; }
+.tutte-actions { display:flex; flex-direction:column; gap:8px; margin-top:auto; }
+.tutte-inspector .failure-copy { margin-top:16px!important; color:#ffb0a7!important; }
+.tutte-verdict { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 20px; min-height:66px; padding:18px 24px; border-top:1px solid var(--line); background:#86d9c20a; }
+.tutte-verdict b { color:#a8e6ce; font-size:14px; }.tutte-verdict span { color:var(--muted); font-size:13px; }
+.tutte-verdict.failed { background:#ff827d12; }.tutte-verdict.failed b { color:#ffb0a7; }
+.tutte-theorem { display:grid; grid-template-columns:1fr 2fr; gap:56px; margin:48px 0; }
+.tutte-theorem h2 { margin:0; font-size:36px; letter-spacing:-.04em; }
+.tutte-theorem p:not(.eyebrow) { margin:0 0 16px; font-size:15px; line-height:1.7; color:var(--muted); }
+.tutte-theorem a { color:var(--accent); }
+@media(prefers-reduced-motion:reduce) { .tutte-page * { animation:none!important; transition:none!important; } }
+@media(max-width:1150px) { .tutte-body { grid-template-columns:minmax(0,1fr) 285px; }.tutte-inspector { padding:20px; }.tutte-equation b { font-size:21px; }.tutte-diagrams { align-content:center; } }
+@media(max-width:950px) { .tutte-body { grid-template-columns:1fr; }.tutte-inspector { min-height:390px; border-left:0; border-top:1px solid var(--line); }.tutte-diagrams { padding-bottom:20px; }.tutte-inspector h2 br { display:none; }.tutte-steps button { font-size:12px!important; padding:12px!important; }.tutte-steps button span { flex-basis:23px; width:23px; height:23px; }.tutte-theorem { grid-template-columns:1fr; gap:24px; } }
+@media(max-width:550px) { .tutte-toolbar { gap:14px; padding:16px; flex-wrap:wrap; }.tutte-toolbar label { flex:1; }.tutte-play { margin:0; width:100%; }.tutte-steps button { flex-direction:column; align-items:start!important; height:auto!important; min-height:112px; gap:8px!important; }.tutte-diagrams { grid-template-columns:1fr; gap:24px; }.tutte-diagrams figure+figure { border-left:0; padding-top:20px; border-top:1px solid var(--line); }.tutte-verdict { padding:18px; } }

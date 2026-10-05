@@ -11,6 +11,18 @@ npm ci --ignore-scripts
 mkdir -p build
 ```
 
+The C/GMP graph contract tests require a C compiler, AddressSanitizer/UBSan and
+GMP development headers. The development shell includes GMP. On Debian or
+Ubuntu, install `build-essential libgmp-dev` before running the contract suite.
+These tests use the host GMP library; prepared C package tests build the pinned
+GMP source bundled with the release.
+
+Historical verification reuses successful source normalization within one test
+process. Its cache compares the complete source text, path and requested
+predecessor, with a 64 MiB string budget and at most 1,024 entries. Changed text
+is checked again. Unknown text and failed checks are not cached. Verifiers still
+authenticate every recorded source transition and installed execution receipt.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:
@@ -32,6 +44,30 @@ Each projection output directory must be absent or empty. The commands produce l
 
 To obtain approved flake outputs from a binary cache, use [signed Nix package consumption](../publish/nix.md). Authenticate the cache's public key and check substitution. Its cache signature and a Lean Bridge archive receipt cover different records.
 
+### Signed Nix cache recipes
+
+With Nix 2.24+, Node 22, Bash and curl on PATH, run:
+
+```sh
+npm run test:nix-cache
+```
+
+The suite executes the signing, endpoint-verification and clean-fetch blocks from the publishing and consumer guides. It registers a two-path input-addressed fixture in a private store, generates temporary signing keys, and checks full-closure downloads through a file cache and a loopback HTTP server. Unsigned packages or dependencies, unrelated keys, modified references, corrupt archives and missing runtime archives must fail. It also checks key rotation and paths containing reserved URL characters. Each run removes its stores, keys and caches.
+
+No Lean compilation, registry upload, public cache, active-store mutation or privileged daemon configuration is involved. These checks cover cache transport and trust; the separate consumer jobs build and execute the actual Lean packages. The downstream workflow runs this suite with Nix 2.24.11.
+
+### Publication shell recipes
+
+Run the prepared-archive shell checks with Node 22, Bash and GNU tar/coreutils:
+
+```sh
+node --test tests/publishing-recipes.test.mjs
+```
+
+These checks execute the npm, PyPI, NuGet, Maven, RubyGems and GitHub archive-upload snippets with recording clients. They check exact argument boundaries for unrelated package filenames, paths containing spaces, credential guards, unchanged input bytes and failed-command propagation. The Cargo checks preserve an ordinary package's lockfile and handle Alpha's optional VCS metadata. PATH contains only the recorders and the required filesystem tools; the suite makes no registry requests.
+
+The recorders test shell behavior, not registry acceptance or archive validity. Installed-consumer suites cover generated package contents. PAUSE's web upload and Composer repository administration still need the operator checks in their publishing guides. The [publication recipe acceptance record](../evidence/publication-recipes-20260916.md) records the fixes, toolchain and executed checks.
+
 ## Managed packages
 
 Build the NuGet package, Maven repository, and Ruby gem from the same pinned Alpha bundle:
@@ -49,7 +85,213 @@ The outputs contain `LeanBridge.Alpha.0.0.0.nupkg`, `repository/org/leanbridge/l
 
 The [managed runner](../../scripts/test-managed-registry-consumers.mjs) installs the original packages and executes the C#, Java, Kotlin, and Ruby programs. It checks copied payloads, identity, callback failures, returned callables, repeated close, and closed-resource errors. Separate checks cover composition, isolated Java class loaders, Ruby GC compaction, and performance. See [managed acceptance evidence](../evidence/managed-consumer-acceptance.md).
 
+### Ordinary-source NuGet packages
+
+Install the pinned Lean compiler, a native C compiler and .NET SDK 8.0.424 on x86-64 Linux. Use glibc 2.38 or newer for the production native profile:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 \
+  node --test --test-reporter=spec tests/native-dotnet.test.mjs
+```
+
+Set `LEAN_BRIDGE_DOTNET` to the SDK executable's absolute path if it is not on PATH. The suite builds unrelated Aurora and Boreal projects, compares relocated archives, hides the original sources, and executes offline-installed C# applications. It tests all primitive values, nested arrays and records, rejected inputs, cleanup, concurrent calls, package tampering and two packages sharing one Lean runtime. Cross-package callbacks, returned closures and nested exception identity use the same runtime. The [earlier NuGet acceptance record](../evidence/native-dotnet-20260914.md) retains the original copied-value archive hashes; the [callable record](../evidence/dotnet-callables-20260919.md) includes the rebuilt packages.
+
+Run primitive callable acceptance on both ordinary-source and independently reviewed NuGet packages:
+
+```sh
+LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs
+```
+
+This checks nineteen primitive mappings, one- and sixteen-argument callbacks and returned closures, exception identity/stack preservation, async delegate rejection, reentry limits, expired borrows, GC rooting, finalization, thread ownership and lease exhaustion. Seven invalid C# consumers must fail compilation. Installed executables repeat their checks with a relocated runtime containing no SDK or sources. Results are recorded in `build/callables/dotnet.json` and uploaded by the managed consumer CI job. A separate compiled contract test checks deferred active disposal and the process-change guard without forking the CLR.
+
+For ordinary Rust crates, install Rust 1.90+ and Cargo. `scripts/bootstrap-rust-ci.sh` installs the SHA-256-pinned CI toolchain. Set `LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` when they are not on `PATH`, then run:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_RUST_TEST=1 node --test tests/native-rust.test.mjs
+```
+
+This builds Cedar and Hazel twice, installs exact crates, exercises all primitive and nested copied values, injects conversion failures and unwinding, and runs moved binaries without their Cargo source trees. It checks shared-runtime composition, post-fork rejection, package drift and atomic build failure. Cargo dependencies must be cached for offline consumer checks; the author build fetches the pinned dependencies. The [Rust evidence](../evidence/native-rust-20260915.md) lists the local toolchain and archive hashes.
+
+The Node consumer CI job also runs `tests/multi-profile-project.test.mjs` with `LEAN_BRIDGE_MULTI_PROFILE_TEST=1`. Shop builds npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT/WASI, PyPI, Cargo and native PHP from one captured API with one compilation per native/Wasm profile. This check additionally needs Emscripten, the prepared Wasm runtime, Perl, .NET, JDK 22, Ruby 3.3, Python 3.11+ with venv, Rust 1.90+ with Cargo, PHP CLI with FFI, Composer and the pinned Wasmtime C API.
+
+### Ordinary-source Maven packages
+
+Use the pinned Lean compiler, a native C compiler, JDK 22, Maven and Kotlin's JVM compiler/runner. CI uses Temurin 22.0.2 and the checksummed Kotlin 2.2.0 compiler archive. Run all JVM tools with the same JDK:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+export LEAN_BRIDGE_KOTLINC=/absolute/path/to/kotlinc/bin/kotlinc
+export LEAN_BRIDGE_KOTLIN=/absolute/path/to/kotlinc/bin/kotlin
+LEAN_BRIDGE_NATIVE_JVM_TEST=1 \
+  node --test --test-reporter=spec tests/native-jvm.test.mjs
+```
+
+Set `JAVA_HOME` to JDK 22 first, and set `LEAN_BRIDGE_MAVEN` if `mvn` is not on PATH. The suite compiles Maple and Cedar, compares relocated JAR/POM bytes, hides their sources, installs the archives with Maven and executes Java and Kotlin consumers. It checks exact primitives, nested arrays/records, rejection, cleanup, concurrent calls, tampering, class-loader isolation and two packages sharing one runtime. Cross-package callbacks, closures and nested exception identity use that shared runtime. Maven may download its pinned install plugin; the Lean packages come from the supplied files. The [earlier JVM acceptance record](../evidence/native-jvm-20260914.md) retains the copied-value archive hashes; the [callable record](../evidence/jvm-callables-20260919.md) records the rebuilt packages.
+
+Run the independent Java and Kotlin primitive callable consumers on both source paths:
+
+```sh
+LEAN_BRIDGE_JVM_CALLABLE_TEST=1 \
+  node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs
+```
+
+This checks all nineteen primitives, sixteen-argument functions, exact integers, exception identity, copied callback storage, expired borrows, reentry, thread ownership, virtual-thread rejection and deterministic cleanup. Java also checks Cleaner recovery and creator-thread exit. Each language compiles six invalid callers against the installed JAR. Both repeat their assertions using a `jlink` runtime with only `java.base`, after deleting author and consumer sources and the Maven installation/cache. The compiled lifetime contract checks deferred active disposal and a simulated PID change without forking the JVM. Managed CI retains `build/callables/jvm.json`.
+
+### Ordinary-source RubyGems packages
+
+Use the pinned Lean compiler, a native C compiler and MRI Ruby 3.3 with RubyGems. CI uses Ruby 3.3.12. Set both executables to the same Ruby installation:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_RUBY=/absolute/path/to/ruby-3.3/bin/ruby
+export LEAN_BRIDGE_GEM=/absolute/path/to/ruby-3.3/bin/gem
+LEAN_BRIDGE_NATIVE_RUBY_TEST=1 \
+  node --test --test-reporter=spec tests/native-ruby.test.mjs
+```
+
+Willow and Aspen each build from two relocated source trees. Their gems must match byte-for-byte. The suite hides both source locations, installs with RubyGems offline, and calls generated APIs without Lean or a C compiler. It covers all primitive values, arrays and record fields, nested values, strict rejection, allocation-failure cleanup, concurrent calls, GC compaction, tampering and two installed gems sharing one runtime. See the [Ruby acceptance record](../evidence/native-ruby-20260914.md).
+
+Run the independent copied-array and record acceptance on both source paths:
+
+```sh
+LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 \
+  node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
+```
+
+The 35-export contract covers all nineteen primitive elements and fields, seven
+records and 24 fixed Array nesting levels. Consumers install original gems
+offline, remove producer sources and handoffs, relocate the installation and
+execute without compilers. They check independent copies, field meanings,
+nominal value equality, exact integers, float bit cases, Unicode, malformed
+inputs, budgets, GC compaction and threads. Overridden String and Array methods
+must not change copy lengths or element selection.
+
+A separate process injects conversion, allocation, buffer-retention and record
+construction failures in memory. It checks native output cleanup, every retained
+scratch pointer, partial invalid inputs and malformed sequence/Char outputs.
+Public consumers execute before and after the probe, and all installed files
+must retain their original identities. Managed CI requires
+`build/collections/ruby.json`. The [collection record](../evidence/ruby-collections-20260922.md)
+retains the independent rebuild and executed documentation example.
+
 ## Native PHP package
+
+For ordinary Composer packages, install the C author tools, PHP 8.2+ CLI with FFI, and Composer 2 with ZIP support:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs
+```
+
+This builds unrelated Clover and Juniper projects twice, installs relocated ZIPs with Composer, executes all copied primitives, arrays and records, and checks strict validation, cleanup, shared loading, fork rejection and archive drift. The [PHP evidence](../evidence/native-php-copied-20260915.md) records the local toolchain and explicit glibc test override. The PHP consumer CI job requires this suite, the Alpha transport checks below, the copied Zend boundary check, and ordinary PHP-Wasm compilation.
+
+The native suite also tests cross-package callbacks, returned functions and nested exception identity. Run the independent primitive callable acceptance with:
+
+```sh
+LEAN_BRIDGE_PHP_CALLABLE_TEST=1 \
+  node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs
+```
+
+This checks all nineteen primitive signatures and sixteen-argument functions on ordinary-source and independently reviewed Composer paths. Weak and strict callers each run twice after relocation, without author sources, compilers, Composer caches or runtime overrides. It checks exact values, exception identity, borrowed lifetime, reentry, alias lifetime, deterministic disposal, destructor recovery, capacity limits, fiber rejection and post-fork rejection. A 20,000-callback stress test checks retained memory after warm-up. A separate production-state contract checks deferred active close. CI retains `build/callables/php-native.json`; the [acceptance record](../evidence/php-callables-20260919.md) identifies the installed archives.
+
+Run the independent native compound acceptance with the same PHP and Composer tools:
+
+```sh
+LEAN_BRIDGE_PHP_COMPOUND_TEST=1 \
+  node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs
+```
+
+Both source paths build 64 exports covering nineteen primitives in options,
+results and nested binary products, including arrays and record fields. Weak
+and strict callers each run twice after offline Composer installation and
+relocation, with producer sources and archive handoffs removed. A separate
+in-memory probe injects conversion failures and checks scratch/output cleanup;
+both public callers then repeat against the unchanged installation. The suite
+checks malformed values, native flags, inactive payloads, copy limits and
+recovery. CI retains `build/compounds/php-native.json`. The
+[native compound record](../evidence/php-native-compounds-20260920.md) records
+the exact installed packages.
+
+PHP-Wasm runs the same compound signature catalog through its 32-bit Zend adapter:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test \
+  tests/php-wasm-compounds.test.mjs \
+  tests/php-wasm-compound-contract.test.mjs \
+  tests/php-wasm-compound-zend.test.mjs
+```
+
+Both source paths install npm and Composer archives offline with empty caches,
+repeat locked installs, relocate the application, and remove producer sources
+and the handoff before execution. Node and Chromium repeat weak/strict callers
+with startup and lazy loading. Every run preserves the installed-file inventory.
+Separate synthetic Zend providers check allocation failure, malformed wire
+values, inactive payloads, native flags and bailout cleanup. These probes do not
+replace the compiled Lean acceptance library. CI retains
+`build/compounds/php-wasm.json` and `build/compounds/php-wasm-zend-faults.json`.
+See the [PHP-Wasm compound record](../evidence/php-wasm-compounds-20260920.md).
+
+The generic Zend adapter has a separate real PHP-Wasm check:
+
+```sh
+bash scripts/bootstrap-php-wasm-ci.sh
+LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs
+```
+
+This compiles two synthetic C providers and executes their generated APIs inside 32-bit PHP-Wasm. It checks exact integer conversion, nested copied values, relocated builds, allocation failures and Zend bailout cleanup. It does not run Lean or establish installed ordinary PHP-Wasm support. The [Zend boundary record](../evidence/php-wasm-copied-zend-20260915.md) lists the tested scope and remaining compiler/package integration.
+
+To compile ordinary Lean implementations for that boundary, prepare the separate PHP-Wasm runtime profile:
+
+```sh
+bash scripts/bootstrap-toolchains.sh
+bash scripts/bootstrap-php-wasm-ci.sh
+export LEAN_WASM_EMSDK="$PWD/.toolchains/emsdk-php-wasm"
+export LEAN_WASM_RUNTIME_PROFILE=browser
+export LEAN_WASM_RUNTIME_VARIANT=php-wasm-3.1.68
+export LEAN_WASM_ARTIFACT_TARGET=php-wasm-emscripten-3.1.68
+bash scripts/build-lean-runtime.sh
+npx playwright install --with-deps chromium
+LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
+LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 \
+  node --test --test-reporter=spec tests/php-wasm-ordinary.test.mjs
+```
+
+Willow and Aspen each compile 46 ordinary Lean exports twice through a tarball-installed CLI's public `build --target php-wasm` command. The suite compares relocated builds and deterministic npm/Composer archives, installs offline, moves the installed application, and executes actual Lean without compiler commands on `PATH`. It checks embedded PHP files, Composer autoloading and Vite-built asset URLs in Node-hosted PHP-Wasm, each with startup and lazy loading. A seventh arrangement mixes the two loading modes. Each route checks exact values, strict validation, output-budget recovery, independent results despite shared Lean module names, repeated requests, duplicate registration and one runtime initialization. The composed Node check also passes a returned closure between packages and checks nested exception identity and recovery. Separate installed checks cover disabled `dl()`, missing registration, missing extensions and missing runtimes, including restoration of the application's PHP error handler. The [first-call record](../evidence/php-wasm-lazy-20260915.md) records the earlier copied-value checks; the [callable record](../evidence/php-wasm-callables-20260919.md) adds the two callable exports. Earlier [compiler](../evidence/php-wasm-ordinary-20260915.md), [installed package](../evidence/php-wasm-packages-20260915.md) and [public CLI](../evidence/php-wasm-cli-20260915.md) records retain each milestone's evidence.
+
+Run the PHP-Wasm primitive callable acceptance with the same author toolchain and Chromium:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 \
+  node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs
+```
+
+The 63-export library covers nineteen primitives and sixteen-argument functions on ordinary-source and independently reviewed paths. Each path runs twelve installed configurations: weak/strict callers, startup/lazy loading, embedded/Composer APIs in Node, and bundled APIs in Chromium. The tests cover exact wasm32 values, original exceptions, expired borrows, reentry, closure disposal, aliases, registry capacity, warmed memory use, callback `exit()` cleanup and subsequent-call recovery. Production-state tests check deferred close, the Fiber guard and token exhaustion. The pinned PHP-Wasm host cannot start Fibers; installed Fiber execution is not claimed. CI retains `build/callables/php-wasm.json`. The [acceptance record](../evidence/php-wasm-callables-20260919.md) binds the results to installed archives. Compiler inputs prepared before this milestone must be rebuilt to include the callback registry.
+
+Each of the seven arrangements runs with both weak and strict PHP callers, for fourteen installed Node routes. The boundary vectors exercise all sixteen primitives as scalar inputs/results, array elements and nested record fields. Comparisons check exact integer and byte contents, float bits including signed zero, and NaN classification. Invalid types, integer overflow and malformed UTF-8 must fail consistently in both caller modes, followed by a successful call. The [primitive boundary record](../evidence/php-wasm-primitive-boundaries-20260918.md) records the results and archive identities.
+
+With `LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1`, the same installed packages execute in Chromium under a nested application URL with external requests blocked. The browser checks all 88 exports and 20 repeated requests in both modes. It requires zero Lean library requests during lazy startup, PHP autoload and invalid-input validation, then one fetch for each needed library. Timers must run during deliberately delayed cold downloads. Disabled loading and corrupt runtime bytes must produce explicit errors without another lazy attempt. The suite then builds and executes the exact consumer guide's HTML, Vite config and JavaScript. Use `CHROMIUM_PATH` for an existing browser binary; otherwise the helper uses `/usr/bin/chromium` when present, then Playwright's installed Chromium. CI requires the browser check. The original [browser record](../evidence/php-wasm-browser-20260915.md) and subsequent [first-call record](../evidence/php-wasm-lazy-20260915.md) document the executed scope.
+
+Chromium also runs both caller modes, for four installed browser routes across startup and lazy loading. The public guide and loading-failure checks run separately.
+
+For PHP-Wasm combined with JavaScript and native PHP, also prepare the ordinary JavaScript engine/runtime and native PHP author tools. Reset the shell to the default JavaScript Emscripten profile before this check; the PHP compiler selects its separate SDK explicitly:
+
+```sh
+unset LEAN_WASM_EMSDK LEAN_WASM_RUNTIME_VARIANT LEAN_WASM_ARTIFACT_TARGET
+source scripts/env.sh
+nix build .#universal-core-artifacts --out-link build/php-multi-runtime
+nix build .#component-build-engine --out-link build/php-multi-engine
+LEAN_BRIDGE_LAKE_ENGINE=build/php-multi-engine/bin/lean-bridge-component-engine \
+LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/php-multi-runtime/lazy \
+LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 \
+  node --test --test-reporter=spec tests/php-wasm-multi-profile.test.mjs
+```
+
+The suite executes all three profiles and both PHP-Wasm pairs, counts one compilation per ABI, compares relocated releases with reversed target order, and hides source/build directories before installed execution. The PHP consumer CI gate requires both ordinary suites.
 
 Nix builds the PHP 8.2 NTS Alpha package for x86-64 Linux:
 
@@ -59,9 +301,1574 @@ nix --extra-experimental-features 'nix-command flakes' \
 export LEAN_ALPHA_PHP_PACKAGE=$(readlink -f build/consumer-php-native)
 ```
 
-The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../consume/php-native.md) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
+The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share/php/component/composer.json`. The [native PHP guide](../php.md#native-php) installs those Composer sources and runs the application. The [native release record](../evidence/native-php-release-package.md) records the producer's pinned toolchain. The installed consumer check below uses the matching PHP and Composer from Nix.
+
+## Python packages
+
+### Ordinary-source Python packages
+
+Use the pinned Lean compiler, a native C compiler and Python 3.11 or newer with pip and venv. Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if it is not available as `python3`:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 \
+  node --test --test-reporter=spec tests/native-python.test.mjs
+```
+
+Iris and Lotus each expose 42 functions and reproduce their wheels from relocated source trees. The suite hides those trees, installs original wheels with pip offline, and runs typed APIs with no Lean or C compiler available. It checks primitives, nested arrays and records, rejected inputs, allocation-failure cleanup, concurrent calls, tampering, post-fork rejection and two installed packages sharing a runtime. Uninstalling one distribution must leave the other usable. See the [Python acceptance record](../evidence/native-python-20260915.md).
+
+## Shared real-Lean type corpus
+
+The shared corpus adds differential tests: a fresh Lean run computes expected results, then an installed consumer package must return those results. Run its fast report checks without a compiler:
+
+```sh
+npm run test:type-corpus
+```
+
+Python needs the same prerequisites as the ordinary-source suite above. Ruby needs MRI Ruby 3.3 with RubyGems. Perl needs a 64-bit Perl 5.36 or newer with matching headers, MakeMaker, make and tar. All three adapters run on Linux x86-64 and need the pinned Lean compiler, a native C compiler, Git and at least 3 GiB of free scratch space. Run an adapter separately:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:python
+npm run test:type-corpus:ruby
+npm run test:type-corpus:perl
+```
+
+To build Python and Ruby together, or all eleven native-runtime adapters including C, C++, Rust, .NET, Java, Kotlin, native PHP and WIT/WASI, and compare the consumers against the same Lean run:
+
+```sh
+npm run test:type-corpus:native
+npm run test:type-corpus:all-native
+```
+
+Set `LEAN_BRIDGE_PYTHON`, `LEAN_BRIDGE_RUBY`, `LEAN_BRIDGE_GEM` and `LEAN_BRIDGE_CORPUS_PERL` to absolute executable paths when selecting alternate host installations. The Perl build compiles XS only for that interpreter's ABI. Its consumer installs both runtime and component archives in `prebuilt-only` mode and checks the selected XS hashes and ABI.
+
+Rust runs on Linux x86-64 and needs Rust/Cargo 1.90 or newer, a system linker, tar, gzip and 3 GiB of free scratch space. The author build also needs the pinned Lean and native C toolchains. Install the pinned Rust toolchain and run its corpus:
+
+```sh
+bash scripts/bootstrap-rust-ci.sh
+source scripts/env.sh
+npm run test:type-corpus:rust
+```
+
+`LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` select absolute tool paths; the corpus defaults to `.toolchains/rust-1.90.0/bin/`. The author build resolves the crate's locked Cargo dependencies. The consumer receives those dependencies as a hashed vendor archive and builds offline with an empty Cargo home. Only Rust compilation and linking are allowed during installation. The harness removes the entire consumer build tree, then executes the relocated binary twice with compiler and Cargo paths disabled. Normal exit must remove the runtime loader's temporary assets and registry files.
+
+C and C++ run on Linux x86-64 and need GCC/G++ 12 or newer at `/usr/bin/cc` and `/usr/bin/c++`, CMake 3.20+, make, pkg-config, tar, gzip and 3 GiB of free scratch space. The author build needs the pinned Lean and native toolchains. Run either adapter or both together:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:c
+npm run test:type-corpus:cpp
+npm run test:type-corpus:c-family
+```
+
+Each C/C++ installation builds two independent consumers: one uses the prepared pkg-config file, the other uses its CMake imported target. Only the downstream caller is compiled. The harness moves both executables and their packaged shared libraries, deletes the installed package and consumer build tree, then runs each executable twice without compiler paths or runtime overrides. All packaged libraries must resolve inside the moved deployment.
+
+.NET runs on Linux x86-64 and needs the .NET 8 SDK, the pinned Lean and native C toolchains, Git and 3 GiB of free scratch space. CI uses SDK 8.0.424. Select an absolute `dotnet` path and run:
+
+```sh
+export LEAN_BRIDGE_DOTNET=/absolute/path/to/dotnet
+source scripts/env.sh
+npm run test:type-corpus:dotnet
+```
+
+The local default is `.toolchains/dotnet/dotnet`. Each C# consumer restores only its prepared NuGet archive from a private feed, with empty package and CLI caches, a source mapping and an exact version. A second restore uses the lock file. The harness compiles the caller against the public assembly, then removes the entire installation and consumer build tree. It runs the relocated assembly twice with a copied .NET runtime containing no SDK, Roslyn or reference assemblies. Packaged native libraries must load from that deployment.
+
+Java and Kotlin run on Linux x86-64 and need JDK 22.0.2, Maven 3.8 or 3.9, Kotlin 2.2.0, unzip, tar and gzip, plus the pinned Lean and native C toolchains. Select tools from the same JDK, then run either adapter or both:
+
+```sh
+export LEAN_BRIDGE_JAVA=/absolute/path/to/jdk-22/bin/java
+export LEAN_BRIDGE_JAVAC=/absolute/path/to/jdk-22/bin/javac
+export LEAN_BRIDGE_MAVEN=/absolute/path/to/maven/bin/mvn
+export LEAN_BRIDGE_KOTLINC=/absolute/path/to/kotlinc/bin/kotlinc
+source scripts/env.sh
+npm run test:type-corpus:java
+npm run test:type-corpus:kotlin
+npm run test:type-corpus:jvm
+```
+
+Local defaults are `.toolchains/jdk22/`, `.toolchains/apache-maven-3.9.11/` and `.toolchains/kotlin-2.2.0/kotlinc/`. Java alone does not need Kotlin. The author stage downloads pinned Maven install/dependency plugins and records their dependency files in a hashed archive. Each downstream consumer starts with an empty Maven repository and user home, imports that build-tool archive, and installs the exact prepared JAR and POM offline. Dependency resolution must return only that package's JAR.
+
+After compiling the caller, the harness removes its sources, Maven installation tree, repository and cache. It moves the original package JAR and caller classes into a separate deployment and runs them twice with a `jlink` image containing only `java.base`. No Maven, Java compiler or Kotlin compiler is available in that runtime image. Kotlin includes its separately hashed standard-library JAR. The original package JAR retains its shipped source provenance; the harness does not strip or repack it. Native assets must load from the package, match their recorded hashes, and be removed from the private temporary directory on normal exit.
+
+Native PHP runs on Linux x86-64 with non-threaded PHP 8.2 or newer (below PHP 9), Composer 2, unzip and the pinned Lean/native author tools. PHP needs FFI; the selected Composer interpreter also needs ctype, iconv, mbstring, Phar and ZIP. Select absolute executable paths, then run:
+
+```sh
+export LEAN_BRIDGE_PHP=/usr/bin/php
+export LEAN_BRIDGE_COMPOSER=/usr/bin/composer
+source scripts/env.sh
+npm run test:type-corpus:php-native
+```
+
+Each Composer consumer starts with empty private home/cache directories, disables Packagist, network access, plugins and scripts, and installs only the original prepared ZIP. A second install checks the lock file and unchanged installed bytes. The harness moves the installed application, removes the installation tree and executes separate weak and strict PHP caller files twice each. Public reflection checks function signatures, PHPDoc types and readonly records against the independent corpus catalog. Both caller modes compare exact values with fresh Lean results and check rejected inputs, copied records and recovery. PHP runs with INI files disabled, explicitly selected FFI, and no compiler or Composer commands on PATH. The installed PHP API and its shipped provenance remain in the deployment.
+
+The report records the actual Composer implementation files, interpreter/extensions, included PHP files, loaded native libraries and package receipts. It is written to `build/type-corpus/php-native.json`. The [native PHP corpus record](../evidence/type-corpus-php-native-20260917.md) lists the executed scope and artifact identities.
+
+WIT/WASI needs Linux x86-64, GCC 12 or newer at `/usr/bin/cc`, pkg-config, tar, gzip, the pinned Lean toolchain, wasm-tools 1.245.1 and the official Wasmtime 42.0.1 C API. The author build checks the C API's complete file inventory. Select its root and run:
+
+```sh
+export LEAN_BRIDGE_WASMTIME_C_API=/absolute/path/to/wasmtime-v42.0.1-x86_64-linux-c-api
+source scripts/env.sh
+npm run test:type-corpus:wit-wasi
+```
+
+The local default is `.toolchains/wasmtime42`. `LEAN_BRIDGE_WASM_TOOLS` selects the wasm-tools executable; the installed-consumer check otherwise uses `.toolchains/wasm-tools/bin/wasm-tools`. CI obtains the C API from `nix build .#wasmtime-c-api`. Consumers receive both Wasmtime and Lean libraries in their prepared archives.
+
+Each WIT consumer compiles a C11 caller against the installed public Wasmtime header and pkg-config file. Parsed WIT and binary component interfaces must match the independent catalog, including nested record fields. The harness removes author, oracle and consumer build trees before running the relocated executable twice without compilers or runtime overrides. The process must load the exact packaged native libraries.
+
+Wasmtime's fixed-width C fields cannot represent out-of-range integers, so those literals must fail compilation with range diagnostics. Separate runtime checks reject incorrect tags, non-canonical exact integers, invalid UTF-8, malformed records and invalid calls. Conversion limits and a native-budget trap must leave the output slot unchanged; subsequent calls must match fresh Lean results. Copied records must remain independent of inputs and other results, and survive closing the session.
+
+This profile executes a Component Model component with its packaged native Lean host. It does not compile the algorithm into a standalone WASI command. Its report is `build/type-corpus/wit-wasi.json`. The [WIT/WASI corpus record](../evidence/type-corpus-wit-wasi-20260917.md) documents the executed scope.
+
+PHP-Wasm runs the same libraries in the 32-bit PHP 8.4.1 embedded host. Prepare the [PHP-Wasm author toolchain](author-toolchain.md#php-wasm), the pinned `php-wasm` 0.1.0 host and Chromium, then run:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:php-wasm
+```
+
+`LEAN_BRIDGE_PHP_WASM_HOST` selects the host package directory; its default is `build/php-wasm-host/node_modules/php-wasm`. `CHROMIUM_PATH` selects a browser executable; otherwise the harness uses the local Chromium binary or Playwright's Chromium. Composer 2, unzip and the native PHP extensions listed above are needed to install the companion PHP package, but FFI is not used by the PHP-Wasm interpreter. Native PHP runs Composer with INI disabled; its target platform is set to PHP 8.4.1. The actual calls execute in PHP-Wasm, not that native interpreter.
+
+The harness builds each library twice, verifies the npm runtime/component and matching Composer archives, and removes the author trees. Offline npm installs include a locally repacked copy of the pinned host, with no external symlink. Composer installs the prepared API ZIP. Empty caches, locked repeat installs and complete file inventories check the installed dependency closure. All hosts use a relocated deployment; Node runs with no Lean or C compiler on PATH.
+
+Each library runs 12 combinations: Node with descriptor-mounted or Composer-loaded PHP, plus a bundled Chromium page; each uses startup or lazy loading and weak or strict lexical PHP callers. Every combination runs twice in a fresh host. Chromium serves a nested application URL with external requests blocked and records the exact bytes served. Lazy hosts must fetch no Lean libraries during autoload or invalid-input checks, then load the runtime and component once on the first valid call.
+
+On this 32-bit host, `UInt32` and `Int64` use `BigInteger`, alongside `Nat`, `Int` and `UInt64`. The independent signature checks enforce those mappings. Out-of-range native `Int32` literals become PHP floats and must be rejected as wrong types, without truncation. Both caller modes compare the full value corpus with fresh Lean results and test copied values, invalid inputs and recovery. The report is `build/type-corpus/php-wasm.json`; Node/browser routes and supplemental rejections have separate counts. The [PHP-Wasm corpus record](../evidence/type-corpus-php-wasm-20260917.md) lists the executed scope and archive identities.
+
+For Node JavaScript and TypeScript, prepare the pinned Lean/Emscripten toolchain and shared WASM runtime using the [author toolchain setup](author-toolchain.md), then run:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:node
+```
+
+Node needs version 22 or newer, npm, the repository's TypeScript compiler, Git and 3 GiB of free scratch space. The default prepared runtime is `build/lean-link-spike/lazy`; `LEAN_BRIDGE_LAKE_RUNTIME_ROOT` selects another runtime directory. `LEAN_BRIDGE_LAKE_ENGINE` selects the pinned external component engine used in CI. The Lean oracle still needs the local pinned compiler.
+
+Browser JavaScript, React and dedicated Web Workers consume the same prepared npm releases. Install Playwright's engines and OS libraries, then run the browser profiles or all five npm profiles together:
+
+```sh
+npx playwright install --with-deps chromium firefox webkit
+npm run test:type-corpus:browser
+npm run test:type-corpus:npm
+```
+
+All three engines run by default. For a focused local check, set `LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium`, `firefox`, `webkit` or a comma-separated subset. Missing engines and invalid selections fail; the harness never skips a requested browser. CI requires all three. `PLAYWRIGHT_BROWSERS_PATH` selects an alternate Playwright installation.
+
+`Shop.Pricing` and `Telemetry.Readings` use different APIs, record layouts and calculations. Each fixture has a local Lake dependency and a pinned Git dependency created in the test's offline cache. The harness checks the compiler's function signatures and nested record types against an independent catalog, then tests the installed transport. It compiles the same source files for the Lean oracle and the packages, builds each archive from two relocated workspaces, and compares archive hashes. It deletes the author workspaces and unpacked releases before installing each wheel, gem, CPAN, Cargo, C/C++, NuGet, Maven, Composer, WIT or npm archive offline. Consumers call public exports with compiler paths disabled.
+
+After validating a library's observations and rechecking its receipts, the harness removes that transport's consumer directory before starting another library. Failure hooks also clean incomplete runs. This keeps completed installations from consuming the next build's scratch-space allowance.
+
+Native builds discard the duplicate release immediately after comparing archive bytes, binding IR and declarations. Only the first verified release supplies the consumer handoff. This avoids retaining two full package sets while copying archives and preparing offline build dependencies.
+
+The catalog contains 124 cases across both libraries. Python, Ruby, Perl and native PHP execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. PHP repeats the catalog in weak and strict caller modes. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm corpus package selects scalar exports, executes 112 cases and leaves 12 unselected array/record cases as gaps for that release. Its negative-build copy adds an unsupported `Sum UInt32 UInt32` export; the original oracle modules are unchanged. The separate [npm array](../evidence/npm-arrays-20260920.md), [record](../evidence/npm-records-20260920.md) and [compound suites](../evidence/npm-compounds-20260920.md) exercise nested copied values and all nineteen primitives on both source paths in Node, strict TypeScript and three browser engines, including React and workers. Native and PHP-Wasm corpus negative copies also use `Sum UInt32 UInt32`; their original oracle modules remain unchanged. The [C/C++ compound suite](../evidence/native-compounds-20260920.md) covers options, results and products separately. The [npm List suite](../evidence/npm-lists-20260920.md) covers List parameters, results and fields on both source paths in the same five npm profiles. The [C/C++ List suite](../evidence/native-lists-20260920.md) adds installed native spans and vectors, nested payloads, budget recovery and allocation-failure cleanup. Run it with `LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests/native-lists.test.mjs`; CI retains `build/lists/native.json`.
+
+The [C/C++ collection suite](../evidence/native-collections-20260921.md) checks
+all nineteen primitives, seven records and 24 fixed Array levels on both
+source paths:
+
+```sh
+LEAN_BRIDGE_NATIVE_COLLECTION_TEST=1 node --test tests/native-collections.test.mjs
+node --test tests/native-collection-contract.test.mjs tests/native-collection-evidence.test.mjs
+```
+
+CI requires `build/collections/native.json`. Original archives install offline
+after author removal, relocate and execute twice without compilers. Separate
+native and C/GMP sanitizer probes test allocation failures and partial cleanup;
+the installed C++ caller also fails host allocation checkpoints. Startup and
+initialized-fixture sanitizer reports remain separate, and repeated
+initialization must not grow the report.
+
+Run the npm compound suite against the prepared shared runtime:
+
+```sh
+LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit \
+  node --test tests/component-compounds.test.mjs
+  node --test tests/component-lists.test.mjs
+node --test tests/component-compound-contract.test.mjs
+```
+
+The installed checks preserve none/some Unit, nested options, asymmetric result
+branches, product nesting and mixtures with arrays and records. They also test
+recordless packages, malformed inputs, cleanup after partial output, and a
+compile-time UInt64 constant that detects missing wasm32 static-layout flags.
+CI retains `build/compounds/npm/` and `build/compounds/recordless/`.
+
+Run the installed Python compound checks on both source paths:
+
+```sh
+LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs
+node --test tests/python-compound-contract.test.mjs
+```
+
+The [Python compound suite](../evidence/python-compounds-20260920.md) checks all
+nineteen primitives, explicit `Some`/`Ok`/`Err` branches, nested products and copied
+arrays/records. It removes producer files before offline wheel installation and
+tests malformed values, conversion limits and cleanup after injected failures.
+CI retains `build/compounds/python.json`.
+
+Run the installed Python List checks on both source paths:
+
+```sh
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
+node --test tests/python-list-contract.test.mjs
+```
+
+The [Python List suite](../evidence/python-lists-20260920.md) installs prepared
+wheels after removing producer files. It checks all nineteen primitive elements,
+nested arrays/Lists/options/results/products, copied record fields, exact public
+annotations, conversion failures, allocation limits and concurrent calls.
+CI retains `build/lists/python.json`.
+
+Run the Python array/record collection suite with CPython 3.11 and 3.12 installed.
+Set `LEAN_BRIDGE_COLLECTION_PYTHONS` to a JSON array containing their absolute
+executable paths, in that order. Without the override, the suite uses
+`.toolchains/python311/bin/python3.11` and `.toolchains/python312/bin/python3.12`.
+Prepare the isolated checker and both offline dependency versions:
+
+```sh
+python3 -m venv build/python-collection-typecheck
+build/python-collection-typecheck/bin/python -m pip install --no-cache-dir \
+  mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 \
+  pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+LEAN_BRIDGE_PYTHON_WHEEL_INSTALL_TEST=1 node --test tests/python-wheel-install.test.mjs
+LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test \
+  tests/python-collections.test.mjs tests/python-collection-contract.test.mjs
+node --test tests/python-collection-evidence.test.mjs
+```
+
+The installer checks each dependency wheel's pinned SHA-256, then lets pip resolve
+the original component wheel with `--no-index --find-links`. Python 3.11 runs with
+both the minimum and current backport; Python 3.12 runs without that dependency.
+The separate wheel-install test uses a metadata-only fixture to check dependency
+resolution, runtime annotations and strict positive/negative typing of installed
+stubs. It does not count as compiled Lean evidence.
+Both source paths exercise all 19 primitive elements, seven record types and 24
+fixed array levels. The suite removes producer files, relocates installations,
+checks public calls and precise runtime annotations, and runs strict positive
+and negative typing fixtures. Separate in-memory probes inject failures without
+editing installed files. Each mypy process has a 30-second deadline and 1 GiB
+address-space limit. The suite also builds the publisher's Parcels example and
+executes the consumer's arrays-and-records example from its relocated original
+wheel. CI retains `build/collections/python.json` and
+`build/collections/python-docs.json`.
+
+The [installed collection record](../evidence/python-collections-20260922.md)
+binds both source paths, all three runtime/dependency configurations, unchanged
+installed files and an independent rebuild to their public callers.
+
+Mypy 1.17.1 remains pinned for the earlier alias and variant regressions. Its deep
+union expansion is unsuitable for this collection fixture; keep the new checker
+in its separate environment.
+
+Run the installed Rust compound checks on both source paths:
+
+```sh
+LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs
+node --test tests/rust-compound-contract.test.mjs
+```
+
+The [Rust compound suite](../evidence/rust-compounds-20260920.md) checks all
+nineteen primitive payloads, nested containers, independent owned results and
+threaded calls. Each path also compiles eleven invalid consumer programs,
+injects allocation failures and panics, and runs the relocated executable after
+removing the crate and dependency sources. CI retains `build/compounds/rust.json`.
+
+Run the installed Rust List checks on both source paths:
+
+```sh
+LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
+node --test tests/rust-list-contract.test.mjs
+```
+
+The [Rust List suite](../evidence/rust-lists-20260920.md) checks all nineteen
+primitive elements, nested copied values, slice input types and owned results.
+It compiles invalid consumers, injects conversion errors and panics, and checks
+malformed private output layouts. The public consumer reruns after removal of
+crate and dependency sources. CI retains `build/lists/rust.json`.
+
+Run the Rust array/record checks with the pinned Rust toolchain:
+
+```sh
+LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
+LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs
+node --test tests/rust-collection-contract.test.mjs tests/rust-collection-evidence.test.mjs
+```
+
+The conversion preflight needs a populated Cargo cache and runs offline. It
+compiles the independent public caller, rejects fifteen invalid programs and
+executes generated host conversions for nineteen primitive array shapes, seven
+records and 24 fixed array levels. It also tests allocation failures, unwinding,
+malformed buffers and copy limits. It compiles the native fault probe but does
+not execute it or load Lean. Its report, `build/collections/rust-conversions.json`,
+does not count as installed-package evidence.
+
+The installed suite builds original crates on both source paths. Consumers
+install the archives and checksummed dependency closure offline with an empty
+Cargo home. They compile Rust without Lean or C compilation, execute the public
+caller, then repeat from a relocated executable after all sources are removed.
+Private fault tests run in a separate instrumented copy; the original installed
+files and dependencies must remain unchanged. CI retains the preflight report
+and `build/collections/rust.json` separately.
+
+The [installed collection record](../evidence/rust-collections-20260922.md)
+binds public callers, unchanged original crates, dependencies, failure probes
+and an independent rebuild. The suite also compiles the actual consumer
+documentation example and runs it after source removal, with compiler access disabled.
+
+Run the installed .NET compound checks on both source paths:
+
+```sh
+LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs
+node --test tests/dotnet-compound-contract.test.mjs
+```
+
+The [.NET compound suite](../evidence/dotnet-compounds-20260920.md) installs
+prepared NuGet assemblies offline, compiles invalid consumers and reruns the
+relocated application with only the .NET runtime. A separate instrumented copy
+of the compiler-produced C# projection tests conversion failures and malformed
+native flags without changing the installed assembly. CI retains
+`build/compounds/dotnet.json`.
+
+Run the .NET array/record checks:
+
+```sh
+LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
+LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs
+node --test tests/dotnet-collection-contract.test.mjs
+```
+
+The conversion preflight uses the .NET 8 SDK and an empty NuGet source list. It
+compiles the independent public caller, rejects sixteen invalid programs and
+executes unchanged generated converters for nineteen primitive array shapes,
+seven records and 24 fixed array levels. It checks independent copies, partial
+invalid inputs, copy limits, null and misaligned result buffers, Unicode,
+canonical integer magnitudes, boolean bytes and unit markers. Valid empty
+buffers do not read their data pointer. A separate instrumented copy checks
+cleanup at every conversion and allocation checkpoint. The preflight compiles
+the native-result failure probe but does not execute it or load Lean. Its report,
+`build/collections/dotnet-conversions.json`, does not count as installed-package
+coverage.
+
+The installed suite builds original NuGet archives on both source paths.
+Consumers install from a local-only feed with an empty package cache, compile
+the public caller and reject the invalid programs against the installed
+assembly. They execute all 35 exports, copied-value checks and threaded calls.
+Failure probes run in a separate source copy; the installed package must remain
+unchanged. The suite then removes package and consumer sources and feeds. It
+reruns the relocated application twice with a runtime-only deployment that
+contains no SDK. It also compiles the consumer guide's Array/record example
+against the original installed assembly and runs it after source removal. The
+[installed collection record](../evidence/dotnet-collections-20260922.md) binds
+the repeated build, consumer and failure checks. CI retains
+`build/collections/dotnet.json` separately from the preflight report.
+
+Run generated .NET value equality checks without a native library:
+
+```sh
+LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
+```
+
+This compiles unchanged generated C# sources for collections, compounds, Lists,
+aliases and variants. The independent caller checks nested equality and hashes,
+dictionary/set lookup, constructor identity, absent and active branches, empty
+arrays and mutation. It also checks structural comparison of native C# arrays
+and tuples. CI retains `build/equality/dotnet.json` as host-only evidence, not
+installed-package or Lean-execution coverage.
+
+Run the copied .NET List checks on both source paths:
+
+```sh
+LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs
+node --test tests/dotnet-list-contract.test.mjs
+```
+
+The [.NET List suite](../evidence/dotnet-lists-20260920.md) checks typed arrays
+and nested values, rejects twelve invalid C# consumers, injects conversion
+failures, and checks malformed native sequence buffers. It reruns from a
+deployment with no SDK, source package or feed. CI retains
+`build/lists/dotnet.json`.
+
+Run the installed Java and Kotlin compound checks with JDK 22, Kotlin 2.2 and
+Maven 3.9.11, using the same tool paths as the JVM corpus:
+
+```sh
+LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs
+node --test tests/jvm-compound-contract.test.mjs
+```
+
+The [JVM compound suite](../evidence/jvm-compounds-20260920.md) builds a prepared
+Maven package on each source path. Independent Java and Kotlin consumers install
+it offline, check boxed generic signatures and compile invalid callers. Each
+consumer runs twice in a relocated deployment with only a `java.base` runtime.
+A separate instrumented adapter checks scoped cleanup and malformed output;
+the installed release JAR stays unchanged. CI retains `build/compounds/jvm.json`.
+
+Run the installed Java and Kotlin List checks with the same tools:
+
+```sh
+LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs
+node --test tests/jvm-list-contract.test.mjs
+```
+
+The [JVM List suite](../evidence/jvm-lists-20260920.md) checks primitive and
+reference arrays, nested copied values, compiler rejections and copy budgets.
+Both languages install the same prepared JAR offline on each source path and
+run twice with only a `java.base` runtime. Separate probes inject conversion
+and allocation failures and reject malformed native sequence buffers. CI
+retains `build/lists/jvm.json`.
+
+Run the installed Ruby compound checks with MRI Ruby 3.3 and RubyGems:
+
+```sh
+LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs
+node --test tests/ruby-compound-contract.test.mjs
+```
+
+Set `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to the selected executables. The
+[Ruby suite](../evidence/ruby-compounds-20260920.md) builds all nineteen primitives
+inside options, results and products, plus mixed records and deep nesting, on
+both source paths. It installs each gem offline, removes producer inputs and the
+archive handoff, relocates the installation, and executes an independent public
+consumer twice without compilers. A separate process injects conversion failures
+and checks cleanup without changing installed files. Ruby source files remain
+part of the installed package. CI retains `build/compounds/ruby.json`.
+
+Run the copied Ruby List checks with the same interpreter:
+
+```sh
+LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs
+node --test tests/ruby-list-contract.test.mjs
+```
+
+The [Ruby List suite](../evidence/ruby-lists-20260921.md) checks all nineteen
+primitive elements, nested copied values, invalid containers and payloads,
+copy budgets, independent results and GC compaction. Both source paths install
+and relocate a prepared gem offline, remove producer inputs and the handoff,
+and repeat the public checks. A separate process injects conversion failures
+and probes malformed native sequence buffers. CI retains `build/lists/ruby.json`.
+
+Run the installed Perl compound checks with a selected supported interpreter:
+
+```sh
+export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/5.38.2-threaded/bin/perl"
+LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
+node --test tests/perl-compound-contract.test.mjs
+```
+
+Set `LEAN_BRIDGE_PERLS` to a JSON array of absolute interpreter paths to test
+several ABIs against one Lean build. The [Perl suite](../evidence/perl-compounds-20260920.md)
+checks ordinary and reviewed packages, all nineteen primitive payloads, mixed
+records, deep options, malformed values, copy independence and conversion limits.
+It installs the runtime and component offline in `prebuilt-only` mode, relocates
+the installation, removes the producer and archive handoff, and runs the public
+consumer twice without compilers. A separately compiled test-only XS copy injects
+conversion failures and exercises cleanup. Installed files remain unchanged.
+CI runs this suite for all four pinned ABIs and retains `build/compounds/perl.json`.
+
+Run the copied Perl List checks with the same interpreter selection:
+
+```sh
+LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs
+node --test tests/perl-list-contract.test.mjs
+```
+
+The [Perl List suite](../evidence/perl-lists-20260921.md) checks both source paths,
+all nineteen primitive elements, nested Lists and arrays, copied record fields,
+24-level Lists, invalid values and copy-limit recovery. It installs and relocates
+both CPAN archives, removes producer sources and the handoff, and repeats public
+execution without compilers. Separate test-only XS injects conversion failures,
+checks partial-input cleanup, preserves host exceptions and tests input mutation
+during element conversion. Installed files remain unchanged. CI runs all four
+pinned ABIs and retains `build/lists/perl.json`.
+
+Run the installed native PHP List checks with PHP 8.2+ NTS CLI, FFI and Composer:
+
+```sh
+LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs
+node --test tests/php-list-contract.test.mjs tests/php-list-evidence.test.mjs
+```
+
+The [native PHP List suite](../evidence/php-native-lists-20260921.md) checks
+both source paths and weak/strict callers. It installs the Composer archive
+offline, removes producer inputs and the handoff, then repeats the public
+consumer from a relocated installation without compilers. Separate in-memory
+instrumentation injects conversion failures and tests malformed native output
+buffers without changing installed files. CI retains `build/lists/php-native.json`.
+
+Run the PHP-Wasm List checks with the [PHP-Wasm author toolchain](author-toolchain.md#php-wasm),
+the pinned host package and Chromium:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-zend.test.mjs
+node --test tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-evidence.test.mjs
+```
+
+The [PHP-Wasm List suite](../evidence/php-wasm-lists-20260921.md) builds both
+source paths, installs the exact npm and Composer archives offline, removes
+producer inputs and the handoff, and repeats weak/strict callers in Node and
+Chromium. Startup and lazy loading retain separate checks. Synthetic Zend
+providers test allocation failures, malformed sequence buffers and PHP bailouts;
+they are not Lean execution evidence. CI retains `build/lists/php-wasm.json`
+and `build/lists/php-wasm-zend-faults.json`.
+
+Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
+
+C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.
+
+C `Nat` and `Int` use GMP `mpz_t`. C++ uses pinned Boost.Multiprecision cpp_int values. Both reject negative naturals in scalar inputs and nested fields. C archives supply GMP headers, the shared library, source and licenses; C++ archives include Boost headers. CMake and pkg-config configure both dependencies. The callers check exact values beyond 4,096 bits, copied nested storage, and recovery after malformed UTF-8 or oversized strings. C also checks null spans, a null output pointer, invalid unit markers and nested null spans. C cleanup must release each owned result exactly once and tolerate a second clear. These supplemental runtime checks stay separate from the catalog and compiler-rejection counts.
+
+.NET checks all 19 public methods and each record's constructor and property types against independent C# signatures. `Nat` and `Int` use `BigInteger`. Negative `Nat` inputs must throw `ArgumentOutOfRangeException` and leave the next call usable. C# accepts the catalog's integer-to-float conversions; wrong aggregate/boolean types and checked fixed-width overflows must fail compilation with the expected source-located Roslyn diagnostic. These compiler rejections are not runtime range checks.
+
+The .NET consumers also check independent nested-array storage, garbage collection of copied records, null arguments, malformed UTF-16, input and output budgets, and recovery after every error. Garbage-collection checks cover the managed record copies, not native allocation counts or assembly unloading. The existing ordinary .NET suite retains its separate allocation, concurrency and multi-package checks.
+
+Java and Kotlin check all 19 public method signatures and each record's constructor, accessor types and field order against the independent catalog. Kotlin also assigns every method to an explicitly typed function reference. Both use `BigInteger` for `Nat`, `Int` and `UInt64`; smaller unsigned integers use wider signed host types with runtime range checks. Negative `Nat` inputs and out-of-range unsigned values must throw `IllegalArgumentException`, then recover on a valid call. Invalid signed literals and wrong argument types must produce the expected source-located compiler error. Java accepts integer-to-float conversion; Kotlin requires an explicit conversion, so the same unconverted inputs must fail compilation.
+
+JVM consumers check independent copied rows, null arguments, malformed UTF-16, oversized inputs, combined input/output budgets and recovery after each error. These supplemental checks run three times each. The separate ordinary JVM suite retains its concurrency, class-loader and multi-package checks.
+
+Floating-point cases compare exact bits for finite values, signed zero, subnormals and infinities; NaN cases check classification without requiring a payload. The TypeScript consumer compiles with `strict`, `noEmitOnError` and `skipLibCheck: false`. It checks each public function's complete type against independently specified signatures, exercises compile-time invalid inputs with `@ts-expect-error`, then executes the emitted JavaScript against the same Lean oracle.
+
+Host expectations remain explicit. Perl accepts native boolean scalars as integer inputs and integer scalars as floats; those calls must match fresh Lean results. Python and Ruby must reject the same inputs. Perl uses `Math::BigInt` for `Nat`/`Int` and native scalars for fixed-width integers. Rejected Perl inputs must produce the expected diagnostic and leave the next call usable.
+
+JavaScript uses `number` for floats and fixed-width integers through 32 bits, and `bigint` for 64-bit integers, `Nat` and `Int`. Integer-valued float inputs are valid JavaScript numbers; booleans are not integers. Generated npm exports reject wrong types and out-of-range inputs with `TypeError`. All five npm adapters check recovery after each rejection.
+
+Each browser profile gets a separate offline npm installation. React dependencies come from deterministic archives of the repository's locked React, React DOM and Scheduler packages. Vite bundles only that installation's dependencies. The harness then removes the installation and consumer sources, serves the static output under `/corpus/nested/`, and blocks requests outside that deployment. Both fetched WASM assets must match the installed runtime/component hashes and use `application/wasm`.
+
+Browser checks cover repeated calls, recovery after a missing WASM asset, production React and development StrictMode effects, unmount/remount and unmount while WASM loads, and dedicated-worker reuse, termination and restart. Worker results must come from the worker realm. Reports retain each engine/variant's observations and lifecycle checks separately; extra engine runs do not multiply type-position coverage.
+
+Reports appear in `build/type-corpus/`, named for the sorted selected profiles, such as `python.json`, `rust.json` or `node-javascript-node-typescript.json`. The combined npm report is `browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json`. Reports record the input catalog, declaration checks, per-case observations, archive, runtime, binding IR, dependency, source and oracle identities. Perl also records its separate runtime archive and interpreter ABI. Rust adds compiler/Cargo identities, exact typed callers, compiler diagnostics, dependency locks and vendor checksums, runtime limit checks, and the relocated executable hash. `compileRejectedCases` counts compiler failures separately from `executedCases`; `rustRuntimeRejections` counts the additional limit/recovery checks. npm profiles record both archives; TypeScript records its compiler, consumer source and generated declaration hashes. Browser evidence adds engine versions, framework archives, bundled module paths, static deployment hashes and actual WASM responses. Every report lists all 17 consumer profiles and both source paths. All 17 ordinary-source adapters are implemented. Unsupported or unexecuted cases remain gaps. Separate reports cover compiler-checked reviewed native and Wasm builds. These scoped cases do not change the [type-support inventory](../reference/types.md).
+
+The C/C++ report is `c-cpp.json`. It records GCC identities, public signature and caller hashes, source-located compiler diagnostics, pkg-config and CMake integration, deployed library/executable hashes, and repeated source-free execution. `cFamilyRuntimeRejections` counts the additional 60 invalid-input/recovery checks across both libraries. The two build integrations and repeated executions do not multiply catalog or coverage counts.
+
+The .NET report is `dotnet.json`. It binds the SDK, Roslyn compiler, reference assemblies, public assembly/declarations, exact package lock, installed receipt, consumer source, relocated deployment and runtime-only files. `dotnetRuntimeRejections` counts supplemental runtime error/recovery checks separately from catalog cases and compiler rejections. Repeated execution does not multiply coverage.
+
+The JVM report is `java-kotlin.json`, or `java.json`/`kotlin.json` for a single adapter. It binds both package archives, public declarations, compiler inputs and diagnostics, JDK and Maven tool files, plugin dependency files, offline settings, resolved classpath, installed receipt, relocated classes and runtime image. Kotlin also records its compiler and standard-library files. `jvmRuntimeRejections` counts supplemental runtime error/recovery checks separately from catalog and compiler-rejection cases.
+
+The WIT report is `wit-wasi.json`. It binds the prepared archive, native component/adapter/runtime receipts, pinned Wasmtime file inventory, wasm-tools and GCC identities, parsed WIT and binary interfaces, public caller, compile diagnostics and loaded shared-library paths. It contains 100 executed catalog cases, 24 compile rejections and 84 supplemental error/recovery checks across both libraries. `witRuntimeRejections` counts those supplemental checks; repeat execution does not multiply coverage.
+
+### Reviewed-IR admission corpus
+
+Run the separate reviewed-contract checks with Node and the pinned host Lean compiler:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+source scripts/env.sh
+npm run test:type-corpus:reviewed
+```
+
+The two library contracts come from the independent corpus signatures, not generated compiler metadata or the Alpha fixture. The actual CLI validates all 19 declarations in each contract without a compiler. These admission fixtures omit authorized source modules. Builds for all 17 profiles, covering 12 package targets, must return `reviewed-ir-build-unsupported` before tool discovery and leave no release directory. Fast checks also cover combined targets, the Perl alias, direct native/PHP entry points, cached interface claims, conflicting export decisions and malformed review files.
+
+`build/type-corpus/reviewed-ir.json` records 38 analyzed declarations and 34 rejected build attempts. It records zero installed runs, executed consumer cases or observed cells. All 6,562 corpus cells remain gaps in this admission-only report; 697 carry the reviewed-build rejection reason. A separate fresh Lean oracle checks the source fixtures and their proofs. That oracle is not evidence that reviewed IR was compiled. The report binds the catalog, admission implementation, source/dependency snapshots and oracle identities, and rejects invented execution evidence.
+
+The consumer workflow's required `Reviewed IR admission corpus` job uploads `type-corpus-reviewed-ir-<commit>`. A failed command or missing report fails CI. The [admission acceptance record](../evidence/type-corpus-reviewed-ir-20260917.md) preserves the earlier analysis-only milestone.
+
+### Compiler-checked reviewed native corpus
+
+The native corpus supplies explicit modules alongside each independent review, compiles fresh Lean interfaces, and requires the reviewed API to match. Run all eleven native consumer profiles with the same host toolchains listed above:
+
+```sh
+npm run test:type-corpus:reviewed-native
+```
+
+For a smaller selection:
+
+```sh
+LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,python \
+  node --test tests/type-corpus-reviewed-native.test.mjs
+```
+
+The runner builds each library twice from relocated sources, compares exact archives, removes the author workspace, and installs the copied packages offline. Public consumer calls must match a separately compiled Lean oracle. The report reconstructs the native model from retained metadata and checks the raw review, semantic digest, compiler invocation, source inventory, receipt and oracle identities. Review-only analysis cannot satisfy these checks.
+
+Run the fresh-compiler rejection checks separately with the pinned host Lean compiler:
+
+```sh
+LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 \
+  node --test tests/reviewed-source-build.test.mjs
+```
+
+These checks cover a namespace that differs from its source module, changed signatures, record field order and nominal identity, exports outside the selected roots, and review-file changes during compilation. Scalar checks also reject changed public names, missing retained reviews and altered invocation evidence. Invalid inputs must stop before native linking or scalar adapter generation and leave no component output.
+
+Reports use `reviewed-native-<sorted-profiles>.json` in `build/type-corpus/`. Each native CI corpus step runs both source paths and uploads both reports in its existing artifact. Observed reviewed cells cover the executed copied-value cases only; they do not promote the full type-support inventory.
+
+The [reviewed native acceptance record](../evidence/reviewed-native-20260918.md) lists the eleven-profile results, compiler rejections and retained identities.
+
+### Compiler-checked reviewed Wasm corpus
+
+Use the npm and PHP-Wasm toolchains from the ordinary-source corpus instructions above. The reviewed corpus uses independently specified contracts for the same two libraries:
+
+```sh
+source scripts/env.sh
+npm run test:type-corpus:reviewed-wasm
+```
+
+Run npm or PHP-Wasm separately with `npm run test:type-corpus:reviewed-npm` and `npm run test:type-corpus:reviewed-php-wasm`. To select individual profiles:
+
+```sh
+LEAN_BRIDGE_REVIEWED_WASM_PROFILES=node-javascript,browser-worker \
+  node --test tests/type-corpus-reviewed-wasm.test.mjs
+```
+
+Each library builds twice from relocated locked sources. Consumers install the reproduced archives offline after the harness removes the author and build directories. npm checks JavaScript, strict TypeScript, browser JavaScript, React and dedicated workers. PHP-Wasm checks weak/strict callers through Node and Chromium, embedded/Composer APIs, and startup/lazy loading. The Shop/Telemetry npm review selects scalar signatures; array and record execution is recorded by `tests/component-arrays.test.mjs` and `tests/component-records.test.mjs`, which also compile independent reviewed contracts. PHP-Wasm checks copied arrays and records in this corpus.
+
+Reports use `reviewed-wasm-<sorted-profiles>.json`. They retain the reviewed bytes, compiler invocation, source inventory and generated API separately from consumer results. Validators reject changed or missing review evidence, inconsistent receipts and attempts to label ordinary-source results as reviewed execution. CI requires both ordinary and reviewed reports in each existing npm/PHP-Wasm artifact.
+
+Check combined reviewed releases with:
+
+```sh
+LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 \
+  node --test tests/php-wasm-multi-profile.test.mjs
+```
+
+This checks all three ABIs together, reversed target order, native/PHP-Wasm, and npm/PHP-Wasm. It requires one compilation per selected ABI, identical relocated archives, agreement on the reviewed input and source API, and execution from relocated installed packages. The PHP CI job runs both ordinary and reviewed variants.
+
+The [reviewed Wasm acceptance record](../evidence/reviewed-wasm-20260918.md) lists the six-profile results, combined releases, rejection checks and retained identities.
+
+CI requires all 17 adapters: C, C++, .NET, Java, Kotlin, Python, Ruby, Rust, native PHP, PHP-Wasm, WIT/WASI, all five npm adapters and all four Perl configurations. Jobs upload `type-corpus-c-family-<commit>`, `type-corpus-dotnet-<commit>`, `type-corpus-jvm-<commit>`, `type-corpus-python-<commit>`, `type-corpus-ruby-<commit>`, `type-corpus-rust-<commit>`, `type-corpus-php-native-<commit>`, `type-corpus-php-wasm-<commit>`, `type-corpus-wit-wasi-<commit>`, `type-corpus-npm-<commit>` or `type-corpus-perl-<configuration>-<commit>`. A failed corpus run or missing artifact fails the corresponding consumer gate.
+
+The [JVM record](../evidence/type-corpus-jvm-20260917.md) lists Java/Kotlin host policies, offline Maven installation and runtime-only execution. The [.NET record](../evidence/type-corpus-dotnet-20260917.md) lists public signature checks and private NuGet restore. The [C/C++ record](../evidence/type-corpus-c-family-20260917.md) lists typed calls, cleanup checks and both relocated build integrations. The [Rust record](../evidence/type-corpus-rust-20260917.md) separates compiler rejections from runtime and ownership checks. The [browser record](../evidence/type-corpus-browser-20260917.md) lists engine, lifecycle and static-deployment checks. The [Node record](../evidence/type-corpus-node-20260917.md) lists the TypeScript checks and unsupported projections. The [Perl record](../evidence/type-corpus-perl-20260916.md) lists installation and ABI checks. The [Python/Ruby record](../evidence/type-corpus-primitives-ruby-20260916.md) and [foundation record](../evidence/type-corpus-foundation-20260916.md) preserve the preceding milestones' cases and artifact identities.
 
 ## WASI package
+
+### Ordinary-source WIT packages
+
+Use the pinned Lean compiler, a native C compiler, pkg-config, wasm-tools 1.245.1 and Wasmtime 42.0.1. From this checkout, the Wasmtime build-tool output can be obtained independently:
+
+```sh
+nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+source scripts/env.sh
+export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+LEAN_BRIDGE_NATIVE_WIT_TEST=1 \
+  node --test --test-reporter=spec tests/native-wit.test.mjs
+```
+
+Cobalt and Saffron each build from two relocated source trees. The suite hides their source directories, extracts the original archives and compiles consumer applications against the installed public headers and libraries. It checks copied values, input rejection, cleanup, shared runtime composition, altered artifacts and atomic build failure. See the [ordinary WIT acceptance record](../evidence/native-wit-20260914.md).
+
+### Native WIT callables
+
+Run the installed callable checks using the author toolchain above:
+
+```sh
+LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs
+```
+
+This compiles a 63-export Lean library and its Component Model host on both ordinary-source and independently reviewed paths. The test removes the producer workspace before installing each original archive and compiling a consumer against its public headers. Execution has no compiler or Lean on `PATH`. The consumer checks nineteen primitive mappings, sixteen-argument functions, borrowed and returned ownership, nested calls, deferred close, wrong-thread/session/signature rejection, expired borrows, registry reuse and exhaustion. It also checks that a surviving Lean function remains callable after a callback traps and the helper replaces its component store. CI retains `build/callables/wit.json`.
+
+### Structured WIT callbacks
+
+With the same author toolchain, run the installed structured-value, alias,
+documentation and allocation-failure checks:
+
+```sh
+LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 \
+  tests/native-callback-alias-contract.test.mjs \
+  tests/wit-structured-callable-contract.test.mjs \
+  tests/wit-structured-callable-faults.test.mjs \
+  tests/wit-structured-callables.test.mjs \
+  tests/wit-structured-aliases.test.mjs \
+  tests/wit-structured-documentation.test.mjs
+```
+
+Both source paths build callbacks and captured closures with arrays, Lists,
+options, results, products, records, variants and copied aliases. Consumers run
+from relocated archives after the author sources are removed, then repeat after
+the package handoff is deleted. The documentation check compiles the publisher's
+Lean example and executes the consumer's C file. A separate synthetic host probe
+checks allocation failures and shared reply ownership under ASan/UBSan; removing
+either ownership reference must fail. It does not replace installed Lean execution.
+
+CI requires and uploads `build/structured-callables/wit.json`,
+`wit-aliases.json`, `wit-faults.json` and `wit-documentation.json` from the same
+directory. Recursive callback payloads and resource-containing aggregates remain
+separate work.
+
+### Recursive C-family callbacks
+
+Check closure thread lifetimes separately:
+
+```sh
+node --test tests/closure-thread-contract.test.mjs
+LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-installed.test.mjs
+```
+
+The registry tests check both token widths, departed creators, full registries
+and exhausted thread serials under ASan, UBSan and LSan. The 32-bit variant runs
+on the native test host. Two compiled negative variants remove thread binding
+or permit serial wraparound; both must fail. Installed tests compile Lean on
+both source paths and verify that replacement threads cannot invoke a departed
+creator's closures. CI uploads `build/closure-thread/installed.json`.
+
+Run the installed packages and executable documentation serially:
+
+```sh
+LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs
+LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs
+LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs
+LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs
+```
+
+Both source paths exercise all nine copied callback shapes, recursive captured
+closures and nested aliases. C tests inject native and GMP-facade allocation
+failures and require the allocation ledger to return to its baseline after every
+checkpoint. C++ tests inject host allocation failures and reject invalid caller
+types. Mixed C/C++ executables include the headers in both orders and check that
+both APIs share one runtime with no remaining closure identities.
+
+Sanitized consumers run after the producer sources, installed headers and archive
+handoff have been removed. Leak checks compare against the unchanged GMP runtime
+startup baseline. Edge cases include every accepted tree depth, the first rejected
+depth, malformed values, active disposal, post-fork calls and expired creator
+threads whose operating-system IDs have been reused. CI requires and uploads
+`build/native-recursive-callables/transport.json` and
+`build/recursive-callables/{c,cpp,c-family-documentation}.json`.
+
+### Recursive Python callbacks and closures
+
+Use the Python 3.11/3.12 interpreters, pinned mypy environment and offline
+`typing_extensions` wheels from the Python collection checks, then run:
+
+```sh
+LEAN_BRIDGE_PYTHON_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/python-recursive-callables.test.mjs
+node --test tests/python-recursive-callable-contract.test.mjs
+node --test tests/python-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on both source paths and installs each original
+wheel offline on Python 3.11 with minimum/current typing dependencies and Python
+3.12 with standard-library aliases. It removes the producer before installation,
+relocates the consumers, and removes the handoff before execution. Calls use the
+installed package with no Lean compiler or native build tools on the consumer
+path. Strict mypy checks positive callers and rejects nine invalid call sites.
+
+Lifetime checks retain closures after their creator exits, reject replacement
+threads, exhaust and recover the 4,096 identity slots, and verify finalization.
+The published Lean example compiles in the producer and the Python example is
+typechecked and executed from each installed wheel.
+
+Nine copied shapes include recursive trees, with nested aliases used only in
+callback signatures. Failure probes inject `MemoryError` and `BaseException`
+through each conversion checkpoint, check native identity cleanup and deferred
+closure disposal, and reject malformed output. Probes run in separate processes
+and do not modify installed files. CI requires and uploads
+`build/recursive-callables/python.json`.
+
+### Recursive Rust callbacks and closures
+
+Use the pinned Rust tools and prepared Cargo dependency cache from the Rust
+collection checks, then run:
+
+```sh
+LEAN_BRIDGE_RUST_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/rust-recursive-callables.test.mjs
+node --test tests/rust-recursive-callable-contract.test.mjs
+node --test tests/rust-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on both source paths and installs the original
+Cargo archives offline with an empty Cargo home. It verifies the vendored
+dependency files and allows host linking while rejecting C compilation. The
+producer is removed before installation. The published Lean example compiles
+in each producer, and the exact Rust example compiles and runs from each crate.
+
+Each installation checks all nine copied callback shapes, finite recursive trees,
+captured closures, aliases used only in callback signatures, closure capacity,
+depth limits and recovery after caller errors. Twelve invalid consumers must
+fail with the expected Rust compiler errors.
+
+Safety probes use a copy of the installed crate. They inject allocation and panic
+failures, check callback result ownership before reading returned pointers, and
+check runtime retirement after malformed output. Removing the retention or
+retirement guard must fail its corresponding probe. Original installed files
+remain unchanged. The relocated executable runs again after removing all
+producer and installed sources and package archives. CI requires and uploads
+`build/recursive-callables/rust.json`.
+
+### Recursive Ruby callbacks and closures
+
+Select the pinned MRI 3.3 interpreter and RubyGems executable:
+
+```sh
+export LEAN_BRIDGE_RUBY=/absolute/path/to/ruby-3.3/bin/ruby
+export LEAN_BRIDGE_GEM=/absolute/path/to/ruby-3.3/bin/gem
+LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/ruby-recursive-callables.test.mjs
+node --test tests/ruby-recursive-callable-contract.test.mjs
+node --test tests/ruby-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on ordinary-source and reviewed-IR paths, removes
+each producer and installs the original gem offline. It relocates the installed
+gem, removes the handoff and gem cache, and runs without compiler tools. Each
+producer compiles the published Lean example; each installation runs the exact
+Ruby example.
+
+Public checks cover recursive trees, aliases used only in callbacks, independent
+copies, all accepted tree depths, first rejected depth and the existing acyclic
+shapes. Fault probes inject `NoMemoryError` and another `Exception` subclass at
+every conversion checkpoint across nine shapes and five call paths. Lifetime
+probes check creator-thread exit, native thread ID reuse, closure capacity,
+deferred close and finalization.
+
+Separate processes inspect callback owners before reading native pointers and
+verify cleanup and runtime retirement after corrupting an owned native result.
+In-memory removal of either guard must fail its corresponding probe. Every
+installed file and the package receipt must remain unchanged. CI requires and
+uploads `build/recursive-callables/ruby.json`.
+
+### Recursive Perl callbacks and closures
+
+Use the four pinned Perl interpreters, or set `LEAN_BRIDGE_CORPUS_PERL` to one
+absolute interpreter path:
+
+```sh
+LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/perl-recursive-callables.test.mjs
+node --test tests/perl-recursive-callable-contract.test.mjs
+node --test tests/perl-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on ordinary-source and reviewed-IR paths. It
+installs the original runtime and component archives using both `prebuilt-only`
+and `build-xs` modes after deleting the producer. Each installation relocates
+and runs without the archive handoff, Lean or compiler tools. The documented
+Lean definitions compile in both producers; the Perl example runs from every
+installation.
+
+Public checks cover recursive trees, aliases used only in callback signatures,
+copied values, depth limits and recovery, and all eight existing acyclic shapes.
+Lifetime checks cover closure capacity, stale handles, deferred close,
+finalization, interpreter threads and fork-child cleanup.
+
+Fault probes compile isolated libraries from the original archived XS and
+installed runtime headers. They inject allocation failures, exceptions and
+signal-handler exceptions, inspect reply owners before dereferencing pointers,
+and verify cleanup and retirement after corrupting a real owned native result.
+Removing either ownership or retirement protection must raise the expected Perl
+exception, not terminate with a fatal signal. All installed files must remain
+unchanged, and the public consumer runs again after the probes. Each ABI job
+requires and uploads `build/recursive-callables/perl.json`.
+
+### Owner-anchored C results
+
+Run the runtime and prepared-package gates with the pinned native toolchain:
+
+```sh
+source scripts/env.sh
+npm run test:owned-borrows
+npm run test:owned-borrow-packages
+```
+
+The runtime gate compiles ordinary and independently reviewed contracts. It
+checks exact-owner expiration through nested values, empty containers, returned
+closures, callback reentry and consuming calls. Allocation-fault, sanitizer,
+wrong-thread, post-fork and stale-handle probes check cleanup and rejected use.
+Deliberately broken lifetime implementations must fail the independent consumer.
+
+The installed gate removes the Lean project and producer output before using the
+C archive. It checks all 19 anchored exports through pkg-config and relocated
+CMake, and rejects altered anchor contracts and readers without the capability.
+CI requires both gates without skips and retains `build/owned-borrows/` plus the
+runtime and installed logs.
+
+### Owner-anchored C++ results
+
+```sh
+source scripts/env.sh
+npm run test:owned-cpp-borrows
+```
+
+The enabled gate covers ordinary and reviewed APIs. Its public C++ consumer
+checks complete result owners, empty constructors, nested and recursive values,
+canonical identity, explicit retain/copy, callback escape, and transitive
+expiration during consuming calls. C++ and native allocation failures must not
+leak result owners. ASan/UBSan runs compare against a separate startup baseline.
+Four compiled mutations test whole-value validation, empty ownership, callback
+expiration and equality across borrowed views.
+
+Installed tests delete author sources and producer output before using the
+archive through pkg-config. After deleting the handoff, they relocate the
+installation and run it through CMake and sanitizers. They execute the consumer
+documentation example and reject altered anchor contracts. CI requires all five
+tests without skips and retains `build/owned-cpp-borrows/`,
+`build/owned-cpp-borrow-packaging/`, and `build/owned-cpp-borrows.log`.
+
+### Owner-anchored Rust results
+
+```sh
+source scripts/env.sh
+npm run test:owned-rust-borrows
+```
+
+The enabled gate compiles ordinary and reviewed Lean APIs. Its Rust consumer
+checks complete owners, empty constructors, nested and recursive values,
+canonical identity, explicit retain/copy, callback escape and original-owner
+transfers. Allocation failures and panic unwinding must release temporary
+owners, preserve inputs before handoff and expire descendants after handoff.
+Compile-negative consumers reject raw anchors, immutable transfers, `Send` and
+`Sync`. A borrow-only API compiles separately. Four compiled mutations must fail
+the lifetime and equality checks.
+
+Installed tests remove author sources and producer output before building an
+offline Cargo consumer with an empty Cargo home and no Lean or C compiler. They
+execute the documentation example, reject forged anchor contracts and relocate
+the executable after removing the package and handoff. Shared C++ consumers
+check the same native adapter. CI requires all six tests without skips and
+retains `build/owned-rust-borrows/`, `build/owned-rust-borrow-packaging/` and
+`build/owned-rust-borrows.log`.
+
+### Owner-anchored Python results
+
+```sh
+source scripts/env.sh
+npm run test:owned-python-borrows
+```
+
+Use the owned-wheel Python setup, pinned typing wheels and mypy 2.3.1. For a
+glibc 2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; the builder
+still checks library symbol requirements. Production defaults remain glibc 2.38.
+The gate runs Python 3.11 with minimum/current typing backports and Python 3.12.
+Both authoring paths compile real Lean code. Runtime probes check whole owners,
+empty containers, all fixture constructors, recursive values, canonical equality,
+callback expiry, original-owner transfers, thread/process affinity and transitive
+anchor limits. Allocation failures retain exception tracebacks while checking
+that temporary owners release. Twelve schedules close a wrapper from another
+thread during reads, retains, copies and status checks. Eight compiled mutations
+must fail those checks, including late reads of cleared storage.
+Strict typing rejects seven malformed consumers on each interpreter configuration.
+A separate borrow-only API compiles and executes on both source paths without
+input-transfer support.
+
+Installed tests remove author source and producer output before offline pip
+installation. They execute public-only consumers, strict-checked documentation,
+compatible/concurrent imports, loader identity conflicts and post-fork rejection.
+They reject forged lifetime contracts, reproduce the original wheel exactly,
+then relocate installed environments after deleting the handoff. The reviewed
+combined build also exercises C++ and Cargo consumers. CI requires eight tests
+without skips and uploads `build/owned-python-borrows/`,
+`build/owned-python-borrow-packaging/` and `build/owned-python-borrows.log`.
+
+### Staged input transfers
+
+With the pinned Lean compiler, a C/C++ compiler, GMP headers and sanitizers, run:
+
+```sh
+source scripts/env.sh
+npm run test:owned-transfers
+```
+
+The native ledger moves complete input-owner batches without allocating or
+dropping references during the commit. Public C probes compile ordinary export
+contracts and independently reviewed APIs against fresh Lean metadata. They
+cover resource-containing records, variants, containers, recursive values,
+transferred Lean closures and callback reentry. Failed validation preserves
+every input owner. At the handoff, all input owner slots become null; later
+allocation failures, callback errors, session closure and malformed replies
+must clean up without restoring those owners or publishing partial outputs.
+Independent retains remain usable. Duplicate, foreign, stale, wrong-thread
+and post-fork owners reject.
+
+AddressSanitizer and UndefinedBehaviorSanitizer runs compare against a separate
+Lean startup leak baseline. Mutation probes remove owner-membership checks,
+moved-state updates and cleanup. CI requires the enabled tests and retains
+`build/owned-transfers/`. Existing borrowed-input APIs must produce identical
+generated files when the transfer capability is enabled but unused.
+
+The [transfer implementation record](../evidence/owned-transfer-c-20260929.md)
+captures the lower-level native/C checks.
+
+#### Installed C transfers
+
+Run the prepared-package gate with the native producer prerequisites:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_TRANSFER_PACKAGE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-transfer-packaging.test.mjs
+```
+
+Both ordinary configuration and an independently reviewed API build real Lean
+archives. The test removes the author source and producer output before installing
+the archive. A public C consumer checks owner consumption, empty values, nested
+containers, recursive trees, callbacks and closures using pkg-config, then runs
+again with CMake after archive removal and package relocation. Readers without
+transfer support and forged move contracts must reject. Reassembly must reproduce
+the exact original archive. Reports go to `build/owned-transfer-packaging/`.
+
+#### Installed C++ transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-cpp-transfers
+```
+
+The enabled gate compiles ordinary-source and independently reviewed exports.
+It checks rvalue signatures, shared aliases, independent retains, empty and
+nested values, recursive trees, returned closures and callback reentry. Both
+the C++ allocator and the native bridge allocator fail at each observed site;
+inputs must remain usable before handoff and closed after it. The bridge must
+finish without additional live allocations or identities. Sanitizers compare
+against a separate Lean startup baseline.
+
+Package tests remove author sources and producer outputs before installation,
+then use public headers through pkg-config and relocated CMake. They also run
+the documentation example, reject forged move contracts, and require exact
+compiler-free archive reassembly. CI requires both authoring paths and retains
+`build/owned-cpp-transfers/` and `build/owned-cpp-transfer-packaging/`.
+
+#### Installed Rust transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-rust-transfers
+```
+
+The enabled gate exercises ordinary-source and independently reviewed APIs.
+Rust rejects immutable transfer arguments and `Send`/`Sync` resource wrappers
+at compile time. Runtime probes check aliases, independent retains, all selected
+container and variant shapes, recursive trees, closures and callback reentry.
+Injected allocation errors and panics must preserve inputs before the native
+handoff and leave them consumed afterward, with no live allocation or identity
+increase. An independent native counter identifies the actual handoff.
+
+Installed tests remove producer sources, reject forged consumption contracts,
+and reproduce byte-identical Cargo archives without compilation. They install
+offline with an empty Cargo home and a linker that rejects C compilation, run
+the documentation example, then relocate the executable and delete the handoff
+and installed sources. Reports go to `build/owned-rust-transfers/` and
+`build/owned-rust-transfer-packaging/`.
+
+#### Installed Python transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-python-transfers
+```
+
+Use the Python setup and pinned offline typing wheels from the owned-wheel gate.
+On a glibc 2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` for
+the command. The builder checks library symbol requirements against that floor;
+production builds retain the default glibc 2.38 floor.
+The transfer gate runs ordinary-source and independently reviewed APIs on
+Python 3.11 with minimum/current typing backports and Python 3.12. Native probes
+inject allocation failures before and after single- and multiple-input handoffs
+while retaining exception tracebacks. Inputs must remain usable before handoff;
+after handoff, shared aliases close and independent retains remain usable.
+
+Installed-wheel tests remove producer sources before offline pip installation,
+check generated stubs and the documentation example, exercise callback reentry,
+reject forged contracts, and move installed environments after deleting the
+handoff. The reviewed build also installs companion C, C++ and Cargo packages.
+Reports go to `build/owned-python-transfers/` and
+`build/owned-python-transfer-packaging/`.
+
+#### Installed Ruby transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-ruby-transfers
+```
+
+Use MRI Ruby 3.3, the pinned Lean toolchain, a C compiler and the isolated GMP
+build dependencies from the owned-gem gate. The reviewed combined build also
+needs Rust and Python with the pinned offline typing wheel. On a glibc 2.36 test
+host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; library symbol checks still
+apply, and production builds retain the default glibc 2.38 floor.
+
+The private gate executes ordinary-source and independently reviewed APIs.
+It injects Ruby and native allocation failures before and after single- and
+multiple-input handoffs, retaining exceptions while checking explicit cleanup.
+It covers shared aliases, independent retains, recursive values, callback
+reentry, nonlocal exits, and returned closures.
+
+Installed tests remove producer sources before offline gem installation, run
+the documented public API, reject changed contracts and native libraries, and
+rebuild byte-identical archives. They delete the handoff and gem cache before
+relocation. The reviewed build also installs C, C++, Cargo and PyPI companions.
+Reports go to `build/owned-ruby-transfers/` and
+`build/owned-ruby-transfer-packaging/`.
+
+#### Installed Ruby borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-ruby-borrows
+```
+
+Use the owned-gem toolchains above. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; symbol-version checks still apply.
+The enabled gate requires seven tests without skips. Both source paths execute
+whole-owner, empty-value and transitive-expiration checks, original-owner
+transfers, callback reentry, returned closures and canonical equality. Ruby and
+native allocation failures must preserve owners before handoff and consume
+them after handoff, with no residual allocations or identities after cleanup.
+Twelve schedules close the source wrapper during reads, retains, `dup` and
+`clone`, with an owning sibling keeping the lease live. Seven executable
+mutations must fail independent assertions, including late payload reads.
+Borrowed results
+also compile and execute separately without input-transfer support.
+
+Prepared-gem tests remove producer sources before offline installation, reject
+forged contracts and incapable readers, reproduce the archive byte for byte,
+and execute the documentation example. Loader tests cover concurrent requires,
+private GMP, fork with a held loader lock, altered libraries and symlinks.
+Installed consumers run again after handoff and gem-cache deletion and
+relocation. The reviewed build also installs C++, Cargo and PyPI consumers.
+Reports go to `build/owned-ruby-borrows/` and
+`build/owned-ruby-borrow-packaging/`; CI requires both source paths and the
+separate `borrow-only.json` report.
+
+#### Installed .NET transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-dotnet-transfers
+```
+
+Use .NET SDK 8.0.424 and the pinned Lean and native toolchains. The reviewed
+combined build also needs Rust, MRI Ruby 3.3 and Python with the pinned offline
+typing wheel. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; production keeps its default 2.38 floor.
+
+The private gate checks managed and native allocation failures before and after
+single- and multiple-input handoffs. It retains exceptions while checking
+explicit cleanup, exercises callback GC over pinned owner slots, and checks
+foreign-thread rejection and interrupted-thread cleanup.
+
+Installed tests use the safe public C# API with unsafe code disabled. They
+remove producer sources before offline NuGet restore, execute the documented
+example, reject ill-typed consumers and altered ownership metadata, and rebuild
+byte-identical archives. Relocated execution has no SDK, source, package cache
+or handoff directory. The reviewed build also installs C, C++, Cargo, PyPI and
+RubyGems companions. Reports go to `build/owned-dotnet-transfers/` and
+`build/owned-dotnet-transfer-packaging/`.
+
+#### Installed .NET borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-dotnet-borrows
+```
+
+Use the .NET 8 SDK and native toolchains above. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`. The enabled gate requires seven tests
+with no skips on ordinary and reviewed authoring paths.
+
+Prepare the pinned offline `typing_extensions` wheels from the Python collection
+checks for the shared Python 3.11 consumer. Set
+`LEAN_BRIDGE_PYTHON_TYPING_WHEELS` to the absolute feed directory if it lives
+outside `build/python-typing-wheels` in this worktree.
+
+Runtime checks cover whole owners, empty and recursive values, original-slot
+consumption, callback reentry, returned closures, canonical equality and
+independent retention. Managed and native allocation sweeps retain exceptions
+and require zero residual allocations or identities after cleanup. GC,
+foreign-thread disposal and creator-thread exit exercise expiration. Optimized
+C# code runs 21 forced-GC schedules during temporary `Get`, `Share`, `Retain` and
+equality operations. Deterministic concurrent-close schedules cover empty arrays
+and nested value-type payloads. Six compiled mutations must fail independent
+assertions. Borrow-only packages also compile and run separately without
+consuming-input support.
+
+NuGet tests delete producer sources before offline installation. Safe public
+C# callers run with unsafe code disabled. The tests reject ill-typed clients,
+changed lifetime contracts and altered native assets; reassembled archives
+must match byte for byte. Consumers run again after removing the handoff,
+package cache and consumer source, using a runtime without the SDK. The reviewed
+build also installs C++, Cargo, PyPI and RubyGems consumers of the shared
+component. Reports go to `build/owned-dotnet-borrows/` and
+`build/owned-dotnet-borrow-packaging/`.
+
+#### Installed Java and Kotlin transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-jvm-transfers
+```
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned Lean/native toolchains. On a glibc
+2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The private gate exercises every selected aggregate and recursive shape in
+both Java and Kotlin. Managed and native allocation sweeps cover failures
+before and after single- and multiple-input handoffs. The probe retains
+exceptions while checking explicit cleanup, checks alias visibility during
+callback reentry and from other threads, and interrupts creator threads while
+native callbacks are active.
+
+The package gate compiles ordinary-source and independently reviewed APIs.
+It checks exact public signatures, rejects altered ownership metadata and
+ill-typed consumers, and reproduces the original JAR and POM bytes. Offline
+consumers run after producer removal. Relocated execution has only the
+installed JAR, resolved runtime dependencies and a `java.base` runtime image;
+consumer source, Maven caches, handoff archives and compilers are absent.
+Reports go to `build/owned-jvm-transfers/` and
+`build/owned-jvm-transfer-packaging/`.
+
+#### Installed Java and Kotlin borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-jvm-borrows
+```
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned Lean/native toolchains. On a glibc
+2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The runtime gate checks original-owner expiration, transitive descendants,
+empty values, shared guards, independent retains, canonical identity equality,
+callback escape, closure calls, consuming inputs, garbage collection and
+creator-thread exit. Java and Kotlin allocation sweeps cover failures before
+and after the actual native handoff while retaining exceptions. Executable
+mutants disable whole-owner checks, empty-owner checks, callback-frame and view
+cleanup, or canonical equality; the independent consumers must reject them.
+Both ordinary configuration and reviewed IR execute against compiled Lean,
+including packages with no consuming inputs.
+
+The package gate checks exact public signatures, ill-typed consumers, altered
+lifetime contracts and native assets, plus reproducible JAR/POM bytes. It
+removes producer sources before offline Maven installation. Both language
+consumers and documentation examples run from relocated JARs with only a
+`java.base` runtime image. Source, handoff archives, Maven caches and compilers
+are absent during that execution. Reports go to `build/owned-jvm-borrows/`.
+
+#### Installed Perl transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-transfers
+```
+
+Use the pinned Lean and native toolchains and the four configured Perl ABIs:
+5.36.3 and 5.38.2, each threaded and unthreaded. On a glibc 2.36 test host, set
+both `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` and
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The private tests exercise shared aliases, independent retains, host-assembled
+graphs, recursive values and call-scoped callbacks. Single- and multiple-input
+allocation sweeps check failures before and after handoff while exceptions stay
+reachable. Tied scalars check single evaluation and reentrant preparation.
+Fork and interpreter-thread checks preserve the parent's owners.
+
+The installed tests build ordinary-source and independently reviewed CPAN
+packages, reject altered transfer metadata and generated sources, and reproduce
+both archive files. Each ABI installs with `prebuilt-only` and `build-xs`, then
+runs twice after removing the producer, handoff archives and build tools and
+relocating the installation. Cold and warm loaders reject changed native assets.
+The exact author and consumer examples run in combined C/CPAN releases for both
+borrowed and consuming inputs. Reports go to `build/owned-perl-transfers/` and
+`build/owned-perl-transfer-packaging/`.
+
+#### Installed Perl borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-borrows
+```
+
+Use the same four Perl ABIs and glibc overrides as the transfer suite. The
+runtime probes check whole-value owners, empty values, transitive expiration,
+shared owners, independent retains, native identity equality, original-slot
+transfers and callback reentry. Allocation and exception sweeps retain errors
+while checking both sides of the native handoff. Fork and interpreter-thread
+rejections preserve the original process's owners. Five compiled mutations must
+fail the independent consumer assertions. Borrow-only packages also execute
+without enabling consuming inputs.
+
+The installed gate checks ordinary and reviewed CPAN archives on each ABI,
+using both `prebuilt-only` and `build-xs`. It rejects changed lifetime metadata
+and native assets, reproduces both archives, and repeats relocated execution
+without producer sources, handoff archives or build tools. Reports go to
+`build/owned-perl-borrows/` and `build/owned-perl-borrow-packaging/`.
+
+#### Installed Perl receiver members
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-receivers
+```
+
+Use the same four Perl ABIs as the transfer suite. On the local glibc 2.36
+test host, set `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` and
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` for the acceptance command.
+
+The receiver tests cover nominal resource, record, variant and recursive
+owners; read-only properties; original receiver and argument anchors; consuming
+members; and independent retains. Seven altered implementations must fail the
+consumer assertions before the restored implementation passes again. Separate
+cases omit callbacks, result anchors, or both.
+
+The CPAN checks install the real CLI, build twice, verify package policies,
+reassemble archives and run relocated consumers through both `prebuilt-only`
+and `build-xs` installation. Resource-only packages use the native build API
+with callback transport disabled. The documentation test compiles the author
+example and runs the exact consumer file from an installed C/CPAN release.
+The dedicated receiver CI job runs all sixteen tests on each of the four Perl
+ABIs. It rejects skipped or cancelled tests and requires all thirteen reports
+under `build/owned-perl-receiver-core/`. CI retains those reports and
+`build/owned-perl-receivers.log` separately for each ABI.
+
+#### Installed native PHP borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-borrows
+```
+
+Use PHP 8.2 or newer, below PHP 9, with FFI and a matching Composer installation
+on Linux x86-64 NTS CLI. The runtime gate checks whole-value owners, empty
+containers, transitive expiration, shared roots, independent retention, canonical
+identity and original-slot consumption on both compiler paths. It exercises
+callback reentry, returned closures, allocation failures, retained exceptions,
+fork rejection and Fiber cleanup. Five syntactically valid lifetime mutations
+must fail the executed consumer assertions. Borrow-only APIs also run without
+consuming exports.
+
+The installed gate builds ordinary and reviewed Composer archives, rejects
+altered lifetime metadata and native libraries, and reproduces the archives.
+It removes producer sources and handoff files, installs offline with scripts
+and plugins disabled, relocates the application, and runs weak and strict PHP
+callers. A separate observer checks private GMP, shared initialization and
+automatic shutdown. The unchanged documentation example executes from a combined
+C/Composer release. Reports go to `build/owned-php-borrows/` and
+`build/owned-php-borrow-packaging/`.
+
+#### Installed PHP-Wasm borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-wasm-borrows
+```
+
+Use the pinned PHP-Wasm SDK, host and prepared runtime, plus native PHP with
+matching development headers and `pcntl` for the separate Fiber/fork companion.
+The runtime gate executes both compiler paths in weak and strict PHP. It covers
+whole owners, empty values, transitive expiration, independent retention,
+canonical identity, callback reentry and original-owner consumption. Allocation
+faults exercise Zend/native allocation and PHP result construction while keeping
+the original exceptions alive. Six parsed or compiled lifetime mutations must
+fail the public consumer assertions. Borrow-only components run separately.
+
+Request-bailout tests check cleanup and recovery after callbacks, nested calls,
+destructors, explicit shutdown and interrupted whole-owner construction. The
+pinned Wasm host cannot start Fibers; a native Zend companion exercises actual
+Fiber entry guards, deferred finalizers and fork rejection.
+
+The installed gate builds through the standalone CLI and consumes the original
+npm and Composer archives after removing producer sources. It checks startup
+and lazy loading in Node and Chromium, weak and strict PHP, source relocation,
+deterministic rebuilds and receipt tampering. The unchanged owner example also
+runs from a combined C/PHP-Wasm release. CI requires all twelve tests without
+skips and retains the seven JSON reports in `build/owned-php-wasm-borrows/` plus
+`build/owned-php-wasm-borrows.log`.
+
+The [borrowed-result receipt](../evidence/owned-php-wasm-borrows-20261001.md)
+reconstructs the generated Zend/PHP sources and installed package inventories.
+
+Owner-anchored borrowed results in JavaScript/TypeScript and WIT/WASI,
+receiver and callback-result anchors, and owned Docker acceptance remain open.
+
+### Staged WIT owned graphs
+
+Run the ownership projection and canonical-ABI lifetime checks with the pinned
+component-enabled Wasmtime C API selected:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_CANONICAL_TEST=1 \
+  node --test tests/wit-owned-canonical.test.mjs tests/wit-owned-graph-model.test.mjs
+```
+
+The projection preserves recursive resource-containing records, variants,
+containers, aliases and callable signatures. Input graphs contain borrowed
+resources; output graphs contain owned resources. Each root includes only its
+reachable node tables. The tests compare parsed WIT with the compiled component.
+
+An independent C host exercises 15 canonical input shapes, including mixed
+borrowed and transferred resources, empty branches, indirect arguments, and a
+257-case variant. Each case runs 1,024 calls and checks returned-owner disposal
+and the original owner's continued validity. Removing nested borrow cleanup
+must reproduce the borrow-handle trap. The downstream WIT job requires these
+tests. They do not execute Lean or establish installed owned-graph support.
+
+Run the owned graph converters and private native host against fresh Lean builds:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_WASMTIME_C_API=/absolute/path/to/wasmtime-c-api
+LEAN_BRIDGE_WIT_OWNED_CONVERSIONS_TEST=1 \
+LEAN_BRIDGE_WIT_OWNED_NATIVE_TEST=1 \
+  node --test --test-concurrency=1 \
+  tests/wit-owned-graph-conversions.test.mjs tests/wit-owned-native-host.test.mjs
+```
+
+This five-test gate requires Lean 4.32.2, wasm-tools 1.245.1, the pinned Wasmtime
+42.0.1 C API, and a C compiler with AddressSanitizer and UndefinedBehaviorSanitizer.
+The transport probe covers all 19 scalar types, nested resources, malformed
+graphs, allocation limits and rollback. The native probe builds both ordinary
+and independently reviewed Lean sources, links the generated Component Model
+imports, and executes records, containers, variants, aliases and recursive
+graphs. Returned resources and captured Lean closures remain usable after
+releasing their original inputs. Shared node references reuse the same checked
+borrow rather than consuming it twice.
+
+Native allocation failures must preserve the caller's output and release every
+partial lease. The sanitizer run must match the cold Lean startup leak baseline.
+Removing an output lease or pending-call rollback must make the probe fail.
+CI requires all five tests without skips and retains `build/wit-owned-native.log`.
+
+Run the public owned WIT session and host-callback tests with the same tools:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_SESSION_TEST=1 \
+  node --test --test-concurrency=1 tests/wit-owned-session.test.mjs
+```
+
+This seven-test gate compiles independent public C consumers against ordinary
+and independently reviewed Lean sources. It covers nested resources, all 19
+scalar types, optional units, recursive values, returned closures, and typed
+host callbacks. Exported calls cross the generated WIT component; local retain
+and copy helpers only manage ownership. The public header exposes semantic
+values and opaque owners, not Wasmtime handles or Lean object layouts.
+
+Callback tests reenter the API, create resources, release an input owner, close
+a session during a call, and invoke an expired callback borrow. Native and WIT
+scratch-allocation failures must leave output slots unchanged and release all
+partial owners. AddressSanitizer and UndefinedBehaviorSanitizer runs compare
+against independent Lean leak baselines. Removing store cleanup or independent
+result ownership must make the public consumer fail. CI requires all seven
+tests without skips and preserves `build/wit-owned-session.log`.
+
+Run the production owned WIT package gate separately:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST=1 \
+  node --test --test-concurrency=1 tests/wit-owned-packaging.test.mjs
+```
+
+These six tests build ordinary and independently reviewed packages for nested
+values, host callbacks and all 19 scalars. They reassemble byte-identical archives
+without compiling, remove the producer sources and release directory, install
+offline, and compile independent consumers against the shipped public header.
+Each consumer runs through pkg-config and again through CMake after relocating
+the installation and deleting the archive handoff. Header changes with rewritten
+receipt hashes and unrecorded files must fail package verification.
+
+The archive bundles the generated Component Model binary, guarded native host,
+Lean runtime, Wasmtime and GMP with its corresponding source and notices. The
+public host uses semantic C values and opaque owners. It does not expose raw
+Wasmtime resources or a custom-linker API. CI requires all six tests without
+skips and retains `build/wit-owned-packaging.log` and the installed reports.
+
+The consuming-input gate builds ordinary and reviewed packages with all 26
+fixture exports, including 20 consuming exports:
+
+```sh
+source scripts/env.sh
+npm run test:owned-wit-transfers
+```
+
+It checks whole-owner handoff before Lean and callback reentry, independent
+retains, multiple input owners, recursive and mixed values, allocation failures
+before and after consumption, and malformed results. A missing native transfer
+frame must reject without consuming its input. AddressSanitizer and
+UndefinedBehaviorSanitizer runs must match the cold Lean startup leak baseline.
+Removing owner validation, owner-slot invalidation or cleanup must fail the
+consumer checks.
+
+Both installed source paths run after removing producer files and relocating the
+package. The reviewed build also requests C. Tests compile the documented
+consuming example, reject altered capability receipts and generated sources,
+and exercise loaded-library isolation. Byte-identical archive reassembly does
+not establish an independent rebuild. CI requires five tests with no skips and
+preserves `build/wit-owned-transfers.log` plus
+`build/owned-wit-transfers/{ordinary,reviewed}{,-package}.json`.
+Owner-anchored borrowed results remain open.
+
+### Staged WIT callable projection
+
+The separate component projection probe requires no Lean compiler:
+
+With the same pinned Wasmtime C API and wasm-tools, run:
+
+```sh
+LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 \
+  node --test tests/wit-callable-contract.test.mjs
+```
+
+This test supplies synthetic native imports to the generated component. It checks all 19 primitive signatures, borrowed callback handles, owned returned functions, 16-argument invocation, and two callbacks following mixed aligned arguments. It also exercises nested calls, scratch-memory preservation, wrong-signature rejection, double disposal, callback failure and store replacement. Two deliberately broken components must fail: one omits borrow cleanup; the other resets the outer call's memory during re-entry.
+
+The WIT consumer CI job runs both suites alongside the installed copied-value tests. The synthetic probe isolates Component Model ownership and includes compile checks against the generated native C API. The installed suite exercises real Lean callbacks. The [earlier projection milestone](../evidence/wit-callable-projection-20260919.md) records the work before native-host integration.
+
+Run the copied compound acceptance with the same pinned Wasmtime C API:
+
+```sh
+LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test \
+  tests/wit-compounds.test.mjs \
+  tests/wit-compound-contract.test.mjs \
+  tests/wit-compound-conversions.test.mjs
+```
+
+Both source paths build 64 Lean exports. The test checks parsed WIT and compiled
+component signatures against an independent catalog, installs the original
+archive offline, and relocates the application. Producer sources, the handoff
+and installation project are removed before two compiler-free executions.
+The consumer checks nineteen primitive payloads, nested options and Unit,
+success/error order, binary products, arrays, record fields, malformed values,
+copy limits and recovery. Loaded native libraries must match the package receipt.
+
+A separate synthetic conversion probe uses AddressSanitizer, LeakSanitizer and
+UndefinedBehaviorSanitizer. It checks injected scratch failures, partial output
+cleanup, malformed native flags and unreadable inactive payloads. It does not
+claim Lean execution. Required WIT CI retains `build/compounds/wit.json` and
+`build/compounds/wit-conversions.json`. The [acceptance record](../evidence/wit-compounds-20260920.md)
+identifies the installed archives and probe results.
+
+Run copied Lists through the same installed WIT host:
+
+```sh
+LEAN_BRIDGE_WIT_LIST_TEST=1 node --test \
+  tests/wit-lists.test.mjs \
+  tests/wit-list-contract.test.mjs \
+  tests/wit-list-conversions.test.mjs
+node --test tests/wit-list-evidence.test.mjs
+```
+
+Both source paths compile 27 Lean exports. Independent parsed-WIT and binary
+signature checks preserve all nineteen primitive List payloads and nested
+copied fields. Relocated offline consumers repeat after removing the producer,
+handoff and build tools. Separate sanitizer probes exercise partial conversion,
+copy budgets, malformed buffers and cleanup; they do not claim Lean execution.
+CI requires `build/lists/wit.json` and `build/lists/wit-conversions.json`.
+The [List evidence](../evidence/wit-lists-20260921.md) records exact packages
+and checks.
+
+Run named copied variants with the same toolchain:
+
+```sh
+LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 \
+  tests/wit-variants.test.mjs \
+  tests/wit-variant-contract.test.mjs \
+  tests/wit-variant-conversions.test.mjs
+node --test tests/wit-variant-evidence.test.mjs
+```
+
+Both source paths compile nineteen exports and exercise 281 constructors,
+including empty cases, Unit payloads, named aliases and mixed integer/float
+cases. A 257-case family checks the wider WIT discriminant. Independent parsed
+text and binary checks preserve family, constructor and field names. Original
+archives relocate and execute twice without producer files or compilers.
+Separate sanitizer probes check partial conversion, allocation failures,
+copy budgets and poisoned inactive payloads. CI requires
+`build/variants/wit.json` and `build/variants/wit-conversions.json`.
+The [variant evidence](../evidence/wit-variants-20260921.md) records exact counts,
+reproduced archives and the Lean constructor-tag boundary.
+
+### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:
 
@@ -75,6 +1882,72 @@ node scripts/build-wasi-package.mjs \
 
 The projection directory must be absent or empty. It contains `lean-bridge-alpha-wasi-0.0.0.tar.gz`, including the component, Wasmtime host, native Lean libraries, and WIT declarations. Follow the [WIT/WASI guide](../consume/wit-wasi.md) to extract and run it. The [acceptance record](../evidence/wasi-consumer-acceptance.md) identifies the tested Wasmtime and wasm-tools versions.
 
+## Locked Lake dependency builds
+
+The Node-only input tests need Git but no Lean compiler:
+
+```sh
+node --test tests/lake-dependency-snapshot.test.mjs tests/lake-component-input.test.mjs tests/lake-native-inputs.test.mjs
+node --test tests/lake-generator-contract.test.mjs
+node --test tests/lake-entry-modules.test.mjs
+```
+
+Run the relocated npm acceptance through the pinned Nix engine and its shared runtime:
+
+```sh
+nix build .#component-build-engine --out-link build/locked-lake-engine
+nix build .#universal-core-artifacts --out-link build/locked-lake-runtime
+LEAN_BRIDGE_LAKE_WASM_TEST=1 \
+LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine \
+LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/locked-lake-runtime/lazy \
+node --test tests/lake-wasm.test.mjs
+```
+
+This compiles two unrelated dependency-importing projects after their original paths become unavailable, compares relocated releases, installs both npm archives offline, and invokes their public APIs. Their automatically discovered exports use aliases, notation and inferred signatures. The cases cover custom source layouts and declared C inputs with captured headers. The consumer CI workflow runs these cases too.
+
+With the local pinned Lean/Emscripten toolchains and `build/lean-link-spike/lazy` prepared, unset the two path overrides and run `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/lake-wasm.test.mjs`. This also exercises linker rejection of changed resolution, module order, C headers, source identity, and fresh interface files. Captured-entry cases reject changed metadata even without generators or C inputs. Unsupported implicit, instance, dependent, generic, IO, Task, unsafe, foreign and admitted exports must fail before target adapter compilation. The [ordinary-entry acceptance record](../evidence/lake-elaborated-entries-20260913.md) records this cutover.
+
+### Compiler-owned export metadata
+
+The rich metadata checks need Git and the pinned Lean compiler, without a WASM runtime or Emscripten:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 \
+  node --test tests/elaborated-metadata.test.mjs
+```
+
+The suite checks structural type projection, aliases, documentation, UTF-16 source ranges, direct theorem references, selection and namespace collisions. It compares relocated reports, rejects altered interface sidecars, and verifies cleanup after extractor execution failures, malformed JSON and cancellation. The Perl consumer CI job runs this suite with its Lean-only toolchain. The [metadata acceptance record](../evidence/elaborated-export-metadata-20260913.md) lists the installed-package regressions.
+
+### Captured text generators
+
+The internal generator runner needs the pinned Lean compiler, Git, and a C compiler:
+
+```sh
+bash scripts/bootstrap-toolchains.sh --lean-only
+LEAN_BRIDGE_LAKE_GENERATOR_TEST=1 node --test --test-concurrency=1 \
+  tests/lake-generators.test.mjs tests/lake-generator-prerequisites.test.mjs \
+  tests/lake-generated-workspace.test.mjs
+```
+
+The tests compare relocated generator receipts, compile the resulting Lean source and C header, reject unreviewed implementations and changed staging files, and check cleanup after failure and cancellation. The prerequisite suite uses Lake to select declared recipes and resolve tool imports without invoking target bodies. It covers dependency-owned tools, unused targets, generation cycles, and receipt tampering.
+
+The generated-workspace suite stages those outputs separately from the original capture, asks Lake to resolve their imports, then compiles the complete application closure and generated C translation unit. It rejects changed output origins, additional prerequisites, import cycles, missing modules, symlinks, extra files and staging drift. Both relocation fixtures run after their original paths become unavailable. The [generated-workspace acceptance record](../evidence/lake-generated-workspace-20260912.md) describes the internal APIs.
+
+Installed generated-package checks require Perl and the prepared WASM runtime in addition to Lean and Emscripten:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_LAKE_GENERATED_PACKAGES_TEST=1 \
+  node --test tests/lake-generated-packages.test.mjs
+```
+
+These checks compare relocated npm and CPAN archives, invoke generated-value APIs after installation, verify publication dry runs, and reject changed handoffs before linking. Use `--test-name-pattern='generated native'` for the Perl-only cases. The Node consumer CI job uses the pinned Nix engine for the npm and publication cases; direct local compiler/linker rejection tests require the local toolchains.
+
+Both captured APIs importing generated code and generated public entry modules have Shop and Telemetry fixtures. The entry fixtures use a type alias and inferred return type. Source-only tests reject forged intent, host metadata, symlinks and oversized inputs without running Lean. Compiled checks reject admitted generated exports and changed metadata between elaboration and target compilation. Use `--test-name-pattern='generated entry'` for the npm entry cases. The [generated-entry record](../evidence/lake-generated-entries-20260912.md) lists their evidence.
+
+These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The consumer workflows run them after installing the required tools. See the [generated-package acceptance record](../evidence/lake-generated-packages-20260912.md).
+
 ## Standalone CLI package
 
 Check the reviewed source allowlist and the tarball-installed executable:
@@ -83,7 +1956,27 @@ Check the reviewed source allowlist and the tarball-installed executable:
 npm run test:cli-package
 ```
 
-This checks deterministic archive bytes, excluded private files, executable permissions, local/global/npm-exec installation, and analysis from a read-only installation. It requires Node and npm, without Lean or a build backend.
+This checks deterministic archive bytes, excluded private files, executable permissions, local/global/npm-exec installation, reviewed-IR analysis from a read-only installation, and blocked source analysis when no backend is available. It requires Node and npm.
+
+Run the Node-only receipt and installed verifier checks with:
+
+```sh
+node --test --test-reporter=spec \
+  tests/package-set-receipt.test.mjs tests/cli-verification.test.mjs
+```
+
+The package-set unit fixtures use inert bytes to test schema closure, deterministic receipts, corrupted archives, sidecar checks, symlinks, runtime mismatches, dependency cycles, cross-profile name collisions and cancellation. The installed CLI test runs package-set, npm v1/v2 and signed verification with only Node on `PATH`. It needs no compiler or shared runtime.
+
+The compiled `multi-profile-project`, `php-wasm-multi-profile` and `php-wasm-ordinary` suites also copy only real receipts, sidecars and their named archives into fresh directories, then verify them with Node. Their existing installed-consumer checks execute the public APIs separately. These suites require the author and consumer toolchains described above; archive verification does not.
+
+Run the compiler-backed analysis suite with the pinned Lean toolchain:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_COMPILER_ANALYSIS_TEST=1 node --test tests/compiler-analysis.test.mjs
+```
+
+These checks use real Lean through an injected Nix-command transport. They cover fresh interfaces, unsupported declarations, locked dependency relocation, missing locks, source preservation, output tampering and cancellation. They do not claim to execute Nix locally.
 
 For the full author check, prepare the existing shared runtime, then package that runtime with the CLI into a new directory:
 
@@ -98,7 +1991,7 @@ npm run acceptance:cli-package -- \
 
 The acceptance runner installs the original CLI tarball with scripts disabled, creates an independent committed Lake project, builds and reproduces its packages without a runtime-path override, then calls the generated exports from a separate installed consumer. It retains the candidate reports and command logs, and removes its own scratch directory after success. It performs no registry upload.
 
-Without `--runtime`, the packager creates a source-only candidate for packaging tests. Runtime correctness, registry acceptance, namespace ownership, and release approval remain required before publication.
+Without either input flag, the packager creates a source-only candidate for packaging tests. `--php-wasm-inputs` includes the separate PHP-Wasm runtime and headers; see [compiler-input packaging](author-toolchain.md#package-php-wasm-compiler-inputs). The PHP-Wasm suite builds with the CLI's bundled inputs, then repeats with a relocated standalone bundle while hiding the default bundle. Neither build selects checkout PHP sources or Lean target archives. `node --test tests/php-wasm-compiler-inputs.test.mjs` checks deterministic assembly, manifests, corruption, symlinks, size bounds and conflicting selectors. Runtime correctness, registry acceptance, namespace ownership, and release approval remain required before publication.
 
 ## Reference package examples
 
@@ -135,7 +2028,7 @@ The runner removes its registry storage and successful consumer scratch director
 
 ## Author acceptance
 
-Complete the [checkout-based author setup](../lean/setup.md#install-the-local-cli) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`. To check a prepared CLI archive without a checkout or runtime override, use the [standalone CLI acceptance runner](#standalone-cli-package) instead.
+Complete the [checkout-based author setup](author-toolchain.md#install-the-local-cli) first. Keep its `LEAN_BRIDGE_CHECKOUT`, `LEAN_BRIDGE_WORK`, `LEAN_BRIDGE_RUNTIME_ROOT`, and `LEAN_BRIDGE_BUILD_BACKEND` variables, and make sure `lean` selects the pinned compiler. The shared runtime must already contain `main.mjs` and `main.wasm`. To check a prepared CLI archive without a checkout or runtime override, use the [standalone CLI acceptance runner](#standalone-cli-package) instead.
 
 Run the [author tutorial runner](../../scripts/check-lean-author-tutorial.mjs) with a fresh output directory:
 
@@ -185,6 +2078,29 @@ The command verifies the supplied archives, installs them in an external tempora
 
 It checks loading, unmount during loading, invalid input, exact large-integer arithmetic, failed assets, reload recovery, and deployment prefixes. A successful run writes `acceptance.json` with `status: "passed"`. The adjacent `numeric-boundary-diagnostic.json` records successful addition at the 31-bit and 64-bit boundaries and for an input above `2^4096`. Acceptance neither rebuilds the component nor publishes it.
 
+### npm primitive callables
+
+The contract profile runs the private callable lifecycle and shared scalar codec checks:
+
+```sh
+node --test tests/component-callable-runtime.test.mjs tests/component-scalar-codec.test.mjs
+```
+
+The callable suite supplies a synthetic native side. It checks primitive conversions, sixteen-argument callbacks, exception identity, expiration, reentry, disposal, registry limits and cumulative copy budgets. The ordinary installed scalar tests separately exercise the extracted codec against real Lean and verify the U+FEFF string regression:
+
+```sh
+node --test tests/component-scalars.test.mjs tests/component-npm-package.test.mjs
+```
+
+The installed suite builds ordinary-source and independently reviewed callable packages, installs their verified archives offline, hides producer sources, and runs without compilers on the consumer PATH:
+
+```sh
+LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit \
+  node --test tests/component-callables.test.mjs
+```
+
+It checks all nineteen primitives in Node JavaScript, strict TypeScript, browser JavaScript, React and workers. Cases include sixteen-argument functions, exact large integers, callback exception identity, expired borrows, reentry, disposal, registry exhaustion and recovery. CI retains `build/callables/npm/`. The [transport staging record](../evidence/npm-callable-transport-20260919.md) describes the earlier synthetic-only milestone.
+
 ## Consumer acceptance
 
 Choose the command for the package boundary you changed. These commands run from the checkout, build the required packages, and install them into clean consumer projects. Native and managed jobs use the pinned Nix environment. The browser job needs Playwright's Chromium installed. The Node job also runs browser acceptance when `LEAN_BRIDGE_DOCUMENTATION_BROWSERS` names the requested engines, such as `chromium,firefox,webkit`; install those engines first.
@@ -193,6 +2109,7 @@ Choose the command for the package boundary you changed. These commands run from
 | --- | --- |
 | `npm run test:consumer:native` | Python, Rust, C, and C++ archives. |
 | `npm run test:consumer:managed` | NuGet, Maven for Java and Kotlin, and RubyGems. |
+| `npm run test:consumer:perl` | CPAN distributions, all four Perl ABIs and both XS install paths. |
 | `npm run test:consumer:node` | Alpha and the authored `onboarding-small` package in Node JavaScript and TypeScript, including the documentation fixtures. |
 | `npm run test:consumer:browser` | Alpha's browser npm package. |
 | `npm run test:consumer:php-native` | Native PHP extension, runtime, and Composer sources. |
@@ -201,6 +2118,13 @@ Choose the command for the package boundary you changed. These commands run from
 
 The [native runner](../../scripts/test-native-consumers.mjs) installs the original release archives and executes the Python, Rust, C, and C++ guide files against real Lean. It retains its steady-state benchmark separately and writes `build/documentation-native-acceptance/acceptance.json`. Successful native and managed reports use `result: "passed"`; the managed report is `build/documentation-consumers/managed.json`.
 
+CI runs the C/C++, Python and Rust acceptance suites in three independent matrix
+jobs. Each job has its own four-hour limit, runs the shared installed-release
+baseline, then executes its selected ordinary-source and type-corpus checks.
+Failures do not cancel the other jobs. Each job publishes only its own consumer
+rows; the support summary still requires all fourteen targets. A selected step
+that fails, is skipped or is cancelled prevents that consumer from passing.
+
 The native PHP job installs the Composer sources and runs the guide's program; its separate conformance and performance checks run in the same job. The PHP-Wasm job prepares its pinned Emscripten 3.1.68 and PHP source inputs, installs the host and generated package in a clean Node project, and executes the checked-in PHP and host files as part of the native/lazy/startup release gate.
 
 For changes spanning native PHP and both PHP-Wasm profiles, run `npm run test:php-release` in the pinned PHP build environment. This regression gate builds and tests the fixture profiles locally; it does not upload them.
@@ -208,6 +2132,1125 @@ For changes spanning native PHP and both PHP-Wasm profiles, run `npm run test:ph
 The WIT/WASI job extracts its archive into a clean consumer, runs the checked-in shell example, and independently validates the component. That example prints `42` and `73` on separate lines. The job measures whole-process invocation cost separately from the tutorial.
 
 Keep the command output and reports with the change. See the [native consumer evidence](../evidence/native-consumer-acceptance.md), [managed acceptance evidence](../evidence/managed-consumer-acceptance.md), [PHP release gate](../evidence/php-release-gate.md), and [WIT/WASI acceptance record](../evidence/wasi-consumer-acceptance.md) for the recorded checks.
+
+### Perl packages
+
+Build only the pinned Lean compiler with `bash scripts/bootstrap-toolchains.sh --lean-only`, then run `npm run test:consumer:perl` on x86-64 Linux with glibc 2.38 or newer. The suite builds checksummed Perl 5.36.3 and 5.38.2, with and without interpreter threads, and installs generated packages through both prebuilt and XS-only paths. It records archive identities and warmed benchmarks in `build/consumer-ci/perl/`, plus the aggregate performance observation in `build/consumer-ci/performance/perl.json`.
+
+To repeat one configuration:
+
+```sh
+npm run test:consumer:perl -- --configuration 5.38.2-unthreaded
+```
+
+The accepted configurations are `5.36.3-threaded`, `5.36.3-unthreaded`, `5.38.2-threaded`, and `5.38.2-unthreaded`. A single-configuration run writes its observation to `build/consumer-ci/perl/<configuration>/perl.json`; only a complete four-configuration run writes the aggregate observation. Each run removes the previous aggregate observation before testing.
+
+To check one runtime containing multiple prebuilt ABIs, set `LEAN_BRIDGE_CPAN_MATRIX_PERLS` to a JSON array of at least two absolute interpreter paths from that matrix, then run:
+
+```sh
+LEAN_BRIDGE_PERL_NATIVE_TEST=1 node --test \
+  --test-name-pattern='CPAN completes every' tests/perl-native.test.mjs
+```
+
+This check prepares the complete runtime before pinning its component, reproduces both archives with the interpreter order reversed, and installs and calls the same component on every selected interpreter. The ordinary installed suite also checks exact `META.json` and `MYMETA.json` runtime requirements, version parsing without numeric rounding, and rejection of both lower and higher runtime versions. Pure contract tests reject resealed payload changes under an unchanged runtime coordinate.
+
+CI runs these four configurations in parallel, with separate toolchain caches and evidence artifacts. The shared compiler/Lake checks and pinned Nix installation run in their own jobs. The combined Perl observation requires every job to pass and retains the warmed Perl 5.38.2 threaded measurement with the CPU information from that configuration's runner.
+
+For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` lowers only the test package's declared floor. Do not publish those development packages as the production profile. `LEAN_BRIDGE_KEEP_PERL_TEST=1` preserves a suite's task-local build directory for inspection; otherwise it is removed after the run.
+
+The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
+
+### Recursive Perl conversion
+
+Run the staged recursive XS checks with the four pinned Perl installations,
+the pinned Lean compiler and a native C compiler:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 \
+  node --test tests/perl-copied-graph-conversions.test.mjs
+```
+
+`LEAN_BRIDGE_CORPUS_PERL` selects one absolute interpreter path;
+`LEAN_BRIDGE_PERLS` selects a JSON array. Without either override, the test uses
+all four local configurations. CI selects each matrix interpreter explicitly.
+
+The [conversion record](../evidence/perl-recursive-conversions-20260923.md)
+distinguishes isolated C round-trips from ordinary/reviewed compiled Lean calls.
+It covers recursive and wide values, malformed native results, every scratch
+and native arena allocation, exceptions, signals and shared-runtime retirement.
+Reports are retained in `build/recursive/perl-conversions.json` and
+`build/recursive/perl-native.json`. These are private module tests. They do not
+establish installed CPAN support.
+
+### Recursive Perl package acceptance
+
+Run the installed package, component-collision, composition and documentation checks:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 \
+  node --test tests/perl-graph-package.test.mjs
+```
+
+The default selects all four pinned Perl configurations. Set
+`LEAN_BRIDGE_CORPUS_PERL` to one absolute interpreter path for a single-ABI run.
+The package suite builds ordinary-source and reviewed-contract releases twice
+in independent directories. It installs original archives through both
+prebuilt-only and XS-only paths, relocates the installations, and removes
+producer sources and archive handoffs before calling the public APIs. Archive
+hashes, installed package files and consumer results must match across
+independent builds. The comparison normalizes only MakeMaker's installation
+prefixes in `.packlist` and `perllocal.pod`, and the latter's installation dates.
+The report also retains those files' original hashes.
+
+Fault checks compile a separate instrumented copy of the authenticated archive's
+XS against the installed runtime. They inject allocation failures, exceptions,
+signals and malformed results without replacing installed files. Composition
+checks combine recursive and acyclic packages, exercise colliding private C
+names, reject calls and fresh imports after a fork with the broker lock held,
+check inherited-closure cleanup and parent ownership, and check shared
+retirement. Conflicting component coordinates must reject
+before reading or opening the second native library; reloading the same
+library identity must still work.
+
+Documentation checks compile the publishing guide's recursive example through
+ordinary source and an independent reviewed contract. They execute the consumer
+guide's exact Perl snippet after source and handoff removal on all selected
+ABIs. Separate subprocesses reject altered runtime, broker and component native
+libraries before loading those files; restored installations must still run.
+The tamper probe temporarily grants owner-write permission to its private copy
+and restores the original bytes and permissions even if the check throws.
+`node --test tests/native-asset-tamper.test.mjs` exercises read-only files as a
+non-root owner, including when the main test runner runs as root.
+The [read-only asset regression](../evidence/native-asset-tamper-20260923.md)
+records the CI failure, non-root reproduction and unchanged package identities.
+
+Reports go to `build/recursive/perl-packages.json`,
+`build/recursive/perl-component-collision.json`,
+`build/recursive/perl-composition.json` and
+`build/recursive/perl-documentation.json`. The
+[installed CPAN acceptance record](../evidence/perl-recursive-packages-20260923.md)
+includes all four ABIs and both source paths. Private conversion reports or a
+single-ABI package run do not establish that full matrix.
+
+### Recursive Java declarations
+
+```sh
+LEAN_BRIDGE_JVM_GRAPH_TEST=1 \
+  node --test tests/jvm-copied-graph-values.test.mjs
+```
+
+JDK 22 compiles the generated types and a separate consumer with warnings treated
+as errors. Execution uses a 256 KiB stack and checks recursive equality, hashing,
+cycles, limits, pattern matching and a 256-field constructor. Eleven invalid
+consumer programs must fail compilation. CI retains
+`build/recursive/jvm-values.json`. The
+[Java declaration record](../evidence/jvm-recursive-values-20260923.md) describes
+the representations and bounds. This check loads no Lean library and does not
+enable recursive Maven packages or Kotlin's recursive projection.
+
+### Recursive Java native conversions
+
+```sh
+LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 \
+LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 \
+  node --test tests/jvm-copied-graph-conversions.test.mjs
+```
+
+The isolated test compares Java FFM layouts with independently compiled C and
+numeric offsets, compiles a 700-record catalog and checks cleanup after injected
+conversion failures. The native test builds ordinary and reviewed Lean components
+and calls all 18 exports. Separate JVMs check malformed carriers, invalid tags,
+cyclic output and retirement during conversion. Allocation-failure sweeps check
+both the native ledger and the lifetimes of Java's scratch segments.
+
+CI retains `build/recursive/jvm-conversions.json` and
+`build/recursive/jvm-native.json`. The
+[Java conversion record](../evidence/jvm-recursive-conversions-20260923.md)
+describes the bounds and observed failures. These checks do not establish
+installed Maven or Kotlin recursive support.
+
+### Recursive Java and Kotlin packages
+
+```sh
+LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 \
+  node --test tests/jvm-copied-graph-kotlin.test.mjs
+
+LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 \
+LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 \
+  node --test tests/jvm-graph-package.test.mjs
+
+LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 \
+LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 \
+  node --test tests/jvm-graph-package.test.mjs
+```
+
+The Kotlin test compiles a separate consumer against generated bytecode and
+metadata. It checks nested options and results, sealed cases, mutual recursion,
+copy isolation, cycles, the 128-level value budget and typed wide builders.
+The deepest structural fixture retains all 32 array levels. Graph builds use
+Kotlin's type-table serialization so downstream compilers can decode that
+metadata. Twelve invalid programs check non-null fields, nominal types,
+immutable properties and inaccessible implementation helpers.
+
+The package tests compile both public APIs and check invalid calls before native
+loading. Ordinary Lean source and reviewed IR each produce a Maven-only release.
+An empty offline repository installs the original JAR and POM; Maven resolves
+Kotlin's standard library. Independent Java and Kotlin consumers exercise the
+18-function surface, recursive copies, limits and 256 concurrent calls.
+Execution uses a relocated runtime without the SDK, author sources, handoff or
+consumer sources. Asset-tamper checks require rejection before native mapping.
+Repackaging must reproduce the original archives, and re-signed graph receipt
+or adapter-source changes must reject.
+
+The reproduction gate requires the installed-package report first. It rebuilds
+both source paths in fresh directories and compares the complete JAR/POM
+identities and compiler provenance with the packages that consumers executed.
+
+The loading gate installs two recursive packages and an ordinary package into
+an empty offline Maven repository. One recursive release also targets C++.
+Independent Java and Kotlin callers check both loading orders, 192 concurrent
+cross-package calls, one runtime initialization and shared retirement. A separate
+test installs two genuine builds of one Lean component coordinate. Isolated
+class loaders must admit identical builds, reject conflicting builds before
+native mapping, and leave the first component usable. Execution uses only a
+relocated `java.base` runtime and the original installed archives.
+
+CI retains `build/recursive/kotlin-values.json`,
+`build/recursive/jvm-package-cold.json`, `build/recursive/jvm-packages.json`,
+`build/recursive/jvm-reproducibility.json`, `build/recursive/jvm-composition.json`
+and `build/recursive/jvm-conflicts.json`. Cross-language regressions and the
+complete source-bound evidence remain part of final recursive acceptance.
+
+### Recursive PHP values
+
+```sh
+LEAN_BRIDGE_PHP_GRAPH_VALUES_TEST=1 \
+  node --test tests/php-copied-graph-values.test.mjs
+
+# Uses the PHP 8.4 interpreter installed by bootstrap-php-wasm-ci.sh.
+LEAN_BRIDGE_PHP_WASM_GRAPH_VALUES_TEST=1 \
+  node --test tests/php-copied-graph-values.test.mjs
+```
+
+The native check executes weak and strict callers for all four PHP-integer and
+Lean-word width combinations. Its 32-bit integer models are simulations on a
+64-bit PHP process. The separate PHP-Wasm check runs the 32-bit model in an
+actual 32-bit interpreter and records the loaded WebAssembly binary hash.
+
+Both checks exercise nineteen scalars, recursive records and variants, mutual
+recursion, nested options/results, transparent aliases, 256-field constructors,
+and 32-level container annotations. They reject uninitialized values, unknown
+subclasses, object cycles, array-reference cycles and cyclic uninhabited values.
+Shared acyclic subtrees remain valid. Equality and hashing use the same bounded
+walk, including NaNs and signed zero. A maximum-size traversal runs under a
+128 MiB PHP memory limit without queuing every array element.
+
+Reports are `build/recursive/php-values.json` and
+`build/recursive/php-wasm-values.json`. These are value-layer checks, not Lean
+execution or installed-package acceptance. See the
+[source-bound record](../evidence/php-recursive-values-20260923.md).
+
+### Recursive native PHP conversions
+
+```sh
+LEAN_BRIDGE_PHP_GRAPH_CONVERSION_TEST=1 \
+  node --test tests/php-copied-graph-conversions.test.mjs
+
+LEAN_BRIDGE_PHP_GRAPH_NATIVE_TEST=1 \
+  node --test tests/php-copied-graph-conversions.test.mjs
+```
+
+The first gate runs generated FFI conversions against independent C producers.
+It compares 478 sizes, alignments and field offsets, rejects malformed native
+values, and injects failures at every PHP scratch allocation and output
+construction checkpoint. Weak and strict callers run under a 128 MiB PHP limit.
+
+The second gate compiles fresh ordinary and reviewed Lean source and calls all
+eighteen exports. It checks recursive and mutually recursive values, nineteen
+scalars, aliases, wide constructors, boundary depths, independent copies and
+native allocation failures. Each caller mode runs four fresh-process retirement
+scenarios: malformed Lean carrier, invalid native tag, cyclic native output,
+and retirement during the call. Retained output owners remain releasable after
+retirement; future calls reject without entering Lean.
+
+Reports are `build/recursive/php-conversions.json` and
+`build/recursive/php-native.json`. CI requires both execution gates and retains
+both reports. These Linux x86-64 FFI checks do not claim Composer installation or
+PHP-Wasm Zend support. See the
+[source-bound record](../evidence/php-recursive-conversions-20260923.md).
+
+### Recursive Composer packages
+
+```sh
+LEAN_BRIDGE_PHP_GRAPH_PACKAGE_TEST=1 \
+LEAN_BRIDGE_PHP_GRAPH_INSTALLED_TEST=1 \
+  node --test tests/php-graph-package.test.mjs
+
+LEAN_BRIDGE_PHP_GRAPH_REPRO_TEST=1 \
+  node --test tests/php-graph-package.test.mjs
+
+LEAN_BRIDGE_PHP_GRAPH_LOADING_TEST=1 \
+  node --test tests/php-graph-package.test.mjs
+```
+
+Run installation before reproduction. The cold-call gate runs weak and strict
+PHP without the FFI extension. The installed gate builds eighteen exports from
+ordinary source and independently reviewed IR, then installs each original ZIP
+through offline Composer with an empty home and cache. It removes author inputs
+and the installation project before running the relocated consumers twice.
+Consumers use only generated public functions and values, with compiler and
+runtime-path overrides disabled. Each bundled native library is corrupted in
+turn to check rejection before loading; the fixture restores its original bytes
+and permissions afterward.
+
+The build checks reject altered graph receipts and re-signed adapter sources.
+Compiler-free reassembly must reproduce the original archive. The separate
+reproduction gate performs two fresh native builds and compares their archives
+with those exercised by installed consumers.
+
+The loading gate installs two recursive packages and an ordinary package in one
+offline Composer project. One release also targets C++. Both loading orders
+check shared initialization, post-fork rejection, runtime retirement and retained
+PHP values. A separate probe installs two conflicting builds of one component
+and checks the native registry in both orders. It autoloads only one public PHP
+API because PHP cannot declare the same namespace's functions and classes twice.
+Duplicate native identities reuse mappings; conflicts must leave the first
+component usable and reject before mapping the second build.
+
+CI retains `build/recursive/php-package-cold.json`,
+`build/recursive/php-packages.json`, `build/recursive/php-reproducibility.json`,
+`build/recursive/php-composition.json`, and `build/recursive/php-conflicts.json`.
+Final cross-language regression and source-lineage acceptance remain open.
+
+### Recursive wasm32 transport
+
+```sh
+LEAN_BRIDGE_WASM32_RECURSIVE_TEST=1 \
+  node --test tests/wasm32-recursive-transport.test.mjs
+```
+
+This gate compiles fresh Lean source and runs the 32-bit C graph transport inside
+PHP-Wasm 8.4.1. It builds the pinned shared runtime in its temporary workspace;
+`LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME` can select a verified existing build.
+The regular PHP-Wasm compiler, target-runtime and PHP-header inputs are required.
+
+An independent C caller checks all nineteen scalars, recursive and mutually
+recursive values, nested options and results, aliases, copied shared inputs,
+wide constructors and depth, visit and allocation limits. Allocation failures
+and malformed Lean carriers must release every owned output. Additional checks
+cover wasm32 scalar boxes and pointers beyond the current Wasm memory.
+The probe uses unconditional checks because PHP's release headers define
+`NDEBUG`. Clang compiles the wide generated carriers with
+`-fbracket-depth=4096`; this does not change runtime value limits.
+
+Two fresh PHP-Wasm interpreters must return identical observations. CI retains
+`build/recursive/wasm32-transport.json`, including compiler/runtime identities,
+fresh metadata, the finite layout, generated-source hashes and execution counts.
+The test-only Zend entry point invokes a C caller. Generated PHP-to-Zend graph
+conversion and installed recursive PHP-Wasm packages have separate gates below.
+The default 64-bit generator also retains six pre-change artifact hashes.
+
+### Recursive PHP-Wasm conversions
+
+```sh
+LEAN_BRIDGE_PHP_WASM_GRAPH_ZEND_TEST=1 \
+LEAN_BRIDGE_PHP_WASM_GRAPH_LEAN_TEST=1 \
+  node --test tests/php-copied-graph-zend.test.mjs
+```
+
+These gates use the same pinned Emscripten, PHP headers and target Lean runtime
+as the wasm32 transport gate. The compiled-Lean test requires a runtime with the
+shared retirement API. The default builds that runtime in its owned temporary
+workspace; an explicitly selected older runtime fails the API check.
+
+The independent C producer checks PHP/Zend conversion without claiming Lean
+execution. Weak and strict callers exercise nineteen scalars, recursive and
+mutually recursive values, options, results, aliases, wide constructors and
+maximum-depth spines. The test injects every C scratch allocation failure and
+every PHP construction checkpoint, rejects malformed private wire values and
+native outputs, and checks cleanup after a native or output-copy bailout.
+PHP-Wasm keeps loaded classes between runs, so recovery uses `require_once`.
+
+The compiled-Lean gate extracts fresh metadata and connects generated public PHP
+functions to the actual Lean carriers. It checks the eighteen declared exports,
+independent copied results, native/Zend allocation failures and shared-runtime
+retirement. The uninhabited `Never` input rejects before entering Lean.
+
+CI requires both gates and retains `build/recursive/php-wasm-zend.json` and
+`build/recursive/php-wasm-zend-lean.json`. These reports distinguish independent
+C producers from compiled Lean. Neither is installed-package evidence; use the
+package gate below for compiler admission and consumer installation.
+
+### Recursive PHP-Wasm packages
+
+The existing ordinary-package gate also checks compatibility with the original
+pre-recursion verifier and packager:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 \
+LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 \
+  node --test tests/php-wasm-ordinary.test.mjs
+```
+
+It loads the original modules from checksummed source snapshots into its owned
+scratch tree. Both verifiers must accept the freshly compiled nonrecursive
+components. Repackaging compares every payload, permits only the measured
+runtime-host/packager identity changes and requires identical Composer archives.
+Six original 64-bit recursive C outputs must also remain byte-identical.
+The same test then installs the current archives and runs its existing Node and
+Chromium consumers. CI requires and retains
+`build/recursive/php-wasm-shared-regressions.json`.
+
+Build and install the recursive API separately:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_GRAPH_PACKAGE_TEST=1 \
+  node --test tests/php-wasm-graph-package.test.mjs
+```
+
+This gate builds a fresh retirement-aware wasm32 runtime and sends ordinary
+source and independently reviewed contracts through the normal PHP-Wasm build.
+It requires the pinned Emscripten toolchain, PHP headers, target Lean archives,
+PHP-Wasm 0.1.0 host, Composer and Chromium. Set `CHROMIUM_PATH` to select an
+installed browser. Builds run serially and the test removes its scratch tree.
+
+The original npm archives and companion Composer ZIP install offline with
+empty caches. The pinned PHP-Wasm host also installs from a local archive.
+The test compares installed files with the verified package trees, relocates
+the consumer, removes author sources and archives, and runs without compilers
+on the consumer PATH. Weak and strict callers exercise eighteen exports,
+including all nineteen scalar mappings, recursion, mutual recursion, options,
+results, aliases, copied shared inputs, wide constructors and maximum-depth
+spines. Uninhabited inputs reject before a lazy extension loads.
+
+Node runs descriptor-mounted PHP, Composer autoloading and Vite-bundled
+descriptors with startup and first-call loading. Network-isolated Chromium
+repeats every caller and loading combination at a nested deployment URL.
+Requests bind browser PHP sources and Wasm binaries to their installed hashes.
+Each host makes twenty further requests after the full corpus.
+
+The gate checks compiler-free archive reassembly, nine wasm32 constructor-guard
+cases and rejection of re-signed receipt, PHP, C and allocation-guard changes.
+CI requires and retains `build/recursive/php-wasm-graph-packages.json`.
+
+Run independent reproduction after that package gate:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_GRAPH_REPRO_TEST=1 \
+  node --test tests/php-wasm-graph-reproduction.test.mjs
+```
+
+This builds another runtime and two fresh source projects, reinstalls their
+archives offline and repeats the Node and Chromium consumers. It compares the
+compiled libraries, metadata, generated sources, installed files and original
+npm/Composer archive hashes with `build/recursive/php-wasm-graph-packages.json`.
+Both builds must use the same compiler and packing environment. Archive identity
+includes Node, zlib and ICU versions; a different CI runner starts with its own
+package-gate report rather than comparing against a developer's archive.
+CI retains `build/recursive/php-wasm-graph-reproduction.json`.
+
+Check shared loading separately:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_GRAPH_LOADING_TEST=1 \
+  node --test tests/php-wasm-graph-loading.test.mjs
+```
+
+This gate builds two recursive packages, one acyclic package and a conflicting
+build of the first package. It installs original npm archives and companion
+Composer ZIPs offline, relocates the consumer and deletes all producer trees.
+Node covers descriptor-mounted PHP, Composer autoloading and Vite bundles, with
+startup, lazy and mixed loading; both call orders; and weak/strict callers.
+Chromium repeats both call orders and lexical modes with startup/lazy loading
+at a nested URL. A separately evaluated duplicate descriptor must not load an
+extra library or initialize another runtime.
+
+A test-only Zend probe reads the production runtime's initialization counters
+and triggers retirement. All three packages must reject later calls while
+previously copied PHP values remain usable. Conflicting compiled identities
+must reject before any library fetch. Disabled loading, missing registration,
+missing components and missing runtimes must produce explicit errors, preserve
+the caller's error handler and avoid repeated link attempts through peers.
+PHP-Wasm wraps `run()` source, so lexical `strict_types` declarations belong in
+the PHP files that the caller includes, not directly in `run()` strings.
+CI retains `build/recursive/php-wasm-graph-loading.json`.
+
+Verification of historical source transitions and final cross-language
+acceptance remain open.
+
+### Recursive C# declarations
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 \
+  node --test tests/dotnet-copied-graph-values.test.mjs
+```
+
+This test compiles a .NET 8 library and a separate consumer assembly, checks
+recursive value semantics and rejects invalid consumer programs. Downstream CI
+requires the execution and retains `build/recursive/dotnet-values.json`.
+The [declaration record](../evidence/dotnet-recursive-values-20260923.md) describes
+the equality, cycle and structural-type limits. These declaration tests do not
+load Lean.
+
+### Recursive C# native conversions
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 \
+LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 \
+  node --test tests/dotnet-copied-graph-conversions.test.mjs
+```
+
+The isolated C/.NET probe checks native layouts, bounded conversions, public-name
+collisions and failure cleanup. The native probe compiles both ordinary-source
+and reviewed-IR Lean components, executes all exports, and tests allocation
+failure, malformed outputs and retirement during result construction. Each
+retirement scenario runs in a separate process.
+
+CI requires both executions and retains `build/recursive/dotnet-conversions.json`
+and `build/recursive/dotnet-native.json`. The
+[conversion record](../evidence/dotnet-recursive-conversions-20260923.md) describes
+the exact scope.
+
+### Recursive C# callbacks and closures
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/dotnet-recursive-callables.test.mjs
+node --test tests/dotnet-recursive-callable-contract.test.mjs \
+  tests/dotnet-recursive-callable-evidence.test.mjs
+```
+
+The installed suite builds original NuGet packages from both source paths,
+removes the author directories, and installs offline into empty caches. It
+checks recursive callbacks and owned closures against unchanged installed
+assemblies, then repeats execution after relocation with only the .NET runtime.
+Separate instrumented copies check allocation failures, reply lifetimes,
+malformed-output retirement, and deferred disposal. A mixed package checks every
+primitive callback type and sixteen-argument delegates alongside recursive APIs.
+The exact Lean publisher and C# consumer examples compile and run too.
+
+CI requires the suite and retains `build/recursive-callables/dotnet.json`.
+The [acceptance record](../evidence/dotnet-recursive-callables-20260926.md) lists
+the checks, source hashes, and ownership limits. Set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` only for local tests on older glibc;
+those development archives are not the production release profile.
+
+### Recursive Java and Kotlin callbacks
+
+```sh
+LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/jvm-recursive-callables.test.mjs
+node --test tests/jvm-recursive-callable-contract.test.mjs \
+  tests/jvm-recursive-callable-evidence.test.mjs
+```
+
+The suite builds Maven-only packages through ordinary-source and reviewed-IR
+authoring. Each Java and Kotlin consumer installs the original JAR and POM
+offline into an empty Maven cache. The runner removes producer directories
+before installation, then removes installed sources and the handoff before
+running relocated consumers with a `java.base`-only runtime. The exact Java,
+Kotlin and Lean documentation examples compile as part of acceptance.
+
+Separate source copies check every host and native allocation failure across
+nine copied shapes, four seeds and five callback/closure paths. Ownership
+mutations must fail before decoding released memory. Malformed results must
+clear once and retire the runtime. Lifetime checks cover concurrent close,
+creating-thread ownership, virtual-thread rejection, Throwable identity,
+Cleaner recovery and 4,096 live closure slots. A changed-PID simulation checks
+the process guard; the suite does not fork a running JVM.
+
+Mixed packages exercise all nineteen primitive callback families and
+sixteen-argument Unit functions beside recursive values. CI retains both
+`build/recursive-callables/jvm-recursive.json` and
+`build/recursive-callables/jvm-mixed.json`. The
+[acceptance record](../evidence/jvm-recursive-callables-20260926.md) binds these
+results to package and source hashes. Use `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`
+only for local testing on older glibc, not production archives.
+
+### Owned Java and Kotlin values
+
+Use the pinned Lean toolchain, JDK 22.0.2, Kotlin 2.2.0, Maven and a native
+C/C++ compiler. Run the ownership, public API and installed-package suites:
+
+```sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs \
+  tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs \
+  tests/owned-jvm-conversions.test.mjs tests/owned-jvm-calls.test.mjs \
+  tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs \
+  tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs \
+  tests/owned-jvm-documentation.test.mjs
+node --test tests/owned-jvm-ci.test.mjs
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs
+```
+
+The Maven acceptance builds through the CLI on ordinary-source and reviewed-IR
+paths, verifies the handoff without producer tools, installs the original JAR
+and POM offline, and executes separate Java and Kotlin consumers. Tests remove
+the author source and installed source before rerunning relocated consumers
+on a `java.base`-only runtime. Exact public signatures, Kotlin metadata,
+resource ownership, nested copied values and synchronous callbacks are checked.
+The publishing recipe and consumer examples also build and execute verbatim.
+
+Other tests inject host/native allocation failures, reject expired borrows and
+foreign resource types, and observe native cleanup after platform threads
+exit. Mixed owned, copied and recursive packages exercise both languages,
+multiple loading orders, concurrent calls and shared retirement. Real JAR
+copies with missing or replaced native libraries must reject before mapping
+new libraries, including when another classloader has loaded the original.
+The loader fixture also checks conflicting identities, unverified preloads,
+private GMP isolation and simulated process-origin changes. It does not fork
+a running JVM.
+
+CI requires the eleven ownership suites and the thread-exit regression, checks
+27 nonempty reports and retains the
+`build/owned-jvm-*` report directories. Runtime, converter and callable
+evidence receipts remain separate from installed Maven acceptance.
+
+The thread-exit regression holds the native TLS destructor behind a test-only
+gate. Java's `Thread.join()` returns while that gate is closed. The repaired
+signature exercise waits for native cleanup before sampling the allocation
+baseline. Removing that wait makes the same compiled fixture fail its first
+rollback assertion. Both ordinary and reviewed builds run the positive and
+negative controls. CI retains `build/owned-jvm-thread-exit/ordinary.json` and
+`build/owned-jvm-thread-exit/reviewed.json`.
+
+### Owned Perl values
+
+Use the pinned Lean compiler, a native C compiler and the supported Perl
+interpreters. The default local run covers Perl 5.36.3 and 5.38.2, each threaded
+and unthreaded. Set `LEAN_BRIDGE_CORPUS_PERL` to one absolute interpreter path
+to run the same checks for a single ABI, as each CI matrix job does.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs \
+  tests/owned-perl-conversions.test.mjs tests/owned-perl-xs.test.mjs \
+  tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs \
+  tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs \
+  tests/owned-perl-documentation.test.mjs
+```
+
+The installed suite builds through the CLI on ordinary-source and reviewed-IR
+paths. It verifies a receipt-only archive handoff after deleting the producer,
+installs in both `prebuilt-only` and `build-xs` modes, relocates the prefix and
+runs without Lean, Lake or Node. Cases cover all nineteen primitive fields and
+callback signatures, recursive resource-bearing values, independent retention
+and cleanup. Changing XS, Lean or private GMP files must reject on both cold
+and warm loads without leaking owners.
+
+The coexistence suite rebuilds archives independently and checks four loading
+orders for two owned packages, a recursive copied package and a primitive
+package. The documentation suite builds the author recipe with C and CPAN
+targets, then runs the unmodified consumer example from installed packages.
+CI requires all nine suites and retains their `build/owned-perl-*` reports.
+Use `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` only when testing on an older local
+glibc, not when preparing production archives.
+
+### Owned native PHP values
+
+Run the value-model checks in native PHP, then compile and install the owned API:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test \
+  --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs \
+  tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs \
+  tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs \
+  tests/owned-php-documentation.test.mjs
+```
+
+These tests need PHP 8.2+ NTS CLI with FFI, Composer 2 with ZIP support, the
+pinned Lean toolchain and the C author tools. Set `LEAN_BRIDGE_PHP` and
+`LEAN_BRIDGE_COMPOSER` to select non-default executables. The value-only suite
+does not claim compiled transport support for its simulated integer widths.
+The separate PHP-Wasm value-model test uses its actual 32-bit interpreter.
+
+CI disables Xdebug in the host PHP CLI configuration and verifies that it stays
+disabled in a clean environment. The callback reentry test must reach Lean
+Bridge's own limit; Xdebug's stack limit can interrupt it first. Consumer probes
+strip inherited environment variables, so setting `XDEBUG_MODE` on the parent
+test command does not configure those child processes.
+
+Runtime and conversion probes exercise scoped borrows, explicit retention,
+retirement, partial output cleanup, all nineteen primitives and injected PHP
+and native allocation failures. Public calls cover 51 exports, higher-order
+callbacks, preserved exceptions, Fiber rejection and normal shutdown.
+
+The package tests build ordinary and reviewed APIs through the CLI, verify
+relocated receipts without producer tools, then install real Composer ZIPs
+offline after deleting the source and producer directories. Strict and weak
+callers use ordinary autoloading. Separate observers inspect the loaded native
+libraries, private GMP resolution and zero live identities after shutdown.
+Independent builds reproduce every installed byte and archive; three owned and
+copied packages execute nested calls in four loading orders. The documentation
+test builds the published Lean example for C and PHP together, then runs the
+unmodified PHP example from the installed Composer package.
+
+CI requires all eight suites, checks their nonempty reports, and retains
+`build/owned/php-values.json`, `build/owned-php-runtime/`,
+`build/owned-php-conversions/`, `build/owned-php-calls/` and
+`build/owned-php-packaging/`. Existing copied and PHP-Wasm suites remain required.
+
+### Recursive native PHP callbacks
+
+Run the Composer acceptance with 64-bit PHP 8.2 or newer, FFI, Composer, the
+pinned Lean toolchain and a native C compiler:
+
+```sh
+export LEAN_BRIDGE_PHP=/absolute/path/to/php
+export LEAN_BRIDGE_COMPOSER=/absolute/path/to/composer
+npm run test:php-recursive-callables
+```
+
+The suite builds fresh Composer-only packages on ordinary-source and reviewed-IR
+paths. It removes authors before offline installation, relocates the installed
+package, removes the handoff and runs weak and strict callers without compilers
+or runtime overrides. The recursive corpus checks nine shapes and six seeds;
+the mixed corpus adds all nineteen primitive families and sixteen-argument Unit
+callbacks. The published Lean and PHP examples run against these builds.
+
+Separate probes inject PHP exceptions and errors at every conversion checkpoint,
+fail each native allocation and supply five malformed native results. They check
+reply storage before decoding, reject expired callback contexts, detect deliberate
+ownership and retirement defects, and exercise real post-fork rejection, Fiber
+rules, stale identity generations, GC cleanup and capacity recovery. Each native
+asset has its own tamper case. The original installed package stays unchanged and
+runs its public consumers again after the probes.
+
+CI retains `build/recursive-callables/php-recursive.json` and
+`build/recursive-callables/php-mixed.json`. The
+[acceptance record](../evidence/php-recursive-callables-20260926.md) binds these
+checks to the installed archives and tested source files.
+
+### Recursive PHP-Wasm callbacks
+
+Use the pinned PHP 8.4 Wasm host, configured headers, Lean runtime and Emscripten
+inputs from the [author toolchain](author-toolchain.md#php-wasm):
+
+```sh
+npm run test:php-wasm-recursive-generated
+npm run test:php-wasm-recursive-packages
+```
+
+The generated suite compiles fresh Lean and C for actual wasm32 execution. It
+checks callback and closure allocation failures, malformed native results,
+expired and forged callback contexts, 64-bit closure generations, identity
+exhaustion, active close and GC. Separate PHP requests test recovery after
+`exit()`, Zend bailouts and aborts during partial string and array construction.
+Weak and strict callers run in separate interpreters. Lifetime and retirement
+mutants must fail at their named invariant before an unsafe read.
+
+The package suite builds ordinary-source and reviewed-IR npm archives and
+Composer ZIPs, installs offline, removes authors and runs relocated consumers
+without compiler paths. Base and mixed APIs cover nine copied shapes, all
+nineteen primitive families and sixteen-argument Unit callables. Node and
+Chromium cover startup and lazy loading, bundled PHP and Composer consumers.
+The exact Lean and PHP documentation examples run too.
+
+CI retains `build/recursive-callables/php-wasm-generated.json`,
+`php-wasm-packages.json` and `php-wasm-mixed-packages.json` in that directory.
+The generated probes are instrumented test builds; the installed-package suite
+checks original, unmodified archives separately. The pinned host cannot start
+Fibers, so it does not provide Fiber-execution evidence.
+
+### Recursive C# packages
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 \
+LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 \
+  node --test tests/dotnet-graph-package.test.mjs
+```
+
+The package tests build ordinary-source and reviewed-IR NuGet archives and
+restore each from an offline feed into an empty package cache. They compile
+public consumers, reject invalid caller types and execute the documentation
+example. Relocated deployments run after removing the author project, package
+cache, sources and SDK. Each native library is modified separately to check
+that the loader rejects it before invoking Lean.
+
+CI requires these executions and retains `build/recursive/dotnet-packages.json`.
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 \
+  node --test tests/dotnet-graph-package.test.mjs
+```
+
+The composition test installs two recursive NuGet packages and an ordinary
+package together. One graph package comes from a mixed C++/NuGet build. It runs
+without the SDK, checks concurrent calls and retires the shared runtime in two
+loading orders. Copied results remain usable after retirement. CI retains
+`build/recursive/dotnet-composition.json`.
+
+Run reproducibility after the installed-package test has produced its report:
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 \
+  node --test tests/dotnet-graph-package.test.mjs
+LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 \
+  node --test tests/dotnet-graph-package.test.mjs
+```
+
+The reproducibility test builds both source paths in new directories and requires
+byte-identical archives, native libraries, binding IR and models. It compares
+against the original installed report without replacing it. CI retains
+`build/recursive/dotnet-reproducibility.json`.
+
+The conflict test builds two real packages with the same Lean component identity
+and different implementations. Each package must work on its own. Separate CLR
+loading contexts check both loading orders: an identical build can reuse the
+component, while a conflicting build must fail before its native library loads.
+The first package must remain usable after rejection. Source-free, SDK-free runs
+use unchanged installed assemblies and private copies of their native assets.
+CI retains `build/recursive/dotnet-conflicts.json`.
+
+Final recursive NuGet acceptance also requires regressions of the existing
+native profiles and current source evidence.
+
+## Recursive WIT callbacks and closures
+
+Use the pinned Lean, Wasmtime and wasm-tools dependencies from the
+[WIT publishing guide](../publish/wit-wasi.md#build-an-ordinary-lean-project):
+
+```sh
+npm run test:wit-recursive-generated
+npm run test:wit-recursive-packages
+```
+
+The generated checks compile the declared and binary Component Model interfaces,
+then execute recursive callbacks and owned functions against compiled Lean on
+ordinary-source and reviewed-IR paths. Public headers compile twice in C and C++.
+ASan and UBSan cover the raw and typed callers and all nine copied shapes. LSan
+compares each exercised process with a separate cold-session startup process;
+Lean's numeric initialization retains 128 bytes in twelve GMP allocations in
+the measured toolchain. Any additional allocation or diagnostic fails the check.
+
+A separate synthetic native provider tests every host allocation checkpoint and
+requires zero live allocations. Premature reply release must fail with ASan's
+use-after-free diagnostic; removing the reply owner must fail the allocation
+accounting assertion. This probe does not count as installed Lean execution.
+
+The package checks build WIT-only archives containing 33 exports and a mixed
+99-export companion. Both source paths require deterministic, compiler-free
+reassembly and reject re-signed generated source changes. Consumers compile
+against installed public headers, then execute twice after the author, headers
+and archive handoff have been removed. The tests compile the published Lean and
+C examples verbatim. Installed boundary probes check that malformed native
+results retire the shared runtime, while depth and node limits leave both
+sessions usable. They leave the original shared libraries unchanged.
+
+The downstream WIT job requires both commands and uploads
+`build/recursive-callables/wit-native.json`, `wit-faults.json`,
+`wit-packages.json` and `wit-mixed-packages.json`. Frozen acceptance also reruns
+the existing copied-only packages, acyclic callback packages, callback-only
+aliases and their documentation examples.
+
+### Resource-containing wasm32 transport
+
+```sh
+LEAN_BRIDGE_OWNED_WASM32_TEST=1 \
+  node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs
+```
+
+This gate compiles fresh Lean ownership carriers and executes them inside
+PHP-Wasm 8.4.1. It uses the pinned PHP-Wasm compiler, target runtime and PHP
+headers. `LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME` can select a verified existing
+runtime; otherwise the test builds one in its temporary workspace.
+
+The independent C probes cover all nineteen primitives, resource-containing
+records, variants, lists, arrays, nested options/results, aliases, recursive
+values and Lean closures. They check allocation failures, cumulative budgets,
+invalid tags, cycles, expired identities and cleanup. Wasm-specific checks cover
+32-bit machine words, boxed UInt32/Int32/Char, heap boundaries and resource
+identities wider than a machine word. Malformed results retire the runtime;
+already-held resources remain releasable afterward.
+
+Both corpora run in two fresh interpreters. CI requires and retains
+`build/owned-wasm32/owned-scalars.json` and
+`build/owned-wasm32/owned-aggregates.json`. This tests the private transport.
+Public PHP-Wasm resource wrappers, host callbacks and installed ownership-aware
+packages use the additional gates below.
+
+### Owned PHP-Wasm packages
+
+Use the pinned PHP-Wasm SDK, target Lean runtime and configured PHP headers.
+The native Fiber companion also requires matching PHP CLI and development
+headers. CI installs both. These tests build a verified runtime in each
+temporary workspace unless `LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME` selects an
+existing verified runtime.
+
+```sh
+LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 \
+  node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs
+LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 \
+  node --test --test-concurrency=1 \
+  tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs \
+  tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 \
+  node --test tests/owned-php-wasm-package.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 \
+  node --test tests/owned-php-wasm-multi-profile.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 \
+  node --test tests/owned-php-wasm-documentation.test.mjs
+```
+
+The Zend checks execute resource leases, synchronous callbacks, recursive
+values, allocation failures, malformed results and request-abort cleanup.
+The pinned PHP-Wasm host cannot start Fibers, so the companion executes Fiber
+entry guards and deferred destruction in native PHP.
+
+The package gate installs the standalone CLI with its compiler inputs, then
+builds ordinary and reviewed projects. Independent relocated builds must produce
+identical archives. Node and Chromium execute the original offline-installed
+npm and Composer packages after producer removal. Mixed owned and copied
+packages exercise both load orders, startup and lazy loading, weak and strict
+PHP callers, cross-package callbacks, cleanup and request refresh. Chromium
+repeats every case in a fresh context and rejects off-origin network requests.
+
+The combined-release gate builds native PHP and PHP-Wasm from one captured
+API. The documentation gate compiles the author guide and executes the consumer
+example unchanged. CI requires all five commands, verifies eight report files,
+uploads them as `owned-php-wasm-<commit>`, and fails the PHP job if any gate fails.
+
+## JavaScript ownership transport and generated APIs
+
+With the pinned Lean and Emscripten [author toolchains](author-toolchain.md)
+installed, build the browser runtime and run the owned-value checks:
+
+```sh
+source scripts/env.sh
+bash scripts/build-lean-link-spike.sh
+LEAN_BRIDGE_OWNED_JS_WASM_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=2 \
+  tests/owned-javascript-package.test.mjs \
+  tests/owned-javascript-wasm-layout.test.mjs \
+  tests/owned-javascript-wasm-component.test.mjs \
+  tests/owned-javascript-wasm-loader.test.mjs \
+  tests/owned-wasm-scalars.test.mjs tests/owned-wasm-values.test.mjs \
+  tests/owned-wasm-registry.test.mjs tests/owned-wasm-calls.test.mjs \
+  tests/owned-wasm-bindings.test.mjs \
+  tests/owned-javascript-wasm-native.test.mjs \
+  tests/owned-javascript-wasm-callbacks.test.mjs \
+  tests/owned-javascript-wasm-shared.test.mjs \
+  tests/owned-javascript-wasm-prepared.test.mjs \
+  tests/component-runtime.test.mjs tests/component-callable-runtime.test.mjs \
+  tests/javascript-generator.test.mjs tests/javascript-coverage.test.mjs
+```
+
+The tests compile ordinary and independently reviewed Lean APIs. They check
+wasm32 layouts, all primitive values, aggregate conversion, typed callbacks,
+borrow expiry, independent retention, malformed results and allocation failure.
+Production-runtime tests call the generated public functions while a legacy
+component shares the same heap. They require one core initialization and no
+tracked identities or attached components after cleanup. Strict TypeScript
+checks cover input types, returned function leases and rejected consumer code.
+
+Set `LEAN_BRIDGE_LINK_OUTPUT_DIR` for an alternate build directory and
+`LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT` to the same path when testing it.
+The installed-package gate additionally compiles ordinary and reviewed sources,
+checks the generated sources against compiler metadata, and creates reproducible
+npm archives. It installs both an author CLI and downstream packages offline.
+Node and strict TypeScript checks run after producer removal. Chromium, Firefox
+and WebKit exercise pages, React StrictMode and module workers under a nested
+deployment path, with external requests blocked.
+
+```sh
+npx playwright install --with-deps chromium firefox webkit
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=1 \
+  tests/owned-javascript-wasm-model.test.mjs \
+  tests/javascript-wasm-compiler-inputs.test.mjs \
+  tests/owned-javascript-cli.test.mjs \
+  tests/owned-javascript-wasm-build.test.mjs
+```
+
+The author CLI includes [prepared compiler headers](author-toolchain.md#package-javascript-wasm-compiler-inputs)
+and the shared runtime. Its acceptance test removes the producer directories
+before compiling through the installed executable. The reviewed project also
+requests native C, requiring both compiled profiles to agree on one captured API.
+The npm consumers install their two archives after source and build-output removal.
+
+The consuming-input gate checks atomic handoff, shared-owner invalidation,
+independent retains, callback reentry, and cleanup after native and JavaScript
+allocation failures. It builds both source paths through an installed CLI and
+executes all 26 fixture exports, including 20 consuming exports. The installed
+checks also cover strict TypeScript and every browser context above:
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-transfers
+```
+
+CI requires zero skipped tests. It preserves
+`build/owned-javascript-transfers/{ordinary,reviewed}.json`,
+`build/owned-javascript-transfer-packaging/report.json`, and
+`build/owned-javascript-wasm/transfers.log` in the ownership job's artifact.
+
+The borrowed-result gate checks whole-value owners, shared roots, independent
+copies and expiration through the original input owner. It includes empty values,
+atomic transfers, callback reentry, native and host allocation failures, the
+128-level borrow limit and the 4,096-wrapper limit. Eight deliberately broken
+JavaScript/native implementations must fail the original lifetime assertions.
+Copied Alpha handles and borrowed results run in one production runtime in both
+load orders, on both source paths.
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-borrows
+```
+
+This gate also builds and independently rebuilds source-free npm releases through
+an installed CLI. It runs the consumer documentation example, strict TypeScript,
+and all browser contexts described above. CI requires 25 tests with zero failures,
+cancellations or skips. It retains ten reports in
+`build/owned-javascript-borrows/`, the installed-package report in
+`build/owned-javascript-borrow-packaging/report.json`, and
+`build/owned-javascript-wasm/borrows.log`.
+
+Receiver and callback-result anchors remain outside this gate. The final
+cross-language Docker audit is separate. The
+[borrowed-result receipt](../evidence/owned-javascript-borrows-20261001.md)
+records the executed scope and the source identities used for it.
+
+The receiver gate checks named methods and read-only properties, original
+receiver and remaining-argument anchors, and original-owner consumption. It
+sweeps native and JavaScript allocation failures, retains thrown errors during
+cleanup checks, and runs actual garbage collection against nominal owners,
+payload cycles and retained method references. Twelve deliberately broken
+implementations must fail their named semantic assertions.
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-receivers
+```
+
+The command enables garbage collection and requires 28 tests with no skips.
+Both ordinary source and reviewed contracts run through the installed CLI,
+offline npm installation, strict TypeScript, and Chromium, Firefox and WebKit
+pages, React and workers. Separate packages exercise resource-only methods with
+and without transfers, plus callback members without result anchors. Every
+package configuration requires independent rebuilds and identical reassembly.
+The full package test executes the exact methods-and-properties documentation
+example. Copied Alpha handles and receiver owners share one runtime in both
+load orders, including shutdown and rejection after retirement.
+
+The independent `owned-javascript-receivers` CI job requires all 23 reports in
+`build/owned-javascript-receivers/` and
+`build/owned-javascript-receiver-packaging/report.json`, and keeps the TAP log
+at `build/owned-javascript-receivers.log`. Callback-result lifetime support and
+the final cross-language container audit remain separate work.
+
+The coexistence gate builds a copied compound-value package and an owned package
+independently. Both must produce the same runtime archive byte for byte. It
+installs the archives offline, deletes producer files and tests owned-first,
+copied-first and concurrent imports in Node, pages, React StrictMode and workers.
+The probe observes one actual Wasm memory and one runtime initialization, calls
+the copied API from an owned callback, and verifies that closing the owned API
+leaves the copied API usable. Fault probes retire the shared heap and require
+both public APIs to reject further calls.
+
+```sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=1 \
+  tests/component-runtime-package-identity.test.mjs \
+  tests/owned-javascript-npm-coexistence.test.mjs
+```
+
+Compiler-only ownership analysis checks all 51 exports through ordinary source
+and an independent schema-4 review. It rejects substituted selections, changed
+ownership policies and reordered reviewed fields. Relocated CLI packages use
+their own engine sources and produce the same source API as a separately
+compiled Wasm component. These local tests inject the Nix process transport and
+run the real pinned Lean compiler; they do not establish Nix or Docker isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_COMPILER_ANALYSIS_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 \
+  tests/owned-compiler-analysis.test.mjs \
+  tests/owned-analysis-build-parity.test.mjs
+```
+
+The owned-component engine checks ordinary source and independent schema-4
+reviews, captured path dependencies, generated Lean and native inputs. It
+rejects changed requests, unauthorized files, symlinks, source substitutions
+and mismatched execution reports. Archive SDK tests compile and install real
+packages without requiring a fabricated `.git` directory. Public build tests
+inject only the Nix command transport and run the real compiler engine. These
+checks do not establish actual Nix or Docker isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 \
+  tests/javascript-wasm-toolchain.test.mjs \
+  tests/owned-javascript-archive-sdk.test.mjs \
+  tests/owned-javascript-engine-request.test.mjs \
+  tests/owned-javascript-engine.test.mjs \
+  tests/owned-javascript-isolated-project.test.mjs
+```
+
+The real Nix acceptance uses the default process runner without a transport
+substitute. Prepare the shared production runtime, then run:
+
+```sh
+LEAN_BRIDGE_OWNED_JS_NIX_TEST=1 \
+LEAN_BRIDGE_NIX_TOOLCHAIN_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=build/lean-link-spike \
+node --test --test-concurrency=1 \
+  tests/nix-toolchain-installation.test.mjs \
+  tests/owned-javascript-nix-installed.test.mjs
+```
+
+This suite requires Nix, npm, Bash, tar, xz and zstd. It compiles ordinary and
+reviewed exports with deliberately unusable host SDK paths, preserves the
+author source, removes producer files, installs both archives offline, and
+checks resource-containing values, expired callback borrows, returned closures
+and callback exceptions. The three installation tests extract fixture archives
+using the Nix recipe's installation commands and check bytes, permissions,
+symlinks and the SDK release marker. Direct extraction avoids keeping a second
+unpacked toolchain, including when the build directory and store are on
+different mounts.
+
+The required Node consumer CI job runs all five cases against its prepared
+runtime and retains `owned-nix-installed-<commit>`. These checks establish the
+actual Nix build and package handoff; they do not establish Docker execution or
+OS sandbox isolation. Nix sandbox settings remain the build host's policy.
+
+Owned npm publication tests compile two clean checkouts for both ordinary and
+reviewed APIs, compare their complete release bytes, and exercise signed
+publication and retry through an in-memory registry adapter. They verify the
+signed archive offline and install it after deleting the producer files.
+Changed package metadata, source evidence, build plans and archives must fail;
+an unlicensed package cannot be published. No external registry receives a write.
+The reviewed path injects the Nix transport and does not claim actual isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 tests/owned-javascript-publication.test.mjs
+```
+
+The downstream workflow runs these checks in its required `owned-javascript-wasm`
+job. It builds the production runtime with the pinned toolchains, enables all
+five execution flags, rejects skipped tests and retains the runtime, execution,
+installed-package, coexistence, analysis, engine and publication logs
+as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
+does not succeed. Type-surface support classifications are not changed by adding
+the gate.
 
 ## Release tooling checks
 
@@ -222,4 +3265,526 @@ node --test tests/npm-registry-adapter.test.mjs
 npm run test:release-receipt
 ```
 
-These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release. Use the [sandbox publishing guide](../publish/sandbox-release.md) for an authorized registry transaction.
+These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release. Use the [sandbox publishing guide](sandbox-release.md#rehearse-a-registry-release) for an authorized registry transaction.
+
+## WIT/WASI borrowed-result acceptance
+
+Run the owner-anchored result gate with the pinned Lean, native C, Wasmtime C API
+and wasm-tools dependencies available:
+
+```sh
+npm run test:owned-wit-borrows
+```
+
+The gate requires eight passing tests and no skips. It tests both ordinary Lean
+source and reviewed IR, real Component Model dispatch, all 26 mixed-ownership
+exports, empty values without consuming exports, allocation failures, callback
+reentry and ASan/UBSan cleanup. Nine compiled broken adapters must fail semantic
+assertions. Installed tests build through the public CLI, remove producer trees,
+install offline, relocate packages, compare independent rebuilds, check loaded
+libraries and execute the consumer documentation example.
+
+CI requires all six JSON reports in `build/owned-wit-borrows/` and retains
+`build/wit-owned-borrows.log`. The [source-bound receipt](../evidence/wit-owned-borrows-20261001.md)
+keeps prior receipts unchanged. Callback-result anchors and the final Docker
+audit remain separate work.
+
+## WIT/WASI receiver acceptance
+
+Run the method and property gate with the pinned Lean, native C, Wasmtime C API
+and wasm-tools dependencies available:
+
+```sh
+npm run test:owned-wit-receivers
+```
+
+The gate requires 20 passing tests and no skips. Both source paths execute
+receiver and remaining-parameter anchors, consuming methods, callbacks, returned
+closures and recursive values through real Component Model calls. Ten compiled
+broken adapters must fail semantic assertions. Resource-only and unanchored
+callable configurations also run independently, including Unit properties.
+ASan/UBSan checks compare an initialized cold Lean process against the exercised
+process; bridge allocation and identity counters must finish at zero.
+
+Installed tests use the public CLI, remove producer sources, install offline,
+relocate archives, compare independent rebuilds, reject altered receipts and
+verify loaded dependencies. The full package test executes the exact consumer
+documentation example. The separate CI job requires all 16 JSON reports in
+`build/owned-wit-receivers/` and retains `build/wit-owned-receivers.log`.
+
+## C receiver acceptance
+
+Run the receiver gate with the pinned Lean and native C toolchain:
+
+```sh
+npm run test:owned-receivers
+```
+
+The gate requires eight passing tests and no skips. Both ordinary-source and
+reviewed APIs execute fifteen method/property exports through compiled Lean.
+Checks cover receiver-bound results, a result borrowed from another argument,
+consuming receivers, callbacks, recursive values, allocation failures and
+ASan/UBSan cleanup. Seven deliberately broken adapters must fail the original
+consumer assertions. Lean rejects invalid receiver declarations; reviewed
+contracts must preserve the selected method/property kind and anchor. Separate
+resource-only APIs test methods and properties without owned aggregates,
+borrowed results, transfers or host callbacks.
+
+Installed tests use an offline-installed CLI, build twice independently, compare
+archive bytes, reject forged contracts and generated sources, remove producers,
+install offline, relocate the package and execute the C documentation example.
+CI retains `build/owned-receivers.log` and all six reports in
+`build/owned-receivers/`. The [source-bound receipt](../evidence/owned-receivers-20261001.md)
+records this C milestone. Other receiver projections, callback-result anchors
+and the final Docker audit remain separate work.
+
+## C++ receiver acceptance
+
+Run the member API gate with the pinned Lean toolchain and C++20 compiler:
+
+```sh
+npm run test:owned-cpp-receivers
+```
+
+The gate requires ten passing tests with no skips. Compile checks enforce nominal
+receiver types, zero-argument property accessors and consuming rvalue qualifiers.
+Both source paths execute sixteen receiver exports through fresh Lean code.
+Runtime checks cover original-owner borrows, other-argument anchors, copied
+properties, reentrant callbacks, returned closures, recursive values and
+allocation failures. ASan/UBSan runs compare against a cold-start baseline.
+Compiled broken adapters must fail the unchanged consumer assertions.
+
+Resource-only cases separately test receiver APIs without borrowed results or
+callbacks, with and without consuming methods. Installed tests use the packaged
+CLI offline, compare independent builds, reject forged metadata and generated
+sources, remove producer files and execute relocated pkg-config/CMake consumers
+and the documentation example. CI retains `build/owned-cpp-receivers.log` and
+eight JSON reports in `build/owned-cpp-receivers/`.
+
+## Rust receiver acceptance
+
+Run the receiver API gate with the pinned Lean toolchain and Rust 1.90:
+
+```sh
+npm run test:owned-rust-receivers
+```
+
+The gate requires ten passing tests with no skips. It checks nominal methods,
+zero-argument property accessors, mutable consuming receivers, receiver and
+other-argument anchors, empty values, callbacks and recursive values. Both source
+paths compile and execute the same independent assertions. Allocation failures,
+panic unwinding, six compile-time misuse cases and three compiled broken
+implementations test the lifetime checks. Resource-only APIs are tested with and
+without consumption, independently of callback or borrowed-result support.
+
+Installed-package tests build through an offline-installed CLI, compare two
+independent archives, reject altered contracts and generated Rust, and execute
+the consumer and documentation example with an empty Cargo home and vendored
+dependencies. A relocated executable must still run after removing both source
+trees, the installed crate, the CLI and the handoff. CI keeps
+`build/owned-rust-receivers.log` and eight JSON reports under
+`build/owned-rust-receivers/`.
+
+## Python receiver acceptance
+
+Run the gate with the pinned Lean toolchain, Python interpreters, mypy and offline
+typing wheels described in [Owner-anchored Python results](#owner-anchored-python-results):
+
+```sh
+npm run test:owned-python-receivers
+```
+
+The gate requires eleven passing tests with no skips. Both source paths execute
+receiver methods, read-only properties, unbound class members, original-owner
+transfers and result anchors. Runtime checks retain the existing allocation,
+callback reentry, exception traceback and foreign-thread close regressions.
+Three broken implementations must fail the unchanged consumer assertions.
+Resource-only builds run with and without consuming receivers, independently of
+callback or result-anchor capabilities.
+
+Installed-wheel tests build twice with an offline-installed CLI and compare
+original archive bytes. They remove producer sources and tools, install through
+offline pip, execute public imports and strict type checks, then relocate each
+installation and run it again without the handoff. The documented example runs
+on Python 3.11 with both typing dependency bounds and Python 3.12 with standard
+typing. A reviewed combined build also executes C++ and Rust consumers from the
+same authenticated adapter. CI retains `build/owned-python-receivers.log` and
+nine reports in `build/owned-python-receivers/`.
+
+## Ruby receiver acceptance
+
+Run the gate with the pinned Lean toolchain and MRI Ruby 3.3. The reviewed
+combined build also needs the C++, Rust and Python consumer tools and offline
+dependencies described in [Installed Ruby borrowed results](#installed-ruby-borrowed-results):
+
+```sh
+npm run test:owned-ruby-receivers
+```
+
+The gate requires ten passing tests with no skips. Both source paths execute
+nominal methods, read-only property readers, unbound class members, receiver and
+other-argument anchors, original-owner transfers, callbacks and recursive
+values. It retains allocation-failure and foreign-thread close regressions.
+Three broken implementations must fail the unchanged consumer assertions.
+Resource-only builds run without callback or result-anchor capabilities, with
+and without consuming receivers.
+
+Installed-gem tests use an offline-installed CLI, compare two independent
+builds and reject changed receiver contracts and adapter files. They remove
+producer sources and tools, install through local RubyGems, execute the public
+API and documentation example, then remove the handoff and gem cache before
+relocating and rerunning the installation. Loader checks cover isolated GMP,
+concurrent require, fork affinity and changed or injected native libraries.
+The reviewed build also executes C++, Rust and Python prepared packages sharing
+the same Lean component. CI retains `build/owned-ruby-receivers.log` and all
+eight reports under `build/owned-ruby-receivers/`.
+
+## C# receiver acceptance
+
+Use .NET 8 and the pinned native Lean toolchain. The reviewed combined build
+also needs C++, Rust, Python, MRI Ruby 3.3 and the offline dependencies listed
+under [Installed .NET borrowed results](#installed-net-borrowed-results).
+
+```sh
+npm run test:owned-dotnet-receivers
+```
+
+The ten-test gate exercises nominal owner classes, actual read-only properties,
+receiver and other-argument anchors, consuming members and typed returned
+closures. It retains allocation-failure, foreign-close and optimized-GC checks.
+Four compiled broken implementations must fail their semantic assertions.
+Separate resource-only builds omit callbacks and result anchors and exercise
+Unit properties, with and without consuming receivers.
+
+Each source path builds through an offline-installed CLI. Two independent
+builds and package reassembly must reproduce the original archives. After
+removing the author sources and CLI, tests install the NuGet package, execute
+the public API and documented example, and reject 23 invalid C# clients.
+They remove the package handoff, cache and consumer sources, then relocate the
+assemblies and run them using a .NET runtime without the SDK. The reviewed
+build also executes C++, Rust, Python and Ruby consumers of the shared Lean
+component. CI requires ten passes without skips and retains
+`build/owned-dotnet-receivers.log` and all eight reports under
+`build/owned-dotnet-receivers/`.
+
+## Java and Kotlin receiver acceptance
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned native Lean toolchain. The reviewed
+combined build also needs C++, .NET 8, Rust 1.90, Python and MRI Ruby 3.3. Set
+their `LEAN_BRIDGE_*` tool paths as described in the installed consumer gates.
+On a glibc 2.36 host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+```sh
+npm run test:owned-jvm-receivers
+```
+
+The fifteen-test gate exercises JavaBean getters, Kotlin read-only properties,
+nominal whole owners, receiver and other-argument anchors, consuming members,
+aggregate and recursive values, callbacks and typed closure results. It retains
+the allocation-failure, whole-owner garbage collection and thread-exit checks.
+Four compiled broken implementations must fail their semantic assertions before
+the restored implementation passes again. Separate cases exercise Unit
+properties, consuming and nonconsuming resource-only receivers, and callbacks
+without result anchors.
+
+Each source path uses an offline-installed CLI for two independent builds.
+The test compares every archive byte and rejects modified ownership metadata,
+generated sources and native libraries. After deleting producer sources and the
+CLI, it installs the Maven package into empty caches, compiles both languages
+and rejects twenty invalid clients. It then removes consumer sources, caches
+and handoff archives. Both consumers and both guide examples run from relocated
+JARs using a `java.base` runtime image with no compiler. The reviewed build also
+executes C++, Rust, Python, Ruby and C# consumers of the shared Lean component.
+The lower-level native build API also produces resource-only Maven packages
+with callback transport explicitly disabled, with and without consuming
+members. These packages install and run without callback artifacts. CI requires
+fifteen passes without skips and retains
+`build/owned-jvm-receivers.log` and twelve reports under
+`build/owned-jvm-receiver-core/`.
+
+### Optimized receiver garbage collection
+
+Run the Java and Kotlin lifetime checks with the same JDK, Kotlin and native
+Lean tools:
+
+```sh
+npm run test:owned-jvm-receiver-gc
+```
+
+Both the ordinary and reviewed source paths execute compiled Lean. Each case
+checks 10,627 assertions per language, collects eight nominal owners per
+language, and forces 100 collections inside receiver getter calls. HotSpot's
+compilation log must show C2 compilation of the resource and aggregate getters
+and both ephemeral-receiver callers. The test checks that method references
+keep their receiver alive, borrowed views expire with their original owner,
+and independent retains remain usable after collection.
+
+The test removes Java and Kotlin reachability fences separately, compiles each
+altered implementation, and requires its optimized getter assertion to fail.
+It restores the generated sources and runs again with no live native
+allocations or identities. Native and container CI run this two-test gate
+without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
+`build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
+the installed Maven package checks remain in the receiver gate above.
+
+## .NET callback-result lifetimes
+
+Run these gates in order with .NET SDK 8.0.424, the pinned Lean, Rust and
+Emscripten tools, Ruby 3.3, the Python setup below and all three Playwright
+browsers:
+
+```sh
+npm run test:owned-dotnet-callback-results
+npm run test:owned-dotnet-callback-evidence
+```
+
+Set `LEAN_BRIDGE_DOTNET` to the `dotnet` executable. On glibc 2.36, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`. The first gate requires 26 tests
+without skips and retains 26 reports under `build/owned-dotnet-callback-results/`.
+The second gate runs eight tests that reconstruct those reports' runtime and
+package inputs, generated bindings and public consumer probes across all seven
+ecosystems, and rejects altered claims.
+It runs after execution because it reads the newly produced reports.
+
+Both ordinary Lean source and reviewed IR exercise native closure results
+anchored to their original argument owner, raw and whole-value host replies,
+higher-order callbacks, multiple callback arguments, receiver methods and
+consuming calls. Optimized managed probes force collections during reads and
+callback replies, exercise concurrent close and creator-thread exit, and check
+allocation failures before and after ownership transfer. Compiled mutations
+must fail before the restored bindings pass again.
+
+NuGet tests compare independently built archives, reject modified contracts
+and generated sources, and compile valid and invalid consumers against the
+installed assembly. They delete producer sources and the CLI before consumer
+installation, then remove consumer sources, package caches and handoff archives
+before SDK-free relocated execution. The installed consumers also check fork
+rejection and runtime retirement, including host replies and consuming calls.
+The combined release installs C, C++, Rust, Python, Ruby, NuGet and npm packages
+from one build and exercises npm in browser pages, React and workers.
+
+AddressSanitizer and UndefinedBehaviorSanitizer instrument the native adapter
+called by the C# probe. Positive fault controls must trigger both detectors.
+The Lean runtime and CLR are not instrumented; native allocation and identity
+ledgers check cleanup. LeakSanitizer is disabled for these managed runs.
+CI requires both gates, rejects skipped cases and retains their logs and
+reports as `dotnet-callback-results` artifacts.
+
+## Ruby callback-result lifetimes
+
+Run `npm run test:owned-ruby-callback-results` with MRI Ruby 3.3, the pinned
+Lean, Rust and Emscripten tools, the Python setup below and all three Playwright
+browsers. Set `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to the Ruby and gem
+executables. On a glibc 2.36 host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` before running the gate. It requires
+twelve tests without skips and twelve reports under
+`build/owned-ruby-callback-results/`.
+
+Six runtime cases cover both source paths with callbacks disabled, enabled,
+and combined with receiver methods and ownership transfers. They check original
+owners, recursive empty values, transitive expiration, retained copies, native
+closure passback, host replies and recovery, nonlocal exits, interruptions,
+thread and fork affinity, concurrent close schedules, and allocation failures
+before and after consuming handoff. A weak-key check requires an exited creator
+thread to be collected while its closed result wrappers remain in scope.
+
+AddressSanitizer and UndefinedBehaviorSanitizer instrument the native boundary.
+LeakSanitizer runs after normal interpreter shutdown; the complete normalized
+report must equal the cold startup baseline. Five deliberate detector controls
+cover overflow, undefined behavior, an unreferenced leak, a live dynamic-TLS
+root and a leak after clearing that root. No leak suppressions are used. Six
+no-host and ten host-capable source mutations must fail their named semantic
+assertions before restored sources reproduce the passing observations. The
+[sanitizer diagnosis](../evidence/ruby-callback-sanitizer-runtime-20261002.md)
+records the exited-thread retention bug and repair.
+
+Four gem cases build ordinary and reviewed packages with and without host
+callbacks. They require deterministic reassembly and independent builds,
+offline installation after removing producer sources and the CLI, automatic
+private-GMP loading, rejected package mutations, executed documentation and
+relocated consumers after removing the handoff and gem cache. A separate test
+installs C, C++, Cargo, PyPI, RubyGems and npm from one release, including strict
+TypeScript and all nine browser contexts. The required Ruby CI job checks every
+report and propagates failure to the consumer summary.
+
+## Python callback-result lifetimes
+
+Run `npm run test:owned-python-callback-results` with the pinned Lean, Rust and
+Emscripten tools, native build tools, and all three Playwright browsers. The
+Python setup above supplies CPython 3.11 and 3.12, mypy 2.3.1, and the offline
+`typing_extensions` 4.6.0 and 4.16.0 wheels. The gate requires 13 passing tests
+without skips and 13 reports under `build/owned-python-callback-results/`.
+
+Six runtime cases cover ordinary source and reviewed IR, with host callbacks
+disabled, enabled, and combined with receivers and transfers. Each runs on
+three interpreter and typing configurations. They check original argument
+owners, transitive and empty borrows, native closure passback, raw and whole-owner
+host replies and recovery, retained exceptions, reentry, and allocation failures
+before and after ownership handoff. Strict typing rejects raw anchors, wrong
+owner types and callback signatures that require an owner instead of a payload.
+
+The native boundary runs under address and undefined-behavior sanitizers.
+Sanitized Python uses an allowlisted environment, disabled user-site imports
+and a safe import path, while honoring `PYTHONMALLOC=malloc`. The probe checks
+the actual allocator; Python's `-I` flag would ignore this setting. Each run
+must match its interpreter's cold leak baseline. Deliberate buffer overflow,
+invalid shift and memory leak probes verify all three detectors. Lifetime
+mutations must fail named public assertions; restored code must reproduce the
+original checks and finish with zero live bridge allocations and identities.
+
+The harness disables GCC's obsolete `__tls_get_addr` interceptor, which can
+misread glibc allocation metadata and give LeakSanitizer an unmapped scan range.
+Static TLS and loader-allocated roots remain enabled. Two additional controls
+hold an allocation exclusively in dynamic TLS, then clear that pointer: the
+first must match the cold baseline, and the second must report an 89-byte leak.
+See the [diagnosis and coverage checks](../evidence/python-callback-sanitizer-tls-20261002.md).
+
+Four wheel cases cover both source paths with and without host callbacks.
+They compare independent rebuilds and reassembly, reject forged receipts and
+generated files, remove producer sources and the CLI, install original wheels
+offline, execute the documentation example, and rerun after relocation. The
+combined release test installs C, C++, Cargo, PyPI and npm from one build and
+also exercises strict TypeScript and nine browser contexts.
+
+The required `owned-python-callback-results` CI job retains all reports and
+logs and propagates failures to the consumer summary. On a local host with
+glibc older than the default 2.38 package floor, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR` to the tested floor, such as `2.36`.
+The builder rejects any bundled library that requires a newer glibc symbol.
+
+## Rust callback-result lifetimes
+
+Run `npm run test:owned-rust-callback-results` with the pinned Lean, Rust and
+Emscripten toolchains, native build tools, and all three Playwright browsers.
+The gate requires 13 passing tests without skips and twelve reports under
+`build/owned-rust-callback-results/`.
+
+The six runtime cases cover ordinary source and reviewed IR, each with no host
+callbacks, with host callbacks, and with receivers and transfers. They check
+original argument owners, empty and recursive values, independent retains,
+raw and whole-owner host replies, returned Lean closures passed back as
+callbacks, panic identity, fork rejection, and allocation failures before and
+after handoff. Compile-negative cases reject raw anchors, wrong reply owners,
+custom reply wrappers, and `Send`/`Sync` uses.
+
+The native C boundary runs under address and undefined-behavior sanitizers.
+The harness compares exercised leaks with a cold Lean startup and deliberately
+injects a buffer overflow and invalid shift to verify the detectors. Rust owns
+its test threads' alternate signal stacks. Seven compiled ownership mutations
+must fail the public API assertions; restored sources must reproduce the baseline.
+
+Four Cargo package cases cover both source paths with and without host callbacks.
+They independently rebuild archives, reject forged contracts and generated
+sources, install offline into an empty Cargo home, execute the documented
+example, then run relocated executables after removing source and package trees.
+The combined release case checks C, C++, Cargo and npm together, including
+strict TypeScript and page, React and worker contexts in three browser engines.
+
+The required `owned-rust-callback-results` CI job checks every report, preserves
+logs even on failure, and propagates failure to the consumer summary. Runtime
+reports are reconstructed from current compiler metadata and generated sources.
+
+## C and npm callback-result lifetimes
+
+Run the callback-result gate with the pinned Lean toolchain, native C build
+dependencies, Emscripten and the prepared JavaScript runtime:
+
+```sh
+npm run test:owned-callback-results
+```
+
+This gate requires 33 passing tests without skips and retains 23 JSON reports
+under `build/owned-callback-results/`. Both ordinary-source and reviewed-IR
+paths compile callback-local argument anchors. The C runtime checks normal and
+sanitized execution, allocation failures, malformed owners and transitive
+expiration. Wasm checks add host callback reentry, failed result publication,
+six deliberately broken implementations and shared-loader coexistence with
+the earlier Alpha API.
+
+Installed acceptance removes the author source and build output before
+consumption. C callers use pkg-config and relocated CMake packages. npm callers
+use Node, strict TypeScript, and Chromium, Firefox and WebKit pages, React and
+workers. Separate combined C/npm releases check callback anchors together with
+export-result anchors, receiver methods and ownership transfers. The JavaScript
+consumer example runs against those installed packages.
+
+The CI job `owned-callback-results` requires every report and propagates failure
+through the consumer summary. C and npm acceptance does not establish this
+capability for the remaining language adapters.
+
+## C++ callback-result lifetimes
+
+Run the C++ gate with the same native, Emscripten and browser dependencies:
+
+```sh
+npm run test:owned-cpp-callback-results
+```
+
+The gate requires 12 passing tests with no skips and 12 JSON reports in
+`build/owned-cpp-callback-results/`. Both authoring paths compile normal and
+sanitized consumers, inject allocation failures before and after ownership
+transfer, and reject deliberately broken lifetime implementations.
+
+Installed checks cover explicit callback-disabled native builds and combined
+callback, receiver, result-anchor and transfer packages built by the installed
+CLI. Consumers use pkg-config and relocated CMake after producer removal.
+Independent builds and reassembly must reproduce the original archives. Separate
+C/C++/npm releases exercise all three projections, browser contexts and the
+published C++ and JavaScript examples. CI requires every report and propagates
+the C++ job's failure through the consumer summary.
+
+## Native PHP receiver acceptance
+
+Use PHP CLI 8.2 or later, Composer, the FFI extension and the pinned native
+Lean toolchain. On a glibc 2.36 host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+```sh
+npm run test:owned-php-receivers
+```
+
+The sixteen-test gate checks nominal owner classes, camelCase methods,
+read-only properties, receiver and other-argument anchors, original-owner
+transfers, recursive values, callbacks and returned closures. Nine broken
+implementations must fail the consumer assertions before the restored sources
+pass again. Resource-only and unanchored-callback cases check canonical identity
+equality across independent owners, equal hashes and expired-owner rejection.
+
+Installed-package tests build twice through an offline-installed CLI and compare
+the archives. They remove producer sources and tools before installing with
+offline Composer, then remove the handoff and installation cache. Strict and
+weak consumers run in two relocated deployments. Loader checks reject modified,
+missing and symlinked native libraries and verify private GMP and automatic
+shutdown without leaked identities. Separate native builds disable callback
+transport and result anchors, then install and execute packages without callback
+artifacts. The exact author and consumer guide examples run from an installed
+C/Composer release.
+
+The independent native PHP receiver CI job requires sixteen passes with no
+skips. It retains `build/owned-php-receivers.log` and thirteen reports under
+`build/owned-php-receivers/` and `build/owned-php-receiver-packaging/`.
+
+## PHP-Wasm methods and properties
+
+Use the pinned PHP-Wasm SDK, host and prepared Lean runtime, Composer, Chromium,
+and native PHP with `php-config` for the Zend Fiber companion:
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-wasm-receivers
+```
+
+The seventeen-test gate compiles both ordinary source and reviewed contracts.
+It checks nominal owners, read-only properties, receiver and parameter anchors,
+original-owner consumption, synchronous callbacks, recursive values, expiration,
+retained errors, bailout recovery and eight semantic mutations. Resource-only
+and unanchored-callback cases exercise independently disabled capabilities.
+The native Zend companion tests Fiber suspension and fork rejection; the pinned
+PHP-Wasm host does not execute Fibers.
+
+Installed npm and Composer packages run in Node and Chromium with startup and
+first-call loading, weak and strict PHP, runtime refreshes, source-free installs
+and reproducible archives. The exact receiver documentation runs from a combined
+C/PHP-Wasm release through an installed CLI. The independent receiver CI job
+requires seventeen passes without skips and retains thirteen JSON reports in
+`build/owned-php-wasm-receivers/` plus `build/owned-php-wasm-receivers.log`.

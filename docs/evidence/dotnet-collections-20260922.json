@@ -1,0 +1,2125 @@
+{
+  "baseRevision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+  "conversion": {
+    "compiledLean": false,
+    "fixtureSha256": "ba29970a8bac0fde9e9445a08c51dae1a40482852e4257771c39c9dd0c990b92",
+    "generatedSourceHashes": {
+      "NuGet.Config": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c",
+      "README.md": "6b2e2fde354ae509c5caabdeccba047dad434ddee7d89d45c3a0da4ac3c706ec",
+      "binding-manifest.json": "db043adab1d43a6cddfb9bd004d3f7ccc5d0f9155bfa6eb396584cc98d000582",
+      "src/LeanBridge.Collections/Api.cs": "9bb4f186e9bd3b47b2ecc29a216e52ad7ddc1ba7e4060086a19e7edca9fd6f43",
+      "src/LeanBridge.Collections/LeanBridge.Collections.csproj": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0",
+      "src/LeanBridge.Collections/Runtime.cs": "1f8041c5bb1de43f04fc2938e238b8b370b219e833f2d95102a30ba0bc776eb4"
+    },
+    "hostFaults": {
+      "checkpoints": 391,
+      "liveAllocations": 0,
+      "mode": "host",
+      "nativeExecuted": false,
+      "partialInputChecks": 64
+    },
+    "installedPackage": false,
+    "instrumentedRuntimeSha256": "e883cb8d53766fa0d195b14f4f9ad8878a2a877d9c1fd5f0db07de7b80461c56",
+    "kind": "dotnet-collection-conversion-preflight",
+    "nativeFaultsCompiled": true,
+    "nativeFaultsExecuted": false,
+    "observation": {
+      "checks": 21709,
+      "fixedArrayDepth": 24,
+      "primitiveShapes": 19,
+      "records": 7,
+      "rejected": 97
+    },
+    "probeSourceSha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+    "publicCallerCompiled": true,
+    "publicCallerExecuted": false,
+    "publicCallerSha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+    "publicTypes": {
+      "assemblySha256": "bde78114e8b9930bace5f848334c91527c4bd7eb54e6eae7c58ac953a936d1ed",
+      "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+      "rejected": [
+        {
+          "code": "CS1503",
+          "name": "wrong-scalar",
+          "sourceSha256": "a5e628a169041130f77e57fc091bfeb2e4b983693aef83b67b277d587a77c47e"
+        },
+        {
+          "code": "CS0029",
+          "name": "mixed-elements",
+          "sourceSha256": "ec2bf63b54866b80f551fb40277ca6b98d46c0018ff81dcd35c2e8f22b7d381d"
+        },
+        {
+          "code": "CS1503",
+          "name": "text-natural",
+          "sourceSha256": "05377b667eee7ec9e63771e3d3ea506e0f654ff5149804f82f07d26a65ca1b8f"
+        },
+        {
+          "code": "CS1503",
+          "name": "bytes-as-text",
+          "sourceSha256": "c8ddae21578f969d88e490e9e88e35fdc0a45d0d641f60ccbe2f23bae7e1a49f"
+        },
+        {
+          "code": "CS1503",
+          "name": "text-as-char",
+          "sourceSha256": "2f0d0130b2215e187f5aafb12065e38200cf02e47d48a4c2a88a3bd0207a7978"
+        },
+        {
+          "code": "CS1503",
+          "name": "wrong-depth",
+          "sourceSha256": "75c304809413a7e6c6ed99b58f0b215d8b49a630cdf17b3c783f93e29b05d546"
+        },
+        {
+          "code": "CS1503",
+          "name": "nominal-record",
+          "sourceSha256": "4dfa21896bf073f5200165575dd18bf776b7bf1f17a88586734a4cef65339298"
+        },
+        {
+          "code": "CS1503",
+          "name": "unit-as-record",
+          "sourceSha256": "7b3f494562b48bb5a2688fb2ae84d81b6a5e846c2a6eb29e1e4fcaaf28899bb0"
+        },
+        {
+          "code": "CS7036",
+          "name": "missing-field",
+          "sourceSha256": "2caee6bd123385ceb0d5e0af07af4dd863fb0014a7d808bd2ffd87225d96e12d"
+        },
+        {
+          "code": "CS0117",
+          "name": "unknown-field",
+          "sourceSha256": "2dc93db4fee0ca4fa1ec3eec904a4a7c19362bf82c8d25430b0448a00bf8effb"
+        },
+        {
+          "code": "CS1503",
+          "name": "wrong-field",
+          "sourceSha256": "7716c5a96ce3bd34a61cd20df372ee584eb137e44e2bf0db9f3ee2d128956d8d"
+        },
+        {
+          "code": "CS8852",
+          "name": "init-only",
+          "sourceSha256": "95e37543d20934cffe7a9085ce7dbe515630cfc1b09dc89a72dac20a1dadf089"
+        },
+        {
+          "code": "CS0029",
+          "name": "wrong-result",
+          "sourceSha256": "9f7d5aa59d1c2fea3302b34c920ebc7182b9f394d3b958ba831a24e86b004966"
+        },
+        {
+          "code": "CS0031",
+          "name": "unsigned-overflow",
+          "sourceSha256": "c399c3789dda6900293e75811ba0ad9a8760aad26cb2e2eb80bab36c225a7f13"
+        },
+        {
+          "code": "CS0031",
+          "name": "signed-overflow",
+          "sourceSha256": "be5973f49b9bbf8ff63174c86c30228d58d1bdfe0040e66e5a8d4593e5013db1"
+        },
+        {
+          "code": "CS8625",
+          "name": "null-array",
+          "sourceSha256": "ac625837dae7e944f18ff5111ee944a20e54ae477a043fc4c03efb3a869f4b64"
+        }
+      ],
+      "rejectionSourceSha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+      "sdk": "8.0.424"
+    },
+    "schemaVersion": 1
+  },
+  "equality": {
+    "compiledLean": false,
+    "fixtureSha256": "4d435533cdfe8f91032df16fbc6045b3f78f63ade4a651ff324dcb699c805de7",
+    "generatedSourceHashes": {
+      "src/LeanBridge.Aliases/Api.cs": "5f86151bd1feeadc9c71400a57b97e6d3dad531142d8e7851bd45bad4e025a3b",
+      "src/LeanBridge.Aliases/Runtime.cs": "f0980e6119137af9d49b86a2b422721f732968f6e7b47d493ce2bd59706883bb",
+      "src/LeanBridge.Collections/Api.cs": "9bb4f186e9bd3b47b2ecc29a216e52ad7ddc1ba7e4060086a19e7edca9fd6f43",
+      "src/LeanBridge.Collections/Runtime.cs": "1f8041c5bb1de43f04fc2938e238b8b370b219e833f2d95102a30ba0bc776eb4",
+      "src/LeanBridge.Compounds/Api.cs": "47c0955bb488935607ca2a93043038b7bdf849c138932d8036092231cdf99eb1",
+      "src/LeanBridge.Compounds/Runtime.cs": "cc7485f4104b715081ba8e534226d3b1ded6d7000f4a00965fe3a88c95370e88",
+      "src/LeanBridge.Lists/Api.cs": "7dbd9568add79ceedbe6ebfa1abe359d033088d65ca42d15b66e9f69bac1d3a5",
+      "src/LeanBridge.Lists/Runtime.cs": "4de9db4bae95da5fcc7a243f77869744ce9732bcfbf468a5ef16891fbed1d784",
+      "src/LeanBridge.Variants/Api.cs": "9a222c86d9c0a4b318c65c3d5aa56ff4404ffb08d1968f0a94bee4b9b2976e51",
+      "src/LeanBridge.Variants/Runtime.cs": "53e8c85f58caf64040c47314371a839e5b98c8df8d3d845e68d23dd456b508f6"
+    },
+    "installedPackage": false,
+    "kind": "dotnet-value-equality-preflight",
+    "observation": {
+      "checks": 3246,
+      "fixedArrayDepth": 24,
+      "generatedProfiles": 5,
+      "nativeCalls": 0
+    },
+    "schemaVersion": 1
+  },
+  "executions": [
+    {
+      "bindingIrSha256": "615b766ffd18878c6541511a18bf0c177dfdc55f6653da31ce20499460ee6334",
+      "calls": 3364,
+      "checks": 660970,
+      "deployment": {
+        "Consumer.deps.json": {
+          "bytes": 1756,
+          "sha256": "efa314bfcd147143c6c692aaa40800c9d82efe3c883d2af8ac22b79fbd0af0a8"
+        },
+        "Consumer.dll": {
+          "bytes": 26624,
+          "sha256": "85f1df4b7397bebfc64180e80ffe35ba7c7bf49b93cef59f855f922689f86490"
+        },
+        "Consumer.pdb": {
+          "bytes": 15144,
+          "sha256": "3671803af82a8114924f1d3c11489215db90c8f406e4c0c2dc24b236a780136f"
+        },
+        "Consumer.runtimeconfig.json": {
+          "bytes": 257,
+          "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+        },
+        "LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "83e16a7ca34633f712e2c2ad781a2d4c85781891efd09a8ea7ddab34c9659d55"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "documentation": {
+        "assemblySha256": "83e16a7ca34633f712e2c2ad781a2d4c85781891efd09a8ea7ddab34c9659d55",
+        "deploymentUnchanged": true,
+        "sdkFreeExecution": true,
+        "sourceFreeExecution": true,
+        "sourceSha256": "a1fa125e0835ca6b41bad1d0d8edc841109f0e57706e108ec72a618620c9f85f",
+        "stdout": "3, 2, 1\n1, 2, 3\n42\nTrue\n"
+      },
+      "emptyNuGetCache": true,
+      "faults": {
+        "apiSourceSha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12",
+        "host": {
+          "checkpoints": 391,
+          "liveAllocations": 0,
+          "mode": "host",
+          "nativeExecuted": false,
+          "partialInputChecks": 64
+        },
+        "instrumentedRuntimeSha256": "eab014b4f9293f361f23f72a7e4afc91d3d6d5fe1d4c14478e53528bde3e4b5c",
+        "isolatedInstrumentedProjection": true,
+        "native": {
+          "checkpoints": 551,
+          "liveAllocations": 0,
+          "mode": "native",
+          "nativeExecuted": true,
+          "partialInputChecks": 64
+        },
+        "probeSourceSha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+        "replacements": [
+          178,
+          1,
+          1,
+          1,
+          35,
+          32
+        ],
+        "runtimeSourceSha256": "0a6927811427bc7daba72cee90a7baa92668633852f91730117a2b5f39a52fcb"
+      },
+      "fixedArrayDepth": 24,
+      "fxrVersion": "8.0.30",
+      "handoffRemovedBeforeExecution": true,
+      "installedFiles": {
+        "Lean.Collections.nuspec": {
+          "bytes": 474,
+          "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+        },
+        "README.md": {
+          "bytes": 2719,
+          "sha256": "768d3c080a8a0629a948e9423a313856698553d2c7678bd287c952cabcb2506d"
+        },
+        "[Content_Types].xml": {
+          "bytes": 939,
+          "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+        },
+        "_rels/.rels": {
+          "bytes": 260,
+          "sha256": "dd8c31d3209d59edcd654c63cc88dc270b10929d6cb0cf262d05315debf4ae57"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1397,
+          "sha256": "e8c8b1f79452546a31c8d038a49ffc186b36c3361105a5000cd37e7e1e62d444"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 107696,
+          "sha256": "ef4e7f8d911a92e1cc675f4610aa539f97f0261daaf7a4c1ec65944c73aa0985"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 522302,
+          "sha256": "37f2edbe28c3ce7dfc7aefdd9bcc193eb4bd122e2f237f105e350369189d083c"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 11054,
+          "sha256": "974d819f61503e31fdab0518365326c311f19fe5c3c3191255bc35e04f767e7a"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1193,
+          "sha256": "22436853c72f0a5ae21a536412bf20245d37b23352c1b21ad88cdea9c545771d"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+          "bytes": 14544,
+          "sha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+          "bytes": 607,
+          "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+          "bytes": 137576,
+          "sha256": "0a6927811427bc7daba72cee90a7baa92668633852f91730117a2b5f39a52fcb"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3580,
+          "sha256": "0c0fd650398e134b721a0e9aa0d38a7a811805bc4356ca724150dfd8d8a40d39"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "50564ecdb9acfcaeee627f8d2e8e1a04c67e0dd9edeb982ecdb7f7f67bd20441"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2445,
+          "sha256": "8c0034cabddbf8e7f6cd109a98da8c66bd722eaaee8ec0466f2dec4dc873c8c1"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/net8.0/LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "83e16a7ca34633f712e2c2ad781a2d4c85781891efd09a8ea7ddab34c9659d55"
+        },
+        "lib/net8.0/LeanBridge.Collections.xml": {
+          "bytes": 3024,
+          "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "611a46e43afa5991824ee1aa00ed6a430596de86ad0f634293f44000517fcf93",
+      "installedSnapshot": {
+        ".nupkg.metadata": {
+          "bytes": 205,
+          "sha256": "f38d5c1dcb25b1f4f98ea0fb3bbfd7b38c85568a695c237de1ae40d372faeff3"
+        },
+        "README.md": {
+          "bytes": 2719,
+          "sha256": "768d3c080a8a0629a948e9423a313856698553d2c7678bd287c952cabcb2506d"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1397,
+          "sha256": "e8c8b1f79452546a31c8d038a49ffc186b36c3361105a5000cd37e7e1e62d444"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 107696,
+          "sha256": "ef4e7f8d911a92e1cc675f4610aa539f97f0261daaf7a4c1ec65944c73aa0985"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 522302,
+          "sha256": "37f2edbe28c3ce7dfc7aefdd9bcc193eb4bd122e2f237f105e350369189d083c"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 11054,
+          "sha256": "974d819f61503e31fdab0518365326c311f19fe5c3c3191255bc35e04f767e7a"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1193,
+          "sha256": "22436853c72f0a5ae21a536412bf20245d37b23352c1b21ad88cdea9c545771d"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+          "bytes": 14544,
+          "sha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+          "bytes": 607,
+          "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+          "bytes": 137576,
+          "sha256": "0a6927811427bc7daba72cee90a7baa92668633852f91730117a2b5f39a52fcb"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3580,
+          "sha256": "0c0fd650398e134b721a0e9aa0d38a7a811805bc4356ca724150dfd8d8a40d39"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "50564ecdb9acfcaeee627f8d2e8e1a04c67e0dd9edeb982ecdb7f7f67bd20441"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2445,
+          "sha256": "8c0034cabddbf8e7f6cd109a98da8c66bd722eaaee8ec0466f2dec4dc873c8c1"
+        },
+        "lean-bridge/package-receipt.json": {
+          "bytes": 11772,
+          "sha256": "611a46e43afa5991824ee1aa00ed6a430596de86ad0f634293f44000517fcf93"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lean.collections.1.0.0.nupkg": {
+          "bytes": 51505048,
+          "sha256": "48d66923a26fa720f49536d10c20f2c330e2be827cab4724978c0820af692da9"
+        },
+        "lean.collections.1.0.0.nupkg.sha512": {
+          "bytes": 88,
+          "sha256": "d2127c495146dae744790ca57e5362ae3f986fe602b649c58642fe961913063b"
+        },
+        "lean.collections.nuspec": {
+          "bytes": 474,
+          "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+        },
+        "lib/net8.0/LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "83e16a7ca34633f712e2c2ad781a2d4c85781891efd09a8ea7ddab34c9659d55"
+        },
+        "lib/net8.0/LeanBridge.Collections.xml": {
+          "bytes": 3024,
+          "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "installedSourcesRemoved": true,
+      "modelSha256": "37f2edbe28c3ce7dfc7aefdd9bcc193eb4bd122e2f237f105e350369189d083c",
+      "nativeLibraries": {
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "onlyPreparedDependency": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51505048,
+              "path": "archives/Lean.Collections.1.0.0.nupkg",
+              "sha256": "48d66923a26fa720f49536d10c20f2c330e2be827cab4724978c0820af692da9"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Collections",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "primitiveShapes": 19,
+      "profile": "dotnet",
+      "publicCallerSha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+      "publicTypes": {
+        "assemblySha256": "83e16a7ca34633f712e2c2ad781a2d4c85781891efd09a8ea7ddab34c9659d55",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "executed": true,
+        "rejected": [
+          {
+            "code": "CS1503",
+            "name": "wrong-scalar",
+            "sourceSha256": "a5e628a169041130f77e57fc091bfeb2e4b983693aef83b67b277d587a77c47e"
+          },
+          {
+            "code": "CS0029",
+            "name": "mixed-elements",
+            "sourceSha256": "ec2bf63b54866b80f551fb40277ca6b98d46c0018ff81dcd35c2e8f22b7d381d"
+          },
+          {
+            "code": "CS1503",
+            "name": "text-natural",
+            "sourceSha256": "05377b667eee7ec9e63771e3d3ea506e0f654ff5149804f82f07d26a65ca1b8f"
+          },
+          {
+            "code": "CS1503",
+            "name": "bytes-as-text",
+            "sourceSha256": "c8ddae21578f969d88e490e9e88e35fdc0a45d0d641f60ccbe2f23bae7e1a49f"
+          },
+          {
+            "code": "CS1503",
+            "name": "text-as-char",
+            "sourceSha256": "2f0d0130b2215e187f5aafb12065e38200cf02e47d48a4c2a88a3bd0207a7978"
+          },
+          {
+            "code": "CS1503",
+            "name": "wrong-depth",
+            "sourceSha256": "75c304809413a7e6c6ed99b58f0b215d8b49a630cdf17b3c783f93e29b05d546"
+          },
+          {
+            "code": "CS1503",
+            "name": "nominal-record",
+            "sourceSha256": "4dfa21896bf073f5200165575dd18bf776b7bf1f17a88586734a4cef65339298"
+          },
+          {
+            "code": "CS1503",
+            "name": "unit-as-record",
+            "sourceSha256": "7b3f494562b48bb5a2688fb2ae84d81b6a5e846c2a6eb29e1e4fcaaf28899bb0"
+          },
+          {
+            "code": "CS7036",
+            "name": "missing-field",
+            "sourceSha256": "2caee6bd123385ceb0d5e0af07af4dd863fb0014a7d808bd2ffd87225d96e12d"
+          },
+          {
+            "code": "CS0117",
+            "name": "unknown-field",
+            "sourceSha256": "2dc93db4fee0ca4fa1ec3eec904a4a7c19362bf82c8d25430b0448a00bf8effb"
+          },
+          {
+            "code": "CS1503",
+            "name": "wrong-field",
+            "sourceSha256": "7716c5a96ce3bd34a61cd20df372ee584eb137e44e2bf0db9f3ee2d128956d8d"
+          },
+          {
+            "code": "CS8852",
+            "name": "init-only",
+            "sourceSha256": "95e37543d20934cffe7a9085ce7dbe515630cfc1b09dc89a72dac20a1dadf089"
+          },
+          {
+            "code": "CS0029",
+            "name": "wrong-result",
+            "sourceSha256": "9f7d5aa59d1c2fea3302b34c920ebc7182b9f394d3b958ba831a24e86b004966"
+          },
+          {
+            "code": "CS0031",
+            "name": "unsigned-overflow",
+            "sourceSha256": "c399c3789dda6900293e75811ba0ad9a8760aad26cb2e2eb80bab36c225a7f13"
+          },
+          {
+            "code": "CS0031",
+            "name": "signed-overflow",
+            "sourceSha256": "be5973f49b9bbf8ff63174c86c30228d58d1bdfe0040e66e5a8d4593e5013db1"
+          },
+          {
+            "code": "CS8625",
+            "name": "null-array",
+            "sourceSha256": "ac625837dae7e944f18ff5111ee944a20e54ae477a043fc4c03efb3a869f4b64"
+          }
+        ],
+        "rejectionSourceSha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+        "sdk": "8.0.424"
+      },
+      "receiptSha256": "a78d6b3c3b17b0d58f40a444fdb5b8da57d513aabeeb5bfd5e7034b0fff473a9",
+      "recordTypes": 7,
+      "rejected": 57,
+      "relocatedExecution": true,
+      "repeatExecution": true,
+      "runtimeVersion": "8.0.30",
+      "sdkFreeExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "0a5fc140236189555ec6a0af93bcdc51370715789853673ea936a0f28c392e54",
+      "sourceFreeExecutions": 2,
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0b6fd67421c473f6ee877b2d1fe50797981f9da9e43db1f48877ae485653c0bf",
+      "threadedCalls": 512
+    },
+    {
+      "bindingIrSha256": "7bcf0c9fede3df114fe382e6ca5212ec62f8ea87abc1ee3a216a08f8ea4f3328",
+      "calls": 3364,
+      "checks": 660970,
+      "deployment": {
+        "Consumer.deps.json": {
+          "bytes": 1756,
+          "sha256": "1b93b01777dd8128a9c06aab550760184df74021dd2ac04a4d66d44cd86b8d83"
+        },
+        "Consumer.dll": {
+          "bytes": 26624,
+          "sha256": "33234c09d5a2808bebc05a97b16edd49828f3a5e49fd3c92544a3016364e5e79"
+        },
+        "Consumer.pdb": {
+          "bytes": 15144,
+          "sha256": "f38be83a32aa58c79af59a6a5859e2a195300d09c57fe33456a2999d421137e2"
+        },
+        "Consumer.runtimeconfig.json": {
+          "bytes": 257,
+          "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+        },
+        "LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "6774527d8ac7b3c1725d0e9b8bad270185561ca0f1faf6cbcaff40b69274fc8a"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "documentation": {
+        "assemblySha256": "6774527d8ac7b3c1725d0e9b8bad270185561ca0f1faf6cbcaff40b69274fc8a",
+        "deploymentUnchanged": true,
+        "sdkFreeExecution": true,
+        "sourceFreeExecution": true,
+        "sourceSha256": "a1fa125e0835ca6b41bad1d0d8edc841109f0e57706e108ec72a618620c9f85f",
+        "stdout": "3, 2, 1\n1, 2, 3\n42\nTrue\n"
+      },
+      "emptyNuGetCache": true,
+      "faults": {
+        "apiSourceSha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f",
+        "host": {
+          "checkpoints": 391,
+          "liveAllocations": 0,
+          "mode": "host",
+          "nativeExecuted": false,
+          "partialInputChecks": 64
+        },
+        "instrumentedRuntimeSha256": "5471720315e490b4c7ff3f28d59cbe68ca7870d9c5021fa5ef31319bfc79a720",
+        "isolatedInstrumentedProjection": true,
+        "native": {
+          "checkpoints": 551,
+          "liveAllocations": 0,
+          "mode": "native",
+          "nativeExecuted": true,
+          "partialInputChecks": 64
+        },
+        "probeSourceSha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+        "replacements": [
+          178,
+          1,
+          1,
+          1,
+          35,
+          32
+        ],
+        "runtimeSourceSha256": "e581a2a4dfdabc557055776089901a96e05b7b4cfc400ac8a5847f149dbcbd2d"
+      },
+      "fixedArrayDepth": 24,
+      "fxrVersion": "8.0.30",
+      "handoffRemovedBeforeExecution": true,
+      "installedFiles": {
+        "Lean.Collections.nuspec": {
+          "bytes": 474,
+          "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+        },
+        "README.md": {
+          "bytes": 2719,
+          "sha256": "768d3c080a8a0629a948e9423a313856698553d2c7678bd287c952cabcb2506d"
+        },
+        "[Content_Types].xml": {
+          "bytes": 939,
+          "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+        },
+        "_rels/.rels": {
+          "bytes": 260,
+          "sha256": "dd8c31d3209d59edcd654c63cc88dc270b10929d6cb0cf262d05315debf4ae57"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1398,
+          "sha256": "d3a497fea119d3bcdb61e866a6884ea04f2e23465e4d43879a60834b86f14828"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 108385,
+          "sha256": "e75f1c1553ea9d1dff818a4774e3bcaf6bdaa1fe393a89ac77a4c6b7319f9a4c"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 632153,
+          "sha256": "ce330b36b0c089cf20d3ff251721f604038e79727bb2791b25dbfc258c6d1672"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 120216,
+          "sha256": "8ad0f54bbbb157ca91886d54c6b7678c02b699523b65b17661462f11ca3e775e"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1193,
+          "sha256": "7c511f9c5ac102218793fcbb0e4cb7237d817c390cac205f0ef1907800da6181"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+          "bytes": 14752,
+          "sha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+          "bytes": 607,
+          "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+          "bytes": 137576,
+          "sha256": "e581a2a4dfdabc557055776089901a96e05b7b4cfc400ac8a5847f149dbcbd2d"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2439,
+          "sha256": "a1fbd3cdb28e738475a610cb2322afc330c1255a72f5b91526d9a9361c498959"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "fd22d1269f37a3f936aea5122d1f9478cb2a9aa8c97b19296e4e9929b5846c7d"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2445,
+          "sha256": "73fc8207da4a9610633b9c53b1507cf38caf2ab2addfb02b7e81318d7afd4274"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/net8.0/LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "6774527d8ac7b3c1725d0e9b8bad270185561ca0f1faf6cbcaff40b69274fc8a"
+        },
+        "lib/net8.0/LeanBridge.Collections.xml": {
+          "bytes": 3024,
+          "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "e531f3fef04dff14ab937f3ffcf35a46a3a234c479ae2905d5003144111a2715",
+      "installedSnapshot": {
+        ".nupkg.metadata": {
+          "bytes": 205,
+          "sha256": "5bd499ab6ed40b674e6a515595f6db8183d4cc32e52b1b1fd69c6c4ca4f6c802"
+        },
+        "README.md": {
+          "bytes": 2719,
+          "sha256": "768d3c080a8a0629a948e9423a313856698553d2c7678bd287c952cabcb2506d"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1398,
+          "sha256": "d3a497fea119d3bcdb61e866a6884ea04f2e23465e4d43879a60834b86f14828"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 108385,
+          "sha256": "e75f1c1553ea9d1dff818a4774e3bcaf6bdaa1fe393a89ac77a4c6b7319f9a4c"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 632153,
+          "sha256": "ce330b36b0c089cf20d3ff251721f604038e79727bb2791b25dbfc258c6d1672"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 120216,
+          "sha256": "8ad0f54bbbb157ca91886d54c6b7678c02b699523b65b17661462f11ca3e775e"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1193,
+          "sha256": "7c511f9c5ac102218793fcbb0e4cb7237d817c390cac205f0ef1907800da6181"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+          "bytes": 14752,
+          "sha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+          "bytes": 607,
+          "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+          "bytes": 137576,
+          "sha256": "e581a2a4dfdabc557055776089901a96e05b7b4cfc400ac8a5847f149dbcbd2d"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2439,
+          "sha256": "a1fbd3cdb28e738475a610cb2322afc330c1255a72f5b91526d9a9361c498959"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "fd22d1269f37a3f936aea5122d1f9478cb2a9aa8c97b19296e4e9929b5846c7d"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2445,
+          "sha256": "73fc8207da4a9610633b9c53b1507cf38caf2ab2addfb02b7e81318d7afd4274"
+        },
+        "lean-bridge/package-receipt.json": {
+          "bytes": 120935,
+          "sha256": "e531f3fef04dff14ab937f3ffcf35a46a3a234c479ae2905d5003144111a2715"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lean.collections.1.0.0.nupkg": {
+          "bytes": 51515261,
+          "sha256": "599aebb4fb430c78429e0770c6c50927856c5ebc5bbe8bcee43a494168b1178a"
+        },
+        "lean.collections.1.0.0.nupkg.sha512": {
+          "bytes": 88,
+          "sha256": "a5048b69d93313a06324759342b4f5c67ac891c83638cd1e6d6ca6a2acbe0193"
+        },
+        "lean.collections.nuspec": {
+          "bytes": 474,
+          "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+        },
+        "lib/net8.0/LeanBridge.Collections.dll": {
+          "bytes": 78336,
+          "sha256": "6774527d8ac7b3c1725d0e9b8bad270185561ca0f1faf6cbcaff40b69274fc8a"
+        },
+        "lib/net8.0/LeanBridge.Collections.xml": {
+          "bytes": 3024,
+          "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+        },
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "installedSourcesRemoved": true,
+      "modelSha256": "ce330b36b0c089cf20d3ff251721f604038e79727bb2791b25dbfc258c6d1672",
+      "nativeLibraries": {
+        "runtimes/linux-x64/native/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "onlyPreparedDependency": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51515261,
+              "path": "archives/Lean.Collections.1.0.0.nupkg",
+              "sha256": "599aebb4fb430c78429e0770c6c50927856c5ebc5bbe8bcee43a494168b1178a"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Collections",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "primitiveShapes": 19,
+      "profile": "dotnet",
+      "publicCallerSha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+      "publicTypes": {
+        "assemblySha256": "6774527d8ac7b3c1725d0e9b8bad270185561ca0f1faf6cbcaff40b69274fc8a",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "executed": true,
+        "rejected": [
+          {
+            "code": "CS1503",
+            "name": "wrong-scalar",
+            "sourceSha256": "a5e628a169041130f77e57fc091bfeb2e4b983693aef83b67b277d587a77c47e"
+          },
+          {
+            "code": "CS0029",
+            "name": "mixed-elements",
+            "sourceSha256": "ec2bf63b54866b80f551fb40277ca6b98d46c0018ff81dcd35c2e8f22b7d381d"
+          },
+          {
+            "code": "CS1503",
+            "name": "text-natural",
+            "sourceSha256": "05377b667eee7ec9e63771e3d3ea506e0f654ff5149804f82f07d26a65ca1b8f"
+          },
+          {
+            "code": "CS1503",
+            "name": "bytes-as-text",
+            "sourceSha256": "c8ddae21578f969d88e490e9e88e35fdc0a45d0d641f60ccbe2f23bae7e1a49f"
+          },
+          {
+            "code": "CS1503",
+            "name": "text-as-char",
+            "sourceSha256": "2f0d0130b2215e187f5aafb12065e38200cf02e47d48a4c2a88a3bd0207a7978"
+          },
+          {
+            "code": "CS1503",
+            "name": "wrong-depth",
+            "sourceSha256": "75c304809413a7e6c6ed99b58f0b215d8b49a630cdf17b3c783f93e29b05d546"
+          },
+          {
+            "code": "CS1503",
+            "name": "nominal-record",
+            "sourceSha256": "4dfa21896bf073f5200165575dd18bf776b7bf1f17a88586734a4cef65339298"
+          },
+          {
+            "code": "CS1503",
+            "name": "unit-as-record",
+            "sourceSha256": "7b3f494562b48bb5a2688fb2ae84d81b6a5e846c2a6eb29e1e4fcaaf28899bb0"
+          },
+          {
+            "code": "CS7036",
+            "name": "missing-field",
+            "sourceSha256": "2caee6bd123385ceb0d5e0af07af4dd863fb0014a7d808bd2ffd87225d96e12d"
+          },
+          {
+            "code": "CS0117",
+            "name": "unknown-field",
+            "sourceSha256": "2dc93db4fee0ca4fa1ec3eec904a4a7c19362bf82c8d25430b0448a00bf8effb"
+          },
+          {
+            "code": "CS1503",
+            "name": "wrong-field",
+            "sourceSha256": "7716c5a96ce3bd34a61cd20df372ee584eb137e44e2bf0db9f3ee2d128956d8d"
+          },
+          {
+            "code": "CS8852",
+            "name": "init-only",
+            "sourceSha256": "95e37543d20934cffe7a9085ce7dbe515630cfc1b09dc89a72dac20a1dadf089"
+          },
+          {
+            "code": "CS0029",
+            "name": "wrong-result",
+            "sourceSha256": "9f7d5aa59d1c2fea3302b34c920ebc7182b9f394d3b958ba831a24e86b004966"
+          },
+          {
+            "code": "CS0031",
+            "name": "unsigned-overflow",
+            "sourceSha256": "c399c3789dda6900293e75811ba0ad9a8760aad26cb2e2eb80bab36c225a7f13"
+          },
+          {
+            "code": "CS0031",
+            "name": "signed-overflow",
+            "sourceSha256": "be5973f49b9bbf8ff63174c86c30228d58d1bdfe0040e66e5a8d4593e5013db1"
+          },
+          {
+            "code": "CS8625",
+            "name": "null-array",
+            "sourceSha256": "ac625837dae7e944f18ff5111ee944a20e54ae477a043fc4c03efb3a869f4b64"
+          }
+        ],
+        "rejectionSourceSha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+        "sdk": "8.0.424"
+      },
+      "receiptSha256": "ad3b7a5c90ff7c99ad4cfe1c21550f0839884db285b1f1042e2ba73b9d4f9e0e",
+      "recordTypes": 7,
+      "rejected": 57,
+      "relocatedExecution": true,
+      "repeatExecution": true,
+      "runtimeVersion": "8.0.30",
+      "sdkFreeExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "1c7f49e4367c95f4b558f8c6a8725bef2661f1be16211a2a0e2ac691e5a040c6",
+      "sourceFreeExecutions": 2,
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "18ab47d7d9a8a11695fda98acf37c979766cac292c6944e42aa39551becca2b6",
+      "threadedCalls": 512
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "profiles": [
+    "dotnet"
+  ],
+  "reportSha256": "5fa8e44aeb9464081ae34797bf7815e408d7835fefcf8dceaaa7f91087549053",
+  "reproduction": {
+    "archivesIdentical": true,
+    "firstLog": {
+      "sha256": "2aad6e017c29ffbd3b36cbeee2e7f6435cda984ad032ace8b2fd428ba61a1db4",
+      "text": "TAP version 13\n# Subtest: installed .NET arrays and records preserve values on both source paths\nok 1 - installed .NET arrays and records preserve values on both source paths\n  ---\n  duration_ms: 141243.219536\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET collections\n# ordinary-source: original offline NuGet package, typed callers, isolated failure probes and relocation\n# ordinary-source: 660970 public assertions, 3364 calls, 551 injected failures\n# reviewed-ir: compiling .NET collections\n# reviewed-ir: original offline NuGet package, typed callers, isolated failure probes and relocation\n# reviewed-ir: 660970 public assertions, 3364 calls, 551 injected failures\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 141420.864047\n"
+    },
+    "firstReportSha256": "8f973bc28700c9684f9fdba5025b3b74cba9c6085211fcee0e3172912ba2916d",
+    "installedFilesIdentical": true,
+    "nativeLibrariesIdentical": true,
+    "publicObservationsIdentical": true,
+    "runs": [
+      {
+        "installedFilesSha256": "f2d6db315bf72dac2b01729b892e128a9870a054aa281473183e7fef8a61229b",
+        "observationsSha256": "59b838089be1d2e3f0b278013d90b72d1edd320da79352575549ee948e86149a",
+        "packagesSha256": "ce128cd255f30f86cc145d72fb5b17574e57c46dca6a5128e8be2b2cebf0e978",
+        "path": "ordinary-source"
+      },
+      {
+        "installedFilesSha256": "dc5aab724c8bc9543da04d8825742086453ef7c7f361808d3619b861ac3d0c36",
+        "observationsSha256": "87825d2c25afa3210ab99d08b222d17de0670a12bf53927e197df10e50398e12",
+        "packagesSha256": "1528e8ccc775e78bdcdf2d01605af95ece2296c85f391c6a5aeeb4c420ae87e1",
+        "path": "reviewed-ir"
+      }
+    ],
+    "secondLog": {
+      "sha256": "6cd7219f2821233958b4cc6edc867c967cdc28cf8019238a30425911abc77661",
+      "text": "TAP version 13\n# Subtest: installed .NET arrays and records preserve values on both source paths\nok 1 - installed .NET arrays and records preserve values on both source paths\n  ---\n  duration_ms: 175195.789189\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET collections\n# ordinary-source: original offline NuGet package, typed callers, isolated failure probes and relocation\n# ordinary-source: 660970 public assertions, 3364 calls, 551 injected failures\n# reviewed-ir: compiling .NET collections\n# reviewed-ir: original offline NuGet package, typed callers, isolated failure probes and relocation\n# reviewed-ir: 660970 public assertions, 3364 calls, 551 injected failures\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 175400.683222\n"
+    }
+  },
+  "reviewedIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Collections.arrayAdd",
+      "parameters": [
+        "int",
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayCheckElements",
+      "parameters": [
+        {
+          "array": "unit"
+        },
+        {
+          "array": "bool"
+        },
+        {
+          "array": "uint8"
+        },
+        {
+          "array": "uint16"
+        },
+        {
+          "array": "uint32"
+        },
+        {
+          "array": "uint64"
+        },
+        {
+          "array": "int8"
+        },
+        {
+          "array": "int16"
+        },
+        {
+          "array": "int32"
+        },
+        {
+          "array": "int64"
+        },
+        {
+          "array": "nat"
+        },
+        {
+          "array": "int"
+        },
+        {
+          "array": "float32"
+        },
+        {
+          "array": "float64"
+        },
+        {
+          "array": "string"
+        },
+        {
+          "array": "bytes"
+        },
+        {
+          "array": "char"
+        },
+        {
+          "array": "usize"
+        },
+        {
+          "array": "isize"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.arrayDuplicate",
+      "parameters": [
+        {
+          "array": "bytes"
+        }
+      ],
+      "result": {
+        "array": "bytes"
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBool",
+      "parameters": [
+        {
+          "array": {
+            "array": "bool"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bool"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBytes",
+      "parameters": [
+        {
+          "array": {
+            "array": "bytes"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseChar",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat32",
+      "parameters": [
+        {
+          "array": {
+            "array": "float32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat64",
+      "parameters": [
+        {
+          "array": {
+            "array": "float64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt",
+      "parameters": [
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "int16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "int32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "int64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "int8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseISize",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseNat",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "nat"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseString",
+      "parameters": [
+        {
+          "array": {
+            "array": "string"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUnit",
+      "parameters": [
+        {
+          "array": {
+            "array": "unit"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "unit"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUSize",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arraySize",
+      "parameters": [
+        {
+          "array": "unit"
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Collections.arrayTotal",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Collections.arrayWords",
+      "parameters": [],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.deep",
+      "parameters": [
+        {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": {
+                                                        "array": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Collections.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "array": "unit"
+      }
+    },
+    {
+      "name": "Collections.recordCount",
+      "parameters": [
+        {
+          "fields": {
+            "value": "nat"
+          },
+          "record": "Records.Count"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "nat"
+        },
+        "record": "Records.Count"
+      }
+    },
+    {
+      "name": "Collections.recordDuplicate",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordEmpty",
+      "parameters": [
+        {
+          "fields": {},
+          "record": "Records.Empty"
+        }
+      ],
+      "result": {
+        "fields": {},
+        "record": "Records.Empty"
+      }
+    },
+    {
+      "name": "Collections.recordInspect",
+      "parameters": [
+        {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.recordMake",
+      "parameters": [],
+      "result": {
+        "fields": {
+          "first": "uint32",
+          "second": "string"
+        },
+        "record": "Records.Pair"
+      }
+    },
+    {
+      "name": "Collections.recordReverse",
+      "parameters": [
+        {
+          "array": {
+            "fields": {
+              "bytes": "bytes",
+              "char": "char",
+              "f32": "float32",
+              "f64": "float64",
+              "flag": "bool",
+              "i16": "int16",
+              "i32": "int32",
+              "i64": "int64",
+              "i8": "int8",
+              "integer": "int",
+              "isize": "isize",
+              "natural": "nat",
+              "text": "string",
+              "u16": "uint16",
+              "u32": "uint32",
+              "u64": "uint64",
+              "u8": "uint8",
+              "unit": "unit",
+              "usize": "usize"
+            },
+            "record": "Records.Primitives"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordShuffle",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "count": {
+            "fields": {
+              "value": "nat"
+            },
+            "record": "Records.Count"
+          },
+          "empty": {
+            "fields": {},
+            "record": "Records.Empty"
+          },
+          "label": "string",
+          "pair": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Pair"
+          },
+          "reversed": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Reversed"
+          },
+          "single": {
+            "fields": {
+              "value": "uint64"
+            },
+            "record": "Records.Single"
+          },
+          "values": {
+            "array": {
+              "array": {
+                "fields": {
+                  "bytes": "bytes",
+                  "char": "char",
+                  "f32": "float32",
+                  "f64": "float64",
+                  "flag": "bool",
+                  "i16": "int16",
+                  "i32": "int32",
+                  "i64": "int64",
+                  "i8": "int8",
+                  "integer": "int",
+                  "isize": "isize",
+                  "natural": "nat",
+                  "text": "string",
+                  "u16": "uint16",
+                  "u32": "uint32",
+                  "u64": "uint64",
+                  "u8": "uint8",
+                  "unit": "unit",
+                  "usize": "usize"
+                },
+                "record": "Records.Primitives"
+              }
+            }
+          }
+        },
+        "record": "Records.Packet"
+      }
+    },
+    {
+      "name": "Collections.recordSingle",
+      "parameters": [
+        {
+          "fields": {
+            "value": "uint64"
+          },
+          "record": "Records.Single"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "uint64"
+        },
+        "record": "Records.Single"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "tests/dotnet-collection-contract.test.mjs": "38f6272bfaad0a8bf8887de2a1c5833122daa1c6acad75bd0462470beabe8b95",
+    "tests/dotnet-collection-conversions.test.mjs": "f860e28a9379cbe41e8c4bfe1647aadfdbfe2fa9e21e66803014580617409dc5",
+    "tests/dotnet-collection-evidence.test.mjs": "2a9e94d9f8fb26418d679a82b3e911a684a23ae8720843fdd6f075bd1dec18cc",
+    "tests/dotnet-collections.test.mjs": "f711c7e930148059b5f36a263b5edf65a0e7137c80b4cb489b4965df265c9f58",
+    "tests/dotnet-value-equality.test.mjs": "de10a35d9099f865381b671d8458228ed5dbe6b2b434ef6f15d4f0aa2f4efcba",
+    "tests/dotnet-variant-contract.test.mjs": "c397bc9e74290fb99fc443084e0130b1f5ec7edf3d03519f704368414ded34a2",
+    "tests/dotnet-variant-evidence.test.mjs": "6270bf6355f2f991580b7090675a96f3a7f283cd7ffafa3cc11b74a2e44fbc27",
+    "tests/fixtures/collection-consumers/Collections.lean": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524",
+    "tests/fixtures/collection-consumers/dotnet-conversions.cs": "ba29970a8bac0fde9e9445a08c51dae1a40482852e4257771c39c9dd0c990b92",
+    "tests/fixtures/collection-consumers/dotnet-equality.cs": "4d435533cdfe8f91032df16fbc6045b3f78f63ade4a651ff324dcb699c805de7",
+    "tests/fixtures/collection-consumers/dotnet-faults.cs": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+    "tests/fixtures/collection-consumers/dotnet-invalid.json": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+    "tests/fixtures/collection-consumers/dotnet.cs": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+    "tests/fixtures/onboarding/npm-arrays/Arrays.lean": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668",
+    "tests/fixtures/onboarding/npm-arrays/LICENSE": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+    "tests/fixtures/onboarding/npm-arrays/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-records/Records.lean": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540",
+    "tests/helpers/array-fixture.mjs": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf",
+    "tests/helpers/collection-fixture.mjs": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/dotnet-collection-install.mjs": "579d879ec0f11a765a848e34c39e4450cd1038e0c2da1e3568857571801e993b",
+    "tests/helpers/dotnet-collection-probes.mjs": "42679c290a35d21d76906b1f54e5696d744d5bc195c9fd431bc4f6067c8c7838",
+    "tests/helpers/dotnet-collection-types.mjs": "18cf0ec3b971a0d1fb6e088f4d064b2b1bdb77c9623670bd1583914363269e27",
+    "tests/helpers/dotnet-source-history.mjs": "6152032344fecd017ab8e42a90eb0481d81a4ab0dd1ec116d1562c60208b69e9",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/record-fixture.mjs": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+  },
+  "wordBits": 64
+}

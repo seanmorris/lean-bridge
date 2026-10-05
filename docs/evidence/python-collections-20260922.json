@@ -1,0 +1,3156 @@
+{
+  "baseRevision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+  "documentation": {
+    "bindingIrSha256": "33a4e0521ee4ddea6d61a904e20a30de7f82f387725d574149f1b2394023eb07",
+    "compilerFreeExecution": true,
+    "expectedOutput": "Seeds: 7, 2\n",
+    "installation": {
+      "dependency": null,
+      "python": "3.11.16",
+      "requires": [],
+      "resolvedOffline": true
+    },
+    "installedFiles": {
+      "lean_parcels/__init__.py": {
+        "bytes": 525,
+        "sha256": "2f6fbff4adf197dc0b53f219d5b89b649e8e73575e17b099122e15196b189dbc"
+      },
+      "lean_parcels/__init__.pyi": {
+        "bytes": 428,
+        "sha256": "18ef4c6a36de07b953eb155874ef957c7242b586101e049e526db8000a54e0cc"
+      },
+      "lean_parcels/_native.py": {
+        "bytes": 9420,
+        "sha256": "e0224de9da8937c719d258ffef027655f4c9873a7d81f7277df92f8c5710dc8d"
+      },
+      "lean_parcels/lean_bridge/README.md": {
+        "bytes": 2598,
+        "sha256": "c36161bca69f893c834adf45e0e59545de959116964c4f687a4318f418ff8018"
+      },
+      "lean_parcels/lean_bridge/binding-manifest.json": {
+        "bytes": 1004,
+        "sha256": "6f31f78b085d295dfe5131fc2026247d0c9cec29bbe0c587477ca0289c3087eb"
+      },
+      "lean_parcels/lean_bridge/component/artifacts.json": {
+        "bytes": 1184,
+        "sha256": "e071a05f7493d59af4821fd35f2cfa90d9949442c02f64240dbc0bef007b29be"
+      },
+      "lean_parcels/lean_bridge/component/binding-ir.json": {
+        "bytes": 3426,
+        "sha256": "d37faa202add057264c1ce80beec40f4a898fc1570b30cb1e1be8018386b25a5"
+      },
+      "lean_parcels/lean_bridge/component/component.h": {
+        "bytes": 523,
+        "sha256": "081d009afa07569f2fa20924b831bc7ea20704db9dba02975e5ef3bee7ee73f7"
+      },
+      "lean_parcels/lean_bridge/component/generated.lean": {
+        "bytes": 1150,
+        "sha256": "25cd14a94b69adbc47d2c40b3de014d45691b0619e28f75dad3916de82da6325"
+      },
+      "lean_parcels/lean_bridge/component/metadata.json": {
+        "bytes": 5482,
+        "sha256": "fce72d91902d775b869b2add59dfcd51af1e4a10bdd0e1324b7ece4aa1569e73"
+      },
+      "lean_parcels/lean_bridge/component/model.json": {
+        "bytes": 12066,
+        "sha256": "af495af89059b1e59f32595d191cc09ae3c4f691070469ee179156ddc69b86c2"
+      },
+      "lean_parcels/lean_bridge/component/native-component.json": {
+        "bytes": 3108,
+        "sha256": "b912ef6ad4f2b76dc243da1294719c29b788991fd34b6d0e599f9359eccfed49"
+      },
+      "lean_parcels/lean_bridge/include/parcels.h": {
+        "bytes": 1969,
+        "sha256": "bb37fce5a9af4531b724179d0845a1171778fb568ff77c5fc9c389a2e32abbae"
+      },
+      "lean_parcels/lean_bridge/native-c-adapter.json": {
+        "bytes": 1340,
+        "sha256": "c487c026408ae51c5b7b4446be21e77e01162e82d56a838bb6a207f94da44214"
+      },
+      "lean_parcels/lean_bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+      },
+      "lean_parcels/native/linux-x64/libcomponent_1d177a26bc5594cf24ff.so": {
+        "bytes": 16752,
+        "sha256": "b3c6b621c5e43f41b98d696ef51faa0aa78ae6bff03deeadae74f78289443bdf"
+      },
+      "lean_parcels/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 17016,
+        "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+      },
+      "lean_parcels/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "lean_parcels/native/linux-x64/libparcels.so": {
+        "bytes": 21448,
+        "sha256": "a632d26d54dc13569241189b3489a356175ed1245821058d7d957b33e35e30d0"
+      },
+      "lean_parcels/py.typed": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "parcels_api-1.0.0.dist-info/METADATA": {
+        "bytes": 2914,
+        "sha256": "ba962c982a4a21a52bc69c512660bc5f7e7caf6d5dbe4832441ff54cfca594c7"
+      },
+      "parcels_api-1.0.0.dist-info/WHEEL": {
+        "bytes": 117,
+        "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+      },
+      "parcels_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "parcels_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "parcels_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "parcels_api-1.0.0.dist-info/licenses/source-notices.json": {
+        "bytes": 1301,
+        "sha256": "efa15803cac44e7fe58ee029810fc692ee0c1aeffe0de1ce1a7025f1474f25cf"
+      },
+      "parcels_api-1.0.0.dist-info/top_level.txt": {
+        "bytes": 13,
+        "sha256": "8819ba8ec99a2a442a8e2449fb48f5673cc9850e767c5e25a7ae3dfae1de58c5"
+      }
+    },
+    "installedFilesUnchanged": true,
+    "installedReceiptSha256": "ee7e5ff67f01257801af22081c9c87f7f3aa8493c337a73d14fd587d5aac8388",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51339917,
+            "path": "archives/parcels_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+            "sha256": "6f0dabe0ca7d8a0fe611fbd57f2bd2bfde9586c19d051006fed929d81910978f"
+          }
+        ],
+        "ecosystem": "pypi",
+        "name": "parcels-api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+        "target": "pypi",
+        "version": "1.0.0"
+      }
+    ],
+    "producerHandoffRemoved": true,
+    "relocatedInstallation": true,
+    "repeatExecution": true,
+    "schemaVersion": 1,
+    "sourceHashes": {
+      "lean": "3c6491c06f3090e85c8d708b5dc0d44bce08a59a524e4e411d0aa2176ac5e688",
+      "python": "11b67fbb7447b824c627f101fbd0822d1d2e7f4b407b4471a7cc26e8aa8c2b8c"
+    },
+    "sourceRemovedBeforeInstallation": true
+  },
+  "executions": [
+    {
+      "bindingIrSha256": "d7ff3cfd4943f1e13c226f7bc7943b347ca6bcbc2a54cacb2862087a4caa71fe",
+      "checkerVersion": "mypy 2.3.1 (compiled: yes)",
+      "installations": [
+        {
+          "compilerFreeExecution": true,
+          "dependency": {
+            "archive": "typing_extensions-4.6.0-py3-none-any.whl",
+            "bytes": 30680,
+            "name": "typing_extensions",
+            "sha256": "6ad00b63f849b7dcc313b70b6b304ed67b2b2963b3098a33efe18056b1a9a223",
+            "version": "4.6.0"
+          },
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 3.0720210634171963
+          },
+          "installedDependency": {
+            "files": {
+              "typing_extensions-4.6.0.dist-info/INSTALLER": {
+                "bytes": 4,
+                "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+              },
+              "typing_extensions-4.6.0.dist-info/LICENSE": {
+                "bytes": 12787,
+                "sha256": "c7afb65e755707b9fb90487389a176d3ed3d0031d5131afde45c23715ff5e891"
+              },
+              "typing_extensions-4.6.0.dist-info/METADATA": {
+                "bytes": 2786,
+                "sha256": "66244eac9862c4d913a2c3f06964341abc0b5e0579d8187c1807835205afa24a"
+              },
+              "typing_extensions-4.6.0.dist-info/RECORD": {
+                "bytes": 517,
+                "sha256": "dfe53d9cc90e2a036fe1187bc627c3bea4c05557be2726a89f891ac63e3b97a4"
+              },
+              "typing_extensions-4.6.0.dist-info/WHEEL": {
+                "bytes": 81,
+                "sha256": "1196c6921ec87b83e865f450f08d19b8ff5592537f4ef719e83484e546abe33e"
+              },
+              "typing_extensions.py": {
+                "bytes": 102170,
+                "sha256": "0b2f67172ad09b5c12f24ae0ffd9e9f44827fef884ae0deb7b678cc94b7eb75b"
+              }
+            },
+            "version": "4.6.0"
+          },
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 3578,
+              "sha256": "2b9e841518f4a166a5fa79b9068ff1001cea565ab7fe5577d7671bc9a3739d54"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9161,
+              "sha256": "e5aa523d4a20e1d85d35a332002004218762c2047223941cb7ca5ca9e694ecfe"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7849,
+              "sha256": "6af833070ab80a59da87f9d0a19853446541498d19036bdb9f059416194253a7"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "88eeba40aed685baaa715949fde7ec559a26ccbfdc244e61d781ea65c7dc522c"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "4ab853b25bfa26c0a907ff56607ac82b077502895464a0800b9c70380b98dc99"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1397,
+              "sha256": "6c7690b1cfb96bb7bba8e6a42f0b4275ce4db2592e807a290d36c0749f7d3a2b"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 107696,
+              "sha256": "18fa0b86a88592099b0d01365112c01ca6881ff6483205923bed59a68ac0ea73"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 522300,
+              "sha256": "6a22b7102fdc89986b69644090b115f456ce434c527808b96b07f773c565be1b"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 11052,
+              "sha256": "eefef6d6d63f0a382f8c7f4ef04d31d8d32aa8b50a6dc6453f01cc46b397ca88"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44003,
+              "sha256": "ffe9a1353afff3b3db6ed4bb68e80c3531857aa0f4a0da033bb8a3002ecdfb3f"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "fbb3a1a447bd43d1621c4d380bb0092383b8079cbe67fd550f16da77066d7ea4"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2b74cd87d12dee48ecffb38bb04775a509ed19be00d683abfbf594de0bc35724",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.11-minimum",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.11.16",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        },
+        {
+          "compilerFreeExecution": true,
+          "dependency": {
+            "archive": "typing_extensions-4.16.0-py3-none-any.whl",
+            "bytes": 45571,
+            "name": "typing_extensions",
+            "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+            "version": "4.16.0"
+          },
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 2.8586718253791332
+          },
+          "installedDependency": {
+            "files": {
+              "typing_extensions-4.16.0.dist-info/INSTALLER": {
+                "bytes": 4,
+                "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+              },
+              "typing_extensions-4.16.0.dist-info/METADATA": {
+                "bytes": 3310,
+                "sha256": "b05084ca1d50879865178d9fff9fabeab61bdfb1f361bfbde95421ffc8f9be46"
+              },
+              "typing_extensions-4.16.0.dist-info/RECORD": {
+                "bytes": 531,
+                "sha256": "df79b14d51e84a4e19976bb06cecb42d94d4f075a36209c4717e024a08e5598e"
+              },
+              "typing_extensions-4.16.0.dist-info/WHEEL": {
+                "bytes": 82,
+                "sha256": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db"
+              },
+              "typing_extensions-4.16.0.dist-info/licenses/LICENSE": {
+                "bytes": 13936,
+                "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+              },
+              "typing_extensions.py": {
+                "bytes": 165012,
+                "sha256": "4040ca1a1ecbee00d1385c12a93084d1c5bd46f0b774f07e5ae7e91c4f55e696"
+              }
+            },
+            "version": "4.16.0"
+          },
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 3578,
+              "sha256": "2b9e841518f4a166a5fa79b9068ff1001cea565ab7fe5577d7671bc9a3739d54"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9161,
+              "sha256": "e5aa523d4a20e1d85d35a332002004218762c2047223941cb7ca5ca9e694ecfe"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7849,
+              "sha256": "6af833070ab80a59da87f9d0a19853446541498d19036bdb9f059416194253a7"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "88eeba40aed685baaa715949fde7ec559a26ccbfdc244e61d781ea65c7dc522c"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "4ab853b25bfa26c0a907ff56607ac82b077502895464a0800b9c70380b98dc99"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1397,
+              "sha256": "6c7690b1cfb96bb7bba8e6a42f0b4275ce4db2592e807a290d36c0749f7d3a2b"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 107696,
+              "sha256": "18fa0b86a88592099b0d01365112c01ca6881ff6483205923bed59a68ac0ea73"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 522300,
+              "sha256": "6a22b7102fdc89986b69644090b115f456ce434c527808b96b07f773c565be1b"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 11052,
+              "sha256": "eefef6d6d63f0a382f8c7f4ef04d31d8d32aa8b50a6dc6453f01cc46b397ca88"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44003,
+              "sha256": "ffe9a1353afff3b3db6ed4bb68e80c3531857aa0f4a0da033bb8a3002ecdfb3f"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "fbb3a1a447bd43d1621c4d380bb0092383b8079cbe67fd550f16da77066d7ea4"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2b74cd87d12dee48ecffb38bb04775a509ed19be00d683abfbf594de0bc35724",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.11-current",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.11.16",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        },
+        {
+          "compilerFreeExecution": true,
+          "dependency": null,
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 5.969189573079348
+          },
+          "installedDependency": null,
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 3578,
+              "sha256": "2b9e841518f4a166a5fa79b9068ff1001cea565ab7fe5577d7671bc9a3739d54"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9161,
+              "sha256": "e5aa523d4a20e1d85d35a332002004218762c2047223941cb7ca5ca9e694ecfe"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7849,
+              "sha256": "6af833070ab80a59da87f9d0a19853446541498d19036bdb9f059416194253a7"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "88eeba40aed685baaa715949fde7ec559a26ccbfdc244e61d781ea65c7dc522c"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "4ab853b25bfa26c0a907ff56607ac82b077502895464a0800b9c70380b98dc99"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1397,
+              "sha256": "6c7690b1cfb96bb7bba8e6a42f0b4275ce4db2592e807a290d36c0749f7d3a2b"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 107696,
+              "sha256": "18fa0b86a88592099b0d01365112c01ca6881ff6483205923bed59a68ac0ea73"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 522300,
+              "sha256": "6a22b7102fdc89986b69644090b115f456ce434c527808b96b07f773c565be1b"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 11052,
+              "sha256": "eefef6d6d63f0a382f8c7f4ef04d31d8d32aa8b50a6dc6453f01cc46b397ca88"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44003,
+              "sha256": "ffe9a1353afff3b3db6ed4bb68e80c3531857aa0f4a0da033bb8a3002ecdfb3f"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "fbb3a1a447bd43d1621c4d380bb0092383b8079cbe67fd550f16da77066d7ea4"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2b74cd87d12dee48ecffb38bb04775a509ed19be00d683abfbf594de0bc35724",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.12-standard",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.12.14",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        }
+      ],
+      "modelSha256": "6a22b7102fdc89986b69644090b115f456ce434c527808b96b07f773c565be1b",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51483732,
+              "path": "archives/collections_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "7f0a02384d439c5e21dd2d6f9b47a67bc45d0963fd623bb0a9bea044186fefdf"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "abb73a719fd2f2e77484a2af6c47765bc2d0bd5fdd691b3d880bb9bb1860a12a",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "0a5fc140236189555ec6a0af93bcdc51370715789853673ea936a0f28c392e54",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c56863dedb8a942acb8c9256df6f16da4c2a63167a505e722764a3b7334c34f5"
+    },
+    {
+      "bindingIrSha256": "a76de2bcb6863d92c29f79e98a39440856f40b189fd1d523e7f87d210da23ba8",
+      "checkerVersion": "mypy 2.3.1 (compiled: yes)",
+      "installations": [
+        {
+          "compilerFreeExecution": true,
+          "dependency": {
+            "archive": "typing_extensions-4.6.0-py3-none-any.whl",
+            "bytes": 30680,
+            "name": "typing_extensions",
+            "sha256": "6ad00b63f849b7dcc313b70b6b304ed67b2b2963b3098a33efe18056b1a9a223",
+            "version": "4.6.0"
+          },
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 5.671478807926178
+          },
+          "installedDependency": {
+            "files": {
+              "typing_extensions-4.6.0.dist-info/INSTALLER": {
+                "bytes": 4,
+                "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+              },
+              "typing_extensions-4.6.0.dist-info/LICENSE": {
+                "bytes": 12787,
+                "sha256": "c7afb65e755707b9fb90487389a176d3ed3d0031d5131afde45c23715ff5e891"
+              },
+              "typing_extensions-4.6.0.dist-info/METADATA": {
+                "bytes": 2786,
+                "sha256": "66244eac9862c4d913a2c3f06964341abc0b5e0579d8187c1807835205afa24a"
+              },
+              "typing_extensions-4.6.0.dist-info/RECORD": {
+                "bytes": 517,
+                "sha256": "dfe53d9cc90e2a036fe1187bc627c3bea4c05557be2726a89f891ac63e3b97a4"
+              },
+              "typing_extensions-4.6.0.dist-info/WHEEL": {
+                "bytes": 81,
+                "sha256": "1196c6921ec87b83e865f450f08d19b8ff5592537f4ef719e83484e546abe33e"
+              },
+              "typing_extensions.py": {
+                "bytes": 102170,
+                "sha256": "0b2f67172ad09b5c12f24ae0ffd9e9f44827fef884ae0deb7b678cc94b7eb75b"
+              }
+            },
+            "version": "4.6.0"
+          },
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 2437,
+              "sha256": "5348f0caa07a6a6f6eccd18d0e224d5f018f734aa21d241c81ce2b3a6b7498c4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9369,
+              "sha256": "64ea472ec1d65b286ccdd2d104659500044477fd5416f11bfc76a2ba50015870"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7953,
+              "sha256": "138af9f99f49a993ceac380d1dbe9b3342ffcb2fafb981bd5a2320fafc61fb16"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "141b49acf3e03e22349e4ac177a1ecdf616b0f2569643828655ce49f2ce6ad28"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "e431ff00650a86a09971cde9698cdac9d6b4a2bba3021e183908ff35225d250a"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1398,
+              "sha256": "b48cf0d59fe47a57c66ecd39034feaee33e14699eefee733cd0fb848554d8836"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 108385,
+              "sha256": "fbf7da424b479d7c7cdf7c3acbeb690bd786c0e16dddb30dc86d633b4c22c7f9"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 632151,
+              "sha256": "1cfadef198b3280b24851f934b3ef6adddc95a0743b5f812e4c74d8b82f1e0cf"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 120214,
+              "sha256": "ec32e518e9f346358e6d9e1c8c6c96ccda0414fc68edadb3894e4537c60e7ea4"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44107,
+              "sha256": "6845e9113e75e38e98fef55629db85893368b45339b29f1945be5f6e99a810ff"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "581ec98c65628f6b6167a233ca5e4911a98dcbed4a13599f5fcbca153807c496"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2403d1576449fb5d1f133c68403d94be3f436c17bf43eb6feb61d53751a99965",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.11-minimum",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.11.16",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        },
+        {
+          "compilerFreeExecution": true,
+          "dependency": {
+            "archive": "typing_extensions-4.16.0-py3-none-any.whl",
+            "bytes": 45571,
+            "name": "typing_extensions",
+            "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+            "version": "4.16.0"
+          },
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 2.7077258564531803
+          },
+          "installedDependency": {
+            "files": {
+              "typing_extensions-4.16.0.dist-info/INSTALLER": {
+                "bytes": 4,
+                "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+              },
+              "typing_extensions-4.16.0.dist-info/METADATA": {
+                "bytes": 3310,
+                "sha256": "b05084ca1d50879865178d9fff9fabeab61bdfb1f361bfbde95421ffc8f9be46"
+              },
+              "typing_extensions-4.16.0.dist-info/RECORD": {
+                "bytes": 531,
+                "sha256": "df79b14d51e84a4e19976bb06cecb42d94d4f075a36209c4717e024a08e5598e"
+              },
+              "typing_extensions-4.16.0.dist-info/WHEEL": {
+                "bytes": 82,
+                "sha256": "1b68144734c4b66791f27add5d425f3620775585718a03d0f9b110ba3a4d88db"
+              },
+              "typing_extensions-4.16.0.dist-info/licenses/LICENSE": {
+                "bytes": 13936,
+                "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+              },
+              "typing_extensions.py": {
+                "bytes": 165012,
+                "sha256": "4040ca1a1ecbee00d1385c12a93084d1c5bd46f0b774f07e5ae7e91c4f55e696"
+              }
+            },
+            "version": "4.16.0"
+          },
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 2437,
+              "sha256": "5348f0caa07a6a6f6eccd18d0e224d5f018f734aa21d241c81ce2b3a6b7498c4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9369,
+              "sha256": "64ea472ec1d65b286ccdd2d104659500044477fd5416f11bfc76a2ba50015870"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7953,
+              "sha256": "138af9f99f49a993ceac380d1dbe9b3342ffcb2fafb981bd5a2320fafc61fb16"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "141b49acf3e03e22349e4ac177a1ecdf616b0f2569643828655ce49f2ce6ad28"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "e431ff00650a86a09971cde9698cdac9d6b4a2bba3021e183908ff35225d250a"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1398,
+              "sha256": "b48cf0d59fe47a57c66ecd39034feaee33e14699eefee733cd0fb848554d8836"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 108385,
+              "sha256": "fbf7da424b479d7c7cdf7c3acbeb690bd786c0e16dddb30dc86d633b4c22c7f9"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 632151,
+              "sha256": "1cfadef198b3280b24851f934b3ef6adddc95a0743b5f812e4c74d8b82f1e0cf"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 120214,
+              "sha256": "ec32e518e9f346358e6d9e1c8c6c96ccda0414fc68edadb3894e4537c60e7ea4"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44107,
+              "sha256": "6845e9113e75e38e98fef55629db85893368b45339b29f1945be5f6e99a810ff"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "581ec98c65628f6b6167a233ca5e4911a98dcbed4a13599f5fcbca153807c496"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2403d1576449fb5d1f133c68403d94be3f436c17bf43eb6feb61d53751a99965",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.11-current",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.11.16",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        },
+        {
+          "compilerFreeExecution": true,
+          "dependency": null,
+          "faults": {
+            "allocationFailures": 80,
+            "checks": 2935,
+            "clears": 405,
+            "conversionFailures": 305,
+            "malformedValues": 7,
+            "partialInputs": 64
+          },
+          "hints": {
+            "depth": 24,
+            "shallow_primitives": 19,
+            "type_hints_ms": 4.2409696616232395
+          },
+          "installedDependency": null,
+          "installedDependencyUnchanged": true,
+          "installedFiles": {
+            "collections_api-1.0.0.dist-info/METADATA": {
+              "bytes": 5852,
+              "sha256": "a177aeb0a303cd9def2b48f1068af308363c17a5b993d54f7c69103b827ccb8d"
+            },
+            "collections_api-1.0.0.dist-info/WHEEL": {
+              "bytes": 117,
+              "sha256": "e41d55df53f77c6c728e826dfa1a3da95b2c97b543ab1de222ccea3f2bb9f4f4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "collections_api-1.0.0.dist-info/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "collections_api-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices.json": {
+              "bytes": 2437,
+              "sha256": "5348f0caa07a6a6f6eccd18d0e224d5f018f734aa21d241c81ce2b3a6b7498c4"
+            },
+            "collections_api-1.0.0.dist-info/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "collections_api-1.0.0.dist-info/top_level.txt": {
+              "bytes": 17,
+              "sha256": "6ee0373da349c5445529ce44fb7791cd94f4cd3c9907f39e0aef8f115d76a56a"
+            },
+            "lean_collections/__init__.py": {
+              "bytes": 9369,
+              "sha256": "64ea472ec1d65b286ccdd2d104659500044477fd5416f11bfc76a2ba50015870"
+            },
+            "lean_collections/__init__.pyi": {
+              "bytes": 7953,
+              "sha256": "138af9f99f49a993ceac380d1dbe9b3342ffcb2fafb981bd5a2320fafc61fb16"
+            },
+            "lean_collections/_native.py": {
+              "bytes": 113370,
+              "sha256": "141b49acf3e03e22349e4ac177a1ecdf616b0f2569643828655ce49f2ce6ad28"
+            },
+            "lean_collections/lean_bridge/README.md": {
+              "bytes": 5365,
+              "sha256": "dba9f4a453a391494521b35418202862b3f60ac8ea70074575b4a1c716722775"
+            },
+            "lean_collections/lean_bridge/binding-manifest.json": {
+              "bytes": 1942,
+              "sha256": "e431ff00650a86a09971cde9698cdac9d6b4a2bba3021e183908ff35225d250a"
+            },
+            "lean_collections/lean_bridge/component/artifacts.json": {
+              "bytes": 1398,
+              "sha256": "b48cf0d59fe47a57c66ecd39034feaee33e14699eefee733cd0fb848554d8836"
+            },
+            "lean_collections/lean_bridge/component/binding-ir.json": {
+              "bytes": 108385,
+              "sha256": "fbf7da424b479d7c7cdf7c3acbeb690bd786c0e16dddb30dc86d633b4c22c7f9"
+            },
+            "lean_collections/lean_bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean_collections/lean_bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean_collections/lean_bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+            },
+            "lean_collections/lean_bridge/component/model.json": {
+              "bytes": 632151,
+              "sha256": "1cfadef198b3280b24851f934b3ef6adddc95a0743b5f812e4c74d8b82f1e0cf"
+            },
+            "lean_collections/lean_bridge/component/native-component.json": {
+              "bytes": 120214,
+              "sha256": "ec32e518e9f346358e6d9e1c8c6c96ccda0414fc68edadb3894e4537c60e7ea4"
+            },
+            "lean_collections/lean_bridge/include/collections.h": {
+              "bytes": 44107,
+              "sha256": "6845e9113e75e38e98fef55629db85893368b45339b29f1945be5f6e99a810ff"
+            },
+            "lean_collections/lean_bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "581ec98c65628f6b6167a233ca5e4911a98dcbed4a13599f5fcbca153807c496"
+            },
+            "lean_collections/lean_bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+            },
+            "lean_collections/native/linux-x64/libcollections.so": {
+              "bytes": 162472,
+              "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+            },
+            "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+            },
+            "lean_collections/native/linux-x64/liblean_bridge_native.so": {
+              "bytes": 17016,
+              "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+            },
+            "lean_collections/native/linux-x64/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "lean_collections/py.typed": {
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "2403d1576449fb5d1f133c68403d94be3f436c17bf43eb6feb61d53751a99965",
+          "isolatedInMemoryFaultProbe": true,
+          "name": "3.12-standard",
+          "offlineInstall": true,
+          "producerHandoffRemoved": true,
+          "public": {
+            "calls": 3225,
+            "checks": 158365,
+            "loadedLibraries": [
+              {
+                "bytes": 162472,
+                "path": "lean_collections/native/linux-x64/libcollections.so",
+                "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+              },
+              {
+                "bytes": 143216,
+                "path": "lean_collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so",
+                "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+              },
+              {
+                "bytes": 17016,
+                "path": "lean_collections/native/linux-x64/liblean_bridge_native.so",
+                "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+              },
+              {
+                "bytes": 158401256,
+                "path": "lean_collections/native/linux-x64/libleanshared.so",
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            ],
+            "primitives": [
+              {
+                "checks": 2992,
+                "name": "unit",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3002,
+                "name": "bool",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3012,
+                "name": "uint8",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint16",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint32",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3012,
+                "name": "uint64",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 3002,
+                "name": "int8",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int16",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int32",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 3002,
+                "name": "int64",
+                "rejected_cases": 5
+              },
+              {
+                "checks": 2992,
+                "name": "nat",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "int",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float32",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "float64",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "string",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "bytes",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 3012,
+                "name": "char",
+                "rejected_cases": 6
+              },
+              {
+                "checks": 2992,
+                "name": "usize",
+                "rejected_cases": 4
+              },
+              {
+                "checks": 2992,
+                "name": "isize",
+                "rejected_cases": 4
+              }
+            ],
+            "recordTypes": [
+              "Primitives",
+              "Empty",
+              "Single",
+              "Count",
+              "Pair",
+              "Reversed",
+              "Packet"
+            ],
+            "rejected": 119
+          },
+          "python": "3.12.14",
+          "relocatedInstallation": true,
+          "repeatExecution": true,
+          "requires": [
+            "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+          ],
+          "resolvedOffline": true,
+          "sourceHashes": {
+            "python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+            "python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+            "python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+            "python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+            "python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+          },
+          "strictTypecheck": {
+            "executed": true,
+            "memoryLimitMiB": 1024,
+            "rejectedCalls": 13,
+            "timeoutSeconds": 30
+          }
+        }
+      ],
+      "modelSha256": "1cfadef198b3280b24851f934b3ef6adddc95a0743b5f812e4c74d8b82f1e0cf",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51493793,
+              "path": "archives/collections_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "4d3a6582db32a920fc12d662d48e027cb0df5f52dac05bb287bc64f77f826293"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "e5ef38cb3d4278d592980bbcc3bd667b2842f468c0c5f165a4e8ead57ab7c30b",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "1c7f49e4367c95f4b558f8c6a8725bef2661f1be16211a2a0e2ac691e5a040c6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "937150021588ce61da803b78fe839c28aab00251ea0416f86185d19ed2931e8e"
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "profiles": [
+    "python"
+  ],
+  "reportSha256": "ec5f5ec08d14dac198718bd44cd94c58ba574ff79fa5364cb9d8c433eaa985bd",
+  "reproduction": {
+    "archivesIdentical": true,
+    "documentationIdentical": true,
+    "documentationSha256": "9771b4ca6e4e87740875ce3cd63ec58744873b48e554d128cc07755367f8e5a0",
+    "firstLog": {
+      "sha256": "4ac359fc06b78e17f6b23dfc9ff2415d20a5776acb4bc25c73dd28f9f010b2c0",
+      "text": "TAP version 13\n# Subtest: installed Python arrays and records preserve values and bounded annotations on both source paths\nok 1 - installed Python arrays and records preserve values and bounded annotations on both source paths\n  ---\n  duration_ms: 205390.644986\n  type: 'test'\n  ...\n# ordinary-source: compiling Python collections\n# ordinary-source: offline installation on 3.11 with minimum/current backport and 3.12 without it\n# ordinary-source: 158365 assertions per runtime; all original installed files unchanged\n# reviewed-ir: compiling Python collections\n# reviewed-ir: offline installation on 3.11 with minimum/current backport and 3.12 without it\n# reviewed-ir: 158365 assertions per runtime; all original installed files unchanged\n# Subtest: Python publisher and consumer collection examples execute from a relocated original wheel\nok 2 - Python publisher and consumer collection examples execute from a relocated original wheel\n  ---\n  duration_ms: 44837.618569\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 250419.328579\n"
+    },
+    "firstReportSha256": "c158d5b0dec81260683b95d92948fa5e764c3c19ff122adf0ce9fe8b42ef8091",
+    "installedFilesIdentical": true,
+    "publicObservationsIdentical": true,
+    "runs": [
+      {
+        "installations": [
+          {
+            "dependencySha256": "be5774120ac5e7c5f34050d02d18a74eea37c522a6d0dbb176fcd57ba907b546",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "690eac28d14a377c5990e5e2607265d0d87518012a88557358144c4d1fef89d9",
+            "name": "3.11-minimum",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          },
+          {
+            "dependencySha256": "553c7d2c0f6b50a5a82309ccec042cf024dabfe9fb64a12c7d4b6ecfeaea002e",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "690eac28d14a377c5990e5e2607265d0d87518012a88557358144c4d1fef89d9",
+            "name": "3.11-current",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          },
+          {
+            "dependencySha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "690eac28d14a377c5990e5e2607265d0d87518012a88557358144c4d1fef89d9",
+            "name": "3.12-standard",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          }
+        ],
+        "packagesSha256": "06fdd0461cafc0fbd8c9a7e2140e5b95ce97d2ccdae390387b06452644fec341",
+        "path": "ordinary-source"
+      },
+      {
+        "installations": [
+          {
+            "dependencySha256": "be5774120ac5e7c5f34050d02d18a74eea37c522a6d0dbb176fcd57ba907b546",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "7dee05f4198d321f2b21ff79113493f578aa068a4a622ee229d9ceab12cc867b",
+            "name": "3.11-minimum",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          },
+          {
+            "dependencySha256": "553c7d2c0f6b50a5a82309ccec042cf024dabfe9fb64a12c7d4b6ecfeaea002e",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "7dee05f4198d321f2b21ff79113493f578aa068a4a622ee229d9ceab12cc867b",
+            "name": "3.11-current",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          },
+          {
+            "dependencySha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+            "faultsSha256": "39b6fbce163722038c66d746de50342d44d01e874ffc98a3d468026ab555235e",
+            "installedFilesSha256": "7dee05f4198d321f2b21ff79113493f578aa068a4a622ee229d9ceab12cc867b",
+            "name": "3.12-standard",
+            "publicSha256": "5ea4541d2506ee8cac3b04db53cc3871a8039df8031e80b528243a7fcb7e96c3",
+            "strictTypecheckSha256": "156da1e0071c2f6796d419bb9b2309aa60f0c3351e90c9fbd39d8f8a1d645653"
+          }
+        ],
+        "packagesSha256": "5f4e1073f4f4681321b7c63ee023f3bc4c2026304618f74ecfce6078822acf70",
+        "path": "reviewed-ir"
+      }
+    ],
+    "secondLog": {
+      "sha256": "6daca1165acbeff5d83e729995afc20d89bcb8d68960e9506c7026b6fc1d2f17",
+      "text": "TAP version 13\n# Subtest: installed Python arrays and records preserve values and bounded annotations on both source paths\nok 1 - installed Python arrays and records preserve values and bounded annotations on both source paths\n  ---\n  duration_ms: 156823.792723\n  type: 'test'\n  ...\n# ordinary-source: compiling Python collections\n# ordinary-source: offline installation on 3.11 with minimum/current backport and 3.12 without it\n# ordinary-source: 158365 assertions per runtime; all original installed files unchanged\n# reviewed-ir: compiling Python collections\n# reviewed-ir: offline installation on 3.11 with minimum/current backport and 3.12 without it\n# reviewed-ir: 158365 assertions per runtime; all original installed files unchanged\n# Subtest: Python publisher and consumer collection examples execute from a relocated original wheel\nok 2 - Python publisher and consumer collection examples execute from a relocated original wheel\n  ---\n  duration_ms: 33813.351404\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 190808.571178\n"
+    }
+  },
+  "reviewedIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Collections.arrayAdd",
+      "parameters": [
+        "int",
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayCheckElements",
+      "parameters": [
+        {
+          "array": "unit"
+        },
+        {
+          "array": "bool"
+        },
+        {
+          "array": "uint8"
+        },
+        {
+          "array": "uint16"
+        },
+        {
+          "array": "uint32"
+        },
+        {
+          "array": "uint64"
+        },
+        {
+          "array": "int8"
+        },
+        {
+          "array": "int16"
+        },
+        {
+          "array": "int32"
+        },
+        {
+          "array": "int64"
+        },
+        {
+          "array": "nat"
+        },
+        {
+          "array": "int"
+        },
+        {
+          "array": "float32"
+        },
+        {
+          "array": "float64"
+        },
+        {
+          "array": "string"
+        },
+        {
+          "array": "bytes"
+        },
+        {
+          "array": "char"
+        },
+        {
+          "array": "usize"
+        },
+        {
+          "array": "isize"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.arrayDuplicate",
+      "parameters": [
+        {
+          "array": "bytes"
+        }
+      ],
+      "result": {
+        "array": "bytes"
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBool",
+      "parameters": [
+        {
+          "array": {
+            "array": "bool"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bool"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBytes",
+      "parameters": [
+        {
+          "array": {
+            "array": "bytes"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseChar",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat32",
+      "parameters": [
+        {
+          "array": {
+            "array": "float32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat64",
+      "parameters": [
+        {
+          "array": {
+            "array": "float64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt",
+      "parameters": [
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "int16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "int32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "int64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "int8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseISize",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseNat",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "nat"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseString",
+      "parameters": [
+        {
+          "array": {
+            "array": "string"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUnit",
+      "parameters": [
+        {
+          "array": {
+            "array": "unit"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "unit"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUSize",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arraySize",
+      "parameters": [
+        {
+          "array": "unit"
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Collections.arrayTotal",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Collections.arrayWords",
+      "parameters": [],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.deep",
+      "parameters": [
+        {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": {
+                                                        "array": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Collections.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "array": "unit"
+      }
+    },
+    {
+      "name": "Collections.recordCount",
+      "parameters": [
+        {
+          "fields": {
+            "value": "nat"
+          },
+          "record": "Records.Count"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "nat"
+        },
+        "record": "Records.Count"
+      }
+    },
+    {
+      "name": "Collections.recordDuplicate",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordEmpty",
+      "parameters": [
+        {
+          "fields": {},
+          "record": "Records.Empty"
+        }
+      ],
+      "result": {
+        "fields": {},
+        "record": "Records.Empty"
+      }
+    },
+    {
+      "name": "Collections.recordInspect",
+      "parameters": [
+        {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.recordMake",
+      "parameters": [],
+      "result": {
+        "fields": {
+          "first": "uint32",
+          "second": "string"
+        },
+        "record": "Records.Pair"
+      }
+    },
+    {
+      "name": "Collections.recordReverse",
+      "parameters": [
+        {
+          "array": {
+            "fields": {
+              "bytes": "bytes",
+              "char": "char",
+              "f32": "float32",
+              "f64": "float64",
+              "flag": "bool",
+              "i16": "int16",
+              "i32": "int32",
+              "i64": "int64",
+              "i8": "int8",
+              "integer": "int",
+              "isize": "isize",
+              "natural": "nat",
+              "text": "string",
+              "u16": "uint16",
+              "u32": "uint32",
+              "u64": "uint64",
+              "u8": "uint8",
+              "unit": "unit",
+              "usize": "usize"
+            },
+            "record": "Records.Primitives"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordShuffle",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "count": {
+            "fields": {
+              "value": "nat"
+            },
+            "record": "Records.Count"
+          },
+          "empty": {
+            "fields": {},
+            "record": "Records.Empty"
+          },
+          "label": "string",
+          "pair": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Pair"
+          },
+          "reversed": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Reversed"
+          },
+          "single": {
+            "fields": {
+              "value": "uint64"
+            },
+            "record": "Records.Single"
+          },
+          "values": {
+            "array": {
+              "array": {
+                "fields": {
+                  "bytes": "bytes",
+                  "char": "char",
+                  "f32": "float32",
+                  "f64": "float64",
+                  "flag": "bool",
+                  "i16": "int16",
+                  "i32": "int32",
+                  "i64": "int64",
+                  "i8": "int8",
+                  "integer": "int",
+                  "isize": "isize",
+                  "natural": "nat",
+                  "text": "string",
+                  "u16": "uint16",
+                  "u32": "uint32",
+                  "u64": "uint64",
+                  "u8": "uint8",
+                  "unit": "unit",
+                  "usize": "usize"
+                },
+                "record": "Records.Primitives"
+              }
+            }
+          }
+        },
+        "record": "Records.Packet"
+      }
+    },
+    {
+      "name": "Collections.recordSingle",
+      "parameters": [
+        {
+          "fields": {
+            "value": "uint64"
+          },
+          "record": "Records.Single"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "uint64"
+        },
+        "record": "Records.Single"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "tests/fixtures/collection-consumers/Collections.lean": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524",
+    "tests/fixtures/collection-consumers/python-hints.py": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c",
+    "tests/fixtures/collection-consumers/python-invalid.py": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52",
+    "tests/fixtures/collection-consumers/python-probe.py": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba",
+    "tests/fixtures/collection-consumers/python-typed.py": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37",
+    "tests/fixtures/collection-consumers/python.py": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f",
+    "tests/fixtures/onboarding/npm-arrays/Arrays.lean": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668",
+    "tests/fixtures/onboarding/npm-arrays/LICENSE": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+    "tests/fixtures/onboarding/npm-arrays/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-records/Records.lean": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540",
+    "tests/helpers/array-fixture.mjs": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf",
+    "tests/helpers/collection-fixture.mjs": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/python-collection-install.mjs": "73817c10670888f4b925025671ca7ac6cad1db9287bce683d40784aec357b7f5",
+    "tests/helpers/python-wheel-install.mjs": "f075880a23027dd52c73e8d73a08244e5b8339d3c9d1f2fa1b698afda4edc189",
+    "tests/helpers/record-fixture.mjs": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+    "tests/python-collection-contract.test.mjs": "71fc55ae8f795ff8958e8590c1483c0cc5055602eb57a80babb85e9302adc8aa",
+    "tests/python-collection-evidence.test.mjs": "e6211ced15e5de581bc75a7e8ff2a3bf8443f40833083e411bb5b531dbd814c0",
+    "tests/python-collections.test.mjs": "633c40af72834da8072f6dc41770f63dfc53f305ffcfbe0940a76f5dafe9a4b0",
+    "tests/python-wheel-install.test.mjs": "b9924f45dc33e8d2fdbdf77d0c55a61abdbaeae4a100024ed248e5605be0169d"
+  },
+  "wordBits": 64
+}

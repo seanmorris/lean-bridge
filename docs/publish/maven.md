@@ -1,8 +1,419 @@
-# Publish a Maven package
+# Build and publish Java and Kotlin packages
+
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, bounded recursive copied values and synchronous callables with primitive, acyclic or recursive copied payloads. Consumers install the artifacts without compiling Lean or writing native conversions.
+
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
 Deploy the reviewed JAR and POM to an organization-controlled Maven repository. Java and Kotlin consumers use the same artifact.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler, JDK 22 and the Kotlin 2.2.0 compiler distribution. Set `LEAN_BRIDGE_JAVAC` and `LEAN_BRIDGE_KOTLINC` to their compiler executables if they are not on PATH. `LEAN_BRIDGE_JAVA`, when set, must select the same JDK as `javac`. If a wrapper puts `kotlinc` outside its distribution, set `LEAN_BRIDGE_KOTLIN_HOME` to the directory containing its `lib/` folder. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select modules and functions in `lean-bridge.exports.json`. Choose coordinates your organization owns:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Maple"],
+  "exports": ["Maple.echo_nat", "Maple.echo_text", "Maple.matrix"],
+  "targets": {
+    "maven": { "name": "com.acme:maple-api", "version": "2.0.0-rc.1" }
+  }
+}
+```
+
+Build into a new directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/maple --target maven \
+  --output /absolute/path/to/maple-release
+```
+
+The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
+
+Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion. Resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+
+Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export options, results and products
+
+Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The Java API supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. The companion Kotlin API supplies sealed interfaces and final classes with non-nullable, covariant type parameters. Both compare nested array contents. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
+
+Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Lean checks the source API before adapter generation on either path. Every selected target must admit the full API in a combined build. See the [Java](../consume/java.md#options-results-and-products) and [Kotlin](../consume/kotlin.md#options-results-and-products) examples and the [installed Maven evidence](../evidence/jvm-compounds-20260920.md).
+
+## Export Lists
+
+Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested arrays and Lists, records, `Option`, `Except` and binary products. Select concrete exports in the ordinary configuration or reviewed contract; no List-specific setting is required.
+
+Java callers use typed arrays; Kotlin uses the corresponding primitive or reference arrays. `List UInt32`, for example, uses Java `long[]` and Kotlin `LongArray`. The generated conversions preserve order, duplicates, nesting and independent result storage. The existing copy budgets and 32-level type limit apply. Acyclic Lists also work in [callbacks and returned closures](#structured-callback-values). See the [Java](../consume/java.md#lists) and [Kotlin](../consume/kotlin.md#lists) examples and the [installed Maven evidence](../evidence/jvm-lists-20260920.md).
+
+## Export named copied aliases
+
+Ordinary-source and reviewed-IR builds preserve concrete copied aliases over
+supported primitives, containers and records. Keep alias names and targets in
+a reviewed contract; flattening them changes that contract and fails compiler
+reconciliation. The generated Java API uses transparent target values. Its
+manifest, README and source documentation retain alias identities and chains,
+including their use at parameters, results and record components.
+
+Java and Kotlin consume the same JAR. This profile does not export wrapper
+classes or separate Kotlin `typealias` declarations. Aliasing retains target
+checks: UInt32 uses range-checked `long`/`Long`, and Nat still rejects negative
+`BigInteger` values. See the [Java](../consume/java.md#named-copied-aliases) and
+[Kotlin](../consume/kotlin.md#named-copied-aliases) examples and the
+[installed Maven evidence](../evidence/jvm-aliases-20260921.md).
+
+## Export copied tagged variants
+
+Select concrete non-recursive Lean inductives through the ordinary export
+configuration or an independently reviewed contract. Lean checks the source
+constructors and payloads before generation. No variant-specific configuration
+is required.
+
+The JAR exposes a sealed Java interface with one record per constructor and a
+companion sealed Kotlin interface with named constructor classes. Java switches
+and Kotlin `when` expressions can match all cases exhaustively.
+Constructor names use PascalCase; accessors use camelCase, escape Java keywords
+and preserve distinguishing trailing underscores. Colliding names reject before
+compilation. The private FFM adapter computes aligned C union layouts and reads
+only the active payload. Generated Lean helpers keep runtime object layouts
+private. The [Kotlin acceptance record](../evidence/kotlin-collections-20260922.md)
+checks the companion APIs alongside the original Java API in installed packages.
+
+Payloads may contain all nineteen primitives and supported copied containers,
+records and other non-recursive variants. Null cases and active null payloads
+reject. Generic, indexed, proof-bearing, callable and identity-bearing
+payloads are not admitted. For recursive constructor families, use the
+[recursive copied-value profile](../consume/java.md#recursive-values).
+Combined native variant builds currently accept C,
+C++, Python, Rust, .NET, JVM, Ruby and Perl when every selected target accepts the entire API.
+
+Review the [Java](../consume/java.md#tagged-variants) and
+[Kotlin](../consume/kotlin.md#tagged-variants) examples and the
+[installed acceptance record](../evidence/jvm-variants-20260921.md) before
+publishing the original JAR and POM.
+
+## Export callbacks and returned functions
+
+Select primitive callable exports in `lean-bridge.exports.json`:
+
+```lean
+namespace Maple
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
+end Maple
+```
+
+Include both exports and set `"arities": { "Maple.make_word": 1 }` to return a function after accepting the captured value. For reviewed Binding IR, the outer parameter count makes that decision; do not also configure `arities`.
+
+Callbacks accept one to sixteen primitive, acyclic or recursive copied arguments and a copied result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement their matching interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
+
+Both source paths use the existing private C callable ABI. A combined build rejects the complete request if a selected target does not support its callable signatures.
+
+## Structured callback values
+
+Arrays, Lists, options, results, nested binary products, copied records, variants
+and aliases can appear in callback arguments/results and returned closures.
+For the consumer examples, add this API to `Structured.lean`:
+
+```lean
+namespace Structured
+structure Payload where
+  text : String
+  rows : Array (Option String)
+  count : Nat
+  nested : Option (Except String (UInt64 × Unit))
+
+def callRecord (value : Payload) (callback : Payload → Payload) := callback value
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) := callback value
+def makeRecord (captured : Payload) : Bool → Payload → Payload :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the functions and the capture arity in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecord", "Structured.callArray", "Structured.makeRecord"],
+  "arities": { "Structured.makeRecord": 1 },
+  "targets": {
+    "maven": { "name": "org.leanbridge:structured", "version": "1.0.0" }
+  }
+}
+```
+
+These coordinates identify the local acceptance example. Choose your own
+coordinates when publishing. Build with `--target maven` using the command
+above. Reviewed contracts specify the outer parameter count in their function
+declarations instead of the `arities` configuration.
+
+The JAR supplies Java records and a separate Kotlin API with Kotlin value types.
+Each callback has a typed functional interface; consumers pass lambdas.
+Returned closures copy captures and implement `AutoCloseable`. Their arguments
+and results retain independent nested storage. Both adapters share process
+guards, native loading and closure leases. The [Java](../consume/java.md#structured-callback-values)
+and [Kotlin](../consume/kotlin.md#structured-callback-values) examples use the same JAR.
+
+This acyclic profile uses copied callback payloads. See the [recursive callback profile](#recursive-callback-values) for recursive types. Host callbacks borrow the
+enclosing synchronous call, and returned closures own explicit leases.
+Callback identities or resources inside copied
+aggregates, retained host callbacks and asynchronous delivery remain unsupported.
+
+## Recursive callback values
+
+Ordinary-source and reviewed-IR Maven builds support recursive copied values in
+callback arguments, callback results and returned closures. Java and Kotlin
+consume one JAR, with separate typed value classes and a shared native runtime.
+
+For the consumer examples, save `Structured.lean`:
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select both functions and the capture arity in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": {
+    "maven": { "name": "org.leanbridge:structured", "version": "1.0.0" }
+  }
+}
+```
+
+These coordinates identify the local acceptance example. Choose your own when
+publishing. Build and verify the release with the commands above, then publish
+its original JAR and POM using the repository instructions below. Reviewed
+contracts specify the outer parameter count instead of configuring `arities`.
+
+The [Java](../consume/java.md#recursive-callback-values) and
+[Kotlin](../consume/kotlin.md#recursive-callback-values) examples use typed lambdas
+and deterministic closure cleanup. Callback inputs, returned values and
+captures keep independent copied storage. Recursive conversion permits 128
+value levels, 262,144 visited values and separate 16 MiB native-copy and
+accounted host-storage budgets. Callbacks are synchronous and call-scoped;
+returned functions own explicit leases. Resources and callable identities
+inside copied aggregates, retained host callbacks and asynchronous delivery
+remain unsupported.
+
+## Owned resources and aggregates
+
+Select the owned-value profile when records or other containers carry resources.
+For a Lean package named `owned-aggregates`, put these declarations in `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle :=
+  callback value
+
+end Owned
+```
+
+Select the resource and ownership policy in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "maven": { "name": "org.leanbridge:owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `lean-bridge build --project . --target maven --output release`.
+Verify `release/package-set-receipt.json` with `lean-bridge verify` before
+handing off or publishing the JAR and POM. Use coordinates you control for
+publication. The [Java](../consume/java.md#owned-resources-and-aggregates) and
+[Kotlin](../consume/kotlin.md#owned-resources-and-aggregates) examples call this API.
+
+The package contains both typed APIs, the compiled Lean component, the shared
+runtime and a private GMP library. Compatible JVM packages share verified
+dependencies. Loading rejects conflicting component builds, incompatible
+runtimes and unverified preloads. Native libraries remain loaded until process
+exit; normal JVM shutdown removes their extracted files.
+
+Reviewed contracts use the same ownership-aware Maven projection. Borrowed
+inputs, explicitly owned results and author-selected input transfers are
+supported. [Parameter-anchored results](#anchor-a-result-to-an-input-owner) use
+whole-value owners. Receiver anchors, callback-result anchors and asynchronous
+delivery need separate lifetime support.
+
+### Transfer input ownership
+
+To consume a resource argument, add this function inside `namespace Owned` and
+include `Owned.retainTicket` in `exports`:
+
+```lean
+def retainTicket (ticket : Ticket) : Ticket := ticket
+```
+
+Add this entry to `contracts` in `lean-bridge.exports.json`:
+
+```json
+{
+  "Owned.retainTicket": {
+    "parameters": [
+      { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } }
+    ]
+  }
+}
+```
+
+The compiler authenticates the decision for both ordinary source and reviewed
+APIs. The Maven JAR exposes the same typed values. Java Javadoc and Kotlin KDoc
+name each consuming argument. The version-2 JVM contract records the handoff and
+alias rules; packaging checks it against the compiled native transfer contract.
+
+At the Lean call boundary, resource aliases sharing the input's lease close
+together. Independent retains remain usable. Invalid inputs and failures during
+snapshot preparation preserve ownership. Failures after handoff leave the input
+consumed. Two consuming arguments cannot share a lease. Callback borrows require
+an explicit retain before transfer. See the [Java](../consume/java.md#consuming-inputs)
+and [Kotlin](../consume/kotlin.md#consuming-inputs) examples.
+
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet,
+Maven and CPAN. Every selected target must admit the complete API.
+
+### Anchor a result to an input owner
+
+Declare a borrowed result in `lean-bridge.exports.json`. For example, given
+`Owned.retainTicket (ticket : Ticket) : Ticket`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.retainTicket"],
+  "resources": ["Owned.Ticket"],
+  "arities": { "Owned.retainTicket": 1 },
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Use the parameter identifier reported by analysis. Reviewed Binding IR can
+declare the same ownership and lifetime on its result site. Fresh compiler
+metadata must agree with the selected declarations before packaging.
+
+Packages with these declarations use `owned-jvm-v3`. Java and Kotlin APIs
+expose `Value<T>` for resource-bearing results, anchor inputs and consuming
+inputs. The version-3 JVM receipt records original-owner expiration, transitive
+descendants, empty-value owners, raw views, canonical identity comparison and
+typed copy factories. Packaging checks those rules against the version-4 native
+ownership contract. Altering outer file hashes does not bypass that comparison.
+
+Build with `lean-bridge build --project . --target maven`. The prepared JAR
+contains both APIs and their native dependencies. Consumers need no Lean tools
+or explicit runtime setup. See the [Java](../consume/java.md#borrowed-results-and-whole-owners)
+and [Kotlin](../consume/kotlin.md#borrowed-results-and-whole-owners) examples.
+
+A combined anchored-result build can select C, C++, Cargo, PyPI, RubyGems,
+NuGet and Maven. Callback-result anchors remain unsupported.
+
+### Export methods and properties
+
+Select the first Lean runtime argument with `"receiver": "method"` or
+`"receiver": "property"`. It must be a declared resource or an owned record or
+variant. Properties take only the receiver; methods may take other arguments.
+Keep the resource and aggregate policies from the previous example, and add
+the selected declarations to `exports` and `arities`:
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    }
+  }
+}
+```
+
+Build with `lean-bridge build --project . --target maven`. Java receives
+`TicketValue.getSerial()` and `TicketValue.retainTicket()`; Kotlin receives
+`TicketValue.serial` and `TicketValue.retainTicket()`. The static `Api` calls
+remain available. Nominal owner classes extend `Value<T>` and keep the original
+receiver's ownership slot through borrows and consuming calls. Read-only
+properties have no setters. A method may instead anchor its result to another
+argument using that argument's original runtime index, such as `arg1`.
+
+Raw resource views expose only members that do not borrow from or consume the
+receiver. `share()` preserves the same owner and `retain()` creates an
+independent one. Both return the nominal owner type. Packages with receivers
+use `owned-jvm-v4`, version-4 JVM receipts and version-5 native ownership
+contracts. Packages without receiver declarations retain their existing format.
+
+Maven can share one receiver build with C, C++, Cargo, PyPI, RubyGems and NuGet.
+Other targets still reject receiver declarations. See the executable
+[Java](../consume/java.md#methods-and-properties) and
+[Kotlin](../consume/kotlin.md#methods-and-properties) examples.
+
 ## Build the repository layout
+
+The separate Alpha interoperability fixture retains its resource and callback examples.
 
 From the Lean Bridge checkout with the pinned Nix environment:
 
@@ -32,13 +443,15 @@ Check both the [Java](../consume/java.md) and [Kotlin](../consume/kotlin.md) con
 
 The example coordinate is `org.leanbridge:lean-alpha:0.0.0`. Do not publish it as your own package.
 
-The [universal bundle mapping](../../src/release/universal-release-bundle.mjs) fixes the package name, while [Alpha's Binding IR](../../poc/lean-link-spike/bindings/alpha.binding-ir.json) supplies the version. Review those inputs, the [JVM generator](../../src/backends/jvm/generate.mjs), and consumer fixtures when adopting an owned group ID, artifact ID, and new version. Regenerate the bindings, canonical bundle, and packages from that source change.
+For ordinary projects, set `targets.maven.name` to a lowercase `groupId:artifactId` and `targets.maven.version` to an exact three-part release version, optionally with a prerelease suffix. Mutable selectors, version ranges and SNAPSHOT releases are rejected. Rebuild to change coordinates; do not edit an approved JAR or POM.
 
-The current managed profile implements Alpha's API model. An arbitrary ordinary Lean project does not automatically produce a JVM package. Do not override coordinates during deployment or edit the approved POM to disguise the fixture.
+For the separate Alpha fixture, the [universal bundle mapping](../../src/release/universal-release-bundle.mjs) fixes the package name and [Alpha's Binding IR](../../poc/lean-link-spike/bindings/alpha.binding-ir.json) supplies the version. Do not override coordinates during deployment to disguise that fixture.
 
 ## Produce and review the candidate
 
-Use a clean committed checkout. The publication ecosystem is `maven`; its binding target is `jvm`.
+For an ordinary release, reproduce the build from a different source location, compare both archive hashes, and execute fresh installed consumers. Review source and dependency licenses. Preserve the original JAR, POM and `native-release.json` for the approved upload.
+
+The signed-candidate workflow below applies to the universal Alpha bundle, not ordinary Maven outputs. Use a clean committed checkout. The publication ecosystem is `maven`; its binding target is `jvm`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target maven --dry-run \
@@ -57,7 +470,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/maven-candidate/publish-manifest.json
 ```
 
-Retain both the JAR and POM hashes. Complete the [sandbox record](sandbox-release.md) and [production approval process](production-release.md) for the actual destination.
+Retain both the JAR and POM hashes. Complete the [sandbox record](../contributing/sandbox-release.md#rehearse-a-registry-release) and [production approval process](../publishing.md#build-and-approve-the-same-artifacts) for the actual destination.
 
 The installed CLI supplies only the npm transaction adapter. A Maven deploy command does not produce a Lean Bridge signed completion receipt. The reviewed integration must authorize the chosen repository and credentials; the manifest's default Maven Central destination does not authorize a private repository.
 
@@ -170,3 +583,7 @@ If a reviewed publisher integration supplies a signed release receipt, apply [re
 A JAR upload can succeed before the POM or metadata upload fails. Inspect the repository's exact coordinate and compare each existing file before retrying. Keep partial-deployment logs and the original candidate.
 
 If any published file differs, stop and involve the repository and release owners. Use an approved new version for corrected content. A repository's overwrite or deletion capability is not authority to replace an immutable reviewed release.
+
+### Publish a Maven package
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

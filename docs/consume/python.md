@@ -1,8 +1,629 @@
 # Use a Lean package from Python
 
-Install the Alpha interoperability wheel and import `lean_alpha`. The wheel includes the generated Python API, its native adapter, the Alpha component, and the Lean runtime. Consumers do not compile Lean.
+Install the publisher's platform wheel and import its generated Python module. The wheel includes the API, native adapter, compiled Lean component and runtime. Consumers need neither Lean nor a C compiler.
 
 ## Use a prepared release
+
+### Ordinary project packages
+
+Use Python 3.11 or newer on Linux x86-64 with glibc 2.38 or newer. Install the original wheel in an isolated environment. This example uses the Iris acceptance package; substitute the filename and module supplied by your publisher:
+
+```sh
+python3 -m venv .venv
+./.venv/bin/python -m pip install \
+  ./iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl
+```
+
+Save this as `ordinary.py`:
+
+```python file=python/ordinary.py
+from lean_iris import array_u32, echo_nat, echo_text, echo_u32
+
+assert echo_u32(42) == 42
+assert echo_nat(2**4096 + 1) == 2**4096 + 1
+assert echo_text("Lean λ\0") == "Lean λ\0"
+assert array_u32([0, 2**32 - 1]) == (0, 2**32 - 1)
+
+print("42; exact integers and copied arrays")
+```
+
+Run `./.venv/bin/python ordinary.py`. The wheel supplies type annotations, type stubs and a `py.typed` marker. Importing it verifies its native libraries and loads a compatible shared runtime automatically. There is no runtime path or `ctypes` setup in application code.
+
+pip also installs any Python dependencies declared by the wheel. Packages with
+deep or heavily repeated type annotations use `TypeAliasType` to avoid expanding
+the same type repeatedly. Python 3.12 and newer supply it in the standard library.
+On Python 3.11, pip installs `typing_extensions>=4.6,<5` automatically when needed.
+Runtime aliases expose their precise target through `__value__`. Shallow hints
+and the exact list-or-tuple input types in the stubs remain unchanged.
+
+For an offline installation, download the wheel's dependencies on a connected
+machine using the same Python version and platform as the consumer:
+
+```sh
+./.venv/bin/python -m pip download --only-binary=:all: --dest wheelhouse \
+  ./iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl
+```
+
+Transfer the publisher's verified wheel and `wheelhouse/`, then install with
+`--no-index --find-links ./wheelhouse`. Keep dependency resolution enabled.
+The publisher's Lean Bridge receipt identifies its own wheel; verify third-party
+dependency downloads under your dependency policy.
+
+For deeply nested APIs, use a current static checker. The 24-level collection
+fixture passes strict checking with mypy 2.3.1. Mypy 1.17.1 expands its nested
+union aliases excessively, even when a consumer only imports the package.
+
+Ordinary packages support pure functions over 19 primitive types, concrete copied aliases, arrays, Lists, copied records, tagged variants, options, results and nested binary products, including bounded recursive values. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
+
+Reserved Python field names gain a trailing underscore, such as Lean `bytes`
+becoming Python `bytes_`. Conflicting projected names stop generation. The native
+layout keeps the original field meaning. Dataclasses provide field-by-field
+equality and pattern matching; fields containing input lists remain mutable,
+and list and tuple fields retain Python's normal comparison rules.
+
+Python conversion and native input/output copying each have a 16 MiB budget. Array and List conversion count at least eight bytes per element, and text counts encoding/decoding storage. These budgets do not bound all Python object overhead or the Lean algorithm's working memory. Inputs raise `TypeError`, `ValueError` or an encoding error when invalid. Native failures raise the package's `LeanBridgeError`. Native results and temporary buffers are released even if Python result conversion fails.
+
+Calls can run on separate threads. Do not mutate inputs during conversion. The loader rejects free-threaded interpreters and calls after `fork`; start a fresh interpreter in the child process. Subinterpreters and non-CPython implementations have not been accepted. See the [installed-wheel evidence](../evidence/native-python-20260915.md) for tested versions and cases.
+
+### Arrays and records
+
+For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),
+save this as `arrays-records.py`:
+
+```python
+from lean_parcels import Parcel, reverse
+
+parcel = Parcel(label="Seeds", counts=[2, 7])
+result = reverse(parcel)
+
+assert result == Parcel(label="Seeds", counts=(7, 2))
+assert parcel.counts == [2, 7]
+print(f"{result.label}: {', '.join(map(str, result.counts))}")
+```
+
+Run `./.venv/bin/python arrays-records.py`. It prints `Seeds: 7, 2`.
+`reverse` returns a new record with tuple-valued counts. It leaves the input
+record and its list unchanged. Records use their declared field names and types;
+dicts and record subclasses are not interchangeable with the generated class.
+The [installed collection checks](../evidence/python-collections-20260922.md)
+cover all nineteen primitives, seven record types and 24 nested array levels on
+both source paths, including offline dependency resolution and strict typing.
+
+### Options, results and products
+
+`Option[T]` is `None` or `Some(value)`. Import `Some` from the installed package.
+`Some(None)` preserves a present Unit or an absent inner option; it never becomes
+the outer `None`. `Result[T, E]` is `Ok(value)` or `Err(value)`. Both wrappers keep
+their branch even when `T` and `E` are the same type. They are frozen dataclasses
+with a `value` field and support Python pattern matching.
+
+For the Compounds acceptance package, save this as `compounds.py`:
+
+```python
+from lean_compounds import Some, Ok, Err, classify, next, flip, tuple_uint32
+
+assert classify(None) == 0
+assert classify(Some(None)) == 1
+assert classify(Some(Some(None))) == 2
+assert next(None) == Some(None)
+assert flip(Ok((42, Some(None)))) == Err((42, Some(None)))
+assert tuple_uint32((1, 2)) == (2, 1)
+```
+
+Run `./.venv/bin/python compounds.py` after installing that package's wheel.
+Generated annotations use `Option[T]`, `Result[T, E]` and `tuple[A, B]`.
+`A × (B × C)` remains `(a, (b, c))`, not a flat three-element tuple. Products
+require exactly two elements in a tuple; Python lists are accepted for Lean arrays and Lists.
+Options and results require their explicit wrappers, not bare payloads or dicts.
+An `Err` is a returned domain value; conversion and runtime failures raise
+exceptions separately.
+
+These types can contain arrays, Lists, copied records and each other, within the
+32-level type limit and existing copy budgets. Resources and callbacks cannot
+be placed inside copied values. See the [installed compound checks](../evidence/python-compounds-20260920.md).
+
+### Lists
+
+Lean `List T` accepts a Python `list[T]` or `tuple[T, ...]` and returns an owned
+`tuple[T, ...]`. Empty Lists, duplicates and order are preserved. Elements can
+contain the supported copied types, including arrays, options, results, products
+and records. Lists and arrays remain distinct in the reviewed contract. Container
+subclasses and arbitrary iterators are rejected.
+
+For the Lists acceptance package, save this as `lists.py`:
+
+```python
+from lean_lists import reverse_uint32, mix
+
+assert reverse_uint32([1, 2, 2, 3]) == (3, 2, 2, 1)
+assert reverse_uint32(()) == ()
+assert mix([[1, 2], [], [3]]) == ((3,), (), (2, 1))
+```
+
+Run `./.venv/bin/python lists.py` after installing its prepared wheel. Native
+output cleanup is automatic, including if a nested Python conversion fails.
+The [installed List checks](../evidence/python-lists-20260920.md) cover both source
+paths. Lists also work as [callback and closure payloads](#structured-callback-values).
+
+### Named aliases
+
+Concrete copied Lean aliases become named `TypeAlias` declarations in the module
+and its type stub. They use the target's ordinary Python values. An alias of
+`Nat` is still an exact `int` and rejects negative input; an alias of a record
+is the same frozen dataclass. Aliased arrays and Lists accept lists or tuples
+and return independent tuples. Aliases introduce no wrapper or disposal step.
+
+For the Aliases acceptance package, save this as `aliases.py`:
+
+```python
+from lean_aliases import Count, Rows, increment, reverse_rows
+
+count: Count = 41
+rows: Rows = ((1, 2), ())
+assert increment(count) == 42
+assert reverse_rows(rows) == ((2, 1), ())
+assert reverse_rows([[1, 2], []]) == ((2, 1), ())
+```
+
+Run `./.venv/bin/python aliases.py` after installing its prepared wheel.
+The [installed alias checks](../evidence/python-aliases-20260921.md) exercise
+all nineteen primitive targets, chains, records and nested containers, including
+strict checking of the installed stubs. Concrete aliases can also refer to the
+[recursive values](#recursive-values) below. Acyclic aliases also work in
+[structured callback values](#structured-callback-values).
+
+### Tagged variants
+
+Concrete copied Lean inductives become a union of named, frozen dataclasses.
+For example, `Signal` is `SignalIdle | SignalStopped | SignalData | SignalMarker`.
+Construct the case you need, then inspect the result with `isinstance` or pattern
+matching. Empty cases and a case containing `Unit` remain different values.
+
+After installing the Variants acceptance wheel, save this as `variants.py`:
+
+```python
+from lean_variants import SignalData, SignalIdle, SignalStopped, echo, next
+
+assert echo(SignalIdle()) == SignalIdle()
+assert next(SignalIdle()) == SignalStopped()
+
+match next(SignalData(41, "queued")):
+    case SignalData(42, "queued!"):
+        print("The next signal carries 42 and queued!")
+    case _:
+        raise AssertionError("Unexpected signal")
+```
+
+Run `./.venv/bin/python variants.py`. Each constructor's `kind` class attribute
+retains its Lean name, such as `"data"`; calls select cases by their exact
+generated class. Dictionaries, subclasses and numeric tags do not substitute
+for constructor values. Calls validate payload types and ranges. Field names use
+snake_case; reserved names gain a trailing underscore, such as `bytes_`.
+
+Variant fields can contain supported copied records, arrays, Lists, options,
+results and products. Returned containers are independent tuples, even when
+inputs use lists. The 32-level type limit and existing copy budgets apply.
+The [installed variant checks](../evidence/python-variants-20260921.md) cover
+both source paths, strict stubs, relocation and conversion-failure cleanup.
+Recursive values use the graph adapter described below. Identity-bearing variant
+payloads require the explicit [ownership profile](#resource-containing-values).
+
+### Recursive values
+
+Prepared wheels expose finite recursive records and inductives as named frozen
+dataclasses. Mutually recursive types and concrete aliases work the same way.
+Construct values with the generated classes and call ordinary typed functions;
+the wheel loads its native libraries and shared Lean runtime automatically.
+
+After installing the Recursive acceptance wheel, save this as `recursive.py`:
+
+```python
+from typing import assert_never
+from lean_recursive import Spine, SpineLeaf, SpineNext, spine
+
+
+def depth(value: Spine) -> int:
+    match value:
+        case SpineLeaf():
+            return 0
+        case SpineNext(child):
+            return 1 + depth(child)
+    assert_never(value)
+
+
+original = SpineNext(SpineNext(SpineLeaf(42)))
+copied = spine(original)
+assert copied == original and copied is not original
+print(f"Depth: {depth(copied)}")
+```
+
+Run `./.venv/bin/python recursive.py`. It prints `Depth: 2`.
+Lists and arrays accept exact lists or tuples and return independent tuples.
+`Some`, `Ok`, and `Err` preserve option and result constructors inside recursive
+values. A domain error returned as `Err` does not raise a bridge exception.
+
+Calls accept at most 128 levels and 262,144 visited nodes. Arguments and the
+result share a 16 MiB native-copy budget and a separate 16 MiB accounted Python
+conversion-storage budget. Cycles, invalid constructors, wrong scalar types,
+out-of-range integers and invalid Unicode are rejected. The adapter releases
+native output and temporary buffers even if a Python conversion raises.
+Malformed native output retires the shared runtime; earlier copied Python
+results remain usable. Start a fresh interpreter after `fork`.
+
+Stubs retain recursive unions and container types for strict type checking.
+Runtime annotations use finite `TypeAliasType` references; `__value__` exposes
+their targets. On Python 3.11, pip installs `typing_extensions` automatically
+when container aliases need it.
+Python 3.12 and newer use the standard library. Recursive values also work as
+[callback and closure payloads](#recursive-callback-values). Copied fields cannot
+contain resource or callback identities.
+
+The [recursive wheel checks](../evidence/python-recursive-packages-20260923.md)
+exercise both source paths on CPython 3.11 and 3.12, strict typing, three-package
+runtime sharing, failed conversions and fork rejection with a held runtime lock.
+
+### Callbacks and returned Lean closures
+
+Ordinary-source and compiler-checked reviewed wheels accept synchronous Python callables with primitive, structured and bounded recursive arguments and results. The same nineteen primitive conversions apply inside callbacks and returned closures, including exact integers and Unicode scalars.
+
+For the Callables acceptance package, save this as `callbacks.py`:
+
+```python
+from lean_callables import call_nat, make_string
+
+assert call_nat(2**4096, lambda value: value + 1) == 2**4096 + 1
+
+with make_string("captured\0🌿") as choose:
+    assert choose(True, "argument") == "captured\0🌿"
+    assert choose(False, "argument") == "argument"
+```
+
+Returned functions have a typed `LeanClosure` API. Use `with`, or call `close()` explicitly. Closing twice is safe; `closed` reports the state. Calling a closed closure raises `RuntimeError`. Garbage collection also releases the lease, but does not replace deterministic cleanup. Closures cannot be copied or pickled.
+
+Invoke a closure on its creating thread. Closing from another thread waits for an active call; closing during same-thread re-entry defers disposal until that call finishes. Independent calls and closures can run on different threads.
+
+If a callback raises, the caller receives the original Python exception after native cleanup. Later callback invocations in that call are suppressed. Nested synchronous calls are allowed, with a native re-entry limit of 64. Callback conversions share the exporting call's 16 MiB conversion budget. Async callbacks are rejected. Lean cannot retain a borrowed host callback beyond the exporting call; attempts to invoke an expired callback raise `LeanBridgeError`.
+
+See the [Python callable acceptance record](../evidence/python-callables-20260918.md) for installed-wheel boundary and lifetime checks.
+
+### Structured callback values
+
+Callbacks and returned closures can carry arrays, Lists, options, results,
+products, acyclic records, variants and concrete aliases. They use the same
+Python values as ordinary exported functions.
+
+Callback arguments own independent copies. Arrays and Lists arrive as tuples;
+the callback may return an exact list or tuple. Returned Lean closures also
+accept lists or tuples and return owned tuples. For the Structured acceptance
+package, save this as `structured-callbacks.py`:
+
+```python
+from lean_structured import Option, Some, call_array, make_array
+
+
+def append_note(rows: tuple[Option[str], ...]) -> list[Option[str]]:
+    return [*rows, Some("found\0🌿")]
+
+
+result = call_array([None, Some("")], append_note)
+assert result == (None, Some(""), Some("found\0🌿"))
+
+with make_array(result) as choose:
+    assert choose(True, []) == result
+    assert choose(False, [Some("replacement")]) == (Some("replacement"),)
+```
+
+`None`, `Some(None)` and `Some(Some(None))` retain separate meanings for nested
+options. `Ok` and `Err` preserve Lean domain results; exceptions raised by the
+callback propagate as the original Python exception after native cleanup.
+Records and variants use their generated classes. Aliases reuse their target
+values without wrappers.
+
+Callback result buffers stay alive until Lean finishes copying them. Each
+Python call and its callbacks share a 16 MiB conversion allowance. Native
+conversions have a separate 16 MiB allowance; neither limit bounds the Lean
+algorithm's working memory or all Python allocator overhead. Resource-containing
+aggregates use the separate [ownership profile](#resource-containing-values).
+Asynchronous delivery and callbacks inside copied containers remain unsupported.
+
+The [installed structured callback checks](../evidence/python-structured-callables-20260924.md)
+cover both source paths on CPython 3.11 and 3.12, strict typing, relocated wheels,
+nested allocation failures and unchanged installed files.
+
+### Recursive callback values
+
+The Structured acceptance package also exports a recursive `Tree`. Its generated
+`TreeLeaf` and `TreeBranch` classes work in ordinary calls, callback arguments,
+callback results and returned closures. Save this as `recursive-callbacks.py`:
+
+```python
+import lean_structured as api
+
+
+def increment(value: api.Tree) -> api.Tree:
+    if isinstance(value, api.TreeLeaf):
+        return api.TreeLeaf(value.value + 1)
+    return api.TreeBranch(tuple(increment(child) for child in value.children))
+
+
+original = api.TreeBranch((api.TreeLeaf(2**256), api.TreeBranch(())))
+changed = api.call_recursive(original, increment)
+expected = api.TreeBranch((api.TreeLeaf(2**256 + 1), api.TreeBranch(())))
+assert changed == expected
+
+with api.make_recursive(changed) as choose:
+    assert choose(True, api.TreeLeaf(0)) == expected
+    assert choose(False, original) == original
+```
+
+Callbacks receive independent values. Captured values survive changes to the
+original Python containers. `close()` releases the closure's native identity;
+later invocation raises `RuntimeError`. A closure stays bound to its creating
+thread even after that thread exits and the OS reuses its thread ID.
+
+The graph adapter rejects cyclic Python values. Each call shares a 16 MiB native
+copy budget across its inputs, callbacks and result, plus a separate 16 MiB
+accounted Python conversion budget. Values can visit at most 262,144 nodes and
+128 levels, counting each record, constructor, container and scalar edge.
+Callback exceptions and conversion failures release temporary owners before
+propagating to the Python caller. Malformed native output retires the runtime.
+
+The [installed recursive callback checks](../evidence/python-recursive-callables-20260925.md)
+cover both source paths, Python 3.11/3.12, strict typing, allocation failures,
+creator-thread exit and closure-capacity recovery.
+
+### Resource-containing values
+
+When the publisher selects resource identities and an explicit ownership policy,
+ordinary wheels expose those resources inside records, variants, arrays, Lists,
+options, results, products and recursive values. Install the publisher's wheel
+normally. It includes the generated API, compatible Lean runtime and GMP;
+application code needs no native-library configuration.
+
+For the Owned acceptance package, save this as `owned-values.py`:
+
+```python
+import lean_owned_aggregates as api
+
+with api.new_ticket(2**256 + 1, "receipt") as ticket:
+    bundle = api.Bundle(ticket, None, (), (), api.Payload(-7, b"payload"))
+    returned = api.callback_record(bundle, lambda value: value)
+    with returned.primary as copied_ticket:
+        assert api.serial(copied_ticket) == 2**256 + 1
+        assert api.label(copied_ticket) == "receipt"
+
+    with api.identity_closure(None) as echo:
+        with echo(bundle).primary as copied_ticket:
+            assert api.serial(copied_ticket) == api.serial(ticket)
+```
+
+Run `./.venv/bin/python owned-values.py`. Records and constructor cases are
+frozen dataclasses. Returned containers are independent tuples, while resource
+fields retain their original Lean identities through checked ownership leases.
+All nineteen primitive types can appear alongside resource fields.
+
+Use `with` or `close()` to release a resource wrapper. A shallow Python copy
+shares its ownership lease; closing either wrapper leaves the other usable.
+`retain()` acquires independent native ownership. Garbage collection supplies
+fallback cleanup on the creating thread. Resources reject use on another thread,
+after creator-thread exit or after fork. Deep copying and pickling identities
+are rejected.
+
+Callback containers are independent values, but their resource fields borrow
+the invocation and expire when it returns. Call `retain()` inside the callback
+to keep one. Reply values are copied and retained before callback-local storage
+expires. An original callback exception returns to the caller after native
+cleanup. Functions that require a failure-path value accept
+`with_recovery(function, typed_value)`; that value never turns a failed callback
+into a successful result. Async functions and awaitable replies are rejected.
+
+Returned Lean closures support `with`, `retain()` and `close()`. They can be
+passed back as callbacks, including higher-order arguments. Returning a closure
+that captures a call-scoped Python callback does not extend that callback's
+lifetime; invoking the expired callback raises `LeanBridgeError`.
+
+Each call shares limits of 128 levels, 262,144 visited nodes, 16 MiB of native
+conversion data and 16 MiB of accounted Python conversion storage across its
+inputs, callbacks and result. Cycles and invalid values are rejected. These
+limits do not bound Lean's working memory or every Python allocation overhead.
+See [owned-wheel acceptance](../evidence/owned-python-packages-20260927.md) and
+the [author configuration](../publish/pypi.md#export-resource-containing-values).
+
+### Transferred inputs
+
+A publisher can mark a resource-containing argument as transferred. Pass its
+ordinary Python value to the function. At the Lean call boundary, the argument's
+resource leases close, including shallow aliases and sibling resources sharing
+the same returned owner. Copied fields remain Python values. Call `retain()`
+before the transfer when another part of your application needs independent
+ownership.
+
+For the transfer acceptance wheel, save this as `owned-transfers.py`:
+
+```python file=python/owned-transfers.py
+import copy
+from lean_owned_aggregates import new_ticket, retain_ticket, serial
+
+original = new_ticket(42, "shipment")
+alias = copy.copy(original)
+independent = original.retain()
+
+with retain_ticket(original) as received:
+    assert original.is_closed and alias.is_closed
+    assert serial(received) == 42
+    assert serial(independent) == 42
+
+independent.close()
+print("transferred")
+```
+
+Run `./.venv/bin/python owned-transfers.py`. This fixture declares
+`retain_ticket`'s parameter as transferred; ownership follows the publisher's
+contract, not a function's name.
+Generated function docstrings identify the consuming arguments; inspect them
+with `help()` before passing resources that other code still uses.
+
+Validation and preparation failures leave the inputs usable. Once Lean receives
+them, callback exceptions and result-conversion failures leave them consumed.
+Reentrant callbacks observe caller aliases as closed while their callback-local
+borrows remain valid. Retain a callback borrow before transferring it. Two
+transferred arguments cannot share a resource lease; use independent retains.
+Borrow-only functions keep their existing behavior.
+
+### Results borrowed from an input
+
+A publisher can tie a returned value to one input owner. Those packages expose
+resource-containing results as `Value[T]`, including empty arrays, `None` and
+empty constructors. Call `get()` to access the checked value. Pass the `Value`
+itself to an anchored or consuming parameter; other parameters use ordinary
+Python values.
+
+For the borrowed-result acceptance wheel, save this as `owned-borrows.py`:
+
+```python file=python/owned-borrows.py
+import lean_owned_aggregates as api
+
+with api.new_ticket(42, "example") as owner:
+    view = api.retain_ticket(owner)
+    independent = view.retain()
+    assert view == owner
+
+assert view.is_closed
+with independent:
+    print(api.serial(independent.get()))
+
+with api.copy_value([], result_of=api.echo_array) as empty:
+    borrowed_empty = api.echo_array(empty)
+    assert borrowed_empty.get() == ()
+assert borrowed_empty.is_closed
+```
+
+Run `./.venv/bin/python owned-borrows.py`. This fixture declares `retain_ticket`'s
+result as borrowed from its argument. The method `Value.retain()` instead creates
+independent ownership.
+
+`copy.copy(value)` shares its original owner and immutable storage. `close()`
+releases that wrapper. Resource wrappers extracted by `get()` can also share an
+owning lease. Releasing the last owning alias expires borrowed results and their
+descendants. A borrow does not keep its anchor alive. Checked access, resource
+operations and equality raise `LeanBridgeError` for expired owners. Equality
+compares canonical resource identity; independently retained aliases compare
+equal. Already extracted ordinary fields remain Python data.
+
+Whole-value reads, retains and shallow copies capture their payload before
+validation. If another thread closes the wrapper during an operation, that
+operation uses its captured payload or raises `LeanBridgeError` for expiration.
+Resource calls still run on the creating thread.
+
+Use `copy_value(record)` for generated records, variants and resources. For
+containers, `result_of=api.function` selects the function's exact result type,
+including when the value is empty. `parameter_of=(api.function, "arg2")` selects
+an argument type. Neither selector calls the function. `Value.retain()` already
+knows its type and needs no selector. Returned Lean closures are callable
+`Value` objects. Callback payloads remain ordinary Python values whose resource
+leaves expire at callback return unless explicitly retained.
+
+In these packages, transferred parameters consume the original `Value` owner,
+including empty values. Aliases and borrowed descendants become closed before
+callback reentry. Validation failures preserve inputs; errors after handoff
+leave them consumed. A borrowed root cannot transfer, and a call cannot consume
+its result anchor or that anchor's ancestor. Retain a borrow first when independent
+ownership is needed. Packages without result anchors keep the API above.
+
+### Callback results borrowed from an argument
+
+A returned Lean function can declare that its result borrows one of its own
+arguments. Pass that argument as a `Value[T]`. The callback returns a checked
+`Value[T]` view that expires with the selected argument's original owner, even
+when Lean returns captured data. Closing the closure does not close that view.
+Retain or copy the result to give it independent ownership.
+
+For the callback-result acceptance wheel, save this as `owned-callback-results.py`:
+
+```python file=python/owned-callback-results.py
+import lean_owned_aggregates as api
+
+ticket = api.new_ticket(42, "ready")
+bundle = api.Bundle(ticket.get(), None, (), (), api.Payload(0, b""))
+owner = api.copy_value(bundle)
+callback = api.make_record(bundle)
+
+# The callback result borrows its second argument, not its captured bundle.
+view = callback(False, owner)
+print(api.serial(view.get().primary))
+independent = view.retain()
+
+owner.close()
+assert view.is_closed
+print(api.serial(independent.get().primary))
+
+view.close()
+independent.close()
+callback.close()
+ticket.close()
+```
+
+Run `./.venv/bin/python owned-callback-results.py`. It prints `42` twice.
+Borrowed descendants and empty recursive constructors keep the same lifetime
+checks. A shallow copy shares its owner; `retain()` creates an independent one.
+Passing a returned closure back into Lean accepts either the `Value` wrapper or
+its checked `get()` result, including packages with host callbacks disabled.
+
+When a package enables synchronous Python callbacks, their arguments remain raw
+generated Python values. A borrowed callback reply or explicit recovery value
+can be a raw value or a whole `Value[T]`. The adapter checks and copies it before
+the callback frame expires. Escaped argument resources expire on return unless
+retained inside the callback. Recovery does not turn an exception into success;
+the caller receives the original exception after native cleanup.
+
+Consuming methods expire aliases and borrowed descendants before callback
+reentry. Validation failures leave the input open; errors after handoff leave
+it consumed. Retaining an exception traceback does not retain hidden result
+owners. These contracts do not enable retained host callbacks or async replies.
+
+### Methods and properties
+
+Packages with [receiver exports](../publish/pypi.md#export-methods-and-properties)
+provide named methods and read-only properties on `Value[T]`. Lean's
+`retainTicket` becomes `retain_ticket()`, and the declared `serial` property
+becomes `owner.serial`.
+
+For the receiver acceptance wheel, save this as `owned-receivers.py`:
+
+```python file=python/owned-receivers.py
+import lean_owned_aggregates as api
+
+with api.new_ticket(42, "receiver") as owner:
+    view = owner.retain_ticket()
+    independent = view.retain()
+    print(view.serial)
+
+assert view.is_closed
+with independent:
+    print(independent.serial)
+```
+
+Run `./.venv/bin/python owned-receivers.py`. It prints `42` twice. The borrowed
+view expires when the original owner closes; the retained value stays usable.
+A method can instead anchor its result to another argument, whose lifetime then
+controls the result. Properties that return copied strings or numbers remain
+usable after the call.
+
+Record fields remain on the checked value: `record.get().primary` reads a field,
+while `record.primary` calls the exported property. Resource leaves expose only
+members that do not require the whole result owner. The generated stubs reject
+members used on the wrong `Value[T]`, and runtime dispatch checks the nominal
+type. Free functions remain available.
+
+A consuming method such as `owner.transfer_ticket()` consumes the original
+owner. Aliases and borrowed descendants become closed before a reentrant callback
+can use them. Retain a borrowed value before transferring it. Receiver packages
+preserve whole result owners even when they have no borrowed-result exports.
+
+### Alpha resource example
+
+The remaining example uses the separate Alpha fixture and its fixed API.
+New packages use the ordinary source and ownership profiles described above.
 
 ### Requirements and package
 
@@ -10,7 +631,7 @@ Use Python 3.11 or newer on Linux x86-64 with glibc 2.38 or newer, with pip and 
 
 Obtain `lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl` from the publisher's release channel. [Use a prepared release](receive-package.md) covers handoff authentication separately.
 
-### Install the wheel
+## Install the wheel
 
 Put the original release wheel in your project directory, then install it in an isolated environment:
 
@@ -22,7 +643,7 @@ python3 -m venv .venv
 
 pip checks the wheel's platform tag and Python requirement. The installed package loads its bundled native libraries when imported.
 
-### Call Lean
+## Call Lean
 
 Save this file as `main.py`:
 
@@ -70,6 +691,8 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Values and cleanup
+
 ### Type conversions
 
 Profiles: Python. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -78,39 +701,39 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `None` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `int` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `str` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `bytes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `tuple[T, ...]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | `T \| None` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | The current nullable annotation collapses nested Option and Option Unit; lossless tagged conversion remains work. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | `Ok[T] \| Err[E]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `tuple[T, U, ...]` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated frozen dataclass (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Generated case classes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Unit` | `None` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Ordinary packages use None in every position. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Only exact bool values are accepted, without numeric coercion. Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact int in 0..18446744073709551615; no floating-point conversion. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact nonnegative int without a fixed bit-width limit. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact signed int without narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Require float and round to binary32; NaN classification, infinities and signed zero are tested. Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `str` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Strict Unicode str preserves embedded NUL; surrogate code points are rejected during UTF-8 encoding. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `bytes` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact bytes input and independently owned immutable output. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `tuple[T, ...] (also list[T] input)` (input, field); `tuple[T, ...]` (result); `tuple[T, ...] from Lean; tuple[T, ...] or list[T] to Lean` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact list or tuple inputs are snapshotted and recursively checked. Returned tuples own their elements; conversion budgets apply at every level. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Exact tuples and lists preserve element order and nesting on input; owned tuples preserve all nineteen primitives and nested records on output. Invalid elements, misaligned nonempty native buffers and oversized copies reject. Runtime aliases bound repeated deep annotation expansion without widening installed static types. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `Option[T] = Some[T] \| None` (input, result, field); `None or Some(value), preserving nested presence` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | None, Some(None) and Some(Some(None)) preserve nested Unit options. Only None or the generated Some wrapper is accepted; payloads use their declared conversion rules. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result[T, E] = Ok[T] \| Err[E]` (input, result, field); `Ok(value) or Err(value)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `tuple[A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Python lists are accepted for Lean arrays and Lists, not products. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Copied structure` | `Generated frozen dataclass` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated frozen dataclasses use compiler-owned accessors. Returned nested arrays, records and byte values are independent copies. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Generated frozen dataclasses preserve declared field order, nominal record identity, empty and one-field records and nested values. Python keywords and reserved names gain a checked underscore suffix without changing Lean field names. pip installs the typing backport automatically on Python 3.11 only when deep shapes require runtime aliases. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Type alias` | `Source-named TypeAlias of the ordinary Python target value` (input, result, field); `Named TypeAlias retaining its copied target values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Names appear in module exports, stubs, signatures and fields. Target checks and ownership are unchanged: exact integers with range checks, list-or-tuple inputs and independent tuple results, and the same frozen dataclass for record aliases. Unit uses TypeAlias = None. An alias of Nat still rejects negative input. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Inductive sum` | `union of named frozen constructor dataclasses` (input, result, field); `Generated constructor dataclasses` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Construct named frozen dataclasses and inspect them with isinstance or structural pattern matching. The union alias and Literal kind annotations preserve constructor identity; calls select cases by exact generated class, not numeric tags or arbitrary attributes. Only the active payload is converted. Results contain independent copied values; nested arrays and Lists return tuples. Empty cases and Unit fields remain distinct. Invalid inputs, unknown native tags and copy-budget failures reject with automatic native-output and scratch cleanup. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated resource class` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
-| `Host function passed to Lean` | `Callable / generated callback` (input) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order and elements without exposing list constructors; choose and test a lossless IR lowering. |
-| `Char` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
-| `USize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
-| `ISize` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
+| `Host function passed to Lean` | `Callable[[...], R]` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
+| `List α` | `tuple[T, ...] \| list[T]` (input); `tuple[T, ...]` (result); `tuple[T, ...] \| list[T] (input); tuple[T, ...] (output)` (field); `tuple[T, ...] from Lean; tuple[T, ...] or list[T] to Lean` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact Python lists or tuples are accepted; results and returned record fields hold independent tuples. Preserve order, duplicates and nesting. Reject container subclasses, iterators, cycles and coercible elements; native results and scratch clear even if Python conversion raises. Generated values preserve option presence, domain branches, constructor identity and independent storage. Scoped owners retain callback result buffers through native copying. Callback exceptions propagate after native cleanup. Faults, expired borrows, post-fork use and over-budget values reject without retaining partial owners or closure leases. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `Char` | `str` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
+| `USize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with range checks for the 64-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
+| `ISize` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. int with signed range checks for the 64-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named frozen dataclasses, constructor unions, transparent aliases and owned tuple/Some/Ok/Err values` (input, result, field); `Generated recursive constructor dataclasses and TypeAliasType aliases; typed Callable parameters and owned LeanClosure results` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime. Constructor identity and recursive aliases survive independent copied values. Arrays and Lists accept lists/tuples and return tuples. Conversion scopes retain callback replies until native copying completes. Original callback errors return after cleanup; malformed native output retires the runtime. Captured values release on close or fallback finalization. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
@@ -122,7 +745,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Declared failure contract` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Project every declared error and payload; preserve trap or poisoned-runtime handling separately. |
 | `Task α / asynchronous result` | `async def returning T` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Keep completion, rejection, cancellation and runtime lifetime distinct; do not block a browser event loop. |
 | `Declared host object` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate typed members and preserve receiver identity, dynamic-access policy and lifetime. |
-| `Lean function returned to the host` | `Transform / generated callable` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve captured state, call signature, errors and deterministic disposal. |
+| `Lean function returned to the host` | `LeanClosure[[...], R]` (result) | Ordinary source: Not audited (input, field, callback input, callback result); Installed checks passed (result). Reviewed IR: Not audited (input, field, callback input, callback result); Installed checks passed (result) | Required: Preserve captured state, call signature, errors and deterministic disposal. |
 | `Cancellation protocol` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specify acknowledgement and late completion; release pending work exactly once. |
 | `Synchronous iterator` | `Iterator[T]` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve values, end-of-sequence, failure, early return and cleanup. |
 | `Asynchronous iterator` | `AsyncIterator[T]` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve backpressure, pending-pull cancellation and terminal cleanup. |
@@ -143,7 +766,7 @@ This table describes the prepared Alpha wheel used above. Names such as `Payload
 | `UInt32 → UInt32` callback | `Callable[[int], int]` | Synchronous Python callable; arguments and results obey the `UInt32` range. |
 | Returned Lean closure | `Transform` | Callable object returned by `make_adder`; use `with` or `close()`. |
 
-### Types, errors, and cleanup
+## Types, errors, and cleanup
 
 `Payload` is a frozen dataclass. It copies bytes and sequence inputs into `bytes` and `tuple`. Alpha uses unsigned 32-bit integers, so pass integers from 0 through 4,294,967,295. Generated validation rejects out-of-range inputs before calling Lean.
 
@@ -151,7 +774,7 @@ Alpha's `round_trip` toggles `enabled`, increments `count`, and preserves the la
 
 Use `with` for `Box` and the `Transform` returned by `make_adder`. Both release their Lean resources when the block exits, including on exceptions. `close()` is idempotent; a closed `Box` raises `DisposedResourceError` on reuse. Ordinary copied `Payload` values need no cleanup.
 
-### Troubleshooting
+## Troubleshooting
 
 - If `venv` is missing, install your distribution's Python venv package before creating the environment.
 - If pip rejects the wheel's platform, use a supported Linux environment. Updating pip cannot provide a missing glibc version.
@@ -160,7 +783,7 @@ Use `with` for `Box` and the `Transform` returned by `make_adder`. Both release 
 
 #### Diagnose wheel compatibility
 
-For more detail before retrying installation, request the release's adjacent `python-wheel-preflight.mjs`. This optional diagnostic needs Node.js 22; normal wheel installation and Python calls do not.
+For the Alpha release, request its adjacent `python-wheel-preflight.mjs` for more detail before retrying installation. This optional diagnostic needs Node.js 22; normal wheel installation and Python calls do not. Ordinary wheels use pip's platform check and the generated loader instead.
 
 ```sh
 node ./python-wheel-preflight.mjs \
@@ -172,14 +795,12 @@ The preflight checks the selected interpreter, glibc, architecture, Python versi
 
 ## Start from a raw Lean package
 
-For Alpha, [build the native bundle and Python projection](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) to produce the wheel used above. Return to [prepared release installation](#use-a-prepared-release) with that wheel and its preflight script.
-
-For another Lean library, check the [source workflow and supported targets](../consume.md#start-from-a-raw-lean-package). These Alpha builds use the repository's target-specific inputs.
+Follow [the Python build-and-publish guide](../publish/pypi.md) for source inputs and package preparation. For an existing library, start with [Adapt an existing library](../lean/existing-package.md).
 
 ### Package authors and acceptance
 
-Contributors can [build the Alpha examples](../contributing/testing.md#build-the-example-artifacts-as-a-maintainer) and run the [installed consumer checks](../contributing/testing.md#consumer-acceptance). See [native consumer evidence](../evidence/native-consumer-acceptance.md).
+Repository checks live in [Contributing](../contributing/testing.md#consumer-acceptance).
 
 ### Publish this package
 
-See [Publish to PyPI](../publish/pypi.md) for package preparation, distribution, and verification after upload.
+Continue in the [build-and-publish workflow](../publish/pypi.md).

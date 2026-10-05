@@ -1,0 +1,1387 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "d08dcb11dc621c2662acbef8c1fb7e51d12342ee",
+  "signatures": [
+    {
+      "name": "Compounds.classify",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Compounds.deep",
+      "parameters": [
+        {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "option": {
+                                                          "result": [
+                                                            {
+                                                              "tuple": [
+                                                                "uint32",
+                                                                "unit"
+                                                              ]
+                                                            },
+                                                            "string"
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "result": [
+                                                          {
+                                                            "tuple": [
+                                                              "uint32",
+                                                              "unit"
+                                                            ]
+                                                          },
+                                                          "string"
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.duplicate",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": {
+              "array": "bytes"
+            }
+          },
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.flip",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                "uint32",
+                {
+                  "option": "unit"
+                }
+              ]
+            },
+            {
+              "option": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": "string"
+          },
+          {
+            "tuple": [
+              "uint32",
+              {
+                "option": "unit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Compounds.make",
+      "parameters": [],
+      "result": {
+        "option": {
+          "result": [
+            {
+              "tuple": [
+                "uint64",
+                "unit"
+              ]
+            },
+            "string"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Compounds.next",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": "unit"
+        }
+      }
+    },
+    {
+      "name": "Compounds.option_bool",
+      "parameters": [
+        {
+          "option": "bool"
+        }
+      ],
+      "result": {
+        "option": "bool"
+      }
+    },
+    {
+      "name": "Compounds.option_bytes",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "option": "bytes"
+      }
+    },
+    {
+      "name": "Compounds.option_char",
+      "parameters": [
+        {
+          "option": "char"
+        }
+      ],
+      "result": {
+        "option": "char"
+      }
+    },
+    {
+      "name": "Compounds.option_float32",
+      "parameters": [
+        {
+          "option": "float32"
+        }
+      ],
+      "result": {
+        "option": "float32"
+      }
+    },
+    {
+      "name": "Compounds.option_float64",
+      "parameters": [
+        {
+          "option": "float64"
+        }
+      ],
+      "result": {
+        "option": "float64"
+      }
+    },
+    {
+      "name": "Compounds.option_int",
+      "parameters": [
+        {
+          "option": "int"
+        }
+      ],
+      "result": {
+        "option": "int"
+      }
+    },
+    {
+      "name": "Compounds.option_int16",
+      "parameters": [
+        {
+          "option": "int16"
+        }
+      ],
+      "result": {
+        "option": "int16"
+      }
+    },
+    {
+      "name": "Compounds.option_int32",
+      "parameters": [
+        {
+          "option": "int32"
+        }
+      ],
+      "result": {
+        "option": "int32"
+      }
+    },
+    {
+      "name": "Compounds.option_int64",
+      "parameters": [
+        {
+          "option": "int64"
+        }
+      ],
+      "result": {
+        "option": "int64"
+      }
+    },
+    {
+      "name": "Compounds.option_int8",
+      "parameters": [
+        {
+          "option": "int8"
+        }
+      ],
+      "result": {
+        "option": "int8"
+      }
+    },
+    {
+      "name": "Compounds.option_isize",
+      "parameters": [
+        {
+          "option": "isize"
+        }
+      ],
+      "result": {
+        "option": "isize"
+      }
+    },
+    {
+      "name": "Compounds.option_nat",
+      "parameters": [
+        {
+          "option": "nat"
+        }
+      ],
+      "result": {
+        "option": "nat"
+      }
+    },
+    {
+      "name": "Compounds.option_string",
+      "parameters": [
+        {
+          "option": "string"
+        }
+      ],
+      "result": {
+        "option": "string"
+      }
+    },
+    {
+      "name": "Compounds.option_uint16",
+      "parameters": [
+        {
+          "option": "uint16"
+        }
+      ],
+      "result": {
+        "option": "uint16"
+      }
+    },
+    {
+      "name": "Compounds.option_uint32",
+      "parameters": [
+        {
+          "option": "uint32"
+        }
+      ],
+      "result": {
+        "option": "uint32"
+      }
+    },
+    {
+      "name": "Compounds.option_uint64",
+      "parameters": [
+        {
+          "option": "uint64"
+        }
+      ],
+      "result": {
+        "option": "uint64"
+      }
+    },
+    {
+      "name": "Compounds.option_uint8",
+      "parameters": [
+        {
+          "option": "uint8"
+        }
+      ],
+      "result": {
+        "option": "uint8"
+      }
+    },
+    {
+      "name": "Compounds.option_unit",
+      "parameters": [
+        {
+          "option": "unit"
+        }
+      ],
+      "result": {
+        "option": "unit"
+      }
+    },
+    {
+      "name": "Compounds.option_usize",
+      "parameters": [
+        {
+          "option": "usize"
+        }
+      ],
+      "result": {
+        "option": "usize"
+      }
+    },
+    {
+      "name": "Compounds.result_bool",
+      "parameters": [
+        {
+          "result": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_bytes",
+      "parameters": [
+        {
+          "result": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_char",
+      "parameters": [
+        {
+          "result": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float32",
+      "parameters": [
+        {
+          "result": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float64",
+      "parameters": [
+        {
+          "result": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int",
+      "parameters": [
+        {
+          "result": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int16",
+      "parameters": [
+        {
+          "result": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int32",
+      "parameters": [
+        {
+          "result": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int64",
+      "parameters": [
+        {
+          "result": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int8",
+      "parameters": [
+        {
+          "result": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_isize",
+      "parameters": [
+        {
+          "result": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_nat",
+      "parameters": [
+        {
+          "result": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_string",
+      "parameters": [
+        {
+          "result": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint16",
+      "parameters": [
+        {
+          "result": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint32",
+      "parameters": [
+        {
+          "result": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint64",
+      "parameters": [
+        {
+          "result": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint8",
+      "parameters": [
+        {
+          "result": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_unit",
+      "parameters": [
+        {
+          "result": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_usize",
+      "parameters": [
+        {
+          "result": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.transform",
+      "parameters": [
+        {
+          "fields": {
+            "choice": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            },
+            "nested": {
+              "result": [
+                {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "uint32",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                },
+                {
+                  "option": "nat"
+                }
+              ]
+            },
+            "products": {
+              "tuple": [
+                {
+                  "tuple": [
+                    "uint32",
+                    "string"
+                  ]
+                },
+                {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              ]
+            },
+            "rows": {
+              "array": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "string",
+                        "uint64"
+                      ]
+                    },
+                    {
+                      "tuple": [
+                        "bytes",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "record": "Compounds.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "choice": {
+            "option": {
+              "result": [
+                {
+                  "tuple": [
+                    "nat",
+                    "unit"
+                  ]
+                },
+                "string"
+              ]
+            }
+          },
+          "nested": {
+            "result": [
+              {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "uint32",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              },
+              {
+                "option": "nat"
+              }
+            ]
+          },
+          "products": {
+            "tuple": [
+              {
+                "tuple": [
+                  "uint32",
+                  "string"
+                ]
+              },
+              {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            ]
+          },
+          "rows": {
+            "array": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "string",
+                      "uint64"
+                    ]
+                  },
+                  {
+                    "tuple": [
+                      "bytes",
+                      "int"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "record": "Compounds.Packet"
+      }
+    },
+    {
+      "name": "Compounds.tuple_bool",
+      "parameters": [
+        {
+          "tuple": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bytes",
+      "parameters": [
+        {
+          "tuple": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_char",
+      "parameters": [
+        {
+          "tuple": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float32",
+      "parameters": [
+        {
+          "tuple": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float64",
+      "parameters": [
+        {
+          "tuple": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int",
+      "parameters": [
+        {
+          "tuple": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int16",
+      "parameters": [
+        {
+          "tuple": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int32",
+      "parameters": [
+        {
+          "tuple": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int64",
+      "parameters": [
+        {
+          "tuple": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int8",
+      "parameters": [
+        {
+          "tuple": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_isize",
+      "parameters": [
+        {
+          "tuple": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_nat",
+      "parameters": [
+        {
+          "tuple": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_string",
+      "parameters": [
+        {
+          "tuple": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint16",
+      "parameters": [
+        {
+          "tuple": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint32",
+      "parameters": [
+        {
+          "tuple": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint64",
+      "parameters": [
+        {
+          "tuple": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint8",
+      "parameters": [
+        {
+          "tuple": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_unit",
+      "parameters": [
+        {
+          "tuple": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_usize",
+      "parameters": [
+        {
+          "tuple": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "usize",
+          "usize"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "bindingIrSha256": "422a3056c6089c9513dceff473551bc328be46e077d5224e26ccf1efbe0fcb92",
+      "checks": 1549,
+      "command": "/tmp/lean-bridge-compound-consumer-MztLqR/c/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "e42de799ab1e93c7105f6e122dc99887baa4000e7064f6cc837609178dfd763d",
+      "faultChecks": {
+        "gmp": 11,
+        "native": 306
+      },
+      "modelSha256": "b6f1310b4abb712a1e5ad6c84f799c2b29c87824506e5909a6ec2ccdcc9f54ca",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 54044096,
+              "path": "archives/compounds-1.0.0-c.tar.gz",
+              "sha256": "5a4e370057d746a3d17b9f3d4af9fc67ad34eb8d85a9357bef17d2433cb03735"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "5a208ae5b8d4cdefbb079f239b5ce54cc2271821c59400e2e2116db8d07b288c",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "dcf15c2d874d35e3207d358df0424cce62afe25504e9ce95824832b048a02432"
+    },
+    {
+      "bindingIrSha256": "422a3056c6089c9513dceff473551bc328be46e077d5224e26ccf1efbe0fcb92",
+      "checks": 1008,
+      "command": "/tmp/lean-bridge-compound-consumer-MztLqR/cpp/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "9d451b6b58729faba1272112245c76f2bd10beaae8f8e254e58dbf9cd1ed8103",
+      "faultChecks": {
+        "gmp": 11,
+        "native": 306
+      },
+      "modelSha256": "b6f1310b4abb712a1e5ad6c84f799c2b29c87824506e5909a6ec2ccdcc9f54ca",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51945392,
+              "path": "archives/compounds-1.0.0-cpp.tar.gz",
+              "sha256": "9b129ed47dfee3c32e037c894ddc1f59b5b3bbe91b9e3de7120757f9ca1f241c"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "5a208ae5b8d4cdefbb079f239b5ce54cc2271821c59400e2e2116db8d07b288c",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "dcf15c2d874d35e3207d358df0424cce62afe25504e9ce95824832b048a02432"
+    },
+    {
+      "bindingIrSha256": "7beac6b9b277cd876fd7a729051c4179c445d5af8c85321a24a243a913ee7cbf",
+      "checks": 1549,
+      "command": "/tmp/lean-bridge-compound-consumer-VcOpaj/c/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "e42de799ab1e93c7105f6e122dc99887baa4000e7064f6cc837609178dfd763d",
+      "faultChecks": {
+        "gmp": 11,
+        "native": 306
+      },
+      "modelSha256": "5288ed997577aaf80bc04a52c5f3d45175b7e6f82d7c6bc91d18ae9a165843d2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 54050378,
+              "path": "archives/compounds-1.0.0-c.tar.gz",
+              "sha256": "2d03de29ddaeea44dcea9f9d9b8b66d5b5f967f2b9049d636a3890aeb7355c9e"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "c",
+      "receiptSha256": "c319006f6ee9f046933aed17525cbc861932afe36e0dbb961a489c9b9c886a83",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "538dd01a7885f52187612f774a9a7179e683917d23dc16d9f48f36e9ebabfc6a"
+    },
+    {
+      "bindingIrSha256": "7beac6b9b277cd876fd7a729051c4179c445d5af8c85321a24a243a913ee7cbf",
+      "checks": 1008,
+      "command": "/tmp/lean-bridge-compound-consumer-VcOpaj/cpp/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "9d451b6b58729faba1272112245c76f2bd10beaae8f8e254e58dbf9cd1ed8103",
+      "faultChecks": {
+        "gmp": 11,
+        "native": 306
+      },
+      "modelSha256": "5288ed997577aaf80bc04a52c5f3d45175b7e6f82d7c6bc91d18ae9a165843d2",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51953493,
+              "path": "archives/compounds-1.0.0-cpp.tar.gz",
+              "sha256": "adc1daf0b11f2548fdfe322c924a0b52d901ce1de8f7d59f769796f0c7e35c58"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "c319006f6ee9f046933aed17525cbc861932afe36e0dbb961a489c9b9c886a83",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "538dd01a7885f52187612f774a9a7179e683917d23dc16d9f48f36e9ebabfc6a"
+    }
+  ]
+}

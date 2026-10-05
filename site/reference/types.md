@@ -1,6 +1,6 @@
 # Types and values
 
-Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below document the ordinary pure-function path.
+Use this reference to choose Lean exports and pass values to prepared packages. The language tables record each profile's current mappings and execution evidence. The npm scalar sections below apply to compiler-backed pure-function packages, with or without a reviewed contract.
 
 ## Full type surface
 
@@ -28,11 +28,15 @@ Construct large values as `bigint` before calling the package. `BigInt(900719925
 
 Strings accept Unicode scalar values and embedded NUL characters. Unpaired UTF-16 surrogates are rejected rather than silently replaced. String lengths and match offsets depend on the particular API: Aho–Corasick's local adapter works with bytes, not JavaScript character positions.
 
+`Char` accepts a JavaScript `string` containing exactly one Unicode scalar. `"a"`, `"🌱"`, `"\0"`, and a standalone combining character are valid. Empty strings, unpaired surrogates, and multi-scalar strings such as `"ab"` or `"e\u0301"` throw `TypeError`. The adapter preserves the scalar without normalization. A supplementary character occupies two UTF-16 code units but is still one `Char`.
+
+`Char` works in npm parameter and result positions. Native and PHP-Wasm packages also support copied `Array Char`, nested arrays and record fields. Both ordinary-source and compiler-checked reviewed contracts have [installed checks](../evidence/char-native-20260918.md). Java and Kotlin use integer code points rather than UTF-16 `char`; .NET uses `System.Text.Rune`. Each consumer page lists its host mapping. [Platform integers](../evidence/platform-words-20260918.md) work across all profiles. [C](../evidence/c-callables-20260918.md), [Perl](../evidence/perl-callables-20260918.md), [Python](../evidence/python-callables-20260918.md), [Ruby](../evidence/ruby-callables-20260919.md) and [Rust](../evidence/rust-callables-20260919.md) also have installed callable coverage for all nineteen primitives. Other uncovered callable positions remain in VO1218.
+
 `ByteArray` accepts a `Uint8Array`. The call copies the input and returns an owned `Uint8Array`; the result is not a view into the Lean heap. Text, bytes, and integer payloads share the per-value {{COPY_LIMIT}} MiB copy limit. Total memory also includes runtime storage, all arguments, results, and temporary allocations.
 
 ## Collections and resource profiles
 
-Ordinary components accept any number of primitive arguments and one primitive result. They reject collection, record, callback, resource, `IO`, and `Task` signatures before compilation. Do not infer support from a source-only analysis report.
+Ordinary components accept zero to 32 primitive arguments and one primitive result. They reject collection, record, callback, resource, `IO`, and `Task` signatures before adapter compilation. Public analysis and locked builds compile fresh source interfaces to resolve the actual types first.
 
 Reviewed package profiles can expose richer APIs. Read that release's generated declarations and the [runtime support reference](../consumers.md); the scalar table does not describe every consumer profile.
 

@@ -12,7 +12,7 @@ import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { promisify } from "node:util";
 
-import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
+import { analyzeCompilerProject } from "../src/analyze/compiler-analysis.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { buildComponentNpmPackages } from "../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../src/release/component-package-receipt.mjs";
@@ -34,7 +34,7 @@ try
 	const consumer = join(scratch, "javascript-consumer");
 	await cp(fixture, project, { recursive: true });
 	await mkdir(consumer);
-	const analysis = await analyzeLeanProject(project, { targets: ["npm"] });
+	const analysis = await analyzeCompilerProject(project, { targets: ["npm"], engineRoot: repository, environment: { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: backend } });
 	if(analysis.bindingIr === null || analysis.adapterHints.some(item => item.required)) throw new Error("plain project analysis is incomplete");
 	const builds = [];
 	for(const name of ["a", "b"])

@@ -132,6 +132,8 @@ test("cancellation stops the scheduled Lean call and completes once", async () =
   );
 
   assert.equal(__bridgeTest.cancelPendingOperation(module, token, "cancelled"), true);
+  assert.equal(module._bridge_lean_native_pending_operations(), 0);
+  assert.equal(module._bridge_lean_alpha_cancel_defer_box_value(token), 0);
   await rejected;
   await waitForNativeDrain(module);
   assert.equal(module._bridge_lean_native_cancelled_operations(), 1);
@@ -156,9 +158,44 @@ test("runtime shutdown cancels native pending work before Lean finalization", as
   );
 
   assert.equal(libraries.shutdown(), true);
+  assert.equal(module._bridge_lean_native_pending_operations(), 0);
   await rejected;
   await waitForNativeDrain(module);
   assert.equal(module._bridge_lean_native_cancelled_operations(), 1);
   assert.equal(module._bridge_lean_runtime_status(), 4);
   assert.equal(libraries.diagnostics().pendingOperations.state, "closed");
+});
+
+test("native cancellation unlinks any pending slot before synchronous shutdown", async () => {
+	const tokens = [], module = await createLazyModule();
+	const libraries = createLibraryLoader(module, { onPendingTransition: transition => {
+		if(transition.event === "begin") tokens.push(transition.token);
+	} });
+	await libraries.load(alpha);
+	const api = createLibrarySurface(module, pendingDescriptor());
+	const pending = [10, 20, 30, 40].map(value => api.deferBoxValue(value));
+	const settled = Promise.allSettled(pending);
+	assert.equal(module._bridge_lean_runtime_shutdown(), 0, "live native work still blocks finalization");
+	for(const [index, live] of [[1, 3], [3, 2], [0, 1]])
+	{
+		assert.equal(__bridgeTest.cancelPendingOperation(module, tokens[index], "cancelled"), true);
+		assert.equal(module._bridge_lean_native_pending_operations(), live);
+		assert.equal(module._bridge_lean_alpha_cancel_defer_box_value(tokens[index]), 0);
+	}
+	assert.equal(await pending[2], 30);
+	const results = await settled;
+	assert.deepEqual(results.map(item => item.status), ["rejected", "rejected", "fulfilled", "rejected"]);
+	for(const index of [0, 1, 3]) assert.equal(results[index].reason.code, "operation-cancelled");
+	assert.equal(module._bridge_lean_native_pending_operations(), 0);
+	const shutdownPending = Array.from({ length: 16 }, (_, index) => api.deferBoxValue(index));
+	const shutdownSettled = Promise.allSettled(shutdownPending);
+	assert.equal(libraries.shutdown(), true);
+	assert.equal(module._bridge_lean_native_pending_operations(), 0);
+	assert.equal(module._bridge_lean_native_cancelled_operations(), 19);
+	assert.ok((await shutdownSettled).every(item => item.status === "rejected" && item.reason.code === "operation-cancelled"));
+	await new Promise(resolve => setTimeout(resolve, 10));
+	assert.equal(module._bridge_lean_native_pending_operations(), 0);
+	assert.equal(module._bridge_lean_native_cancelled_operations(), 19);
+	assert.equal(module._bridge_lean_native_late_settlements(), 0);
+	assert.equal(libraries.shutdown(), true);
 });

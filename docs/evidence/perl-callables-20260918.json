@@ -1,0 +1,2494 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "01f10ed85b75e3676df0eba41de9e8efc89c0dcc",
+  "sourceSha256": "1517248d4bc1c592c3b1e9907203792f904a1057f8182d1af9b376a317b937c0",
+  "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+  "signatures": [
+    {
+      "name": "Callables.callUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.twiceUnit",
+      "parameters": [
+        "unit",
+        {
+          "callback": {
+            "parameters": [
+              "unit"
+            ],
+            "result": "unit"
+          }
+        }
+      ],
+      "result": "unit"
+    },
+    {
+      "name": "Callables.makeUnit",
+      "parameters": [
+        "unit"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "unit"
+          ],
+          "result": "unit"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.twiceBool",
+      "parameters": [
+        "bool",
+        {
+          "callback": {
+            "parameters": [
+              "bool"
+            ],
+            "result": "bool"
+          }
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Callables.makeBool",
+      "parameters": [
+        "bool"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bool"
+          ],
+          "result": "bool"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.twiceUInt8",
+      "parameters": [
+        "uint8",
+        {
+          "callback": {
+            "parameters": [
+              "uint8"
+            ],
+            "result": "uint8"
+          }
+        }
+      ],
+      "result": "uint8"
+    },
+    {
+      "name": "Callables.makeUInt8",
+      "parameters": [
+        "uint8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint8"
+          ],
+          "result": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.twiceUInt16",
+      "parameters": [
+        "uint16",
+        {
+          "callback": {
+            "parameters": [
+              "uint16"
+            ],
+            "result": "uint16"
+          }
+        }
+      ],
+      "result": "uint16"
+    },
+    {
+      "name": "Callables.makeUInt16",
+      "parameters": [
+        "uint16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint16"
+          ],
+          "result": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.twiceUInt32",
+      "parameters": [
+        "uint32",
+        {
+          "callback": {
+            "parameters": [
+              "uint32"
+            ],
+            "result": "uint32"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Callables.makeUInt32",
+      "parameters": [
+        "uint32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint32"
+          ],
+          "result": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.twiceUInt64",
+      "parameters": [
+        "uint64",
+        {
+          "callback": {
+            "parameters": [
+              "uint64"
+            ],
+            "result": "uint64"
+          }
+        }
+      ],
+      "result": "uint64"
+    },
+    {
+      "name": "Callables.makeUInt64",
+      "parameters": [
+        "uint64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "uint64"
+          ],
+          "result": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.twiceInt8",
+      "parameters": [
+        "int8",
+        {
+          "callback": {
+            "parameters": [
+              "int8"
+            ],
+            "result": "int8"
+          }
+        }
+      ],
+      "result": "int8"
+    },
+    {
+      "name": "Callables.makeInt8",
+      "parameters": [
+        "int8"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int8"
+          ],
+          "result": "int8"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.twiceInt16",
+      "parameters": [
+        "int16",
+        {
+          "callback": {
+            "parameters": [
+              "int16"
+            ],
+            "result": "int16"
+          }
+        }
+      ],
+      "result": "int16"
+    },
+    {
+      "name": "Callables.makeInt16",
+      "parameters": [
+        "int16"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int16"
+          ],
+          "result": "int16"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.twiceInt32",
+      "parameters": [
+        "int32",
+        {
+          "callback": {
+            "parameters": [
+              "int32"
+            ],
+            "result": "int32"
+          }
+        }
+      ],
+      "result": "int32"
+    },
+    {
+      "name": "Callables.makeInt32",
+      "parameters": [
+        "int32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int32"
+          ],
+          "result": "int32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.twiceInt64",
+      "parameters": [
+        "int64",
+        {
+          "callback": {
+            "parameters": [
+              "int64"
+            ],
+            "result": "int64"
+          }
+        }
+      ],
+      "result": "int64"
+    },
+    {
+      "name": "Callables.makeInt64",
+      "parameters": [
+        "int64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int64"
+          ],
+          "result": "int64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.twiceNat",
+      "parameters": [
+        "nat",
+        {
+          "callback": {
+            "parameters": [
+              "nat"
+            ],
+            "result": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Callables.makeNat",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "nat"
+          ],
+          "result": "nat"
+        }
+      }
+    },
+    {
+      "name": "Callables.callInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.twiceInt",
+      "parameters": [
+        "int",
+        {
+          "callback": {
+            "parameters": [
+              "int"
+            ],
+            "result": "int"
+          }
+        }
+      ],
+      "result": "int"
+    },
+    {
+      "name": "Callables.makeInt",
+      "parameters": [
+        "int"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "int"
+          ],
+          "result": "int"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.twiceFloat32",
+      "parameters": [
+        "float32",
+        {
+          "callback": {
+            "parameters": [
+              "float32"
+            ],
+            "result": "float32"
+          }
+        }
+      ],
+      "result": "float32"
+    },
+    {
+      "name": "Callables.makeFloat32",
+      "parameters": [
+        "float32"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float32"
+          ],
+          "result": "float32"
+        }
+      }
+    },
+    {
+      "name": "Callables.callFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.twiceFloat",
+      "parameters": [
+        "float64",
+        {
+          "callback": {
+            "parameters": [
+              "float64"
+            ],
+            "result": "float64"
+          }
+        }
+      ],
+      "result": "float64"
+    },
+    {
+      "name": "Callables.makeFloat",
+      "parameters": [
+        "float64"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "float64"
+          ],
+          "result": "float64"
+        }
+      }
+    },
+    {
+      "name": "Callables.callString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.twiceString",
+      "parameters": [
+        "string",
+        {
+          "callback": {
+            "parameters": [
+              "string"
+            ],
+            "result": "string"
+          }
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Callables.makeString",
+      "parameters": [
+        "string"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "string"
+          ],
+          "result": "string"
+        }
+      }
+    },
+    {
+      "name": "Callables.callBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.twiceBytes",
+      "parameters": [
+        "bytes",
+        {
+          "callback": {
+            "parameters": [
+              "bytes"
+            ],
+            "result": "bytes"
+          }
+        }
+      ],
+      "result": "bytes"
+    },
+    {
+      "name": "Callables.makeBytes",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "bytes"
+          ],
+          "result": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Callables.callChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.twiceChar",
+      "parameters": [
+        "char",
+        {
+          "callback": {
+            "parameters": [
+              "char"
+            ],
+            "result": "char"
+          }
+        }
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Callables.makeChar",
+      "parameters": [
+        "char"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "char"
+          ],
+          "result": "char"
+        }
+      }
+    },
+    {
+      "name": "Callables.callUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.twiceUSize",
+      "parameters": [
+        "usize",
+        {
+          "callback": {
+            "parameters": [
+              "usize"
+            ],
+            "result": "usize"
+          }
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Callables.makeUSize",
+      "parameters": [
+        "usize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "usize"
+          ],
+          "result": "usize"
+        }
+      }
+    },
+    {
+      "name": "Callables.callISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.twiceISize",
+      "parameters": [
+        "isize",
+        {
+          "callback": {
+            "parameters": [
+              "isize"
+            ],
+            "result": "isize"
+          }
+        }
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Callables.makeISize",
+      "parameters": [
+        "isize"
+      ],
+      "result": {
+        "callback": {
+          "parameters": [
+            "bool",
+            "isize"
+          ],
+          "result": "isize"
+        }
+      }
+    },
+    {
+      "name": "Callables.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    }
+  ],
+  "executions": [
+    {
+      "configuration": "5.36.3-threaded",
+      "bindingIrSha256": "72aca7da3c1b1dd8407c62a5d974994c8487fdf74cf82990e9d7c247eac10815",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "836ead1bc0af0fd7a23884bd0674cfee12d8bfff0809a65053547e5e7da30cf4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 193483,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "52154d193b8fb4d8f7046bf9578fea82cd542fc5fcc27154e6605fb4e87a0411"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355305,
+              "path": "archives/LeanBridge-Runtime-0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181.tar.gz",
+              "sha256": "21f156df57e6d055a1a67127e7107429e243e1dc8151345a089a0d38aca8f516"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "9cdfd21826ce912b434edf9bfff8f73613dec60004b1caaf4245b1c7b9ab55a7",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "36",
+          "archname": "x86_64-linux-thread-multi",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "define",
+          "uselongdouble": "",
+          "usemultiplicity": "define",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+        "checks": 8756,
+        "hostVersion": "5.36.3",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d2edf3249c8da2085be68fd28557f74073e0e30511c006f425b7ded4a4eeb63c"
+    },
+    {
+      "configuration": "5.36.3-threaded",
+      "bindingIrSha256": "c005adfe70e79d8583f715f5a729b158af03c10bc5da9cce1680c794484baee2",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "cc963d2281fdbfce37fe6ca6066a97067a1ec063660a25a6416fed8d031c8eea",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 203110,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "57db1267d727ffbf80676b93bb4de3f936e9b5849e9d46192133996410e40f6b"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355305,
+              "path": "archives/LeanBridge-Runtime-0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181.tar.gz",
+              "sha256": "21f156df57e6d055a1a67127e7107429e243e1dc8151345a089a0d38aca8f516"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020043973452497261474954006600697103750267111024476662014486677007010024277606181"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "98c29edc0bb04d8f11891c265edf8976be5d915f1480d39485989e7d31f41df1",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "36",
+          "archname": "x86_64-linux-thread-multi",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "define",
+          "uselongdouble": "",
+          "usemultiplicity": "define",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+        "checks": 8756,
+        "hostVersion": "5.36.3",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e777a4036950a9f3394f0b1743e0d27b8d84aded6937566e39a8fc90168bc0a6"
+    },
+    {
+      "configuration": "5.36.3-unthreaded",
+      "bindingIrSha256": "72aca7da3c1b1dd8407c62a5d974994c8487fdf74cf82990e9d7c247eac10815",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "836ead1bc0af0fd7a23884bd0674cfee12d8bfff0809a65053547e5e7da30cf4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 189372,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "4d5c8c0fe47806d01e659c16c05938bb97c4f550b826bf5e569ed251125ef0fe"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51354942,
+              "path": "archives/LeanBridge-Runtime-0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081.tar.gz",
+              "sha256": "460182d1cb8e855ecf4abe405992eb60b0d9ecda8129fadbe7dce230aa40a201"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "02364a410d1be076a2fbd99994ea79d576b1dd3eca9e1cef838facf1a204eac2",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "36",
+          "archname": "x86_64-linux",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "",
+          "uselongdouble": "",
+          "usemultiplicity": "",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "checks": 8756,
+        "hostVersion": "5.36.3",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d2edf3249c8da2085be68fd28557f74073e0e30511c006f425b7ded4a4eeb63c"
+    },
+    {
+      "configuration": "5.36.3-unthreaded",
+      "bindingIrSha256": "c005adfe70e79d8583f715f5a729b158af03c10bc5da9cce1680c794484baee2",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "cc963d2281fdbfce37fe6ca6066a97067a1ec063660a25a6416fed8d031c8eea",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 199442,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "7779ef68a219fd066f8f867ad15c41455de345f050cbaaf23fddced53f3e163a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51354942,
+              "path": "archives/LeanBridge-Runtime-0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081.tar.gz",
+              "sha256": "460182d1cb8e855ecf4abe405992eb60b0d9ecda8129fadbe7dce230aa40a201"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0021152440015678175296149279804041523265029081070887178634070707368162553998497081"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "420fbf7869c2fb3c88c60e1a532eedac7d763333f6272ad7e10bf6237f54cd54",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "36",
+          "archname": "x86_64-linux",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "",
+          "uselongdouble": "",
+          "usemultiplicity": "",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+        "checks": 8756,
+        "hostVersion": "5.36.3",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e777a4036950a9f3394f0b1743e0d27b8d84aded6937566e39a8fc90168bc0a6"
+    },
+    {
+      "configuration": "5.38.2-threaded",
+      "bindingIrSha256": "72aca7da3c1b1dd8407c62a5d974994c8487fdf74cf82990e9d7c247eac10815",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "836ead1bc0af0fd7a23884bd0674cfee12d8bfff0809a65053547e5e7da30cf4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 192828,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "35fb2510d1f9e84cc4750a515c8572ae04bcf67cc1743e5decdee8374b8f3c32"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355604,
+              "path": "archives/LeanBridge-Runtime-0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281.tar.gz",
+              "sha256": "5ba874640af54583504cd2a77c3985ade94ff43c8f28f0809959234104936918"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "2db86c21e4214f53f973a576b2aba57e3e8c5284fa91b98e58d4d60f4ff7c1fc",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "38",
+          "archname": "x86_64-linux-thread-multi",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "define",
+          "uselongdouble": "",
+          "usemultiplicity": "define",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "checks": 8756,
+        "hostVersion": "5.38.2",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d2edf3249c8da2085be68fd28557f74073e0e30511c006f425b7ded4a4eeb63c"
+    },
+    {
+      "configuration": "5.38.2-threaded",
+      "bindingIrSha256": "c005adfe70e79d8583f715f5a729b158af03c10bc5da9cce1680c794484baee2",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "cc963d2281fdbfce37fe6ca6066a97067a1ec063660a25a6416fed8d031c8eea",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 202585,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "4d193a0acbc2e8e7802274f876a0ae3eca374b30fec9d5b1387b734077aec2cd"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355604,
+              "path": "archives/LeanBridge-Runtime-0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281.tar.gz",
+              "sha256": "5ba874640af54583504cd2a77c3985ade94ff43c8f28f0809959234104936918"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020589445633653025834835093326274526451516217131919483731379155023757958357177281"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "56c39d28de2086d38fcf47521b95e58aea19e00ac6445ffcdbf22f1d374a922a",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "38",
+          "archname": "x86_64-linux-thread-multi",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "define",
+          "uselongdouble": "",
+          "usemultiplicity": "define",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+        "checks": 8756,
+        "hostVersion": "5.38.2",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e777a4036950a9f3394f0b1743e0d27b8d84aded6937566e39a8fc90168bc0a6"
+    },
+    {
+      "configuration": "5.38.2-unthreaded",
+      "bindingIrSha256": "72aca7da3c1b1dd8407c62a5d974994c8487fdf74cf82990e9d7c247eac10815",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "836ead1bc0af0fd7a23884bd0674cfee12d8bfff0809a65053547e5e7da30cf4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 189164,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "f3ca63f99cc8756dc4beafe79247edb9a7cd0cb08a953ad25e0aaae46f2bcbf3"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355099,
+              "path": "archives/LeanBridge-Runtime-0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621.tar.gz",
+              "sha256": "f60a3da3b6a7bd5c3a81bb09396dda2c18023ef9e5f631f5ebc3a51d828e5577"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "4604eccfad5fe7389a9671152263f18fe5ed716abd435af87286990322664478",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "38",
+          "archname": "x86_64-linux",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "",
+          "uselongdouble": "",
+          "usemultiplicity": "",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "checks": 8756,
+        "hostVersion": "5.38.2",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d2edf3249c8da2085be68fd28557f74073e0e30511c006f425b7ded4a4eeb63c"
+    },
+    {
+      "configuration": "5.38.2-unthreaded",
+      "bindingIrSha256": "c005adfe70e79d8583f715f5a729b158af03c10bc5da9cce1680c794484baee2",
+      "checks": 8756,
+      "compilerFreePath": true,
+      "consumerSha256": "a47027b58049b9bb436b961fef35d9d263338984e2d94b2f3395cca373e16389",
+      "modelSha256": "cc963d2281fdbfce37fe6ca6066a97067a1ec063660a25a6416fed8d031c8eea",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 199206,
+              "path": "archives/LeanBridge-Callables-1.000.tar.gz",
+              "sha256": "cdaf9d00771c8f957dbfb0533f1ba7f5b8aef7c55e933a743855ef1ce055f8b2"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Callables",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51355099,
+              "path": "archives/LeanBridge-Runtime-0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621.tar.gz",
+              "sha256": "f60a3da3b6a7bd5c3a81bb09396dda2c18023ef9e5f631f5ebc3a51d828e5577"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020174497881033761754971934129572804598878709514467182604495675731308813477386621"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "39e4daccc301ea55a6db52357d6d1ac582cebf46f7126ae2d19a74cc421eddac",
+      "result": {
+        "abi": {
+          "api_revision": "5",
+          "api_subversion": "0",
+          "api_version": "38",
+          "archname": "x86_64-linux",
+          "binary_options": [],
+          "byteorder": "12345678",
+          "ivsize": "8",
+          "longsize": "8",
+          "nvsize": "8",
+          "nvtype": "double",
+          "ptrsize": "8",
+          "quadkind": "2",
+          "use64bitall": "define",
+          "use64bitint": "define",
+          "useithreads": "",
+          "uselongdouble": "",
+          "usemultiplicity": "",
+          "useperlio": "define",
+          "usequadmath": "",
+          "uvsize": "8"
+        },
+        "abiKey": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+        "checks": 8756,
+        "hostVersion": "5.38.2",
+        "primitives": [
+          {
+            "checks": 248,
+            "primitive": "unit",
+            "rejectedCases": 3,
+            "validCases": 1
+          },
+          {
+            "checks": 273,
+            "primitive": "bool",
+            "rejectedCases": 4,
+            "validCases": 2
+          },
+          {
+            "checks": 425,
+            "primitive": "uint8",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 425,
+            "primitive": "uint16",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 450,
+            "primitive": "uint32",
+            "rejectedCases": 4,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "uint64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 440,
+            "primitive": "int8",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int16",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 440,
+            "primitive": "int32",
+            "rejectedCases": 3,
+            "validCases": 4
+          },
+          {
+            "checks": 465,
+            "primitive": "int64",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 282,
+            "primitive": "nat",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 282,
+            "primitive": "int",
+            "rejectedCases": 3,
+            "validCases": 3
+          },
+          {
+            "checks": 615,
+            "primitive": "float32",
+            "rejectedCases": 3,
+            "validCases": 11
+          },
+          {
+            "checks": 590,
+            "primitive": "float64",
+            "rejectedCases": 3,
+            "validCases": 10
+          },
+          {
+            "checks": 638,
+            "primitive": "string",
+            "rejectedCases": 5,
+            "validCases": 5
+          },
+          {
+            "checks": 560,
+            "primitive": "bytes",
+            "rejectedCases": 4,
+            "validCases": 3
+          },
+          {
+            "checks": 761,
+            "primitive": "char",
+            "rejectedCases": 7,
+            "validCases": 8
+          },
+          {
+            "checks": 465,
+            "primitive": "usize",
+            "rejectedCases": 3,
+            "validCases": 5
+          },
+          {
+            "checks": 465,
+            "primitive": "isize",
+            "rejectedCases": 3,
+            "validCases": 5
+          }
+        ],
+        "schemaVersion": 1,
+        "wordBits": 64
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e777a4036950a9f3394f0b1743e0d27b8d84aded6937566e39a8fc90168bc0a6"
+    }
+  ]
+}

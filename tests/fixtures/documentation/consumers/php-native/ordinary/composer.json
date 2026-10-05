@@ -1,0 +1,7 @@
+{
+  "name": "example/lean-php-consumer",
+  "repositories": [
+    { "type": "artifact", "url": "./releases" }
+  ],
+  "require": { "example/clover-api": "2.0.0-RC.1" }
+}

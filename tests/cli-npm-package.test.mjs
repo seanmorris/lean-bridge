@@ -70,6 +70,13 @@ test("CLI archives are deterministic, dependency-free, and contain the complete 
 		assert.deepEqual(await readFile(first.archive), await readFile(second.archive));
 		assert.deepEqual(first.report, second.report);
 		assert.equal(first.report.runtimeIncluded, false);
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedDotnetPackage } from './src/backends/dotnet/copied-values.mjs'; if (typeof generateCopiedDotnetPackage !== 'function') throw new Error('Missing .NET generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateOwnedDotnetPackage } from './src/backends/dotnet/owned-package.mjs'; if (typeof generateOwnedDotnetPackage !== 'function') throw new Error('Missing owned .NET generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedJvmPackage } from './src/backends/jvm/copied-values.mjs'; if (typeof generateCopiedJvmPackage !== 'function') throw new Error('Missing JVM generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedRubyPackage } from './src/backends/ruby/copied-values.mjs'; if (typeof generateCopiedRubyPackage !== 'function') throw new Error('Missing Ruby generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedPhpPackage } from './src/backends/php/copied-values.mjs'; if (typeof generateCopiedPhpPackage !== 'function') throw new Error('Missing PHP generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generatePerlBindingPackage } from './src/backends/perl/generate.mjs'; if (typeof generatePerlBindingPackage !== 'function') throw new Error('Missing Perl generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { compileCopiedWitModel } from './src/backends/wit/copied-model.mjs'; if (typeof compileCopiedWitModel !== 'function') throw new Error('Missing WIT generator');"], { cwd: first.directory });
 		assert.equal(first.report.productionApproved, false);
 		assert.equal(first.report.externalRegistryWrites, false);
 		const manifest = JSON.parse(await readFile(join(first.directory, "package.json"), "utf8"));
@@ -198,14 +205,21 @@ test("tarball installs work locally, globally, and through npm exec without the 
 		await chmod(consumer, 0o777);
 		const unprivileged = process.getuid?.() === 0 ? { uid: 65534, gid: 65534 } : {};
 		const options = { ...npmOptions, ...unprivileged };
-		const analysis = JSON.parse((await execute(executable, ["analyze", "--project", project, "--target", "npm", "--check", "--output", join(consumer, "analysis"), "--json"], options)).stdout);
-		assert.equal(analysis.status, "ok");
-		assert.equal(analysis.result.project.name, "onboarding-small");
+		await assert.rejects(execute(executable, ["analyze", "--project", project, "--target", "npm", "--check", "--output", join(consumer, "analysis"), "--json"], {
+			...options
+			, env: { ...environment, LEAN_BRIDGE_DOCKER: join(scratch, "absent-docker"), LEAN_BRIDGE_NIX: join(scratch, "absent-nix") }
+		}), error => error.code === 2 && JSON.parse(error.stdout).result === null && JSON.parse(error.stdout).diagnostics.some(item => item.code === "build-tools-unavailable"));
 		await assert.rejects(execute(executable, ["--unknown", "--json"], options), error => error.code === 64 && JSON.parse(error.stdout).status === "failed");
 		await assert.rejects(execute(executable, ["build", "--project", project, "--target", "npm", "--output", join(consumer, "build"), "--json"], {
 			...options
 			, env: { ...environment, LEAN_BRIDGE_DOCKER: join(scratch, "absent-docker"), LEAN_BRIDGE_NIX: join(scratch, "absent-nix") }
 		}), error => error.code === 2 && JSON.parse(error.stdout).diagnostics.some(item => item.code === "build-tools-unavailable"));
+		await cp("poc/lean-link-spike/bindings/alpha.binding-ir.json", join(project, "reviewed.binding-ir.json"));
+		const analysis = JSON.parse((await execute(executable, ["analyze", "--project", project, "--check", "--output", join(consumer, "analysis"), "--json"], options)).stdout);
+		assert.equal(analysis.status, "ok");
+		assert.equal(analysis.result.project.name, "onboarding-small");
+		assert.equal(analysis.result.bindingIr.origin, "existing-validated");
+		assert.equal(analysis.result.compiledEnvironment.status, "absent");
 		for(const file of candidate.report.files)
 			assert.equal(hash(await readFile(join(installed, file.path))), file.sha256, file.path);
 	} finally

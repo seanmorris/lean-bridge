@@ -5,8 +5,24 @@
  */
 
 import { gzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
+
+/**
+ * Bind runtime coordinates to the archive implementation and its host tools.
+ * The default collation affects entry ordering; zlib also emits a host OS byte.
+ * This is a producer constraint, not a requirement for installing an archive.
+ */
+export const tarGzipPackingIdentity = async () => ({
+	implementationSha256: createHash("sha256").update(await readFile(new URL(import.meta.url))).digest("hex")
+	, nodeVersion: process.versions.node
+	, zlibVersion: process.versions.zlib
+	, icuVersion: process.versions.icu ?? null
+	, platform: process.platform
+	, architecture: process.arch
+	, collationLocale: new Intl.Collator().resolvedOptions().locale
+});
 
 const splitTarPath = path => {
 	if(Buffer.byteLength(path) <= 100) return { name: path, prefix: "" };
@@ -88,9 +104,25 @@ export const createDeterministicTarGz = async ({ directory, archiveRoot, sourceD
 	{
 		throw new Error("source date epoch must be a positive integer");
 	}
+	return createDeterministicTarGzFromFiles({ files: await collectFiles(directory, archiveRoot), sourceDateEpoch });
+};
+
+/**
+ * Archive already verified bytes without rereading mutable filesystem inputs.
+ *
+ * @param root0 - Exact entries and normalized archive timestamp.
+ * @param root0.files - Verified paths, modes, and byte buffers to archive.
+ * @param root0.sourceDateEpoch - Fixed Unix timestamp for every entry.
+ */
+export const createDeterministicTarGzFromFiles = ({ files, sourceDateEpoch }) => {
+	if(!Number.isSafeInteger(sourceDateEpoch) || sourceDateEpoch < 1) throw new Error("source date epoch must be a positive integer");
 	const chunks = [];
-	for(const file of await collectFiles(directory, archiveRoot))
+	const names = new Set();
+	for(const file of [...files].sort((a, b) => a.path.localeCompare(b.path)))
 	{
+		if(typeof file.path !== "string" || file.path.includes("\0") || file.path.includes("\\") || file.path.split("/").some(part => !part || part === "." || part === "..")
+			|| names.has(file.path) || ![0o644, 0o755].includes(file.mode)) throw new Error("invalid archive entry");
+		names.add(file.path);
 		chunks.push(tarHeader(file.path, file.bytes.length, sourceDateEpoch, file.mode), file.bytes);
 		const remainder = file.bytes.length % 512;
 		if(remainder !== 0) chunks.push(Buffer.alloc(512 - remainder));

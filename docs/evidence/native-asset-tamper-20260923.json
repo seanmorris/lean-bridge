@@ -1,0 +1,1098 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "baseRevision": "2a56f4366a20e0aac8a0fba68c55b45f9df1d2b0",
+  "description": "Repair the documentation tamper probe for read-only installed CPAN libraries. The non-root test reproduces EACCES and verifies restoration on success and failure. Both source paths and all four Perl ABIs retain the original release archives, native files and documented results.",
+  "ciRun": 35882567314,
+  "failedJobs": [
+    107254453229,
+    107254453264,
+    107254453437,
+    107254453466
+  ],
+  "baselines": {
+    "packages": {
+      "path": "docs/evidence/perl-recursive-packages-20260923.json",
+      "sha256": "ac4899f912ce4c4982facfa723c5a8a1c85ef5e064a2030ccbb81fb5d3c73516"
+    },
+    "regressions": {
+      "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+      "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+    }
+  },
+  "sourceHashes": {
+    "tests/helpers/native-asset-tamper.mjs": "0a5e88a6a2468e7e1740f7c707e7e17f354652633567e6eef0a2ace5c815c7ca",
+    "tests/helpers/native-asset-tamper-history.mjs": "a221341be4e28b79d293efa3899a6a0d66b41478b418c4e22c3c4339b5955b62",
+    "tests/native-asset-tamper.test.mjs": "d59482caf04df85496c3e907c71fd9047b375d23e97ba29976b256a7c211b82f",
+    "tests/helpers/perl-graph-documentation.mjs": "b7d333d10f81a0b93bc0aa0ee5ce11bfbc3858c4c876fc744c54885f6beee4bb",
+    "tests/helpers/source-registration-history.mjs": "d94544e58cff681055179bd46fb00131a097f9115a7cec396ee76ebbb183ffbc",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "docs/publish/cpan.md": "c7e53151c64f04699c90444dca0a1fd7fbf44a868426251091751baff5159016",
+    "docs/consume/perl.md": "0e23ffe2d379845249fa7136fbb7fd5e15b71d92e9eacbede9827fcb2a40457f",
+    "tests/helpers/source-registration-upgrade.mjs": "1c06c23143730adba378c606f0f3c785efdbacc817715e3a8b16ce106ecf44db"
+  },
+  "logs": {
+    "unprivileged": {
+      "command": "node --test --test-name-pattern='^native tamper probes restore' tests/native-asset-tamper.test.mjs",
+      "text": "TAP version 13\n# Subtest: native tamper probes restore read-only bytes and permissions without root\nok 1 - native tamper probes restore read-only bytes and permissions without root\n  ---\n  duration_ms: 68.895385\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 131.084088\n",
+      "sha256": "084d53de4d63f8eb545cf23aece19396a9a9fa0347d405d7949120981cc65946"
+    },
+    "documentation": {
+      "command": "LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test --test-name-pattern='recursive Perl documentation builds' tests/perl-graph-package.test.mjs",
+      "text": "TAP version 13\n# Subtest: recursive Perl documentation builds original archives and rejects installed native tampering\nok 1 - recursive Perl documentation builds original archives and rejects installed native tampering\n  ---\n  duration_ms: 218977.789631\n  type: 'test'\n  ...\n# ordinary: compiling the documented recursive module\n# ordinary: executing documentation and native tamper checks on /app/.toolchains/perl/5.36.3-threaded/bin/perl\n# ordinary: executing documentation and native tamper checks on /app/.toolchains/perl/5.36.3-unthreaded/bin/perl\n# ordinary: executing documentation and native tamper checks on /app/.toolchains/perl/5.38.2-threaded/bin/perl\n# ordinary: executing documentation and native tamper checks on /app/.toolchains/perl/5.38.2-unthreaded/bin/perl\n# reviewed: compiling the documented recursive module\n# reviewed: executing documentation and native tamper checks on /app/.toolchains/perl/5.36.3-threaded/bin/perl\n# reviewed: executing documentation and native tamper checks on /app/.toolchains/perl/5.36.3-unthreaded/bin/perl\n# reviewed: executing documentation and native tamper checks on /app/.toolchains/perl/5.38.2-threaded/bin/perl\n# reviewed: executing documentation and native tamper checks on /app/.toolchains/perl/5.38.2-unthreaded/bin/perl\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 219291.847312\n",
+      "sha256": "a3a57adf4e674d0f86dcf696f058e3aca1ec414427d3a621d1d7e11ffca05206"
+    }
+  },
+  "documentation": {
+    "configurationSha256": "126ac9c9199a61f51952e11fd9d76c31b882130cefbd12843534d93c277af224",
+    "consumerSha256": "775987a963503644e9849afd4ba688ca8f7176dc7619a4078bb7d10ce6eaaa05",
+    "observations": [
+      {
+        "installs": [
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "b2d4c415bb48b2f601b781ed31e5fc4d4e766c6b1d2387afdb4378e685079a86"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "a5862b5a8e7c3d59c93ecee31d03922ad27b9d98fe8e3bf9c49661916d8c02b2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 650,
+                "sha256": "3b807dba9763293ac383827573adcf4fca81948a80bb2b79dced35261014109c"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 31656,
+                "sha256": "a3f2c000ca8822b25705a5051487442bebad4c54ae0d4fd9668666c3a245cb7d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2618,
+                "sha256": "823425f36509d731d65dacb063f2e979570103fccba28122c88dad5522f10bd6"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 27776,
+                "sha256": "428a2521790499d6bdf202a1cae1c7a84b0341e3313b3ce4fa42af9d5dcb8e5f"
+              },
+              "x86_64-linux-thread-multi/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "13f9be07e71e569d8f032ba456327d86e487df6aace04e049d3d6b8d9e9a4451"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "ebebf8b667a0d1f845ba4bd8bf1a5b4eac596e3d5f40ca58e3d6dfd42d074445"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "483ddc27c19bd6dbaa4a07dd2f1b291460e92755f2942f53e2aa60aace91a4c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 598,
+                "sha256": "47d564cdb86762cb24091fdbbb69c71b3c73085d1c7e749f5b62773822f3ac66"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 27736,
+                "sha256": "f2faa20850f043bbd98eac195d4656a6b85727303286591cfc3670c4d9970c03"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2397,
+                "sha256": "92c691e91a07629e2c962b542f2e8b064246ffaece034717abbac5d031fb151d"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 28120,
+                "sha256": "a70cce43e820ded10fe16bbd810e1bf197bcc1db9861bebdd3fbc3795192ac72"
+              },
+              "x86_64-linux/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "8601af4c0d81b7ecf4d1f50eadd4aa77b0c706c6c72417832956f65fce5a98ae"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "6eeaf32d2ef67cfa7bc2e0799653185e9564bc2a596a51e27dfe3f8a1f8baca5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "9651649b54ef0a7946cc53ca135afae104d8214c8ee52e689643eeeeef0d9c44"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 650,
+                "sha256": "38294f5f42a38771d94e8c84b00896aa306b751b2f983ee5353fc218ec1b4154"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 31656,
+                "sha256": "72a1907664c1247545b719ef8a1768a0a7bf8abe881453fef4c774729c615a5b"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2618,
+                "sha256": "89f906bd2d022e6839e5fbb708e932961d2df23158f5ce48bff719c4708a0e3e"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 27816,
+                "sha256": "46de356cd89cd6e81b78ced79e7b1f46a4e6563c5ed833e248a9df4e6134e11e"
+              },
+              "x86_64-linux-thread-multi/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "bf268c0a227fd724d026680140926102c1ed75dba9d56c82ab6cac52ceb64f61"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "f400929d094a57bdcb061733a7d4173993a1c612e9f09cc24e3896b74dd18ce4"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "5b589605c6e9aefc9f8b5db9ef818961f1a3a413e9938046afa11851d019e99c"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 598,
+                "sha256": "0341396a8c61416e5863e39dcb8f0d585d5a60de2cbee5bd640f9e6982e19ab0"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 27736,
+                "sha256": "474ec8e0f9825ffb778638f89d02793e1853fc85d3bd19a779dbdba407ea9aec"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2397,
+                "sha256": "d1cf4d8ef7cd095490134e6aced893bdc7bcc5cad89e6fe754634c50ca83f1a6"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 28168,
+                "sha256": "55aad09c9c93e7b4a3ae7073519547bc602af78e3fd01caa4d1a543fe983d2ed"
+              },
+              "x86_64-linux/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "fe42f759bd99220c970c69dc7cc79a625316324c57b2bcdd7644f0c8a2ae2756"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          }
+        ],
+        "packages": {
+          "component": {
+            "id": "recursive_demo@1.0.0",
+            "name": "recursive_demo",
+            "version": "1.0.0"
+          },
+          "kind": "lean-bridge-package-set-receipt",
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 89066,
+                  "path": "archives/LeanBridge-RecursiveDemo-0.001.tar.gz",
+                  "sha256": "41266219e949c0e6fcdd841e94b98edbb28614e8cfa0db5cf0e39cfc62dfd187"
+                }
+              ],
+              "ecosystem": "cpan",
+              "name": "LeanBridge-RecursiveDemo",
+              "profile": "native-library-v1",
+              "requires": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "version": "0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891"
+                }
+              ],
+              "role": "component",
+              "runtimeDelivery": "dependency",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "cpan",
+              "version": "0.001"
+            },
+            {
+              "artifacts": [
+                {
+                  "bytes": 51372657,
+                  "path": "archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+                  "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+                }
+              ],
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "runtime",
+              "runtimeDelivery": "provided",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "cpan",
+              "version": "0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891"
+            }
+          ],
+          "profiles": [
+            {
+              "bindingIrSha256": "ffb4d7d01a0b6a0e66836ebfdb68d01c77858759bbea6991624e0deb556e22a7",
+              "id": "native-library-v1",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            }
+          ],
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "95257d4a0f40b46a3769b8bf14861653ae4b285314a2bb0c0b50021b9b82a859"
+          }
+        },
+        "reviewed": false,
+        "sourceUnchanged": true
+      },
+      {
+        "installs": [
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "b2d4c415bb48b2f601b781ed31e5fc4d4e766c6b1d2387afdb4378e685079a86"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "a5862b5a8e7c3d59c93ecee31d03922ad27b9d98fe8e3bf9c49661916d8c02b2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 650,
+                "sha256": "da0f8e7dacbadeee831d91d2c5ecedfcf8806d63c635fc3292f45e4887d7e192"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 31656,
+                "sha256": "a3f2c000ca8822b25705a5051487442bebad4c54ae0d4fd9668666c3a245cb7d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2618,
+                "sha256": "6df8cdd26dc8202120e376c27acbc984cfc9295da3dadc2c9475b9bf38e7af7b"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 27776,
+                "sha256": "428a2521790499d6bdf202a1cae1c7a84b0341e3313b3ce4fa42af9d5dcb8e5f"
+              },
+              "x86_64-linux-thread-multi/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "e2d9a984b75dd6426786899c34b5972c0819086cb92e445fbb1971fd46e5a383"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "ebebf8b667a0d1f845ba4bd8bf1a5b4eac596e3d5f40ca58e3d6dfd42d074445"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "483ddc27c19bd6dbaa4a07dd2f1b291460e92755f2942f53e2aa60aace91a4c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 598,
+                "sha256": "234f5df46e412da47ef961cfdf6cf59eca9fe8c777ea75bbc9e8c6250b0e58f3"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 27736,
+                "sha256": "f2faa20850f043bbd98eac195d4656a6b85727303286591cfc3670c4d9970c03"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2397,
+                "sha256": "ab2be47cdbf975f5f78b6dcf0d8a994bbb481af0dd3804f708fafff7f0fc574f"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 28120,
+                "sha256": "a70cce43e820ded10fe16bbd810e1bf197bcc1db9861bebdd3fbc3795192ac72"
+              },
+              "x86_64-linux/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "4befc18e06074bf21028e1b90796d103c1d0e7a88d3095dec975109fb80b5ec2"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "6eeaf32d2ef67cfa7bc2e0799653185e9564bc2a596a51e27dfe3f8a1f8baca5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 531,
+                "sha256": "9651649b54ef0a7946cc53ca135afae104d8214c8ee52e689643eeeeef0d9c44"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 650,
+                "sha256": "6eb1edfe1a957838950ef21d52b579449b4eff7fc013d362a8daf7f59d9000bf"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 31656,
+                "sha256": "72a1907664c1247545b719ef8a1768a0a7bf8abe881453fef4c774729c615a5b"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2618,
+                "sha256": "23c917da10a283ef53c50d0f78489c126f4e4e8bbc7723f2a21a12f7bd66b84e"
+              },
+              "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 27816,
+                "sha256": "46de356cd89cd6e81b78ced79e7b1f46a4e6563c5ed833e248a9df4e6134e11e"
+              },
+              "x86_64-linux-thread-multi/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "e9dd1621b775dccc771545f75a2a58433445450d3183bfed24540d99e0b983eb"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux-thread-multi/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          },
+          {
+            "compilerFreeExecution": true,
+            "documentedOutput": "41\n99\n41\n",
+            "handoffRemoved": true,
+            "installedFiles": {
+              "x86_64-linux/LeanBridge/RecursiveDemo.pm": {
+                "bytes": 4814,
+                "sha256": "55d4008e82c47902ccb84177d0c5bf56c3b70c48291fbf84b8ee5647d6ad6875"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "f400929d094a57bdcb061733a7d4173993a1c612e9f09cc24e3896b74dd18ce4"
+              },
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so": {
+                "bytes": 36800,
+                "sha256": "41ed91687eb5f7c8724b0c3adaabcc0555a793125ef20a979e6327b3bbba6e45"
+              },
+              "x86_64-linux/LeanBridge/Runtime.pm": {
+                "bytes": 3547,
+                "sha256": "01784c87a2b5fb85a90704f821edf1b64ad6e20f6b751692b8d5fbdd4fc46cc2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+                "bytes": 1824,
+                "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+              },
+              "x86_64-linux/LeanBridge/Runtime/binding.json": {
+                "bytes": 483,
+                "sha256": "44b7fff89ace55c8a584818941e579d01e192559f7b9f80093362dd10c5550e7"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+                "bytes": 253,
+                "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+                "bytes": 131189,
+                "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+                "bytes": 578,
+                "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+                "bytes": 39953,
+                "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+                "bytes": 400,
+                "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+                "bytes": 2124,
+                "sha256": "875e0a704a30f1103b9c85e477a3e2a503333aab1dfff5782c812aacdd07c184"
+              },
+              "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+                "bytes": 3561,
+                "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+              },
+              "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+                "bytes": 506,
+                "sha256": "5b589605c6e9aefc9f8b5db9ef818961f1a3a413e9938046afa11851d019e99c"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+                "bytes": 1466,
+                "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+              },
+              "x86_64-linux/LeanBridge/Runtime/target.json": {
+                "bytes": 36,
+                "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/.packlist": {
+                "bytes": 598,
+                "sha256": "a808552dd8e663cd897df3275c2d3dd94df5b9bae5a260803f70e5f926021280"
+              },
+              "x86_64-linux/auto/LeanBridge/RecursiveDemo/RecursiveDemo.so": {
+                "bytes": 27736,
+                "sha256": "474ec8e0f9825ffb778638f89d02793e1853fc85d3bd19a779dbdba407ea9aec"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+                "bytes": 2397,
+                "sha256": "b12426ac3f0e58cc43dbc2438addfbc833d614fe78fce82a4814150c81eb487c"
+              },
+              "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+                "bytes": 28168,
+                "sha256": "55aad09c9c93e7b4a3ae7073519547bc602af78e3fd01caa4d1a543fe983d2ed"
+              },
+              "x86_64-linux/perllocal.pod": {
+                "bytes": 701,
+                "sha256": "2242661c3b767547121b50049b127e854f93a2141fecee79c34e1c548f97a7a0"
+              }
+            },
+            "installedFilesRestored": true,
+            "nativeTamperRejections": [
+              "x86_64-linux/LeanBridge/RecursiveDemo/native/libcomponent_c5d4d7374b743566e94c.so",
+              "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so",
+              "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so"
+            ],
+            "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+            "relocated": true,
+            "repeated": true,
+            "sourceFree": true
+          }
+        ],
+        "packages": {
+          "component": {
+            "id": "recursive_demo@1.0.0",
+            "name": "recursive_demo",
+            "version": "1.0.0"
+          },
+          "kind": "lean-bridge-package-set-receipt",
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 89845,
+                  "path": "archives/LeanBridge-RecursiveDemo-0.001.tar.gz",
+                  "sha256": "18d3d60234548a538137154245a07ad674daca5ce6f4e1c5ad338e046bfaad07"
+                }
+              ],
+              "ecosystem": "cpan",
+              "name": "LeanBridge-RecursiveDemo",
+              "profile": "native-library-v1",
+              "requires": [
+                {
+                  "ecosystem": "cpan",
+                  "name": "LeanBridge-Runtime",
+                  "version": "0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891"
+                }
+              ],
+              "role": "component",
+              "runtimeDelivery": "dependency",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "cpan",
+              "version": "0.001"
+            },
+            {
+              "artifacts": [
+                {
+                  "bytes": 51372657,
+                  "path": "archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+                  "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+                }
+              ],
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "runtime",
+              "runtimeDelivery": "provided",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "cpan",
+              "version": "0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891"
+            }
+          ],
+          "profiles": [
+            {
+              "bindingIrSha256": "7d86d9fc5fac74418d2651fe80380de9d9cd640bb347e670ab7a2b3e33dcd0c3",
+              "id": "native-library-v1",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            }
+          ],
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "37eed1a2233bef3b5eda7a5e9692995cc085be24e09c62ebd2bfb5c02e8ffa24"
+          }
+        },
+        "reviewed": true,
+        "sourceUnchanged": true
+      }
+    ],
+    "reviewSha256": "77100af4ca6247fc1645c44e7c6cc446425c4b004ee74a5ca1226d68eeaacf3b",
+    "schemaVersion": 1,
+    "sourceSha256": "3df5f73bd2f4ff565306019bebc2dd7935898dc014ecf3bf7af242cf05c459c0",
+    "tamperCheckSha256": "584a84a54eec1d971471f8ac64ad3d641e60d157b5d430b162de614d23ee11dc"
+  }
+}

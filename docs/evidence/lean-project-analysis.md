@@ -1,5 +1,7 @@
 # Lean project analysis evidence
 
+Historical evidence for the source-scanning implementation. The public command and ordinary npm builds now use [compiler-backed analysis](../../src/analyze/README.md); the scanner remains in internal fixture tooling.
+
 ## Result
 
 `lean-bridge analyze` now reads an ordinary Lean project and returns a deterministic, read-only export plan. A project with copied primitive types can produce a valid Binding IR version 3 document without bridge annotations.
@@ -91,7 +93,7 @@ The build pipeline must elaborate the project, validate generated ABI code, and 
 - built-in and custom policy thresholds with stable exit codes; and
 - cancellation without output or staging residue.
 
-[`schema/project-analysis.schema.json`](../../schema/project-analysis.schema.json) closes the version 1 report, candidate, hint, diagnostic, and Binding IR reference shapes.
+This evidence records the original source-scanning implementation. The public command now uses compiler-backed analysis and the [version-2 report](../../schema/project-analysis.schema.json); ordinary npm builds use compiler-owned source intent. The old scanner remains in internal fixture tooling. See the [current analyzer contract](../../src/analyze/README.md).
 
 Run the focused gate:
 

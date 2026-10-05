@@ -24,6 +24,32 @@ import consumerSections from "./fixtures/documentation/consumer-sections.json" w
 const fixtureRoot = resolve("tests/fixtures/documentation/consumers");
 const guides = docPages.filter(page => page.consumerIds?.length);
 
+test("prepared releases lead with project-free CLI verification and retain both offline fallbacks", async () => {
+	const source = await readFile("docs/consume/receive-package.md", "utf8");
+	const signed = source.split("### Authenticate a signed archive\n")[1].split("### Verify the local npm receipt\n")[0];
+	const local = source.split("### Verify the local npm receipt\n")[1];
+	for(const section of [signed, local])
+	{
+		assert.match(section, /```sh\nlean-bridge verify|\nlean-bridge verify/);
+		assert.ok(section.indexOf("lean-bridge verify") < section.indexOf("node "));
+	}
+	for(const required of ["release-receipt.sha256", "--policy-sha256", "--subject", "--coordinate", "verify-release-archive.mjs"])
+		assert.ok(signed.includes(required), required);
+	assert.match(local, /verify-component-package-receipt\.mjs/);
+	assert.match(local, /authenticated: false/);
+	assert.match(signed, /authenticated: true/);
+	assert.match(source, /runtime-free CLI archive is sufficient/);
+	assert.match(source, /Ordinary registry consumers can use their package manager/);
+	const packages = source.split("### Verify a local package set\n")[1]?.split("### Authenticate a signed archive\n")[0];
+	assert.ok(packages);
+	for(const required of ["package-set-receipt.json.sha256", "lean-bridge verify", "local-package-set", "authenticated: false", "--artifacts", "native PHP", "PHP-Wasm", "CPAN", "PyPI", "NuGet", "Maven", "Cargo", "RubyGems", "WIT/WASI"])
+		assert.ok(packages.includes(required), required);
+	assert.match(packages, /does not unpack or execute/);
+	assert.match(packages, /does not authenticate a publisher/);
+	for(const guide of ["docs/lean/first-component.md", "docs/publish/local-handoff.md"])
+		assert.match(await readFile(guide, "utf8"), /```sh\nlean-bridge verify/);
+});
+
 /**
  * Read the worked example's three-column API table, separate from the generated inventory.
  *
@@ -31,7 +57,7 @@ const guides = docPages.filter(page => page.consumerIds?.length);
  */
 function conversionTable(source)
 {
-	const heading = source.includes("### Alpha example API\n") ? "Alpha example API" : "Scalar package example";
+	const heading = source.includes("### Alpha example API\n") ? "Alpha example API" : source.includes("### Workshop example API\n") ? "Workshop example API" : "Scalar package example";
 	const section = source.split(`### ${heading}\n`)[1]?.split(/^### /mu)[0];
 	assert.ok(section, "The guide must keep its worked example's API table");
 	const rows = section.split("\n").filter(line => line.startsWith("| "));
@@ -84,7 +110,7 @@ test("each consumer guide documents type conversions within prepared-package use
 			assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
 		if(guide.id !== "javascript-typescript")
 		{
-			for(const lean of ["Array UInt32", "Payload", "Box"])
+			for(const lean of guide.id === "perl" ? ["Array UInt32", "Packet", "Counter"] : ["Array UInt32", "Payload", "Box"])
 				assert.ok(rows.has(`\`${lean}\``), `${guide.id}: ${lean}`);
 			assert.match(source, /callback|callable/u, guide.id);
 		}
@@ -101,6 +127,7 @@ test("Alpha conversion tables match the generated public Payload field types", a
 	const java = generateJvmBindingPackage(alpha.bindingIr)["src/main/java/org/leanbridge/alpha/Payload.java"];
 	const ruby = generateRubyBindingPackage(alpha.bindingIr)["sig/lean_bridge/alpha.rbs"];
 	const php = generatePhpBindingPackage(alpha.bindingIr)["src/Payload.php"];
+	const phpWasm = generatePhpBindingPackage(alpha.bindingIr, { integerBits: 32 })["src/Payload.php"];
 	const namedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, name, type]) => [name, type]));
 	const typedFirst = (source, expression) => new Map([...source.matchAll(expression)].map(([, type, name]) => [name.toLowerCase(), type.replace(/^\\/u, "")]));
 	const jvmFields = typedFirst(java, new RegExp(`([a-zA-Z\\[\\]]+) (${fields})(?=[,)])`, "gu"));
@@ -115,12 +142,12 @@ test("Alpha conversion tables match the generated public Payload field types", a
 		, kotlin: new Map([...jvmFields].map(([name, type]) => [name, kotlinTypes[type]]))
 		, ruby: namedFirst(ruby, new RegExp(`^      attr_reader (${fields}): (.+)$`, "gmu"))
 		, "php-native": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
-		, "php-wasm": typedFirst(php, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
+		, "php-wasm": typedFirst(phpWasm, new RegExp(`^    public (.+) \\$(${fields});$`, "gmu"))
 	};
 	const leanNames = { bool: "Bool", uint32: "UInt32", string: "String", bytes: "ByteArray" };
 	for(const [target, generated] of Object.entries(targets))
 	{
-		const { rows } = conversionTable(await readFile(`docs/consume/${target}.md`, "utf8"));
+		const { rows } = conversionTable(await readFile(target.startsWith("php-") ? "docs/php.md" : `docs/consume/${target}.md`, "utf8"));
 		const payload = alpha.bindingIr.types.find(type => type.name === "Payload");
 		assert.equal(generated.size, payload.fields.length, `${target}: extract all generated fields`);
 		for(const field of payload.fields)
@@ -135,28 +162,28 @@ test("Alpha conversion tables match the generated public Payload field types", a
 	}
 });
 
-test("the PHP overview exposes conversions without requiring a transport guide", async () => {
+test("the combined PHP guide owns both profiles and preserves their differences", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	const overview = conversionTable(source);
-	assert.ok(source.indexOf("### Type conversions\n") < source.indexOf("### Verify the native release\n"));
+	assert.deepEqual(docPages.find(page => page.id === "php").consumerIds, ["php-native", "php-wasm"]);
 	for(const profile of ["php-native", "php-wasm"])
 	{
-		const detailed = conversionTable(await readFile(`docs/consume/${profile}.md`, "utf8"));
-		assert.deepEqual([...overview.rows.keys()], [...detailed.rows.keys()], profile);
-		for(const lean of ["Bool", "UInt32", "String", "ByteArray", "Array UInt32", "Payload", "Box"])
-			assert.equal(overview.rows.get(`\`${lean}\``).host, detailed.rows.get(`\`${lean}\``).host, `${profile}: ${lean}`);
-		assert.ok(overview.section.includes(`(consume/${profile}.md#type-conversions)`), profile);
+		assert.ok(source.includes(`file=${profile}/main.php`), profile);
+		assert.equal(docPages.find(page => page.id === profile).legacy, true);
 	}
 	const range = overview.rows.get("`UInt32`").rules;
-	assert.match(range, /Native PHP: `0\.\.4294967295` with 64-bit/u);
-	assert.match(range, /PHP-Wasm: `0\.\.2147483647` with 32-bit signed/u);
-	assert.match(overview.section, /result above `PHP_INT_MAX`/u);
+	assert.match(range, /Full `0\.\.4294967295` range in both profiles/u);
+	assert.match(range, /PHP-Wasm.*BigInteger::of/u);
+	assert.match(overview.section, /callback\(BigInteger\)|callable\(BigInteger\): BigInteger/u);
+	assert.doesNotMatch(overview.section, /result above `PHP_INT_MAX` cannot be represented/u);
+	assert.match(source, /PHP module API `20220829`/u);
+	assert.match(source, /PHP's virtual filesystem/u);
 });
 
 test("conversion tables distinguish full-width integers and executable WASI support", async () => {
 	const javascript = conversionTable(await readFile("docs/javascript-typescript.md", "utf8"));
 	const scalarReference = await readFile("docs/reference/types.md", "utf8");
-	const leanNames = { unit: "Unit", bool: "Bool", nat: "Nat", int: "Int", float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray" };
+	const leanNames = { unit: "Unit", bool: "Bool", nat: "Nat", int: "Int", float32: "Float32", float64: "Float", string: "String", bytes: "ByteArray", char: "Char", usize: "USize", isize: "ISize" };
 	const scalars = [...scalarReference.matchAll(/^\| `([a-z0-9]+)` \| `([^`]+)` \|/gmu)];
 	assert.equal(javascript.rows.size, scalars.length);
 	for(const [, primitive, host] of scalars)
@@ -165,11 +192,11 @@ test("conversion tables distinguish full-width integers and executable WASI supp
 		assert.ok(javascript.rows.get(`\`${lean}\``)?.host.includes(`\`${host}\``), `${lean}: ${host}`);
 	}
 	assert.match(javascript.section, /16 MiB/u);
-	const phpNative = conversionTable(await readFile("docs/consume/php-native.md", "utf8"));
-	const phpWasm = conversionTable(await readFile("docs/consume/php-wasm.md", "utf8"));
+	const phpNative = conversionTable(await readFile("docs/php.md", "utf8"));
+	const phpWasm = phpNative;
 	assert.match(phpNative.rows.get("`UInt32`").rules, /4294967295/u);
-	assert.match(phpWasm.rows.get("`UInt32`").rules, /32-bit signed.*2147483647/u);
-	assert.match(phpWasm.section, /result above `PHP_INT_MAX`/u);
+	assert.match(phpWasm.rows.get("`UInt32`").rules, /BigInteger::of\('4294967295'\)/u);
+	assert.match(phpWasm.section, /4294967295` wraps to `0/u);
 	const wasi = conversionTable(await readFile("docs/consume/wit-wasi.md", "utf8"));
 	assert.match(wasi.rows.get("`UInt32`").rules, /Executable input and result/u);
 	for(const lean of ["Bool", "String", "ByteArray", "Array UInt32"])
@@ -182,28 +209,30 @@ test("consumer section overrides name unique canonical consumer guides", () => {
 	for(const entry of consumerSections.overrides)
 	{
 		const guide = docPages.find(page => page.id === entry.id);
-		assert.ok(guide && !guide.legacy && guide.group === "Consume", entry.id);
+		assert.ok(guide && !guide.legacy && guide.group === "Use a package", entry.id);
 		assert.ok(entry.prepared.length > 0, entry.id);
 		assert.notEqual(entry.prepared, consumerSections.source, entry.id);
 	}
 });
 
-test("consumer guides put prepared release use before source-package preparation", async () => {
+test("consumer guides own installation while source bookmarks link to authors", async () => {
 	const pages = [...guides, ...docPages.filter(page => ["consume", "receive-package", "php"].includes(page.id))];
 	for(const page of pages)
 	{
 		const source = await readFile(page.source, "utf8");
 		const preparedHeading = consumerSections.overrides.find(entry => entry.id === page.id)?.prepared
 			?? consumerSections.prepared;
-		assert.deepEqual([...source.matchAll(/^## (.+)$/gmu)].map(match => match[1]),
-			[preparedHeading, consumerSections.source], page.id);
+		const outline = [...source.matchAll(/^## (.+)$/gmu)].map(match => match[1]);
+		assert.equal(outline[0], preparedHeading, page.id);
+		assert.ok(outline.includes(consumerSections.source), page.id);
+		assert.doesNotMatch(source, /lean-bridge (?:analyze|build|publish)/u, `${page.id}: building belongs to authors`);
 		const boundary = source.indexOf(`## ${consumerSections.source}`);
 		const prepared = source.slice(0, boundary);
 		assert.doesNotMatch(prepared, /lean-bridge (?:analyze|build|publish)|lean\/setup\.md|lean\/first-component\.md/u,
 			`${page.id}: source preparation is not an installation prerequisite`);
 		for(const match of source.matchAll(/^```[a-z0-9]+ file=([^\s]+)/gmu))
 			assert.ok(match.index < boundary, `${page.id}: ${match[1]} belongs to prepared-package consumption`);
-		assert.match(source.slice(boundary), /\]\([^)]*(?:lean\/setup|publish\/local-handoff|contributing\/testing|publish\/npm|consume)\.md(?:#|\))/u,
+		assert.match(source.slice(boundary), /\]\([^)]*(?:lean\/existing-package|publish\/[a-z-]+)\.md(?:#|\))/u,
 			`${page.id}: source path links to the applicable build workflow`);
 	}
 });
@@ -220,7 +249,7 @@ test("the prepared release guide uses its chosen title and preserves its existin
 
 test("JavaScript uses automatic runtime loading and Python installs with its own package tools", async () => {
 	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
-	const registry = javascript.split("### Install from a registry\n")[1].split("### Install a local archive release\n")[0];
+	const registry = javascript.split("## Install from a registry\n")[1].split("## Install a local archive release\n")[0];
 	assert.match(registry, /npm install --save-exact/u);
 	assert.match(registry, /npm resolves the declared runtime dependency/u);
 	assert.doesNotMatch(registry, /LEAN_BRIDGE_RUNTIME_ARCHIVE/u);
@@ -228,7 +257,7 @@ test("JavaScript uses automatic runtime loading and Python installs with its own
 	for(const [, snippet] of javascript.matchAll(/^```(?:js|ts|tsx)[^\n]*\n([\s\S]*?)^```/gmu))
 		assert.doesNotMatch(snippet, /(?:from|import\()\s*["']@lean-bridge\/runtime/u);
 	const python = await readFile("docs/consume/python.md", "utf8");
-	const install = python.split("### Install the wheel\n")[1].split("### Call Lean\n")[0];
+	const install = python.split("## Install the wheel\n")[1].split("## Call Lean\n")[0];
 	assert.match(install, /python3 -m venv/u);
 	assert.match(install, /python -m pip install/u);
 	assert.doesNotMatch(install, /\bnode\b|preflight|lean-bridge build/u);
@@ -274,12 +303,12 @@ test("published runnable snippets exactly match every public documentation fixtu
 
 test("superseded guides remain compatibility pages outside primary navigation", async () => {
 	const legacy = docPages.filter(page => page.legacy);
-	assert.deepEqual(legacy.map(page => page.id), ["javascript", "typescript", "browser", "react", "browser-workers", "dotnet-jvm-ruby", "publish-pages", "release-pipeline"]);
+	assert.deepEqual(new Set(legacy.map(page => page.id)), new Set(["javascript", "typescript", "browser", "react", "browser-workers", "dotnet-jvm-ruby", "publish-pages", "release-pipeline", "php-native", "php-wasm", "publish-composer", "publish-sandbox", "publish-production"]));
 	for(const page of legacy)
 	{
 		const source = await readFile(page.source, "utf8");
 		assert.doesNotMatch(source, /^```/mu, "Compatibility pages link to runnable guides instead of duplicating them");
-		assert.ok((source.match(/^## /gmu) ?? []).length >= 4);
+		assert.ok((source.match(/^## /gmu) ?? []).length >= 2);
 	}
 });
 
@@ -287,20 +316,23 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 	const overview = await readFile("docs/publishing.md", "utf8");
 	const index = await readFile("docs/README.md", "utf8");
 	const recipes = [
-		["npm", ["npm"], "build-npm-package.mjs", ["javascript-typescript", "php-wasm"]]
+		["npm", ["npm"], "build-npm-package.mjs", ["javascript-typescript"]]
 		, ["pypi", ["pypi"], "build-pypi-package.mjs", ["python"]]
 		, ["cargo", ["cargo"], "build-cargo-package.mjs", ["rust"]]
 		, ["nuget", ["nuget"], "build-nuget-package.mjs", ["dotnet"]]
 		, ["maven", ["maven"], "build-maven-package.mjs", ["java", "kotlin"]]
 		, ["rubygems", ["rubygems"], "build-rubygems-package.mjs", ["ruby"]]
-		, ["composer", [], "build-php-native-package.mjs", ["php-native"]]
-		, ["archives", ["c", "cpp", "wit-wasi"], "build-c-family-package.mjs", ["c", "cpp", "wit-wasi"]]
+		, ["php", [], "build-php-native-package.mjs", ["php"]]
+		, ["cpan", [], "lean-bridge build", ["perl"]]
+		, ["c", ["c"], "build-c-family-package.mjs", ["c"]]
+		, ["cpp", ["cpp"], "build-c-family-package.mjs", ["cpp"]]
+		, ["wit-wasi", ["wit-wasi"], "build-wasi-package.mjs", ["wit-wasi"]]
 	];
 	for(const [slug, targets, builder, consumers] of recipes)
 	{
 		const guide = docPages.find(page => page.id === `publish-${slug}`);
 		assert.equal(guide?.route, `/docs/publish/${slug}/`, slug);
-		assert.equal(guide.group, "Publish", slug);
+		assert.equal(guide.group, "Build and publish", slug);
 		assert.equal(guide.legacy, undefined, slug);
 		assert.equal(guide.source, `docs/publish/${slug}.md`, slug);
 		assert.ok(overview.includes(`(publish/${slug}.md)`), slug);
@@ -308,7 +340,7 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 		const source = await readFile(guide.source, "utf8");
 		assert.ok(source.includes(builder), `${slug}: use the real package builder`);
 		assert.match(source, /^```sh\n/mu, `${slug}: provide executable commands`);
-		assert.match(source, /https:\/\//u, `${slug}: link registry references`);
+		assert.ok(/https:\/\//u.test(source) || source.includes("(archives.md#"), `${slug}: link registry or archive references`);
 		assert.match(source, /[Vv]erif|[Cc]ompare/u, `${slug}: check the uploaded artifact`);
 		assert.match(source, /[Rr]ecover|[Rr]etry/u, `${slug}: explain interrupted uploads`);
 		assert.match(source, /[Aa]pprov|[Aa]uthoriz/u, `${slug}: identify the release approval`);
@@ -316,7 +348,7 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 		{
 			const destination = publicationDestinationFor(target);
 			assert.ok(overview.includes(`\`${target}\``), `${slug}: document the real target ID`);
-			assert.equal(destination.operation, slug === "archives" ? "retain" : "publish");
+			assert.equal(destination.operation, ["c", "cpp", "wit-wasi"].includes(slug) ? "retain" : "publish");
 		}
 		for(const id of consumers)
 		{
@@ -326,6 +358,14 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 	}
 	for(const target of ["composer", "php-native", "php-wasm", "nix"])
 		assert.throws(() => publicationDestinationFor(target), { code: "unsupported-publication-target" });
+	for(const slug of ["pypi", "wit-wasi"])
+	{
+		const source = await readFile(`docs/publish/${slug}.md`, "utf8");
+		assert.match(source, /lean-bridge verify --receipt .*package-set-receipt\.json/);
+		assert.match(source, /\.json\.sha256/);
+		assert.match(source, /receive-package\.md#verify-a-local-package-set/);
+		assert.doesNotMatch(source, /package-set verification remains/);
+	}
 	assert.match(overview, /Only npm has an installed adapter/u);
 	assert.match(overview, /does not produce Lean Bridge's signed transaction or completion receipt/u);
 });
@@ -333,9 +373,9 @@ test("each package ecosystem has a visible publishing recipe linked from its con
 test("signed Nix publication covers the closure and consumer trust without inventing a registry target", async () => {
 	const guide = docPages.find(page => page.id === "publish-nix");
 	assert.equal(guide?.route, "/docs/publish/nix/");
-	assert.equal(guide.group, "Publish");
+	assert.equal(guide.group, "Build and publish");
 	assert.equal(guide.legacy, undefined);
-	const source = await readFile(guide.source, "utf8");
+	const source = await readFile(guide.source, "utf8") + await readFile("docs/consume/receive-package.md", "utf8");
 	for(const term of ["universal-release-bundle", "store sign", "--recursive", "--key-file", "copy", "trusted-public-keys", "substituters", "store verify"])
 		assert.ok(source.includes(term), `Nix guide: ${term}`);
 	assert.ok(source.includes("--option trusted-public-keys"), "Signer audits select the intended key");
@@ -345,6 +385,6 @@ test("signed Nix publication covers the closure and consumer trust without inven
 	assert.match(source, /https:\/\/nix\.dev\/manual/u, "Nix commands cite their official reference");
 	assert.match(source, /[Pp]rivate|[Ss]ecret/u, "Signing-key storage is explained");
 	for(const file of ["docs/publishing.md", "docs/README.md", "docs/consume.md", "docs/consume/receive-package.md", "src/release/README.md", "nix/README.md"])
-		assert.ok((await readFile(file, "utf8")).includes("publish/nix.md"), file);
+		assert.match(await readFile(file, "utf8"), /publish\/nix\.md|receive-package\.md#install-from-a-signed-nix-cache/u, file);
 	assert.throws(() => publicationDestinationFor("nix"), { code: "unsupported-publication-target" });
 });

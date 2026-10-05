@@ -1,0 +1,1112 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "jvm-structured-codegen-regression",
+  "baselineRevision": "594287dd2e4ab9550de349f9414b3d0ecf9d0c22",
+  "predecessors": {
+    "src/backends/jvm/copied-model.mjs": "28fdea63186791b5a0b2dd9cd8762253916aafb681219bb02c676b9deb31a644",
+    "src/backends/jvm/copied-values.mjs": "4a881800e3d767468d255770fa268af84848896ba56aed5c80c7b7b993b230a1",
+    "src/backends/jvm/copied-kotlin.mjs": "658118d92e67ad14469541f931cd757d241fa0a5b6a96d668f0574a12eff7a3d",
+    "src/backends/jvm/copied-runtime.mjs": "705592d8f75088679d3b7df4080adba5d7903d447a2e8e9aa0e46ae78ea71f6f",
+    "src/backends/jvm/callables.mjs": "53a0b9b60608bb9350728c5654d33b6c3500ab73b41008ade3bafcd292c702eb"
+  },
+  "sourceHashes": {
+    "src/backends/jvm/copied-model.mjs": "d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246",
+    "src/backends/jvm/copied-values.mjs": "e162223087125c44a042298ef48e40992fcb201cfa88e98738c53a5e150dc263",
+    "src/backends/jvm/copied-kotlin.mjs": "bca0eaf8fd637c524cc4e7d0756dc683037cb8e426cbfad02d7cfc733bac8d17",
+    "src/backends/jvm/copied-runtime.mjs": "21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9",
+    "src/backends/jvm/callables.mjs": "0c56311edb94344367ebb2cedf43a8d388395eb09d1f15fe992772431e302cae"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "215293131e3c77939222ece257a6fd9bf0973ddf81e4cd35fb3e918050336a52",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/callables/Unit.java": {
+          "bytes": 64,
+          "sha256": "58c83c598759035813fe24eff4e6acb38fe5344ba82665c009e0d278d5072713"
+        },
+        "src/main/java/org/leanbridge/callables/LeanBridgeException.java": {
+          "bytes": 239,
+          "sha256": "07d60f2c8524eaa8fadfd3cb76fd826d123f21f8de87b645875bc129e515e60a"
+        },
+        "src/main/java/org/leanbridge/callables/Api.java": {
+          "bytes": 7175,
+          "sha256": "0fb47d1fef01cf525f55b6c5ceae870beb3cb9628c29562dce17a166f039a967"
+        },
+        "src/main/java/org/leanbridge/callables/FnUnitToUnit.java": {
+          "bytes": 911,
+          "sha256": "8e024c6321b3e311d4abc028ccb14ec12d6616f32802b2ca547d021b9150ae6c"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUnitToUnit.java": {
+          "bytes": 953,
+          "sha256": "be5dd4391f078285c5c2b85fbc68b4f51e15041b6de4bf3f81453a5b938a48d7"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolToBool.java": {
+          "bytes": 930,
+          "sha256": "9a2ff883110daae755872f1b8b025d30ad53a87130b8973a250828206106de40"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolBoolToBool.java": {
+          "bytes": 972,
+          "sha256": "1eb07f796f5dfdeadd595cea95bad6d5edaafda36a29c79f7d8afeb7c2ea3d2d"
+        },
+        "src/main/java/org/leanbridge/callables/FnUInt8ToUInt8.java": {
+          "bytes": 918,
+          "sha256": "ff2687e24e1286287dff311e2021900557fad20a69b0336d0ec0a1ea856b4570"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUInt8ToUInt8.java": {
+          "bytes": 960,
+          "sha256": "24a0ada0fa44cf953130c2dab9f100439a9db4f946d5d0dadfa48e47e3acd735"
+        },
+        "src/main/java/org/leanbridge/callables/FnUInt16ToUInt16.java": {
+          "bytes": 922,
+          "sha256": "58f7b2ed7fa7d0bbd34d98adf21e4e7176642b3bd691a66a96ed3a32e4042962"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUInt16ToUInt16.java": {
+          "bytes": 964,
+          "sha256": "6e694068ac9f884cb7e4ca2fed77540fdeba5674a50c04b0c904da8eecc029ec"
+        },
+        "src/main/java/org/leanbridge/callables/FnUInt32ToUInt32.java": {
+          "bytes": 926,
+          "sha256": "90ad1710ef472718ddaf9f023a00f392d5d4f11498f7626dbcb11be7cf99008e"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUInt32ToUInt32.java": {
+          "bytes": 968,
+          "sha256": "6a0272d0698268d33fc68b17407c73a8660c8265c1713fee1a0f3c8ef7177350"
+        },
+        "src/main/java/org/leanbridge/callables/FnUInt64ToUInt64.java": {
+          "bytes": 991,
+          "sha256": "cee0199797bc3cb1d8d93d6262e1f7a1b0268a6d7298cbdc8d0c72a57fa9a9a3"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUInt64ToUInt64.java": {
+          "bytes": 1033,
+          "sha256": "146e79cabdfea7d16a7d3240ef74277170991a1bc7b7c8e7bb5c15260f81912a"
+        },
+        "src/main/java/org/leanbridge/callables/FnInt8ToInt8.java": {
+          "bytes": 919,
+          "sha256": "cd364e877d69558206a8c83280fbde705017e963774422691527d46a94b30425"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolInt8ToInt8.java": {
+          "bytes": 961,
+          "sha256": "033a5ebc4a914dc88179bef1f4fa7b7e1d1340c5ae55f7bb93df3eced2aef995"
+        },
+        "src/main/java/org/leanbridge/callables/FnInt16ToInt16.java": {
+          "bytes": 927,
+          "sha256": "38af325829c137815d75559e130181fa712f740c218cd9179dc7764762743ead"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolInt16ToInt16.java": {
+          "bytes": 969,
+          "sha256": "2bbd429056f53b9fce7371e18259b2096aeebd52b9c3fdf26dbd080f7085b3ee"
+        },
+        "src/main/java/org/leanbridge/callables/FnInt32ToInt32.java": {
+          "bytes": 919,
+          "sha256": "e5d5800d613e8a6bc6375e256db2ffdf13ea75436d6813132a71f5ae5e40fa4b"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolInt32ToInt32.java": {
+          "bytes": 961,
+          "sha256": "4966870b35da076b80615c25f39352c7e45966e197ca6bd16009c0f8b4bf16ae"
+        },
+        "src/main/java/org/leanbridge/callables/FnInt64ToInt64.java": {
+          "bytes": 923,
+          "sha256": "f02e92248916f46b1f936dfdccce7577ff6ac31d4fa48b190e12aaa89e6c4860"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolInt64ToInt64.java": {
+          "bytes": 965,
+          "sha256": "6cbb5246013b2246bcd842609a02554ed6f079e74274294c89fa3677138a3f66"
+        },
+        "src/main/java/org/leanbridge/callables/FnNatToNat.java": {
+          "bytes": 979,
+          "sha256": "14a93eea387d0bd6ba6a324e1506404c8d711065fd533104ffa9b11dbb7ff764"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolNatToNat.java": {
+          "bytes": 1021,
+          "sha256": "1b12770c2dac121acf50fb6179858b167bcfa8d9a834fb73930195f16e819725"
+        },
+        "src/main/java/org/leanbridge/callables/FnIntToInt.java": {
+          "bytes": 979,
+          "sha256": "bb199a3eead4e788cf139ae96fdc73e7c85835089c10112773cb59ab8538fc6f"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolIntToInt.java": {
+          "bytes": 1021,
+          "sha256": "ddf6f42fdd3370dab256689ba864109aea53bf32857e33e2cba16da99f9e2fde"
+        },
+        "src/main/java/org/leanbridge/callables/FnFloat32ToFloat32.java": {
+          "bytes": 935,
+          "sha256": "9a62f0f155c6d2a1756e069909511bbb12f6dddfa445e66d0a418fd60e5f40f0"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolFloat32ToFloat32.java": {
+          "bytes": 977,
+          "sha256": "667483ae0e8dfc00e94d95833b7e439391c10dcfb58e8c7eddb84d454c81d096"
+        },
+        "src/main/java/org/leanbridge/callables/FnFloat64ToFloat64.java": {
+          "bytes": 939,
+          "sha256": "94df8b6d8bda5009c3b35602e8f57aa058debc5e97b7eb590a1a3cc65a2b50a3"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolFloat64ToFloat64.java": {
+          "bytes": 981,
+          "sha256": "a3c4be9721a44690c46d6cc8ad8059e935e76af3a5666851f3c50acb51104d63"
+        },
+        "src/main/java/org/leanbridge/callables/FnStringToString.java": {
+          "bytes": 935,
+          "sha256": "9d7681563ffee3b502bb4ebde7312bc4a4e2c735d3bdccb810a415135f3840f3"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolStringToString.java": {
+          "bytes": 977,
+          "sha256": "e1069abe6a2fe70ab430da747d224873b78074ef0b39439a635469d4da8c9e53"
+        },
+        "src/main/java/org/leanbridge/callables/FnBytesToBytes.java": {
+          "bytes": 931,
+          "sha256": "c1df0f235676475958fad3f00547718bc6b15041f907278644adb4cc20fc9dbc"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolBytesToBytes.java": {
+          "bytes": 973,
+          "sha256": "4c7473091ceb9ab8a67aa6bd1c34618cc217a097bbc51fc3c88d0fc1d3c379c0"
+        },
+        "src/main/java/org/leanbridge/callables/FnCharToChar.java": {
+          "bytes": 915,
+          "sha256": "7284b1818a4c4196aef47280d5658f477e515acc766ff1aa7db24d05e410d0a3"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolCharToChar.java": {
+          "bytes": 957,
+          "sha256": "4cf10a0dbd57d8e2591c61fa00bbb16b63ea0e41412ce55126ff37b6f1c77cf8"
+        },
+        "src/main/java/org/leanbridge/callables/FnUSizeToUSize.java": {
+          "bytes": 987,
+          "sha256": "7e8a47817388c6fe18199bb8bd498f69b65fd8c7d14cf064993d8499401351d7"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolUSizeToUSize.java": {
+          "bytes": 1029,
+          "sha256": "f303f2f7f19a77ef23d4abaded4c3f2709ea3de96ae5c6876d514c90e44f32ec"
+        },
+        "src/main/java/org/leanbridge/callables/FnISizeToISize.java": {
+          "bytes": 923,
+          "sha256": "57db34b272e4af2e909653c6c1e9d5008768945a7053a390167c3ebb37a46ba0"
+        },
+        "src/main/java/org/leanbridge/callables/FnBoolISizeToISize.java": {
+          "bytes": 965,
+          "sha256": "d20d4039d74adbf28a94d654a8b7cb5181fbb8c72fcd1e0d5cc30d8125398bc3"
+        },
+        "src/main/java/org/leanbridge/callables/FnStringUInt64ToString.java": {
+          "bytes": 1007,
+          "sha256": "6caf0e229012d7e1da23a9d0ab60e62441940e0d47b7b96884c63620df7c207e"
+        },
+        "src/main/java/org/leanbridge/callables/FnUInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32ToUInt32.java": {
+          "bytes": 1545,
+          "sha256": "ede735c42d8642ecde4a2a60d79abc751fc2890d78a15805b110a41135a7dc79"
+        },
+        "src/main/java/org/leanbridge/callables/Runtime.java": {
+          "bytes": 186819,
+          "sha256": "c016e7ec664abf773505e083208776ed8629b7394773d7774abf74b7044c244e"
+        },
+        "src/main/java/org/leanbridge/callables/NativeAssets.java": {
+          "bytes": 2145,
+          "sha256": "0ffc7ce28fa1408d3e47a0e7681d31fc4af8086e787641232e0e82b3e56639ac"
+        },
+        "src/main/java/org/leanbridge/callables/Scope.java": {
+          "bytes": 542,
+          "sha256": "abfa02d82019b96a41edee6286b09049bb9b008d2f99176038fa5ea9980a4692"
+        },
+        "README.md": {
+          "bytes": 2008,
+          "sha256": "94b62528e1783a900897b15c5b1691d583cd1a84b6741790419af5a1a99088c6"
+        },
+        "binding-manifest.json": {
+          "bytes": 17927,
+          "sha256": "f619170d5ed6840efa64ef16d66812c978c6bfc125421f8c9c55dba3dc638f5b"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/Api.kt": {
+          "bytes": 19628,
+          "sha256": "ba8d5ee5f7a725461ca7497460d01cac5bfffd02e3a650f6bc29ce5b539c621b"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/Unit.kt": {
+          "bytes": 102,
+          "sha256": "6515fbf3bf8b1d30e8b80c520ca117937a5a53a32b30476a6e31475f8333b0a7"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/LeanBridgeException.kt": {
+          "bytes": 132,
+          "sha256": "61ffda6049133baf1466e45d7130975d9e662db828ff073f9c009d6cd13356bf"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUnitToUnit.kt": {
+          "bytes": 122,
+          "sha256": "7d29a4bb6eb2bc3796f0e424f5e75cf41fed42e866655bf8f2c568b80acfa843"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUnitToUnit.kt": {
+          "bytes": 130,
+          "sha256": "530cd323b4432492d621965ca9f2aec6281239ed7a5ab549cc52d7644fb3c387"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolToBool.kt": {
+          "bytes": 122,
+          "sha256": "b503e30be52ae33241766d8a84a4f7d44f447f05ad0a5c27f82a478384449e13"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolBoolToBool.kt": {
+          "bytes": 130,
+          "sha256": "6cb5ea12a70dae6198aa18a66eb61dcac897c62babd6d7079db89906ce837c50"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUInt8ToUInt8.kt": {
+          "bytes": 126,
+          "sha256": "d74cd8c484f1b53c11450a0a6501f5b6bf8021e8ba44983d4021919e8932beb1"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUInt8ToUInt8.kt": {
+          "bytes": 134,
+          "sha256": "47c7718ef37e61048b0a5284623c2185b153b288853c7e5c2b3c5559146056fb"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUInt16ToUInt16.kt": {
+          "bytes": 130,
+          "sha256": "9f7b4d05faef7cfd1bf6125725d626194c968b5fa3ef777be8ef0b562295aebf"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUInt16ToUInt16.kt": {
+          "bytes": 138,
+          "sha256": "aab13cc079b71338b92bf73185b366f447a411f721dbf8ca2ef2f98c0c1df477"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUInt32ToUInt32.kt": {
+          "bytes": 130,
+          "sha256": "1ae9d3b6641ba55768f68bd99be19c33af0e0c532e502487fd19f76327986aa2"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUInt32ToUInt32.kt": {
+          "bytes": 138,
+          "sha256": "724b946b14cf50cf91120477527b3bed3e10e6f2fcf67b6606a70f0d1ba418f7"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUInt64ToUInt64.kt": {
+          "bytes": 130,
+          "sha256": "4496bc635d2b29d60d8e5ad9a928c1aeb756c4e4aeeb1e9ccd0a7bab3c6bac54"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUInt64ToUInt64.kt": {
+          "bytes": 138,
+          "sha256": "7906f14c856cdd03d6b67de2cf29d9a1b0c0ad4cd8b69c5f8a20b7617839c830"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnInt8ToInt8.kt": {
+          "bytes": 122,
+          "sha256": "b8cc9023361dc2d1b96b1893614b16891ad4c4054051f6722254d2fc5d97dddc"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolInt8ToInt8.kt": {
+          "bytes": 130,
+          "sha256": "2e263afb3f0a7a027c4857f0b8be61b923a431f0773cc40a68bd75b2191e16fc"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnInt16ToInt16.kt": {
+          "bytes": 126,
+          "sha256": "bc0a8dc0a2b7e7415c2fe7beb1c7bf1611222e7bc7a3821d2e67cc333b7eeb3c"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolInt16ToInt16.kt": {
+          "bytes": 134,
+          "sha256": "3b481e50bbe74225a171b8b10a40f9d9a62f5bae616fdfcfa88f2d27d726eb2e"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnInt32ToInt32.kt": {
+          "bytes": 126,
+          "sha256": "5aa0a4237e26519a66a95952d7b8d7e1fe958289792018ae996ddb3355456798"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolInt32ToInt32.kt": {
+          "bytes": 134,
+          "sha256": "1551d587c3b47e6b4faf88152d605f1a57bb776d533cdf5c8db40ef6cc114ea1"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnInt64ToInt64.kt": {
+          "bytes": 126,
+          "sha256": "00e26554b7d71db406635169301bbd3a649d80b6f52441d51638762681014bd9"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolInt64ToInt64.kt": {
+          "bytes": 134,
+          "sha256": "45c2a0ff1701146d51bfca38d061d701929598475688869240b75795c7a748b6"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnNatToNat.kt": {
+          "bytes": 118,
+          "sha256": "065f4724299d9514fae954e584619113e532d38c809af11f7a888dac137b559e"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolNatToNat.kt": {
+          "bytes": 126,
+          "sha256": "a0cbe31965221f777139020ea8e6e0e53dd4dd92a429b8509c09705d2f4ac5ae"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnIntToInt.kt": {
+          "bytes": 118,
+          "sha256": "c7e50f47b42d6bb83f420915998645e09c73c888d860e03e7ddd2ea397604dcf"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolIntToInt.kt": {
+          "bytes": 126,
+          "sha256": "5b956b847868f03eb73c72ccca9a11c5ccf9520d3a49f48e3a8e4daeb6f7cea9"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnFloat32ToFloat32.kt": {
+          "bytes": 134,
+          "sha256": "03ec4c4e2f4f4d60ab27fdd4a4d52c2420dc539fa43ce39ce6ec42c4c1ae7c92"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolFloat32ToFloat32.kt": {
+          "bytes": 142,
+          "sha256": "b36533480545eb151b6f153b24e86df0383952c8ef5f2bb677e394ef4df7af80"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnFloat64ToFloat64.kt": {
+          "bytes": 134,
+          "sha256": "9dc229bfee385a0e87404756b873ad5c79ed2c75a45dd3879dcf41af75c8fae4"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolFloat64ToFloat64.kt": {
+          "bytes": 142,
+          "sha256": "d76263d7f9d08a9beae69c43b8032c3c218f12f98d419ad614c2097f45c34a7d"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnStringToString.kt": {
+          "bytes": 130,
+          "sha256": "0ccfca6af32ab021582b4e27889722c79736bc94595d3e0ceefec5e1e81fde92"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolStringToString.kt": {
+          "bytes": 138,
+          "sha256": "39085cfc445b5717dcd753397076ecfeb4e1821bab138ac2ef2611572d6391bd"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBytesToBytes.kt": {
+          "bytes": 126,
+          "sha256": "1cc454a88398c3b376a6e7d0f240aabec9286a0133676dc70ca5b6c91ee229a9"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolBytesToBytes.kt": {
+          "bytes": 134,
+          "sha256": "a5de7c672abdcd5d37ae31d020856d06c85f57c14b2f822c19bfcc9206b0f84d"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnCharToChar.kt": {
+          "bytes": 122,
+          "sha256": "f1c6bf194ed7a15f42b780ca65174664478d6f947f7801c4471dae518668b581"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolCharToChar.kt": {
+          "bytes": 130,
+          "sha256": "204d0bd7df66c9f7fc535867114b02efe7ba68585a9adb1869b34ca9d9bef1dd"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUSizeToUSize.kt": {
+          "bytes": 126,
+          "sha256": "acb26d9af3979bc7cdf0318545c9b648eccef269634ef132f78d3412cc46d80b"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolUSizeToUSize.kt": {
+          "bytes": 134,
+          "sha256": "07b34b74a50b4cc1f7b03df7b84168d8b909fbbcf1d17ace408ff0d57de4da52"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnISizeToISize.kt": {
+          "bytes": 126,
+          "sha256": "d90e8a4f9d3db3a6fa7fcbc58636f1bb6569ec745c7e9a3db027f51a6e1dd5d5"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnBoolISizeToISize.kt": {
+          "bytes": 134,
+          "sha256": "6ca588af4092750a04ecf2f1ca61cd09ecdf42b3b6836ecc85a0f0efb7ab5ce1"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnStringUInt64ToString.kt": {
+          "bytes": 142,
+          "sha256": "bb25bde0f055f811a5f00af1abf6afcea201dd751011a7a904ae4fedbd50a506"
+        },
+        "src/main/kotlin/org/leanbridge/callables/kotlin/FnUInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32UInt32ToUInt32.kt": {
+          "bytes": 310,
+          "sha256": "638631b97a9a10a70cec943a0e747e8a4874fe65b9d10c56078e81e5a7a72f1f"
+        },
+        "src/main/java/org/leanbridge/callables/KotlinBridge.java": {
+          "bytes": 8936,
+          "sha256": "d9a4aafcf9199adf53dcb6620f3180dee128265fbbf9ca282f743d55de8ce997"
+        },
+        "src/main/kotlin/org/leanbridge/callables/KotlinCalls.kt": {
+          "bytes": 7380,
+          "sha256": "e46862cf8d378064cfc2e48b80c8f06a48895de3b11a6279306d4c696a5627a6"
+        },
+        "src/main/java/org/leanbridge/callables/KotlinRuntime.java": {
+          "bytes": 70999,
+          "sha256": "de368d4a8084dcf0256437bce2a7be81d58dba4791948b71f506dfb822b9610c"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/collections/Unit.java": {
+          "bytes": 66,
+          "sha256": "6d5f1a287f060f711963c7b49cdbc46fe0e164802ffca3e4e5ca551eb5423748"
+        },
+        "src/main/java/org/leanbridge/collections/LeanBridgeException.java": {
+          "bytes": 241,
+          "sha256": "fa059e5c2692c7637eb85ba84d14fc880866e442104f1270436653a6d0d370d2"
+        },
+        "src/main/java/org/leanbridge/collections/Api.java": {
+          "bytes": 3959,
+          "sha256": "b3af8d6dd6e606bf729edb34ec57a9ac1b0bdf1196316748fab78eaf3a5ad009"
+        },
+        "src/main/java/org/leanbridge/collections/Primitives.java": {
+          "bytes": 2104,
+          "sha256": "02d3b2da50851214a6d2bf98573b2db26439b57bb9d696830d42b1684a2d886e"
+        },
+        "src/main/java/org/leanbridge/collections/Empty.java": {
+          "bytes": 337,
+          "sha256": "83921d15e68c3f7dbb524eb2caf570b224709c9d08cd5b55e1cdf929165814f2"
+        },
+        "src/main/java/org/leanbridge/collections/Single.java": {
+          "bytes": 447,
+          "sha256": "73b7321edabdb1b3a6b838bc95b2f92a4af7849bd624197d4fcd82a4c07583f9"
+        },
+        "src/main/java/org/leanbridge/collections/Count.java": {
+          "bytes": 444,
+          "sha256": "d3dd0a841a07151eed1712eacc43460aeaecf6d90415330460268689e0832a2b"
+        },
+        "src/main/java/org/leanbridge/collections/Pair.java": {
+          "bytes": 524,
+          "sha256": "c94cdeaa93aa30ee86786c47b08a08abf20bebe9702c9f9ef696e4953fad05f0"
+        },
+        "src/main/java/org/leanbridge/collections/Reversed.java": {
+          "bytes": 536,
+          "sha256": "9a14374eb8e1d2c692c364ce331c36a1598f139963817c2f135a2087348dc683"
+        },
+        "src/main/java/org/leanbridge/collections/Packet.java": {
+          "bytes": 1025,
+          "sha256": "dcd807d20f74bb60ca9639d7eddd4c2631a33a4add3dc7c6c06fee48a737eaa2"
+        },
+        "src/main/java/org/leanbridge/collections/Runtime.java": {
+          "bytes": 140756,
+          "sha256": "630ac8162ff5437d0a591635cae4c82f659179ad08dee070594e5c1844010a44"
+        },
+        "src/main/java/org/leanbridge/collections/NativeAssets.java": {
+          "bytes": 2147,
+          "sha256": "635d637cb49b9adaa449aa5454c90312fed6c9c39e808610fb7e5d9747767999"
+        },
+        "src/main/java/org/leanbridge/collections/Scope.java": {
+          "bytes": 544,
+          "sha256": "5bbab59a2c727230594ae98c2980b106b15b2680d4a3150130ea6bbb38a99d19"
+        },
+        "README.md": {
+          "bytes": 2016,
+          "sha256": "1b9d77ba3df4b848e4d028e9909ca31ab1ecf01a29426556d0d1a769777fdbcd"
+        },
+        "binding-manifest.json": {
+          "bytes": 5215,
+          "sha256": "20157b4ff3a015b259794bd6f51c724bf70ea7137376b0dc09657744310cf04b"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Api.kt": {
+          "bytes": 12664,
+          "sha256": "0df21d3ab88dccf7fd837bed0eabc785ffce800f1ccbe4b05cc350d901b80de7"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Unit.kt": {
+          "bytes": 106,
+          "sha256": "df7faf313aa10a46b4e9cf902b3e42b111c5eb04407b147d454c865ac92c3dce"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/LeanBridgeException.kt": {
+          "bytes": 136,
+          "sha256": "e9f89e868c90a3c3b3eedbe1b65c2b34dc5cc8c008cfec386f0867bed21567e7"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Primitives.kt": {
+          "bytes": 3689,
+          "sha256": "1ae16774c08d831444d7aefb73ac1923d1cc5406c062ddce52cfaa4f18871345"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Empty.kt": {
+          "bytes": 334,
+          "sha256": "c7ec598a564462447484d97d1984e5156a3bc4b432ef71b497c194af7a5881ca"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Single.kt": {
+          "bytes": 527,
+          "sha256": "189f72e4e930a78da36353a755ae8e5f883e2721e83e44ee4290e3ed5c88d92b"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Count.kt": {
+          "bytes": 524,
+          "sha256": "686944cb4cc4010bf57b1985737f0323429bb23dbb8ced8dbe62ab2a9f17a073"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Pair.kt": {
+          "bytes": 688,
+          "sha256": "56e2124ae8f5cabc231b28fc91fb034d33ec6f93679c47215949e7247c92ffc4"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Reversed.kt": {
+          "bytes": 700,
+          "sha256": "c0390b416e750779ed259097873855563cdbaf1f892e7fbc0df4f6cd1e3e9d23"
+        },
+        "src/main/kotlin/org/leanbridge/collections/kotlin/Packet.kt": {
+          "bytes": 2115,
+          "sha256": "7d506437f83d9289972b9ed3128cc2a61b2fe76fa4d8b31f149de5be9eee0301"
+        },
+        "src/main/java/org/leanbridge/collections/KotlinBridge.java": {
+          "bytes": 4525,
+          "sha256": "bd2c153359881372754ff1368ebb3ccbe189db527ab3c76711b536cb18a373fd"
+        },
+        "src/main/kotlin/org/leanbridge/collections/KotlinCalls.kt": {
+          "bytes": 4004,
+          "sha256": "c8d064ad71db8aa3a1858aeb1634e2009de0ffd94bd19ac2a0d11f070bd7dc4f"
+        },
+        "src/main/java/org/leanbridge/collections/KotlinRuntime.java": {
+          "bytes": 142366,
+          "sha256": "4408d213a07852bd8e0fe82f8e64b53d8a9d7346ea508af00225d6c2bff2e725"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "d98b9496e222f1dc20cfb17e1adfbc840bf1026cf21c173aaccd2d93dce7c5e7",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/compounds/Unit.java": {
+          "bytes": 64,
+          "sha256": "aeb2c1ef440c2a976e35451238722c8947b49dabd6d7cadf1eb75236346d4cbf"
+        },
+        "src/main/java/org/leanbridge/compounds/LeanBridgeException.java": {
+          "bytes": 239,
+          "sha256": "1cf6d71bba5d0ed4b48b6e2d38555493207cf2df9b137ec55495988cb0a596ff"
+        },
+        "src/main/java/org/leanbridge/compounds/Api.java": {
+          "bytes": 7894,
+          "sha256": "11bdb7dc2160849f5191046880ee8816e75400b3a11a124b75cc47184f4f8024"
+        },
+        "src/main/java/org/leanbridge/compounds/Packet.java": {
+          "bytes": 978,
+          "sha256": "ff66a8207208de22ec16d2bd023968217620bcf890c0b707baeae83c6ccae721"
+        },
+        "src/main/java/org/leanbridge/compounds/Option.java": {
+          "bytes": 1042,
+          "sha256": "313ce3c0ed5c0cce8b1619a3188306a6475c390d1332a0ecd416ac83056fff0e"
+        },
+        "src/main/java/org/leanbridge/compounds/Result.java": {
+          "bytes": 1607,
+          "sha256": "dbfd7c955f51a5172c109f45cba98ab954dd244188bd862f168a4e0fae310048"
+        },
+        "src/main/java/org/leanbridge/compounds/Pair.java": {
+          "bytes": 706,
+          "sha256": "d424a2cfdc1d8d12a912a1efab0ab678d3e78998109c1056f962ecae86e069ab"
+        },
+        "src/main/java/org/leanbridge/compounds/Runtime.java": {
+          "bytes": 151911,
+          "sha256": "a264a40b589d10edf1872ad1814a926a3fe2316dd2a2f734d76a745a545101f7"
+        },
+        "src/main/java/org/leanbridge/compounds/NativeAssets.java": {
+          "bytes": 2145,
+          "sha256": "5f61a72c43b4947d5dfd684fb241e5ea4614021dd7ecc510ed1af21185d7aaae"
+        },
+        "src/main/java/org/leanbridge/compounds/Scope.java": {
+          "bytes": 542,
+          "sha256": "5eed602745382e4237befe4f3c75c892d96e96bd4fa133e6e4c0caafcb43dac6"
+        },
+        "README.md": {
+          "bytes": 2644,
+          "sha256": "ad2ec841bb64ca1805e68c04d1bd676b59c9cc43d5564babdc7873a619e6610b"
+        },
+        "binding-manifest.json": {
+          "bytes": 4120,
+          "sha256": "d2c876d8a17184969c4cebbae94d7342bcab5c08e9d402f98beebe2d00b47dcd"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Api.kt": {
+          "bytes": 31545,
+          "sha256": "d092b71916bd10dcdab7c4f766ca84e7142d076d6a4a67e3bfcf342cce5de4d1"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Unit.kt": {
+          "bytes": 102,
+          "sha256": "acec7da53b5be3a890cb7661638b50ff87e5aac0c7d88397636e1201c2a8736a"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/LeanBridgeException.kt": {
+          "bytes": 132,
+          "sha256": "c118b63a9a91a4927c318cca8246d60c7ce42315e48ae35dff5224208f1c14e5"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Packet.kt": {
+          "bytes": 3040,
+          "sha256": "5d39e581c42bf7d9a3b6130f975988d22745219d8b6e481f2b783eed1bee69d9"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Option.kt": {
+          "bytes": 1384,
+          "sha256": "6b004c5a8a086c95a0294611ae25e65b43e89ce9fb3e5558992a4a6cd6fedb20"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Result.kt": {
+          "bytes": 1812,
+          "sha256": "90fae1ee3bda17aa891ea8b933e35a5948d7dc068288b48994f6f51a92633712"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/kotlin/Pair.kt": {
+          "bytes": 765,
+          "sha256": "3c002badc066edad3d82b997742a538ffd2f39b58db50fd18fd4e9187377242b"
+        },
+        "src/main/java/org/leanbridge/compounds/KotlinBridge.java": {
+          "bytes": 10529,
+          "sha256": "654a83f1e5c951393a4386e1913e11d7504956f6ab3fc6c862e5d3e01f4492c8"
+        },
+        "src/main/kotlin/org/leanbridge/compounds/KotlinCalls.kt": {
+          "bytes": 6430,
+          "sha256": "5b44f4ba3f07baed077317a53df867a6cab1fb29d4d994a3fd5b5e984fa2e53c"
+        },
+        "src/main/java/org/leanbridge/compounds/KotlinRuntime.java": {
+          "bytes": 193203,
+          "sha256": "e2a1aaf6c9c022bcc1f67c4d05b1c8175fc5e4cebc1f1040ccd75a2857ac00d8"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/lists/Unit.java": {
+          "bytes": 60,
+          "sha256": "80c93113984c918b2cfecc799882637819ea829fe1d9bb13dead88ba5dccb0ae"
+        },
+        "src/main/java/org/leanbridge/lists/LeanBridgeException.java": {
+          "bytes": 235,
+          "sha256": "0a93be8ce2924539d62e58ea6d586035d02500fa66eec23e5f9e3338e0239e5a"
+        },
+        "src/main/java/org/leanbridge/lists/Api.java": {
+          "bytes": 2690,
+          "sha256": "e8df8c4cceaf13ecbdc348d87cb3c17b0452b6b5759b819ecf56f6fd6aad5116"
+        },
+        "src/main/java/org/leanbridge/lists/Packet.java": {
+          "bytes": 828,
+          "sha256": "ee6365c31a97c68f4465ad5a17206513ce051b2d53ca8cdb5d2ac8c3176ba820"
+        },
+        "src/main/java/org/leanbridge/lists/Option.java": {
+          "bytes": 1038,
+          "sha256": "f68baaf2073f058f869e166f591109074462d125c1bf6c54829a255d59383ec7"
+        },
+        "src/main/java/org/leanbridge/lists/Result.java": {
+          "bytes": 1603,
+          "sha256": "df546c152b3903987878e87e6cd0b5a744d0eb29359950facb7142126a21d06f"
+        },
+        "src/main/java/org/leanbridge/lists/Pair.java": {
+          "bytes": 702,
+          "sha256": "31148d64ad84ba693979e2d662c3217b023490f38bcc2b1bfc6fa3269c7df23c"
+        },
+        "src/main/java/org/leanbridge/lists/Runtime.java": {
+          "bytes": 114018,
+          "sha256": "7a717bd9318e18864b9d21e881e98044c65b9b22ab6aa81e485a7a8ceb3484c7"
+        },
+        "src/main/java/org/leanbridge/lists/NativeAssets.java": {
+          "bytes": 2141,
+          "sha256": "bb078589064e9b3829938cc3ada25e38dccde0fefcaf6ae75d9cc2378c626af1"
+        },
+        "src/main/java/org/leanbridge/lists/Scope.java": {
+          "bytes": 538,
+          "sha256": "27bb6f59537e2228cc849b81f9dfa43f6b51d3069eab7b660089d499cb5af04e"
+        },
+        "README.md": {
+          "bytes": 3086,
+          "sha256": "8c014b3db7afbd226ed0cf7e9cdfe365f1c82cd3a58cc87b07bb1d049643e045"
+        },
+        "binding-manifest.json": {
+          "bytes": 3908,
+          "sha256": "a5a86b29e9c9c2ebe0ff37cdad2046a38e12e74ef09cca014f310e4eb2d52e96"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Api.kt": {
+          "bytes": 8879,
+          "sha256": "7ec4bcaae329ccae78c63b8862d265442b2c582cfe742dd5c40fbf82dee4df39"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Unit.kt": {
+          "bytes": 94,
+          "sha256": "25de2d45758dc50087721082721342a2eb84e3a2395358b1dce408d38d5d70c9"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/LeanBridgeException.kt": {
+          "bytes": 124,
+          "sha256": "a1c330871839548b1a92ca762a7bc53b7444b19bc9546ed15fd3a6625b3477fd"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Packet.kt": {
+          "bytes": 1752,
+          "sha256": "52fb5cd0f4818fae19a44976eb7c13e2bbd0eb43ccf6c744d2c85b4ed2da0f71"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Option.kt": {
+          "bytes": 1380,
+          "sha256": "4dfc12ecc0c2546989cdfb2dbc483519c91d0ec37d1549f11cef4bacc5236af6"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Result.kt": {
+          "bytes": 1808,
+          "sha256": "d54979accf788fdcfb5b090976b53f2e43fdaadc6536c55a3830807a8134dda4"
+        },
+        "src/main/kotlin/org/leanbridge/lists/kotlin/Pair.kt": {
+          "bytes": 761,
+          "sha256": "ba2e17885030f53bfd258cc0ec324191721f5ffe6c6ecaeb6bed195611fb8b5d"
+        },
+        "src/main/java/org/leanbridge/lists/KotlinBridge.java": {
+          "bytes": 3069,
+          "sha256": "d04ee67a32e68ad62a5c568e738cf4858c7bffc43c779a714a4eb3e7b9250dd7"
+        },
+        "src/main/kotlin/org/leanbridge/lists/KotlinCalls.kt": {
+          "bytes": 2747,
+          "sha256": "04c31fb7b07a0e7146863f43ac1f6476b74c45111cf126602e60322c0d287665"
+        },
+        "src/main/java/org/leanbridge/lists/KotlinRuntime.java": {
+          "bytes": 116270,
+          "sha256": "50d82c378ae42ccd191849b24519462f69409fdd58143c96d16ccae0d55f7218"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/aliases/Unit.java": {
+          "bytes": 62,
+          "sha256": "a6c06fce7eba9bfaee1d570e138acf710f995bd97694eb027dc65e53f6a0c102"
+        },
+        "src/main/java/org/leanbridge/aliases/LeanBridgeException.java": {
+          "bytes": 237,
+          "sha256": "b6f784c3a55c8184eb95d362ca84db485227be8fdb24b9c1471f581756cbf94f"
+        },
+        "src/main/java/org/leanbridge/aliases/Api.java": {
+          "bytes": 9859,
+          "sha256": "3b5e518c16d019a37cdcfd30b8d9d3e573b2083b9e9ebf3c6c09adecd5d52034"
+        },
+        "src/main/java/org/leanbridge/aliases/Scalars.java": {
+          "bytes": 3240,
+          "sha256": "b2edbbb954ee6667a70e58f41b61036982b20f1fd3ccc089a511124d644aa7dc"
+        },
+        "src/main/java/org/leanbridge/aliases/Packet.java": {
+          "bytes": 1115,
+          "sha256": "85db3a934f5855fa24c61d20e1d9a5f09e447df65ad4dfdea298904e1480f856"
+        },
+        "src/main/java/org/leanbridge/aliases/Option.java": {
+          "bytes": 1040,
+          "sha256": "ab39b26bf0737308820e596d7be875b52c341d615276be51ada9e09d2093b939"
+        },
+        "src/main/java/org/leanbridge/aliases/Result.java": {
+          "bytes": 1605,
+          "sha256": "7f8ba89c7abc5737cd759715fd61d750a729e774871bfdc32fb239b23425bb4e"
+        },
+        "src/main/java/org/leanbridge/aliases/Pair.java": {
+          "bytes": 704,
+          "sha256": "a0100fda5484c34eb08c984f80353d591dd8092b949a4117fc8001b384ecefa8"
+        },
+        "src/main/java/org/leanbridge/aliases/Runtime.java": {
+          "bytes": 44438,
+          "sha256": "6f9b1670aee5302c0760a2636c1ec4f11efe5219f5ac587e5374e29f5722562c"
+        },
+        "src/main/java/org/leanbridge/aliases/NativeAssets.java": {
+          "bytes": 2143,
+          "sha256": "38f13b0a20e1092363a09613b6ce6cb242bca7624695c070c858dba2b466ec72"
+        },
+        "src/main/java/org/leanbridge/aliases/Scope.java": {
+          "bytes": 540,
+          "sha256": "15926e7056d035bfb8b02016cb68698412e2f44252d251e1613a9aa6b3d7f5a3"
+        },
+        "README.md": {
+          "bytes": 5423,
+          "sha256": "c0fb6780cd92bf19da1b64bfde58f490da5d9b4164b189ed9a3f78504f288664"
+        },
+        "binding-manifest.json": {
+          "bytes": 11312,
+          "sha256": "fea8d19633285bbdf87e86dad13b35ebe4320bf62d3eef1b816fce1aeecc4975"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Api.kt": {
+          "bytes": 8526,
+          "sha256": "c71db829465395d511958ed8aaa1f5c2110ea4047daf5e1e22978e602a0c08df"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Unit.kt": {
+          "bytes": 98,
+          "sha256": "962a6dd60d87138b7c51ebdbdeeced3162b2f332a8da39006dc93edc82a9c47a"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/LeanBridgeException.kt": {
+          "bytes": 128,
+          "sha256": "9cf730a485246e97d26e825582ba1c8bb4085d393df1e0730d5364447e5970a9"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Scalars.kt": {
+          "bytes": 3908,
+          "sha256": "42246cdd154b9c36d288d490e9c55679ab29db97aefd3eb23eaf726c2f4d52e7"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Packet.kt": {
+          "bytes": 1737,
+          "sha256": "91381a42386bccc8be22e34ba7029bd014148b8113cce3350740412339e0cc5c"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Option.kt": {
+          "bytes": 1382,
+          "sha256": "e9dddcc05e41afea9614c7d1d215a636177cd925b92087812949b8e36a59ea6a"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Result.kt": {
+          "bytes": 1810,
+          "sha256": "4b8c3208edf94ad77377705b3392bff4f177e34a6163d2c80f32a352d345e797"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/kotlin/Pair.kt": {
+          "bytes": 763,
+          "sha256": "d62fd86508fd0fa2106e99b9b0d00730266a28f6a4814b660850638836a00047"
+        },
+        "src/main/java/org/leanbridge/aliases/KotlinBridge.java": {
+          "bytes": 3403,
+          "sha256": "be051fc069cf62ac6ad0da0a619d89e01eb5b9d767557e3d9deae89144ec0bf3"
+        },
+        "src/main/kotlin/org/leanbridge/aliases/KotlinCalls.kt": {
+          "bytes": 3107,
+          "sha256": "d894759390b332f520795661d14ed5e236fd8d55222a02acf9eeeea07bf293b0"
+        },
+        "src/main/java/org/leanbridge/aliases/KotlinRuntime.java": {
+          "bytes": 45830,
+          "sha256": "40862a1c76dd51e22fa4592d979c41e9692d0a86c76b1086628b01d4245cc9e2"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "4c2f6c0dba1625eda88a2fe2ae6f750bee11c6dacd9ca0d5a0f9e72a9fec45a4",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/main/java/org/leanbridge/variants/Unit.java": {
+          "bytes": 63,
+          "sha256": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729"
+        },
+        "src/main/java/org/leanbridge/variants/LeanBridgeException.java": {
+          "bytes": 238,
+          "sha256": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca"
+        },
+        "src/main/java/org/leanbridge/variants/Api.java": {
+          "bytes": 1123,
+          "sha256": "686432f1c736ac0d91afca1f736904c2c62355f1048f03f96113b0f88e012d9c"
+        },
+        "src/main/java/org/leanbridge/variants/Packet.java": {
+          "bytes": 749,
+          "sha256": "9eb7c0260fb4d7cf8bc51f50ab5c4e248cd1eb5c40cceb4e6159d63f7022cb67"
+        },
+        "src/main/java/org/leanbridge/variants/Signal.java": {
+          "bytes": 128,
+          "sha256": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224"
+        },
+        "src/main/java/org/leanbridge/variants/SignalIdle.java": {
+          "bytes": 367,
+          "sha256": "18ed8f3d47ffe47929adb10c2a6cc4b58a9e35433a6628e41fe67dd9d1b2e988"
+        },
+        "src/main/java/org/leanbridge/variants/SignalStopped.java": {
+          "bytes": 376,
+          "sha256": "97c13dff9933c60c80af979e4d66d68fbb94eeac369dd6a74b2d950be3f2e642"
+        },
+        "src/main/java/org/leanbridge/variants/SignalData.java": {
+          "bytes": 553,
+          "sha256": "722b1db15798af6e4b9d7ae2c836b7fd3661a9716ae1e450276edb2b4c98fccb"
+        },
+        "src/main/java/org/leanbridge/variants/SignalMarker.java": {
+          "bytes": 464,
+          "sha256": "6b0881f887a621e83b4d2056df65634587a239c309c7bc5901108379aaf7cefc"
+        },
+        "src/main/java/org/leanbridge/variants/Mode.java": {
+          "bytes": 107,
+          "sha256": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865"
+        },
+        "src/main/java/org/leanbridge/variants/ModeFirst.java": {
+          "bytes": 362,
+          "sha256": "f506c1c9ceb7a6f577cc1701d91ee2b503b965e76d85872c61bb769d5f94fd1e"
+        },
+        "src/main/java/org/leanbridge/variants/ModeSecond.java": {
+          "bytes": 365,
+          "sha256": "3a9098dedbdd65dd42cbd1b21f5695dace94af218f060d9a95daf47207b60c79"
+        },
+        "src/main/java/org/leanbridge/variants/ModeThird.java": {
+          "bytes": 362,
+          "sha256": "50bde37a81e96ab8eb407385cc1229dbf8e92c353c0e07a62f2af3bed3fb4d6e"
+        },
+        "src/main/java/org/leanbridge/variants/Nested.java": {
+          "bytes": 117,
+          "sha256": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105"
+        },
+        "src/main/java/org/leanbridge/variants/NestedEmpty.java": {
+          "bytes": 370,
+          "sha256": "4b00eb66d97728d50fccaa9e421074ee560f6463ea73cbd132307144610e0045"
+        },
+        "src/main/java/org/leanbridge/variants/NestedPacket.java": {
+          "bytes": 466,
+          "sha256": "f3de090feafdc71cdc9e35904b00b3c7855d2c343c63011adede191e60246a05"
+        },
+        "src/main/java/org/leanbridge/variants/NestedOutcome.java": {
+          "bytes": 497,
+          "sha256": "bbb78729fd029cc1af6e21ece7b7ebda0b6e07e2ec8a0d5e42d5219d87021f34"
+        },
+        "src/main/java/org/leanbridge/variants/Scalars.java": {
+          "bytes": 103,
+          "sha256": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14"
+        },
+        "src/main/java/org/leanbridge/variants/ScalarsAbsent.java": {
+          "bytes": 377,
+          "sha256": "c844f04ad05fc6809429e8c0490aa1546b34ab67051d8f219e7982e95740ec9a"
+        },
+        "src/main/java/org/leanbridge/variants/ScalarsAll.java": {
+          "bytes": 2136,
+          "sha256": "9b5705d405869c4a1c301ba11650ba1e4997bd2726a9dd0241f45157b11edc80"
+        },
+        "src/main/java/org/leanbridge/variants/Anonymous.java": {
+          "bytes": 130,
+          "sha256": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08"
+        },
+        "src/main/java/org/leanbridge/variants/AnonymousNumber.java": {
+          "bytes": 472,
+          "sha256": "ba6cb2cc777e716edc9e62711a4b8d354a5b84c3206f44eddc9a00d0a64b3f3b"
+        },
+        "src/main/java/org/leanbridge/variants/AnonymousPair.java": {
+          "bytes": 557,
+          "sha256": "7990313c53f2dd359f9f43e2101d7d0068c210b83deff6ea7468df5f79c25700"
+        },
+        "src/main/java/org/leanbridge/variants/AnonymousCollision.java": {
+          "bytes": 576,
+          "sha256": "ad1b0dd18383fc00786dbfb5c5c3458afd788bb566a41558de763ec8029dae47"
+        },
+        "src/main/java/org/leanbridge/variants/One.java": {
+          "bytes": 81,
+          "sha256": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3"
+        },
+        "src/main/java/org/leanbridge/variants/OneOnly.java": {
+          "bytes": 446,
+          "sha256": "057b4c7d1d3c8ca4951c6e67cd3a4ca825bc41f2c272b577518115172cc3d78f"
+        },
+        "src/main/java/org/leanbridge/variants/Buffers.java": {
+          "bytes": 103,
+          "sha256": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158"
+        },
+        "src/main/java/org/leanbridge/variants/BuffersEmpty.java": {
+          "bytes": 374,
+          "sha256": "5cf670862a89a2a399cd3435aa5ec2804f4ebdff5c926e7b435b1f40b27b5658"
+        },
+        "src/main/java/org/leanbridge/variants/BuffersPair.java": {
+          "bytes": 563,
+          "sha256": "7db0f6ff07d3e3ada7c6cb1dd09b3cdebcd4f0ad8d6b97a11c80404a33508325"
+        },
+        "src/main/java/org/leanbridge/variants/Option.java": {
+          "bytes": 1041,
+          "sha256": "d356b27847b2ca6e4cf9553eff98edd386e7c577fa2bf5561ef659577dfb00db"
+        },
+        "src/main/java/org/leanbridge/variants/Result.java": {
+          "bytes": 1606,
+          "sha256": "e1953f7836d85d02f4cd56c9a0cfb400cee7dcd29af534f013b99843f70d4da8"
+        },
+        "src/main/java/org/leanbridge/variants/Pair.java": {
+          "bytes": 705,
+          "sha256": "4aea8ab03aa4404e5a690c9094413a8591b0754a36e99294c72268997e9743cd"
+        },
+        "src/main/java/org/leanbridge/variants/Runtime.java": {
+          "bytes": 38308,
+          "sha256": "0c8870816d593bfe3d900c0ac94d866c27a40cdce17ec0662bcbeb55340b1f23"
+        },
+        "src/main/java/org/leanbridge/variants/NativeAssets.java": {
+          "bytes": 2144,
+          "sha256": "e918ccb6ecebc0ac79cb9ad795628e9aecf62e7c7f7fffe7d1900ddea32196dc"
+        },
+        "src/main/java/org/leanbridge/variants/Scope.java": {
+          "bytes": 541,
+          "sha256": "26ec6477b71edbe2cebedab24727f9e31d8ef7b8ddf2665140171957c3efcdea"
+        },
+        "README.md": {
+          "bytes": 3804,
+          "sha256": "2802d3a9021037c926a6eaa80cbb5bda78ab3a7e0109295134635225086af843"
+        },
+        "binding-manifest.json": {
+          "bytes": 12267,
+          "sha256": "6f60cf5550e83e1ba23cd9d1d5dccc578c9bdaf400fee431186e15a4301accf3"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Api.kt": {
+          "bytes": 4225,
+          "sha256": "1ff8cf1d192e7379b92b800e389b7a4995b53ce91818d0314611b6d2df46f800"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Unit.kt": {
+          "bytes": 100,
+          "sha256": "c220ae711fee441cca7b7038fc2a7648e023e7ca9219d66c1fe4c86a647bfe90"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/LeanBridgeException.kt": {
+          "bytes": 130,
+          "sha256": "db14bdb045d2487843d4ca259d81b313ff0076df7c60e313b50c7ff847da7220"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Signal.kt": {
+          "bytes": 74,
+          "sha256": "5bc4041e2a21e9a336ccf2d103f41aa2db53c9df083726249f44bfc9502a6d6f"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/SignalIdle.kt": {
+          "bytes": 396,
+          "sha256": "00a4155c391fdd507a52262bec5d74488609c2c919ab0bf4732c9d3607c2391d"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/SignalStopped.kt": {
+          "bytes": 405,
+          "sha256": "9ce77f2d7f6b735034b6de67a339405c11b3ef897720c365fc98fc253cde0fc2"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/SignalData.kt": {
+          "bytes": 747,
+          "sha256": "d0e266e405317cdda96116830a2d2e0b938e53a58dd6dddc09219d08b7ecd8b4"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/SignalMarker.kt": {
+          "bytes": 620,
+          "sha256": "0c7e21287a77dced21ffc68c53d123faa5dbf5889fca37bbc282463786ace8ed"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Mode.kt": {
+          "bytes": 72,
+          "sha256": "9ee35ba178f2325a7db3f039906786b311e91ca016ab5d0903e18ebea49bba2c"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/ModeFirst.kt": {
+          "bytes": 391,
+          "sha256": "58a55c4326c6e409e5e1f7463b6827a678a31e32b561433039a2afdb28f9f48b"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/ModeSecond.kt": {
+          "bytes": 394,
+          "sha256": "7a0bf394c2f9a9614c5c73e5715571549b845741528a2d06371477ec4fbef15f"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/ModeThird.kt": {
+          "bytes": 391,
+          "sha256": "16168a58d4fd4388aa68a1c83a7d93b5ee103f005530493db32f803721b3fa05"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Packet.kt": {
+          "bytes": 1505,
+          "sha256": "d25c5e0b9abf814783e124e8389467d8f11c753eb604532c671fc17484b47e80"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Nested.kt": {
+          "bytes": 74,
+          "sha256": "876ef35d8a1f3df7b6143d578d76f15940de7d433b56d6357b378363cb2b5413"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/NestedEmpty.kt": {
+          "bytes": 399,
+          "sha256": "51f20d5d745a53bfe0bebbf43b678d9d4533a21c7b4a1af0f58f1fe7becf52d6"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/NestedPacket.kt": {
+          "bytes": 646,
+          "sha256": "0310c6d9fb3e69d9e50eb864b80d5ff403de15cbfaf13c944e3a823cbbcd7193"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/NestedOutcome.kt": {
+          "bytes": 965,
+          "sha256": "cf0798300f228c8fa1d257af1296bb0535a319cc80a1ba988c06cd26b6f5bb62"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Scalars.kt": {
+          "bytes": 75,
+          "sha256": "c4ac586563d567953dd5d6dc6b741597d8a4c510552df3fb36cb4bb5feecb5c7"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/ScalarsAbsent.kt": {
+          "bytes": 406,
+          "sha256": "382d90af22afbe3d79323f06ae9a579aa14094ccccd0d783dc0a00b7f2ce91ee"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/ScalarsAll.kt": {
+          "bytes": 3755,
+          "sha256": "57943aba8101b2f544d9758f1af06c1c94801224106a009ea3b7d1b3f0fac290"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Anonymous.kt": {
+          "bytes": 77,
+          "sha256": "7dec5bb16b3efb37a79a29d51beb496819f7bafd0b8805f73b9a80e0ec5d1067"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/AnonymousNumber.kt": {
+          "bytes": 580,
+          "sha256": "ee08f9c01ae4aa92c538870ba48d128bc8a4864880da196fd66d9417246dc207"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/AnonymousPair.kt": {
+          "bytes": 747,
+          "sha256": "566340bab2e933fe2d57f264f9bd934545157635051b9ce0da8c6dedc4a1a059"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/AnonymousCollision.kt": {
+          "bytes": 768,
+          "sha256": "3ba760d9321d391e77bb4500cfb5b2f385eb61b9bdd5d8b81dc7abedcb187e55"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/One.kt": {
+          "bytes": 71,
+          "sha256": "255bb91eb5df85e7bb82644925aa301cb5aac708a3fe625f10222bcb6e173d31"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/OneOnly.kt": {
+          "bytes": 556,
+          "sha256": "84c854bcbb43ddedb17bc4d0ee3403e5cdfdc09a86942c2fe9fd44ffeaca013d"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Buffers.kt": {
+          "bytes": 75,
+          "sha256": "6697fd8fa4f3a0bcdb13b66e8ac9824d1a581100b28b4909414df25b6e217138"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/BuffersEmpty.kt": {
+          "bytes": 403,
+          "sha256": "f230c45174acb8185b372ae3ea9202084647eeb30d86d4dbe78ffeeabc1761b4"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/BuffersPair.kt": {
+          "bytes": 773,
+          "sha256": "9480c724d872c3ed1bcb38c59449b7c1855d8feb259497cb5e2207a390704276"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Option.kt": {
+          "bytes": 1383,
+          "sha256": "d8144bed1fafd1c0e67158e85128e2e5778c71d6d1a5709ae8dc7a48ca489da6"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Result.kt": {
+          "bytes": 1811,
+          "sha256": "ae4bea76bf1e5755716d27f6e59dc86f2e8a77bcce353a3ee4937915f790228d"
+        },
+        "src/main/kotlin/org/leanbridge/variants/kotlin/Pair.kt": {
+          "bytes": 764,
+          "sha256": "8462b482380e00575485929a3c70cae6d865640414cfe4e263c9a2844d51b7fb"
+        },
+        "src/main/java/org/leanbridge/variants/KotlinBridge.java": {
+          "bytes": 1691,
+          "sha256": "cbf21916c8b0403794114ebd9d47101c68e43004dca071f00a87e6ea601851a7"
+        },
+        "src/main/kotlin/org/leanbridge/variants/KotlinCalls.kt": {
+          "bytes": 1350,
+          "sha256": "d39bf0eddec150729e7c8375859cfe92cfbaa4efb175d3d13e82297aa0d722c8"
+        },
+        "src/main/java/org/leanbridge/variants/KotlinRuntime.java": {
+          "bytes": 41916,
+          "sha256": "4ea00aa433b89802332a25660a4305724375cc1602fd4e28fbf2cce7bc466b3f"
+        }
+      }
+    }
+  ]
+}

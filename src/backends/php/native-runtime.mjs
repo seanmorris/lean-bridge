@@ -9,6 +9,7 @@ import { createHash } from "node:crypto";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { brokerHeader, brokerSource } from "../native/runtime-broker.mjs";
 
 /**
  * Reports PHP native runtime generation failures with stable machine-readable codes and structured diagnostic context.
@@ -73,341 +74,7 @@ const exactAlphaShape = (ir, projection) => {
 	return { payload, resource, callback };
 };
 
-const brokerHeader = `#ifndef LEAN_BRIDGE_NATIVE_RUNTIME_H
-#define LEAN_BRIDGE_NATIVE_RUNTIME_H
-
-#include <stddef.h>
-#include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION 1u
-
-#if defined(_WIN32)
-#define LEAN_BRIDGE_NATIVE_API __declspec(dllexport)
-#else
-#define LEAN_BRIDGE_NATIVE_API __attribute__((visibility("default")))
-#endif
-
-typedef void *(*lean_bridge_native_initializer)(uint8_t builtin);
-
-typedef struct lean_bridge_native_snapshot {
-  uint32_t abi_version;
-  uint32_t runtime_state;
-  uint32_t runtime_init_runs;
-  uint32_t component_init_runs;
-  uint32_t attached_components;
-  uint32_t live_identities;
-  uint64_t runtime_instance_id;
-  uint64_t identity_domain_id;
-} lean_bridge_native_snapshot;
-
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
-    const char *component_id,
-    lean_bridge_native_initializer initializer
-);
-LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *component_id);
-LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer);
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer);
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer);
-LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-`;
-
-const brokerSource = `#include "lean_bridge_native_runtime.h"
-
-#include <lean/lean.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
-#include <unistd.h>
-
-extern lean_object *initialize_Init(uint8_t builtin);
-extern void lean_initialize_runtime_module(void);
-
-enum lean_bridge_runtime_state {
-  LEAN_BRIDGE_RUNTIME_COLD = 0,
-  LEAN_BRIDGE_RUNTIME_INITIALIZING = 1,
-  LEAN_BRIDGE_RUNTIME_READY = 2,
-  LEAN_BRIDGE_RUNTIME_FAILED = 3,
-  LEAN_BRIDGE_RUNTIME_SHUT_DOWN = 4
-};
-
-enum {
-  LEAN_BRIDGE_COMPONENT_CAPACITY = 128,
-  LEAN_BRIDGE_COMPONENT_ID_CAPACITY = 160,
-  LEAN_BRIDGE_IDENTITY_CAPACITY = 4096
-};
-
-typedef struct lean_bridge_component_slot {
-  char id[LEAN_BRIDGE_COMPONENT_ID_CAPACITY];
-  uint8_t state;
-  bool attached;
-} lean_bridge_component_slot;
-
-typedef struct lean_bridge_identity_slot {
-  const void *pointer;
-  uint64_t kind_hash;
-  uint32_t generation;
-  uint32_t references;
-  bool retired;
-} lean_bridge_identity_slot;
-
-static pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;
-static uint32_t runtime_state = LEAN_BRIDGE_RUNTIME_COLD;
-static uint32_t runtime_init_runs = 0;
-static uint32_t component_init_runs = 0;
-static uint32_t attached_components = 0;
-static uint32_t live_identities = 0;
-static lean_bridge_component_slot components[LEAN_BRIDGE_COMPONENT_CAPACITY];
-static lean_bridge_identity_slot identities[LEAN_BRIDGE_IDENTITY_CAPACITY];
-
-__attribute__((destructor))
-static void lean_bridge_native_process_shutdown(void)
-{
-  pthread_mutex_lock(&runtime_mutex);
-  if (runtime_state == LEAN_BRIDGE_RUNTIME_READY && live_identities == 0) {
-    lean_finalize_task_manager();
-  }
-  runtime_state = LEAN_BRIDGE_RUNTIME_SHUT_DOWN;
-  pthread_mutex_unlock(&runtime_mutex);
-}
-
-static uint64_t hash_text(const char *text)
-{
-  uint64_t hash = UINT64_C(1469598103934665603);
-  while (*text) {
-    hash ^= (uint8_t)*text++;
-    hash *= UINT64_C(1099511628211);
-  }
-  return hash;
-}
-
-static uint64_t opaque_process_id(const void *address, uint64_t domain)
-{
-  uint64_t value = (uint64_t)(uintptr_t)address ^ ((uint64_t)(uint32_t)getpid() << 32) ^ domain;
-  value ^= value >> 30;
-  value *= UINT64_C(0xbf58476d1ce4e5b9);
-  value ^= value >> 27;
-  value *= UINT64_C(0x94d049bb133111eb);
-  value ^= value >> 31;
-  return value == 0 ? domain : value;
-}
-
-static lean_bridge_component_slot *component_find(const char *component_id)
-{
-  for (size_t index = 0; index < LEAN_BRIDGE_COMPONENT_CAPACITY; index++) {
-    if (components[index].id[0] != 0 && strcmp(components[index].id, component_id) == 0) return &components[index];
-  }
-  return NULL;
-}
-
-static lean_bridge_component_slot *component_reserve(const char *component_id)
-{
-  size_t length = strlen(component_id);
-  if (length == 0 || length >= LEAN_BRIDGE_COMPONENT_ID_CAPACITY) return NULL;
-  for (size_t index = 0; index < LEAN_BRIDGE_COMPONENT_CAPACITY; index++) {
-    if (components[index].id[0] == 0) {
-      memcpy(components[index].id, component_id, length + 1);
-      components[index].state = LEAN_BRIDGE_RUNTIME_COLD;
-      return &components[index];
-    }
-  }
-  return NULL;
-}
-
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
-    const char *component_id,
-    lean_bridge_native_initializer initializer
-)
-{
-  if (component_id == NULL || initializer == NULL) return 0;
-  pthread_mutex_lock(&runtime_mutex);
-  lean_bridge_component_slot *component = component_find(component_id);
-  if (component != NULL && component->state == LEAN_BRIDGE_RUNTIME_READY) {
-    if (!component->attached) {
-      component->attached = true;
-      attached_components++;
-    }
-    pthread_mutex_unlock(&runtime_mutex);
-    return 1;
-  }
-  if (component != NULL && component->state == LEAN_BRIDGE_RUNTIME_FAILED) {
-    pthread_mutex_unlock(&runtime_mutex);
-    return 0;
-  }
-  if (runtime_state == LEAN_BRIDGE_RUNTIME_FAILED || runtime_state == LEAN_BRIDGE_RUNTIME_INITIALIZING) {
-    pthread_mutex_unlock(&runtime_mutex);
-    return 0;
-  }
-  if (component == NULL) component = component_reserve(component_id);
-  if (component == NULL) {
-    pthread_mutex_unlock(&runtime_mutex);
-    return 0;
-  }
-
-  bool first = runtime_state == LEAN_BRIDGE_RUNTIME_COLD;
-  if (first) {
-    runtime_state = LEAN_BRIDGE_RUNTIME_INITIALIZING;
-    runtime_init_runs++;
-    lean_initialize_runtime_module();
-    lean_object *init_result = initialize_Init(1);
-    if (lean_io_result_is_error(init_result)) {
-      lean_dec(init_result);
-      runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;
-      component->state = LEAN_BRIDGE_RUNTIME_FAILED;
-      pthread_mutex_unlock(&runtime_mutex);
-      return 0;
-    }
-    lean_dec(init_result);
-  }
-
-  component->state = LEAN_BRIDGE_RUNTIME_INITIALIZING;
-  lean_object *component_result = (lean_object *)initializer(1);
-  component_init_runs++;
-  if (lean_io_result_is_error(component_result)) {
-    lean_dec(component_result);
-    component->state = LEAN_BRIDGE_RUNTIME_FAILED;
-    if (first) runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;
-    pthread_mutex_unlock(&runtime_mutex);
-    return 0;
-  }
-  lean_dec(component_result);
-  if (first) {
-    lean_io_mark_end_initialization();
-    lean_init_task_manager();
-    runtime_state = LEAN_BRIDGE_RUNTIME_READY;
-  }
-  component->state = LEAN_BRIDGE_RUNTIME_READY;
-  component->attached = true;
-  attached_components++;
-  pthread_mutex_unlock(&runtime_mutex);
-  return 1;
-}
-
-LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *component_id)
-{
-  if (component_id == NULL) return;
-  pthread_mutex_lock(&runtime_mutex);
-  lean_bridge_component_slot *component = component_find(component_id);
-  if (component != NULL && component->attached) {
-    component->attached = false;
-    attached_components--;
-  }
-  pthread_mutex_unlock(&runtime_mutex);
-}
-
-LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer)
-{
-  if (kind == NULL || pointer == NULL) return 0;
-  uint64_t kind_hash = hash_text(kind);
-  pthread_mutex_lock(&runtime_mutex);
-  for (size_t index = 0; index < LEAN_BRIDGE_IDENTITY_CAPACITY; index++) {
-    lean_bridge_identity_slot *slot = &identities[index];
-    if (slot->pointer == pointer && slot->kind_hash == kind_hash && !slot->retired) {
-      if (slot->references == UINT32_MAX) {
-        pthread_mutex_unlock(&runtime_mutex);
-        return 0;
-      }
-      slot->references++;
-      uint64_t token = ((uint64_t)slot->generation << 32) | (uint64_t)(index + 1);
-      pthread_mutex_unlock(&runtime_mutex);
-      return token;
-    }
-  }
-  for (size_t index = 0; index < LEAN_BRIDGE_IDENTITY_CAPACITY; index++) {
-    lean_bridge_identity_slot *slot = &identities[index];
-    if (slot->pointer != NULL || slot->retired) continue;
-    if (slot->generation == 0) slot->generation = 1;
-    slot->pointer = pointer;
-    slot->kind_hash = kind_hash;
-    slot->references = 1;
-    live_identities++;
-    uint64_t token = ((uint64_t)slot->generation << 32) | (uint64_t)(index + 1);
-    pthread_mutex_unlock(&runtime_mutex);
-    return token;
-  }
-  pthread_mutex_unlock(&runtime_mutex);
-  return 0;
-}
-
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer)
-{
-  if (token == 0 || kind == NULL || pointer == NULL) return -1;
-  uint32_t encoded_index = (uint32_t)token;
-  uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > LEAN_BRIDGE_IDENTITY_CAPACITY || generation == 0) return -1;
-  pthread_mutex_lock(&runtime_mutex);
-  lean_bridge_identity_slot *slot = &identities[encoded_index - 1];
-  if (slot->pointer != pointer || slot->kind_hash != hash_text(kind) || slot->generation != generation || slot->references == 0 || slot->retired) {
-    pthread_mutex_unlock(&runtime_mutex);
-    return -1;
-  }
-  slot->references--;
-  if (slot->references != 0) {
-    pthread_mutex_unlock(&runtime_mutex);
-    return 0;
-  }
-  slot->pointer = NULL;
-  slot->kind_hash = 0;
-  live_identities--;
-  if (slot->generation == UINT32_MAX) {
-    slot->retired = true;
-  } else {
-    slot->generation++;
-  }
-  pthread_mutex_unlock(&runtime_mutex);
-  return 1;
-}
-
-LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer)
-{
-  if (kind == NULL || pointer == NULL) return -1;
-  uint64_t kind_hash = hash_text(kind);
-  pthread_mutex_lock(&runtime_mutex);
-  for (size_t index = 0; index < LEAN_BRIDGE_IDENTITY_CAPACITY; index++) {
-    lean_bridge_identity_slot *slot = &identities[index];
-    if (slot->pointer != pointer || slot->kind_hash != kind_hash || slot->references == 0 || slot->retired) continue;
-    slot->references--;
-    if (slot->references == 0) {
-      slot->pointer = NULL;
-      slot->kind_hash = 0;
-      live_identities--;
-      if (slot->generation == UINT32_MAX) slot->retired = true;
-      else slot->generation++;
-    }
-    pthread_mutex_unlock(&runtime_mutex);
-    return 1;
-  }
-  pthread_mutex_unlock(&runtime_mutex);
-  return 0;
-}
-
-LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out)
-{
-  if (out == NULL) return;
-  pthread_mutex_lock(&runtime_mutex);
-  *out = (lean_bridge_native_snapshot){
-    .abi_version = LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION,
-    .runtime_state = runtime_state,
-    .runtime_init_runs = runtime_init_runs,
-    .component_init_runs = component_init_runs,
-    .attached_components = attached_components,
-    .live_identities = live_identities,
-    .runtime_instance_id = opaque_process_id(&runtime_state, UINT64_C(0x4c65616e52756e31)),
-    .identity_domain_id = opaque_process_id(identities, UINT64_C(0x4c65616e49646531))
-  };
-  pthread_mutex_unlock(&runtime_mutex);
-}
-`;
+// The same broker serves native PHP and ordinary native components.
 
 const providerSource = (ir, shape) => {
 	const stem = packageStem(ir);
@@ -449,6 +116,12 @@ static ${stem}_status fail(${stem}_status status, ${stem}_error_code code, const
   return status;
 }
 
+static ${stem}_status ready(${stem}_error *error)
+{
+  return lean_bridge_native_component_ready(component_id) ? ${macro}_STATUS_OK
+    : fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean runtime is not ready or has been retired", error);
+}
+
 static void release_heap(void *owner) { free(owner); }
 
 static void *copy_bytes(const void *source, size_t length)
@@ -471,12 +144,16 @@ static ${stem}_status initialize(void *context, ${stem}_error *error)
 static ${stem}_status box_create(void *context, uint32_t value, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
-  (void)error;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *box = lean_link_alpha_box(value);
   if (box == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Box", error);
   if (lean_bridge_native_identity_acquire(box_identity_kind, box) == 0) {
     lean_dec(box);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Box identity capacity is exhausted", error);
+  }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    lean_bridge_native_identity_release_pointer(box_identity_kind, box); lean_dec(box);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
   }
   *out = (uintptr_t)box;
   return ${macro}_STATUS_OK;
@@ -485,16 +162,20 @@ static ${stem}_status box_create(void *context, uint32_t value, uintptr_t *out, 
 static ${stem}_status box_read(void *context, uintptr_t self, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Box is closed", error);
   lean_object *box = (lean_object *)self;
   lean_inc(box);
-  *out = lean_link_alpha_read(box);
+  uint32_t result = lean_link_alpha_read(box);
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
+  *out = result;
   return ${macro}_STATUS_OK;
 }
 
 static ${stem}_status box_identity(void *context, uintptr_t self, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Box is closed", error);
   *out = self;
   return ${macro}_STATUS_OK;
@@ -503,6 +184,7 @@ static ${stem}_status box_identity(void *context, uintptr_t self, uintptr_t *out
 static ${stem}_status round_trip(void *context, const ${stem}_${payload} *input, ${stem}_${payload} *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *label = lean_mk_string_from_bytes(input->label.length == 0 ? "" : input->label.data, input->label.length);
   lean_object *bytes = lean_alloc_sarray(1, input->bytes.length, input->bytes.length);
   if (input->bytes.length != 0) memcpy(lean_sarray_cptr(bytes), input->bytes.data, input->bytes.length);
@@ -547,6 +229,10 @@ static ${stem}_status round_trip(void *context, const ${stem}_${payload} *input,
     free(values_copy);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Payload copy allocation failed", error);
   }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    free(label_copy); free(bytes_copy); free(values_copy);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
+  }
   *out = (${stem}_${payload}){
     .enabled = enabled,
     .count = count,
@@ -570,13 +256,15 @@ static lean_object *callback_apply(lean_object *frame_value, lean_object *argume
   lean_dec(frame_value);
   lean_dec(argument);
   uint32_t result = 0;
-  frame->status = frame->callback->call(frame->callback->context, value, &result, &frame->error);
+  frame->status = ready(&frame->error);
+  if (frame->status == ${macro}_STATUS_OK) frame->status = frame->callback->call(frame->callback->context, value, &result, &frame->error);
   return lean_box_uint32(result);
 }
 
 static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}_${callback} *callback_value, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   callback_frame frame = {callback_value, ${macro}_STATUS_OK, {0}};
   lean_object *callback = lean_alloc_closure((void *)callback_apply, 2, 1);
   lean_closure_set(callback, 0, lean_box_usize((size_t)(uintptr_t)&frame));
@@ -585,6 +273,7 @@ static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}
     if (error != NULL) *error = frame.error;
     return frame.status;
   }
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   *out = result;
   return ${macro}_STATUS_OK;
 }
@@ -592,12 +281,16 @@ static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}
 static ${stem}_status make_adder(void *context, uint32_t base, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
-  (void)error;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *transform = lean_link_alpha_make_adder(base);
   if (transform == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Transform", error);
   if (lean_bridge_native_identity_acquire(transform_identity_kind, transform) == 0) {
     lean_dec(transform);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Transform identity capacity is exhausted", error);
+  }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    lean_bridge_native_identity_release_pointer(transform_identity_kind, transform); lean_dec(transform);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
   }
   *out = (uintptr_t)transform;
   return ${macro}_STATUS_OK;
@@ -615,12 +308,15 @@ static void box_dispose(void *context, uintptr_t value)
 static ${stem}_status transform_call(void *context, uintptr_t self, uint32_t value, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Transform is closed", error);
   lean_object *transform = (lean_object *)self;
   lean_inc(transform);
   lean_object *result = lean_apply_1(transform, lean_box_uint32(value));
-  *out = lean_unbox_uint32(result);
+  uint32_t copied = lean_unbox_uint32(result);
   lean_dec(result);
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
+  *out = copied;
   return ${macro}_STATUS_OK;
 }
 

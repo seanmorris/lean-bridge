@@ -8,6 +8,8 @@ import { chmod, mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "no
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 
 /**
  * Reports component compilation plan failures with stable machine-readable codes and structured diagnostic context.
@@ -74,13 +76,24 @@ const safePath = (path, label) => {
 };
 
 /**
+ * Derive fixed artifact paths from package identity without knowing its signatures.
+ *
+ * @param component - Selected component name and identity.
+ */
+export const componentArtifactPaths = component => {
+	const stem = `${component.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "component"}-${sha256(component.id).slice(0, 16)}`;
+	return { sideModule: `artifacts/${stem}.so.wasm`, linkMap: `audit/${stem}.link.map`, artifactManifest: "component-artifact-manifest.json" };
+};
+
+/**
  * Validates component compilation plan against its closed contract before it enters the isolated component build pipeline.
  *
  * @param plan - Validated plan that defines the allowed operation and targets.
  */
 export const validateComponentCompilationPlan = plan => {
 	exactKeys(plan, ["schemaVersion", "component", "componentPlanSha256", "compilerAdapters", "source", "runtime", "target", "outputs", "policies"], "component compilation plan");
-	if(plan.schemaVersion !== 1) fail("invalid-component-compilation-plan", "component compilation plan version must be 1");
+	if(![1, 2, 3, 4].includes(plan.schemaVersion)) fail("invalid-component-compilation-plan", "Unsupported component compilation plan version");
+	const locked = plan.schemaVersion >= 2, elaborated = plan.schemaVersion >= 3;
 	exactKeys(plan.component, ["id", "name", "version"], "component");
 	for(const key of ["id", "name", "version"]) if(typeof plan.component[key] !== "string" || plan.component[key] === "") fail("invalid-component-compilation-plan", `component ${key} is required`);
 	if(!validHash(plan.componentPlanSha256)) fail("invalid-component-compilation-plan", "component plan identity must be a SHA-256 value");
@@ -91,24 +104,59 @@ export const validateComponentCompilationPlan = plan => {
 	{
 		fail("invalid-component-compilation-plan", "compiler adapters must expose unique direct symbols");
 	}
-	exactKeys(plan.source, ["treeSha256", "toolchain", "modules", "compileOrder", "externalImports"], "source");
+	exactKeys(plan.source, ["treeSha256", "toolchain", "modules", ...(locked ? ["lakeSnapshotSha256", "requestedModules"] : ["compileOrder", "externalImports"]), ...(elaborated ? ["generatedSourcesSha256", "elaborationSha256"] : [])], "source");
+	if(elaborated)
+	{
+		const generatedIdentity = plan.source.generatedSourcesSha256;
+		const validGenerated = validHash(generatedIdentity) || (plan.schemaVersion === 4 && generatedIdentity === null);
+		if(!validGenerated || !validHash(plan.source.elaborationSha256)) fail("invalid-component-compilation-plan", "Elaborated roots require authenticated source and metadata identities");
+	}
 	if(!validHash(plan.source.treeSha256) || typeof plan.source.toolchain !== "string" || plan.source.toolchain === "") fail("invalid-component-compilation-plan", "source identity is incomplete");
 	if(!Array.isArray(plan.source.modules) || plan.source.modules.length === 0) fail("invalid-component-compilation-plan", "source modules must not be empty");
 	const moduleNames = new Set();
 	for(const module of plan.source.modules)
 	{
-		exactKeys(module, ["module", "path", "bytes", "sha256", "imports", "localDependencies"], "source module");
+		exactKeys(module, ["module", "path", "bytes", "sha256", ...(locked ? [] : ["imports", "localDependencies"]), ...(elaborated ? ["origin"] : [])], "source module");
+		if(elaborated)
+		{
+			const origin = module.origin;
+			if(origin?.kind === "captured")
+			{
+				exactKeys(origin, ["kind", "snapshotSha256"], "captured origin");
+				if(origin.snapshotSha256 !== plan.source.lakeSnapshotSha256) fail("invalid-component-compilation-plan", "Captured root origin differs from the snapshot");
+			}
+			else if(origin?.kind === "generated")
+			{
+				exactKeys(origin, ["kind", "generator", "receiptSha256"], "generated origin");
+				if(!/^root\/[A-Za-z][A-Za-z0-9_.-]*$/.test(origin.generator) || !validHash(origin.receiptSha256)) fail("invalid-component-compilation-plan", "Generated root has an invalid producer");
+				if(!validHash(plan.source.generatedSourcesSha256)) fail("invalid-component-compilation-plan", "Generated roots require a generated source identity");
+			}
+			else fail("invalid-component-compilation-plan", "Unknown public module origin");
+		}
 		if(!validModule(module.module) || moduleNames.has(module.module)) fail("invalid-component-compilation-plan", "source module names must be unique Lean names");
 		moduleNames.add(module.module);
 		safePath(module.path, "source module path");
-		if(!module.path.endsWith(".lean") || moduleFromPath(module.path) !== module.module || !Number.isSafeInteger(module.bytes) || module.bytes < 0 || !validHash(module.sha256)) fail("invalid-component-compilation-plan", `source module ${module.module} identity is invalid`);
-		if(!Array.isArray(module.imports) || !Array.isArray(module.localDependencies) || module.imports.some(imported => !validModule(imported)) || module.localDependencies.some(imported => !validModule(imported))) fail("invalid-component-compilation-plan", `source module ${module.module} imports are invalid`);
+		const suffix = `${module.module.replaceAll(".", "/")}.lean`;
+		if(!module.path.endsWith(".lean") || (locked ? module.path !== suffix && !module.path.endsWith(`/${suffix}`) : moduleFromPath(module.path) !== module.module) || !Number.isSafeInteger(module.bytes) || module.bytes < 0 || !validHash(module.sha256)) fail("invalid-component-compilation-plan", `source module ${module.module} identity is invalid`);
+		if(!locked && (!Array.isArray(module.imports) || !Array.isArray(module.localDependencies) || module.imports.some(imported => !validModule(imported)) || module.localDependencies.some(imported => !validModule(imported)))) fail("invalid-component-compilation-plan", `source module ${module.module} imports are invalid`);
 	}
-	for(const module of plan.source.modules) if(module.localDependencies.some(dependency => !moduleNames.has(dependency) || !module.imports.includes(dependency))) fail("invalid-component-compilation-plan", `source module ${module.module} has an unbound local dependency`);
-	if(!Array.isArray(plan.source.compileOrder) || plan.source.compileOrder.length !== moduleNames.size + 1 || plan.source.compileOrder.at(-1) !== plan.compilerAdapters.module || new Set(plan.source.compileOrder).size !== plan.source.compileOrder.length) fail("invalid-component-compilation-plan", "compile order must cover every source module before the generated module");
-	if(plan.source.compileOrder.slice(0, -1).some(module => !moduleNames.has(module))) fail("invalid-component-compilation-plan", "compile order contains an unknown source module");
-	for(const module of plan.source.modules) for(const dependency of module.localDependencies) if(plan.source.compileOrder.indexOf(dependency) > plan.source.compileOrder.indexOf(module.module)) fail("invalid-component-compilation-plan", `compile order places ${module.module} before ${dependency}`);
-	if(!Array.isArray(plan.source.externalImports) || new Set(plan.source.externalImports).size !== plan.source.externalImports.length || plan.source.externalImports.some(imported => !validModule(imported) || moduleNames.has(imported))) fail("invalid-component-compilation-plan", "external imports must be unique non-local Lean module names");
+	if(locked)
+	{
+		if(plan.schemaVersion === 3 && !plan.source.modules.some(module => module.origin.kind === "generated")) fail("invalid-component-compilation-plan", "Version 3 entry plans require a generated root");
+		if(!validHash(plan.source.lakeSnapshotSha256) || !Array.isArray(plan.source.requestedModules) || !plan.source.requestedModules.length
+			|| new Set(plan.source.requestedModules).size !== plan.source.requestedModules.length
+			|| plan.source.requestedModules.length !== moduleNames.size || new Set(plan.source.modules.map(module => module.path)).size !== moduleNames.size
+			|| plan.source.requestedModules.some(module => !moduleNames.has(module)) || moduleNames.has(plan.compilerAdapters.module))
+			fail("invalid-component-compilation-plan", "Locked compilation requires a snapshot identity and unique selected root modules");
+	}
+	else
+	{
+		for(const module of plan.source.modules) if(module.localDependencies.some(dependency => !moduleNames.has(dependency) || !module.imports.includes(dependency))) fail("invalid-component-compilation-plan", `source module ${module.module} has an unbound local dependency`);
+		if(!Array.isArray(plan.source.compileOrder) || plan.source.compileOrder.length !== moduleNames.size + 1 || plan.source.compileOrder.at(-1) !== plan.compilerAdapters.module || new Set(plan.source.compileOrder).size !== plan.source.compileOrder.length) fail("invalid-component-compilation-plan", "compile order must cover every source module before the generated module");
+		if(plan.source.compileOrder.slice(0, -1).some(module => !moduleNames.has(module))) fail("invalid-component-compilation-plan", "compile order contains an unknown source module");
+		for(const module of plan.source.modules) for(const dependency of module.localDependencies) if(plan.source.compileOrder.indexOf(dependency) > plan.source.compileOrder.indexOf(module.module)) fail("invalid-component-compilation-plan", `compile order places ${module.module} before ${dependency}`);
+		if(!Array.isArray(plan.source.externalImports) || new Set(plan.source.externalImports).size !== plan.source.externalImports.length || plan.source.externalImports.some(imported => !validModule(imported) || moduleNames.has(imported))) fail("invalid-component-compilation-plan", "external imports must be unique non-local Lean module names");
+	}
 	exactKeys(plan.runtime, ["abiVersion", "leanCommit", "patchSetSha256", "profile", "shared"], "runtime");
 	if(!Number.isSafeInteger(plan.runtime.abiVersion) || plan.runtime.abiVersion < 1 || !/^[0-9a-f]{40}$/.test(plan.runtime.leanCommit) || !validHash(plan.runtime.patchSetSha256) || plan.runtime.profile !== "side-lazy" || plan.runtime.shared !== true) fail("invalid-component-compilation-plan", "runtime identity does not describe one shared lazy runtime");
 	exactKeys(plan.target, ["triple", "format", "linkMode", "exceptionHandling", "positionIndependent"], "target");
@@ -133,12 +181,20 @@ export const validateComponentCompilationPlan = plan => {
 export const createComponentCompilationPlan = ({ analysis, componentPlan, compilerAdapters, sourceFiles }) => {
 	if(componentPlan.sha256 !== compilerAdapters.plan.componentPlanSha256) fail("component-compilation-plan-drift", "component and compiler adapter plan identities differ");
 	const inputByPath = new Map(componentPlan.document.source.inputs.map(input => [input.path, input]));
-	const leanInputs = componentPlan.document.source.inputs.filter(input => input.path.endsWith(".lean"));
-	const moduleNames = new Set(leanInputs.map(input => moduleFromPath(input.path)));
+	const locked = componentPlan.document.schemaVersion === 2;
+	const elaborated = analysis.bindingIr.origin === "lean-elaborated";
+	const leanInputs = elaborated ? analysis.entryModules : locked ? compilerAdapters.plan.imports.map(module => {
+		const paths = new Set(compilerAdapters.plan.exports.filter(item => item.sourceModule === module).map(item => analysis.exportCandidates.find(candidate => candidate.declaration === item.sourceDeclaration)?.path));
+		if(paths.size !== 1 || !inputByPath.has([...paths][0])) fail("compiler-adapter-import-missing", `Selected module has no unique root source: ${module}`);
+		return { ...inputByPath.get([...paths][0]), module };
+	}) : componentPlan.document.source.inputs.filter(input => input.path.endsWith(".lean")).map(input => ({ ...input, module: moduleFromPath(input.path) }));
+	const moduleNames = new Set(leanInputs.map(input => input.module));
 	const externalImports = new Set();
 	const modules = leanInputs.map(input => {
+    if(elaborated) return Object.freeze({ ...input });
     const source = sourceFiles[input.path];
     if(typeof source !== "string" || Buffer.byteLength(source) !== input.bytes || sha256(source) !== input.sha256) fail("component-source-drift", `Source input changed before compilation: ${input.path}`);
+    if(locked) return Object.freeze({ module: input.module, path: input.path, bytes: input.bytes, sha256: input.sha256 });
     const imports = [...new Set(importsFromSource(source))].sort();
     const localDependencies = imports.filter(imported => moduleNames.has(imported));
     for(const imported of imports) if(!moduleNames.has(imported)) externalImports.add(imported);
@@ -146,10 +202,9 @@ export const createComponentCompilationPlan = ({ analysis, componentPlan, compil
 	}).sort((left, right) => left.module.localeCompare(right.module));
 	for(const imported of compilerAdapters.plan.imports) if(!moduleNames.has(imported)) fail("compiler-adapter-import-missing", `Generated compiler adapter imports source module outside the component closure: ${imported}`);
 	if(inputByPath.size !== analysis.inputs.length || analysis.inputs.some(input => inputByPath.get(input.path)?.sha256 !== input.sha256)) fail("component-analysis-plan-drift", "Analysis inputs and component plan source closure differ");
-	const sourceOrder = topologicalOrder(modules);
-	const componentStem = `${componentPlan.document.component.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "component"}-${sha256(componentPlan.document.component.id).slice(0, 16)}`;
+	const sourceOrder = locked ? null : topologicalOrder(modules);
 	const document = Object.freeze({
-		schemaVersion: 1
+		schemaVersion: elaborated ? 4 : locked ? 2 : 1
 		, component: Object.freeze({ ...componentPlan.document.component })
 		, componentPlanSha256: componentPlan.sha256
 		, compilerAdapters: Object.freeze({
@@ -163,12 +218,13 @@ export const createComponentCompilationPlan = ({ analysis, componentPlan, compil
 			treeSha256: componentPlan.document.source.treeSha256
 			, toolchain: componentPlan.document.source.toolchain
 			, modules: Object.freeze(modules)
-			, compileOrder: Object.freeze([...sourceOrder, compilerAdapters.plan.module])
-			, externalImports: Object.freeze([...externalImports].sort())
+			, ...(elaborated ? { generatedSourcesSha256: analysis.elaboration.generatedSourcesSha256, elaborationSha256: sha256(canonicalJson(analysis.elaboration)) } : {})
+			, ...(locked ? { lakeSnapshotSha256: componentPlan.document.source.lakeSnapshotSha256, requestedModules: Object.freeze([...(elaborated ? moduleNames : compilerAdapters.plan.imports)].sort()) }
+				: { compileOrder: Object.freeze([...sourceOrder, compilerAdapters.plan.module]), externalImports: Object.freeze([...externalImports].sort()) })
 		})
 		, runtime: Object.freeze({ ...componentPlan.document.runtime })
 		, target: Object.freeze({ triple: "wasm32-unknown-emscripten", format: "wasm", linkMode: "side-module-2", exceptionHandling: "wasm", positionIndependent: true })
-		, outputs: Object.freeze({ sideModule: `artifacts/${componentStem}.so.wasm`, linkMap: `audit/${componentStem}.link.map`, artifactManifest: "component-artifact-manifest.json" })
+		, outputs: Object.freeze(componentArtifactPaths(componentPlan.document.component))
 		, policies: Object.freeze({ compileOnce: true, sourceReadOnly: true, linksRuntime: false, definesMemory: false, definesTable: false, publicGenericDispatch: false })
 	});
 	validateComponentCompilationPlan(document);
@@ -199,8 +255,9 @@ export const prepareComponentCompilationPlan = async ({ projectRoot, analysis, c
  * @param root0.analysis - Completed project analysis containing source identities, diagnostics, export evidence, and proposed Binding IR.
  * @param root0.componentPlan - Validated component plan defining exports, targets, and generated adapter requirements.
  * @param root0.compilerAdapters - Generated adapter manifest and source files that connect Lean declarations to the component ABI.
+ * @param root0.lakeSnapshot - Optional immutable dependency capture for a clean release checkout.
  */
-export const writeComponentCompilationInputs = async ({ projectRoot, outputRoot, analysis, componentPlan, compilerAdapters }) => {
+export const writeComponentCompilationInputs = async ({ projectRoot, outputRoot, analysis, componentPlan, compilerAdapters, lakeSnapshot = undefined }) => {
 	const root = resolve(projectRoot);
 	const output = resolve(outputRoot);
 	try
@@ -213,10 +270,20 @@ export const writeComponentCompilationInputs = async ({ projectRoot, outputRoot,
 		if(error.code !== "ENOENT") throw error;
 	}
 	const plan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: root });
+	else lakeSnapshot = await captureLockedLakeProject({ projectRoot: root, inputs: analysis.inputs });
+	if(lakeSnapshot?.sha256 !== componentPlan.document.source.lakeSnapshotSha256)
+		fail("lake-source-drift", "Locked dependencies changed after component planning");
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-component-inputs-"));
 	try
 	{
+		if(lakeSnapshot) await writeLakeDependencySnapshot({ snapshot: lakeSnapshot, outputRoot: join(staging, "lake") });
+		if(analysis.elaboration)
+		{
+			await mkdir(join(staging, "generated"), { recursive: true });
+			await writeFile(join(staging, "generated/lake-entry-exports.json"), canonicalJson(analysis.elaboration), { mode: 0o444 });
+		}
 		for(const input of componentPlan.document.source.inputs)
 		{
 			const bytes = await readFile(join(root, input.path));

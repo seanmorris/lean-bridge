@@ -44,6 +44,10 @@ export interface DocPage
 	title: string;
 	/** Audience group used by documentation navigation. */
 	group: string;
+	/** Short label in the guide rail; page titles remain descriptive in search. */
+	navTitle?: string;
+	/** Ordered subdivision within a workflow. */
+	section?: string;
 	/** Compatibility routes stay available without appearing in navigation or search. */
 	legacy?: boolean;
 	/** Supported consumer profiles whose primary documentation lives on this page. */
@@ -54,5 +58,6 @@ export interface DocPage
 
 export const demos: readonly Demo[];
 export const docPages: readonly DocPage[];
+export const documentationGroups: readonly string[];
 export const prerenderPaths: readonly string[];
 export const documentationImages: Readonly<Record<string, string>>;

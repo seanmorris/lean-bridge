@@ -4,6 +4,7 @@
  * @file
  */
 
+import { resolveComponentRuntimeRoot } from "./component-runtime-root.mjs";
 import { createHash } from "node:crypto";
 import {
 	cp,
@@ -18,11 +19,14 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { buildCanonicalProject, processBuildRunner } from "../build/canonical-build.mjs";
+import { prepareLakeDependencySnapshot, verifyLakeSnapshotProject } from "../build/lake-dependency-snapshot.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { buildComponentNpmPackages } from "./component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeComponentPublication } from "./component-publication.mjs";
+import { readVerifiedOwnedJavaScriptRelease } from "./owned-javascript-publication.mjs";
+import { javascriptWasmOwnedProfile } from "../build/javascript-wasm-owned-model.mjs";
 import {
 	collectReleaseInventory,
 	compareReleaseInventories,
@@ -38,7 +42,8 @@ const fail = (code, message, options = {}) => {
 	throw new ReproducibilityGateError(code, message, options);
 };
 
-const capture = (runner, request) => runner.capture({ timeoutMs: 30 * 60 * 1000, ...request });
+const capture = (runner, request) => runner.capture({ timeoutMs: 30 * 60 * 1000, ...request
+	, ...(request.command === "git" ? { args: ["--no-optional-locks", ...request.args] } : {}) });
 
 const outputAbsent = async ({ projectRoot, outputRoot }) => {
 	const project = resolve(projectRoot);
@@ -124,6 +129,7 @@ export const prepareCleanComponentSources = async ({
 		// Falling back to the portable local repository path is intentional.
 	}
 	const roots = [];
+	const lakeSnapshot = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, allowMissingLock: true });
 	for(const name of ["a", "b"])
 	{
 		const checkout = join(scratchRoot, `source-${name}`);
@@ -144,10 +150,12 @@ export const prepareCleanComponentSources = async ({
 			, cwd: cloneProject
 		})).stdout.trim();
 		if(cloneStatus !== "") fail("unclean-source-clone", `Independent source clone ${name.toUpperCase()} is not clean`);
+		if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: cloneProject });
 		roots.push(cloneProject);
 	}
 	return Object.freeze({
 		roots: Object.freeze(roots)
+		, ...(lakeSnapshot ? { lakeSnapshot } : {})
 		, source: Object.freeze({
 			repository: publicRepositoryIdentity(repository)
 			, projectPath: projectPath === "" ? "." : portable(projectPath)
@@ -157,27 +165,6 @@ export const prepareCleanComponentSources = async ({
 	});
 };
 
-const runtimeRootFor = async ({ engineRoot, environment }) => {
-	const candidates = [
-		environment.LEAN_BRIDGE_RUNTIME_ROOT
-		, join(engineRoot, "runtime", "wasm")
-		, join(engineRoot, "build", "lean-link-spike", "lazy")
-	].filter(Boolean).map(value => resolve(value));
-	for(const root of candidates)
-	{
-		try
-		{
-			await Promise.all([stat(join(root, "main.mjs")), stat(join(root, "main.wasm"))]);
-			return root;
-		} catch(error)
-		{
-			if(error.code !== "ENOENT") throw error;
-		}
-	}
-	fail("shared-runtime-package-unavailable", "The installed Lean Bridge package does not contain its shared runtime", {
-		hint: "Reinstall Lean Bridge, then run the same dry-run command."
-	});
-};
 
 const combinedInventory = async ({ buildRoot, packageRoot }) => new Map([
 	...await collectReleaseInventory(join(buildRoot, "bundle"), { prefix: "bundle" })
@@ -278,12 +265,12 @@ export const runComponentReproducibilityGate = async ({
 		report.source = prepared.source;
 		signal?.throwIfAborted();
 		onProgress?.({ phase: "source", state: "completed", message: "Project revision is clean and locked" });
-		const runtimeRoot = await runtimeRootFor({ engineRoot: engine, environment });
+		const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot: engine, environment });
 		const built = [];
 		for(const [index, name] of ["A", "B"].entries())
 		{
 			const buildRoot = join(scratch, `build-${name.toLowerCase()}`);
-			const packageRoot = join(scratch, `packages-${name.toLowerCase()}`);
+			let packageRoot = join(scratch, `packages-${name.toLowerCase()}`);
 			const started = now();
 			onProgress?.({ phase: `build-${name.toLowerCase()}`, state: "started", message: `Building clean component ${name}`, current: index, total: 2 });
 			const result = await build({
@@ -294,16 +281,29 @@ export const runComponentReproducibilityGate = async ({
 				, targets
 				, cache
 				, signal
+				, ...(prepared.lakeSnapshot ? { lakeSnapshot: prepared.lakeSnapshot } : {})
 			});
-			const packages = await packageComponent({
-				bundleRoot: join(buildRoot, "bundle")
-				, runtimeRoot
-				, outputRoot: packageRoot
-			});
-			const receipt = await verifyReceipt({ receiptPath: join(packageRoot, "component-package-receipt.json") });
-			const inventory = await combinedInventory({ buildRoot, packageRoot });
-			built.push({ name, buildRoot, packageRoot, result, packages, receipt, inventory, durationMs: Math.max(0, now() - started) });
+			const owned = result.profile === javascriptWasmOwnedProfile;
+			let packages, receipt, inventory;
+			if(owned)
+			{
+				const release = await readVerifiedOwnedJavaScriptRelease({ root: buildRoot, signal });
+				packageRoot = join(buildRoot, "packages/npm");
+				packages = { report: release.receipt }; receipt = release.checked; inventory = release.inventory;
+			}
+			else
+			{
+				packages = await packageComponent({ bundleRoot: join(buildRoot, "bundle"), runtimeRoot, outputRoot: packageRoot });
+				receipt = await verifyReceipt({ receiptPath: join(packageRoot, "component-package-receipt.json") });
+				inventory = await combinedInventory({ buildRoot, packageRoot });
+			}
+			built.push({ name, buildRoot, packageRoot, result, packages, receipt, inventory, owned, durationMs: Math.max(0, now() - started) });
 			onProgress?.({ phase: `build-${name.toLowerCase()}`, state: "completed", message: `Clean component ${name} built`, current: index + 1, total: 2 });
+		}
+		if(prepared.lakeSnapshot)
+		{
+			const current = await prepareLakeDependencySnapshot({ projectRoot: project, includeProject: true, allowMissingLock: true, signal });
+			if(current.sha256 !== prepared.lakeSnapshot.sha256) fail("lake-source-drift", "Project inputs or locked dependencies changed during release reproduction");
 		}
 		const [left, right] = built;
 		const comparison = compareReleaseInventories(left.inventory, right.inventory);
@@ -329,13 +329,14 @@ export const runComponentReproducibilityGate = async ({
 		const candidateId = sha256(canonicalJson({ source: report.source, component: report.component, inventorySha256 }));
 		report.candidate = { id: candidateId, inventorySha256 };
 		report.result = "passed";
-		await Promise.all([
+		if(left.owned) await cp(left.buildRoot, join(staging, "release"), { recursive: true, dereference: true });
+		else await Promise.all([
 			cp(join(left.buildRoot, "bundle"), join(staging, "release", "bundle"), { recursive: true, dereference: true })
 			, cp(left.packageRoot, join(staging, "release", "packages", "npm"), { recursive: true, dereference: true })
 		]);
-		const copiedReceipt = await verifyReceipt({
-			receiptPath: join(staging, "release", "packages", "npm", "component-package-receipt.json")
-		});
+		const receiptName = left.owned ? "package-set-receipt.json" : "component-package-receipt.json";
+		const copiedReceipt = left.owned ? (await readVerifiedOwnedJavaScriptRelease({ root: join(staging, "release"), signal })).checked
+			: await verifyReceipt({ receiptPath: join(staging, "release", "packages", "npm", receiptName) });
 		await mkdir(join(staging, "evidence"), { recursive: true });
 		const reportSource = canonicalJson(report);
 		await writeFile(join(staging, "evidence", "reproducibility.json"), reportSource);
@@ -351,7 +352,7 @@ export const runComponentReproducibilityGate = async ({
 			, publishManifest: join(output, "publish-manifest.json")
 			, publishManifestSha256: manifestSha256
 			, plannedTargets: manifest.targets
-			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, "release/packages/npm/component-package-receipt.json") })
+			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, "release/packages/npm", receiptName) })
 			, packages: Object.freeze({
 				runtime: join(output, "release/packages/npm", left.packages.report.runtime.archive)
 				, component: join(output, "release/packages/npm", left.packages.report.package.archive)

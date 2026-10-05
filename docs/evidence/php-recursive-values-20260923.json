@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "recursive-php-public-values",
+  "sourceHashes": {
+    "src/abi/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+    "src/abi/component-records.mjs": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a",
+    "src/abi/component-recursive.mjs": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9",
+    "src/backends/c/copied-graph-layout.mjs": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+    "src/backends/c/generate.mjs": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518",
+    "src/backends/php/brick-math.mjs": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc",
+    "src/backends/php/brick-math.source.json": "d6e99c476f8d959a70f4548ff4a7d2a2500402a0046213a9836564a301d09b2e",
+    "src/backends/php/copied-equality.mjs": "9eec1bcc845f5494897b631f5d8829bf7cf52c3ef4dd440eb970a1ff07f078a7",
+    "src/backends/php/copied-graph-scalars.mjs": "4d039fada86b470eb4be8f10ac24a658bdac07f749c46256ec84c4a72b4dd959",
+    "src/backends/php/copied-graph-values.mjs": "ee217e566cda2c62e1beb3abd296e1cca6497484dabe09e7e5b2b0a9b40aefe4",
+    "src/backends/php/copied-graph-walk.mjs": "9c6642a6a02eb8c25e129df361c5d3c6b83a342aee46324f66db3e809f5a9e2b",
+    "src/backends/php/copied-names.mjs": "8c0a0bd0cbbb8d785daa12986f345141ee763769f0a70cd6b812e4e1542a5f16",
+    "src/backends/php/copied-support.mjs": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74",
+    "src/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+    "src/binding-ir/contract.mjs": "009172364bbd854b568b25b1a4818a1f1f68145c9b521722b55b75604a5b1aae",
+    "tests/fixtures/structured-types/recursive-php-values.php": "0692ce2a59829f855cd5aa39662525945cdd8d7fd65c2dca96b3f9f3d272fdda",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/native-recursive-reviewed.mjs": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+    "tests/helpers/php-graph-values-fixture.mjs": "66bb923543dfb7daf73073b12cd3b6e2b2b1023f919f318e55f88f9584c4ad0c",
+    "tests/helpers/recursive-fixture.mjs": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+    "tests/php-copied-graph-values.test.mjs": "939ba6c3f38547611f135e576f713c514546bba9adc6fb09a1b8a3acf530fb10"
+  },
+  "reportHashes": {
+    "native": "25ffa63d3a57ff680659d43c63ebd7f17b92dcbdc6e04c04ace7420223231426",
+    "wasm": "396e38710d3467a3b2ce73def118517a49deefd1e2ee60f3721231d1e5f6097d"
+  },
+  "reports": {
+    "native": {
+      "compiledLean": false,
+      "installedPackage": false,
+      "observations": [
+        {
+          "mode": "weak",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 167,
+            "integerBits": 64,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 63,
+            "wideFields": 256,
+            "wordBits": 64
+          },
+          "probeSha256": "20ad2de028191955f1b607440ce32ac5e3178414b8e5adba5672b1c6eee6964e",
+          "sourceHashes": {
+            "deep/src/Api.php": "d012b6d30c5e3e4ac28c0de75d36f06eaaa0074e5e5cc8952f8760d7f454977f",
+            "deep/src/Internal/GraphTypes.php": "5752441963143018c26d8c66a028c4dc4988917ee9bce010787d870eb83f19b8",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "2bbbcc88de7c87f4aaaa8ba38450d51f7b4dd023129f129e978c06167ad30492",
+            "linked/src/Internal/GraphTypes.php": "7e52d7955ad6e8e6cc244550bc83b46be9cedfd7506637b0c65aeb889fefce43",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "1459784456e9b306f4d2c42abcd5df3a9eba04807b97b9a0a3aa48597c2ff821",
+            "names/src/Internal/GraphTypes.php": "89bae94413f05a226c0404c0cdeb6d1c5df33e0c0f0a49b15bc4c6c69777ba8e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "a2128a52354470c42b73fa66c5e6af3e3afba085fb9bb3750967c689219e4adc",
+            "src/Internal/GraphTypes.php": "f958f6da763d38eea17bb3ef71991485248f749356ca2808d99c4cf24257d3bc",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "strict",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 167,
+            "integerBits": 64,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 63,
+            "wideFields": 256,
+            "wordBits": 64
+          },
+          "probeSha256": "41112503b6c5e46eb063a583e928ddda5e330d58bfb774503c90ef602d95477b",
+          "sourceHashes": {
+            "deep/src/Api.php": "d012b6d30c5e3e4ac28c0de75d36f06eaaa0074e5e5cc8952f8760d7f454977f",
+            "deep/src/Internal/GraphTypes.php": "5752441963143018c26d8c66a028c4dc4988917ee9bce010787d870eb83f19b8",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "2bbbcc88de7c87f4aaaa8ba38450d51f7b4dd023129f129e978c06167ad30492",
+            "linked/src/Internal/GraphTypes.php": "7e52d7955ad6e8e6cc244550bc83b46be9cedfd7506637b0c65aeb889fefce43",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "1459784456e9b306f4d2c42abcd5df3a9eba04807b97b9a0a3aa48597c2ff821",
+            "names/src/Internal/GraphTypes.php": "89bae94413f05a226c0404c0cdeb6d1c5df33e0c0f0a49b15bc4c6c69777ba8e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "a2128a52354470c42b73fa66c5e6af3e3afba085fb9bb3750967c689219e4adc",
+            "src/Internal/GraphTypes.php": "f958f6da763d38eea17bb3ef71991485248f749356ca2808d99c4cf24257d3bc",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "weak",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 167,
+            "integerBits": 64,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 63,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "877619f903c9fcdfa395ad3ef991fbcfd57011bfeccd64e1b2d958f7d01d7e4f",
+          "sourceHashes": {
+            "deep/src/Api.php": "d012b6d30c5e3e4ac28c0de75d36f06eaaa0074e5e5cc8952f8760d7f454977f",
+            "deep/src/Internal/GraphTypes.php": "5752441963143018c26d8c66a028c4dc4988917ee9bce010787d870eb83f19b8",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "2bbbcc88de7c87f4aaaa8ba38450d51f7b4dd023129f129e978c06167ad30492",
+            "linked/src/Internal/GraphTypes.php": "7e52d7955ad6e8e6cc244550bc83b46be9cedfd7506637b0c65aeb889fefce43",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "1459784456e9b306f4d2c42abcd5df3a9eba04807b97b9a0a3aa48597c2ff821",
+            "names/src/Internal/GraphTypes.php": "89bae94413f05a226c0404c0cdeb6d1c5df33e0c0f0a49b15bc4c6c69777ba8e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "1e0da11a7f2114da26f3a4934dc7fd8ddc6a6a61d75f8109e28e963261866151",
+            "src/Internal/GraphTypes.php": "3d2ccb6d8255157f73450f3c2f355d9292ed0c7ebe0eda0ea30661db3db7c17b",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "strict",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 167,
+            "integerBits": 64,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 63,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "3eaef1581aec0209ce22bff4ed7b7d98ef2f75056786adee6604672085c61102",
+          "sourceHashes": {
+            "deep/src/Api.php": "d012b6d30c5e3e4ac28c0de75d36f06eaaa0074e5e5cc8952f8760d7f454977f",
+            "deep/src/Internal/GraphTypes.php": "5752441963143018c26d8c66a028c4dc4988917ee9bce010787d870eb83f19b8",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "2bbbcc88de7c87f4aaaa8ba38450d51f7b4dd023129f129e978c06167ad30492",
+            "linked/src/Internal/GraphTypes.php": "7e52d7955ad6e8e6cc244550bc83b46be9cedfd7506637b0c65aeb889fefce43",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "1459784456e9b306f4d2c42abcd5df3a9eba04807b97b9a0a3aa48597c2ff821",
+            "names/src/Internal/GraphTypes.php": "89bae94413f05a226c0404c0cdeb6d1c5df33e0c0f0a49b15bc4c6c69777ba8e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "1e0da11a7f2114da26f3a4934dc7fd8ddc6a6a61d75f8109e28e963261866151",
+            "src/Internal/GraphTypes.php": "3d2ccb6d8255157f73450f3c2f355d9292ed0c7ebe0eda0ea30661db3db7c17b",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "weak",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "ee521746eac3de0205ff484ec817518ef9bc7459123bfb7dc138e07548c5fabd",
+          "sourceHashes": {
+            "deep/src/Api.php": "b35e66839f30277728c886ed572b09809145ae7b0ad6c443da0c39fc88d9e491",
+            "deep/src/Internal/GraphTypes.php": "cbe78c5bc13cf7d79fef6df6b858a09c80e765e788850fd1e1924e0e27b84eb9",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "15919c9c20e73d5151b81580d7a28a22563b4a496ff0689dc680468eb791d384",
+            "linked/src/Internal/GraphTypes.php": "7ef56b3fecb08bd3e42b33cfd1b318ff901c5775193ea3e3b69069b039b367a4",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "208b6d75715559a43fe83c89e7fa073be0f060b6e3c662ebc05d6ba863373e78",
+            "names/src/Internal/GraphTypes.php": "2682b9d6df453ad05bcfff27998b0cfa6a7ac2879360adc8bec2f0ff53c3485e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "51bb99e860e870bccfc45b24fc52138b7e47eba99277f77166c756b606cc2909",
+            "src/Internal/GraphTypes.php": "88062e2921868ed6d2f83e4f57bf2c48e0dac0d1c9e04d266e0db08de70b13c9",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "strict",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "1667e687ad8d7df6a9f42d509b4be0cee46fd7bf72f059adc317ee8ebe05a7cd",
+          "sourceHashes": {
+            "deep/src/Api.php": "b35e66839f30277728c886ed572b09809145ae7b0ad6c443da0c39fc88d9e491",
+            "deep/src/Internal/GraphTypes.php": "cbe78c5bc13cf7d79fef6df6b858a09c80e765e788850fd1e1924e0e27b84eb9",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "15919c9c20e73d5151b81580d7a28a22563b4a496ff0689dc680468eb791d384",
+            "linked/src/Internal/GraphTypes.php": "7ef56b3fecb08bd3e42b33cfd1b318ff901c5775193ea3e3b69069b039b367a4",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "208b6d75715559a43fe83c89e7fa073be0f060b6e3c662ebc05d6ba863373e78",
+            "names/src/Internal/GraphTypes.php": "2682b9d6df453ad05bcfff27998b0cfa6a7ac2879360adc8bec2f0ff53c3485e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "51bb99e860e870bccfc45b24fc52138b7e47eba99277f77166c756b606cc2909",
+            "src/Internal/GraphTypes.php": "88062e2921868ed6d2f83e4f57bf2c48e0dac0d1c9e04d266e0db08de70b13c9",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "weak",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 64
+          },
+          "probeSha256": "fece99fe63bd9a5456462be25359504502eff08ca8e52f62114c04d234d01395",
+          "sourceHashes": {
+            "deep/src/Api.php": "b35e66839f30277728c886ed572b09809145ae7b0ad6c443da0c39fc88d9e491",
+            "deep/src/Internal/GraphTypes.php": "cbe78c5bc13cf7d79fef6df6b858a09c80e765e788850fd1e1924e0e27b84eb9",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "15919c9c20e73d5151b81580d7a28a22563b4a496ff0689dc680468eb791d384",
+            "linked/src/Internal/GraphTypes.php": "7ef56b3fecb08bd3e42b33cfd1b318ff901c5775193ea3e3b69069b039b367a4",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "208b6d75715559a43fe83c89e7fa073be0f060b6e3c662ebc05d6ba863373e78",
+            "names/src/Internal/GraphTypes.php": "2682b9d6df453ad05bcfff27998b0cfa6a7ac2879360adc8bec2f0ff53c3485e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "14656b98de7aa560c6a19da349dcd7597604a3bddab251fcd6d7110c816f6600",
+            "src/Internal/GraphTypes.php": "0a9f071ca2a0a07f0b85b92c486fc3e714400af18628a85b22ea692e56b45ff3",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        },
+        {
+          "mode": "strict",
+          "observation": {
+            "actualPhpBits": 64,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.2.33",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 64
+          },
+          "probeSha256": "e70dff9182ae06cae6527f2c29491a1f8b4b8f29f9e22797abe393eb57ae87f0",
+          "sourceHashes": {
+            "deep/src/Api.php": "b35e66839f30277728c886ed572b09809145ae7b0ad6c443da0c39fc88d9e491",
+            "deep/src/Internal/GraphTypes.php": "cbe78c5bc13cf7d79fef6df6b858a09c80e765e788850fd1e1924e0e27b84eb9",
+            "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+            "linked/src/Api.php": "15919c9c20e73d5151b81580d7a28a22563b4a496ff0689dc680468eb791d384",
+            "linked/src/Internal/GraphTypes.php": "7ef56b3fecb08bd3e42b33cfd1b318ff901c5775193ea3e3b69069b039b367a4",
+            "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+            "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+            "names/src/Api.php": "208b6d75715559a43fe83c89e7fa073be0f060b6e3c662ebc05d6ba863373e78",
+            "names/src/Internal/GraphTypes.php": "2682b9d6df453ad05bcfff27998b0cfa6a7ac2879360adc8bec2f0ff53c3485e",
+            "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+            "src/Api.php": "14656b98de7aa560c6a19da349dcd7597604a3bddab251fcd6d7110c816f6600",
+            "src/Internal/GraphTypes.php": "0a9f071ca2a0a07f0b85b92c486fc3e714400af18628a85b22ea692e56b45ff3",
+            "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+          }
+        }
+      ],
+      "phpSha256": "f44be0fe6c6c19b4a296f5b051bbe7d7924dc2d63ad4711ef666c4626e4a0e7a",
+      "phpVersion": "PHP 8.2.33 (cli) (built: Aug 10 2026 16:44:03) (NTS)\nCopyright (c) The PHP Group\nZend Engine v4.2.33, Copyright (c) Zend Technologies\n",
+      "schemaVersion": 1
+    },
+    "wasm": {
+      "compiledLean": false,
+      "hostPackageSha256": "d68ca1b8461437059dae6fa9f2a15fe5577a50548a8a0748c7c9686a62c88546",
+      "hostSourceSha256": "236729c2cdef87c4a303276af24ddffaa5e6fe33ce06f101562c16920af9b1a5",
+      "installedPackage": false,
+      "observations": [
+        {
+          "binaries": {
+            "e31ec3faf3e2323a2b4a448342b50307765b8217.wasm": "66b6a6f127e984215d792b676d12bcbb6dd5c3bd09409ca2599a929f77634df0"
+          },
+          "hostSha256": "4288ef277577371da4a902f279d3afc9ac4b42ae5808f8ed8ee47a567b374391",
+          "mode": "weak",
+          "observation": {
+            "actualPhpBits": 32,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.4.1",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "ee521746eac3de0205ff484ec817518ef9bc7459123bfb7dc138e07548c5fabd"
+        },
+        {
+          "binaries": {
+            "e31ec3faf3e2323a2b4a448342b50307765b8217.wasm": "66b6a6f127e984215d792b676d12bcbb6dd5c3bd09409ca2599a929f77634df0"
+          },
+          "hostSha256": "4288ef277577371da4a902f279d3afc9ac4b42ae5808f8ed8ee47a567b374391",
+          "mode": "strict",
+          "observation": {
+            "actualPhpBits": 32,
+            "checks": 168,
+            "integerBits": 32,
+            "maximumSpineLinks": 127,
+            "maximumVisits": 262144,
+            "nativeCalls": 0,
+            "phpVersion": "8.4.1",
+            "rejections": 64,
+            "wideFields": 256,
+            "wordBits": 32
+          },
+          "probeSha256": "1667e687ad8d7df6a9f42d509b4be0cee46fd7bf72f059adc317ee8ebe05a7cd"
+        }
+      ],
+      "runtimeSourceSha256": "f8a082759f90c7d328902d228b323303e220adf783b0a7f315ae067e0d3920d2",
+      "schemaVersion": 1,
+      "sourceHashes": {
+        "deep/src/Api.php": "b35e66839f30277728c886ed572b09809145ae7b0ad6c443da0c39fc88d9e491",
+        "deep/src/Internal/GraphTypes.php": "cbe78c5bc13cf7d79fef6df6b858a09c80e765e788850fd1e1924e0e27b84eb9",
+        "deep/src/Internal/Values.php": "1af3bfa0f68fc289d52cbb8c14304b4d0c868d95bd985ddf1b9a113a99dcfbf1",
+        "linked/src/Api.php": "15919c9c20e73d5151b81580d7a28a22563b4a496ff0689dc680468eb791d384",
+        "linked/src/Internal/GraphTypes.php": "7ef56b3fecb08bd3e42b33cfd1b318ff901c5775193ea3e3b69069b039b367a4",
+        "linked/src/Internal/Values.php": "3d9414083160163980d32545834773392c38c5e5bfa0f36bde805d86596204e7",
+        "names/shadow.php": "d46263467a9a9a46db6540c0cc18d88abbe64a1541fd2fe88ef6c0bc212fde65",
+        "names/src/Api.php": "208b6d75715559a43fe83c89e7fa073be0f060b6e3c662ebc05d6ba863373e78",
+        "names/src/Internal/GraphTypes.php": "2682b9d6df453ad05bcfff27998b0cfa6a7ac2879360adc8bec2f0ff53c3485e",
+        "names/src/Internal/Values.php": "6c00e3b2cc777fd2ce5e579ec307fcc3b2b914994eac61eaf20a867fcb7ea291",
+        "src/Api.php": "51bb99e860e870bccfc45b24fc52138b7e47eba99277f77166c756b606cc2909",
+        "src/Internal/GraphTypes.php": "88062e2921868ed6d2f83e4f57bf2c48e0dac0d1c9e04d266e0db08de70b13c9",
+        "src/Internal/Values.php": "4e1fadb5d9919c76ccbef6636e3ecfe689d8d7f5e5c40b09d10ae7806b10ff0e"
+      }
+    }
+  },
+  "logs": {
+    "native": {
+      "command": "LEAN_BRIDGE_PHP_GRAPH_VALUES_TEST=1 node --test --test-name-pattern='values execute' tests/php-copied-graph-values.test.mjs",
+      "sha256": "7264a43b882da20818d709ee54cde7bab971322bffc104a0be2f35503bf75e74",
+      "text": "TAP version 13\n# Subtest: PHP recursive values execute in weak and strict callers without native loading\nok 1 - PHP recursive values execute in weak and strict callers without native loading\n  ---\n  duration_ms: 3289.38997\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3382.144946\n"
+    },
+    "wasm": {
+      "command": "LEAN_BRIDGE_PHP_WASM_GRAPH_VALUES_TEST=1 node --test --test-name-pattern='^recursive PHP values run' tests/php-copied-graph-values.test.mjs",
+      "sha256": "46f7a4dd54f92314ee9ceed384278ab5b12caecdb1b45675d7ccd3cb61f6fe03",
+      "text": "TAP version 13\n# Subtest: recursive PHP values run in the actual 32-bit PHP-Wasm interpreter\nok 1 - recursive PHP values run in the actual 32-bit PHP-Wasm interpreter\n  ---\n  duration_ms: 6225.806794\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 6328.801991\n"
+    }
+  }
+}

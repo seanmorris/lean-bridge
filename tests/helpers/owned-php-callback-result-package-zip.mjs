@@ -1,0 +1,73 @@
+/**
+ * Inspect selected Composer ZIPs in memory without extracting or executing them.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { inflateRawSync } from "node:zlib";
+import { sha256 } from "../../src/capsule/node.mjs";
+
+const crcTable = Array.from({ length: 256 }, (_, value) => {
+	for(let bit = 0; bit < 8; bit++) value = value & 1 ? 0xedb88320 ^ value >>> 1 : value >>> 1;
+	return value >>> 0;
+});
+const crc32 = bytes => {
+	let crc = 0xffffffff;
+	for(const byte of bytes) crc = crcTable[(crc ^ byte) & 255] ^ crc >>> 8;
+	return (crc ^ 0xffffffff) >>> 0;
+};
+
+/**
+ * Validate the complete closed ZIP layout and every uncompressed file identity.
+ * Compression outputs are observed bytes, not regenerated compiler evidence.
+ *
+ * @param bytes - Original archive bytes.
+ * @param inventory - Independently reconstructed path/size/hash inventory.
+ */
+export const readOwnedPhpCallbackZip = (bytes, inventory) => {
+	assert.ok(Buffer.isBuffer(bytes) && bytes.length > 22 && bytes.length < 80 * 1024 ** 2);
+	const end = bytes.length - 22;
+	assert.equal(bytes.readUInt32LE(end), 0x06054b50, "ZIP end marker");
+	assert.equal(bytes.readUInt32LE(end + 4), 0, "single ZIP disk");
+	const count = bytes.readUInt16LE(end + 8), centralSize = bytes.readUInt32LE(end + 12);
+	assert.equal(count, Object.keys(inventory).length); assert.equal(bytes.readUInt16LE(end + 10), count);
+	assert.equal(bytes.readUInt16LE(end + 20), 0, "no trailing comment or bytes");
+	const centralStart = bytes.readUInt32LE(end + 16);
+	assert.equal(centralStart + centralSize, end);
+	let offset = 0, central = centralStart, total = 0;
+	const files = new Map();
+	for(let index = 0; index < count; index++)
+	{
+		assert.ok(offset + 30 <= centralStart && central + 46 <= end);
+		assert.equal(bytes.readUInt32LE(offset), 0x04034b50);
+		assert.equal(bytes.readUInt16LE(offset + 4), 20);
+		assert.equal(bytes.readUInt16LE(offset + 6), 0x800);
+		assert.equal(bytes.readUInt16LE(offset + 8), 8);
+		assert.equal(bytes.readUInt16LE(offset + 10), 0); assert.equal(bytes.readUInt16LE(offset + 12), 33);
+		const checksum = bytes.readUInt32LE(offset + 14), compressedSize = bytes.readUInt32LE(offset + 18);
+		const size = bytes.readUInt32LE(offset + 22), nameSize = bytes.readUInt16LE(offset + 26);
+		assert.equal(bytes.readUInt16LE(offset + 28), 0);
+		const nameBytes = bytes.subarray(offset + 30, offset + 30 + nameSize), path = nameBytes.toString("utf8");
+		assert.deepEqual(Buffer.from(path), nameBytes); assert.match(path, /^[A-Za-z0-9_.+/-]+$/u);
+		assert.ok(!path.startsWith("/") && !path.split("/").some(part => ["", ".", ".."].includes(part)));
+		assert.ok(Object.hasOwn(inventory, path) && !files.has(path), `closed ZIP path ${path}`);
+		assert.equal(size, inventory[path].bytes); total += size; assert.ok(total < 256 * 1024 ** 2);
+		const dataStart = offset + 30 + nameSize, next = dataStart + compressedSize;
+		assert.ok(next <= centralStart);
+		const source = inflateRawSync(bytes.subarray(dataStart, next), { maxOutputLength: size });
+		assert.equal(source.length, size); assert.equal(sha256(source), inventory[path].sha256, path);
+		assert.equal(crc32(source), checksum, `ZIP CRC ${path}`);
+		assert.equal(bytes.readUInt32LE(central), 0x02014b50);
+		assert.equal(bytes.readUInt16LE(central + 4), 0x0314);
+		assert.deepEqual(bytes.subarray(central + 6, central + 28), bytes.subarray(offset + 4, offset + 26));
+		assert.equal(bytes.readUInt16LE(central + 28), nameSize);
+		assert.equal(bytes.readUInt32LE(central + 30), 0); assert.equal(bytes.readUInt32LE(central + 34), 0);
+		assert.equal(bytes.readUInt32LE(central + 38), (0o100644 << 16) >>> 0);
+		assert.equal(bytes.readUInt32LE(central + 42), offset);
+		assert.deepEqual(bytes.subarray(central + 46, central + 46 + nameSize), nameBytes);
+		files.set(path, source); offset = next; central += 46 + nameSize;
+	}
+	assert.equal(offset, centralStart); assert.equal(central, end);
+	assert.deepEqual([...files.keys()].sort(), Object.keys(inventory).sort());
+	return files;
+};

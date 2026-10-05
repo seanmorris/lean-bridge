@@ -120,7 +120,17 @@ try
 	await run("Set a credential-bearing test remote", "git", ["remote", "add", "origin", "https://author:FAKE_REMOTE_SECRET@example.invalid/component.git?token=FAKE_QUERY_SECRET"], project);
 	const analyzed = JSON.parse((await cli("Analyze through the installed CLI", ["analyze", "--project", ".", "--target", "npm", "--check", "--output", "build/analysis"])).stdout);
 	assert.equal(analyzed.status, "ok");
+	assert.equal(analyzed.result.schemaVersion, 2);
+	assert.equal(analyzed.result.bindingIr.origin, "lean-elaborated");
+	assert.equal(analyzed.result.compiledEnvironment.status, "available");
+	assert.equal(analyzed.result.elaboration.metadata.kind, "lean-bridge-elaborated-exports");
+	assert.deepEqual(analyzed.result.bindingIr.document.assurance, []);
 	await cli("Compile through the installed pinned engine", ["build", "--project", ".", "--target", "npm", "--output", "build/component"]);
+	const componentRoot = join(project, "build/component/bundle");
+	const plan = JSON.parse(await readFile(join(componentRoot, "locks/component-build-plan.json"), "utf8"));
+	assert.equal(plan.bindingIr.origin, "lean-elaborated");
+	assert.equal(plan.source.inputs.some(input => input.path === "lake-manifest.json"), false);
+	assert.deepEqual(JSON.parse(await readFile(join(componentRoot, "metadata/assurance.json"), "utf8")).claims, []);
 	assert.equal((await run("Check author source remains clean", "git", ["status", "--porcelain=v1", "--untracked-files=all"], project)).stdout, "");
 	const gate = join(output, "gate");
 	const result = JSON.parse((await cli("Reproduce packages without a runtime path override", ["publish", "--project", ".", "--target", "npm", "--dry-run", "--output", gate])).stdout);
@@ -129,6 +139,11 @@ try
 	const receiptPath = join(packages, "component-package-receipt.json");
 	const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 	assert.doesNotMatch(await readFile(join(gate, "evidence/reproducibility.json"), "utf8"), /FAKE_REMOTE_SECRET|FAKE_QUERY_SECRET/);
+	const checkedHandoff = JSON.parse((await run("Verify the generated handoff through the installed CLI", executable,
+		["verify", "--receipt", receiptPath, "--json"], consumer)).stdout);
+	assert.equal(checkedHandoff.result.verified, true);
+	assert.equal(checkedHandoff.result.authenticated, false);
+	assert.equal(checkedHandoff.project, null);
 	await run("Verify the generated handoff with its copied verifier", process.execPath, [join(packages, "verify-component-package-receipt.mjs"), "--receipt", receiptPath], consumer);
 	if(registry)
 	{

@@ -22,7 +22,8 @@ const sharedFiles = new Set([
 	, 'site-nav.mjs', 'site.css', 'gallery-card.mjs', 'workbench-scope.mjs'
 ]);
 const demoFiles = new Set([
-	'app.mjs', 'benchmark-workload.mjs', 'browser-benchmark.mjs', 'graph.mjs'
+	'app.mjs', 'benchmark-workload.mjs', 'browser-benchmark.mjs'
+	, 'constructions.mjs', 'graph.mjs'
 	, 'index.html', 'network.mjs', 'percolation.mjs', 'README.md', 'reference.mjs'
 	, 'runtime.mjs', 'scenario.mjs', 'styles.css', 'terrain.mjs', 'workbench.mjs'
 ]);
@@ -218,7 +219,8 @@ export async function assembleSite(options = {})
 	}).split('\0').filter(file => file.endsWith('.lean')).map(file => file.slice('demos/'.length)));
 	for(const demo of demos)
 	{
-		await readFile(resolve(demoRoot, demo.slug, 'index.html'));
+		// React routes supply their own prerendered page and generated artifact alias.
+		if(demo.renderingMode !== 'react') await readFile(resolve(demoRoot, demo.slug, 'index.html'));
 		for(const file of [`${demo.slug}.wasm`, `${demo.slug}.mjs`, 'proof-audit.json'])
 			await readFile(resolve(demoRoot, demo.slug, 'runtime', file));
 		const audit = JSON.parse(await readFile(resolve(demoRoot, demo.slug, 'runtime/proof-audit.json'), 'utf8'));

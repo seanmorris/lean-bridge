@@ -8,8 +8,12 @@ import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { analyzeLeanProject } from "../analyze/lean-project.mjs";
-import { assertComponentSignature } from "../abi/component-scalars.mjs";
+import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
+import { createComponentPrivateAbi } from "./component-callable-adapters.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
+import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
 
 /**
  * Reports component build plan failures with stable machine-readable codes and structured diagnostic context.
@@ -54,10 +58,11 @@ const hash = value => {
  */
 export const validateComponentBuildPlan = plan => {
 	exactKeys(plan, ["schemaVersion", "component", "source", "bindingIr", "runtime", "targets", "policies"], "component build plan");
-	if(plan.schemaVersion !== 1) fail("invalid-component-build-plan", "component build plan version must be 1");
+	if(![1, 2].includes(plan.schemaVersion)) fail("invalid-component-build-plan", "component build plan version must be 1 or 2");
 	exactKeys(plan.component, ["id", "name", "version"], "component");
 	for(const key of ["id", "name", "version"]) if(typeof plan.component[key] !== "string" || plan.component[key] === "") fail("invalid-component-build-plan", `component ${key} must be a string`);
-	exactKeys(plan.source, ["treeSha256", "toolchain", "inputs"], "source");
+	exactKeys(plan.source, ["treeSha256", "toolchain", "inputs", ...(plan.schemaVersion === 2 ? ["lakeSnapshotSha256"] : [])], "source");
+	if(plan.schemaVersion === 2) hash(plan.source.lakeSnapshotSha256);
 	hash(plan.source.treeSha256);
 	if(typeof plan.source.toolchain !== "string" || plan.source.toolchain === "") fail("invalid-component-build-plan", "source toolchain must be a string");
 	if(!Array.isArray(plan.source.inputs) || plan.source.inputs.length === 0) fail("invalid-component-build-plan", "source inputs must not be empty");
@@ -70,7 +75,8 @@ export const validateComponentBuildPlan = plan => {
 	}
 	exactKeys(plan.bindingIr, ["schemaVersion", "origin", "semanticSha256", "declarations"], "Binding IR");
 	if(!Number.isSafeInteger(plan.bindingIr.schemaVersion) || plan.bindingIr.schemaVersion < 1) fail("invalid-component-build-plan", "Binding IR version must be positive");
-	if(!new Set(["statically-inferred", "existing-validated"]).has(plan.bindingIr.origin)) fail("invalid-component-build-plan", "Binding IR origin is unsupported");
+	if(!new Set(["statically-inferred", "existing-validated", "lean-elaborated"]).has(plan.bindingIr.origin)) fail("invalid-component-build-plan", "Binding IR origin is unsupported");
+	if(plan.bindingIr.origin === "lean-elaborated" && plan.schemaVersion !== 2) fail("invalid-component-build-plan", "Elaborated entry plans require a complete source snapshot");
 	hash(plan.bindingIr.semanticSha256);
 	if(!Array.isArray(plan.bindingIr.declarations) || plan.bindingIr.declarations.length === 0 || plan.bindingIr.declarations.some(item => typeof item !== "string" || item === ""))
 	{
@@ -100,19 +106,21 @@ export const validateComponentBuildPlan = plan => {
  * @param root0.analysis - Completed project analysis containing source identities, diagnostics, export evidence, and proposed Binding IR.
  * @param root0.runtime - Runtime closure or profile metadata used to construct the generated package or component plan.
  * @param root0.targets - Closed target identifiers selected for planning, building, or reproducibility comparison.
+ * @param root0.lakeSnapshotSha256 - Optional complete locked source snapshot identity.
  */
-export const createComponentBuildPlan = ({ analysis, runtime, targets = [] }) => {
+export const createComponentBuildPlan = ({ analysis, runtime, targets = [], lakeSnapshotSha256 = undefined }) => {
 	if(analysis.bindingIr === null) fail("component-binding-ir-required", "Build requires a complete Binding IR", { hints: analysis.adapterHints.map(item => item.id) });
 	const requiredHints = analysis.adapterHints.filter(item => item.required);
 	if(requiredHints.length > 0) fail("component-adapter-hints-required", "Build requires decisions for unresolved adapter hints", { hints: requiredHints.map(item => item.id) });
-	if(analysis.bindingIr.origin === "statically-inferred") for(const declaration of analysis.bindingIr.document.declarations) assertComponentSignature(declaration);
+	if(analysis.bindingIr.origin !== "existing-validated") createComponentPrivateAbi(analysis.bindingIr.document);
 	const document = Object.freeze({
-		schemaVersion: 1
+		schemaVersion: lakeSnapshotSha256 === undefined ? 1 : 2
 		, component: Object.freeze({ ...analysis.bindingIr.document.component })
 		, source: Object.freeze({
 			treeSha256: analysis.sourceTreeSha256
 			, toolchain: analysis.project.toolchain
 			, inputs: Object.freeze(analysis.inputs.map(input => Object.freeze({ ...input })))
+			, ...(lakeSnapshotSha256 === undefined ? {} : { lakeSnapshotSha256 })
 		})
 		, bindingIr: Object.freeze({
 			schemaVersion: analysis.bindingIr.document.schemaVersion
@@ -148,11 +156,22 @@ export const createComponentBuildPlan = ({ analysis, runtime, targets = [] }) =>
  * @param root0.targets - Closed target identifiers selected for planning, building, or reproducibility comparison.
  * @param root0.analyze - Injected analyzer used to inspect a project without coupling the caller to its implementation.
  * @param root0.signal - Abort signal used to cancel the operation.
+ * @param root0.lakeSnapshot - Optional immutable capture shared by independent release rebuilds.
  */
-export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targets = [], analyze = analyzeLeanProject, signal = undefined }) => {
+export const prepareComponentBuildPlan = async ({ projectRoot, engineRoot, targets = [], analyze = analyzeLeanProject, signal = undefined, lakeSnapshot = undefined }) => {
+	const record = await readExportConfiguration(projectRoot, { signal });
+	const selected = (targets.length ? targets : ["npm"]).map(target => target === "javascript" ? "npm" : target);
+	for(const target of selected)
+		assertExportConfigurationCapabilities(record.configuration, { target, fields: target === "npm" ? ["package", "modules", "exports", "arities", "generators", "specializations", "contracts"] : ["modules", "exports"], targetFields: target === "npm" ? ["name", "version"] : [] });
 	const [analysis, graph] = await Promise.all([
 		analyze(resolve(projectRoot), { signal, targets })
 		, readFile(join(resolve(engineRoot), "poc/lean-link-spike/graph-lock.json"), "utf8").then(JSON.parse)
 	]);
-	return createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
+	assertExportConfigurationSnapshot(record, analysis.inputs);
+	if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot, signal });
+	else lakeSnapshot = await captureLockedLakeProject({ projectRoot: resolve(projectRoot), inputs: analysis.inputs, signal });
+	if(record.configuration.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
+	const plan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets, lakeSnapshotSha256: lakeSnapshot?.sha256 });
+	if(selected.includes("npm")) componentNpmIdentity(plan.document.component, record.configuration.targets?.npm);
+	return lakeSnapshot ? Object.freeze({ ...plan, lakeSnapshot }) : plan;
 };

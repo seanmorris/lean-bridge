@@ -1,0 +1,10 @@
+[
+  { "name": "wrong-variant", "statement": "Api.Echo(new ModeFirst());", "code": "CS1503" },
+  { "name": "missing-payload", "statement": "_ = new SignalData(42);", "code": "CS7036" },
+  { "name": "wrong-payload", "statement": "_ = new SignalData(true, \"x\");", "code": "CS1503" },
+  { "name": "fixed-overflow", "statement": "_ = new SignalData(4294967296, \"x\");", "code": "CS1503" },
+  { "name": "marker-presence", "statement": "_ = new SignalMarker();", "code": "CS7036" },
+  { "name": "abstract-base", "statement": "_ = new Signal();", "code": "CS0144" },
+  { "name": "init-only-payload", "statement": "var value = new SignalData(1, \"x\"); value.Count = 2;", "code": "CS8852" },
+  { "name": "private-runtime", "statement": "_ = typeof(LeanBridge.Variants.Interop.Runtime);", "code": "CS0122" }
+]

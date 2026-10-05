@@ -21,10 +21,14 @@ test('demo allowlist excludes private files, build scripts, test code, and runti
 	const included = [
 		'manifest.json', 'shared/proof-services.mjs', 'lean-myers/Myers.lean'
 		, 'lean-myers/runtime/lean-myers.wasm', 'lean-myers/runtime/proof-audit.json'
+		, 'lean-tutte/Tutte.lean', 'lean-tutte/runtime/lean-tutte.wasm'
+		, 'lean-tutte/scenario.mjs', 'lean-tutte/benchmark-workload.mjs'
+		, 'lean-tutte/constructions.mjs'
 	];
 	for(const file of included)
 		assert.equal(allowedDemoPath(file), true, file);
 	for(const file of ['.env', 'shared/.env', 'shared/proof-services.test.mjs'
+		, 'lean-tutte/bridge.c', 'lean-tutte/build.sh', 'lean-tutte/test.mjs'
 		, 'lean-myers/build.sh'
 		, 'lean-myers/test.mjs'
 		, 'lean-myers/runtime/secret.json'

@@ -4,11 +4,26 @@
  * @file
  */
 export const componentScalarAbi = 2;
+// Array positions are wire tags. Append new scalars without renumbering existing ones.
 export const componentScalarTypes = Object.freeze([
 	"unit", "bool", "uint8", "uint16", "uint32", "uint64"
 	, "int8", "int16", "int32", "int64", "nat", "int"
-	, "float32", "float64", "string", "bytes"
+	, "float32", "float64", "string", "bytes", "char", "usize", "isize"
 ]);
+// The scalar-frame component profile compiles Lean for wasm32, even on a 64-bit host.
+export const componentScalarWordBits = 32;
+
+/**
+ * Select a platform integer's range from the compiled target, not the host process.
+ *
+ * @param name - Semantic primitive name, retained unchanged in Binding IR.
+ * @param wordBits - Compiled Lean target width.
+ */
+export const fixedPlatformInteger = (name, wordBits) => {
+	if(name !== "usize" && name !== "isize") return name;
+	if(![32, 64].includes(wordBits)) throw new TypeError("Platform integers require a 32-bit or 64-bit compiled target");
+	return `${name === "usize" ? "uint" : "int"}${wordBits}`;
+};
 export const scalarFrameHeaderBytes = 32;
 export const scalarSlotBytes = 16;
 export const scalarCopyLimit = 16 * 1024 * 1024;
@@ -51,6 +66,7 @@ export const assertComponentSignature = declaration => {
  * @param value - Host value checked before crossing the component boundary.
  */
 export const validateComponentScalar = (type, value) => {
+	type = fixedPlatformInteger(type, componentScalarWordBits);
 	const invalid = () => { throw new TypeError(`Expected ${type}`); };
 	if(type === "unit")
 	{ if(value !== undefined) invalid(); }
@@ -72,6 +88,12 @@ export const validateComponentScalar = (type, value) => {
 	}
 	else if(type === "float32" || type === "float64")
 	{ if(typeof value !== "number") invalid(); }
+	else if(type === "char")
+	{
+		if(typeof value !== "string" || value.length === 0 || value.length > 2) invalid();
+		const point = value.codePointAt(0);
+		if((point >= 0xd800 && point <= 0xdfff) || value.length !== (point > 0xffff ? 2 : 1)) invalid();
+	}
 	else if(type === "string")
 	{
 		if(typeof value !== "string") invalid();

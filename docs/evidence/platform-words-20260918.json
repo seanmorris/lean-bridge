@@ -1,0 +1,2004 @@
+{
+  "schemaVersion": 1,
+  "milestone": "platform-words",
+  "baseRevision": "f5001a1d0e0cc891798786b197c4f643359cf54d",
+  "localPlatform": {
+    "os": "linux",
+    "architecture": "x86_64",
+    "nativeGlibcTestFloor": "2.36",
+    "ciGlibcFloor": "2.38",
+    "perl": "5.36"
+  },
+  "sourceSha256": "84c3b2ef97eb37f3f2c30284d4bd4d52179e7639d7d2591c7cfa49f076abb7b8",
+  "nativeSignatures": [
+    {
+      "name": "Words.keepUnsigned",
+      "parameters": [
+        "usize"
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Words.keepSigned",
+      "parameters": [
+        "isize"
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Words.unsignedText",
+      "parameters": [
+        "usize"
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Words.signedText",
+      "parameters": [
+        "isize"
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Words.advanceUnsigned",
+      "parameters": [
+        "usize"
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Words.advanceSigned",
+      "parameters": [
+        "isize"
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Words.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    },
+    {
+      "name": "Words.keepUnsignedValues",
+      "parameters": [
+        {
+          "array": "usize"
+        }
+      ],
+      "result": {
+        "array": "usize"
+      }
+    },
+    {
+      "name": "Words.keepSignedValues",
+      "parameters": [
+        {
+          "array": "isize"
+        }
+      ],
+      "result": {
+        "array": "isize"
+      }
+    },
+    {
+      "name": "Words.keepUnsignedRows",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Words.keepSignedRows",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Words.keepSample",
+      "parameters": [
+        {
+          "record": "Words.Sample",
+          "fields": {
+            "natural": "usize",
+            "integer": "isize",
+            "unsignedValues": {
+              "array": "usize"
+            },
+            "signedValues": {
+              "array": "isize"
+            }
+          }
+        }
+      ],
+      "result": {
+        "record": "Words.Sample",
+        "fields": {
+          "natural": "usize",
+          "integer": "isize",
+          "unsignedValues": {
+            "array": "usize"
+          },
+          "signedValues": {
+            "array": "isize"
+          }
+        }
+      }
+    }
+  ],
+  "scalarSignatures": [
+    {
+      "name": "Words.keepUnsigned",
+      "parameters": [
+        "usize"
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Words.keepSigned",
+      "parameters": [
+        "isize"
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Words.unsignedText",
+      "parameters": [
+        "usize"
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Words.signedText",
+      "parameters": [
+        "isize"
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Words.advanceUnsigned",
+      "parameters": [
+        "usize"
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Words.advanceSigned",
+      "parameters": [
+        "isize"
+      ],
+      "result": "isize"
+    },
+    {
+      "name": "Words.wordBits",
+      "parameters": [],
+      "result": "uint32"
+    }
+  ],
+  "nativeExecutions": [
+    {
+      "bindingIrSha256": "aa631cdff371466d4e2d4dd0b7f591461b78cc53d81854a908008b5b6e662ef3",
+      "checks": 7031,
+      "compilerFreePath": true,
+      "consumerSha256": "2a50ec3ce82ca89d70f5d2b4407500c0bef1ce3480e711180f596d708d881715",
+      "modelSha256": "8d2cef5320a04d240e743108438662ea8cf360e2845017dea06be71e2c96cdc1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51335714,
+              "path": "archives/platform-words-1.0.0-c.tar.gz",
+              "sha256": "7e6e7ef1465b6fb2e2a6f4bc6c5adbbfb30f7d1f5d41a5aa59ef50eebd7bb55d"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "de1fb44a3a3e33320244192c56b1962b993fa4fdf1760edb2ce88444a6083a2e",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "29cccdffa1fc09e0a851b42bccfc996f83db7f0fc4f5eee05d1ce96ac99ff9e5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "aa631cdff371466d4e2d4dd0b7f591461b78cc53d81854a908008b5b6e662ef3",
+      "checks": 4181,
+      "compilerFreePath": true,
+      "consumerSha256": "77c263dbd39ae84eb521e6feabf8b17e75fa6b3716658737b06792e25b7f95b3",
+      "modelSha256": "8d2cef5320a04d240e743108438662ea8cf360e2845017dea06be71e2c96cdc1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51352925,
+              "path": "archives/platform_words-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "99e72cfcfd8bec81ab55dfe5de935e0dcff397e41f63a04132ad0380ea4d30c4"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "de1fb44a3a3e33320244192c56b1962b993fa4fdf1760edb2ce88444a6083a2e",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "29cccdffa1fc09e0a851b42bccfc996f83db7f0fc4f5eee05d1ce96ac99ff9e5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "0819696c54a79ce73a41e64203fa52a5eaf602dacf2ac6ad16e2c1abfaa0f9b4",
+      "checks": 7031,
+      "compilerFreePath": true,
+      "consumerSha256": "2a50ec3ce82ca89d70f5d2b4407500c0bef1ce3480e711180f596d708d881715",
+      "modelSha256": "3ab218d3bf5a2e0fa66b2ad12c0e27327bdd108955bb5c9af1fb0e23f752f4f1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51338586,
+              "path": "archives/platform-words-1.0.0-c.tar.gz",
+              "sha256": "90c2669061b214245a98ee9e512df0c13719791336b4698adae995ea9fba0781"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "c",
+      "receiptSha256": "2ccba6243c1f02d5459714665f733b1c34521d671e92d5ac307ff7ebe6a151af",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "dc272cc13ef574a2f4e756bac64d96673fce2b2ad49325da1bf3f9d9d63ded02",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "0819696c54a79ce73a41e64203fa52a5eaf602dacf2ac6ad16e2c1abfaa0f9b4",
+      "checks": 4181,
+      "compilerFreePath": true,
+      "consumerSha256": "77c263dbd39ae84eb521e6feabf8b17e75fa6b3716658737b06792e25b7f95b3",
+      "modelSha256": "3ab218d3bf5a2e0fa66b2ad12c0e27327bdd108955bb5c9af1fb0e23f752f4f1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51356328,
+              "path": "archives/platform_words-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "cc60cf628946d179410dadae87813b43f3305103cf4b48cdbc117e4194dc0f90"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "2ccba6243c1f02d5459714665f733b1c34521d671e92d5ac307ff7ebe6a151af",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "dc272cc13ef574a2f4e756bac64d96673fce2b2ad49325da1bf3f9d9d63ded02",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "c0d19dcef74cee72fc55edafa206d19de22921fd2850fdabc7d5e1dcce4ce47c",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "85f0cfba0342c31057b0e3aede3955a72e452112e7b5172e93ae64352d6112e2",
+      "modelSha256": "0b4392cd44169eb0cb7e81df7918cf32db407e2c5b2f232b71b84f061b7d0a98",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51337360,
+              "path": "archives/platform-words-1.0.0-cpp.tar.gz",
+              "sha256": "b528818a4efbbee66fd6b899e39b7e4c55bb51f91a1573b48f5f7473fedb8c4a"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "a334245f66c5bb693151330af4568a064eaddcca804c76f1cda9e70189ea288d",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "8e7630a13b78a8ebeb555479b1a3686c26b6d61518ed80b232bcf3350bd5f6d4",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "c0d19dcef74cee72fc55edafa206d19de22921fd2850fdabc7d5e1dcce4ce47c",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "9be93b772fa366f2f4e62ac572ab9e9217355dc3f2942f2dadfd83c87910fb02",
+      "modelSha256": "0b4392cd44169eb0cb7e81df7918cf32db407e2c5b2f232b71b84f061b7d0a98",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51345177,
+              "path": "archives/platform-words-1.0.0.crate",
+              "sha256": "349cbfaea53c18ae9a941504c7504a789052a97ccd911a255643dc909f2b3fc3"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "a334245f66c5bb693151330af4568a064eaddcca804c76f1cda9e70189ea288d",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "8e7630a13b78a8ebeb555479b1a3686c26b6d61518ed80b232bcf3350bd5f6d4",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "37020d296fa948a6fa62b63fb09809eb9e0b18223ded2df7d7162dc7c5715f1b",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "85f0cfba0342c31057b0e3aede3955a72e452112e7b5172e93ae64352d6112e2",
+      "modelSha256": "87e2448c2ee85dbc58928b5559d1fc9deea7ff0289135a7e89550bff4a0f0d99",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51340221,
+              "path": "archives/platform-words-1.0.0-cpp.tar.gz",
+              "sha256": "cd6107cd2083f36c09a7bfea3d40c65831ca6082ad63c919484129e6c3741be5"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "4c4ad3a915b6ed98d6ac95a940ebf2e5b6471dab6b419e0cebe1ddca0228b46a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e57829dd0464627f1350c735882429011296d428486c5437581cbcb439b1609c",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "37020d296fa948a6fa62b63fb09809eb9e0b18223ded2df7d7162dc7c5715f1b",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "9be93b772fa366f2f4e62ac572ab9e9217355dc3f2942f2dadfd83c87910fb02",
+      "modelSha256": "87e2448c2ee85dbc58928b5559d1fc9deea7ff0289135a7e89550bff4a0f0d99",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51347926,
+              "path": "archives/platform-words-1.0.0.crate",
+              "sha256": "309e6817330a9b7fe0d7079ab359a3f7389cd34902366ecd2c87338feb09c26e"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "rust",
+      "receiptSha256": "4c4ad3a915b6ed98d6ac95a940ebf2e5b6471dab6b419e0cebe1ddca0228b46a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e57829dd0464627f1350c735882429011296d428486c5437581cbcb439b1609c",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "885c859698af173d2ca18ca9683514e35e6b71dafe13d8bae64eb32de4b30df5",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "0967ab789724ab35e7cc0dae6b472a95452118b28b0f5be35ef94fb03642d2d1",
+      "modelSha256": "33ef27febf51f2b66b4ecd80935eedea9923d8965e572910da85c9559400f115",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51359751,
+              "path": "archives/Platform.Words.1.0.0.nupkg",
+              "sha256": "729b290489191f3c0f5e9b849b07faf0a33e5c2e1a7d1d18248d855e6ad65bf9"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Platform.Words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "a32b97aecf73dfb1d52a8939662c3f2b3c02ee7fd7cc22c54e260edab1d90763",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d7baa08374e51d639d716b4590d2ad77d094cd2f62c59153e6c5cbabea723f5b",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "885c859698af173d2ca18ca9683514e35e6b71dafe13d8bae64eb32de4b30df5",
+      "checks": 6061,
+      "compilerFreePath": true,
+      "consumerSha256": "3e56f7c480e758e4c5cc6584d67d332ca351f7148607d503ea1589b825bda54f",
+      "modelSha256": "33ef27febf51f2b66b4ecd80935eedea9923d8965e572910da85c9559400f115",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51364926,
+              "path": "archives/platform-words-1.0.0.jar",
+              "sha256": "24372bc31656251ed48cf606061b050302712d91eec3c9357f9fe6f9ffebfcf6"
+            },
+            {
+              "bytes": 469,
+              "path": "archives/platform-words-1.0.0.pom",
+              "sha256": "f6e89ee06e7005d47deb71ac7c383c7c851332ab96867a5068fa778fe1ce79ae"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "a32b97aecf73dfb1d52a8939662c3f2b3c02ee7fd7cc22c54e260edab1d90763",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d7baa08374e51d639d716b4590d2ad77d094cd2f62c59153e6c5cbabea723f5b",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "885c859698af173d2ca18ca9683514e35e6b71dafe13d8bae64eb32de4b30df5",
+      "checks": 6051,
+      "compilerFreePath": true,
+      "consumerSha256": "1320354ac7186257917c827189e55fa5e990d17dfe94aa0b646e5b3b4e2bd9c7",
+      "modelSha256": "33ef27febf51f2b66b4ecd80935eedea9923d8965e572910da85c9559400f115",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51364926,
+              "path": "archives/platform-words-1.0.0.jar",
+              "sha256": "24372bc31656251ed48cf606061b050302712d91eec3c9357f9fe6f9ffebfcf6"
+            },
+            {
+              "bytes": 469,
+              "path": "archives/platform-words-1.0.0.pom",
+              "sha256": "f6e89ee06e7005d47deb71ac7c383c7c851332ab96867a5068fa778fe1ce79ae"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "a32b97aecf73dfb1d52a8939662c3f2b3c02ee7fd7cc22c54e260edab1d90763",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d7baa08374e51d639d716b4590d2ad77d094cd2f62c59153e6c5cbabea723f5b",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "885c859698af173d2ca18ca9683514e35e6b71dafe13d8bae64eb32de4b30df5",
+      "checks": 6171,
+      "compilerFreePath": true,
+      "consumerSha256": "a42341db6d46086682445ab16862f7dfaa28ab26d907562f64d652aea526c181",
+      "modelSha256": "33ef27febf51f2b66b4ecd80935eedea9923d8965e572910da85c9559400f115",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50085376,
+              "path": "archives/platform-words-1.0.0-x86_64-linux.gem",
+              "sha256": "a83957b676273b8fb76ccde9c80829784614a43b60084bb3ff140a8c13d2b4d4"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "ruby",
+      "receiptSha256": "a32b97aecf73dfb1d52a8939662c3f2b3c02ee7fd7cc22c54e260edab1d90763",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d7baa08374e51d639d716b4590d2ad77d094cd2f62c59153e6c5cbabea723f5b",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "2125cf0b9d38edd20f426b8a4c12c512ceaf58ec97798424eb25e72380e603de",
+      "checks": 6031,
+      "compilerFreePath": true,
+      "consumerSha256": "0967ab789724ab35e7cc0dae6b472a95452118b28b0f5be35ef94fb03642d2d1",
+      "modelSha256": "b8a9df4db846e6273e68a6ce16fc3e5b5619d955daf9caec72e3e62d10259494",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51363171,
+              "path": "archives/Platform.Words.1.0.0.nupkg",
+              "sha256": "ebfd220db85261c98f77a03a771ef4671c7beeab11b59df4fe3be4c8816f350c"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Platform.Words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "a4fb944cd4f090ce98eed9e28a853a821814af0360bf28db62119eae2de87707",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "057eb3f71cbb11b3ce15e0a38621c20c29018e7c5336e816de71af1b80a61de5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "2125cf0b9d38edd20f426b8a4c12c512ceaf58ec97798424eb25e72380e603de",
+      "checks": 6061,
+      "compilerFreePath": true,
+      "consumerSha256": "3e56f7c480e758e4c5cc6584d67d332ca351f7148607d503ea1589b825bda54f",
+      "modelSha256": "b8a9df4db846e6273e68a6ce16fc3e5b5619d955daf9caec72e3e62d10259494",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51368354,
+              "path": "archives/platform-words-1.0.0.jar",
+              "sha256": "612a8636d5eb96d6ed86941b3530cb26354de943804cb908bd0e69af821f319c"
+            },
+            {
+              "bytes": 469,
+              "path": "archives/platform-words-1.0.0.pom",
+              "sha256": "f6e89ee06e7005d47deb71ac7c383c7c851332ab96867a5068fa778fe1ce79ae"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "a4fb944cd4f090ce98eed9e28a853a821814af0360bf28db62119eae2de87707",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "057eb3f71cbb11b3ce15e0a38621c20c29018e7c5336e816de71af1b80a61de5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "2125cf0b9d38edd20f426b8a4c12c512ceaf58ec97798424eb25e72380e603de",
+      "checks": 6051,
+      "compilerFreePath": true,
+      "consumerSha256": "1320354ac7186257917c827189e55fa5e990d17dfe94aa0b646e5b3b4e2bd9c7",
+      "modelSha256": "b8a9df4db846e6273e68a6ce16fc3e5b5619d955daf9caec72e3e62d10259494",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51368354,
+              "path": "archives/platform-words-1.0.0.jar",
+              "sha256": "612a8636d5eb96d6ed86941b3530cb26354de943804cb908bd0e69af821f319c"
+            },
+            {
+              "bytes": 469,
+              "path": "archives/platform-words-1.0.0.pom",
+              "sha256": "f6e89ee06e7005d47deb71ac7c383c7c851332ab96867a5068fa778fe1ce79ae"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "a4fb944cd4f090ce98eed9e28a853a821814af0360bf28db62119eae2de87707",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "057eb3f71cbb11b3ce15e0a38621c20c29018e7c5336e816de71af1b80a61de5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "2125cf0b9d38edd20f426b8a4c12c512ceaf58ec97798424eb25e72380e603de",
+      "checks": 6171,
+      "compilerFreePath": true,
+      "consumerSha256": "a42341db6d46086682445ab16862f7dfaa28ab26d907562f64d652aea526c181",
+      "modelSha256": "b8a9df4db846e6273e68a6ce16fc3e5b5619d955daf9caec72e3e62d10259494",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50089472,
+              "path": "archives/platform-words-1.0.0-x86_64-linux.gem",
+              "sha256": "be1f1e05e55c236ddf1b95f3b08616dd83172e3a1410f78f7db5912f9d85f9df"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "ruby",
+      "receiptSha256": "a4fb944cd4f090ce98eed9e28a853a821814af0360bf28db62119eae2de87707",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "057eb3f71cbb11b3ce15e0a38621c20c29018e7c5336e816de71af1b80a61de5",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "b7a597ceb6c84790f53789baec7d4b7d5bf31b05a8108ada707e19beb7d67f1b",
+      "checks": 7151,
+      "compilerFreePath": true,
+      "consumerSha256": "668ef69dded607eb8bc2dc7acf0759616365ad13986f4cd6e412c6c496a5a67b",
+      "modelSha256": "019eda335d79d77ff4acf793d9c8e6d1033dc84fa41a074a81a952398b211667",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51355195,
+              "path": "archives/LeanBridge-Runtime-0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411.tar.gz",
+              "sha256": "0317d82f451426ffff9a7db7bfe28cd34560b21e73ee8749c9e15995014168b2"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 66201,
+              "path": "archives/LeanBridge-Words-1.000.tar.gz",
+              "sha256": "d346cb6b63df9eb402270827f2bbd67cd6bed7d3356ec666b9d8a54b3eb4fde1"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Words",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "cb811931917a372822e0d701dae763b4e337e7753e6823a890282c91fe6c552a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1380c85d1ab9e542a5395e4856c6e0084c3c99aea778ab164161cc083bd9037c",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "b7a597ceb6c84790f53789baec7d4b7d5bf31b05a8108ada707e19beb7d67f1b",
+      "checks": 6181,
+      "compilerFreePath": true,
+      "consumerSha256": "28857120233f185cbd66aa507b0d592a337c8ec393b47d47b006ba75b6463092",
+      "modelSha256": "019eda335d79d77ff4acf793d9c8e6d1033dc84fa41a074a81a952398b211667",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51351452,
+              "path": "archives/example-platform-words-1.0.0-linux-x86_64.zip",
+              "sha256": "233b8c31217b5d350c2a38e32f84141f946b775cb6fca7bbd904901ced49936f"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-native",
+      "receiptSha256": "cb811931917a372822e0d701dae763b4e337e7753e6823a890282c91fe6c552a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1380c85d1ab9e542a5395e4856c6e0084c3c99aea778ab164161cc083bd9037c",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "b7a597ceb6c84790f53789baec7d4b7d5bf31b05a8108ada707e19beb7d67f1b",
+      "checks": 6104,
+      "compilerFreePath": true,
+      "consumerSha256": "d3fa690ff06f32e86bc86c57a0941d3d7864510379d171c97c95ae7189547475",
+      "modelSha256": "019eda335d79d77ff4acf793d9c8e6d1033dc84fa41a074a81a952398b211667",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59214900,
+              "path": "archives/platform-words-1.0.0-wit-wasi.tar.gz",
+              "sha256": "b28072f80c00790443d4aa63e1008d86c00cb42131d2353de128139159650c7d"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "wit-wasi",
+      "receiptSha256": "cb811931917a372822e0d701dae763b4e337e7753e6823a890282c91fe6c552a",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1380c85d1ab9e542a5395e4856c6e0084c3c99aea778ab164161cc083bd9037c",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "3c8e80296036bd2191f62c5adbae59ad08b425bd0bbea8974ece68068fd73fd4",
+      "checks": 7151,
+      "compilerFreePath": true,
+      "consumerSha256": "668ef69dded607eb8bc2dc7acf0759616365ad13986f4cd6e412c6c496a5a67b",
+      "modelSha256": "8070c82efe4efc7807c68b018e283224074587f953efc51760cfd9e1b22810b7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51355195,
+              "path": "archives/LeanBridge-Runtime-0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411.tar.gz",
+              "sha256": "0317d82f451426ffff9a7db7bfe28cd34560b21e73ee8749c9e15995014168b2"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 69047,
+              "path": "archives/LeanBridge-Words-1.000.tar.gz",
+              "sha256": "8a455acaa5c3507d132c006fe7a161300d9a7447d7906a311c0bbd35662c8e49"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Words",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "perl",
+      "receiptSha256": "f7aee9d728b2f76898c00f18de7e20e81545169e49b27bab1261d191952c83f0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2e651d0fb0dd5bb8fbaecd71aa2bc2ae4897972e24ec89564d19ca2592042ed4",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "3c8e80296036bd2191f62c5adbae59ad08b425bd0bbea8974ece68068fd73fd4",
+      "checks": 6181,
+      "compilerFreePath": true,
+      "consumerSha256": "28857120233f185cbd66aa507b0d592a337c8ec393b47d47b006ba75b6463092",
+      "modelSha256": "8070c82efe4efc7807c68b018e283224074587f953efc51760cfd9e1b22810b7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51354883,
+              "path": "archives/example-platform-words-1.0.0-linux-x86_64.zip",
+              "sha256": "211140178d4a51678d5c6f5ba58a49244c8f7c430ffcc2f9b58326c24e80f304"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "php-native",
+      "receiptSha256": "f7aee9d728b2f76898c00f18de7e20e81545169e49b27bab1261d191952c83f0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2e651d0fb0dd5bb8fbaecd71aa2bc2ae4897972e24ec89564d19ca2592042ed4",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "3c8e80296036bd2191f62c5adbae59ad08b425bd0bbea8974ece68068fd73fd4",
+      "checks": 6104,
+      "compilerFreePath": true,
+      "consumerSha256": "d3fa690ff06f32e86bc86c57a0941d3d7864510379d171c97c95ae7189547475",
+      "modelSha256": "8070c82efe4efc7807c68b018e283224074587f953efc51760cfd9e1b22810b7",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59218753,
+              "path": "archives/platform-words-1.0.0-wit-wasi.tar.gz",
+              "sha256": "6dd0fd8af5101645b952b3c313b592572bd80fbfbe74bb80020a0a40aea6b8c8"
+            }
+          ],
+          "ecosystem": "wit-wasi",
+          "name": "platform-words",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "wit-wasi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "wit-wasi",
+      "receiptSha256": "f7aee9d728b2f76898c00f18de7e20e81545169e49b27bab1261d191952c83f0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2e651d0fb0dd5bb8fbaecd71aa2bc2ae4897972e24ec89564d19ca2592042ed4",
+      "wordBits": 64
+    },
+    {
+      "bindingIrSha256": "d4100604c03f55e21b633eb9129586e3eb0fa74513b8805863a3aa843d404c32",
+      "browserVersion": "151.0.7922.34",
+      "checks": 6181,
+      "compilerFreePath": true,
+      "consumerSha256": "1fbc2c291fef5e17ea97f4e51722de66f8c875648499abedbb1921aea86744dd",
+      "driverSha256": "679836b37299a0519a93c8905088cc08cc261ca839de256cb993e55bd8df7907",
+      "modelSha256": "3d6ec301e84e486ba149fa35922a82dd6181d22a003cfa7fe14725c249179199",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 72842,
+              "path": "packages/php-wasm/archives/example-platform-words-wasm-1.0.0-php-wasm.zip",
+              "sha256": "a45a22fb84089f9072164994c91ceeb1c379c971637ddba872328103a481e301"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/platform-words-wasm",
+          "profile": "php-wasm-copied-v1",
+          "requires": [
+            {
+              "ecosystem": "npm",
+              "name": "@lean-bridge/php-wasm-copied-runtime",
+              "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+            },
+            {
+              "ecosystem": "npm",
+              "name": "platform-words-wasm",
+              "version": "1.0.0"
+            }
+          ],
+          "role": "api",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "1.0.0"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 1649177,
+              "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16.tgz",
+              "sha256": "f3db595875924f7532a91c4d6058d7588144a591476d6c192035530970b88847"
+            }
+          ],
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "profile": "php-wasm-copied-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 121484,
+              "path": "packages/php-wasm/archives/platform-words-wasm-1.0.0.tgz",
+              "sha256": "c904ee95f396bd67f62586227a027129882ff9a3129a1b7fef625f3b12626e29"
+            }
+          ],
+          "ecosystem": "npm",
+          "name": "platform-words-wasm",
+          "profile": "php-wasm-copied-v1",
+          "requires": [
+            {
+              "ecosystem": "npm",
+              "name": "@lean-bridge/php-wasm-copied-runtime",
+              "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-wasm",
+      "receiptSha256": "07c996f64807fdd460a93b06c04899ceae209764810864025b48df49019310c2",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d64004eb3ff8e258027953dd2b236dbd597e29c17611f3b9d0edee44725f2f82",
+      "wordBits": 32,
+      "arrangements": [
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "423d9ed3138996b03588028ef567d05974946277db64d1427f3b79af4f924dd3",
+      "browserVersion": "151.0.7922.34",
+      "checks": 6181,
+      "compilerFreePath": true,
+      "consumerSha256": "1fbc2c291fef5e17ea97f4e51722de66f8c875648499abedbb1921aea86744dd",
+      "driverSha256": "679836b37299a0519a93c8905088cc08cc261ca839de256cb993e55bd8df7907",
+      "modelSha256": "2f0210b92532efb22647673e3b273eef8c8bf18ebd25bfdfed81692572823bf8",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 74053,
+              "path": "packages/php-wasm/archives/example-platform-words-wasm-1.0.0-php-wasm.zip",
+              "sha256": "a92e642d3a38570ef0db4601ea754cf106e69e52f788e31ddb4c2d908f6d26b8"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/platform-words-wasm",
+          "profile": "php-wasm-copied-v1",
+          "requires": [
+            {
+              "ecosystem": "npm",
+              "name": "@lean-bridge/php-wasm-copied-runtime",
+              "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+            },
+            {
+              "ecosystem": "npm",
+              "name": "platform-words-wasm",
+              "version": "1.0.0"
+            }
+          ],
+          "role": "api",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "1.0.0"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 1649177,
+              "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16.tgz",
+              "sha256": "f3db595875924f7532a91c4d6058d7588144a591476d6c192035530970b88847"
+            }
+          ],
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "profile": "php-wasm-copied-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 125006,
+              "path": "packages/php-wasm/archives/platform-words-wasm-1.0.0.tgz",
+              "sha256": "e4a0f44b07b3050c735b67b3a7052a6f3ffc0b2010cd9f8fb1b55379ef6e3470"
+            }
+          ],
+          "ecosystem": "npm",
+          "name": "platform-words-wasm",
+          "profile": "php-wasm-copied-v1",
+          "requires": [
+            {
+              "ecosystem": "npm",
+              "name": "@lean-bridge/php-wasm-copied-runtime",
+              "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "target": "php-wasm",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "php-wasm",
+      "receiptSha256": "a65f77a18d53a656e76cd6856a9588d6487775ec43fbfb59a0deb3f9b4c031ff",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "46628e64fc3ef6319e2c50b345b792d5b6331bdf317a666df22c986726a028e0",
+      "wordBits": 32,
+      "arrangements": [
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 6181,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ]
+    }
+  ],
+  "npmExecutions": [
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "153.0"
+        },
+        {
+          "engine": "webkit",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "26.5"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "2231636a55da45da561221499e2cd90733d2b16a260a7cb639931dc302e8c4e8",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "ordinary-source",
+      "receipt": {
+        "bindingIrSha256": "5578ad512a354f4a377d1e3c9cae5cdc87ce38a9e31f3c79944730b40ae56f03",
+        "component": {
+          "id": "words@1.0.0",
+          "name": "words",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "d2188454b1438b5914771618bd614a039c7c923e3ec3cadd9858b0efd4dd2d57",
+        "componentBundleSha256": "92cd823037be7cff52050e1eecceffbf97f5e32541595fba0e8984e4e15b7574",
+        "componentIdentitySha256": "1a0be4548164ec73f6d5d4aad7c7551376e485a53c2bbff15fe457893cbec1c1",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "words-1.0.0.tgz",
+          "package": "words@1.0.0",
+          "sha256": "829434af852705401fdd7e9ca74f2547d2b17a9ed4cd8bf022995f1dc1b9e6a3"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "45109e3c56a79e28bfcf88b1486273c84b3be4f8959a32c37ff4e729a788d43a",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.5d396dedcd2042dfbaaf8f33117d106f0f9a966c42d1f817a96a4ad69b71553d.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.5d396dedcd2042dfbaaf8f33117d106f0f9a966c42d1f817a96a4ad69b71553d",
+          "sha256": "a6f47735f2330920b58b7605a307ecfb226d6a273785613498f92e9e6e4e7693"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "b08722718fe14d97816ba847ff9f1debfa1190905c90724d47c05d3d8f2ef6d1"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 2217,
+        "signed": [
+          -2147483648,
+          -2147483647,
+          -65536,
+          -1,
+          0,
+          1,
+          65535,
+          2147483647
+        ],
+        "unsigned": [
+          0,
+          1,
+          127,
+          65535,
+          2147483647,
+          2147483648,
+          4294967294,
+          4294967295
+        ],
+        "wordBits": 32
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "84c3b2ef97eb37f3f2c30284d4bd4d52179e7639d7d2591c7cfa49f076abb7b8",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    },
+    {
+      "browsers": [
+        {
+          "engine": "chromium",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "151.0.7922.34"
+        },
+        {
+          "engine": "firefox",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "153.0"
+        },
+        {
+          "engine": "webkit",
+          "result": {
+            "page": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "react": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            },
+            "worker": {
+              "checks": 2217,
+              "signed": [
+                -2147483648,
+                -2147483647,
+                -65536,
+                -1,
+                0,
+                1,
+                65535,
+                2147483647
+              ],
+              "unsigned": [
+                0,
+                1,
+                127,
+                65535,
+                2147483647,
+                2147483648,
+                4294967294,
+                4294967295
+              ],
+              "wordBits": 32
+            }
+          },
+          "version": "26.5"
+        }
+      ],
+      "compilerFreePath": true,
+      "consumerSha256": "2231636a55da45da561221499e2cd90733d2b16a260a7cb639931dc302e8c4e8",
+      "node": "v22.23.2",
+      "offlineInstall": true,
+      "path": "reviewed-ir",
+      "receipt": {
+        "bindingIrSha256": "def4fbb6af227ef61b1f5e0d92eaab2ce1d1287ea5a6335b16420a636aeb3d11",
+        "component": {
+          "id": "words@1.0.0",
+          "name": "words",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "d2188454b1438b5914771618bd614a039c7c923e3ec3cadd9858b0efd4dd2d57",
+        "componentBundleSha256": "da3805dc3fa457ea4f293a34cf3683d86630f1f662e27c4718c2fe03282dd339",
+        "componentIdentitySha256": "1d83f29e63c0adc93e6368f285be3fa22b39603f21c6b857f0b54523d72bee51",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "words-1.0.0.tgz",
+          "package": "words@1.0.0",
+          "sha256": "266a5a467d188b76dbde3b1e3584f994b8298e80a90047bc9d608127615f2458"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "f05b85170aa4516459c089e48652aa689a0d75a493463e91be00dddebc12dbdc",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.5d396dedcd2042dfbaaf8f33117d106f0f9a966c42d1f817a96a4ad69b71553d.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.5d396dedcd2042dfbaaf8f33117d106f0f9a966c42d1f817a96a4ad69b71553d",
+          "sha256": "a6f47735f2330920b58b7605a307ecfb226d6a273785613498f92e9e6e4e7693"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "f766f3733a4421841cbe2b0181a34c6bdd83a979cc9cb7739a5bbfe152c81b72"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "result": {
+        "checks": 2217,
+        "signed": [
+          -2147483648,
+          -2147483647,
+          -65536,
+          -1,
+          0,
+          1,
+          65535,
+          2147483647
+        ],
+        "unsigned": [
+          0,
+          1,
+          127,
+          65535,
+          2147483647,
+          2147483648,
+          4294967294,
+          4294967295
+        ],
+        "wordBits": 32
+      },
+      "sourceRelocatedBeforeInstallation": true,
+      "sourceSha256": "84c3b2ef97eb37f3f2c30284d4bd4d52179e7639d7d2591c7cfa49f076abb7b8",
+      "typescript": {
+        "executed": true,
+        "strict": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,1414 @@
+{
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "tests/dotnet-aliases.test.mjs": "83d7a27f8e0e79372160eec2fbf1743e67d625ecde9d845d08499a4a3e9d23cd",
+    "tests/dotnet-alias-contract.test.mjs": "114be041b96634356e23c9886e792922e112c916e336c61538e72e660e9a2d6e",
+    "tests/fixtures/alias-consumers/dotnet.cs": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621",
+    "tests/fixtures/alias-consumers/dotnet-invalid.json": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e",
+    "tests/fixtures/alias-consumers/dotnet-faults.cs": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902",
+    "tests/helpers/dotnet-alias-install.mjs": "52359ebba175668f2812e7964e9e40a18bd867eb927f54ee6f85223ef53b62f2",
+    "tests/helpers/dotnet-alias-faults.mjs": "7151cb186ba4a08df2d5b7dca242a8db7cb92b33e748bd9d7cd0ba94a3b505d6",
+    "tests/helpers/dotnet-copied-install.mjs": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "runs": [
+    {
+      "bindingIrSha256": "ce1828ea9665ea23a47b551083161c6b89ba71dbe309556c4be62333e0f77d4d",
+      "checks": 3876,
+      "compilerFreePath": true,
+      "consumerSha256": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621",
+      "faults": {
+        "apiSourceSha256": "22c9701a943bb3ff289d36da64add41eedf8e4d4f78cec3179a9825169afd1ef",
+        "checks": 180,
+        "instrumentedRuntimeSha256": "c8782d59720090d92ec4e91ee82816d5d7fa3454a572ebecf65819ef17b77b7e",
+        "isolatedInstrumentedProjection": true,
+        "malformedChecks": 17,
+        "partialInputChecks": 64,
+        "probeSourceSha256": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          56,
+          1,
+          1,
+          1,
+          31,
+          13
+        ],
+        "runtimeSourceSha256": "5de8dc9455a3e9698a4548b72f918f924a245f901aa9e7107fc82eb301875b2c"
+      },
+      "installed": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "managedType": "bool",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "managedType": "byte[]",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "managedType": "global::System.Text.Rune",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "managedType": "float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "managedType": "double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "managedType": "short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "managedType": "int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "managedType": "long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "managedType": "sbyte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "managedType": "global::System.Numerics.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "managedType": "global::System.Numerics.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "managedType": "long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "managedType": "string",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "managedType": "ushort",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "managedType": "uint",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "managedType": "ulong",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "managedType": "byte",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "managedType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "managedType": "ulong",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "managedType": "uint",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "managedType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "managedType": "uint",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "managedType": "Result<(uint, byte[]), string>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "managedType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "managedType": "Packet[]",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "managedType": "uint[][]",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "managedType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "assemblySha256": "435fa9da2391fd7379d4d6df80b12ec8d79cdb864b9071a3bac25e6e7fe1faf7",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1728,
+            "sha256": "dbd98176c24683f7f726e11b9f338979320d360f22d353d2314319dcc7986584"
+          },
+          "Consumer.dll": {
+            "bytes": 17920,
+            "sha256": "dfd5a726ccd243036143a3b1c0f541e93fe91a6c401fb2b63a4cde36ad770f1d"
+          },
+          "Consumer.pdb": {
+            "bytes": 13316,
+            "sha256": "6ff845693923949e3e829ea07d819814512205f87034ad32bc0cbf1c6f87af7c"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Aliases.dll": {
+            "bytes": 39424,
+            "sha256": "435fa9da2391fd7379d4d6df80b12ec8d79cdb864b9071a3bac25e6e7fe1faf7"
+          },
+          "runtimes/linux-x64/native/libaliases.so": {
+            "bytes": 78912,
+            "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+          },
+          "runtimes/linux-x64/native/libcomponent_415b536a11d7304fc0bd.so": {
+            "bytes": 90864,
+            "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "manifestSha256": "f4e8d4f49fe6ada0423ff53c63a149800742eb95c4817fce5c5f62777d573ba8",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "c8b3f10f0be8056f55b447053b2f8b7479769c6375235d402926c943f8035975",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-scalar",
+            "sourceSha256": "8e7c98d93375233a048988c255d0ff48966e7bcf36139bd99edebfdd3e5edfbb"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-nat",
+            "sourceSha256": "8ec97b03545c145e4d80032ee000f37dcbb60489eb0f31b2185818d82ae3003a"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-unit",
+            "sourceSha256": "ad7cd97e98b9ff59df65c91cd7d91d1df626040cfad311396d5c140a52cdecbf"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-option",
+            "sourceSha256": "a0dc101c7d7e0706974287a96618d36af012c426a4ba14487e95e0a02ff42efb"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-result",
+            "sourceSha256": "b26a4b176905312cf894ea87cc848ce7a69db2d1f92a9d0d00e773a65753652c"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "wrong-field",
+            "sourceSha256": "fdec3f77db9eadb0e9ce339721c7f69763e4f8f642e321e6f3f573fa483bba49"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-row",
+            "sourceSha256": "a6122918c7f8201d9d8dce906f77a409455dbadd095630512380a80433bc31fd"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-byte",
+            "sourceSha256": "ad635f488b2201aae1d4eb68c05d7355de90887b0c368d4c57c63fd59afbdcdd"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "domain-versus-boundary",
+            "sourceSha256": "4169f93c1819b3f1d6791a3da3bc7358b891145169cfb234eade79287a21ee35"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "f9265accf067b09807091afc4d42f3cfb6c0f95cc1c1ca0964806105b1ffed8c"
+          },
+          {
+            "codes": [
+              "CS1021"
+            ],
+            "name": "word-overflow",
+            "sourceSha256": "c6d730ef6dc5e90c6642fb36ab18922bccd76ae6a976b694d9d531e6cdb32783"
+          },
+          {
+            "codes": [
+              "CS0234"
+            ],
+            "name": "no-wrapper-identity",
+            "sourceSha256": "f1a5fec941e3fc875edcf7703743568ce74e2064192d1dfebb3759413b963feb"
+          }
+        ],
+        "rejectionSourceSha256": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e",
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 3876,
+        "sourceFreeExecutions": 2,
+        "xmlSha256": "d0fc0c76c1a24f30f5144b2ef586e805b59eaf64dfee2acc8b3b3498c9942894"
+      },
+      "modelSha256": "372047174fa8e6e6a0603387a77498b4ae723a819d8bd8ece9ab73d407f89682",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51435702,
+              "path": "archives/Lean.Aliases.1.0.0.nupkg",
+              "sha256": "ad7b51d375441acce021e06d6402e30b524fd7cb0774846d4b5e906893567d4b"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "4f2f8a44f6aca018aaa64534c0c2ca1f728605610e4e0494e87b135a3bf23abc",
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "958b3d289d6e1ccbeb2c73284e9b5c6f15efe5086767f3d3b802d71c06990b8d"
+    },
+    {
+      "bindingIrSha256": "0d590fe04df1e026c02969669a129b7206dd8f511c3ca5f16afc418985d3ae22",
+      "checks": 3876,
+      "compilerFreePath": true,
+      "consumerSha256": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621",
+      "faults": {
+        "apiSourceSha256": "383720ca0c0a8b409ce8977e6b55e674e56c1999cd3a1345335ad3609adb5b9f",
+        "checks": 180,
+        "instrumentedRuntimeSha256": "e6af82a65f0387c94408e94a314b7e0f41ac8d7ff0c8e5925d14b7af27b2876b",
+        "isolatedInstrumentedProjection": true,
+        "malformedChecks": 17,
+        "partialInputChecks": 64,
+        "probeSourceSha256": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          56,
+          1,
+          1,
+          1,
+          31,
+          13
+        ],
+        "runtimeSourceSha256": "cdbb6c9dd749e8fae3f987c961cf7c7d6ad7447871f15adf95f6c8ec06dcba52"
+      },
+      "installed": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "managedType": "bool",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "managedType": "byte[]",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "managedType": "global::System.Text.Rune",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "managedType": "float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "managedType": "double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "managedType": "short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "managedType": "int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "managedType": "long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "managedType": "sbyte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "managedType": "global::System.Numerics.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "managedType": "global::System.Numerics.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "managedType": "long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "managedType": "string",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "managedType": "ushort",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "managedType": "uint",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "managedType": "ulong",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "managedType": "byte",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "managedType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "managedType": "ulong",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "managedType": "uint",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "managedType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "managedType": "uint",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "managedType": "Result<(uint, byte[]), string>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "managedType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "managedType": "Packet[]",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "managedType": "uint[][]",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "managedType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "assemblySha256": "e9b48176d740eb38d9830382591b72e8c116c76a787960ec0603c0b8a1f6d87d",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1728,
+            "sha256": "9dea6fdad99e595045e1412280cc9464348efa74835597f22ebbd9ae3992de45"
+          },
+          "Consumer.dll": {
+            "bytes": 17920,
+            "sha256": "71470aa4b26e48616db6245ed85d13c238a741dca2237eb6fd37bb1bfcb0be0a"
+          },
+          "Consumer.pdb": {
+            "bytes": 13316,
+            "sha256": "06a06465222ca549cf868e88efc8c2f4a2a4f2d9ee38885d3204530cad1c12ae"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Aliases.dll": {
+            "bytes": 39424,
+            "sha256": "e9b48176d740eb38d9830382591b72e8c116c76a787960ec0603c0b8a1f6d87d"
+          },
+          "runtimes/linux-x64/native/libaliases.so": {
+            "bytes": 78912,
+            "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+          },
+          "runtimes/linux-x64/native/libcomponent_415b536a11d7304fc0bd.so": {
+            "bytes": 90864,
+            "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "manifestSha256": "03acdf7c456a54053cc3abc071ad528bfba370ee72b6b096743578f5cd8ac462",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "bd3a4bf09d5ce31e38172a4adfe40ddde2f7eaa0aa47534ce6877d14fb1253b9",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-scalar",
+            "sourceSha256": "8e7c98d93375233a048988c255d0ff48966e7bcf36139bd99edebfdd3e5edfbb"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-nat",
+            "sourceSha256": "8ec97b03545c145e4d80032ee000f37dcbb60489eb0f31b2185818d82ae3003a"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "alias-unit",
+            "sourceSha256": "ad7cd97e98b9ff59df65c91cd7d91d1df626040cfad311396d5c140a52cdecbf"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-option",
+            "sourceSha256": "a0dc101c7d7e0706974287a96618d36af012c426a4ba14487e95e0a02ff42efb"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-result",
+            "sourceSha256": "b26a4b176905312cf894ea87cc848ce7a69db2d1f92a9d0d00e773a65753652c"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "wrong-field",
+            "sourceSha256": "fdec3f77db9eadb0e9ce339721c7f69763e4f8f642e321e6f3f573fa483bba49"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-row",
+            "sourceSha256": "a6122918c7f8201d9d8dce906f77a409455dbadd095630512380a80433bc31fd"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-byte",
+            "sourceSha256": "ad635f488b2201aae1d4eb68c05d7355de90887b0c368d4c57c63fd59afbdcdd"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "domain-versus-boundary",
+            "sourceSha256": "4169f93c1819b3f1d6791a3da3bc7358b891145169cfb234eade79287a21ee35"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "f9265accf067b09807091afc4d42f3cfb6c0f95cc1c1ca0964806105b1ffed8c"
+          },
+          {
+            "codes": [
+              "CS1021"
+            ],
+            "name": "word-overflow",
+            "sourceSha256": "c6d730ef6dc5e90c6642fb36ab18922bccd76ae6a976b694d9d531e6cdb32783"
+          },
+          {
+            "codes": [
+              "CS0234"
+            ],
+            "name": "no-wrapper-identity",
+            "sourceSha256": "f1a5fec941e3fc875edcf7703743568ce74e2064192d1dfebb3759413b963feb"
+          }
+        ],
+        "rejectionSourceSha256": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e",
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 3876,
+        "sourceFreeExecutions": 2,
+        "xmlSha256": "8537953f9c29243dbedc4b299931b4e56468b4bbf3cea65335738f6f8288675a"
+      },
+      "modelSha256": "837b36d07ef268c62441775f193024d4cd310040b2fae5b33e01ff1c3b721b20",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51443504,
+              "path": "archives/Lean.Aliases.1.0.0.nupkg",
+              "sha256": "ee342cab8148081d9104b8a2ea514727186535023df5b03d35c08a651d47faaf"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "50c4825dcaca70c837d1ddbcc4a63fbdb8eae0956b9f8b26ccbcc10cb784a435",
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "53661b9e4f2b01a7ff41df57a04e609a6e9479f0046d8fa58d9fcf083b9f40cc"
+    }
+  ]
+}

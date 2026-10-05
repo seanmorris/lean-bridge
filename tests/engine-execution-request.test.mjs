@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, normalize } from "node:path";
 import test from "node:test";
@@ -16,6 +16,8 @@ import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "../src/build/component-compilation-plan.mjs";
 import {
 	createEngineExecutionRequest,
+	engineIdentityFiles,
+	identifyBuildEngine,
 	EngineExecutionRequestError,
 	readVerifiedEngineExecutionRequest,
 	validateEngineExecutionRequest,
@@ -58,9 +60,33 @@ const collectModuleClosure = async entry => {
 
 test("the Nix component engine source boundary closes the executable module graph", async () => {
   const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
-  const dataFiles = ["poc/lean-link-spike/graph-lock.json", "poc/lean-link-spike/component_scalar.h"];
+  const dataFiles = ["poc/lean-link-spike/graph-lock.json", "poc/lean-link-spike/component_scalar.h", "src/build/ResolveLakeWorkspace.lean", "src/analyze/NativeExports.lean"];
+  assert.ok(boundary.includedFiles.includes("src/build/ResolveLakeWorkspace.lean"));
+  assert.ok(boundary.includedFiles.includes("src/analyze/NativeExports.lean"));
+  assert.match(await readFile("src/build/lean-component-compiler.mjs", "utf8"), /"src\/analyze\/NativeExports\.lean"/);
+  assert.match(await readFile("src/build/lake-workspace.mjs", "utf8"), /new URL\("ResolveLakeWorkspace\.lean", import\.meta\.url\)/);
   const executableFiles = boundary.includedFiles.filter(path => !dataFiles.includes(path)).sort();
   assert.deepEqual(await collectModuleClosure("scripts/run-component-engine.mjs"), executableFiles);
+});
+
+test("the filtered Nix engine retains every input needed to authenticate a host request", async t => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-filtered-engine-"));
+	t.after(() => rm(scratch, { recursive: true, force: true }));
+	const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
+	const core = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
+	assert.deepEqual(boundary.identityFiles, [...engineIdentityFiles]);
+	for(const path of new Set([...boundary.includedFiles, ...boundary.identityFiles, ...core.includedFiles, ...core.includedDirectoryPrefixes]))
+	{
+		await mkdir(dirname(join(scratch, path)), { recursive: true });
+		await cp(path, join(scratch, path), { recursive: true });
+	}
+	assert.deepEqual(await identifyBuildEngine(scratch), await identifyBuildEngine(process.cwd()));
+	const source = await readFile("flake.nix", "utf8");
+	const filter = source.slice(source.indexOf("componentEngineSource = builtins.path"), source.indexOf("portablePackages = rec"));
+	assert.match(filter, /componentEngineSourceBoundary\.identityFiles/);
+	assert.match(filter, /coreSourceBoundary\.includedFiles/);
+	assert.match(filter, /coreSourceBoundary\.includedDirectoryPrefixes/);
+	assert.match(filter, /includedDirectory \|\| parentDirectory \|\| parentFile/);
 });
 
 test("one closed execution request names engine, component, source, output, cache, and targets", async () => {
@@ -117,7 +143,10 @@ test("the engine rejects source drift before compilation", async () => {
     const prepared = await prepare({ projectRoot: "tests/fixtures/onboarding/small", scratch });
     const requestPath = join(scratch, "request.json");
     await writeEngineExecutionRequest({ output: requestPath, engineRoot: process.cwd(), ...prepared, targets: ["npm"] });
-    await writeFile(join(prepared.inputRoot, "source/OnboardingSmall.lean"), "def changed := true\n");
+    const sourcePath = join(prepared.inputRoot, "source/OnboardingSmall.lean");
+    await chmod(sourcePath, 0o644);
+    await writeFile(sourcePath, "def changed := true\n");
+    await chmod(sourcePath, 0o444);
     await assert.rejects(
       readVerifiedEngineExecutionRequest({ requestPath, engineRoot: process.cwd(), inputRoot: prepared.inputRoot }),
       error => error instanceof EngineExecutionRequestError && error.code === "component-input-identity-drift",

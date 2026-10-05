@@ -25,13 +25,25 @@ const sourcePages = new Map(docPages.filter(page => page.source)
 	.map(page => [page.source, page]));
 const demoPages = new Map([
 	['demos/index.html', '/demos/']
-	, ...demos.map(demo => [`demos/${demo.entrypoint}index.html`, demo.canonicalPage])
+	, ...demos.flatMap(demo => ['', 'index.html'].map(suffix =>
+		[`demos/${demo.entrypoint}${suffix}`, demo.canonicalPage]))
 ]);
 const languages = [
 	'sh', 'js', 'ts', 'tsx', 'html', 'json', 'lean', 'toml', 'php', 'python'
-	, 'rust', 'c', 'cpp', 'csharp', 'java', 'kotlin', 'ruby'
+	, 'rust', 'c', 'cpp', 'csharp', 'java', 'kotlin', 'ruby', 'perl'
 	, 'xml', 'cmake', 'wit', 'nix', 'ini'
 ];
+const syntaxClasses = new Map([
+	['#79c0ff', 'syntax-blue']
+	, ['#7ee787', 'syntax-green']
+	, ['#8b949e', 'syntax-muted']
+	, ['#a5d6ff', 'syntax-cyan']
+	, ['#d2a8ff', 'syntax-purple']
+	, ['#e6edf3', 'syntax-text']
+	, ['#ff7b72', 'syntax-red']
+	, ['#ffa198', 'syntax-coral']
+	, ['#ffa657', 'syntax-orange']
+]);
 
 /**
  * Visits Markdown or HTML syntax nodes without loading a browser dependency.
@@ -227,6 +239,20 @@ function highlightCode(highlighter)
 				plainText(code).replace(/\n$/u, '')
 				, { lang: language, theme: 'github-dark-default' }
 			).children[0];
+			// Shiki repeats an inline style object for every token. Stable theme
+			// classes keep large reference pages comfortably inside the route budget.
+			delete highlighted.properties.style;
+			walk(highlighted, child => {
+				if(child.type !== 'element' || typeof child.properties?.style !== 'string') return;
+				const color = child.properties.style.match(/(?:^|;)\s*color:\s*(#[\da-f]{6})/iu)?.[1].toLowerCase();
+				const syntaxClass = syntaxClasses.get(color);
+				if(!syntaxClass) return;
+				const classes = child.properties.className ?? [];
+				child.properties.className = [...(Array.isArray(classes) ? classes : [classes]), syntaxClass];
+				const remaining = child.properties.style.replace(/(?:^|;)\s*color:\s*#[\da-f]{6}\s*;?/iu, '').trim();
+				if(remaining) child.properties.style = remaining;
+				else delete child.properties.style;
+			});
 			highlighted.properties['data-language'] = label;
 			Object.assign(node, highlighted);
 		});
@@ -373,7 +399,7 @@ export async function generateSiteContent(options = {})
 	].join('\n'));
 	await writeFile(path.join(output, 'metadata.d.mts'), [
 		'export interface Heading { depth: number; id: string; text: string; }'
-		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; legacy?: boolean; consumerIds?: string[]; searchAliases?: string[]; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
+		, 'export interface Page { id: string; route: string; source: string; title: string; group: string; navTitle?: string; section?: string; legacy?: boolean; consumerIds?: string[]; searchAliases?: string[]; headings: Heading[]; sourceUrl: string; sourceSha256: string; }'
 		, 'export const pages: Record<string, Page>;'
 	].join('\n'));
 	await writeFile(path.join(output, 'index.d.mts'), [

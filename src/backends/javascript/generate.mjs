@@ -14,6 +14,9 @@ import { compileGenericSpecializationV1 } from "../../abi/generic-specialization
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
+import { sha256 } from "../../capsule/node.mjs";
+import { emitCopiedValidators } from "./copied-validators.mjs";
+import { compileOwnedJavaScriptPackageModel, renderOwnedJavaScriptPackageLayout } from "./owned-package.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -28,19 +31,19 @@ const typeScriptType = (typeRef, typeMap) => {
 		if(typeRef.name === "unit") return "void";
 		if(typeRef.name === "bool") return "boolean";
 		if(new Set(["uint64", "int64", "nat", "int"]).has(typeRef.name)) return "bigint";
-		if(typeRef.name === "string") return "string";
+		if(typeRef.name === "string" || typeRef.name === "char") return "string";
 		if(typeRef.name === "bytes") return "Uint8Array";
 		return "number";
 	}
 	if(typeRef.kind === "named") return typeMap.get(typeRef.id)?.name ?? "never";
 	if(typeRef.kind === "parameter") return typeRef.id;
-	if(typeRef.constructor === "array")
+	if(["array", "list"].includes(typeRef.constructor))
 	{
 		return `ReadonlyArray<${typeScriptType(typeRef.arguments[0], typeMap)}>`;
 	}
 	if(typeRef.constructor === "option")
 	{
-		return `${typeScriptType(typeRef.arguments[0], typeMap)} | null`;
+		return `Readonly<{ tag: "none" }> | Readonly<{ tag: "some"; value: ${typeScriptType(typeRef.arguments[0], typeMap)} }>`;
 	}
 	if(typeRef.constructor === "result")
 	{
@@ -572,6 +575,8 @@ const validatorName = (typeRef, typeMap) => {
 	{
 		return `assertArrayOf${validatorName(typeRef.arguments[0], typeMap).slice("assert".length)}`;
 	}
+	if(typeRef.kind === "apply" && ["list", "option", "result", "tuple"].includes(typeRef.constructor))
+		return `assertApplied$${sha256(canonicalizeJsonValue(typeRef, "validator")).slice(0, 20)}`;
 	fail("unsupported-validator", "The JavaScript POC cannot emit this validator", { typeRef });
 };
 
@@ -587,6 +592,8 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt8 = (value, path) => { if (!Number.isInteger(value) || value < -0x80 || value > 0x7f) invalid(path, \"int8\"); return value; };"
 		, "export const assertInt16 = (value, path) => { if (!Number.isInteger(value) || value < -0x8000 || value > 0x7fff) invalid(path, \"int16\"); return value; };"
 		, "export const assertInt32 = (value, path) => { if (!Number.isInteger(value) || value < -0x80000000 || value > 0x7fffffff) invalid(path, \"int32\"); return value; };"
+		, "export const assertUsize = assertUint32;"
+		, "export const assertIsize = assertInt32;"
 		, "const assertBigInt = (value, path) => { if (typeof value !== \"bigint\") invalid(path, \"bigint\"); return value; };"
 		, "export const assertUint64 = (value, path) => { assertBigInt(value, path); if (value < 0n || value > 0xffffffffffffffffn) invalid(path, \"uint64\"); return value; };"
 		, "export const assertInt64 = (value, path) => { assertBigInt(value, path); if (value < -0x8000000000000000n || value > 0x7fffffffffffffffn) invalid(path, \"int64\"); return value; };"
@@ -596,108 +603,11 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertFloat32 = assertNumber;"
 		, "export const assertFloat64 = assertNumber;"
 		, "export const assertString = (value, path) => { if (typeof value !== \"string\") invalid(path, \"string\"); return value; };"
+		, "export const assertChar = (value, path) => { if (typeof value !== \"string\" || value.length === 0 || value.length > 2) invalid(path, \"one Unicode scalar\"); const point = value.codePointAt(0); if ((point >= 0xd800 && point <= 0xdfff) || value.length !== (point > 0xffff ? 2 : 1)) invalid(path, \"one Unicode scalar\"); return value; };"
 		, "export const assertBytes = (value, path) => { if (!(value instanceof Uint8Array)) invalid(path, \"Uint8Array\"); return value; };"
 		, ""
 	];
-	const emittedArrays = new Set();
-	const emitArray = typeRef => {
-		if(typeRef.kind !== "apply" || typeRef.constructor !== "array") return;
-		emitArray(typeRef.arguments[0]);
-		const name = validatorName(typeRef, typeMap);
-		if(emittedArrays.has(name)) return;
-		emittedArrays.add(name);
-		const itemValidator = validatorName(typeRef.arguments[0], typeMap);
-		lines.push(
-			`export const ${name} = (value, path) => {`,
-			"  if (!Array.isArray(value) && !(value instanceof Uint32Array)) invalid(path, \"array\");",
-			`  for (let index = 0; index < value.length; index += 1) ${itemValidator}(value[index], \`\${path}[\${index}]\`);`,
-			"  return value;",
-			"};",
-			"",
-		);
-	};
-	for(const type of ir.types)
-	{
-		if(type.kind === "record") type.fields.forEach(field => emitArray(field.type));
-		if(type.kind === "variant")
-		{
-			type.cases.forEach(variantCase => variantCase.fields.forEach(field => emitArray(field.type)));
-		}
-		if(type.kind === "alias") emitArray(type.target);
-	}
-	for(const declaration of ir.declarations)
-	{
-		declaration.parameters.forEach(parameter => emitArray(parameter.type));
-		emitArray(declaration.result.type);
-	}
-	for(const type of ir.types.filter(item => item.kind === "record"))
-	{
-		lines.push(`export const assert${type.name} = (value, path) => {`);
-		lines.push(
-			"  if (value === null || typeof value !== \"object\" || Array.isArray(value)) invalid(path, \"record\");",
-			`  const expected = new Set(${JSON.stringify(type.fields.map(field => field.name))});`,
-			"  const unknown = Object.keys(value).filter(key => !expected.has(key));",
-			"  const missing = [...expected].filter(key => !(key in value));",
-			`  if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
-		);
-		for(const field of type.fields)
-		{
-			lines.push(
-				`  ${validatorName(field.type, typeMap)}(value.${field.name}, \`\${path}.${field.name}\`);`,
-			);
-		}
-		lines.push("  return value;", "};", "");
-	}
-	for(const type of ir.types.filter(item => item.kind === "variant"))
-	{
-		lines.push(`export const assert${type.name} = (value, path) => {`);
-		lines.push(
-			"  if (value === null || typeof value !== \"object\" || Array.isArray(value)) invalid(path, \"variant\");",
-			"  switch (value.kind) {",
-		);
-		for(const variantCase of type.cases)
-		{
-			const names = ["kind", ...variantCase.fields.map(field => field.name)];
-			lines.push(
-				`    case ${quote(variantCase.name)}: {`,
-				`      const expected = new Set(${JSON.stringify(names)});`,
-				"      const unknown = Object.keys(value).filter(key => !expected.has(key));",
-				"      const missing = [...expected].filter(key => !(key in value));",
-				`      if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}.${variantCase.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
-			);
-			for(const field of variantCase.fields)
-			{
-				lines.push(
-					`      ${validatorName(field.type, typeMap)}(value.${field.name}, \`\${path}.${field.name}\`);`,
-				);
-			}
-			lines.push("      return value;", "    }");
-		}
-		lines.push(
-			`    default: invalid(\`\${path}.kind\`, ${quote(type.cases.map(item => item.name).join(" or "))});`,
-			"  }",
-			"};",
-			"",
-		);
-	}
-	for(const type of ir.types.filter(item => item.kind === "alias"))
-	{
-		lines.push(
-			`export const assert${type.name} = (value, path) => ${validatorName(type.target, typeMap)}(value, path);`,
-			"",
-		);
-	}
-	for(const type of ir.types.filter(item => item.kind === "callback"))
-	{
-		lines.push(
-			`export const assert${type.name} = (value, path) => {`,
-			'  if (typeof value !== "function") invalid(path, "function");',
-			"  return value;",
-			"};",
-			"",
-		);
-	}
-	return lines.join("\n");
+	return `${lines.join("\n")}\n${emitCopiedValidators(ir, typeMap, validatorName)}`;
 };
 
 const emitTypeScript = (ir, typeMap) => {
@@ -842,6 +752,7 @@ const emitDocumentation = ir => {
  * @param ir - Binding IR document that defines the source types and operations.
  */
 export const compileJavaScriptPackageModel = ir => {
+	if(ir.schemaVersion === 4) return compileOwnedJavaScriptPackageModel(ir);
 	validateBindingIr(ir);
 	const coverage = analyzeJavaScriptCoverage(ir);
 	if(!coverage.supported)
@@ -860,6 +771,7 @@ export const compileJavaScriptPackageModel = ir => {
  * @param model - Validated JavaScript package projection model.
  */
 export const renderJavaScriptPackageLayout = model => {
+	if(model.kind === "owned-javascript-package") return renderOwnedJavaScriptPackageLayout(model);
 	const { ir, typeMap } = model;
 	const generated = emitDeclarations(ir, typeMap);
 	const packageManifest = {

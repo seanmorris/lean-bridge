@@ -2,7 +2,7 @@
 
 An application imports functions from the prepared package by its package name. Initialization happens during module loading; the generated pure functions are synchronous afterward. Start with [JavaScript and TypeScript](../javascript-typescript.md) for installation, browser assets, React, and workers.
 
-This reference runs the same analyzer and declaration generator used by the packager. These fixture packages demonstrate a generated API, not names that every Lean package exports.
+This reference runs the package declaration generator against compiler-captured fixture APIs. CI compares those captures with fresh builds, and reference generation checks the source hashes. Each Lean package defines its own exports.
 
 ## The author tutorial package
 

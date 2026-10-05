@@ -9,6 +9,7 @@ import { join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateComponentCompilationPlan } from "./component-compilation-plan.mjs";
+import { validateLakeNativeCompilation } from "./lake-native-inputs.mjs";
 
 /**
  * Reports side module audit failures with stable machine-readable codes and structured diagnostic context.
@@ -79,7 +80,11 @@ const same = (actual, expected, code, message) => {
 };
 
 const validateLinkManifest = ({ manifest, compilationPlan }) => {
-	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies"], "side-module link manifest");
+	const generated = Object.hasOwn(manifest, "generatedSourcesSha256");
+	exactKeys(manifest, ["schemaVersion", "component", "compilationPlanSha256", "targetCManifestSha256", "linker", "profile", "artifact", "linkMap", "generatedInitializer", "exports", "policies", ...(Object.hasOwn(manifest, "nativeCompilation") ? ["nativeCompilation"] : []), ...(generated ? ["generatedSourcesSha256", "overlaySha256"] : [])], "side-module link manifest");
+	if(generated && (compilationPlan.document.schemaVersion < 2 || [manifest.generatedSourcesSha256, manifest.overlaySha256].some(value => typeof value !== "string" || !/^[0-9a-f]{64}$(?![\s\S])/.test(value)))) fail("side-module-plan-drift", "Generated link evidence requires locked sources and valid identities");
+	if(compilationPlan.document.schemaVersion >= 3 && (manifest.generatedSourcesSha256 ?? null) !== compilationPlan.document.source.generatedSourcesSha256) fail("side-module-plan-drift", "Generated public roots differ from the elaborated source identity");
+	if(Object.hasOwn(manifest, "nativeCompilation")) validateLakeNativeCompilation(manifest.nativeCompilation, { snapshotSha256: compilationPlan.document.source.lakeSnapshotSha256, profile: "side-module-2", overlaySha256: manifest.overlaySha256 });
 	if(manifest.schemaVersion !== 1 || manifest.component !== compilationPlan.document.component.id || manifest.compilationPlanSha256 !== compilationPlan.sha256 || manifest.profile !== "side-module-2") fail("side-module-plan-drift", "Side-module link manifest does not match the component compilation plan");
 	exactKeys(manifest.exports, ["directSymbols", "initializer", "internalInitializer"], "side-module exports");
 	same(manifest.exports.directSymbols, compilationPlan.document.compilerAdapters.directSymbols, "side-module-symbol-drift", "Side-module direct symbols differ from the compiler adapters");
@@ -95,6 +100,12 @@ const allowedFunctionImport = name => name === "initialize_Init"
   || name === "abort"
   || name.startsWith("lean_")
   || name.startsWith("bridge_scalar_")
+  || ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode"].includes(name)
+  || ["bridge_record_abi", "bridge_record_frame_validate", "bridge_record_children_validate", "bridge_record_children_allocate", "bridge_record_encode_leaf", "bridge_record_slot_clear"].includes(name)
+  || ["bridge_compound_abi", "bridge_compound_frame_validate", "bridge_compound_children_validate", "bridge_compound_children_allocate"].includes(name)
+  || ["bridge_nominal_abi", "bridge_nominal_frame_validate", "bridge_nominal_children_validate", "bridge_nominal_children_allocate"].includes(name)
+  || ["bridge_recursive_abi", "bridge_recursive_frame_validate", "bridge_recursive_arena_open", "bridge_recursive_children_allocate", "bridge_recursive_encode_leaf", "bridge_recursive_frame_clear"].includes(name)
+  || ["bridge_callable_abi", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].includes(name)
   || name.startsWith("l_")
   || name.startsWith("emscripten_")
   || name.startsWith("__cxa_");
@@ -121,7 +132,7 @@ export const auditWasmStructure = async ({ bytes, directSymbols, initializer, in
 	const rejectedImports = functionImports.filter(value => value.module !== "env" || !allowedFunctionImport(value.name));
 	if(rejectedImports.length > 0) fail("side-module-import-domain", "Side module imports an unreviewed function domain", { imports: rejectedImports });
 	const allowedGlobals = entries(imports, "global").every(value =>
-		(value.module === "env" && new Set(["__memory_base", "__table_base"]).has(value.name))
+		(value.module === "env" && new Set(["__memory_base", "__table_base", "__stack_pointer"]).has(value.name))
     || (new Set(["GOT.func", "GOT.mem"]).has(value.module) && /^[A-Za-z_][A-Za-z0-9_.$]*$/.test(value.name)),
 	);
 	if(!allowedGlobals) fail("side-module-import-domain", "Side module imports an unreviewed global domain", { globals: entries(imports, "global") });

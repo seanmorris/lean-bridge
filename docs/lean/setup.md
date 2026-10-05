@@ -1,6 +1,25 @@
 # Set up the author tools
 
-Install Node 22, Git, and either Nix or Docker. The tutorial's local proof check uses Lean 4.32.2.
+Choose the package backend before installing its build tools. All current source builders use Lean 4.32.2.
+
+| Target | Author tools | Runtime preparation |
+| --- | --- | --- |
+| [JavaScript / TypeScript (npm)](../publish/npm.md) | Node 22, Git, and Nix or Docker. Use Lean 4.32.2 to check source locally. | The engine supplies the compiler. Use the prepared CLI's bundled Wasm runtime. |
+| Perl (CPAN) | Node 22, Lean 4.32.2, a C compiler, Git for locked Git dependencies, and the selected Perl interpreters on x86-64 Linux with glibc 2.38 or newer | The native build prepares its own matching Lean runtime and XS variants. |
+| Python | The C author tools plus Python 3.11 or newer; see [PyPI](../publish/pypi.md#build-an-ordinary-lean-project) | The wheel includes its native libraries and loads a shared runtime automatically. |
+| Rust | The C author tools, Rust 1.90+ and Cargo; see [Cargo](../publish/cargo.md#build-an-ordinary-lean-project) | The crate embeds its native libraries and loads a shared runtime automatically. |
+| C | Node 22, Lean 4.32.2, C11 compiler and binutils on Linux x86-64; see [C packages](../publish/c.md) | The native build includes the matching runtime in the archive. |
+| C++ | The C author tools plus a C++20 compiler; see [C++ packages](../publish/cpp.md) | C and C++ share one native component and runtime. |
+| C# / .NET | The C author tools plus .NET SDK 8; see [NuGet](../publish/nuget.md#build-an-ordinary-lean-project) | The package includes the matching native library and runtime. |
+| Java and Kotlin | The C author tools plus JDK 22; Maven and Kotlin tooling for their examples; see [Maven](../publish/maven.md#build-an-ordinary-lean-project) | The JAR includes the matching native library and runtime. |
+| Ruby | The C author tools plus Ruby 3.3 and RubyGems; see [RubyGems](../publish/rubygems.md#build-an-ordinary-lean-project) | The gem includes the matching native library and runtime. |
+| Native PHP | The C author tools and PHP 8.2+; see [PHP](../publish/php.md#build-an-ordinary-lean-project). Composer and FFI for installed acceptance. | Ordinary CLI packages bundle native libraries and load them automatically. The Alpha Zend recipe additionally needs PHP headers. |
+| PHP-Wasm | Node 22, Lean 4.32.2 and the pinned Emscripten 3.1.68 installation; see [PHP](../publish/php.md#build-an-ordinary-php-wasm-package) | Use the CLI's bundled runtime and configured PHP headers, or a separate prepared compiler-input bundle. |
+| WIT / WASI | The C author tools, wasm-tools 1.245.1 and Wasmtime C API 42.0.1; see [WIT / WASI](../publish/wit-wasi.md#build-an-ordinary-lean-project) | The archive includes the executable adapter, native host and runtime. |
+
+For Perl, use the [native build configuration and toolchain selection](../publish/cpan.md#build-an-ordinary-lean-project). The Nix `perl-build-engine` supplies the pinned compiler environment. The Wasm runtime checks below apply to npm only.
+
+The table distinguishes tools used with prepared backend inputs from ordinary-source compilation. Shared export configuration does not add an ordinary-source compiler to a target. The [cross-language stages](../architecture/cross-language-authoring.md#stages) connect those missing paths; [target selection](../publishing.md) records their current inputs.
 
 ## Install a prepared CLI
 
@@ -15,7 +34,7 @@ sha256sum "$LEAN_BRIDGE_CLI_ARCHIVE"
 tar -xOf "$LEAN_BRIDGE_CLI_ARCHIVE" package/cli-package-inventory.json
 ```
 
-Compare the hash with the maintainer's reviewed value and check that the inventory has `runtimeIncluded: true`. A source-only candidate is for packaging tests and lacks the runtime needed to prepare component archives.
+Compare the hash with the maintainer's reviewed value. For npm builds, check that the inventory has `runtimeIncluded: true`. For PHP-Wasm builds, check `phpWasmInputsIncluded: true`, or supply a [separate input bundle](../publish/php.md#build-an-ordinary-php-wasm-package). Neither input is needed for [receipt verification](../consume/receive-package.md#install-the-verifier-cli).
 
 Install the verified archive into the work directory:
 
@@ -26,9 +45,11 @@ lean-bridge --version
 lean-bridge --help
 ```
 
-The prepared CLI uses its bundled shared runtime automatically. Leave `LEAN_BRIDGE_RUNTIME_ROOT` unset for this path. You do not need a Lean Bridge checkout. Keep the work directory and reuse it throughout the author and consumer examples.
+The prepared CLI uses bundled inputs automatically. Leave `LEAN_BRIDGE_RUNTIME_ROOT` unset for npm and `LEAN_BRIDGE_PHP_INPUTS` unset for PHP-Wasm. You do not need a Lean Bridge checkout. Keep the work directory for the author tutorial and its separate test application.
 
 ## Select the build backend
+
+Compiler-backed `analyze` and npm component builds use Docker or Nix. Native Perl's build command uses its separate native engine. Analysis needs no shared Wasm runtime.
 
 For Docker, start the daemon and select it:
 
@@ -65,82 +86,24 @@ elan run leanprover/lean4:v4.32.2 lean --version
 
 The tutorial's `lean-toolchain` file selects that version when you run `lean` from its project directory. If you use a direct compiler installation, check `lean --version` and confirm `4.32.2`.
 
-Continue with [your first component](first-component.md). The remaining sections describe the alternative checkout-based setup for contributors.
+Continue with [a new component](first-component.md) or [an existing library](existing-package.md). The checkout setup has moved to Contributing; the links below preserve its existing bookmarks.
 
 ## Install the local CLI
 
-Use this path when developing Lean Bridge from source. Prepared-archive users can skip this section and the manual runtime builds below.
-
-Set the checkout path and allocate a work directory:
-
-```sh
-export LEAN_BRIDGE_CHECKOUT=/path/to/lean-bridge
-export LEAN_BRIDGE_WORK=$(mktemp -d)
-npm install --global --ignore-scripts --no-audit --no-fund "$LEAN_BRIDGE_CHECKOUT"
-lean-bridge --help
-```
-
-Keep the work directory for the project and its outputs. Reuse it throughout the author and consumer examples.
-
-Check the host before preparing the runtime:
-
-```sh
-node --version
-git --version
-command -v nix || command -v docker
-df -h "$LEAN_BRIDGE_WORK"
-```
-
-The repository pins the builder inputs in [flake.lock](../../flake.lock), [the Docker manifest](../../containers/builder/manifest.json), [lean-toolchain](../../lean-toolchain), and [the runtime graph lock](../../poc/lean-link-spike/graph-lock.json).
+Follow [Install the local CLI](../contributing/author-toolchain.md#install-the-local-cli) in Contributing.
 
 ## Prepare the shared runtime with Nix
 
-Nix needs flakes and the `nix-command` feature:
-
-```sh
-nix --extra-experimental-features 'nix-command flakes' \
-  build "$LEAN_BRIDGE_CHECKOUT#universal-core-artifacts" \
-  --out-link "$LEAN_BRIDGE_WORK/runtime"
-export LEAN_BRIDGE_RUNTIME_ROOT="$LEAN_BRIDGE_WORK/runtime/lazy"
-export LEAN_BRIDGE_BUILD_BACKEND=nix
-```
-
-Each component package uses this shared runtime. Prepare it once and reuse its store across author sessions.
+Follow [Prepare the shared runtime with Nix](../contributing/author-toolchain.md#prepare-the-shared-runtime-with-nix) in Contributing.
 
 ## Prepare the shared runtime with Docker
 
-Start the Docker daemon, then run:
-
-```sh
-cd "$LEAN_BRIDGE_CHECKOUT"
-npm ci
-npm run bootstrap
-npm run build:lean-link-spike
-npm run build:builder-image
-export LEAN_BRIDGE_RUNTIME_ROOT="$LEAN_BRIDGE_CHECKOUT/build/lean-link-spike/lazy"
-export LEAN_BRIDGE_BUILD_BACKEND=docker
-```
-
-The build checks the local image against the pinned builder manifest. A different image tag cannot substitute for that check.
+Follow [Prepare the shared runtime with Docker](../contributing/author-toolchain.md#prepare-the-shared-runtime-with-docker) in Contributing.
 
 ## Use the checkout's Lean compiler
 
-The checkout's bootstrap installs the pinned compiler locally. To use that copy:
-
-```sh
-cd "$LEAN_BRIDGE_CHECKOUT"
-npm run bootstrap
-export PATH="$LEAN_BRIDGE_CHECKOUT/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/bin:$PATH"
-lean --version
-```
-
-Expect version `4.32.2`. The local check verifies the tutorial's proof before packaging; the isolated builder also checks its compiler identity against the shared runtime.
+Follow [Use the checkout's Lean compiler](../contributing/author-toolchain.md#use-the-checkouts-lean-compiler) in Contributing.
 
 ## Confirm the runtime files
 
-```sh
-test -f "$LEAN_BRIDGE_RUNTIME_ROOT/main.mjs"
-test -f "$LEAN_BRIDGE_RUNTIME_ROOT/main.wasm"
-```
-
-Both commands must succeed for the checkout-based setup. If either fails, finish the selected runtime build before running the package dry run. Continue with [your first component](first-component.md).
+Follow [Confirm the runtime files](../contributing/author-toolchain.md#confirm-the-runtime-files) in Contributing.

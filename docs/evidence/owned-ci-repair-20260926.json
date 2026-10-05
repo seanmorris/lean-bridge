@@ -1,0 +1,277 @@
+{
+  "additions": {
+    "tests/helpers/owned-ci-source-history.mjs": "d931c99fad26ea0058ff33373d799a89e0b2df34038e339390b1400ee9c7cb4e"
+  },
+  "baselineRevision": "650641c1274543a334aa7d50c43c70de945984a0",
+  "kind": "owned-ci-contract-repair",
+  "planNode": 1219,
+  "previous": {
+    "path": "docs/evidence/owned-host-integration-20260926.json",
+    "sha256": "66eae61fa9e8e1130e78329c21de139e832597733034ea0b854837127da6ac30"
+  },
+  "run": {
+    "command": "node --test tests/current-source-evidence.test.mjs tests/php-wasm-callable-contract.test.mjs tests/perl-contract.test.mjs tests/toolchain-preflight.test.mjs",
+    "exitCode": 0,
+    "sha256": "e196566bff0c4468778f979dbea24bd2b240c26b9e50cf711279ec5cea4ab65a",
+    "text": "TAP version 13\n# Subtest: recursive documentation changes retain original documents and all prior registration steps\nok 1 - recursive documentation changes retain original documents and all prior registration steps\n  ---\n  duration_ms: 2279.324019\n  type: 'test'\n  ...\n# Subtest: documentation verification rejects unrelated edits, unknown predecessors and altered history\nok 2 - documentation verification rejects unrelated edits, unknown predecessors and altered history\n  ---\n  duration_ms: 330.558122\n  type: 'test'\n  ...\n# Subtest: five recursive profiles have original installed evidence on both paths without promoting callable payloads\nok 3 - five recursive profiles have original installed evidence on both paths without promoting callable payloads\n  ---\n  duration_ms: 6975.205359\n  type: 'test'\n  ...\n# Subtest: acceptance table updates retain executed examples and reject unrelated source changes\nok 4 - acceptance table updates retain executed examples and reject unrelated source changes\n  ---\n  duration_ms: 133.6765\n  type: 'test'\n  ...\n# Subtest: collection and Composer checker upgrades retain their complete previous test bodies\nok 5 - collection and Composer checker upgrades retain their complete previous test bodies\n  ---\n  duration_ms: 19.561926\n  type: 'test'\n  ...\n# Subtest: current PHP family evidence preserves every public result and failure probe on both source paths\nok 6 - current PHP family evidence preserves every public result and failure probe on both source paths\n  ---\n  duration_ms: 1997.259908\n  type: 'test'\n  ...\n# Subtest: support inventory source updates require their compiled regressions or exact administrative transitions\nok 7 - support inventory source updates require their compiled regressions or exact administrative transitions\n  ---\n  duration_ms: 7563.473983\n  type: 'test'\n  ...\n# Subtest: Perl alias documentation selects the exact specialized export identity\nok 8 - Perl alias documentation selects the exact specialized export identity\n  ---\n  duration_ms: 15.423317\n  type: 'test'\n  ...\n# Subtest: Perl CI selection accepts only the complete matrix or one exact pinned configuration\nok 9 - Perl CI selection accepts only the complete matrix or one exact pinned configuration\n  ---\n  duration_ms: 1.276454\n  type: 'test'\n  ...\n# Subtest: the local Perl command still runs every ABI and copies the designated runner's measurement\nok 10 - the local Perl command still runs every ABI and copies the designated runner's measurement\n  ---\n  duration_ms: 28.982983\n  type: 'test'\n  ...\n# Subtest: each Perl shard runs only its selected suite and does not claim a complete matrix\n    # Subtest: 5.36.3-threaded\n    ok 1 - 5.36.3-threaded\n      ---\n      duration_ms: 5.645273\n      type: 'test'\n      ...\n    # Subtest: 5.36.3-unthreaded\n    ok 2 - 5.36.3-unthreaded\n      ---\n      duration_ms: 4.772031\n      type: 'test'\n      ...\n    # Subtest: 5.38.2-threaded\n    ok 3 - 5.38.2-threaded\n      ---\n      duration_ms: 4.68587\n      type: 'test'\n      ...\n    # Subtest: 5.38.2-unthreaded\n    ok 4 - 5.38.2-unthreaded\n      ---\n      duration_ms: 5.378668\n      type: 'test'\n      ...\n    1..4\nok 11 - each Perl shard runs only its selected suite and does not claim a complete matrix\n  ---\n  duration_ms: 21.437535\n  type: 'test'\n  ...\n# Subtest: failed Perl setup or acceptance clears stale evidence and still runs the remaining ABIs\n    # Subtest: toolchain\n    ok 1 - toolchain\n      ---\n      duration_ms: 18.221289\n      type: 'test'\n      ...\n    # Subtest: suite\n    ok 2 - suite\n      ---\n      duration_ms: 18.853916\n      type: 'test'\n      ...\n    # Subtest: benchmark\n    ok 3 - benchmark\n      ---\n      duration_ms: 14.98146\n      type: 'test'\n      ...\n    # Subtest: acceptance\n    ok 4 - acceptance\n      ---\n      duration_ms: 17.599762\n      type: 'test'\n      ...\n    1..4\nok 12 - failed Perl setup or acceptance clears stale evidence and still runs the remaining ABIs\n  ---\n  duration_ms: 70.639541\n  type: 'test'\n  ...\n# Subtest: Perl observations reject invalid timings and mismatched installed-artifact evidence\n    # Subtest: missing case\n    ok 1 - missing case\n      ---\n      duration_ms: 8.804436\n      type: 'test'\n      ...\n    # Subtest: zero iterations\n    ok 2 - zero iterations\n      ---\n      duration_ms: 3.542527\n      type: 'test'\n      ...\n    # Subtest: fractional iterations\n    ok 3 - fractional iterations\n      ---\n      duration_ms: 3.914064\n      type: 'test'\n      ...\n    # Subtest: zero duration\n    ok 4 - zero duration\n      ---\n      duration_ms: 3.455883\n      type: 'test'\n      ...\n    # Subtest: overflow\n    ok 5 - overflow\n      ---\n      duration_ms: 14.409222\n      type: 'test'\n      ...\n    # Subtest: wrong consumer\n    ok 6 - wrong consumer\n      ---\n      duration_ms: 3.53128\n      type: 'test'\n      ...\n    # Subtest: wrong artifact\n    ok 7 - wrong artifact\n      ---\n      duration_ms: 5.267346\n      type: 'test'\n      ...\n    # Subtest: wrong Perl\n    ok 8 - wrong Perl\n      ---\n      duration_ms: 4.860964\n      type: 'test'\n      ...\n    1..8\nok 13 - Perl observations reject invalid timings and mismatched installed-artifact evidence\n  ---\n  duration_ms: 49.832325\n  type: 'test'\n  ...\n# Subtest: Perl CI runs four independent ABI jobs and gates its single observation on every prerequisite\nok 14 - Perl CI runs four independent ABI jobs and gates its single observation on every prerequisite\n  ---\n  duration_ms: 1.907292\n  type: 'test'\n  ...\n# Subtest: the pinned Perl CI installs the runtime and component archives named by its build receipt\nok 15 - the pinned Perl CI installs the runtime and component archives named by its build receipt\n  ---\n  duration_ms: 86.523881\n  type: 'test'\n  ...\n# Subtest: native projection retains compiler documentation and theorem references without granting assurance\nok 16 - native projection retains compiler documentation and theorem references without granting assurance\n  ---\n  duration_ms: 276.516761\n  type: 'test'\n  ...\n# Subtest: native metadata rejects stale identities, unbound selection and unchecked representations\nok 17 - native metadata rejects stale identities, unbound selection and unchecked representations\n  ---\n  duration_ms: 2.524121\n  type: 'test'\n  ...\n# Subtest: native arity and resources stay bound to configuration in the shared report\nok 18 - native arity and resources stay bound to configuration in the shared report\n  ---\n  duration_ms: 6.01901\n  type: 'test'\n  ...\n# Subtest: native export contracts bind the invocation and model without adding assurance\nok 19 - native export contracts bind the invocation and model without adding assurance\n  ---\n  duration_ms: 9.780804\n  type: 'test'\n  ...\n# Subtest: native specializations retain original provenance and require matching concrete selections\nok 20 - native specializations retain original provenance and require matching concrete selections\n  ---\n  duration_ms: 14.04326\n  type: 'test'\n  ...\n# Subtest: shared source configuration selects native declarations and CPAN metadata\nok 21 - shared source configuration selects native declarations and CPAN metadata\n  ---\n  duration_ms: 4.135589\n  type: 'test'\n  ...\n# Subtest: Perl requires compiler-checked representations and does not guess from semantic IR\nok 22 - Perl requires compiler-checked representations and does not guess from semantic IR\n  ---\n  duration_ms: 8.859463\n  type: 'test'\n  ...\n# Subtest: adapters expose explicit typed native prototypes\nok 23 - adapters expose explicit typed native prototypes\n  ---\n  duration_ms: 5.986604\n  type: 'test'\n  ...\n# Subtest: native ELF validation rejects wasm and wrong architecture binaries\nok 24 - native ELF validation rejects wasm and wrong architecture binaries\n  ---\n  duration_ms: 0.262446\n  type: 'test'\n  ...\n# Subtest: CPAN archive assembly uses verified byte snapshots\nok 25 - CPAN archive assembly uses verified byte snapshots\n  ---\n  duration_ms: 14.726809\n  type: 'test'\n  ...\n# Subtest: runtime packing identity binds each host tool and default collation\nok 26 - runtime packing identity binds each host tool and default collation\n  ---\n  duration_ms: 110.014095\n  type: 'test'\n  ...\n# Subtest: binary archive assertions reject changed bytes without an unbounded text diff\nok 27 - binary archive assertions reject changed bytes without an unbounded text diff\n  ---\n  duration_ms: 38.536843\n  type: 'test'\n  ...\n# Subtest: CPAN stages a versioned runtime from read-only Nix-style templates\n    # Subtest: helper\n    ok 1 - helper\n      ---\n      duration_ms: 59.656422\n      type: 'test'\n      ...\n    # Subtest: notice\n    ok 2 - notice\n      ---\n      duration_ms: 36.848302\n      type: 'test'\n      ...\n    # Subtest: metadata\n    ok 3 - metadata\n      ---\n      duration_ms: 39.237267\n      type: 'test'\n      ...\n    # Subtest: library\n    ok 4 - library\n      ---\n      duration_ms: 51.091558\n      type: 'test'\n      ...\n    # Subtest: platform\n    ok 5 - platform\n      ---\n      duration_ms: 33.377152\n      type: 'test'\n      ...\n    # Subtest: packer\n    ok 6 - packer\n      ---\n      duration_ms: 35.102975\n      type: 'test'\n      ...\n    # Subtest: prebuilt-selection\n    ok 7 - prebuilt-selection\n      ---\n      duration_ms: 39.165914\n      type: 'test'\n      ...\n    # Subtest: prebuilt-bytes\n    ok 8 - prebuilt-bytes\n      ---\n      duration_ms: 36.078295\n      type: 'test'\n      ...\n    1..8\nok 28 - CPAN stages a versioned runtime from read-only Nix-style templates\n  ---\n  duration_ms: 542.592529\n  type: 'test'\n  ...\n# Subtest: the Nix Perl source boundary includes the complete import and template closure\nok 29 - the Nix Perl source boundary includes the complete import and template closure\n  ---\n  duration_ms: 78.966022\n  type: 'test'\n  ...\n# Subtest: the pinned Perl engine exposes libxcrypt headers outside a Nix build shell\nok 30 - the pinned Perl engine exposes libxcrypt headers outside a Nix build shell\n  ---\n  duration_ms: 0.467894\n  type: 'test'\n  ...\n# Subtest: the filtered Perl engine loads without undeclared checkout modules\nok 31 - the filtered Perl engine loads without undeclared checkout modules\n  ---\n  duration_ms: 403.387018\n  type: 'test'\n  ...\n# Subtest: Zend callable sources bind exact wasm32 values without exposing native layouts\nok 32 - Zend callable sources bind exact wasm32 values without exposing native layouts\n  ---\n  duration_ms: 296.694134\n  type: 'test'\n  ...\n# Subtest: Zend callable admission rejects retained\nok 33 - Zend callable admission rejects retained\n  ---\n  duration_ms: 1.950044\n  type: 'test'\n  ...\n# Subtest: Zend callable admission rejects async\nok 34 - Zend callable admission rejects async\n  ---\n  duration_ms: 1.344696\n  type: 'test'\n  ...\n# Subtest: Zend callable admission rejects zero\nok 35 - Zend callable admission rejects zero\n  ---\n  duration_ms: 1.550914\n  type: 'test'\n  ...\n# Subtest: Zend callable admission rejects seventeen\nok 36 - Zend callable admission rejects seventeen\n  ---\n  duration_ms: 1.651299\n  type: 'test'\n  ...\n# Subtest: Zend callable admission includes copied aggregate replies\nok 37 - Zend callable admission includes copied aggregate replies\n  ---\n  duration_ms: 88.07\n  type: 'test'\n  ...\n# Subtest: wasm32 callback generations retire without token truncation or reuse\nok 38 - wasm32 callback generations retire without token truncation or reuse\n  ---\n  duration_ms: 77.082288\n  type: 'test'\n  ...\n# Subtest: wasm32 owned leases retain full broker identities and never reuse local tokens\nok 39 - wasm32 owned leases retain full broker identities and never reuse local tokens\n  ---\n  duration_ms: 62.163506\n  type: 'test'\n  ...\n# Subtest: Zend PHP syntax and production lease defer active close and reject Fiber calls\nok 40 - Zend PHP syntax and production lease defer active close and reject Fiber calls\n  ---\n  duration_ms: 645.35227\n  type: 'test'\n  ...\n# Subtest: the filtered Nix and Docker component engine starts without checkout imports\nok 41 - the filtered Nix and Docker component engine starts without checkout imports\n  ---\n  duration_ms: 262.073865\n  type: 'test'\n  ...\n# Subtest: PHP-Wasm host bootstrap checks prerequisites before modifying compiler inputs\nok 42 - PHP-Wasm host bootstrap checks prerequisites before modifying compiler inputs\n  ---\n  duration_ms: 26.139584\n  type: 'test'\n  ...\n# Subtest: the filtered Perl engine retains package-set assembly without checkout imports\nok 43 - the filtered Perl engine retains package-set assembly without checkout imports\n  ---\n  duration_ms: 437.762411\n  type: 'test'\n  ...\n# Subtest: preflight probes every tool before reporting multiple missing requirements\nok 44 - preflight probes every tool before reporting multiple missing requirements\n  ---\n  duration_ms: 2.305175\n  type: 'test'\n  ...\n# Subtest: component profile accepts either a working Nix or Docker engine\nok 45 - component profile accepts either a working Nix or Docker engine\n  ---\n  duration_ms: 1.805951\n  type: 'test'\n  ...\n# Subtest: preflight profiles and result objects are closed and machine-readable\nok 46 - preflight profiles and result objects are closed and machine-readable\n  ---\n  duration_ms: 1.344073\n  type: 'test'\n  ...\n# Subtest: core profile rejects an incompatible Node version with remediation\nok 47 - core profile rejects an incompatible Node version with remediation\n  ---\n  duration_ms: 0.931005\n  type: 'test'\n  ...\n1..47\n# tests 71\n# suites 0\n# pass 71\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 20237.497801\n"
+  },
+  "schemaVersion": 1,
+  "scope": {
+    "productionChanges": false,
+    "promotedCells": 0
+  },
+  "updates": [
+    {
+      "currentSha256": "56ed83d21c5477406c10c69a3b3ca8825ef983db44cd6cb274e37581d097c4e4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 27294
+        },
+        {
+          "current": "          \"sha256\": \"ecff1a0c928ec54504b082cf627ca562673aedf70c6d303cd5bdee3b5a10ffb7\"\n",
+          "previous": "          \"sha256\": \"d63e56d84d70e12224a7ebf3b4b84b3e821ef95f6a7615146018c03da89799cb\"\n",
+          "start": 683311
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1041514
+        },
+        {
+          "current": "          \"sha256\": \"ecff1a0c928ec54504b082cf627ca562673aedf70c6d303cd5bdee3b5a10ffb7\"\n",
+          "previous": "          \"sha256\": \"d63e56d84d70e12224a7ebf3b4b84b3e821ef95f6a7615146018c03da89799cb\"\n",
+          "start": 1139405
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1148916
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1322500
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1344469
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1364506
+        },
+        {
+          "current": "          \"sha256\": \"d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7\"\n",
+          "previous": "          \"sha256\": \"8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e\"\n",
+          "start": 1385219
+        },
+        {
+          "current": "          \"sha256\": \"ecff1a0c928ec54504b082cf627ca562673aedf70c6d303cd5bdee3b5a10ffb7\"\n",
+          "previous": "          \"sha256\": \"d63e56d84d70e12224a7ebf3b4b84b3e821ef95f6a7615146018c03da89799cb\"\n",
+          "start": 1386774
+        },
+        {
+          "current": "          \"sha256\": \"9cc0564d008fd5fdc7e80bc16cf6f7a74979d92df25ecb540d964b5e810102b4\"\n",
+          "previous": "          \"sha256\": \"f3b9b422d5f42bdd183e5ec6885c69e30c4577436eda02d0380ca6051757105c\"\n",
+          "start": 1400118
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "44e3f358c7e2f63b8e1cf6c11112993261ae177328af71f639e2157c12d8a1fe"
+    },
+    {
+      "currentSha256": "cc8ffc41e9f1b0e1c2962fe53c1d5da252559e3865775ffed66fe8bfd7b35f9d",
+      "edits": [
+        {
+          "current": "import { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1047
+        },
+        {
+          "current": "\t\tconst current = ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path)\n",
+          "previous": "\t\tconst current = ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)\n",
+          "start": 9592
+        }
+      ],
+      "path": "tests/helpers/owned-aggregate-evidence.mjs",
+      "previousSha256": "06ac1e75c37477dc8173c8b577325f0cef602c049df67e5c013658055466f07e"
+    },
+    {
+      "currentSha256": "0878fe39b1c3d2e43b3015bf86bdb43dc0af2d15fe4f351f1b08be5b2437e0d2",
+      "edits": [
+        {
+          "current": "import { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1298
+        },
+        {
+          "current": "\treturn ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path)\n",
+          "previous": "\treturn ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)\n",
+          "start": 2536
+        }
+      ],
+      "path": "tests/helpers/owned-c-evidence.mjs",
+      "previousSha256": "e5a22976c7201cbffa7d6250b4cef425fce976d48657048dc9e790b5b6403fe9"
+    },
+    {
+      "currentSha256": "a11c905b0d0d125c48362689043e9c3376cd1f9a7d1f3fb290601277a9e53499",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCi, ownedCiHistoricalBytes } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 893
+        },
+        {
+          "current": "const source = async path => beforeOwnedCi(path, await readFile(path, \"utf8\"));\n",
+          "previous": "const source = path => readFile(path, \"utf8\");\n",
+          "start": 2087
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCiHistoricalBytes(path, await readFile(path))), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);\n",
+          "start": 3326
+        },
+        {
+          "current": "\t\tconst current = ownedCiHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "previous": "\t\tconst current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "start": 11590
+        },
+        {
+          "current": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface(), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n\tconst document = JSON.parse(await source(\"docs/type-surface.v1.json\"));\n\tassert.equal(currentDocument.contractVersion, document.contractVersion);\n",
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "start": 12146
+        }
+      ],
+      "path": "tests/helpers/owned-host-evidence.mjs",
+      "previousSha256": "ac310e8008822726af6d1408270dc1d0b4803d41053a4aa34b6cb5c0e85b164b"
+    },
+    {
+      "currentSha256": "4f168a46b7ffe96768b01ec825ccc13ad18b80e4022a9c9c203c3171297bd1c8",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCi } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 234
+        },
+        {
+          "current": "\tsource = beforeOwnedCi(update.path, source, update.currentSha256);\n",
+          "previous": "",
+          "start": 2925
+        },
+        {
+          "current": "\tsource = beforeOwnedCi(path, source, expected);\n",
+          "previous": "",
+          "start": 4163
+        }
+      ],
+      "path": "tests/helpers/owned-host-source-history.mjs",
+      "previousSha256": "211883f90b82cfd19c003e6479ca50508a1ace3f7f4469e7ef2175da08802aa7"
+    },
+    {
+      "currentSha256": "82c528c2ba3134370271e79bb47cd1797f5d7e2810480a1c24b46e55f26be449",
+      "edits": [
+        {
+          "current": "import { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1003
+        },
+        {
+          "current": "\treturn ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) ? beforeOwnedHost(path, bytes.toString(\"utf8\")) : bytes;\n",
+          "previous": "\treturn ownedHostChangedPaths.includes(path) ? beforeOwnedHost(path, bytes.toString(\"utf8\")) : bytes;\n",
+          "start": 2592
+        }
+      ],
+      "path": "tests/helpers/owned-package-evidence.mjs",
+      "previousSha256": "9523da076befcf4b042535749645190a0f8cba5006998de4b697466bd3fb2d04"
+    },
+    {
+      "currentSha256": "07cba616979f537de165559b339ed97af49b7d6ca8f1b5ca0eb596e85da88798",
+      "edits": [
+        {
+          "current": "import { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1125
+        },
+        {
+          "current": "\treturn ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path)\n",
+          "previous": "\treturn ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)\n",
+          "start": 2078
+        }
+      ],
+      "path": "tests/helpers/owned-reviewed-evidence.mjs",
+      "previousSha256": "460dffb3b279b3d9017e95c47f85dce24f6fc756276f2eff814a03f067a377db"
+    },
+    {
+      "currentSha256": "d136034053a1132ea9d4eacf442d2d3ecad6b208187446ca046a91d5fe3b02b7",
+      "edits": [
+        {
+          "current": "\tsource = beforeWitGraphRegistration(\"docs/architecture/binding-ir.md\", source, expected);\n",
+          "previous": "",
+          "start": 2957
+        }
+      ],
+      "path": "tests/helpers/recursive-acceptance-updates.mjs",
+      "previousSha256": "8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e"
+    },
+    {
+      "currentSha256": "9cc0564d008fd5fdc7e80bc16cf6f7a74979d92df25ecb540d964b5e810102b4",
+      "edits": [
+        {
+          "current": "import { ownedCiChangedPaths } from \"./owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1429
+        },
+        {
+          "current": "\tconst value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path)\n",
+          "previous": "\tconst value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)\n",
+          "start": 1593
+        }
+      ],
+      "path": "tests/helpers/wit-recursive-callable-evidence.mjs",
+      "previousSha256": "f3b9b422d5f42bdd183e5ec6885c69e30c4577436eda02d0380ca6051757105c"
+    },
+    {
+      "currentSha256": "c0120a8290e3077e12394afff5c2f497271befcaa3169afa5c5bebb0a9b8791f",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCi, reverseOwnedCiUpdate, ownedCiBaseline, ownedCiChangedPaths, ownedCiHistoricalBytes, ownedCiHistoryPath } from \"./helpers/owned-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 518
+        },
+        {
+          "current": "\t\tconst source = beforeOwnedCi(update.path, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "start": 3064
+        },
+        {
+          "current": "\ntest(\"owned CI repairs retain exact predecessors and passing contract executions\", async () => {\n\tconst record = await json(ownedCiHistoryPath);\n\tassert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);\n\tassert.equal(record.kind, \"owned-ci-contract-repair\"); assert.equal(record.baselineRevision, ownedCiBaseline);\n\tassert.deepEqual(record.scope, { productionChanges: false, promotedCells: 0 });\n\tassert.deepEqual(record.updates.map(update => update.path).sort(), ownedCiChangedPaths);\n\tassert.equal(record.previous.path, ownedHostHistoryPath);\n\tassert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);\n\tconst helper = \"tests/helpers/owned-ci-source-history.mjs\";\n\tassert.deepEqual(Object.keys(record.additions), [helper]);\n\tassert.equal(record.additions[helper], sha256(await readFile(helper)));\n\tfor(const update of record.updates)\n\t{\n\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseOwnedCiUpdate(source, update);\n\t\tassert.equal(sha256(previous), update.previousSha256);\n\t\tassert.equal(beforeOwnedCi(update.path, source), previous);\n\t\tassert.equal(beforeOwnedCi(update.path, source, update.currentSha256), source);\n\t\tconst unknown = source + \"\\n/* unrecorded */\\n\";\n\t\tassert.equal(beforeOwnedCi(update.path, unknown), unknown);\n\t\tassert.throws(() => reverseOwnedCiUpdate(unknown, update));\n\t\tassert.throws(() => reverseOwnedCiUpdate(source, { ...update, previousSha256: \"0\".repeat(64) }));\n\t\tassert.throws(() => reverseOwnedCiUpdate(source, { ...update, edits: [...update.edits, update.edits[0]] }));\n\t}\n\tconst bytes = Buffer.from([255, 0, 128, 192]);\n\tassert.equal(ownedCiHistoricalBytes(\"unrecorded.bin\", bytes), bytes);\n\tassert.equal(record.run.command, \"node --test tests/current-source-evidence.test.mjs tests/php-wasm-callable-contract.test.mjs tests/perl-contract.test.mjs tests/toolchain-preflight.test.mjs\");\n\tassert.equal(record.run.exitCode, 0); assert.equal(sha256(record.run.text), record.run.sha256);\n\tfor(const [name, value] of Object.entries({ tests: 71, pass: 71, fail: 0, skipped: 0, cancelled: 0 }))\n\t\tassert.match(record.run.text, new RegExp(`^# ${name} ${value}$`, \"mu\"));\n});\n",
+          "previous": "",
+          "start": 3803
+        }
+      ],
+      "path": "tests/owned-host-evidence.test.mjs",
+      "previousSha256": "d51bebb18ae131e8d3ccb1a6ae780f7fb00436f7f0f4b1d463b6faa7713e7b91"
+    },
+    {
+      "currentSha256": "ecff1a0c928ec54504b082cf627ca562673aedf70c6d303cd5bdee3b5a10ffb7",
+      "edits": [
+        {
+          "current": "\tawait saveLakeFile(root, \"registry.c\", `#include <stdint.h>\\n#include <stddef.h>\\n#include <pthread.h>\\n#include <assert.h>\\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\\nenum { LEAN_BRIDGE_RUNTIME_READY = 2 };\\nstatic unsigned runtime_state = LEAN_BRIDGE_RUNTIME_READY;\\nstatic int process_valid = 1;\\nstatic int lean_bridge_native_process_valid(void) { return process_valid; }\\n${nativeCallbackHeader}\\n${phpWasmCallbackBroker}\\nstatic void invoke(void) {}\\nint main(void) {\n",
+          "previous": "\tawait saveLakeFile(root, \"registry.c\", `#include <stdint.h>\\n#include <stddef.h>\\n#include <pthread.h>\\n#include <assert.h>\\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\\nenum { LEAN_BRIDGE_RUNTIME_READY = 2 };\\nstatic unsigned runtime_state = LEAN_BRIDGE_RUNTIME_READY;\\n${nativeCallbackHeader}\\n${phpWasmCallbackBroker}\\nstatic void invoke(void) {}\\nint main(void) {\n",
+          "start": 3211
+        },
+        {
+          "current": "  process_valid = 0;\n  assert(lb_native_callback_register(invoke, NULL) == 0);\n  assert(lb_native_callback_lookup(next).invoke == NULL); assert(lb_native_callback_take_error());\n  assert(lb_native_callback_wrong_thread(next)); lb_native_callback_release(next);\n  process_valid = 1;\n",
+          "previous": "",
+          "start": 4212
+        }
+      ],
+      "path": "tests/php-wasm-callable-contract.test.mjs",
+      "previousSha256": "d63e56d84d70e12224a7ebf3b4b84b3e821ef95f6a7615146018c03da89799cb"
+    }
+  ]
+}

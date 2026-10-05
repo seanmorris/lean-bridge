@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "ruby-structured-codegen-regression",
+  "baselineRevision": "cbb6fecce821a9a9fef3c06ab93b9c46786c9323",
+  "predecessors": {
+    "src/backends/ruby/copied-model.mjs": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3",
+    "src/backends/ruby/copied-values.mjs": "495c2a2c3ddfa3d65d47672e8328041d03dd60863908c53c65f0c3c2d7ffdc95"
+  },
+  "sourceHashes": {
+    "src/backends/ruby/copied-model.mjs": "76b2b404b57a16604bb396997ba371f67c9dac3b6b37caf4bae017d1e597734d",
+    "src/backends/ruby/copied-values.mjs": "b22c326e190bd3ec3e837370f02a82257ae62b2eed96598c310e1d18f9fba23f"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "010e3acb3cc4b9aff9aed875f56a7074dbd6ec21a918ef8cd2f0e7d7ee25ba75",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/callables.rb": {
+          "bytes": 10453,
+          "sha256": "7e48309139cb3135179fe59f8841ac7be6e5f86a6daf9d9c859d9d0c9c9b2f31"
+        },
+        "lib/lean_bridge/callables/native.rb": {
+          "bytes": 175946,
+          "sha256": "f2a709433b1e13235fa96bfb5433dd2a2a62aee38fc4298f896277d119db3b3b"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 5627,
+          "sha256": "dd88836d3623017d23049c78057b0fbf940fe8f3ed149efc3c448a248b6e46ec"
+        },
+        "binding-manifest.json": {
+          "bytes": 1136,
+          "sha256": "be29aac47b32105bd6b21ea1e5be13f0c6be211d0d58f3418cbefebe83f8efae"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/collections.rb": {
+          "bytes": 11119,
+          "sha256": "1f5e498fbce78283b1e3f0c2548faeb257b664889d7dcb278572210cf271c207"
+        },
+        "lib/lean_bridge/collections/native.rb": {
+          "bytes": 105442,
+          "sha256": "f5c845bd7337982788b6500792de839052f97feebdafbafac1901b7215ea9b1e"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 4465,
+          "sha256": "c7f05d7bcd8ebac06e0f0db53803d302ee44a78803da228f151d1ce24398f127"
+        },
+        "binding-manifest.json": {
+          "bytes": 1096,
+          "sha256": "c1583a8b0ff4edaaf7e72f13692e2532636150e48471dc019e28b40af7d1270c"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "d98b9496e222f1dc20cfb17e1adfbc840bf1026cf21c173aaccd2d93dce7c5e7",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/compounds.rb": {
+          "bytes": 5751,
+          "sha256": "4de285f0670a58bb53530978942841f6aaad8480d765b8c76f8031afaba4b9ed"
+        },
+        "lib/lean_bridge/compounds/native.rb": {
+          "bytes": 148824,
+          "sha256": "35f18156dc819ba75dc8e35c8c7586daac39cac1c9b680489ac38477e34f7b6b"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 6521,
+          "sha256": "accc078a859e905618c35f89d139d97a3cdd8e957ed66385ded870565e442e85"
+        },
+        "binding-manifest.json": {
+          "bytes": 1084,
+          "sha256": "0235d67977357533ee66c9c2aa72a45ede2ab383007d0acca73f979fe1e1b491"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/lists.rb": {
+          "bytes": 3326,
+          "sha256": "3744b1bac5c07e3ebc6728b7f06ca9a61cb4230fafc23fc47bfbcb6a3fdb3cc9"
+        },
+        "lib/lean_bridge/lists/native.rb": {
+          "bytes": 85455,
+          "sha256": "7b01451a72652798913b013af17296c33de400d2041052b80983bc7ad28dafea"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 4366,
+          "sha256": "3c5ed42f434237261c95586f0aa4a965cc9978d47ac3d76a496602e361a4bc34"
+        },
+        "binding-manifest.json": {
+          "bytes": 1060,
+          "sha256": "9fc45bf5c6deb316b0e6d24002fec71aae0b1aec7becd7ebf0ff9c5fe3fd3909"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "0a8f0cfc124a40b08605bcadcdafd82e913574fac03d3512c7ab7f0b0c9ac964",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/aliases.rb": {
+          "bytes": 10962,
+          "sha256": "dbe284f11c3d2260201c3633b6ea688058543bfb01687fee161662b98b5e4fb1"
+        },
+        "lib/lean_bridge/aliases/native.rb": {
+          "bytes": 43505,
+          "sha256": "bfbb13a2d878b4193b6a60e3b9c3eacc98c826d2a2f55f0e4a73f3a654cae7c5"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 6653,
+          "sha256": "48076cb46045f5777b8bad19604b1e9a4edcdf267ab8847b98c0821e41e083d0"
+        },
+        "binding-manifest.json": {
+          "bytes": 7316,
+          "sha256": "f0d73cf6533694679e0f93cc11b5b87ec80bd4cd05a42fd51dabe51de38d09f4"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "7fac2d65bdfe63c20af47ff6e5007b7a9444cdee0745fcfae78549786365014f",
+      "identicalToPredecessor": true,
+      "files": {
+        "lib/lean_bridge/variants.rb": {
+          "bytes": 15416,
+          "sha256": "7ae97b23344ca67a85a485c3d5059e2a685196c4b78e999139153cd8902e3421"
+        },
+        "lib/lean_bridge/variants/native.rb": {
+          "bytes": 37274,
+          "sha256": "643ab5d18fe7a49cf9d30bb9794da45f5c3a0063cb7521d3d3fcd3b2a1b3b51c"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 483,
+          "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+        },
+        "README.md": {
+          "bytes": 4399,
+          "sha256": "416828d00b9355d9d81223d48954f4ee94c49e787ae58a08dd2b044ae2c2dce1"
+        },
+        "binding-manifest.json": {
+          "bytes": 1078,
+          "sha256": "29ba567e246583d86b656ea26a66c505581e7b9689308731a8dffa8c56de298a"
+        }
+      }
+    }
+  ]
+}

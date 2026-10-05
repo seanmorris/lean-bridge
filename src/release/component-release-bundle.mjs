@@ -8,6 +8,11 @@ import { copyFile, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFil
 import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { readLakeDependencySnapshot, writeLakeDependencySnapshot } from "../build/lake-dependency-snapshot.mjs";
+import { readLakeGeneratedSources } from "../build/lake-generated-workspace.mjs";
+import { isSourceNotice } from "./source-notices.mjs";
+import { componentLicense } from "../analyze/package-license.mjs";
+import { readExportConfiguration } from "../analyze/export-configuration.mjs";
 
 /**
  * Reports component release bundle failures with stable machine-readable codes and structured diagnostic context.
@@ -164,8 +169,39 @@ export const buildComponentReleaseBundle = async ({
 	try
 	{
 		const artifactName = linked.manifest.artifact.path.split("/").at(-1);
+		if(componentPlan.document.schemaVersion === 2)
+		{
+			const snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputs, "lake"), expectedSha256: componentPlan.document.source.lakeSnapshotSha256 });
+			if(sha256(canonicalJson(compiled.manifest.lakeDependencies?.snapshot)) !== snapshot.sha256)
+				fail("component-release-source-drift", "Compiled Lake snapshot differs from the authorized source closure");
+			await writeLakeDependencySnapshot({ snapshot, outputRoot: join(staging, "lake") });
+			if(compiled.manifest.schemaVersion === 3)
+			{
+				const generated = await readLakeGeneratedSources({ snapshot
+					, snapshotRoot: join(inputs, "lake")
+					, modules: compilationPlan.document.source.requestedModules
+					, artifactPath: join(targetC, "lake-generated-sources.json")
+					, expectedSha256: compiled.manifest.lakeDependencies.generatedSourcesSha256 });
+				try
+				{
+					if(linked.manifest.generatedSourcesSha256 !== generated.sha256 || linked.manifest.overlaySha256 !== generated.document.overlaySha256
+						|| canonicalJson(compiled.manifest.lakeDependencies.resolution) !== canonicalJson(generated.document.resolution))
+						fail("component-release-source-drift", "Generated sources differ between compilation and linking");
+					await write(staging, "generated/lake-generated-sources.json", canonicalJson(generated.document));
+					await generated.verify();
+				} finally
+				{ await generated.dispose(); }
+			}
+		}
 		await copy(staging, `artifacts/${artifactName}`, join(side, linked.manifest.artifact.path));
 		await write(staging, "binding/binding-ir.json", canonicalJson(analysis.bindingIr.document));
+		if(compilationPlan.document.schemaVersion >= 3)
+		{
+			const bytes = await readFile(join(inputs, "generated/lake-entry-exports.json"));
+			if(sha256(bytes) !== compilationPlan.document.source.elaborationSha256 || bytes.toString() !== canonicalJson(analysis.elaboration))
+				fail("component-release-source-drift", "Elaborated export evidence differs from the compiled API");
+			await write(staging, "metadata/lake-entry-exports.json", bytes);
+		}
 		await write(staging, "binding/private-abi.json", canonicalJson(compilerAdapters.plan.privateAbi));
 		await write(staging, "metadata/assurance.json", canonicalJson({ schemaVersion: 1, component: analysis.bindingIr.document.component.id, bindingIrSemanticSha256: analysis.bindingIr.semanticSha256, claims: analysis.bindingIr.document.assurance }));
 		const runtimeRequirement = Object.freeze({ schemaVersion: 1, kind: "lean-bridge-shared-runtime-requirement", artifactIncluded: false, ...componentPlan.document.runtime, requiredImports: Object.freeze(["memory", "__indirect_function_table"]) });
@@ -191,8 +227,9 @@ export const buildComponentReleaseBundle = async ({
 		await write(staging, "README.md", readme(componentPlan.document.component));
 		const packageInput = componentPlan.document.source.inputs.find(item => item.path === "package.json");
 		const metadata = packageInput ? JSON.parse(await readFile(join(staging, "source/package.json"), "utf8")) : {};
-		const license = typeof metadata.license === "string" && metadata.license.trim() ? metadata.license : "UNLICENSED";
-		const notices = componentPlan.document.source.inputs.filter(item => /^(?:LICENSE|NOTICE|COPYING)(?:\.[A-Za-z0-9_-]+)?$/.test(item.path));
+		const declared = (await readExportConfiguration(join(staging, "source"))).configuration.package ?? {};
+		const license = componentLicense(declared, metadata);
+		const notices = componentPlan.document.source.inputs.filter(item => isSourceNotice(item.path, declared));
 		await write(staging, "metadata/sbom.json", canonicalJson({
 			schemaVersion: 1
 			, kind: "lean-bridge-component-sbom"
@@ -209,7 +246,7 @@ export const buildComponentReleaseBundle = async ({
 							: path === "metadata/provenance.json" ? "provenance"
 								: path.startsWith("metadata/") ? "build-evidence"
 									: path.startsWith("locks/") ? "plan"
-										: path.startsWith("source/") ? "source"
+										: path.startsWith("source/") || path.startsWith("lake/") ? "source"
 											: path.startsWith("generated/") ? "generated-source"
 												: "documentation";
 		const files = [];

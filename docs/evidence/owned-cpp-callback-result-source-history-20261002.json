@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-cpp-callback-result-source-history",
+  "baselineRevision": "a48d4d3ca089aa2c0cd4d625a809df94ff2cf629",
+  "previous": {
+    "path": "docs/evidence/owned-callback-inventory-repair-20261002.json",
+    "sha256": "52dbcf9a39a7a67d7ad473a9f4f5849c3890021345370977b01ffd5d15942403"
+  },
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "a1eebf5894916518c34d3281b9d5665200009acd904a5916e2bb18e58da061bf",
+      "currentSha256": "ad2dece5a55c29b23e8d1e7134c3c629230b4a56f48fb221649d86278528c666",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 16307,
+          "current": "  owned-cpp-callback-results:\n    name: Callback-result lifetimes in installed C++ packages\n    runs-on: ubuntu-24.04\n    timeout-minutes: 150\n    env:\n      EMCC_CORES: \"2\"\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install callback acceptance tools\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd\n          npm ci --ignore-scripts --no-audit --no-fund\n          bash scripts/bootstrap-toolchains.sh\n      - name: Install all callback browser engines\n        run: npx playwright install --with-deps chromium firefox webkit\n      - name: Build the callback shared runtime\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-cpp-callback-result-runtime.log\n          test -s build/lean-link-spike/lazy/main.wasm\n      - name: Verify C++ callback-result lifetimes\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          npm run test:owned-cpp-callback-results 2>&1 | tee build/owned-cpp-callback-results.log\n          rg '^# tests 12$' build/owned-cpp-callback-results.log\n          rg '^# pass 12$' build/owned-cpp-callback-results.log\n          rg '^# fail 0$' build/owned-cpp-callback-results.log\n          rg '^# cancelled 0$' build/owned-cpp-callback-results.log\n          rg '^# skipped 0$' build/owned-cpp-callback-results.log\n          test -s build/owned-cpp-callback-results/ordinary-base-nohost.json\n          test -s build/owned-cpp-callback-results/ordinary-base-host.json\n          test -s build/owned-cpp-callback-results/ordinary-combined.json\n          test -s build/owned-cpp-callback-results/ordinary-no-host-package.json\n          test -s build/owned-cpp-callback-results/ordinary-combined-package.json\n          test -s build/owned-cpp-callback-results/ordinary-combined-release.json\n          test -s build/owned-cpp-callback-results/reviewed-base-nohost.json\n          test -s build/owned-cpp-callback-results/reviewed-base-host.json\n          test -s build/owned-cpp-callback-results/reviewed-combined.json\n          test -s build/owned-cpp-callback-results/reviewed-no-host-package.json\n          test -s build/owned-cpp-callback-results/reviewed-combined-package.json\n          test -s build/owned-cpp-callback-results/reviewed-combined-release.json\n      - name: Preserve C++ callback-result acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: cpp-callback-results-${{ github.sha }}\n          path: |\n            build/owned-cpp-callback-results/\n            build/owned-cpp-callback-results.log\n            build/owned-cpp-callback-result-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n\n",
+          "previous": ""
+        },
+        {
+          "start": 182195,
+          "current": "      - owned-cpp-callback-results\n",
+          "previous": ""
+        },
+        {
+          "start": 183913,
+          "current": "      - name: Enforce C++ callback-result acceptance\n        if: needs.owned-cpp-callback-results.result != 'success'\n        run: exit 1\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "533b3840ab6dd4db0198811cafbc39624f20c54b3bae9acff09b178dd5ec3b33",
+      "currentSha256": "da5e7668b1a3f18b6e5779096b06b45ab6020a8411f359200707aa5e09746358",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 22860,
+          "current": "### Callback-result owners\n\nA returned Lean closure can borrow its result from one of its arguments. Pass\nthat argument as `Value<T>`. The result expires with the supplied argument's\noriginal owner, even when Lean returns data from the closure's capture. Closing\nthe closure does not close the supplied argument's owner.\n\n```cpp file=cpp/owned-callback-results.cpp\n#include \"owned_aggregates.hpp\"\n#include <cassert>\n#include <iostream>\n\nnamespace api = lean_bridge::owned_aggregates;\n\nint main() {\n    auto ticket = api::new_ticket(42, \"callback\");\n    api::Bundle raw{ticket.get(), {}, {}, {}, {api::Int(0), {}}};\n    auto captured = api::echo_record(raw);\n    auto supplied = api::echo_record(raw);\n    auto closure = api::make_record(captured);\n    auto borrowed = closure(true, supplied);\n    auto kept = borrowed.retain();\n    supplied.close();\n    assert(borrowed.is_closed());\n    captured.close();\n    closure.close();\n    std::cout << api::serial(kept->primary) << '\\n';\n}\n```\n\nBorrowed descendants expire transitively, including empty recursive values.\n`retain()` and `copy_value()` create independent owners. Callback-result anchors\ndo not require ordinary result anchors, receiver methods, or host callbacks.\n\nFor a host callback with a borrowed result contract, return the declared `T` or\n`Value<T>`. Lean Bridge checks the reply and retains its resource contents before\nthe callback's borrowed arguments expire. An expired reply rejects. Exceptions\nretain their C++ type and rethrow after native cleanup. Host callbacks remain\nsynchronous and call-scoped.\n\nWhen a consuming method invokes a callback, aliases and borrowed descendants\nclose before that callback runs. A failure before the native handoff leaves the\ninput usable; a failure after the handoff leaves it consumed. Independent retains\nsurvive either case.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "6ea163edc8227234215361d4209f117293715306504e862fd510dd56bc2386bb",
+      "currentSha256": "e5512b055431da4bcd705f4fa25a957e5b3d146495b946d0428bf9b83e6398cc",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 219201,
+          "current": "## C++ callback-result lifetimes\n\nRun the C++ gate with the same native, Emscripten and browser dependencies:\n\n```sh\nnpm run test:owned-cpp-callback-results\n```\n\nThe gate requires 12 passing tests with no skips and 12 JSON reports in\n`build/owned-cpp-callback-results/`. Both authoring paths compile normal and\nsanitized consumers, inject allocation failures before and after ownership\ntransfer, and reject deliberately broken lifetime implementations.\n\nInstalled checks cover explicit callback-disabled native builds and combined\ncallback, receiver, result-anchor and transfer packages built by the installed\nCLI. Consumers use pkg-config and relocated CMake after producer removal.\nIndependent builds and reassembly must reproduce the original archives. Separate\nC/C++/npm releases exercise all three projections, browser contexts and the\npublished C++ and JavaScript examples. CI requires every report and propagates\nthe C++ job's failure through the consumer summary.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "79320d975e5bf92158cd4829e7c4439c8d6351ceee3ae86b42575ec66c40b2ca",
+      "currentSha256": "73b1ae29a2fc26d51d96c505c97893a543ffeae7e76535ed79eac0256e657b66",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 32553,
+          "current": "For C, C++ and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n",
+          "previous": "For C and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/publish/cpp.md",
+      "previousSha256": "f2492597a94cc34cfe4dc5f98665126a92c4bb0f8459117c1abe1c2eb80343d6",
+      "currentSha256": "9f29633ee8e7da8383513015d96d0f6645e312d5e885882d08870a44ba7cdca6",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 14321,
+          "current": "### Anchor a callback result to its argument\n\nUse the nested [callback-result contract](c.md#anchor-a-callback-result-to-its-argument)\nto select a callback-local argument as the result's lifetime anchor. Ordinary\nconfiguration uses `arg0`, `arg1`, and so on. Reviewed contracts use their own\ncallback parameter names. Neither the outer export's arguments nor the closure\nhandle count toward those positions.\n\nBuild with `--target cpp`. Returned closure calls require the selected argument\nas `Value<T>` and return a checked `Value<Result>`. Host callback replies accept\nthe declared value or its whole-owner wrapper. See the\n[consumer example](../consume/cpp.md#callback-result-owners).\n\nThese contracts use native model version 11, native component receipt version 7,\npackage manifest version 7, `ownedValues` version 6 and `cppValues` version 5.\nPackaging regenerates the selected argument, expiry, retention and host-reply\nrules from compiler metadata and verifies the generated source. Callback-local\nanchors work without ordinary result anchors, methods, or host callbacks.\nPackages without callback-result anchors keep their existing contract versions.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "178dd24fd7e81e1379a345d624a81eba5acc6881369fdc8db5d16a633b70b562",
+      "currentSha256": "3d4bc74c7bb1a42671385e002eaf838e9597a3df9ae848dbaf2c688ed6d9e4e1",
+      "strategy": "replacements",
+      "edits": [
+        {
+          "current": "\"5410d43293e54aa302433a82729bf3eaac3548f62739d0c7360e74bb1630dd04\"",
+          "previous": "\"f49ab47a35baed7bd9510efc59e5d0caf8575e32cdb8e475a1c8b5234cb95a88\"",
+          "count": 18
+        },
+        {
+          "current": "\"36a374a5cb5e8e6c4fbb417098671459418e65ba75d0d6f734b9e20839e6ad09\"",
+          "previous": "\"46017cdacc77a54b27c798603a052f4e2d7a203e9645e712567a51f6272e1ed2\"",
+          "count": 93
+        },
+        {
+          "current": "\"6b8f79efb209a88c6c353c4676226058d38f87ddc5bce30715e2c8da5f7ce4c6\"",
+          "previous": "\"e67fd342828b4173f287da1082b018757e0e0219b6231e3b83d88eff8c108948\"",
+          "count": 83
+        },
+        {
+          "current": "\"87b19d42f8d106d5c5bac5e2298fd5744c7f6a697d5cc85d74cbbe403ae1ce88\"",
+          "previous": "\"3ec12e5a53ada6182188ed22e9fc32a5daab12f2dfc25d58110177d7e260d4d7\"",
+          "count": 75
+        },
+        {
+          "current": "\"ad2dece5a55c29b23e8d1e7134c3c629230b4a56f48fb221649d86278528c666\"",
+          "previous": "\"a1eebf5894916518c34d3281b9d5665200009acd904a5916e2bb18e58da061bf\"",
+          "count": 89
+        },
+        {
+          "current": "\"da5e7668b1a3f18b6e5779096b06b45ab6020a8411f359200707aa5e09746358\"",
+          "previous": "\"533b3840ab6dd4db0198811cafbc39624f20c54b3bae9acff09b178dd5ec3b33\"",
+          "count": 1
+        },
+        {
+          "current": "\"9f29633ee8e7da8383513015d96d0f6645e312d5e885882d08870a44ba7cdca6\"",
+          "previous": "\"f2492597a94cc34cfe4dc5f98665126a92c4bb0f8459117c1abe1c2eb80343d6\"",
+          "count": 8
+        },
+        {
+          "current": "\"f3c90b953d84552e7974224bc47ea053381f51319afca193c3357054477ce3a8\"",
+          "previous": "\"89c1aac3b8075d6ac250fbd3676ae1bb1154cb6cdff81652bb0047943a72e457\"",
+          "count": 7
+        },
+        {
+          "current": "\"73b1ae29a2fc26d51d96c505c97893a543ffeae7e76535ed79eac0256e657b66\"",
+          "previous": "\"79320d975e5bf92158cd4829e7c4439c8d6351ceee3ae86b42575ec66c40b2ca\"",
+          "count": 22
+        },
+        {
+          "current": "\"e5512b055431da4bcd705f4fa25a957e5b3d146495b946d0428bf9b83e6398cc\"",
+          "previous": "\"6ea163edc8227234215361d4209f117293715306504e862fd510dd56bc2386bb\"",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "f49ab47a35baed7bd9510efc59e5d0caf8575e32cdb8e475a1c8b5234cb95a88",
+      "currentSha256": "5410d43293e54aa302433a82729bf3eaac3548f62739d0c7360e74bb1630dd04",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 46700,
+          "current": "    \"test:owned-cpp-callback-results\": \"LEAN_BRIDGE_OWNED_CPP_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-callback-results.test.mjs tests/owned-cpp-callback-result-packaging.test.mjs tests/owned-cpp-callback-result-combined-packaging.test.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "46017cdacc77a54b27c798603a052f4e2d7a203e9645e712567a51f6272e1ed2",
+      "currentSha256": "36a374a5cb5e8e6c4fbb417098671459418e65ba75d0d6f734b9e20839e6ad09",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 960,
+          "current": "\t\t, \"owned-cpp-callback-results\"\n\t\t, \"owned-cpp-callback-result-packaging\"\n\t\t, \"owned-cpp-callback-result-combined-packaging\"\n\t\t, \"owned-cpp-callback-result-ci\"\n\t\t, \"owned-cpp-callback-result-history\"\n\t\t, \"owned-cpp-callback-result-evidence\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/owned-package.mjs",
+      "previousSha256": "44edb26ffded82ec8b879d3294618744e0392933e60c6ab2e2fdf0d897c5b07a",
+      "currentSha256": "533692ac61f799493843b353b1afba22921f036fb111245ea6656c24e7588c3c",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2835,
+          "current": "\t\t, valueCopies: options.valueCopies\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/owned-values.mjs",
+      "previousSha256": "6a7e9fde5e9293633cc059bbe442c1bc335f6eee594a96c04671aad3ec2b8c78",
+      "currentSha256": "3798132db63f50302474af8d04e2ecc3c3462f7c33a6b5aa555d94feafa2ccb7",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1285,
+          "current": " * @param options.valueCopies - Expose value copies without admitting host callbacks.\n",
+          "previous": ""
+        },
+        {
+          "start": 1883,
+          "current": "export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {\n",
+          "previous": "export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {\n"
+        },
+        {
+          "start": 4347,
+          "current": "\t\tif((hostCallbacks || valueCopies) && !identity) claim(node.kind === \"primitive\" ? `${p}_scalar_${node.name}_copy` : `${name}_copy`, node.id);\n",
+          "previous": "\t\tif(hostCallbacks && !identity) claim(node.kind === \"primitive\" ? `${p}_scalar_${node.name}_copy` : `${name}_copy`, node.id);\n"
+        },
+        {
+          "start": 14914,
+          "current": "\tconst copies = hostCallbacks || valueCopies ? nodes.filter(node => !node.identity).map(node => ({\n",
+          "previous": "\tconst copies = hostCallbacks ? nodes.filter(node => !node.identity).map(node => ({\n"
+        },
+        {
+          "start": 15422,
+          "current": "\t\t, ...(hostCallbacks ? { copies, hostArgument } : valueCopies ? { copies } : {})\n",
+          "previous": "\t\t, ...(hostCallbacks ? { copies, hostArgument } : {})\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/cpp/owned-callables.mjs",
+      "previousSha256": "e5a0cae750ab1091fb1c8e3daa50ff5d493ccf84c8344dcc3889a9b3596b60c4",
+      "currentSha256": "a757d5d81ca335bab16116c81b2f53731807600fd99b9ed99ac083a164cdc68f",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1104,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1275,
+          "current": "export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = conversions;\n",
+          "previous": "export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;\n"
+        },
+        {
+          "start": 1704,
+          "current": "\tconst callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);\n\tconst anchors = callbackAnchors || c.functions.some(item => item.anchor !== undefined);\n",
+          "previous": "\tconst anchors = c.functions.some(item => item.anchor !== undefined);\n"
+        },
+        {
+          "start": 2915,
+          "current": "\t\tconst borrowed = callback.anchor !== undefined;\n\t\tconst reply = borrowed ? \"owned_callback_reply(reply)\" : \"reply\";\n\t\tconst recovery = borrowed ? \"owned_callback_reply(input.recovery)\" : \"input.recovery\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3325,
+          "current": "\t\t\t, `  && ${borrowed ? \"owned_callback_recovery_matches\" : \"owned_recovery_matches\"}<std::remove_cvref_t<F>, ${result.hostName}>`\n",
+          "previous": "\t\t\t, `  && owned_recovery_matches<std::remove_cvref_t<F>, ${result.hostName}>`\n"
+        },
+        {
+          "start": 3572,
+          "current": "\t\t\t, `    { std::invoke(owned_function(function)${params.map((_, index) => `, a${index}`).join(\"\")}) } -> ${borrowed ? \"OwnedCallbackReply\" : \"std::same_as\"}<${resultType(result)}>;`\n",
+          "previous": "\t\t\t, `    { std::invoke(owned_function(function)${params.map((_, index) => `, a${index}`).join(\"\")}) } -> std::same_as<${resultType(result)}>;`\n"
+        },
+        {
+          "start": 5008,
+          "current": "\t\t\t, `      owned_check${result.index}(${reply}, 0, self.call.budget, self.call.state);`\n\t\t\t, `      OwnedView${result.index} view(${reply}, self.call.state);`\n",
+          "previous": "\t\t\t, `      owned_check${result.index}(reply, 0, self.call.budget, self.call.state);`\n\t\t\t, `      OwnedView${result.index} view(reply, self.call.state);`\n"
+        },
+        {
+          "start": 6046,
+          "current": "\t\t\t, `        recovery = std::make_unique<OwnedView${result.index}>(${recovery}, scope.state);`\n",
+          "previous": "\t\t\t, `        recovery = std::make_unique<OwnedView${result.index}>(input.recovery, scope.state);`\n"
+        },
+        {
+          "start": 6868,
+          "current": "\t\t\t, `      owned_check${result.index}(${recovery}, 0, call.budget, call.state);`, \"  }\", \"}\");\n",
+          "previous": "\t\t\t, `      owned_check${result.index}(input.recovery, 0, call.budget, call.state);`, \"  }\", \"}\");\n"
+        },
+        {
+          "start": 15029,
+          "current": "\t\t, ...callbackAnchors && hostCallbacks ? [\n\t\t\t\"template<class T, class Expected> concept OwnedCallbackReply = std::same_as<std::remove_cvref_t<T>, Expected> || std::same_as<std::remove_cvref_t<T>, Value<Expected>>;\"\n\t\t\t, \"template<class T> inline const T& owned_callback_reply(const T& value) { return value; }\"\n\t\t\t, \"template<class T> inline const T& owned_callback_reply(const Value<T>& value) { return value.get(); }\"\n\t\t\t, \"template<class F, class Expected> constexpr bool owned_callback_recovery_matches = true;\"\n\t\t\t, \"template<class F, class R, class Expected> constexpr bool owned_callback_recovery_matches<RecoveredCallback<F, R>, Expected> = OwnedCallbackReply<R, Expected>;\"\n\t\t] : []\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/cpp/owned-conversions.mjs",
+      "previousSha256": "a345ead80eb3f23bb65983b23f817f31fbd524e77a6746cdb8ef14bd8ce69aad",
+      "currentSha256": "fcca0e269a82be4f07d1ce450ba96a849e0a76923fc6a2ef56c68a8a094b4b11",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 4816,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 4987,
+          "current": "export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = values, p = c.prefix, m = p.toUpperCase();\n",
+          "previous": "export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = values, p = c.prefix, m = p.toUpperCase();\n"
+        },
+        {
+          "start": 16113,
+          "current": "\t\t, support(p, c.native.model.limits, c.nodes.some(node => node.integer), [...c.functions, ...c.callbacks].some(item => item.anchor !== undefined))\n",
+          "previous": "\t\t, support(p, c.native.model.limits, c.nodes.some(node => node.integer), c.functions.some(item => item.anchor !== undefined))\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/cpp/owned-package.mjs",
+      "previousSha256": "35853f331c1f695ab174407f1036d107de7dfb30aba4f8c054fd73fa0d38d408",
+      "currentSha256": "acd820b2bbe57a7acba0f28e68bb2ca1845157aa34ae7870de49765b82b2b23b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 731,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 902,
+          "current": "export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedCppCallables(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), p = generated.c.prefix;\n",
+          "previous": "export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedCppCallables(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), p = generated.c.prefix;\n"
+        },
+        {
+          "start": 1418,
+          "current": "\tconst callbackAnchors = generated.c.callbacks.filter(item => item.anchor !== undefined);\n",
+          "previous": ""
+        },
+        {
+          "start": 1912,
+          "current": "\tconst contract = { schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n",
+          "previous": "\tconst contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n"
+        },
+        {
+          "start": 2192,
+          "current": "\t\t, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1\n\t\t\t, values: \"checked-whole-result\", anchor: \"original-argument-owner\"\n\t\t\t, parameterNumbering: \"callback-local\"\n\t\t\t, expiration: \"owner-release-or-transfer\", descendants: \"transitive\"\n\t\t\t, emptyValues: \"owner-preserved\"\n\t\t\t, independentOwnership: \"retain-or-copy_value\"\n\t\t\t, hostReply: \"value-or-whole-owner\"\n\t\t\t, hostResultHandoff: \"before-callback-frame-expires\"\n\t\t\t, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))\n\t\t} } : {}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/cpp/owned-values.mjs",
+      "previousSha256": "952785aa3734a6626f67770fec19e9a303a67abc96b98b1539dff87cd19c9218",
+      "currentSha256": "621a2c428cf79dcc471802fd2f22770a170d613f2e0f076bdafa645992c388ce",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1650,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1821,
+          "current": "export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 2364,
+          "current": "\tconst anchors = [...c.functions, ...c.callbacks].some(item => item.anchor !== undefined);\n",
+          "previous": "\tconst anchors = c.functions.some(item => item.anchor !== undefined);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/multi-profile-project.mjs",
+      "previousSha256": "89c1aac3b8075d6ac250fbd3676ae1bb1154cb6cdff81652bb0047943a72e457",
+      "currentSha256": "f3c90b953d84552e7974224bc47ea053381f51319afca193c3357054477ce3a8",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 11775,
+          "current": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "previous": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => target === \"c\") });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "e67fd342828b4173f287da1082b018757e0e0219b6231e3b83d88eff8c108948",
+      "currentSha256": "6b8f79efb209a88c6c353c4676226058d38f87ddc5bce30715e2c8da5f7ce4c6",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3646,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => target === \"c\") });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "3ec12e5a53ada6182188ed22e9fc32a5daab12f2dfc25d58110177d7e260d4d7",
+      "currentSha256": "87b19d42f8d106d5c5bac5e2298fd5744c7f6a697d5cc85d74cbbe403ae1ce88",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 7832,
+          "current": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target))\n",
+          "previous": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => target === \"c\")\n"
+        },
+        {
+          "start": 8520,
+          "current": "\t\t\t\t\tif(targets.includes(\"cpp\")) generateOwnedCppPackage(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n",
+          "previous": "\t\t\t\t\tif(targets.includes(\"cpp\")) generateOwnedCppPackage(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-c-projection.mjs",
+      "previousSha256": "ac009a07634a72a18a3c495158b80fa802b5b4f7914017a8092d0fca920cef63",
+      "currentSha256": "ddd471a3417361df9f423828a33636d9f09050bdccc80ef4a856e4963b9439c1",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2247,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => target === \"c\") });\n"
+        },
+        {
+          "start": 3282,
+          "current": "\tif(targets.includes(\"cpp\") && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned C++ projection requires authenticated callback/copy support\");\n\tconst valueCopies = targets.includes(\"cpp\") && callbackResultAnchors;\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst cpp = targets.includes(\"cpp\") ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n",
+          "previous": "\tif(targets.includes(\"cpp\") && !hostCallbacks && !receiverExports) throw new TypeError(\"Owned C++ projection requires authenticated callback/copy support\");\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst cpp = targets.includes(\"cpp\") ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-c-package.mjs",
+      "previousSha256": "34910101899a89a6795e1bd3db93f9006e5d40fea7b2ab11082d0f0778b68125",
+      "currentSha256": "721da5d5ac4ab50b6c8a08afdb93400f843409208e096c8a448cfcc60ad16650",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2056,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: target === \"c\" });\n"
+        },
+        {
+          "start": 2846,
+          "current": "\tconst adapter = JSON.parse(await readFile(join(adapterRoot, \"native-c-adapter.json\"), \"utf8\"));\n\tconst valueCopies = Boolean(adapter.cppValues) && callbackResultAnchors;\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst p = generated.values.prefix;\n\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tif((target === \"cpp\" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))\n",
+          "previous": "\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, \"native-c-adapter.json\"), \"utf8\"));\n\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n\tif((target === \"cpp\" && !cpp) || (cpp && !hostCallbacks && !receiverExports) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))\n"
+        },
+        {
+          "start": 12455,
+          "current": "${anchoredResults || callbackResultAnchors ? `Functions returning resource-containing values use Value<T>, including empty\n",
+          "previous": "${anchoredResults ? `Functions returning resource-containing values use Value<T>, including empty\n"
+        },
+        {
+          "start": 13374,
+          "current": "` : \"Copied container storage is independent; its resource leaves retain their leases.\"}${callbackResultAnchors ? `\nReturned closures use callback-local parameter numbering, excluding the closure\nitself. An anchored callback result borrows the selected argument's original owner,\nnot the closure's captured owner. Pass Value<T> for the selected argument. Releasing\nor transferring that owner expires the result and every descendant, including empty\ncontainers. retain() or copy_value creates an independent owner before expiration.\n${hostCallbacks ? `Host callbacks may return the exact raw result type or Value<T>. The bridge\nvalidates and copies the reply before its callback borrow frame expires. Recovery\nvalues follow the same rule. A Value<T> reply with an expired owner is rejected.\n` : \"\"}` : \"\"}${transferredInputs ? anchoredResults || receiverExports || callbackResultAnchors ? `\n",
+          "previous": "` : \"Copied container storage is independent; its resource leaves retain their leases.\"}${transferredInputs ? anchoredResults || receiverExports ? `\n"
+        },
+        {
+          "start": 15458,
+          "current": "${callbackResultAnchors && !hostCallbacks ? \"\" : `Typed lambdas and function objects are call-scoped callbacks. Borrowed callback\n",
+          "previous": "Typed lambdas and function objects are call-scoped callbacks. Borrowed callback\n"
+        },
+        {
+          "start": 16295,
+          "current": "`}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "dc272b72df635c5f6a4e44d0b4b5c22b133996b50bd5fd1bee89cf9d483a9988",
+      "currentSha256": "a3364486c6aa0bb5aaf2981a8deeab4413f40bcdfdbfbda7ae2273fa7debf224",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 439,
+          "current": "import { ownedCppCallbackChangedPaths } from \"./owned-cpp-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1388,
+          "current": "\t, ...ownedCppCallbackChangedPaths\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-callback-inventory-history.mjs",
+      "previousSha256": "2f06f0770c302dbba2bb5c22f879e8304d11eaa4ae31620b1d53f9178b9dc3dd",
+      "currentSha256": "e675adac60bd2422522206a47d146744034f5a54ce893c5a780b95065d20f650",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 235,
+          "current": "import { beforeOwnedCppCallbackResults } from \"./owned-cpp-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1920,
+          "current": "\tsource = beforeOwnedCppCallbackResults(path, source, expected);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-callback-inventory-repair.test.mjs",
+      "previousSha256": "b099b1b1d2b2a8a4c55da2a9a6990621fabc7c83b1d79b686b3a01ee6baf43ff",
+      "currentSha256": "520e8017365121388bd57b4bc46f66104b53e5c4c6f1f57e6b9ef9bf80d7fdac",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 268,
+          "current": "import { beforeOwnedCppCallbackResults } from \"./helpers/owned-cpp-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1707,
+          "current": "\t\tconst current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path)), prior = beforeCallbackInventoryRepair(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeCallbackInventoryRepair(update.path, current);\n"
+        },
+        {
+          "start": 2568,
+          "current": "\tconst current = JSON.parse(beforeOwnedCppCallbackResults(\"package.json\", await readFile(\"package.json\")));\n",
+          "previous": "\tconst current = JSON.parse(await readFile(\"package.json\", \"utf8\"));\n"
+        },
+        {
+          "start": 3113,
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedCppCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n"
+        },
+        {
+          "start": 3306,
+          "current": "\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path)));\n",
+          "previous": "\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-callback-result-c-packaging.test.mjs",
+      "previousSha256": "f9931c60fd4fe1809923833ef2eb55ac0d2a7cbacd5dfcbd0d1402539dba9373",
+      "currentSha256": "b6224e5ca25dcf9780bf81b0b74e60c9a28da907da559a7d345ab6950165a147",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 5621,
+          "current": "\tawait assert.rejects(packageOwnedNativeC({ ...packageOptions, target: \"cpp\", working: join(directory, \"unsupported\") }), /Owned C\\+\\+ adapter differs/u);\n",
+          "previous": "\tawait assert.rejects(packageOwnedNativeC({ ...packageOptions, target: \"cpp\", working: join(directory, \"unsupported\") }), { code: \"native-owned-callback-anchors-unavailable\" });\n"
+        }
+      ]
+    }
+  ]
+}

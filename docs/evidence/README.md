@@ -16,6 +16,8 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 
 ## Author workflow and release
 
+- [Compiler-checked reviewed Wasm APIs and combined releases, 18 September 2026](reviewed-wasm-20260918.md)
+- [Compiler-checked reviewed native APIs, 18 September 2026](reviewed-native-20260918.md)
 - [npm scalar ABI and signed release hardening, 9 September 2026](npm-release-hardening-20260909.md)
 - [Executable author tutorial, 8 September 2026](documentation-author-20260908.md)
 - [Lean project analysis](lean-project-analysis.md)
@@ -39,6 +41,8 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Browser package acceptance](browser-package-acceptance.md)
 - [Native PHP release](native-php-release-package.md)
 - [PHP-Wasm release](php-wasm-release-package.md)
+- [Installed ordinary PHP-Wasm packages, 15 September 2026](php-wasm-packages-20260915.md)
+- [Ordinary PHP-Wasm CLI and combined builds, 15 September 2026](php-wasm-cli-20260915.md)
 - [PHP release gate](php-release-gate.md)
 - [.NET, JVM, and Ruby acceptance](managed-consumer-acceptance.md)
 - [PyPI package](pypi-package.md)
@@ -58,6 +62,8 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Generation-safe registries](generation-safe-registries.md)
 - [Cross-language semantic parity](cross-language-semantic-parity.md)
 - [PHP transport parity](php-transport-parity.md)
+- [Copied Zend boundary in 32-bit PHP-Wasm, 15 September 2026](php-wasm-copied-zend-20260915.md)
+- [Ordinary Lean compilation for PHP-Wasm, 15 September 2026](php-wasm-ordinary-20260915.md)
 - [PHP-Wasm shared runtime composition](php-wasm-shared-runtime-composition.md)
 
 ## Performance

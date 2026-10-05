@@ -1,5 +1,7 @@
 # PHP-Wasm Release Package Evidence
 
+This report records the earlier `int`-based Alpha package and its artifact hashes. The current PHP-Wasm API uses `BigInteger` for every `UInt32`. Use the updated [consumer example](../php.md#php-wasm) and [boundary checks](php-alpha-uint32-boundaries-20260918.md).
+
 Status: one manifest now builds a PHP 8.4 extension, one shared Lean runtime, three independently compiled Lean components, an ordinary Composer package, PHP-Wasm loader metadata, capsule records, proof-aware Binding IR, provenance, and artifact hashes. Two isolated output roots contain 63 byte-identical files for each loading profile. The published `php-wasm@0.1.0` host executes both packages successfully.
 
 ## Consumer result

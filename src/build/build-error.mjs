@@ -27,3 +27,15 @@ export class CanonicalBuildError extends Error
 		this.details = details;
 	}
 }
+
+/**
+ * Keep reviewed declarations out of source-only compiler admission.
+ *
+ * @param inventory - Captured project inputs, before starting any build tools.
+ */
+export const assertSourceBuildInputs = inventory => {
+	const paths = inventory.inputs.filter(input => input.path.endsWith(".binding-ir.json")).map(input => input.path).sort();
+	if(paths.length) throw new CanonicalBuildError("reviewed-ir-build-unsupported"
+		, "Reviewed Binding IR compilation is not supported by this build profile"
+		, { details: { paths }, hint: "Use a native target with explicit modules for compiler-checked pure copied APIs, or analyze to validate the reviewed document without compiling." });
+};

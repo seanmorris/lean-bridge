@@ -15,6 +15,7 @@ import { generatePhpBindingPackage } from "../backends/php/generate.mjs";
 import { generatePythonBindingPackage } from "../backends/python/generate.mjs";
 import { generateRustBindingPackage } from "../backends/rust/generate.mjs";
 import { generateRubyBindingPackage } from "../backends/ruby/generate.mjs";
+import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "./canonical.mjs";
 
 /**
@@ -63,6 +64,20 @@ export const generateBindingPackages = ir => Object.freeze(Object.fromEntries(
 	BACKENDS.map(backend => [backend.id, Object.freeze({ ...backend.generate(ir) })]),
 ));
 
+/**
+ * Generate a native Perl projection only with compiler-checked ABI metadata.
+ *
+ * @param model - Elaborated native model including canonical semantic IR.
+ * @param receipt - Matching native compilation receipt and runtime identity.
+ */
+export const generateNativeBindingPackages = (model, receipt) => {
+	if(model?.profile !== "native-library-v1" || hashBindingIr(model.bindingIr) !== model.bindingIrSha256
+		|| receipt.bindingIrSha256 !== model.bindingIrSha256) fail("native-metadata-required", "Perl needs matching compiled native metadata; semantic IR alone is insufficient");
+	const files = generatePerlBindingPackage(model, receipt);
+	auditGeneratedPublicSurface("perl", files);
+	return Object.freeze({ perl: Object.freeze(files) });
+};
+
 const sha256 = source => createHash("sha256").update(source, "utf8").digest("hex");
 
 const packageManifest = (backend, files) => {
@@ -98,6 +113,7 @@ const publicFilesFor = (backend, manifest, files) => {
 	if(backend === "c") return [manifest.publicHeader, ...docsFor(files)];
 	if(backend === "cpp") return [manifest.publicHeader, ...docsFor(files)];
 	if(backend === "rust") return [manifest.publicModule, "Cargo.toml", ...docsFor(files)];
+	if(backend === "perl") return [manifest.publicModule, ...docsFor(files)];
 	if(new Set(["dotnet", "jvm", "ruby"]).has(backend))
 	{
 		return [...manifest.publicFiles, ...docsFor(files)];

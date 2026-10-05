@@ -13,6 +13,7 @@ import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { canonicalJson, readLockedGraph } from "../../capsule/node.mjs";
 import { generatePhpBindingPackage } from "./generate.mjs";
 import { generatePhpWasmAdapterPackage } from "./php-wasm.mjs";
+import { bundledBrickMath } from "./brick-math.mjs";
 
 /**
  * Reports PHP WebAssembly package failures with stable machine-readable codes and structured diagnostic context.
@@ -269,17 +270,19 @@ export const readPhpWasmPackageInputs = async ({ projectRoot, manifestPath }) =>
 
 const releaseReadme = ({ manifest, bindingIr }) => `# ${bindingIr.component.name} for PHP-Wasm
 
-Install this package beside \`php-wasm\`, then add its generated descriptor to the PHP-Wasm dependency list. PHP application code uses the same Composer package as native PHP.
+Install this package beside \`php-wasm\`, then add its generated descriptor to the PHP-Wasm dependency list. This 32-bit PHP profile represents every Lean \`UInt32\` as \`BigInteger\`, including small values. Native 64-bit PHP uses \`int\`.
 
 \`\`\`php
 use LeanAlpha\\Box;
+use Brick\\Math\\BigInteger;
 use LeanAlpha\\Bytes;
 use LeanAlpha\\Payload;
 use function LeanAlpha\\roundTrip;
 
-$box = new Box(41);
-$payload = roundTrip(new Payload(false, 8, 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
-assert($box->read() === 41);
+$box = new Box(BigInteger::of('4294967295'));
+$payload = roundTrip(new Payload(false, BigInteger::of('2147483647'), 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [BigInteger::of('4294967295')]));
+assert((string) $box->read() === '4294967295');
+assert((string) $payload->count === '2147483648');
 $box->close();
 \`\`\`
 
@@ -303,7 +306,7 @@ Graph lock SHA-256: \`${manifest.graphLock.fileSha256}\`
 export const generatePhpWasmReleaseSources = ({ inputs, runtime, extensions }) => {
 	const { manifest, bindingIr, graph } = inputs;
 	validatePhpWasmPackageManifest(manifest);
-	const composer = { ...generatePhpBindingPackage(bindingIr) };
+	const composer = { ...generatePhpBindingPackage(bindingIr, { integerBits: 32 }) };
 	composer["src/LeanBeta/functions.php"] = `<?php
 declare(strict_types=1);
 
@@ -313,7 +316,7 @@ use LeanAlpha\\Box;
 use LeanAlpha\\Internal\\Hydrator;
 use LeanAlpha\\Internal\\Runtime;
 
-function read(Box $box): int
+function read(Box $box): \\Brick\\Math\\BigInteger
 {
     $transport = Runtime::transport();
     if (!method_exists($transport, 'leanBetaRead')) {
@@ -339,11 +342,13 @@ declare(strict_types=1);
 
 namespace LeanBeta;
 
-function read(\\LeanAlpha\\Box $box): int {}
+function read(\\LeanAlpha\\Box $box): \\Brick\\Math\\BigInteger {}
 function identity(\\LeanAlpha\\Box $box): \\LeanAlpha\\Box {}
 `;
 	composer["autoload.php"] = `<?php
 declare(strict_types=1);
+
+require_once __DIR__ . '/dependencies/brick-math/autoload.php';
 
 spl_autoload_register(static function (string $class): void {
     $prefix = 'LeanAlpha\\\\';
@@ -355,6 +360,7 @@ spl_autoload_register(static function (string $class): void {
 require_once __DIR__ . '/src/functions.php';
 require_once __DIR__ . '/src/LeanBeta/functions.php';
 `;
+	Object.assign(composer, bundledBrickMath());
 	const phpFiles = Object.keys(composer)
     .sort()
     .map(path => `${manifest.artifacts.composerPackage}/${path}`);

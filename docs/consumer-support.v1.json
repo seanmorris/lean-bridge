@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "1.3.0",
-  "verifiedAt": "2026-08-14",
+  "contractVersion": "1.4.0",
+  "verifiedAt": "2026-09-11",
   "states": {
     "supported": "A clean consumer installs the documented artifact and executes a real Lean component.",
     "partial": "Package or interface behavior passes, but an ordinary package workflow remains incomplete.",
@@ -128,6 +128,22 @@
         "docs/evidence/managed-consumer-acceptance.md",
         "tests/managed-registry-package.test.mjs",
         "scripts/test-managed-registry-consumers.mjs"
+      ]
+    },
+    {
+      "id": "perl",
+      "name": "Perl",
+      "state": "supported",
+      "scope": "Perl 5.36.3 and 5.38.2, threaded and nonthreaded, on x86-64 Linux with glibc 2.38 or newer through generated XS and hybrid CPAN distributions",
+      "packageInstallation": true,
+      "realLeanExecution": true,
+      "testCommand": "npm run test:consumer:perl",
+      "blocker": null,
+      "evidence": [
+        "docs/consume/perl.md",
+        "tests/perl-native.test.mjs",
+        "tests/fixtures/perl/consumer.t",
+        "scripts/test-perl-consumers.mjs"
       ]
     },
     {

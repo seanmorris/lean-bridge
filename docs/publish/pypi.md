@@ -1,14 +1,477 @@
-# Publish Python wheels to PyPI
+# Build and publish Python packages
+
+Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. Synchronous callbacks and returned Lean closures accept copied values. Resource-containing values use the explicit ownership profile below.
+
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
 Upload the generated platform wheel with Twine, then download and verify that same file before running the Python consumer. Twine uploads existing distribution files without rebuilding them. This guide uses TestPyPI for the operator-authorized registry exercise. [Twine documentation](https://twine.readthedocs.io/en/stable/).
 
+## Build an ordinary Lean project
+
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, copied records, tagged variants, `Option`, `Except` and nested binary products, including bounded recursive values. A separate callable profile accepts synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Iris"],
+  "exports": ["Iris.echo_u32", "Iris.echo_nat", "Iris.echo_text", "Iris.array_u32"],
+  "targets": {
+    "pypi": { "name": "iris-api", "version": "2.0.0rc1" }
+  }
+}
+```
+
+Use a lowercase hyphen-separated distribution name you own. Python imports follow the compiled component name, not the distribution name: component `iris` becomes `lean_iris`. Release versions such as `1.2.3`, `2.0.0rc1` and `1.2.3.post1` are accepted. The development default is `0.0.0+local`; choose a public version before uploading to PyPI.
+
+On Linux x86-64 with the pinned Lean toolchain, native C compiler and Python 3.11 or newer available, run:
+
+```sh
+lean-bridge build --project ./iris --target pypi --output ./release-iris
+```
+
+Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if Python is not available as `python3`. The build checks generated Python syntax without loading ambient Python modules. It creates `release-iris/archives/iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl`. The wheel contains generated functions, frozen record classes, stubs, verified native libraries, compiler receipts and license notices. It needs no extension build or setuptools at installation. This path emits a wheel, not an sdist.
+
+Deep type annotations use standard `TypeAliasType` boundaries while keeping
+precise list-or-tuple inputs and tuple results. For these packages, wheel metadata
+declares `typing_extensions>=4.6,<5` on Python 3.11 only. pip handles that dependency;
+Python 3.12 and newer use the standard library. Do not tell consumers to disable
+dependency resolution. For disconnected deployments, prepare a wheelhouse using
+the [offline installation recipe](../consume/python.md#ordinary-project-packages).
+The package-set receipt covers your original wheel, not third-party dependencies.
+
+Repeat `--target` to combine PyPI with npm, CPAN, C, C++, Cargo, NuGet, Maven, RubyGems or WIT/WASI when their type profiles all accept the exports. Lean compiles once per required native/Wasm profile. A failed projection leaves no partial release directory.
+
+Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
+
+Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
+
+## Export arrays and records
+
+Add these definitions to `Parcels.lean`:
+
+```lean
+namespace Parcels
+
+structure Parcel where
+  label : String
+  counts : Array Nat
+
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+
+end Parcels
+```
+
+Select `Parcels` in `modules` and `Parcels.reverse` in `exports`, then set
+`targets.pypi` to a distribution name and version you own. Build with
+`--target pypi` as above. The generated module is `lean_parcels`, and its
+`Parcel` class takes `label` and `counts` fields.
+
+Arrays and acyclic records can nest with the other supported copied types.
+Python callers use the generated dataclasses, ordinary integers and lists or
+tuples. Returned arrays are independent tuples. Required fields retain their
+order and meaning; reserved Python names gain a trailing underscore, with
+collisions rejected before packaging. Run the
+[consumer example](../consume/python.md#arrays-and-records) against the original
+wheel before publishing. The [installed collection record](../evidence/python-collections-20260922.md)
+covers both source paths, Python 3.11/3.12, exact typing and conversion-failure cleanup.
+
+## Export options, results and products
+
+Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T`
+and `A × B`. Their contents can use all nineteen primitives, arrays, Lists, acyclic
+records and these constructors recursively, within the 32-level type limit.
+Python receives generated `Some`, `Ok` and `Err` wrappers and binary tuples.
+Unit and nested options retain their presence; success and error retain their
+branch when payload types match. `Except` errors remain returned values.
+
+The wheel includes the wrappers, type aliases and stubs. Consumers need no
+constructor numbers, serialization layer or manual runtime configuration.
+Python conversions and native copies each have a 16 MiB call budget. Resources
+and callbacks inside copied values are not admitted. Recursive data uses the
+[graph adapter](#export-recursive-values).
+Acyclic compound values also work as [callback and closure payloads](#structured-callback-values).
+
+Run the [compound consumer example](../consume/python.md#options-results-and-products)
+before publishing. The [acceptance record](../evidence/python-compounds-20260920.md)
+covers both source paths, offline installation, nested values and cleanup.
+Combined builds require every selected target to support the same API.
+
+## Export copied Lists
+
+Export `List` parameters, results or record fields without a target-specific
+annotation. Python accepts exact lists or tuples and returns owned tuples.
+Lists can nest with arrays, copied records, options, results and binary products.
+Their conversion limits match the other copied containers. List and Array keep
+distinct contract types even though both use Python sequences. Lists also work
+as [callback and closure payloads](#structured-callback-values).
+See the [consumer example](../consume/python.md#lists)
+and [installed checks on both source paths](../evidence/python-lists-20260920.md).
+
+## Export named copied aliases
+
+Concrete `abbrev` and type-valued `def` aliases retain public names as Python
+`TypeAlias` declarations. Both source paths preserve checked alias targets and
+chains in the contract. Functions and record fields use the named annotations;
+the private adapter keeps the target's storage, validation and cleanup rules.
+Aliases can name supported primitives, copied records, arrays, Lists, options,
+results and binary products. Names that collide with Python builtins, functions,
+records or generated helpers fail before packaging.
+
+An alias of `Unit` emits `TypeAlias = None`, which strict type checkers accept.
+An alias of `Nat` still rejects negative values. Python's numeric annotations do
+not encode fixed-width ranges, so runtime validation remains necessary.
+See the [consumer example](../consume/python.md#named-aliases) and
+[installed wheel and stub checks](../evidence/python-aliases-20260921.md).
+Concrete aliases can also name supported recursive values and appear in callback
+and closure signatures. Generic aliases and alias cycles are not admitted.
+
+## Export tagged variants
+
+Export functions over concrete, non-recursive Lean inductives without a
+Python-specific annotation. Both source paths compile typed constructor helpers
+and include named frozen dataclasses and union annotations in the wheel.
+For a Lean `Signal.data` constructor, the public class is `SignalData`.
+Case classes support structural pattern matching; consumers do not pass Lean
+constructor numbers or configure the runtime.
+
+Payloads can contain all nineteen primitives and supported copied containers,
+records and other variants. The adapter reads only the active case and releases
+native output even if Python conversion raises. Generated constructor names and
+escaped field names must be unique. Naming collisions fail before compilation.
+Recursive values use the graph adapter below. Generic, indexed, callable and
+identity-bearing payloads remain outside the copied projection.
+
+Run the [variant consumer example](../consume/python.md#tagged-variants) before
+publishing. The [installed acceptance record](../evidence/python-variants-20260921.md)
+covers original offline-installed wheels, independent source contracts, strict
+type checking and failure cleanup. Combined builds require every selected
+target to accept the same signatures.
+
+## Export recursive values
+
+Export concrete recursive records and inductives without a Python-specific
+annotation. For example:
+
+```lean
+namespace Recursive
+inductive Spine where
+  | next (value : Spine)
+  | leaf (value : UInt32)
+def spine (value : Spine) : Spine := value
+end Recursive
+```
+
+Select `Recursive.spine` in `lean-bridge.exports.json` and build with
+`--target pypi`. The wheel contains named constructor dataclasses, precise recursive
+stubs, checked native conversions and the automatic runtime loader. Consumers
+do not need Lean, a C compiler, GMP or Boost.
+
+Both source paths support direct and mutual recursion, copied records,
+transparent concrete aliases, all nineteen primitives and nested containers,
+options, results and products. Schema references stay finite; values have a
+128-level depth limit and a 262,144-node visit limit. Arguments and output share
+the 16 MiB native-copy allowance, with a separate 16 MiB accounted Python
+conversion-storage allowance. These budgets do not bound Lean working memory
+or all Python allocator overhead.
+
+Names and escaped fields must be unique. Cycles, malformed native branches,
+uninhabited inputs and unsupported effect or ownership policies are rejected.
+Calls use exact generated classes; Python subclasses are not alternate
+constructors. Native results clear on conversion exceptions. Run the
+[recursive consumer example](../consume/python.md#recursive-values) against the
+prepared wheel before publishing. Combined builds require each selected
+target to support the same recursive API.
+
+The [installed wheel checks](../evidence/python-recursive-packages-20260923.md)
+cover ordinary and reviewed contracts, original offline-installed archives,
+relocation, strict typing and deterministic rebuilds. The package assembler
+checks graph metadata and regenerated native adapter sources before packaging.
+
+## Export callbacks and closures
+
+Callback arguments and results can use any of the nineteen primitives and the copied structures below, including bounded recursive values. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
+
+For example, add these definitions to your Lean module:
+
+```lean
+namespace Callables
+def callNat (value : Nat) (callback : Nat → Nat) : Nat := callback value
+def makeString (captured : String) : Bool → String → String :=
+  fun useCaptured value => if useCaptured then captured else value
+end Callables
+```
+
+Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-bridge.exports.json`. That arity leaves the final two arguments in the returned closure. For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`.
+
+Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. All native-runtime targets admit primitive callables. Combined builds still require every selected target to accept the same API and author configuration.
+
+Run the [installed callable example](../consume/python.md#callbacks-and-returned-lean-closures) before publishing. The [acceptance record](../evidence/python-callables-20260918.md) includes exact wheel identities, source-hidden offline installation and lifetime checks.
+
+## Structured callback values
+
+Arrays, Lists, options, results, binary products, acyclic records, variants and
+concrete aliases can cross callbacks and returned closures on both source paths.
+For example:
+
+```lean
+namespace Structured
+
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) :=
+  callback value
+
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select `Structured.callArray` and `Structured.makeArray`. For ordinary source,
+set `"arities": { "Structured.makeArray": 1 }`. A reviewed contract owns the
+outer arity instead. Build with `--target pypi`; consumers use the generated
+functions from the wheel without configuring native callbacks.
+
+Python callbacks receive owned tuples for arrays and Lists, and can return exact
+lists or tuples. Returned closures accept those input containers and return
+owned copies. Nested options retain every presence layer; `Except` uses `Ok` and
+`Err` independently of Python exceptions. The generated stubs distinguish input
+containers from callback arguments and closure results. Run the
+[structured consumer example](../consume/python.md#structured-callback-values)
+against the prepared wheel before publishing.
+
+Host callbacks remain call-scoped borrows. Resource-containing aggregates,
+higher-order callbacks and asynchronous delivery still need adapter support.
+Combined builds require every selected target to accept the same structured
+signature.
+
+## Export recursive callbacks and closures
+
+The graph adapter accepts finite recursive values inside synchronous callback
+arguments and results. Returned closures can capture and receive the same values:
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) : Tree :=
+  callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select both functions, build with `--target pypi`, and set
+`"arities": { "Structured.makeRecursive": 1 }` for ordinary source. A reviewed
+contract supplies the outer arity itself. No extra public C package is required.
+Combined recursive-callable builds currently support C, C++ and PyPI targets.
+
+Python receives `TreeLeaf` and `TreeBranch` constructors and precise recursive
+stubs. The wheel includes its compatible runtime; Python 3.11 resolves the
+required `typing_extensions` dependency through pip. Python 3.12 uses the
+standard library. Run the [recursive callback example](../consume/python.md#recursive-callback-values)
+against the original wheel before publishing.
+
+Host callbacks remain borrowed for the outer call. Returned Lean closures own
+their capture and require `close()` or a `with` block. Cyclic Python inputs,
+invalid constructors and values beyond the 128-level, 262,144-node or 16 MiB
+copy limits are rejected. Callback exceptions propagate after native cleanup.
+Copied fields cannot contain resources or callable identities.
+
+## Export resource-containing values
+
+Select nominal resources and the aggregate ownership policy in shared export
+configuration. For the Owned acceptance project:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket", "Owned.serial", "Owned.label",
+    "Owned.callbackRecord", "Owned.identityClosure"
+  ],
+  "arities": { "Owned.identityClosure": 1 },
+  "targets": {
+    "pypi": { "name": "owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+The source analyzer derives container and callback types from elaborated Lean.
+An independently reviewed version-4 contract can specify the same ownership
+decisions and is checked against fresh compiler metadata before building.
+
+Python receives typed resource wrappers, frozen dataclasses, constructor unions,
+finite aliases and tuples. Resource leaves can appear in records, variants,
+arrays, Lists, options, results, binary products and recursive values. All
+nineteen primitive fields keep their ordinary Python conversions. Synchronous
+host callbacks borrow resource leaves for one invocation; `retain()` explicitly
+extends ownership. Returned Lean closures can receive typed callbacks and serve
+as callback arguments themselves. Input transfers, owner-anchored results and
+callback-result borrows use the explicit contracts below.
+
+The wheel includes GMP and the shared Lean runtime with their licenses and
+source notices. Import verifies the bundled libraries, shares compatible loaded
+libraries, and rejects conflicting or externally preloaded unverified native
+libraries. Consumer setup remains an ordinary pip install and Python import.
+The author needs Python 3.11+, Lean and the native C build tools. A PyPI-only
+build needs no public C package. Combined C, C++, Cargo and PyPI selections
+share one compiled component and owned C adapter.
+
+Run the [resource-containing consumer example](../consume/python.md#resource-containing-values)
+against the original wheel before upload. The
+[owned-wheel checks](../evidence/owned-python-packages-20260927.md) cover source-free
+offline installs, relocation, typed consumers, ownership and loader isolation.
+Upload this wheel using the same Twine workflow below.
+
+## Transfer input ownership
+
+Use the [export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) shows the full configuration.
+Keep `resources` and `ownedAggregates`, and put the Python coordinate under
+`targets.pypi`. Ordinary Lean analysis and independently reviewed contracts use
+the same compiler-checked ownership decisions.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+Python consumers pass ordinary values. The adapter validates all arguments,
+prepares native snapshots and consumes the represented resource leases together
+at the Lean call boundary. Shallow aliases and sibling resources sharing an
+owner close together; independent retains survive. Errors after handoff do not
+restore ownership. See the [consumer example](../consume/python.md#transferred-inputs).
+
+Transfer-enabled wheels use `owned-python-v2`, ownership contract version 2 and
+package receipt version 3. The shared C adapter uses version 4 with
+`ownedValues` version 3. Package verification reconstructs these contracts from
+compiler metadata and rejects changed consumption or alias rules. Packages
+without transfers retain their existing versions and generated API.
+
+A combined transfer build can select the compatible native consumer targets.
+The PHP-Wasm, npm and WIT/WASI projections also support explicit input transfers.
+Building a wheel does not upload it.
+
+## Anchor a result to an input
+
+The [C author example](c.md#anchor-a-result-to-an-input) declares a result borrowed
+from a particular input owner. Keep its resource and `ownedAggregates` declarations
+and select `targets.pypi` for a Python wheel. Ordinary source and reviewed IR use
+the same compiler-checked lifetime contract. Combined builds require each selected
+target to support the same exports and lifetime decisions.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+Consumers receive `Value[T]` roots with checked access, shared shallow copies and
+explicit independent retains. Empty results keep their owners. Borrowed results
+expire with the original anchor's release or transfer. Resource equality compares
+canonical identity and rejects expired values. See the
+[consumer example](../consume/python.md#results-borrowed-from-an-input).
+
+These wheels use `owned-python-v3`, ownership and binding contract version 3,
+and package receipt version 4. The shared C adapter uses version 5 with
+`ownedValues` version 4. Verification reconstructs both the shared native and
+Python contracts from compiler metadata, including the original owner, transitive
+expiration, empty values, copy selectors, equality and original-owner transfers.
+Packages without result anchors keep their prior API and contract versions.
+
+## Export methods and properties
+
+Select an owned nominal first argument as a receiver using the
+[shared receiver configuration](../lean/existing-package.md#declare-export-contracts).
+Use `"receiver": "method"` for a method, or `"receiver": "property"` for a
+zero-argument, read-only property. Reviewed IR declares the same owner and
+receiver explicitly. Methods use snake_case names on `Value[T]`; properties use
+attribute access, such as `owner.serial`. Generated `.pyi` files retain the
+nominal receiver and argument types.
+
+A result can borrow its receiver or another argument. Borrowed results expire
+when that original owner is released or transferred, including through empty
+containers and chained borrows. Consuming methods use the original owning slot;
+validation failures preserve the input, while failures after handoff leave it
+consumed. A method cannot consume its result's lifetime anchor.
+
+Receiver packages use Python contract version 4, the `owned-python-v4` backend,
+and wheel receipt version 5. The compiler-authenticated receiver descriptor is
+also included in the native component and adapter receipts. Package verification
+compares those descriptors and regenerates the public API and stubs before
+assembling the wheel. Receiver-only packages need no callback or borrowed-result
+capability. Older packages without receiver exports keep their existing formats.
+
+Execute the [consumer example](../consume/python.md#methods-and-properties)
+against the original prepared wheel before publishing. Callback-result lifetime
+anchors are separate from receiver-bound export results.
+
+## Anchor a callback result to its argument
+
+A returned Lean function can borrow its result from one of its own arguments.
+Keep the resource and `ownedAggregates` declarations, and select the export's
+outer arity. For `makeRecord : Bundle → Bool → Bundle → Bundle`, an outer arity
+of one returns a function with two arguments. Put this decision under
+`contracts["Owned.makeRecord"]`:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+`arg1` selects the returned function's second argument. It does not count the
+outer `Bundle` argument or a private closure handle. Reviewed IR states the
+same decision using the callback parameter name; compilation checks the type
+and position against Lean metadata.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+The selected callback argument takes a `Value[T]`, and the result borrows its
+original owner. Empty values and borrowed descendants keep that lifetime.
+Python host callbacks still receive raw generated values. Their reply and
+explicit recovery value can be raw or a whole `Value[T]`; conversion finishes
+before the callback frame expires. A callback exception remains an exception.
+
+These wheels use `owned-python-v5`, Python contract version 5 and package receipt
+version 6. The shared C adapter uses version 7 with `ownedValues` version 6.
+Verification reconstructs callback-local numbering, owner selection, transitive
+expiration and reply handoff from compiler metadata. The capability does not
+require host callbacks or export-result anchors. Without an actual callback
+result borrow, existing package formats remain unchanged.
+
+Combine PyPI with C, C++, Cargo and npm when the selected exports are accepted by
+every target. Run the [consumer example](../consume/python.md#callback-results-borrowed-from-an-argument)
+against the original wheel before upload. Retained host callbacks, asynchronous
+delivery and ownership transfers into callbacks remain outside this contract.
+
 ## Choose the package name and platform
+
+This section describes the Alpha fixture's fixed coordinates.
 
 The universal Alpha fixture produces distribution `lean-bridge-alpha==0.0.0`, imported as `lean_alpha`. Its supported wheel is `lean_bridge_alpha-0.0.0-py3-none-manylinux_2_38_x86_64.whl`: Python 3.11 or newer, Linux x86-64, and glibc 2.38 or newer. Keep that platform tag intact.
 
 TestPyPI has its own accounts and package database. Establish ownership of the project name there and obtain a TestPyPI token through the registry's account controls. Do not use production credentials. The fixture name does not establish ownership; use it only in a registry you control. For a different public name or version, regenerate the canonical package mapping and artifacts through the reviewed build workflow before freezing the release. The builder has no `--name` override. [TestPyPI account and upload guide](https://packaging.python.org/en/latest/guides/using-testpypi/).
 
 ## Build and verify the candidate
+
+This section describes the repository's reviewed Alpha bundle, not the ordinary source build above.
 
 From the checkout, prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then project it into a new directory:
 
@@ -31,7 +494,7 @@ npm run verify:release-authorization -- \
 
 The universal `pypi` target records both the wheel and sdist. Review their coordinates, paths, and hashes. A complete transaction for that target would publish both approved files. The wheel-only TestPyPI exercise below produces a separate manual sandbox record.
 
-The stock CLI has no PyPI registry adapter. A successful package build or dry run does not supply one. Twine does not create Lean Bridge's signed publication attestation, transaction record, or completion receipt. Project production releases still require the [shared approvals and reviewed integration](production-release.md).
+The stock CLI has no PyPI registry adapter. A successful package build or dry run does not supply one. Twine does not create Lean Bridge's signed publication attestation, transaction record, or completion receipt. Project production releases still require the [shared approvals and reviewed integration](../publishing.md#build-and-approve-the-same-artifacts).
 
 ## Check the wheel locally
 
@@ -41,16 +504,21 @@ Use an isolated Python environment on the supported native platform. Install the
 python3 -m venv .publish-venv
 ./.publish-venv/bin/python -m pip install twine==7.0.0
 export LEAN_BRIDGE_PYPI_WHEEL=/absolute/path/to/approved-platform-wheel.whl
-export LEAN_BRIDGE_PYPI_PREFLIGHT=/absolute/path/to/python-wheel-preflight.mjs
 export LEAN_BRIDGE_PYPI_NAME=your-owned-lean-package
 export LEAN_BRIDGE_PYPI_VERSION=0.1.0
 ./.publish-venv/bin/python -m twine check --strict "$LEAN_BRIDGE_PYPI_WHEEL"
-node "$LEAN_BRIDGE_PYPI_PREFLIGHT" --wheel "$LEAN_BRIDGE_PYPI_WHEEL" \
-  --python ./.publish-venv/bin/python
 sha256sum "$LEAN_BRIDGE_PYPI_WHEEL"
 ```
 
 Replace the example variables with the reviewed metadata and actual wheel filename. Compare the hash with the candidate record. `twine check` checks distribution metadata and description rendering; the [Python consumer](../consume/python.md) supplies the execution and cleanup checks. Run that consumer against the local wheel before uploading.
+
+Alpha releases also include an optional Node-based wheel diagnostic. Ordinary releases do not need it:
+
+```sh
+export LEAN_BRIDGE_PYPI_PREFLIGHT=/absolute/path/to/python-wheel-preflight.mjs
+node "$LEAN_BRIDGE_PYPI_PREFLIGHT" --wheel "$LEAN_BRIDGE_PYPI_WHEEL" \
+  --python ./.publish-venv/bin/python
+```
 
 ## Upload to TestPyPI
 
@@ -66,7 +534,7 @@ The explicit upload URL keeps the exercise on TestPyPI. Avoid `--skip-existing`:
 
 ## Publish to PyPI
 
-Complete [production review](production-release.md) for the exact coordinates, files, credentials, and publisher implementation. Establish ownership of the project on PyPI separately from TestPyPI. Have the secret provider replace `TWINE_PASSWORD` with the authorized PyPI token; TestPyPI tokens do not authenticate to PyPI.
+Complete [production review](../publishing.md#build-and-approve-the-same-artifacts) for the exact coordinates, files, credentials, and publisher implementation. Establish ownership of the project on PyPI separately from TestPyPI. Have the secret provider replace `TWINE_PASSWORD` with the authorized PyPI token; TestPyPI tokens do not authenticate to PyPI.
 
 The operator-approved upload uses PyPI's production endpoint:
 
@@ -96,7 +564,7 @@ sha256sum "$LEAN_BRIDGE_PYPI_WHEEL" "$LEAN_BRIDGE_PYPI_DOWNLOADED"
 
 The download must have the expected filename and identical bytes. `--only-binary=:all:` prevents an sdist rebuild from silently replacing the reviewed wheel. `--no-deps` prevents this fixture check from fetching unrelated packages. Do not add another package index to compensate for a missing release. [pip download](https://pip.pypa.io/en/stable/cli/pip_download/).
 
-Create a fresh consumer venv, run the packaged preflight with that venv's interpreter, install the downloaded wheel using `--no-index --no-deps`, and execute the complete [Python example](../consume/python.md). Record its visible output and cleanup result. Retain the downloaded hash, filename, version, TestPyPI project URL, and any upload response alongside the approved candidate. PyPI's [release JSON API](https://docs.pypi.org/api/json/#get-a-release) also exposes per-file URLs and SHA-256 digests for comparison.
+Create a fresh consumer venv, install the downloaded wheel with dependency resolution enabled, and execute the matching [Python example](../consume/python.md). For an offline check, use `--no-index --find-links ./wheelhouse` with the prepared dependency wheels. Alpha consumers can run the optional packaged preflight first. Record the program's visible output and cleanup result. Retain the downloaded hash, filename, version, TestPyPI project URL, and any upload response alongside the approved candidate. PyPI's [release JSON API](https://docs.pypi.org/api/json/#get-a-release) also exposes per-file URLs and SHA-256 digests for comparison.
 
 If a reviewed integration produced a signed Lean Bridge receipt, give consumers that receipt, its verifier, and the independently trusted signer-policy hash. A successful Twine upload alone does not produce those records.
 
@@ -104,4 +572,8 @@ If a reviewed integration produced a signed Lean Bridge receipt, give consumers 
 
 After a timeout, inspect the exact TestPyPI release and compare its downloadable files before retrying. Retry only missing approved files; stop on a hash mismatch. An accepted filename cannot be reused for replacement bytes, even after deletion. Publish a corrected version through a new review instead. [PyPI filename reuse policy](https://pypi.org/help/#file-name-reuse).
 
-Keep a manual sandbox record distinct from a completed multi-file universal transaction. [Sandbox release](sandbox-release.md) and [Publishing](../publishing.md) explain the records required for the shared release flow.
+Keep a manual sandbox record distinct from a completed multi-file universal transaction. [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and [Publishing](../publishing.md) explain the records required for the shared release flow.
+
+### Publish Python wheels to PyPI
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

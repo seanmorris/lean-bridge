@@ -1,12 +1,365 @@
-# Publish npm packages
+# Build and publish JavaScript and TypeScript packages
 
 An ordinary Lean component uses `lean-bridge publish` to reproduce, sign, and upload its exact npm archive. Consumers install the component; npm resolves its shared runtime automatically.
 
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
+
+## Build with locked Lake dependencies
+
+Keep the project's reviewed `lake-manifest.json` and exact `lean-toolchain` in source control. Populate its dependency cache during normal Lean development before invoking the bridge. Git entries must identify full commits, and cached checkouts must match those pins without modified or untracked source files. Local path dependencies must be relative and available when you start the build.
+
+Build the selected public API with the usual command:
+
+```sh
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-build
+```
+
+The CLI captures the root project and locked dependency files without running Lean. It verifies cached Git objects and hashes local contents, then passes the snapshot and selected module names into the Nix or Docker engine. The engine resolves imports through Lake, compiles fresh interfaces, and derives the public signatures from Lean before generating adapters and linking one component Wasm. Aliases, notation and inferred result types resolve through the compiler. It neither fetches packages nor updates your lock. Planning requires Node and Git; compilation uses the engine's Lean installation.
+
+The build bundle includes captured sources under `bundle/lake/`. Its component and compilation plans record `source.lakeSnapshotSha256`; `locks/lean-target-c-manifest.json` records the snapshot, resolved order, compiler identity, and fresh interface hashes. Changed dependencies during the build reject its output. Installed JavaScript consumers need only the prepared component and its runtime package, without Lake or dependency checkouts.
+
+`publish --dry-run` supplies the verified dependency snapshot to both independent clean root checkouts. It checks each checkout against the captured root files and rechecks the original dependencies before authorizing the candidate. Keep the local packages and cached Git checkouts available throughout that command. Root files must match the committed revision; local dependencies are identified by their captured contents.
+
+This path supports Lean dependency imports, including transitive packages and custom source directories in root and dependency libraries. Use explicit [module selection](../lean/existing-package.md#select-modules-in-a-custom-source-directory) for a custom root layout. [Declared C inputs](../lean/existing-package.md#declare-c-link-inputs) compile with the WASM profile; `locks/side-module-link-manifest.json` records their compiler, include closure, and object hashes under `nativeCompilation`.
+
+Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The engine runs selected pure tools and compiles their Lean/C/header outputs. `bundle/generated/lake-generated-sources.json` retains their bytes and receipts; the target-C and link manifests bind its digest. The publication dry run reproduces generation in both isolated builds. Installed npm users do not need Lean or generator tooling.
+
+A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm accepts copied primitives, concrete copied aliases, nested arrays and Lists, copied records and tagged variants, Option, Except, nested binary products, [bounded recursive copied values](../javascript-typescript.md#recursive-values) and synchronous callbacks with primitive or copied payloads. Copied values and callables can share one component. Preparation and loading check the shared runtime's capabilities for the selected ABI, including recursive output ownership. Consumers get the matching runtime through the generated package dependency.
+
+To compile an [explicit reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), keep one `.binding-ir.json` file and set `modules` in `lean-bridge.exports.json`. Put declaration selection in the review, not `exports` in the configuration. The engine checks reviewed copied-value and callable signatures against fresh Lean metadata, retains documentation and argument names, and binds the review into its compiler request and package evidence. `analyze` alone validates the document without checking source correspondence. Prepared npm packages use the same installation and automatic runtime loading as ordinary-source packages.
+
+To publish concrete versions of generic Lean functions, configure [finite specializations](../lean/existing-package.md#export-concrete-specializations). Lean checks the selected types and instance dictionaries; each configured name becomes a concrete JavaScript/TypeScript function. The source configuration and compiler applications travel with the build bundle and publication receipts.
+
+Optional [export contracts](../lean/existing-package.md#declare-export-contracts) can declare copied primitives and containers, call-scoped borrowed callbacks and explicitly owned returned functions. Lean checks ownership and effects against the implemented synchronous boundary. Unsupported requirements stop the build before linking; package assembly and publication retain the captured configuration.
+
+Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
+
+## Build owned-value npm packages
+
+An explicit `ownedAggregates` policy selects the ownership-aware npm compiler.
+Version 4 reviewed contracts use the same compiler after validation against
+fresh Lean metadata. This path supports resources inside records, arrays,
+Lists, options, results, aliases, variants and finite recursive values, plus
+synchronous callbacks and returned functions. It preserves resource identity
+and requires explicit cleanup.
+
+Use a prepared CLI containing the shared runtime. Select Nix to supply the
+pinned Lean and Emscripten toolchain:
+
+```sh
+export LEAN_BRIDGE_BUILD_BACKEND=nix
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-release
+lean-bridge verify --receipt /path/to/new-release/package-set-receipt.json
+```
+
+For a local SDK build, use a prepared CLI that also includes the
+[JavaScript-Wasm compiler headers](../contributing/author-toolchain.md#package-javascript-wasm-compiler-inputs).
+Set the author SDK paths and select `auto`:
+
+```sh
+export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
+export LEAN_BRIDGE_JS_EMSDK=/absolute/path/to/pinned-emsdk-6.0.6
+export LEAN_BRIDGE_BUILD_BACKEND=auto
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-release
+lean-bridge verify --receipt /path/to/new-release/package-set-receipt.json
+```
+
+The release contains `javascript-wasm/component/`, its authenticated compiler
+inputs and metadata, and two archives in `packages/npm/`. The component archive
+includes generated JavaScript and TypeScript, the compiled Wasm side module,
+source notices and the exact shared-runtime dependency. It uses the same
+runtime package assembler as copied npm components. Consumers install the
+archives together or let their registry resolve that dependency.
+
+`targets.npm.name` and `targets.npm.version` still set the downstream package
+coordinate. Source package metadata supplies the license; an undeclared license
+remains `UNLICENSED`. Add a supported native target to compile the same captured
+API for both widths. The combined build checks source, compiler, review and
+semantic API agreement before exposing either release.
+
+Explicit `nix` and `docker` selections use a source-only ownership request
+through the component engine. The engine verifies the captured source,
+generated inputs, export selection and output inventory. Nix acceptance builds
+ordinary and reviewed packages with unusable host SDK paths, then installs and
+executes them offline after removing their producer directories. The
+owned-specific Docker installed-package check remains open.
+
+### Anchor a result to an input
+
+Declare the parameter that bounds a borrowed result's lifetime in `contracts`:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Use this alongside the project's `resources` and `ownedAggregates` policy.
+The ordinary compiler names this parameter `arg0`; a reviewed API uses its
+authored parameter name. The result follows the original input owner. Releasing
+its last root or transferring it expires borrowed descendants, including empty
+containers.
+
+Packages with these declarations expose owned results as `LeanValue<T>`.
+Consumers use `get()`, `share()`, `retain()` and `dispose()` without importing a
+runtime or handling owner identifiers. The [consumer example](../javascript-typescript.md#borrowed-results-and-whole-value-owners)
+shows the lifetime rules and typed aggregate construction. Copied results keep
+their ordinary JavaScript representation. Returned functions can also declare
+their own argument-anchored results as described below.
+
+### Anchor a callback result
+
+Put a nested `callable.result` decision on the returned function or host-callback
+parameter. The [shared author configuration](c.md#anchor-a-callback-result-to-its-argument)
+shows the complete syntax. Argument numbering starts over inside each callback;
+the selected argument's original owner bounds that invocation's result.
+
+Consumers pass the selected argument as a whole `LeanValue<T>` and receive a
+whole owner for the borrowed result. Other borrowed callback arguments keep
+their usual input forms. Host callbacks may return a borrowed payload or a
+whole owner of the declared result type. The bridge converts that reply before
+expiring the host argument frame. The [consumer example](../javascript-typescript.md#borrowed-callback-results)
+shows disposal and independent retention.
+
+Callback-result lifetimes are independent of export-result anchors, receiver
+methods and consuming inputs. A combined C/npm build checks the same declared
+lifetimes against its native and wasm32 models. Selecting another consumer
+target that does not implement this capability rejects the build.
+Retained host callbacks, asynchronous invocation and callback input transfers
+remain unsupported.
+
+### Export methods and properties
+
+Mark the first Lean parameter as a receiver in the export contract. A property
+has no remaining parameters and is read-only in JavaScript and TypeScript:
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    }
+  }
+}
+```
+
+Merge these decisions with the package's existing exports, resource declarations
+and `ownedAggregates` policy. The compiler checks the receiver type. Consumers
+get named owner types with properties and methods, such as `ticket.serial` and
+`ticket.retainTicket()`. They do not construct resource handles or load a runtime.
+
+Use a receiver lifetime only when the result follows that receiver. A result
+borrowed from another Lean parameter retains its parameter lifetime and original
+source name, such as `arg1`. Marking the first parameter as a receiver does not
+renumber source parameter names. A consuming receiver uses the existing
+`arg0` transfer contract. Its method consumes the original owner, including
+shared roots and borrowed descendants.
+
+Receiver exports also work without callback declarations or borrowed results.
+The [consumer example](../javascript-typescript.md#methods-and-properties)
+shows member calls, independent retention and typed receiver construction.
+
+### Publish the owned package
+
+Commit the author package and declare `package.license` with nonempty license
+terms before creating a publication candidate:
+
+```sh
+lean-bridge publish --project /path/to/library --target npm \
+  --dry-run --output /path/to/new-candidate
+lean-bridge publish --manifest /path/to/new-candidate/publish-manifest.json
+```
+
+The dry run compiles two independent clean checkouts and compares the complete
+release, including both npm archives. It validates the owned package-set receipt,
+reconstructs generated package bytes, and retains the ownership build plan,
+SBOM, compiler assurance and provenance. The execute command uses the same
+signer configuration and immutable registry transaction described below.
+Its shared-runtime dependency must already be available at the exact recorded
+version and archive hash. Retrying a completed transaction does not republish it.
+The resulting signed archive receipt can be checked without the author source
+or compiler. The copied-value publication workflow is unchanged.
+
+### Declare consuming inputs
+
+Use `contracts` to declare an owned argument as `transfer`, alongside the
+project's `resources` and `ownedAggregates` selections. For example:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "parameters": [
+        { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } }
+      ]
+    }
+  }
+}
+```
+
+A schema-4 reviewed API can declare the same ownership directly. The compiler
+checks both source paths, and the component receipt records which parameters
+consume ownership. Generated JavaScript functions accept the values normally;
+their [lifetime rules](../javascript-typescript.md#consuming-inputs) take effect
+at the native handoff. Generated TypeScript requires a returned Lean lease for
+a consuming callable argument. Borrowed callback arguments still accept
+ordinary JavaScript functions.
+
+## Export callbacks and returned functions
+
+Callback arguments and returned functions can use any of the nineteen supported primitives. Each callable accepts one to sixteen arguments. For example:
+
+```lean
+namespace Functions
+
+def apply (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback value
+
+def makeAdder (captured : UInt32) : UInt32 → UInt32 :=
+  fun value => captured + value
+
+end Functions
+```
+
+Lean function types are curried. Set the outer arity of `makeAdder` to one so the generated API returns a function instead of accepting both arguments at once:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Functions"],
+  "exports": ["Functions.apply", "Functions.makeAdder"],
+  "arities": { "Functions.makeAdder": 1 }
+}
+```
+
+Build and publish with the same commands as a scalar component. The package declares its exact shared-runtime dependency; consumers do not register callback dispatchers or configure Wasm imports. Older prepared runtimes are rejected during packaging with a rebuild diagnostic.
+
+Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. Promise-returning callbacks and retained host callbacks are unsupported. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
+
+### Export structured callbacks
+
+Callback arguments and results can also use copied arrays, Lists, options,
+results, products, records, variants, aliases and finite recursive values.
+Primitive and structured functions can share one npm component.
+
+For the [consumer example](../javascript-typescript.md#structured-callbacks),
+name the package `structured` and save `Structured.lean`:
+
+```lean
+namespace Structured
+
+structure Payload where
+  text : String
+  rows : Array (Option String)
+  count : Nat
+  nested : Option (Except String (UInt64 × Unit))
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecord (value : Payload) (callback : Payload → Payload) :=
+  callback value
+
+def makeRecord (captured : Payload) : Bool → Payload → Payload :=
+  fun selected value => if selected then captured else value
+
+def callRecursive (value : Tree) (callback : Tree → Tree) :=
+  callback value
+
+end Structured
+```
+
+Select the exports and the returned function's outer arity in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecord", "Structured.makeRecord", "Structured.callRecursive"],
+  "arities": { "Structured.makeRecord": 1 },
+  "targets": { "npm": { "name": "structured", "version": "1.0.0" } }
+}
+```
+
+Build with the usual `--target npm` command. Lean-generated typed constructors
+and accessors implement the copied boundary; consumers use plain JavaScript
+values and generated TypeScript types. Callbacks keep one to sixteen arguments,
+and copied values use the [structured-call limits](../javascript-typescript.md#structured-callbacks).
+Callback and resource identities cannot appear inside copied containers.
+Recursive callback payloads currently target npm; combined target builds must
+use types supported by every selected target.
+
+## Build npm and CPAN together
+
+Select both targets to build the same ordinary Lean API for JavaScript and Perl:
+
+```sh
+lean-bridge build --project /path/to/library --target npm --target cpan --output /path/to/new-release
+```
+
+Install the npm build engine and the [native CPAN toolchain](cpan.md#build-an-ordinary-lean-project). The command uses the CLI's prepared Wasm runtime and the selected native Lean compiler and Perl interpreters. Keep npm and CPAN package names under `targets.npm` and `targets.cpan` in the same `lean-bridge.exports.json`.
+
+The builder captures the source tree and Lake dependencies once, compiles one Wasm component and one native component, then checks that both profiles expose the same source API. That comparison includes types, ownership, effects, specialization choices and export contracts. Each profile also retains its compiler and artifact evidence. Both must succeed before the output directory appears; a failed or cancelled build releases neither package set.
+
+| Output | Contents |
+| --- | --- |
+| `packages/npm/` | Component and runtime `.tgz` archives, npm receipt and standalone verifier |
+| `profiles/wasm/` | Wasm bundle and compiler execution evidence |
+| `profiles/native/archives/` | Component and runtime CPAN `.tar.gz` archives and receipts |
+| `profiles/native/native/` | Compiled native component, runtime and checked metadata |
+| `multi-profile-release.json` | Shared source/API identity and both profiles' package and evidence hashes |
+
+Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/packages/npm/component-package-receipt.json`. Install the CPAN archives using the [prepared-package instructions](../consume/perl.md).
+
+Add `--target c` or `--target cpp` to include [prepared native C/C++ archives](c.md#build-an-ordinary-lean-project). Those targets share the same native compilation with CPAN. You can also omit CPAN and build npm with either C-family target; no Perl installation is needed in that case.
+
+The selected exports must fit both profiles: copied primitives, arrays, Lists, options, results, products, acyclic records, variants, aliases and synchronous callbacks with those payloads, including supported concrete specializations. Source-configured closure arities still require separate target builds. Resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
+
 ## Publish an ordinary component
 
-Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Choose a package name and version you own in `lakefile.toml`, declare its license in `package.json`, and include `LICENSE` in the committed source.
+Install the prepared CLI candidate using [author setup](../lean/setup.md#install-a-prepared-cli), then complete [your first component](../lean/first-component.md). Set [shared license terms](../publishing.md#declare-license-terms) in `lean-bridge.exports.json` and commit the nonempty terms files. The publication check accepts declared `package.licenseFiles` paths, or conventional `LICENSE`, `LICENCE`, `COPYING` and `LICENSES/` files, including nested paths and case variations. A `NOTICE` or `COPYRIGHT` filename alone does not identify license terms. The source `package.json` remains an npm-only license fallback; if both declarations exist, they must match exactly.
+
+The publication check matches every root notice and its bytes to the captured source inventory. It also binds the shared configuration and any source `package.json` license declaration to their captured bytes. Commit license changes and rebuild the candidate; editing the SBOM or release files invalidates the evidence.
 
 The runtime is published centrally by Lean Bridge. Your publisher checks that its exact dependency coordinate and tarball hash already exist in the selected registry. It does not upload the runtime under your credentials. A missing or different runtime blocks publication before the component upload.
+
+The generated runtime version binds its payload, package generator and packing environment. `runtime/package/runtime-identity.json` records the file hashes, fixed modes and timestamp, archive implementation, Node/zlib/ICU versions, platform, architecture and default collation locale. Reproduce archives in that recorded environment. A different environment selects a different runtime version, which must also exist in the chosen registry before component publication. Installing or verifying downloaded packages does not require the producer's packing environment. See the [runtime packing audit](../evidence/runtime-packing-identities-20260916.md).
+
+### Choose the npm name and version
+
+Set the npm coordinate in `lean-bridge.exports.json` at the Lean project root. Use a name or scope you own:
+
+```json
+{
+  "schemaVersion": 1,
+  "targets": {
+    "npm": {
+      "name": "@your-org/your-component",
+      "version": "0.1.0"
+    }
+  }
+}
+```
+
+Merge `targets` into your existing file if you already [configure exports](../lean/existing-package.md#configure-exports). Either setting is optional; omitted values use the component's name and version. Declaring `targets.npm` does not select a build target; use `--target npm`.
+
+Names must be lowercase npm names of at most 214 characters, including the scope. Unscoped names must start with a letter or digit. Use an exact version such as `0.1.0` or `0.1.0-beta.1`. Ranges and tags are not versions. Lean Bridge rejects `+build` metadata because npm removes it when publishing. The component cannot use the reserved runtime name. [npm package name and version rules](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#name).
+
+These settings change the generated npm package while preserving the Lean library's identity in proof and build metadata. Package assembly reads them from the sealed build bundle. The receipt records both identities; use `lean-bridge verify` to check its archives. Publication checks the coordinate against the bundled settings before signing. Commit changed settings and create a new candidate instead of editing a prepared archive.
 
 ### Configure signing
 
@@ -118,7 +471,7 @@ npm run verify:release-authorization -- \
 
 Select the coordinate, archive path, and SHA-256 from that candidate's manifest. The executor accepts both the universal version-one manifest and the ordinary component's version-two manifest.
 
-The ordinary component flow above supplies signing through CLI configuration. Universal repository releases retain the reviewed integration in [Sandbox release](sandbox-release.md) and its project production-approval policy. The manual npm commands below do not create `registry-transaction.json` or a signed `release-receipt.json`.
+The ordinary component flow above supplies signing through CLI configuration. Universal repository releases retain the reviewed integration in [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and its project production-approval policy. The manual npm commands below do not create `registry-transaction.json` or a signed `release-receipt.json`.
 
 ## Upload to your sandbox
 
@@ -150,7 +503,7 @@ npm publish "$LEAN_BRIDGE_NPM_ARCHIVE" --ignore-scripts \
   --registry "$LEAN_BRIDGE_NPM_REGISTRY" --tag sandbox
 ```
 
-The explicit tag avoids moving `latest`. Apply the access level required by the registry and reviewed package policy. [Production review](production-release.md) still governs project releases.
+The explicit tag avoids moving `latest`. Apply the access level required by the registry and reviewed package policy. [Production review](../publishing.md#build-and-approve-the-same-artifacts) still governs project releases.
 
 ## Publish to the public npm registry
 
@@ -193,7 +546,7 @@ sha256sum "$LEAN_BRIDGE_NPM_ARCHIVE" "$LEAN_BRIDGE_NPM_DOWNLOADED"
 In a fresh application directory, install the exact coordinate with `npm install --ignore-scripts --registry "$LEAN_BRIDGE_NPM_REGISTRY" "$LEAN_BRIDGE_NPM_COORDINATE"`. Select the consumer check for the package you published:
 
 - For the ordinary `onboarding-small` component, npm installs its exact runtime dependency automatically. Run the [JavaScript and TypeScript example](../javascript-typescript.md).
-- For `php-wasm-lean-alpha`, run the [PHP-Wasm example](../consume/php-wasm.md) with the selected loading profile.
+- For `php-wasm-lean-alpha`, run the [PHP-Wasm example](../php.md#php-wasm) with the selected loading profile.
 - For the universal `@lean-bridge/alpha` fixture, run this `Box` check from the clean installation directory. It prints `42` and releases the resource:
 
 ```sh
@@ -213,24 +566,14 @@ Use the actual package name and exports for a renamed component. If the integrat
 
 ## Publish the PHP-Wasm profile
 
-PHP-Wasm produces an npm package separately from the universal `npm` target. With the PHP sources and Emscripten environment prepared as in its [consumer and package guide](../consume/php-wasm.md), build and pack one profile:
-
-```sh
-node scripts/build-php-wasm-package.mjs \
-  --manifest poc/lean-link-spike/bindings/php-wasm.package.json \
-  --php-source build/php-wasm-sdk/php8.4-src \
-  --emsdk .toolchains/emsdk-php-wasm --output build/publish-php-wasm
-mkdir build/publish-php-wasm-archives
-npm pack ./build/publish-php-wasm --ignore-scripts \
-  --pack-destination build/publish-php-wasm-archives
-```
-
-Use new output directories. The manifest's `graphLock.profile` selects lazy or startup loading. Both fixture profiles currently use `php-wasm-lean-alpha@0.0.0`; they cannot be uploaded as different bytes under that same coordinate. Select one profile, or regenerate distinct reviewed package identities before packaging. Contributors can check both profiles with the [PHP release regression checks](../contributing/testing.md#consumer-acceptance).
-
-Freeze the resulting `.tgz`, record its profile and hash, then use the sandbox upload and download checks above. There is no universal `--target php-wasm`, and the universal `npm` target identifies `@lean-bridge/alpha`, not this package.
+Follow [Build and publish PHP packages](php.md#php-wasm-with-npm) for PHP-Wasm's package inputs, profile selection, npm archive preparation, and consumer verification.
 
 ## Recover a failed upload
 
 After an uncertain response, inspect and download the coordinate before retrying. Matching bytes establish that the upload arrived; different bytes require an incident review or a new version. npm does not permit reusing a published name/version pair. An approved corrective release can deprecate a bad version, but deprecation does not replace its bytes. [npm version immutability](https://docs.npmjs.com/cli/v11/commands/npm-publish/), [npm deprecate](https://docs.npmjs.com/cli/v11/commands/npm-deprecate/).
 
-For a signed Lean Bridge transaction, preserve the manifest and transaction record and follow [transaction recovery](production-release.md#recover-an-interrupted-release). Return to [Publishing](../publishing.md) for the shared approval and handoff flow.
+For a signed Lean Bridge transaction, preserve the manifest and transaction record and follow [transaction recovery](../contributing/production-release.md#recover-an-interrupted-release). Return to [Publishing](../publishing.md) for the shared approval and handoff flow.
+
+### Publish npm packages
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

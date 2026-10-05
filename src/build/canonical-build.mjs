@@ -10,26 +10,35 @@ import {
 	mkdir,
 	mkdtemp,
 	readFile,
+	realpath,
 	rename,
 	rm,
 	stat,
 	writeFile,
 } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { ComponentBuildPlanError, prepareComponentBuildPlan } from "./component-plan.mjs";
-import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { ComponentBuildPlanError, createComponentBuildPlan } from "./component-plan.mjs";
+import { analyzeLeanProject, inspectLeanProject } from "../analyze/lean-project.mjs";
 import { generateCompilerAdapters } from "./compiler-adapters.mjs";
 import { prepareComponentCompilationPlan, writeComponentCompilationInputs } from "./component-compilation-plan.mjs";
+import { captureLockedLakeProject } from "./lake-workspace.mjs";
+import { verifyLakeSnapshotProject } from "./lake-dependency-snapshot.mjs";
 import { writeEngineExecutionRequest } from "./engine-execution-request.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.mjs";
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
+import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
+import { buildNativeProject } from "./native-project.mjs";
+import { buildMultiProfileProject } from "./multi-profile-project.mjs";
+import { buildPhpWasmProject } from "./php-wasm-project.mjs";
+import { buildOwnedJavaScriptProject, usesOwnedJavaScript } from "./javascript-wasm-owned-project.mjs";
+import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
 
@@ -54,6 +63,13 @@ const componentEngineInstallable = async engineRoot => {
 
 const fail = (code, message, options) => {
 	throw new CanonicalBuildError(code, message, options);
+};
+
+const preflightReview = async (root, signal, ownedGraphs = false) => {
+	try
+	{ await readNativeReviewedSource(root, await inspectLeanProject(root, { signal }), signal, ownedGraphs); }
+	catch(error)
+	{ fail(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 };
 
 const exactKeys = (value, keys, label) => {
@@ -609,6 +625,14 @@ const readComponentEngineOutput = async ({ executionRoot, request }) => {
     || report.authorizedOutputsOnly !== true
     || report.runtimeBinaryIncluded !== false
 	) fail("component-engine-output-invalid", "Component execution report does not match the requested component bundle");
+	if(request.document.schemaVersion === 2)
+	{
+		for(const [name, expected] of [["component-build-plan", report.componentPlanSha256], ["component-compilation-plan", report.compilationPlanSha256]])
+			if(sha256(await readFile(join(bundleRoot, `locks/${name}.json`))) !== expected) fail("component-engine-output-invalid", "Compiler-owned plans differ from the execution report");
+		const plan = JSON.parse(await readFile(join(bundleRoot, "locks/component-build-plan.json"), "utf8"));
+		if(plan.component.id !== request.document.component.id || plan.source.treeSha256 !== request.document.component.sourceTreeSha256 || plan.bindingIr.origin !== "lean-elaborated")
+			fail("component-engine-output-invalid", "Compiler-owned component differs from the requested source intent");
+	}
 	return Object.freeze({ bundleRoot, manifest: Object.freeze(manifest), manifestSha256, report: Object.freeze(report) });
 };
 
@@ -617,6 +641,8 @@ const buildPlainComponentProject = async ({
 	, engine
 	, output
 	, componentPlan
+	, entryIntent
+	, lakeSnapshot
 	, selection
 	, runner
 	, environment
@@ -627,20 +653,26 @@ const buildPlainComponentProject = async ({
 }) => {
 	await mkdir(dirname(output), { recursive: true });
 	const workParent = selection.backend === "docker"
-		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? dirname(output))
-		: dirname(output);
+		? resolve(environment.LEAN_BRIDGE_DOCKER_STAGING_ROOT ?? tmpdir())
+		: tmpdir();
 	await mkdir(workParent, { recursive: true });
-	const work = await mkdtemp(join(workParent, ".lean-bridge-component-work-"));
-	const finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
+	const work = await mkdtemp(join(await realpath(workParent), ".lean-bridge-component-work-"));
+	let finalStaging;
 	const isolatedStore = selection.backend === "nix" && cache.policy === "off" ? `${work}-nix-store` : null;
 	try
 	{
+		finalStaging = await mkdtemp(join(dirname(output), ".lean-bridge-build-"));
 		onProgress?.({ phase: "prepare", state: "started", message: "Preparing the verified component input" });
-		const analysis = await analyzeLeanProject(root, { signal, targets });
-		const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
-		const compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+		let analysis, compilationPlan;
 		const inputRoot = join(work, "component");
-		await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters });
+		if(entryIntent) await writeLakeEntryInputs({ intent: entryIntent, outputRoot: inputRoot, signal });
+		else
+		{
+			analysis = await analyzeLeanProject(root, { signal, targets });
+			const compilerAdapters = generateCompilerAdapters({ analysis, componentPlan });
+			compilationPlan = await prepareComponentCompilationPlan({ projectRoot: root, analysis, componentPlan, compilerAdapters });
+			await writeComponentCompilationInputs({ projectRoot: root, outputRoot: inputRoot, analysis, componentPlan, compilerAdapters, lakeSnapshot });
+		}
 		const requestPath = join(work, "request", "engine-execution-request.json");
 		const request = await writeEngineExecutionRequest({
 			output: requestPath
@@ -648,6 +680,7 @@ const buildPlainComponentProject = async ({
 			, inputRoot
 			, componentPlan
 			, compilationPlan
+			, entryIntent
 			, cachePolicy: cache.policy
 			, targets
 		});
@@ -681,6 +714,20 @@ const buildPlainComponentProject = async ({
 		await cp(checked.bundleRoot, join(finalStaging, "bundle"), { recursive: true, dereference: true, preserveTimestamps: true });
 		await cp(join(executionRoot, request.document.output.executionReport), join(finalStaging, "engine-execution-report.json"));
 		await cp(requestPath, join(finalStaging, "engine-execution-request.json"));
+		if(entryIntent)
+		{
+			await verifyLakeSnapshotProject({ snapshot: entryIntent.lakeSnapshot, projectRoot: root, signal });
+			const fresh = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
+			if(fresh.sha256 !== entryIntent.sha256)
+				fail("lake-source-drift", "Project inputs changed during the component build");
+		}
+		else if(componentPlan.document.schemaVersion === 2)
+		{
+			if(lakeSnapshot) await verifyLakeSnapshotProject({ snapshot: lakeSnapshot, projectRoot: root, signal });
+			const snapshot = lakeSnapshot ?? await captureLockedLakeProject({ projectRoot: root, inputs: analysis.inputs, signal });
+			if(snapshot?.sha256 !== componentPlan.document.source.lakeSnapshotSha256)
+				fail("lake-source-drift", "Locked project inputs changed during the component build");
+		}
 		onProgress?.({ phase: "validate", state: "completed", message: "Component and provenance identities validated" });
 		await rename(finalStaging, output);
 		return Object.freeze({
@@ -699,14 +746,14 @@ const buildPlainComponentProject = async ({
 			, cache
 			, engineIdentitySha256: request.document.engine.identitySha256
 			, executionRequestSha256: request.sha256
-			, componentPlanSha256: componentPlan.sha256
-			, compilationPlanSha256: compilationPlan.sha256
+			, componentPlanSha256: checked.report.componentPlanSha256
+			, compilationPlanSha256: checked.report.compilationPlanSha256
 			, sourceReadOnly: true
 			, componentBinariesRebuiltByProjection: false
 		});
 	} catch(error)
 	{
-		await rm(finalStaging, { recursive: true, force: true });
+		if(finalStaging) await rm(finalStaging, { recursive: true, force: true });
 		throw error;
 	} finally
 	{
@@ -728,6 +775,7 @@ const buildPlainComponentProject = async ({
  * @param root0.cache - Cache settings propagated to the isolated build while preserving the requested cache policy.
  * @param root0.signal - Abort signal used to cancel the operation.
  * @param root0.onProgress - Observer invoked when progress occurs.
+ * @param root0.lakeSnapshot - Optional immutable capture authorized by the local reproducibility gate.
  */
 export const buildCanonicalProject = async ({
 	projectRoot
@@ -739,6 +787,7 @@ export const buildCanonicalProject = async ({
 	, cache = { policy: "use", directory: null }
 	, signal = undefined
 	, onProgress = undefined
+	, lakeSnapshot = undefined
 } = {}) => {
 	const root = resolve(projectRoot ?? process.cwd());
 	const engine = resolve(engineRoot);
@@ -747,6 +796,43 @@ export const buildCanonicalProject = async ({
 		fail("invalid-package-targets", "Build targets must be an array of non-empty names");
 	}
 	if(new Set(targets).size !== targets.length) fail("invalid-package-targets", "Build targets must be unique");
+	const normalized = targets.map(target => target === "perl" ? "cpan" : target);
+	if(new Set(normalized).size !== normalized.length) fail("invalid-package-targets", "Build targets must be unique, including aliases");
+	const phpWasm = targets.includes("php-wasm");
+	if(phpWasm)
+	{
+		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
+			fail("invalid-package-targets", "PHP-Wasm cannot be combined with an unsupported package target");
+		if(root === engine)
+			fail("invalid-package-targets", "Ordinary PHP-Wasm builds require a source project with fresh Lean metadata, not the universal fixture");
+		if(cache === null || typeof cache !== "object" || !["use", "refresh", "off"].includes(cache.policy)) fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
+		if(cache.directory !== null && cache.directory !== undefined) fail("cache-directory-unsupported", "PHP-Wasm builds do not implement --cache-directory; use a verified LEAN_BRIDGE_PHP_COPIED_RUNTIME input for shared runtime reuse");
+	}
+	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target));
+	const mixed = phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl");
+	if(mixed && normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
+		fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
+	const ownedNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm")) && await usesOwnedJavaScript(root, signal);
+	if(mixed)
+	{
+		if(normalized.includes("npm") || phpWasm)
+			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
+		if(normalized.length === 1 && phpWasm)
+			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
+		if(!normalized.includes("npm") && !phpWasm)
+			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: normalized, signal, onProgress, lakeSnapshot });
+		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine
+			, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot
+			, nativeTargets: normalized.filter(target => !["npm", "php-wasm"].includes(target))
+			, wasmTargets: normalized.filter(target => ["npm", "php-wasm"].includes(target))
+			, buildWasm: buildCanonicalProject });
+	}
+	if(ownedNpm)
+	{
+		if(normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Owned JavaScript compilation requires the npm target");
+		return buildOwnedJavaScriptProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot });
+	}
+	if(root !== engine) await preflightReview(root, signal);
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))
 	{
 		fail("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
@@ -764,10 +850,21 @@ export const buildCanonicalProject = async ({
 		? runner
 		: Object.freeze({ capture: request => runner.capture({ ...request, signal }) });
 	signal?.throwIfAborted();
-	let componentPlan;
+	let componentPlan, entryIntent;
 	try
 	{
-		componentPlan = await prepareComponentBuildPlan({ projectRoot: root, engineRoot: engine, targets, signal });
+		if(root === engine)
+		{
+			// The repository's universal fixture has its own package projections.
+			// Its Lean component name is not an ordinary-component npm coordinate.
+			const analysis = await analyzeLeanProject(root, { signal, targets });
+			const graph = JSON.parse(await readFile(join(engine, "poc/lean-link-spike/graph-lock.json"), "utf8"));
+			componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets });
+		}
+		else
+		{
+			entryIntent = await prepareLakeEntryIntent({ projectRoot: root, lakeSnapshot, signal });
+		}
 	} catch(error)
 	{
 		if(!(error instanceof ComponentBuildPlanError)) throw error;
@@ -784,7 +881,8 @@ export const buildCanonicalProject = async ({
 	if(root !== engine)
 	{
 		return buildPlainComponentProject({
-			root, engine, output, componentPlan, selection, runner: selectedRunner
+			root, engine, output, componentPlan, entryIntent, lakeSnapshot
+			, selection, runner: selectedRunner
 			, environment, targets, cache: normalizedCache, signal, onProgress
 		});
 	}

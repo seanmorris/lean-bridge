@@ -54,7 +54,7 @@ test("invalid property shapes fail before projection", () => {
   expectGap(property, "unsupported-property-shape");
 });
 
-test("generic and constructed values fail without runtime specialization", () => {
+test("generic values fail without runtime specialization; options are projected", () => {
   const generic = clone(alpha.bindingIr);
   const declaration = roundTrip(generic);
   declaration.typeParameters.push({
@@ -72,7 +72,7 @@ test("generic and constructed values fail without runtime specialization", () =>
     , constructor: "option"
     , arguments: [{ kind: "primitive", name: "uint32" }]
   };
-  expectGap(option, "unsupported-type-constructor");
+  assert.doesNotThrow(() => generateJavaScriptPackage(option));
 });
 
 test("optional arguments and ambiguous overload groups fail before generation", () => {

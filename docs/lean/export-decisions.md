@@ -1,43 +1,204 @@
 # Choose an export shape
 
-Lean Bridge proposes host functions from public `def`, `opaque`, and `abbrev` declarations with explicit supported parameter and result types. Lean theorems remain assurance references.
+Choose the Lean API's meaning before choosing a host-language representation. Export public operations, preserve their input constraints, and specify how values, identity, failures, and effects cross the boundary.
+
+Use the shared [export configuration](existing-package.md#configure-exports) to select modules and declarations. The [type reference](../reference/types.md#full-type-surface) inventories every supported or pending source form; the language tables below record current implementation evidence.
+
+## Choose value and callable semantics
+
+| Lean form | Author decision |
+| --- | --- |
+| `Unit`, `Bool`, fixed-width signed and unsigned integers | Preserve the unit value, Boolean meaning, and integer bounds. Reject invalid inputs before narrowing. |
+| `Nat`, `Int`, `USize`, `ISize` | Keep arbitrary integers exact and use the compiled target's width for platform-sized integers. |
+| `Float32`, `Float` | Preserve the specified precision, infinities, NaN classification, and signed zero. |
+| `Char`, `String`, `ByteArray` | Separate Unicode scalar values, text, and binary data. Preserve embedded zero bytes. |
+| Arrays, lists, tuples, records, aliases, variants, recursive values | Choose copied values or explicit retained identity. Keep constructor tags and fields; enforce allocation and nesting limits. |
+| `Option`, `Except` | Preserve presence and branch payloads. `Some None` differs from `None`; `Except ε α` carries success `α` or error `ε`. |
+| Defaults, optional arguments, host null | Keep omitted input, declared defaults, host null, Unit, and Option.None distinct. |
+| Generics, implicit arguments, instances | Select finite build-time specializations and resolve the required dictionaries. |
+| `Fin`, `Subtype`, dependent signatures | Preserve runtime constraints through checked constructors or validation. An erased proof does not authorize an unchecked input. |
+| Theorems and proof arguments | Let Lean determine runtime erasure. Retain theorem identities and assumptions in assurance metadata. |
+| Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
+| Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. |
+| `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
+| `Task`, cancellation, iterators, async iterators | Specify result delivery and cleanup after completion, cancellation, failure, or early termination. |
+
+These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
+
+Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Checked-constructor lowering, retained host callbacks and async adapters remain unfinished.
+
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
+The result expires with the selected input owner; callers explicitly retain or
+copy it when they need independent ownership. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI also support
+[methods, properties and receiver-bound results](../publish/c.md#export-methods-and-properties),
+with named members in [C++](../publish/cpp.md#export-methods-and-properties),
+[Rust](../publish/cargo.md#export-methods-and-properties),
+[Python](../publish/pypi.md#export-methods-and-properties),
+[Ruby](../publish/rubygems.md#export-methods-and-properties),
+[C#](../publish/nuget.md#export-methods-and-properties),
+[Java/Kotlin](../publish/maven.md#export-methods-and-properties),
+[Perl](../publish/cpan.md#export-methods-and-properties),
+[native PHP and PHP-Wasm](../publish/php.md#export-methods-and-properties) and
+[JavaScript/TypeScript](../publish/npm.md#export-methods-and-properties).
+WIT/WASI exposes [typed receiver-first functions](../publish/wit-wasi.md#export-methods-and-properties), including owned-record and variant receivers.
+Callback-result anchors are available for C, C++, Rust, Python, Ruby, C# and npm;
+the other targets remain in development.
+
+## Check each consumer representation
+
+| Consumer | Conversion table | Package guide |
+| --- | --- | --- |
+| JavaScript, TypeScript, browser, React, workers | [JavaScript and TypeScript](../javascript-typescript.md#type-conversions) | [npm](../publish/npm.md) |
+| Python | [Python](../consume/python.md#type-conversions) | [PyPI](../publish/pypi.md) |
+| Rust | [Rust](../consume/rust.md#type-conversions) | [Cargo](../publish/cargo.md) |
+| C | [C](../consume/c.md#type-conversions) | [C packages](../publish/c.md) |
+| C++ | [C++](../consume/cpp.md#type-conversions) | [C++ packages](../publish/cpp.md) |
+| C# / .NET | [.NET](../consume/dotnet.md#type-conversions) | [NuGet](../publish/nuget.md) |
+| Java and Kotlin | [Java](../consume/java.md#type-conversions), [Kotlin](../consume/kotlin.md#type-conversions) | [Maven](../publish/maven.md) |
+| Ruby | [Ruby](../consume/ruby.md#type-conversions) | [RubyGems](../publish/rubygems.md) |
+| Perl | [Perl](../consume/perl.md#type-conversions) | [CPAN](../publish/cpan.md) |
+| PHP, native and PHP-Wasm | [PHP](../php.md#type-conversions) | [Composer and npm](../publish/php.md) |
+| WIT / WASI | [WIT / WASI](../consume/wit-wasi.md#type-conversions) | [Component distribution](../publish/wit-wasi.md) |
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support pure functions with any number of primitive arguments, including zero:
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except` and nested binary products. Synchronous callbacks and returned functions accept one to sixteen arguments and a result using these same copied types, including finite recursive values. Copied values and callables can share a component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
 | `Unit`, `Bool` | `undefined`, `boolean` |
 | `UInt8`, `UInt16`, `UInt32`, `Int8`, `Int16`, `Int32` | Range-checked integer `number` |
 | `UInt64`, `Int64` | Range-checked `bigint` |
+| `USize`, `ISize` | Range-checked `number`, unsigned or signed 32-bit for the compiled Wasm target |
 | `Nat`, `Int` | Arbitrary-precision `bigint`; `Nat` must be nonnegative |
 | `Float32`, `Float` | `number`, including NaN, infinities, and negative zero |
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
+| `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
+| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be any supported copied value |
+| `List α` | The same host array representation, preserving order and nesting; the reviewed contract retains `constructor:list` |
+| Copied structure | Plain objects with exact own fields; named readonly TypeScript interfaces |
+| Concrete inductive sum | `{ kind: "constructorName", ...fields }`; named readonly discriminated unions. Empty constructors retain their names; explicit Unit fields remain present. |
+| `Option α` | `{ tag: "none" }` or `{ tag: "some", value: T }`; Unit payloads and nested options retain their tags |
+| `Except ε α` | `{ ok: T }` or `{ error: E }`, exactly one own branch |
+| `α × β` | Exact two-element ordinary array; readonly TypeScript tuple retaining Lean's product nesting |
 
-Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
+Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Container calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 container levels for the acyclic transport. Recursive graph calls allow 128 value edges and 262,144 value slots within the same byte budget. Returned copied values own their storage and need no disposal. Variants allow up to 1,024 constructors with at most 1,024 fields each, subject to the 4,096-node descriptor bound. `kind` is reserved for the discriminator. Generic, indexed and proof-bearing variants need further adapter work.
+
+[Recursive npm values](../evidence/npm-recursive-20260922.md) have installed checks on both source paths. [C/C++](../evidence/native-recursive-packages-20260923.md), [Rust/Cargo](../evidence/rust-recursive-packages-20260923.md), [Python wheels](../evidence/python-recursive-packages-20260923.md), [Ruby gems](../evidence/ruby-recursive-packages-20260923.md), [Perl](../evidence/perl-recursive-packages-20260923.md), [C#/JVM/PHP](../evidence/recursive-managed-acceptance-20260924.md) and [WIT/WASI](../evidence/wit-recursive-acceptance-20260924.md) complete installed recursive copied-value coverage across all seventeen profiles. npm, C, C++, [Python](../evidence/python-recursive-callables-20260925.md), [Rust](../evidence/rust-recursive-callables-20260925.md), [Ruby](../evidence/ruby-recursive-callables-20260925.md), [Perl](../evidence/perl-recursive-callables-20260925.md), [C#](../evidence/dotnet-recursive-callables-20260926.md), [Java/Kotlin](../evidence/jvm-recursive-callables-20260926.md), [native PHP](../evidence/php-recursive-callables-20260926.md), [PHP-Wasm](../evidence/php-wasm-recursive-callables-20260926.md) and [WIT/WASI](../evidence/wit-recursive-callables-20260926.md) also accept recursive callback payloads. Resource-containing aggregates use the explicit ownership profiles described below; support varies by target.
+
+C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also compile options, results and products; concrete copied variants compile across all seventeen consumer profiles, including [WIT/WASI](../evidence/wit-variants-20260921.md). Combined builds require every selected target to support the API.
+
+`Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
+
+`USize` and `ISize` follow the compiled Lean target: 32 bits for npm and PHP-Wasm, 64 bits for native packages and native-backed WIT components. The consumer's architecture does not change that range. Adapters reject out-of-range inputs before narrowing; arithmetic inside Lean retains Lean's word-sized wraparound. Use a fixed-width integer when the same API must have the same range on both targets.
 
 The [first-component tutorial](first-component.md) executes `add` and `isEmpty` from generated archives. Its source needs no publishing annotation or handwritten host wrapper.
 
-Analysis, compilation, packaging, and loading check the same ordinary-component capability contract.
+Compilation, packaging, and loading check the same ordinary-component capability contract. `analyze` resolves aliases, notation, and inferred types using fresh Lean interfaces in the pinned engine. Ordinary builds use the same metadata extractor for captured and [generated entry modules](existing-package.md#generate-the-public-entry-module).
+
+Use [concrete specializations](existing-package.md#export-concrete-specializations) to bind a generic function's leading type parameters and resolve its following instance dictionaries. Each configured name becomes a concrete npm function with supported runtime arguments and results. CPAN accepts the same configuration against its native type profile, including [specialized returned closures](../publish/cpan.md#export-a-specialized-closure).
+
+Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
+
+## Native C and C++ exports
+
+Ordinary `c` and `cpp` builds accept all 19 pure primitive parameter/result types above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars, copied buffers and GMP `mpz_t` for Nat/Int; C++ supplies owned standard-library values and Boost.Multiprecision cpp_int. Packages include and configure the exact-integer dependency. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).
+
+The native C/C++ adapters also accept arrays, Lists and acyclic copied records, including nested combinations, Option/Except/product payloads and primitive record fields. [List inputs, results and fields](../evidence/native-lists-20260920.md) use typed C spans or owned C++ vectors. C uses typed spans and structs with generated deep cleanup; C++ uses owned vectors and structs. [Concrete copied aliases](../publish/c.md#named-copied-aliases) retain public names through C typedefs and C++ using declarations, including alias chains and nested containers. Both targets support synchronous primitive callbacks and returned closures: [C uses signature-specific function/context structs](../publish/c.md#export-callbacks-and-closures), while [C++ uses typed lambdas and move-only LeanClosure values](../publish/cpp.md#primitive-callbacks-and-returned-closures). Both targets additionally support acyclic copied callback payloads, including arrays, Lists, options, results, products, records, variants and aliases. Asynchronous functions remain unsupported. A selected unsupported signature stops the build at its Lean source location. Selecting npm alongside C/C++ requires an API admitted by both profiles.
+
+C and C++ builds also support [resource-containing aggregates](../publish/c.md#resource-containing-c-values) when the author selects resource identities and an explicit aggregate ownership policy. The version-4 transport exposes named values with session/result owners in C and checked RAII leases in [C++](../consume/cpp.md#resource-containing-values), including recursive values, captured Lean closures and call-scoped host callbacks. Both ordinary source and independently reviewed contracts compile into prepared archives. [Resource-containing callbacks](../consume/c.md#callbacks-containing-resources) use typed recovery and preserve resource identity through temporary reply cleanup. C++ copies of callback resource wrappers expire on return unless explicitly retained. Input transfers require an explicit export contract; C and C++ also support parameter-anchored borrowed results.
+
+Ordinary [C# / NuGet builds](../publish/nuget.md#build-an-ordinary-lean-project) use the same private native adapter. C# exposes exact-width scalars, `BigInteger`, `T[]` arrays and Lists, and sealed records. [Installed List checks](../evidence/dotnet-lists-20260920.md) cover inputs, results and record fields on both source paths. [Copied aliases](../publish/nuget.md#export-named-copied-aliases) keep ordinary CLR values and preserve their names and targets in installed metadata and XML API documentation. Synchronous primitive and [acyclic structured callbacks](../publish/nuget.md#structured-callback-values) use `Func`/`Action`; returned functions use disposable `LeanClosure<TDelegate>` values. Generated code handles native buffers, callback exception recovery, deep cleanup and compatible runtime loading. The [explicit ownership profile](../publish/nuget.md#export-resource-containing-values) also supports resources inside records, variants, recursive values and synchronous callback payloads. Sealed resource wrappers implement `IDisposable` and explicit `Retain`; callback borrows expire on return. Consumers call the installed assembly without unsafe C#, Lean, a native compiler or a separate runtime installation.
+
+Ordinary [Java/Kotlin Maven builds](../publish/maven.md#build-an-ordinary-lean-project) support copied primitives, arrays, Lists, records, bounded recursive values and synchronous primitive, [acyclic structured](../publish/maven.md#structured-callback-values) or [recursive callables](../publish/maven.md#recursive-callback-values). [Installed List checks](../evidence/jvm-lists-20260920.md) cover both languages on both source paths, using primitive or reference arrays. [Copied aliases](../publish/maven.md#export-named-copied-aliases) retain target values and preserve their names and chains in installed metadata and generated Java source documentation. Unsigned values use wider checked JVM types: UInt8/UInt16 become `int`, UInt32 becomes `long`, and UInt64/Nat/Int become `BigInteger`. Callbacks use typed functional interfaces; returned functions implement the matching interface and `AutoCloseable`. Public APIs keep FFM and native layouts private.
+
+The [Maven ownership profile](../publish/maven.md#owned-resources-and-aggregates)
+also supports resource leaves inside records, containers, variants, recursive
+values and synchronous callback payloads. Java and Kotlin use typed,
+`AutoCloseable` wrappers with explicit retention. Callback borrows expire on
+return, and creating-thread exit drains native owners. The prepared JAR
+includes both language APIs, compatible shared libraries and private GMP.
+
+Ordinary [RubyGems builds](../publish/rubygems.md#build-an-ordinary-lean-project) support those copied types through Ruby `Integer`, `Float`, `String`, `Array` and generated record classes. [Lists](../evidence/ruby-lists-20260921.md) use copied Arrays for inputs, results and fields on both source paths. [Copied aliases](../publish/rubygems.md#export-named-copied-aliases) retain target values and preserve their names and chains in gem metadata and API comments. The generated `UNIT` singleton represents Unit in every position; `nil` is valid only for Option.None. Options use `nil` or `Some`, results use `Ok` or `Err`, and binary products use two-element arrays. Fixed-width integers are range checked, Nat/Int remain exact, and consumers need no native declarations or extension build. Synchronous primitive, [structured](../publish/rubygems.md#structured-callback-values) and [recursive callbacks](../publish/rubygems.md#export-recursive-callbacks-and-closures) accept callables or blocks; returned `LeanClosure` values support `with` and `close`. The [explicit ownership profile](../publish/rubygems.md#export-resource-containing-values) also admits resources in records, variants, recursive values and synchronous callback payloads. Generated wrappers use checked leases and explicit retention; callback borrows expire on return. Prepared gems load their native libraries and private GMP automatically.
+
+Ordinary [Python/PyPI builds](../publish/pypi.md#build-an-ordinary-lean-project) expose `None`, `bool`, exact `int`, `float`, `str`, `bytes`, arrays, Lists and frozen record classes. Arrays and Lists accept exact lists or tuples and return owned tuples. [Installed List checks](../evidence/python-lists-20260920.md) cover both source paths, including nested copied values. [Concrete copied aliases](../publish/pypi.md#export-named-copied-aliases) retain public names as `TypeAlias` declarations in modules, stubs, signatures and fields without adding wrappers. [Recursive records and variants](../consume/python.md#recursive-values) use named frozen constructor classes, finite runtime annotations and precise stubs, with bounded depth and storage. Generated private conversions validate values, clear native results and share the bundled runtime automatically. Consumers install a prepared wheel without Lean, native declarations or an extension build. Synchronous primitive, [structured](../publish/pypi.md#structured-callback-values) and [recursive callbacks](../publish/pypi.md#export-recursive-callbacks-and-closures) accept Python callables; returned `LeanClosure` values support `with` and `close()`. The [explicit ownership profile](../publish/pypi.md#export-resource-containing-values) also supports resources inside records, variants, recursive values and callback payloads on both source paths. Generated resource wrappers use checked leases and explicit retention; callback borrows expire on return. The prepared wheel handles native loading and cleanup.
+
+Ordinary [Rust/Cargo builds](../publish/cargo.md#build-an-ordinary-lean-project) expose typed functions returning `Result`, fixed-width Rust integers, `BigUint`/`BigInt`, `String`, `Vec` and named structs. [Lists](../evidence/rust-lists-20260920.md) borrow slices and return owned vectors, including nested copied values on both source paths. [Concrete copied aliases](../publish/cargo.md#export-named-copied-aliases) export `pub type` declarations, keeping alias chains and named fields without newtype wrappers. Aggregate inputs are borrowed; results own independent values. [Recursive values](../consume/rust.md#recursive-values) use owned enums, structs and Box fields, with depth, node and storage limits. Private C conversions and RAII guards handle native ownership. The crate embeds the native libraries and loads a shared runtime automatically. Synchronous primitive, [structured](../publish/cargo.md#structured-callback-values) and [recursive callbacks](../publish/cargo.md#export-recursive-callbacks-and-closures) use typed `FnMut` functions returning `Result`; returned `LeanClosure` values use `Drop` or explicit `close`. Rust prevents sending or sharing these closures across threads. The [explicit ownership profile](../publish/cargo.md#export-resource-containing-values) admits resource leaves in aggregates, recursive values and callable payloads on both source paths. Generated resource wrappers use checked leases and explicit retention; callback borrows expire on return.
+
+Ordinary [WIT/WASI builds](../publish/wit-wasi.md#build-an-ordinary-lean-project) support copied primitives, arrays, Lists, acyclic records, options, results, products, aliases and [named variants](../publish/wit-wasi.md#export-copied-variants) through Component Model functions and a packaged Wasmtime/native Lean host. Variant cases carry named payload records; empty cases and Unit fields remain distinct. [List parameters, results and fields](../evidence/wit-lists-20260921.md) use canonical WIT lists on both source paths; returned Wasmtime values own independent storage. Unit uses a single-case enum. Nat uses least-significant-first `u32` limbs; Int adds a sign flag. Empty records also use a single-case enum. Synchronous primitive, [acyclic structured](../publish/wit-wasi.md#export-structured-callbacks) and [recursive callbacks](../publish/wit-wasi.md#export-recursive-callbacks) use borrowed Component Model resources; returned Lean closures own resources with explicit close. Callback values preserve copied aliases, active branches and independent storage. Recursive packages expose typed C helpers that convert finite values to WIT node tables. Every selected function receives an executable adapter; the separate Alpha resource/callback fixture keeps its narrower WIT path.
+
+Ordinary [native PHP builds](../publish/php.md#build-an-ordinary-lean-project) expose checked functions, readonly records, arrays, Lists, [named copied variants](../publish/php.md#export-copied-variants), and exact `Brick\Math\BigInteger` values through Composer. Generated packages declare the pinned Brick Math dependency. [List parameters, results and fields](../evidence/php-native-lists-20260921.md) use consecutive-key PHP arrays on both source paths. [Copied aliases](../publish/php.md#export-named-copied-aliases) retain target values and preserve their names and chains in installed metadata and PHPDoc. They use the shared C adapter and automatic FFI loading. Parameters carry precise PHPDoc and use runtime checks to prevent weak-mode PHP coercion. Synchronous primitive, [acyclic structured](../publish/php.md#export-structured-callbacks) and [recursive callbacks](../publish/php.md#export-recursive-callbacks) accept PHP callables; returned `LeanClosure` objects are invokable and provide `close()` and `isClosed()`. This path covers NTS CLI; the Alpha Zend and PHP-Wasm profiles retain their separate adapters.
+
+Ordinary [PHP-Wasm builds](../publish/php.md#build-an-ordinary-php-wasm-package) compile copied values, Lists and synchronous primitive, [acyclic structured](../publish/php.md#export-structured-callbacks) or [recursive callables](../publish/php.md#export-recursive-callbacks) for a separate wasm32 Zend adapter. [List inputs, results and fields](../evidence/php-wasm-lists-20260921.md) have installed checks on both source paths in Node and Chromium. `UInt32` and `Int64` use `Brick\Math\BigInteger` on this host, alongside `UInt64`, `Nat`, `Int` and 32-bit `USize`. Returned functions are invokable `LeanClosure` owners with explicit `close()`. Generated npm descriptors include Brick Math and register the shared runtime and component before PHP starts; the companion Composer ZIP supplies the same public PHP API. Installed startup and lazy-loading packages run in Node and Chromium with PHP 8.4.
+
+PHP's [explicit ownership profile](../publish/php.md#export-resource-containing-values)
+accepts resource leaves in records, variants, containers, finite recursive values
+and synchronous callback payloads. Native Composer packages load their checked
+leases and private native dependencies automatically. PHP-Wasm packages use a
+separately compiled 32-bit Zend extension and shared runtime. Callback borrows
+expire on return unless retained. Ordinary source and reviewed contracts can
+select [consuming inputs](../publish/php.md#export-consuming-inputs) in both
+transports. Both also support [owner-anchored function results](../php.md#owner-anchored-results).
+Both transports support [methods, read-only properties and receiver-anchored
+results](../publish/php.md#export-methods-and-properties). Callback-result
+anchors and asynchronous delivery remain unfinished.
+
+## Native Perl exports
+
+The [native Perl backend](../publish/cpan.md) checks freshly elaborated declarations and the pinned Lean compiler's representations. It supports primitive values, finite acyclic copied records, arrays, Lists, options, results, binary products, configured identity resources, synchronous host callbacks, and returned Lean closures. [Lists](../evidence/perl-lists-20260921.md) use plain array references for inputs, results and fields on both source paths. [Copied aliases](../publish/cpan.md#export-named-copied-aliases) retain target values and preserve names and original targets in archive metadata and installed POD. Options use `undef` or `Some`, results use `Ok` or `Err`, and products use two-element array references. Unit uses `undef`; `Some(undef)` retains presence. [Structured callbacks](../publish/cpan.md#export-structured-callbacks) also accept arrays, Lists, options, results, products, acyclic records, variants and transparent aliases. [Recursive callbacks](../publish/cpan.md#export-recursive-callbacks-and-closures) also accept finite recursive records and variants, including aliases nested only in callback signatures. CODE references receive independent copies; returned Lean closures keep captured copies and support explicit `close()`. Its shared compiler report preserves documentation, source ranges and theorem references alongside the native types; the C compiler checks the adapter prototypes against Lean's emitted definitions.
+
+Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work. Unsupported native shapes fail before packaging.
+
+Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. The compiler supplies native types and declaration selection; npm's primitive frame is a separate ABI.
+
+The [explicit ownership profile](../publish/cpan.md#export-resource-containing-values)
+also admits resource leaves in records, variants, containers and finite recursive
+values, including synchronous callback payloads. Returned wrappers own checked
+leases; callback borrows expire on return unless retained. Ordinary-source and
+reviewed-IR builds emit CPAN archives with an authenticated private GMP library.
+Both prebuilt and XS-only installation work without Lean sources. Explicit
+[consuming inputs](../consume/perl.md#consuming-inputs) and
+[parameter-anchored results](../consume/perl.md#borrowed-results) preserve their
+declared owner lifetimes. [Methods and properties](../consume/perl.md#methods-and-properties)
+use nominal owners and preserve the original receiver or argument anchor.
+Asynchronous delivery remains unsupported.
 
 ## Types understood by source analysis
 
-The source-only analyzer recognizes:
+The compiler-backed analyzer projects:
 
 - `Unit`, `Bool`, `UInt8`, `UInt16`, `UInt32`, and `UInt64`;
 - `Int8`, `Int16`, `Int32`, `Int64`, `Nat`, and `Int`;
-- `Float32`, `Float`, `String`, and `ByteArray`;
-- nested `Array T`, `Option T`, and `Except E T` with supported arguments.
+- `USize` and `ISize`, with the compiled target's width;
+- `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
-Ordinary components reject `IO`, `Task`, collection types, records, callbacks, and resources before compilation. Recognizing a source type does not authorize publishing it. Richer reviewed Binding IR and universal-package backends remain separate from this pure primitive path.
+Nested arrays, Lists, copied records, variants, aliases, bounded recursive values, Option, Except, nested binary products and synchronous callbacks and returned functions with those payloads are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task` and unsupported collection constructors produce diagnostics that retain their elaborated types for inspection. Analysis uses the pinned Nix or Docker engine and does not compile consumer adapters.
 
-Reviewed Binding IR can describe richer APIs than source-only inference. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles; it does not imply that every inferred declaration runs through the ordinary-project npm path.
+For resource-containing values, select `resources` and an explicit `ownedAggregates` policy. The analyzer then projects resource identities, owned records and variants, containers, recursive values and synchronous callbacks through the shared ownership model. Its schema-4 Binding IR records borrowed inputs and explicitly leased results. It also preserves explicit input-transfer decisions from ordinary configuration or a reviewed API. C packages compile those decisions into [owner-consuming calls](../consume/c.md#transferred-inputs); C++ packages use [rvalue references](../consume/cpp.md#transferred-inputs), Rust packages use [mutable references](../consume/rust.md#transferred-inputs), and the other implemented bindings consume checked resource leases ([Python](../consume/python.md#transferred-inputs), [Ruby](../consume/ruby.md#transferred-inputs), [C#](../consume/dotnet.md#consuming-inputs), [Java](../consume/java.md#consuming-inputs), [Kotlin](../consume/kotlin.md#consuming-inputs), [Perl](../consume/perl.md#consuming-inputs), [native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs), [WIT/WASI](../consume/wit-wasi.md#consuming-inputs)). These profiles also preserve [owner-anchored borrowed results](../publish/c.md#anchor-a-result-to-an-input), including the [WIT/WASI Component Model path](../consume/wit-wasi.md#borrowed-results). C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI also support [receiver-bound results](../publish/c.md#export-methods-and-properties).
+
+For C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP,
+JavaScript/TypeScript and WIT/WASI, a nested
+[`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)
+can borrow a callback's result from one of that callback's arguments. Argument
+names are local to each callable. The selected argument's original owner
+controls expiration; outer export parameters and receiver anchors cannot stand
+in for callback arguments. PHP-Wasm still rejects callback-result anchors.
+Rust callers pass a checked [`Value<T>` owner](../consume/rust.md#borrowed-callback-results),
+Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),
+Ruby callers pass a [`Value` owner](../consume/ruby.md#results-borrowed-from-a-callback-argument),
+and C# callers pass a [`Value<T>` owner](../consume/dotnet.md#callback-results-borrowed-from-an-argument)
+for the selected argument. Host replies may return the declared payload or its
+whole owner; the bridge checks and converts either form before the callback ends.
+WIT/WASI callers pass the selected argument's original result owner through the
+generated C API; the bundled host validates it before and after the Component
+Model call.
+
+Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
 
 ## Declarations the analyzer skips
 
-The default public proposal excludes `private`, `protected`, `unsafe`, and `partial` definitions. An existing foreign declaration requires a reviewed boundary contract or exclusion. Duplicate unqualified host names require a naming decision.
+The default public proposal excludes private and protected declarations, theorems, and type declarations. Selected unsafe, partial, admitted, and unreviewed foreign implementations produce diagnostics. Duplicate unqualified host names require a naming decision.
 
 Doc comments become generated API descriptions. Missing documentation produces a warning; it does not supply a proof or change a function's implementation.
 
@@ -55,6 +216,8 @@ Required questions identify the declaration, reason, and closed choices. Current
 | --- | --- |
 | Existing foreign declaration | Exclude it or provide a reviewed foreign contract. |
 | Unsupported value, effect, or callable shape | Exclude it or provide an adapter. |
+| Contract differs from the implemented adapter | Correct the contract to match the intended supported behavior, or wait for the required type-family support. |
+| Contract names no selected export | Correct the name or export selection. |
 | Duplicate public names | Qualify, rename, or exclude the conflicting names. |
 | Several Binding IR documents | Select the intended component. |
 

@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lean-bridge.dev/schema/lake-generator-receipt.schema.json",
+  "title": "Captured Lean text generator receipt",
+  "description": "Compiler-prefix, checked interface, captured input and exact output identities. The runner verifies these against the bytes it used.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profile",
+    "snapshotSha256",
+    "definition",
+    "compiler",
+    "checker",
+    "driverSha256",
+    "requestSha256",
+    "modules",
+    "artifacts",
+    "inputs",
+    "outputs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "profile": {
+      "const": "lean-text-v1"
+    },
+    "snapshotSha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "definition": {
+      "$ref": "lake-generator-definition.schema.json"
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bytes",
+        "sha256",
+        "mode",
+        "libraries",
+        "version"
+      ],
+      "properties": {
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "mode": {
+          "enum": [
+            420,
+            493
+          ]
+        },
+        "libraries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "bytes",
+            "sha256"
+          ],
+          "properties": {
+            "files": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "sha256": {
+              "$ref": "#/$defs/hash"
+            }
+          }
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "checker": {
+      "$ref": "#/$defs/file"
+    },
+    "driverSha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "requestSha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "module",
+          "source",
+          "interface"
+        ],
+        "properties": {
+          "module": {
+            "$ref": "lake-generator-definition.schema.json#/$defs/module"
+          },
+          "source": {
+            "$ref": "lake-dependency-snapshot.schema.json#/$defs/file"
+          },
+          "interface": {
+            "$ref": "#/$defs/file"
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "bytes",
+          "sha256",
+          "mode"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_']*(?:/[A-Za-z_][A-Za-z0-9_']*)*\\.(?:olean(?:\\.private|\\.server)?|ir)$(?![\\s\\S])"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sha256": {
+            "$ref": "#/$defs/hash"
+          },
+          "mode": {
+            "enum": [
+              420,
+              493
+            ]
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "path",
+          "source"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "lake-generator-definition.schema.json#/$defs/name"
+          },
+          "path": {
+            "$ref": "lake-generator-definition.schema.json#/$defs/path"
+          },
+          "source": {
+            "$ref": "lake-dependency-snapshot.schema.json#/$defs/file"
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "bytes",
+          "sha256",
+          "mode"
+        ],
+        "properties": {
+          "path": {
+            "$ref": "lake-generator-definition.schema.json#/$defs/path"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 8388608
+          },
+          "sha256": {
+            "$ref": "#/$defs/hash"
+          },
+          "mode": {
+            "const": 420
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bytes",
+        "sha256",
+        "mode"
+      ],
+      "properties": {
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "mode": {
+          "enum": [
+            420,
+            493
+          ]
+        }
+      }
+    }
+  }
+}

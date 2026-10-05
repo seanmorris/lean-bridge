@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "baselineRevision": "4ae2450fd9dfd164486970993d0923e667c18bbf",
+  "workflowSha256": "e8c3bca7530b915f82c810af6e4e9fa29a18792c6018a58dda46660a3abc49e0",
+  "nativeJobSha256": "d3f956e88bd44fb16f60ea1003b46ac299fa08654a4f4ba38b6fe2b446325e83",
+  "bootstrap": "          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd m4 libgmp-dev\n          bash scripts/bootstrap-toolchains.sh --lean-only\n",
+  "commandHashes": {
+    "ordinary_c": "f8e0a726a01d0bff6338836b750428f99654fa26171419a272565e5fa7bb683b",
+    "type_corpus_c_family": "a918553dfabd942ea909ef6d8c60fb452bd8c15bb28371a549f27f956882602c",
+    "ordinary_python": "9eaa754347099078359298b4091832a34319f23ba5c07bd20e9c80fef33f4cdd",
+    "type_corpus_python": "8c6b5b252e4ded2a836b97bf3dc4ef8c7a716b502111e16320764bd389c1800b",
+    "ordinary_rust": "06508846a18713e1ea446250c52c7d8c71bb803ab32ec8d34349ccf57e31617d",
+    "type_corpus_rust": "500ae4a4786e8971015e73a439c92079af179c6752a462cb40a6c4f83bab81e2"
+  },
+  "stepHashes": {
+    "Upload installed C and C++ corpus observations": "3c621889d5c1163cbb24d1dbb7ebfab390082b2137cd4b85310a1d5674861bf9",
+    "Upload the real-Lean type corpus report": "ada54b55bfd48c5d72111a66103903bdeb217831eaf97b743d4d73bbcd940b6e",
+    "Upload installed Rust corpus observations": "89ac2b7cdfa8d01c9b5c9715e7bcf3248c95117f07cf1132690aef9efab95d6c",
+    "Select Python 3.11 for backported type aliases": "e0da5518f076427c5d197db95658486820ecafd48213fda63efe93d9d5b3c26b",
+    "Select Python 3.12 for standard-library type aliases": "4882c0143e4fd7a9789ff523501e431076c124dd35cff0e935ebc32b8df563d7"
+  },
+  "recordStepSha256": "aea0e69b32fb57ae68465df32f7dcf4e9c8ec215c742ca3a0df9fba21b6e9f8c"
+}

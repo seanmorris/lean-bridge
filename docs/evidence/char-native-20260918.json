@@ -1,0 +1,1119 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-and-php-wasm-char",
+  "baseRevision": "062757aee17110bf7631b98ab30b2d2888079ad6",
+  "localPlatform": {
+    "os": "linux",
+    "architecture": "x86_64",
+    "nativeGlibcTestFloor": "2.36",
+    "ciGlibcFloor": "2.38"
+  },
+  "validScalarCases": 17,
+  "repeatedNestedCalls": 1000,
+  "signatures": [
+    {
+      "name": "Glyphs.choose",
+      "parameters": [
+        "bool",
+        "char",
+        "char"
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Glyphs.keep",
+      "parameters": [
+        "char"
+      ],
+      "result": "char"
+    },
+    {
+      "name": "Glyphs.keepArray",
+      "parameters": [
+        {
+          "array": "char"
+        }
+      ],
+      "result": {
+        "array": "char"
+      }
+    },
+    {
+      "name": "Glyphs.keepLabel",
+      "parameters": [
+        {
+          "fields": {
+            "line": {
+              "array": "char"
+            },
+            "marker": "char"
+          },
+          "record": "Glyphs.Label"
+        }
+      ],
+      "result": {
+        "fields": {
+          "line": {
+            "array": "char"
+          },
+          "marker": "char"
+        },
+        "record": "Glyphs.Label"
+      }
+    },
+    {
+      "name": "Glyphs.keepRows",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Glyphs.point",
+      "parameters": [
+        "char"
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Glyphs.sprout",
+      "parameters": [],
+      "result": "char"
+    },
+    {
+      "name": "Glyphs.text",
+      "parameters": [
+        "char"
+      ],
+      "result": "string"
+    }
+  ],
+  "reports": [
+    {
+      "path": "build/char-native/c-cpp-python-rust.json",
+      "sha256": "52ff8d7c6dc99d266dc898b347ab03b7b032b1ec9cc11846accc53cf71819e34"
+    },
+    {
+      "path": "build/char-native/dotnet-java-kotlin-ruby.json",
+      "sha256": "cdb22fd4721c1ebc20f863494aeb154ede39f67cf3d734d5c5cd0e071c468b64"
+    },
+    {
+      "path": "build/char-native/perl-php-native-wit-wasi.json",
+      "sha256": "fd42d4c3e2f699cb7f84a202a2afad3936e8ae25b39e3a6d6c4b9f5b5350dfb7"
+    },
+    {
+      "path": "build/char-native/php-wasm.json",
+      "sha256": "ccc2a3a0cc960a8e36641e02d9f23abb4324529836a7e2cddb5970dcd878feeb"
+    }
+  ],
+  "executions": [
+    {
+      "profile": "c",
+      "path": "ordinary-source",
+      "checks": 1117238,
+      "consumerSha256": "6b30ddbe592b5b2578436e1df0f2076fc0a116fbd5ed6051cc18dd904e5d2871",
+      "bindingIrSha256": "b3f87d13a16fbde42f705f603b95ea34af981db1eb5c7f01d39d5bab2119b5c0",
+      "sourceTreeSha256": "3c3f21e9976ac01e817e62f04f5991a99efe00f8adb566e7a294fdc7d92f0790",
+      "modelSha256": "d237801e42b035c50a5f97a5bc1362f827a5c6881190c1457b44e3e0367d54ee",
+      "receiptSha256": "162f5603ce8345aae72ab5444b887d262f2452fe44d5613f4669cc1e36c71ab5",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "c",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51329855,
+              "path": "archives/glyphs-char-1.0.0-c.tar.gz",
+              "sha256": "285686c1f2867257d0d4b04e84dee45ef5bcfc2b26e3f4b234cb5d8bf8f32066"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "cpp",
+      "path": "ordinary-source",
+      "checks": 1179,
+      "consumerSha256": "873dbd96a61e132e390e3287e236f46289b236ee1832512b04ca36e582c45a3a",
+      "bindingIrSha256": "b3f87d13a16fbde42f705f603b95ea34af981db1eb5c7f01d39d5bab2119b5c0",
+      "sourceTreeSha256": "3c3f21e9976ac01e817e62f04f5991a99efe00f8adb566e7a294fdc7d92f0790",
+      "modelSha256": "d237801e42b035c50a5f97a5bc1362f827a5c6881190c1457b44e3e0367d54ee",
+      "receiptSha256": "162f5603ce8345aae72ab5444b887d262f2452fe44d5613f4669cc1e36c71ab5",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cpp",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51332093,
+              "path": "archives/glyphs-char-1.0.0-cpp.tar.gz",
+              "sha256": "a66e29f98c99209d21966bae056e9642cfd9c2a97c8596c0e6e2d40fa65d6e9b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "python",
+      "path": "ordinary-source",
+      "checks": 1248,
+      "consumerSha256": "b16911a50dfa350bc5e375257a435b4ab0c92175f780a4ae4066de0935815b5e",
+      "bindingIrSha256": "b3f87d13a16fbde42f705f603b95ea34af981db1eb5c7f01d39d5bab2119b5c0",
+      "sourceTreeSha256": "3c3f21e9976ac01e817e62f04f5991a99efe00f8adb566e7a294fdc7d92f0790",
+      "modelSha256": "d237801e42b035c50a5f97a5bc1362f827a5c6881190c1457b44e3e0367d54ee",
+      "receiptSha256": "162f5603ce8345aae72ab5444b887d262f2452fe44d5613f4669cc1e36c71ab5",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "pypi",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51347406,
+              "path": "archives/glyphs_char-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "44a52a3cf1f515e12a6cb4687b843528f690765e3bda4dec9064ad2e0b22a2a7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "rust",
+      "path": "ordinary-source",
+      "checks": 1142,
+      "consumerSha256": "dc6e0d72d8971ade2d8b74a30e5fae77ca81935cf25e2242ec86a63a98192f67",
+      "bindingIrSha256": "b3f87d13a16fbde42f705f603b95ea34af981db1eb5c7f01d39d5bab2119b5c0",
+      "sourceTreeSha256": "3c3f21e9976ac01e817e62f04f5991a99efe00f8adb566e7a294fdc7d92f0790",
+      "modelSha256": "d237801e42b035c50a5f97a5bc1362f827a5c6881190c1457b44e3e0367d54ee",
+      "receiptSha256": "162f5603ce8345aae72ab5444b887d262f2452fe44d5613f4669cc1e36c71ab5",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cargo",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51336958,
+              "path": "archives/glyphs-char-1.0.0.crate",
+              "sha256": "ca98a87ca89ca2c5df78a6b54d9b193e87136f03a017ad5e3d2ec9a9d6f310df"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "c",
+      "path": "reviewed-ir",
+      "checks": 1117238,
+      "consumerSha256": "6b30ddbe592b5b2578436e1df0f2076fc0a116fbd5ed6051cc18dd904e5d2871",
+      "bindingIrSha256": "82bb5e813c338da93c2f11ec80a407515f0d79595d1842fcfa577a78014218d9",
+      "sourceTreeSha256": "262338d8e9a84ca468c1c87e380513f467e1960c89600a3aacbc04a44042641d",
+      "modelSha256": "cebc50121c5791fcaceb1f166ee4b13a07440fa98ce0779c60ba083079d93641",
+      "receiptSha256": "a81ed292acb654aa0ec87a8f706dc6da7cb887f3109f24fd591752aeefee44d0",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "c",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51330945,
+              "path": "archives/glyphs-char-1.0.0-c.tar.gz",
+              "sha256": "1565ed46925f92c08b9da77c9f9acd7cba3bc6ec05fa5e07601c4bb75b9a788d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "cpp",
+      "path": "reviewed-ir",
+      "checks": 1179,
+      "consumerSha256": "873dbd96a61e132e390e3287e236f46289b236ee1832512b04ca36e582c45a3a",
+      "bindingIrSha256": "82bb5e813c338da93c2f11ec80a407515f0d79595d1842fcfa577a78014218d9",
+      "sourceTreeSha256": "262338d8e9a84ca468c1c87e380513f467e1960c89600a3aacbc04a44042641d",
+      "modelSha256": "cebc50121c5791fcaceb1f166ee4b13a07440fa98ce0779c60ba083079d93641",
+      "receiptSha256": "a81ed292acb654aa0ec87a8f706dc6da7cb887f3109f24fd591752aeefee44d0",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cpp",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51333158,
+              "path": "archives/glyphs-char-1.0.0-cpp.tar.gz",
+              "sha256": "dc2ed6eef3b032cc23b9d082284022df5de553c4f3d0e18fe54df91397aa33f8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "python",
+      "path": "reviewed-ir",
+      "checks": 1248,
+      "consumerSha256": "b16911a50dfa350bc5e375257a435b4ab0c92175f780a4ae4066de0935815b5e",
+      "bindingIrSha256": "82bb5e813c338da93c2f11ec80a407515f0d79595d1842fcfa577a78014218d9",
+      "sourceTreeSha256": "262338d8e9a84ca468c1c87e380513f467e1960c89600a3aacbc04a44042641d",
+      "modelSha256": "cebc50121c5791fcaceb1f166ee4b13a07440fa98ce0779c60ba083079d93641",
+      "receiptSha256": "a81ed292acb654aa0ec87a8f706dc6da7cb887f3109f24fd591752aeefee44d0",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "pypi",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51350525,
+              "path": "archives/glyphs_char-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "caa72357c8dbc8bb4107bcdfd9a1517ec49e2655e1bcd99373799894a68124fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "rust",
+      "path": "reviewed-ir",
+      "checks": 1142,
+      "consumerSha256": "dc6e0d72d8971ade2d8b74a30e5fae77ca81935cf25e2242ec86a63a98192f67",
+      "bindingIrSha256": "82bb5e813c338da93c2f11ec80a407515f0d79595d1842fcfa577a78014218d9",
+      "sourceTreeSha256": "262338d8e9a84ca468c1c87e380513f467e1960c89600a3aacbc04a44042641d",
+      "modelSha256": "cebc50121c5791fcaceb1f166ee4b13a07440fa98ce0779c60ba083079d93641",
+      "receiptSha256": "a81ed292acb654aa0ec87a8f706dc6da7cb887f3109f24fd591752aeefee44d0",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cargo",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51338928,
+              "path": "archives/glyphs-char-1.0.0.crate",
+              "sha256": "76101c9e1576b8fbc7f7b18782a3f9053f3b308fabc85ee6f30487cb4facc9b5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "dotnet",
+      "path": "ordinary-source",
+      "checks": 1143,
+      "consumerSha256": "ae10b62f863f8a8d6b23bb9fd483eba075d910213abc9b9d3998f1b1ca690ea4",
+      "bindingIrSha256": "1b7b1edc8f8251249c98a2f4d4028088363ddff205f191653489bc582c0c4ff9",
+      "sourceTreeSha256": "54213da1bfb16355237b022590bfb4f144fb5f7bc9c00b3bfcaae6d113ea73cf",
+      "modelSha256": "e7fefcf22a001f9f906cc7685341407dd4cec0922871ad5ecf3ed11d512a88b4",
+      "receiptSha256": "d105d3290492e303fa00a940930d4e1edc25028dc409ac56ea5583d112c4bb4d",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "nuget",
+          "role": "component",
+          "name": "Glyphs.Char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51353489,
+              "path": "archives/Glyphs.Char.1.0.0.nupkg",
+              "sha256": "66549c415b96a874a18a3ec010f57ea2b2c82a8f0f30431e370d11bb0eb49fb5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "java",
+      "path": "ordinary-source",
+      "checks": 1188,
+      "consumerSha256": "aa1b01c1c891f2b4f3dc68d2ae0976dffa6cc5a9a022432d9abe32e253aa0a54",
+      "bindingIrSha256": "1b7b1edc8f8251249c98a2f4d4028088363ddff205f191653489bc582c0c4ff9",
+      "sourceTreeSha256": "54213da1bfb16355237b022590bfb4f144fb5f7bc9c00b3bfcaae6d113ea73cf",
+      "modelSha256": "e7fefcf22a001f9f906cc7685341407dd4cec0922871ad5ecf3ed11d512a88b4",
+      "receiptSha256": "d105d3290492e303fa00a940930d4e1edc25028dc409ac56ea5583d112c4bb4d",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "maven",
+          "role": "component",
+          "name": "org.leanbridge:glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51358718,
+              "path": "archives/glyphs-char-1.0.0.jar",
+              "sha256": "2336dbe2524ad85e02498df5b0de23dd70aec9c9d3c60071dddd1ec508a967ba"
+            },
+            {
+              "bytes": 466,
+              "path": "archives/glyphs-char-1.0.0.pom",
+              "sha256": "2514ad05624b70fd369d257325806f69b4b0b51508294f96d02752eb62da02c6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "kotlin",
+      "path": "ordinary-source",
+      "checks": 1188,
+      "consumerSha256": "72fba0d8a604540cd708b7af3a13021e94aa03013c7845173355fa8def15710a",
+      "bindingIrSha256": "1b7b1edc8f8251249c98a2f4d4028088363ddff205f191653489bc582c0c4ff9",
+      "sourceTreeSha256": "54213da1bfb16355237b022590bfb4f144fb5f7bc9c00b3bfcaae6d113ea73cf",
+      "modelSha256": "e7fefcf22a001f9f906cc7685341407dd4cec0922871ad5ecf3ed11d512a88b4",
+      "receiptSha256": "d105d3290492e303fa00a940930d4e1edc25028dc409ac56ea5583d112c4bb4d",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "maven",
+          "role": "component",
+          "name": "org.leanbridge:glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51358718,
+              "path": "archives/glyphs-char-1.0.0.jar",
+              "sha256": "2336dbe2524ad85e02498df5b0de23dd70aec9c9d3c60071dddd1ec508a967ba"
+            },
+            {
+              "bytes": 466,
+              "path": "archives/glyphs-char-1.0.0.pom",
+              "sha256": "2514ad05624b70fd369d257325806f69b4b0b51508294f96d02752eb62da02c6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "ruby",
+      "path": "ordinary-source",
+      "checks": 1248,
+      "consumerSha256": "d79c438c4c7fa73b062e1216d6859948030f0e1f53473fcf2233de577b509295",
+      "bindingIrSha256": "1b7b1edc8f8251249c98a2f4d4028088363ddff205f191653489bc582c0c4ff9",
+      "sourceTreeSha256": "54213da1bfb16355237b022590bfb4f144fb5f7bc9c00b3bfcaae6d113ea73cf",
+      "modelSha256": "e7fefcf22a001f9f906cc7685341407dd4cec0922871ad5ecf3ed11d512a88b4",
+      "receiptSha256": "d105d3290492e303fa00a940930d4e1edc25028dc409ac56ea5583d112c4bb4d",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "rubygems",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 50078720,
+              "path": "archives/glyphs-char-1.0.0-x86_64-linux.gem",
+              "sha256": "92181f340e9ecbb6e5f88847ecead32f9e14142dbc3c5c73cdf4ad8f24a86fd7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "dotnet",
+      "path": "reviewed-ir",
+      "checks": 1143,
+      "consumerSha256": "ae10b62f863f8a8d6b23bb9fd483eba075d910213abc9b9d3998f1b1ca690ea4",
+      "bindingIrSha256": "a52a1b531260f1bfc18b7a855d9565a646d302b0f5939bd72abc93b9991ed0c8",
+      "sourceTreeSha256": "6178356fbf4070bfaf4ed552a6a203774ce4bdadc1d8f9092ad32e12ecdc270c",
+      "modelSha256": "88d6001116e277a46138166a095579a886a719e293dacca2465acbcd5cf9c5fd",
+      "receiptSha256": "d5fcff318e8bd4b1391666773e1fa1bdeaac10e37fd9d1d8f5c704d48809cccc",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "nuget",
+          "role": "component",
+          "name": "Glyphs.Char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51356613,
+              "path": "archives/Glyphs.Char.1.0.0.nupkg",
+              "sha256": "fc9a95f8b3eeff6adb43fa1e16bbdd8187b67ffeb25b72c6683c569108846aac"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "java",
+      "path": "reviewed-ir",
+      "checks": 1188,
+      "consumerSha256": "aa1b01c1c891f2b4f3dc68d2ae0976dffa6cc5a9a022432d9abe32e253aa0a54",
+      "bindingIrSha256": "a52a1b531260f1bfc18b7a855d9565a646d302b0f5939bd72abc93b9991ed0c8",
+      "sourceTreeSha256": "6178356fbf4070bfaf4ed552a6a203774ce4bdadc1d8f9092ad32e12ecdc270c",
+      "modelSha256": "88d6001116e277a46138166a095579a886a719e293dacca2465acbcd5cf9c5fd",
+      "receiptSha256": "d5fcff318e8bd4b1391666773e1fa1bdeaac10e37fd9d1d8f5c704d48809cccc",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "maven",
+          "role": "component",
+          "name": "org.leanbridge:glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51361846,
+              "path": "archives/glyphs-char-1.0.0.jar",
+              "sha256": "4be01250eaecb1d1e0a751122bd853cdfb4f741dd35ad74995a724e885e5923f"
+            },
+            {
+              "bytes": 466,
+              "path": "archives/glyphs-char-1.0.0.pom",
+              "sha256": "2514ad05624b70fd369d257325806f69b4b0b51508294f96d02752eb62da02c6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "kotlin",
+      "path": "reviewed-ir",
+      "checks": 1188,
+      "consumerSha256": "72fba0d8a604540cd708b7af3a13021e94aa03013c7845173355fa8def15710a",
+      "bindingIrSha256": "a52a1b531260f1bfc18b7a855d9565a646d302b0f5939bd72abc93b9991ed0c8",
+      "sourceTreeSha256": "6178356fbf4070bfaf4ed552a6a203774ce4bdadc1d8f9092ad32e12ecdc270c",
+      "modelSha256": "88d6001116e277a46138166a095579a886a719e293dacca2465acbcd5cf9c5fd",
+      "receiptSha256": "d5fcff318e8bd4b1391666773e1fa1bdeaac10e37fd9d1d8f5c704d48809cccc",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "maven",
+          "role": "component",
+          "name": "org.leanbridge:glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51361846,
+              "path": "archives/glyphs-char-1.0.0.jar",
+              "sha256": "4be01250eaecb1d1e0a751122bd853cdfb4f741dd35ad74995a724e885e5923f"
+            },
+            {
+              "bytes": 466,
+              "path": "archives/glyphs-char-1.0.0.pom",
+              "sha256": "2514ad05624b70fd369d257325806f69b4b0b51508294f96d02752eb62da02c6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "ruby",
+      "path": "reviewed-ir",
+      "checks": 1248,
+      "consumerSha256": "d79c438c4c7fa73b062e1216d6859948030f0e1f53473fcf2233de577b509295",
+      "bindingIrSha256": "a52a1b531260f1bfc18b7a855d9565a646d302b0f5939bd72abc93b9991ed0c8",
+      "sourceTreeSha256": "6178356fbf4070bfaf4ed552a6a203774ce4bdadc1d8f9092ad32e12ecdc270c",
+      "modelSha256": "88d6001116e277a46138166a095579a886a719e293dacca2465acbcd5cf9c5fd",
+      "receiptSha256": "d5fcff318e8bd4b1391666773e1fa1bdeaac10e37fd9d1d8f5c704d48809cccc",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "rubygems",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 50081280,
+              "path": "archives/glyphs-char-1.0.0-x86_64-linux.gem",
+              "sha256": "21aaacf0d26f8e66078bb053734e7ea77dfc8d69add5f9fe797defce2934ba47"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "perl",
+      "path": "ordinary-source",
+      "checks": 1248,
+      "consumerSha256": "b55160bbb1d16aa15a7f8610860958064b0169c01533fd2bccd872a0acddeaa2",
+      "bindingIrSha256": "3a19e701f8dba5e6498c4498d8519fef2bed15b9e670d90dd04b404e616e8297",
+      "sourceTreeSha256": "f7d33ce9677e7d68bbd9c2cc12c5ab9b8597533e32e543f6bba545ae458a554e",
+      "modelSha256": "ad1161a919cb4f297b04559b2cabac3b9cd01bb6299c1abf3d831f40c2ab55e0",
+      "receiptSha256": "88727b7ea1a4d0197a0d18482ea9dd20d8013a1de6db40f379c77bdc31d845b7",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cpan",
+          "role": "component",
+          "name": "LeanBridge-Glyphs",
+          "version": "1.000",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 59319,
+              "path": "archives/LeanBridge-Glyphs-1.000.tar.gz",
+              "sha256": "bf748514b1359270fb46ada69f6eaae77bab77668cd551753ab5924e21bec1cd"
+            }
+          ]
+        },
+        {
+          "ecosystem": "cpan",
+          "role": "runtime",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51355195,
+              "path": "archives/LeanBridge-Runtime-0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411.tar.gz",
+              "sha256": "0317d82f451426ffff9a7db7bfe28cd34560b21e73ee8749c9e15995014168b2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "php-native",
+      "path": "ordinary-source",
+      "checks": 1278,
+      "consumerSha256": "938358ebd378baf156d9743484fe61c793a06a05630d3434764b0173a2014ef7",
+      "bindingIrSha256": "3a19e701f8dba5e6498c4498d8519fef2bed15b9e670d90dd04b404e616e8297",
+      "sourceTreeSha256": "f7d33ce9677e7d68bbd9c2cc12c5ab9b8597533e32e543f6bba545ae458a554e",
+      "modelSha256": "ad1161a919cb4f297b04559b2cabac3b9cd01bb6299c1abf3d831f40c2ab55e0",
+      "receiptSha256": "88727b7ea1a4d0197a0d18482ea9dd20d8013a1de6db40f379c77bdc31d845b7",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "composer",
+          "role": "component",
+          "name": "example/glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51345505,
+              "path": "archives/example-glyphs-char-1.0.0-linux-x86_64.zip",
+              "sha256": "79848117cc4148ac939f5df5ecb03db4f60d5d4938b2eb40d42eab0815f6934a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "wit-wasi",
+      "path": "ordinary-source",
+      "checks": 2332,
+      "consumerSha256": "1c07b75d3c647949f26be294728c57c87cf9a136fd74b5e64d603981196f10a8",
+      "bindingIrSha256": "3a19e701f8dba5e6498c4498d8519fef2bed15b9e670d90dd04b404e616e8297",
+      "sourceTreeSha256": "f7d33ce9677e7d68bbd9c2cc12c5ab9b8597533e32e543f6bba545ae458a554e",
+      "modelSha256": "ad1161a919cb4f297b04559b2cabac3b9cd01bb6299c1abf3d831f40c2ab55e0",
+      "receiptSha256": "88727b7ea1a4d0197a0d18482ea9dd20d8013a1de6db40f379c77bdc31d845b7",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "wit-wasi",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 59201319,
+              "path": "archives/glyphs-char-1.0.0-wit-wasi.tar.gz",
+              "sha256": "60b9408fc22a3d7ca837b1fc4c84fd62c2cd7c5cfe34d32e5501d4c735fd3783"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "perl",
+      "path": "reviewed-ir",
+      "checks": 1248,
+      "consumerSha256": "b55160bbb1d16aa15a7f8610860958064b0169c01533fd2bccd872a0acddeaa2",
+      "bindingIrSha256": "eecc6af132ed609fd5095ff09da8fcac5dc0befb5f4daa1198d8276f53912845",
+      "sourceTreeSha256": "00fca49526bcd1c5086b92c1e9476011333ecfda0280983cd56e695b966d03e4",
+      "modelSha256": "e7ff2f91690c100527a2d64c68af04319152a9164005029ccb5a9087ce02a4ae",
+      "receiptSha256": "84d3f98671de8b914de3a2a56354b315b8bcf8328328e2c99bcb72e2aa532717",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "cpan",
+          "role": "component",
+          "name": "LeanBridge-Glyphs",
+          "version": "1.000",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 60564,
+              "path": "archives/LeanBridge-Glyphs-1.000.tar.gz",
+              "sha256": "ba158314c764b900a96beace4efaea5567287f983aacc9565286623cfbda0cb1"
+            }
+          ]
+        },
+        {
+          "ecosystem": "cpan",
+          "role": "runtime",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51355195,
+              "path": "archives/LeanBridge-Runtime-0.0020941411141949693269076698769536246967371112529380673738687062196076016357590411.tar.gz",
+              "sha256": "0317d82f451426ffff9a7db7bfe28cd34560b21e73ee8749c9e15995014168b2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "php-native",
+      "path": "reviewed-ir",
+      "checks": 1278,
+      "consumerSha256": "938358ebd378baf156d9743484fe61c793a06a05630d3434764b0173a2014ef7",
+      "bindingIrSha256": "eecc6af132ed609fd5095ff09da8fcac5dc0befb5f4daa1198d8276f53912845",
+      "sourceTreeSha256": "00fca49526bcd1c5086b92c1e9476011333ecfda0280983cd56e695b966d03e4",
+      "modelSha256": "e7ff2f91690c100527a2d64c68af04319152a9164005029ccb5a9087ce02a4ae",
+      "receiptSha256": "84d3f98671de8b914de3a2a56354b315b8bcf8328328e2c99bcb72e2aa532717",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "composer",
+          "role": "component",
+          "name": "example/glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 51348631,
+              "path": "archives/example-glyphs-char-1.0.0-linux-x86_64.zip",
+              "sha256": "f68726b989638d30496c35f0e4d11274e3652dc94ce249f65e49b50c8eab9eac"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "wit-wasi",
+      "path": "reviewed-ir",
+      "checks": 2332,
+      "consumerSha256": "1c07b75d3c647949f26be294728c57c87cf9a136fd74b5e64d603981196f10a8",
+      "bindingIrSha256": "eecc6af132ed609fd5095ff09da8fcac5dc0befb5f4daa1198d8276f53912845",
+      "sourceTreeSha256": "00fca49526bcd1c5086b92c1e9476011333ecfda0280983cd56e695b966d03e4",
+      "modelSha256": "e7ff2f91690c100527a2d64c68af04319152a9164005029ccb5a9087ce02a4ae",
+      "receiptSha256": "84d3f98671de8b914de3a2a56354b315b8bcf8328328e2c99bcb72e2aa532717",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "packages": [
+        {
+          "ecosystem": "wit-wasi",
+          "role": "component",
+          "name": "glyphs-char",
+          "version": "1.0.0",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "artifacts": [
+            {
+              "bytes": 59202820,
+              "path": "archives/glyphs-char-1.0.0-wit-wasi.tar.gz",
+              "sha256": "f9d4d68847d2f4d605a9a166fe2fefb353c480929996a67488059b4033da133b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "php-wasm",
+      "path": "ordinary-source",
+      "checks": 1278,
+      "consumerSha256": "2ff0db1296fc23e13c5d1bf952456e8d8f5e7618019a2c9939dc67dcde1fb43d",
+      "bindingIrSha256": "41635667bb69398c9805e9fcde1d03b678d7e49f40388096af5db1f846b02b34",
+      "sourceTreeSha256": "dc345d90a922605a596e62f15775a58ec73939ad6daea29cc60422242c1bd175",
+      "modelSha256": "66061fb2fcc56eaaafc249986ca860765588b2a6e669f79a68a42c22934d8888",
+      "receiptSha256": "848541c3f9a0599273dc8a64cfaf74fda641ab5038c5b9ece3feffadff3f2093",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "arrangements": [
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ],
+      "browserVersion": "151.0.7922.34",
+      "driverSha256": "9dcb76327d48644a5469580d404b5bab867d4ab7157fe2734e1060ef55a6fd18",
+      "packages": [
+        {
+          "ecosystem": "composer",
+          "role": "api",
+          "name": "example/glyphs-char-wasm",
+          "version": "1.0.0",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 72526,
+              "path": "packages/php-wasm/archives/example-glyphs-char-wasm-1.0.0-php-wasm.zip",
+              "sha256": "683e947415db4e6657500b35d57c7a57f4da75b272e8b0bd7725399b65fba5eb"
+            }
+          ]
+        },
+        {
+          "ecosystem": "npm",
+          "role": "runtime",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 1649177,
+              "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16.tgz",
+              "sha256": "f3db595875924f7532a91c4d6058d7588144a591476d6c192035530970b88847"
+            }
+          ]
+        },
+        {
+          "ecosystem": "npm",
+          "role": "component",
+          "name": "glyphs-char-wasm",
+          "version": "1.0.0",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 117671,
+              "path": "packages/php-wasm/archives/glyphs-char-wasm-1.0.0.tgz",
+              "sha256": "382ae5ab404eb58d24fb449a2f185cac34c264a360358a89a16547be0b3194ba"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "php-wasm",
+      "path": "reviewed-ir",
+      "checks": 1278,
+      "consumerSha256": "2ff0db1296fc23e13c5d1bf952456e8d8f5e7618019a2c9939dc67dcde1fb43d",
+      "bindingIrSha256": "669a771f855ff6bf39fcc04f363cb49f5d1484a3fe7cf3d97cc2d89033ac055e",
+      "sourceTreeSha256": "5fa975e4122e8aea9408f9e668af6b0e9f81037408136346c5f4038555f4f8ac",
+      "modelSha256": "ba9154a34bb6a2d3a4bc6f1b2ecce827785108e3065cbf62911fb7e34ca0f2b5",
+      "receiptSha256": "8fcd7ff93858d2bae4fa518170caf04e70aa223921b4495b10764abd4d7b8b9f",
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreePath": true,
+      "arrangements": [
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1278,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ],
+      "browserVersion": "151.0.7922.34",
+      "driverSha256": "9dcb76327d48644a5469580d404b5bab867d4ab7157fe2734e1060ef55a6fd18",
+      "packages": [
+        {
+          "ecosystem": "composer",
+          "role": "api",
+          "name": "example/glyphs-char-wasm",
+          "version": "1.0.0",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 73646,
+              "path": "packages/php-wasm/archives/example-glyphs-char-wasm-1.0.0-php-wasm.zip",
+              "sha256": "16d8e9c5094b6746c2e93dda12197928df2ce3d6b3a6ca5e2d4399956dea85aa"
+            }
+          ]
+        },
+        {
+          "ecosystem": "npm",
+          "role": "runtime",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 1649177,
+              "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.0e098e960f3ca4123d8dee2891affbcc90c1a0e0dd957ec743b2990b5c868e16.tgz",
+              "sha256": "f3db595875924f7532a91c4d6058d7588144a591476d6c192035530970b88847"
+            }
+          ]
+        },
+        {
+          "ecosystem": "npm",
+          "role": "component",
+          "name": "glyphs-char-wasm",
+          "version": "1.0.0",
+          "runtimeIdentity": "cf6fd0c4430e142677d32ae69d2f0585c667c1fcabb4b26a43c4d68789b48c5c",
+          "artifacts": [
+            {
+              "bytes": 118965,
+              "path": "packages/php-wasm/archives/glyphs-char-wasm-1.0.0.tgz",
+              "sha256": "2acaf717c0f45572993a9df93ac3dfb0431a405e5286ca28dba29dde75409cad"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

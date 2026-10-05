@@ -12,16 +12,21 @@ for(let index = 2; index < process.argv.length; index += 2)
 {
 	const name = process.argv[index];
 	const value = process.argv[index + 1];
-	if(!["--output", "--runtime"].includes(name) || options.has(name) || !value || value.startsWith("--"))
-		throw new Error("Usage: build-cli-npm-package.mjs --output NEW_DIRECTORY [--runtime PREBUILT_RUNTIME]");
+	if(!["--output", "--runtime", "--php-wasm-inputs", "--javascript-wasm-inputs"].includes(name) || options.has(name) || !value || value.startsWith("--"))
+		throw new Error("Usage: build-cli-npm-package.mjs --output NEW_DIRECTORY [--runtime PREBUILT_RUNTIME] [--php-wasm-inputs PREPARED_DIRECTORY] [--javascript-wasm-inputs PREPARED_DIRECTORY]");
 	options.set(name, value);
 }
-const result = await buildCliNpmPackage({ outputRoot: options.get("--output"), runtimeRoot: options.get("--runtime") ?? null });
+const result = await buildCliNpmPackage({ outputRoot: options.get("--output")
+	, runtimeRoot: options.get("--runtime") ?? null
+	, phpWasmInputsRoot: options.get("--php-wasm-inputs") ?? null
+	, javascriptWasmInputsRoot: options.get("--javascript-wasm-inputs") ?? null });
 process.stdout.write(`${JSON.stringify({
 	output: result.output
 	, package: result.report.package
 	, archive: result.report.archive
 	, runtimeIncluded: result.report.runtimeIncluded
+	, phpWasmInputsIncluded: result.report.phpWasmInputsIncluded
+	, javascriptWasmInputsIncluded: result.report.javascriptWasmInputsIncluded
 	, productionApproved: result.report.productionApproved
 	, externalRegistryWrites: false
 }, null, 2)}\n`);

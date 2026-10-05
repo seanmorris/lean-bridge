@@ -8,7 +8,8 @@ import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { diagnostic, prompt } from "./contract.mjs";
-import { analyzeLeanProject } from "../analyze/lean-project.mjs";
+import { verificationHandler } from "./verify.mjs";
+import { analyzeCompilerProject } from "../analyze/compiler-analysis.mjs";
 import { AnalysisOutputError, writeAnalysisOutput } from "../analyze/output.mjs";
 import { evaluateAnalysisPolicy } from "../analyze/policy.mjs";
 import { buildCanonicalProject, CanonicalBuildError } from "../build/canonical-build.mjs";
@@ -95,6 +96,9 @@ const policyDiagnostics = report => {
 const blockedBuildCodes = new Set([
 	"build-tools-unavailable", "docker-unavailable", "nix-unavailable"
 	, "cache-directory-unsupported"
+	, "php-wasm-toolchain-unavailable"
+	, "reviewed-ir-build-unsupported"
+	, "reviewed-ir-source-mismatch", "export-configuration-reviewed-ir"
 	, "unknown-package-target"
 	, "package-target-ineligible"
 	, "component-binding-ir-required", "component-adapter-hints-required"
@@ -163,7 +167,7 @@ const publicBuildDiagnostic = error => {
  * @param root0.createReceipt - Factory used to create receipt without hard-coding host dependencies.
  */
 export const createCliHandlers = ({
-	analyze = analyzeLeanProject
+	analyze = analyzeCompilerProject
 	, build = buildCanonicalProject
 	, gate = runSelectedReproducibilityGate
 	, createPublishPlan = writePublishManifest
@@ -178,12 +182,28 @@ export const createCliHandlers = ({
 	, authorizePublish = authorizePublication
 	, createReceipt = writeReleaseReceipt
 } = {}) => Object.freeze({
-	analyze: async (request, { signal, emitProgress } = {}) => {
+	verify: verificationHandler
+	, analyze: async (request, { signal, emitProgress } = {}) => {
 		emitProgress?.({ phase: "analyze", state: "started", message: "Inspecting Lean declarations and binding evidence" });
 		signal?.throwIfAborted();
-		const report = await analyze(request.project, { signal, targets: request.selection.targets });
+		let report;
+		try
+		{ report = await analyze(request.project, { signal, targets: request.selection.targets, cache: request.cache, onProgress: emitProgress }); }
+		catch(error)
+		{
+			signal?.throwIfAborted();
+			const context = error.details?.compilerDetails ?? error.details;
+			const detail = context?.stderr || context?.stdout || "";
+			return { status: blockedBuildCodes.has(error.code) ? "blocked" : "failed"
+				, result: null
+				, diagnostics: [diagnostic({ code: error.code ?? "compiler-analysis-failed"
+					, message: detail ? `${error.message}\n${detail.slice(-8000)}` : error.message
+					, hint: error.hint ?? "Resolve the compiler or input error before repeating analysis." })]
+				, prompts: [], nextActions: [] };
+		}
 		signal?.throwIfAborted();
-		const requiredHints = report.adapterHints.filter(item => item.required);
+		const extractionFailed = report.diagnostics.some(item => ["extractor-failure", "stale-metadata"].includes(item.category));
+		const requiredHints = extractionFailed ? [] : report.adapterHints.filter(item => item.required);
 		let policyReport = null;
 		if(request.analysis.check)
 		{
@@ -201,7 +221,7 @@ export const createCliHandlers = ({
 				, total: policyReport.violations.length
 			});
 		}
-		let status = requiredHints.length > 0
+		let status = extractionFailed ? "failed" : requiredHints.length > 0
 			? "needs-input"
 			: report.bindingIr === null
 				? "blocked"
@@ -252,7 +272,7 @@ export const createCliHandlers = ({
 		const analyzeMessage = status === "ok"
 			? "Analysis produced a binding contract"
 			: status === "failed"
-				? "Analysis did not satisfy the selected policy"
+				? extractionFailed ? "Compiler metadata extraction failed" : "Analysis did not satisfy the selected policy"
 				: "Analysis requires an explicit decision";
 		emitProgress?.({
 			phase: "analyze"

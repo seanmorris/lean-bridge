@@ -1,0 +1,1315 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "installedPackage": true,
+  "wordBits": 64,
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.38",
+  "command": "source scripts/env.sh; LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs",
+  "reportSha256": "c58ccec5538e15d4918d0d5f423d7ef687df47310edbc0ad50fcfb3c549f2f2e",
+  "report": {
+    "installedPackage": true,
+    "observations": [
+      {
+        "adapterSha256": "65f4eb6facceac972d05c646a2f6f10f84d4a49fb1db1d028fc59105cfdb409b",
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "bindingIrSha256": "043bd997e2e857ab5e664234a8d9b31f81ec41b2dc6b1c94913d5491e93f7419",
+        "checkedSourceUnchanged": true,
+        "deterministicReassembly": true,
+        "exports": 18,
+        "installed": {
+          "authorSourcesRemoved": true,
+          "buildMetadataNotRequired": true,
+          "compilerFreeExecution": true,
+          "composition": [
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "raw",
+              "order": "recursive-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "during",
+              "order": "recursive-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "raw",
+              "order": "acyclic-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "during",
+              "order": "acyclic-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            }
+          ],
+          "documentation": {
+            "sourceSha256": "8705aa0cd3644db6849f5d224429eebaccedaeda803fb120b0e53649f6072e61",
+            "stdout": "7\n"
+          },
+          "faults": {
+            "asynchronousInterruptions": 2,
+            "checkpoints": 157,
+            "checks": 1089,
+            "exactlyOnceCleanup": true,
+            "inputFailures": 93,
+            "outputFailures": 64,
+            "ownedOutputs": 132
+          },
+          "gemCacheRemoved": true,
+          "handoffRemoved": true,
+          "installedFilesUnchanged": true,
+          "installedPackages": [
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 3338,
+                  "sha256": "3c89c4cbe879a01856b5be6512229629857096fbac8f25e923669149c6a11231"
+                },
+                "binding-manifest.json": {
+                  "bytes": 2614,
+                  "sha256": "ca2a43753006710615d0a310c48756b86003c9ccfbd0061713140ea0021243f9"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1334,
+                  "sha256": "cd0215dbe44fa643b716cd18ae02b89d88d1aa32677b2155c4af677d73d560ef"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 133668,
+                  "sha256": "9a67a8ebb9dd14570733dfa0c16613c6919610df4dcdea8c76319e6a4d91a061"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 43804,
+                  "sha256": "ad83cd7e6b86c43442857593639afa7f32b030095dfb0bdd46f0a81dac499cad"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 275370,
+                  "sha256": "f94fac086fb19d33661ab8e137bf7ec52a1595c0247855de3dac5bdbcda57a97"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 578152,
+                  "sha256": "dbf0e335e971f9c1ed3effeee0191f47e27f7f12821bc91b224118c9f8beaddd"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 697325,
+                  "sha256": "a195a4e84db1da27b15ee0b74d4053448ac83e5b97ce509e83f2ce8409bc32e2"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 6127,
+                  "sha256": "699628d134ffbc3ec907c9f21d43bf25a28fc18687d0a87c3a4ad475af3b2628"
+                },
+                "lean-bridge/include/detail/recursive-graph-types.h": {
+                  "bytes": 24616,
+                  "sha256": "7915d820bec427f6fd43e99cf2b65fca72e7352fd3458ecb85d6bc0380d983e8"
+                },
+                "lean-bridge/include/detail/recursive-graph.h": {
+                  "bytes": 1900,
+                  "sha256": "5c25878f4595c2b6c67aa8c70126473b39c800094cbc4adcca950b91e66565f2"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1777,
+                  "sha256": "8032e00ea8b38e645c39f576e9ba7add17b5621cac1d15c8f684cbb0c542a4e8"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1249,
+                  "sha256": "65f4eb6facceac972d05c646a2f6f10f84d4a49fb1db1d028fc59105cfdb409b"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lean-bridge/src/ruby-graph-clear.c": {
+                  "bytes": 300,
+                  "sha256": "ab9cc585a7cfa102b7a7c322794a1adbfd698a50bd4094c1873ab76009600f80"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                },
+                "lib/lean_bridge/recursive.rb": {
+                  "bytes": 78247,
+                  "sha256": "a8deaf7c2f079869c2be4eaf4741e0a978a8c5f66232ff0e300f8d63f8277c45"
+                },
+                "lib/lean_bridge/recursive/native.rb": {
+                  "bytes": 154346,
+                  "sha256": "ab5c8ef008b05a1070f5ca417fa10dcbfd7425eee699049a46ab07792ad7432f"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/libcomponent_715ae96a00c066a4ae1e.so": {
+                  "bytes": 2059424,
+                  "sha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/librecursive.so": {
+                  "bytes": 220504,
+                  "sha256": "7dcbf19f92ee264edee71f2dbe6c3dcb5ce56e8954126fb850e0ffde71e0ce23"
+                }
+              },
+              "module": "recursive",
+              "receiptSha256": "f6dc1564d9ffa15a5181042b403b1942aa436ecccf2f52b19f654809e69fd749"
+            },
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 1492,
+                  "sha256": "cedcd80fb74fa9f03f0f406c8b043a4b1a4fcb0bcc87fa02b93cff4e8dbcc56a"
+                },
+                "binding-manifest.json": {
+                  "bytes": 1113,
+                  "sha256": "f67e36e5381a468e72f7ebb19c4f3c4cddea14b610dcb37dd516c6495f1cb435"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1321,
+                  "sha256": "cb1905e944c109c538c1496cc0c7eb57a890a0dfe2c526a1fc1f60d95cdc4018"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 1833,
+                  "sha256": "38dd8b3ad4b70d06d37c697b7930a4a9c771cbc19cd245f4bcd9e7487a742cb5"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 307,
+                  "sha256": "290278216765cfee8dc9ad9d4323c925f6a4dbbf72b340d2036cdd5fde469105"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 593,
+                  "sha256": "3140066dc5e84c136eccef1ad5218182172f65598899e5abf510d74a30ce923a"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 1766,
+                  "sha256": "5e4021b1cbbeb0d0ea37f9dddc8204aa13f2e354ef4d1c70bbe89e2ac1a340b3"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 5321,
+                  "sha256": "d07691002a41cd7d76eabac077337b88650e91819ef7ef7bc751b44ed6d0d9f5"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 3179,
+                  "sha256": "34096a000d061e41f8af10d633410d62d26ee589f25e87cf778a93c6bbeef9fd"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1308,
+                  "sha256": "d8a9e9ef4067886516e8045c4bb5f1d51a7f8ce254a79c15cdc1ded41f9b3116"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1375,
+                  "sha256": "ae5f564cedf4f1eef1bd8eddc6fc8ea54487febd269a66f703bbf9d3ec5dc922"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                },
+                "lib/lean_bridge/recursive_peer.rb": {
+                  "bytes": 327,
+                  "sha256": "233546f9d18acf0e88ff3737d856c0ae9b1560311f9ec94ef535cd0579c5842b"
+                },
+                "lib/lean_bridge/recursive_peer/native.rb": {
+                  "bytes": 7693,
+                  "sha256": "9b6acfb8ee15df8ad858e266096b88ddcbba2f9be37047a3bf19179fd6fe6caf"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/libcomponent_de5fea61f2278539f854.so": {
+                  "bytes": 16624,
+                  "sha256": "48dac243448c9f53536912742cb95ad7593f9e833828cf7127dc8c856ae4412b"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/librecursive_peer.so": {
+                  "bytes": 16192,
+                  "sha256": "067524ca5bfce71c3841d82fba44a964027f5bd0494e368061a5be19c164c8ae"
+                }
+              },
+              "module": "recursive_peer",
+              "receiptSha256": "2f3d1775ff3ce7cf7221f9a1a2ec2dfce74b38e236069e203b9e597da1312a67"
+            },
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 2454,
+                  "sha256": "29a29c3d88af55b4704b981a1bc62ffdd4bb9b884e4b1c33e0f3638105872c49"
+                },
+                "binding-manifest.json": {
+                  "bytes": 1449,
+                  "sha256": "fa372b54379b4c08706252d307fdd28ca62ab1ea8f40dd5ac7a3f17d8a7cb339"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1324,
+                  "sha256": "e9c75b4066d36f5470793cee7c32c74c5b190b4ac51c2c4bbba7ef9ded988692"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 6099,
+                  "sha256": "7810447f0f28418e4dd155e1dc2ecc94296beb55ac907928be920e1c68cd9d41"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 965,
+                  "sha256": "cfa38e6bcbcbb4528e742b7717d2ca1688a4623b147e6a987373e8205c6c6fc7"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 3880,
+                  "sha256": "cd4848ff83d8bfa33c9f44c894aff7b80d65c47de9262b44a29d25b8893a0641"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 16258,
+                  "sha256": "f9d0aac9cc89bb9d9b7bb00468e401e3dac096d1638636535247d4fbc03568c1"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 23222,
+                  "sha256": "08da26a54249041ee6a34b5edf74c221c07a0062cd0118d85b503559c9af0957"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 3347,
+                  "sha256": "7f225c9a35ca77066b4bae8c670e89f20a5cbcf0a933a4486831c682549c6a07"
+                },
+                "lean-bridge/include/detail/graph_names-graph-types.h": {
+                  "bytes": 1841,
+                  "sha256": "19c3c301be39e6267674c4fe923d66ad8412c4a3787873c1ba5266ed7438fbbc"
+                },
+                "lean-bridge/include/detail/graph_names-graph.h": {
+                  "bytes": 511,
+                  "sha256": "668ead22cba903c0bcf2470b1717e436cec768c490f0b6bcc2eacd408964a9a0"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1325,
+                  "sha256": "3b86e564d560592b06479a0c6bda85401e0d555c28d51d1e778e2efca20af828"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1253,
+                  "sha256": "fce2825362b488c477f439941e057b46ff3deb4fa79336bc93629fc20986fab3"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lean-bridge/src/ruby-graph-clear.c": {
+                  "bytes": 302,
+                  "sha256": "374915cd8617487c459b857391888db8dfcf4ebee18bc5217cc95afaec4c0372"
+                },
+                "lib/lean_bridge/graph_names.rb": {
+                  "bytes": 3282,
+                  "sha256": "a7b5cad5167229bd794d18a31969bd7345c2e5f90c154e9312d9d308e6842c3e"
+                },
+                "lib/lean_bridge/graph_names/native.rb": {
+                  "bytes": 15973,
+                  "sha256": "fd6d9796867d615a4fc3911bf20166aba588ec0204aaf90cd3d8bcceec53a1bd"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libcomponent_02ee181213279f4950a5.so": {
+                  "bytes": 41256,
+                  "sha256": "e695a1eb1ab8776a2494f4d496a13e3ab566878ceb2e36cb3761a73a6f3597cc"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libgraph_names.so": {
+                  "bytes": 21640,
+                  "sha256": "7f3002105f9158fbafad7504d9b25b8de19d849a445095774bfaac1ff46cd786"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                }
+              },
+              "module": "graph_names",
+              "receiptSha256": "2ac6bfe447c62d782a92961e060d68397350a99907c50792d5a88ee5cb8510f6"
+            }
+          ],
+          "offlineInstall": true,
+          "public": {
+            "checks": 179,
+            "functions": 18,
+            "rejected": 65,
+            "ruby": "3.3.12",
+            "threadedCalls": 256
+          },
+          "rejectsManyToManyThreads": true,
+          "rejectsSymlinkAssets": true,
+          "rejectsTamperedAssets": true,
+          "relocatedInstallation": true,
+          "sourceHashes": {
+            "composition.rb": "822937c081075056f6227c69b280fd12f922a84a85bf0e1a7645fe7778425e6c",
+            "documentation.rb": "8705aa0cd3644db6849f5d224429eebaccedaeda803fb120b0e53649f6072e61",
+            "faults.rb": "796fcd370ab46364d9d07efa3d3814a2fd8ae0db669b0bfae4a921883f0f323e",
+            "public.rb": "56f8464f0d0849c19cecc6c7a3d70e41b9c7a8af5974cfb710357b0c36240903"
+          }
+        },
+        "layoutSha256": "7a3f76bd8e6be51acc0f0f6b4591077a8c7e6d7be4cc4b3681a586d735098aa0",
+        "modelSha256": "a195a4e84db1da27b15ee0b74d4053448ac83e5b97ce509e83f2ce8409bc32e2",
+        "module": "recursive",
+        "package": {
+          "artifacts": [
+            {
+              "bytes": 50691584,
+              "path": "archives/recursive-api-1.0.0-x86_64-linux.gem",
+              "sha256": "656a49b80c150c179f28be1092b727438781edbe6d20939799965262a8c06832"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "recursive-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+          "target": "rubygems",
+          "version": "1.0.0"
+        },
+        "peers": [
+          {
+            "module": "recursive_peer",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50066432,
+                  "path": "archives/recursive-peer-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "bffc630b180767f421ec438cda5790a87272afa9563846fae3d1b6db5163bd3a"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "recursive-peer-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d9c38e91adb68fde9ba5e1ea5e14eb8b8341b70282e3324a2c43bc6e94af210d"
+          },
+          {
+            "module": "graph_names",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50083840,
+                  "path": "archives/graph-names-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "f3c4fe4d8d9d3926b25457d8bf49b611786b532ae4c12fc73e221bbe381e84dc"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "graph-names-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d1581c04dba837c3be725eb80ba58d98b447b01c647eada1cf15a7467787da51"
+          }
+        ],
+        "rejectsGraphReceiptDrift": 3,
+        "rejectsRegeneratedSourceDrift": 4,
+        "reviewed": false,
+        "rubyOnly": true
+      },
+      {
+        "adapterSha256": "ffb9d75a2df5694dfd26157cf6908d6dbd7848821b85ea091c7f5eb3316ddb89",
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "bindingIrSha256": "a81b06dc8877a96d5c8475aa713d26ba397cb43c4eb106cd78cd764fc1dd80ae",
+        "checkedSourceUnchanged": true,
+        "deterministicReassembly": true,
+        "exports": 18,
+        "installed": {
+          "authorSourcesRemoved": true,
+          "buildMetadataNotRequired": true,
+          "compilerFreeExecution": true,
+          "composition": [
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "raw",
+              "order": "recursive-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "during",
+              "order": "recursive-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "raw",
+              "order": "acyclic-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            },
+            {
+              "components": 3,
+              "crossPackageRetirement": true,
+              "forkRejection": true,
+              "forkWithLockHeld": true,
+              "handles": 8,
+              "mode": "during",
+              "order": "acyclic-first",
+              "publicNameCollisions": [
+                "GraphScope",
+                "GraphInvalidNative",
+                "next"
+              ],
+              "ractorRejection": true,
+              "retainedValuesUsable": true,
+              "retirementClears": 1
+            }
+          ],
+          "documentation": {
+            "sourceSha256": "8705aa0cd3644db6849f5d224429eebaccedaeda803fb120b0e53649f6072e61",
+            "stdout": "7\n"
+          },
+          "faults": {
+            "asynchronousInterruptions": 2,
+            "checkpoints": 157,
+            "checks": 1089,
+            "exactlyOnceCleanup": true,
+            "inputFailures": 93,
+            "outputFailures": 64,
+            "ownedOutputs": 132
+          },
+          "gemCacheRemoved": true,
+          "handoffRemoved": true,
+          "installedFilesUnchanged": true,
+          "installedPackages": [
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 3338,
+                  "sha256": "3c89c4cbe879a01856b5be6512229629857096fbac8f25e923669149c6a11231"
+                },
+                "binding-manifest.json": {
+                  "bytes": 2614,
+                  "sha256": "14b7d18f2f91d67e75201d030bf08ceb7adc6e9cc5d9565a3c7072c8d55d3db2"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1336,
+                  "sha256": "12efa74c31e5991bc9777aa4b0490c87ab17ec11ba596e834da721f15f3ed2cd"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 134430,
+                  "sha256": "62b78fb5c0c36a53b6cf379e01ffb1dcc2f0cfbbe93ae0b53bdb38b121f5ce77"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 43804,
+                  "sha256": "ad83cd7e6b86c43442857593639afa7f32b030095dfb0bdd46f0a81dac499cad"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 275370,
+                  "sha256": "f94fac086fb19d33661ab8e137bf7ec52a1595c0247855de3dac5bdbcda57a97"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 578152,
+                  "sha256": "c24f7e127661f4ed1799c2296809949b4e1a830dd3d46eea2d2944e2e6bb6062"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 850488,
+                  "sha256": "ed23915dbda040cbb07e01e85191f8dc299a98fc25646da97f6e76bc1c7cb0d5"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 158528,
+                  "sha256": "5a56ad4bbd1ba660214e404a89e3fadf48a5a00b10e2b18b5bb13c45078a69f4"
+                },
+                "lean-bridge/include/detail/recursive-graph-types.h": {
+                  "bytes": 24616,
+                  "sha256": "7915d820bec427f6fd43e99cf2b65fca72e7352fd3458ecb85d6bc0380d983e8"
+                },
+                "lean-bridge/include/detail/recursive-graph.h": {
+                  "bytes": 1900,
+                  "sha256": "5c25878f4595c2b6c67aa8c70126473b39c800094cbc4adcca950b91e66565f2"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1457,
+                  "sha256": "47db0005c11354b9bde32b853c229b3958933f2b784c4a928a79b3e09123187e"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1249,
+                  "sha256": "ffb9d75a2df5694dfd26157cf6908d6dbd7848821b85ea091c7f5eb3316ddb89"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lean-bridge/src/ruby-graph-clear.c": {
+                  "bytes": 300,
+                  "sha256": "ab9cc585a7cfa102b7a7c322794a1adbfd698a50bd4094c1873ab76009600f80"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                },
+                "lib/lean_bridge/recursive.rb": {
+                  "bytes": 78247,
+                  "sha256": "a8deaf7c2f079869c2be4eaf4741e0a978a8c5f66232ff0e300f8d63f8277c45"
+                },
+                "lib/lean_bridge/recursive/native.rb": {
+                  "bytes": 154346,
+                  "sha256": "350021255a27f5c5276fe5fc42976ef7d48601b6238a03dab1fbe79d331a7393"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/libcomponent_715ae96a00c066a4ae1e.so": {
+                  "bytes": 2059424,
+                  "sha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/recursive/native/linux-x64/librecursive.so": {
+                  "bytes": 220504,
+                  "sha256": "7dcbf19f92ee264edee71f2dbe6c3dcb5ce56e8954126fb850e0ffde71e0ce23"
+                }
+              },
+              "module": "recursive",
+              "receiptSha256": "90e9df7ce98c482e8170159f56269115c08cec37ce5b75a4c2052e77ce43a08c"
+            },
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 1492,
+                  "sha256": "cedcd80fb74fa9f03f0f406c8b043a4b1a4fcb0bcc87fa02b93cff4e8dbcc56a"
+                },
+                "binding-manifest.json": {
+                  "bytes": 1113,
+                  "sha256": "f67e36e5381a468e72f7ebb19c4f3c4cddea14b610dcb37dd516c6495f1cb435"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1321,
+                  "sha256": "cb1905e944c109c538c1496cc0c7eb57a890a0dfe2c526a1fc1f60d95cdc4018"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 1833,
+                  "sha256": "38dd8b3ad4b70d06d37c697b7930a4a9c771cbc19cd245f4bcd9e7487a742cb5"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 307,
+                  "sha256": "290278216765cfee8dc9ad9d4323c925f6a4dbbf72b340d2036cdd5fde469105"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 593,
+                  "sha256": "3140066dc5e84c136eccef1ad5218182172f65598899e5abf510d74a30ce923a"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 1766,
+                  "sha256": "5e4021b1cbbeb0d0ea37f9dddc8204aa13f2e354ef4d1c70bbe89e2ac1a340b3"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 5321,
+                  "sha256": "d07691002a41cd7d76eabac077337b88650e91819ef7ef7bc751b44ed6d0d9f5"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 3179,
+                  "sha256": "34096a000d061e41f8af10d633410d62d26ee589f25e87cf778a93c6bbeef9fd"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1308,
+                  "sha256": "d8a9e9ef4067886516e8045c4bb5f1d51a7f8ce254a79c15cdc1ded41f9b3116"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1375,
+                  "sha256": "ae5f564cedf4f1eef1bd8eddc6fc8ea54487febd269a66f703bbf9d3ec5dc922"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                },
+                "lib/lean_bridge/recursive_peer.rb": {
+                  "bytes": 327,
+                  "sha256": "233546f9d18acf0e88ff3737d856c0ae9b1560311f9ec94ef535cd0579c5842b"
+                },
+                "lib/lean_bridge/recursive_peer/native.rb": {
+                  "bytes": 7693,
+                  "sha256": "9b6acfb8ee15df8ad858e266096b88ddcbba2f9be37047a3bf19179fd6fe6caf"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/libcomponent_de5fea61f2278539f854.so": {
+                  "bytes": 16624,
+                  "sha256": "48dac243448c9f53536912742cb95ad7593f9e833828cf7127dc8c856ae4412b"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/recursive_peer/native/linux-x64/librecursive_peer.so": {
+                  "bytes": 16192,
+                  "sha256": "067524ca5bfce71c3841d82fba44a964027f5bd0494e368061a5be19c164c8ae"
+                }
+              },
+              "module": "recursive_peer",
+              "receiptSha256": "2f3d1775ff3ce7cf7221f9a1a2ec2dfce74b38e236069e203b9e597da1312a67"
+            },
+            {
+              "files": {
+                "README.md": {
+                  "bytes": 2454,
+                  "sha256": "29a29c3d88af55b4704b981a1bc62ffdd4bb9b884e4b1c33e0f3638105872c49"
+                },
+                "binding-manifest.json": {
+                  "bytes": 1449,
+                  "sha256": "fa372b54379b4c08706252d307fdd28ca62ab1ea8f40dd5ac7a3f17d8a7cb339"
+                },
+                "lean-bridge/component/allocation-guard.h": {
+                  "bytes": 1309,
+                  "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+                },
+                "lean-bridge/component/artifacts.json": {
+                  "bytes": 1324,
+                  "sha256": "e9c75b4066d36f5470793cee7c32c74c5b190b4ac51c2c4bbba7ef9ded988692"
+                },
+                "lean-bridge/component/binding-ir.json": {
+                  "bytes": 6099,
+                  "sha256": "7810447f0f28418e4dd155e1dc2ecc94296beb55ac907928be920e1c68cd9d41"
+                },
+                "lean-bridge/component/component.h": {
+                  "bytes": 965,
+                  "sha256": "cfa38e6bcbcbb4528e742b7717d2ca1688a4623b147e6a987373e8205c6c6fc7"
+                },
+                "lean-bridge/component/generated.lean": {
+                  "bytes": 3880,
+                  "sha256": "cd4848ff83d8bfa33c9f44c894aff7b80d65c47de9262b44a29d25b8893a0641"
+                },
+                "lean-bridge/component/metadata.json": {
+                  "bytes": 16258,
+                  "sha256": "f9d0aac9cc89bb9d9b7bb00468e401e3dac096d1638636535247d4fbc03568c1"
+                },
+                "lean-bridge/component/model.json": {
+                  "bytes": 23222,
+                  "sha256": "08da26a54249041ee6a34b5edf74c221c07a0062cd0118d85b503559c9af0957"
+                },
+                "lean-bridge/component/native-component.json": {
+                  "bytes": 3347,
+                  "sha256": "7f225c9a35ca77066b4bae8c670e89f20a5cbcf0a933a4486831c682549c6a07"
+                },
+                "lean-bridge/include/detail/graph_names-graph-types.h": {
+                  "bytes": 1841,
+                  "sha256": "19c3c301be39e6267674c4fe923d66ad8412c4a3787873c1ba5266ed7438fbbc"
+                },
+                "lean-bridge/include/detail/graph_names-graph.h": {
+                  "bytes": 511,
+                  "sha256": "668ead22cba903c0bcf2470b1717e436cec768c490f0b6bcc2eacd408964a9a0"
+                },
+                "lean-bridge/licenses/Lean-LICENSE": {
+                  "bytes": 9160,
+                  "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+                },
+                "lean-bridge/licenses/Lean-LICENSES": {
+                  "bytes": 81854,
+                  "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+                },
+                "lean-bridge/licenses/LeanBridge-LICENSE": {
+                  "bytes": 1093,
+                  "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+                },
+                "lean-bridge/licenses/source-notices.json": {
+                  "bytes": 1325,
+                  "sha256": "3b86e564d560592b06479a0c6bda85401e0d555c28d51d1e778e2efca20af828"
+                },
+                "lean-bridge/native-c-adapter.json": {
+                  "bytes": 1253,
+                  "sha256": "fce2825362b488c477f439941e057b46ff3deb4fa79336bc93629fc20986fab3"
+                },
+                "lean-bridge/platform.json": {
+                  "bytes": 117,
+                  "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+                },
+                "lean-bridge/runtime.json": {
+                  "bytes": 1466,
+                  "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+                },
+                "lean-bridge/src/ruby-graph-clear.c": {
+                  "bytes": 302,
+                  "sha256": "374915cd8617487c459b857391888db8dfcf4ebee18bc5217cc95afaec4c0372"
+                },
+                "lib/lean_bridge/graph_names.rb": {
+                  "bytes": 3282,
+                  "sha256": "a7b5cad5167229bd794d18a31969bd7345c2e5f90c154e9312d9d308e6842c3e"
+                },
+                "lib/lean_bridge/graph_names/native.rb": {
+                  "bytes": 15973,
+                  "sha256": "fd6d9796867d615a4fc3911bf20166aba588ec0204aaf90cd3d8bcceec53a1bd"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libcomponent_02ee181213279f4950a5.so": {
+                  "bytes": 41256,
+                  "sha256": "e695a1eb1ab8776a2494f4d496a13e3ab566878ceb2e36cb3761a73a6f3597cc"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libgraph_names.so": {
+                  "bytes": 21640,
+                  "sha256": "7f3002105f9158fbafad7504d9b25b8de19d849a445095774bfaac1ff46cd786"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/liblean_bridge_native.so": {
+                  "bytes": 17136,
+                  "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+                },
+                "lib/lean_bridge/graph_names/native/linux-x64/libleanshared.so": {
+                  "bytes": 158401256,
+                  "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+                },
+                "lib/lean_bridge/native_copied_runtime_v1.rb": {
+                  "bytes": 483,
+                  "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+                }
+              },
+              "module": "graph_names",
+              "receiptSha256": "2ac6bfe447c62d782a92961e060d68397350a99907c50792d5a88ee5cb8510f6"
+            }
+          ],
+          "offlineInstall": true,
+          "public": {
+            "checks": 179,
+            "functions": 18,
+            "rejected": 65,
+            "ruby": "3.3.12",
+            "threadedCalls": 256
+          },
+          "rejectsManyToManyThreads": true,
+          "rejectsSymlinkAssets": true,
+          "rejectsTamperedAssets": true,
+          "relocatedInstallation": true,
+          "sourceHashes": {
+            "composition.rb": "822937c081075056f6227c69b280fd12f922a84a85bf0e1a7645fe7778425e6c",
+            "documentation.rb": "8705aa0cd3644db6849f5d224429eebaccedaeda803fb120b0e53649f6072e61",
+            "faults.rb": "796fcd370ab46364d9d07efa3d3814a2fd8ae0db669b0bfae4a921883f0f323e",
+            "public.rb": "56f8464f0d0849c19cecc6c7a3d70e41b9c7a8af5974cfb710357b0c36240903"
+          }
+        },
+        "layoutSha256": "7a3f76bd8e6be51acc0f0f6b4591077a8c7e6d7be4cc4b3681a586d735098aa0",
+        "modelSha256": "ed23915dbda040cbb07e01e85191f8dc299a98fc25646da97f6e76bc1c7cb0d5",
+        "module": "recursive",
+        "package": {
+          "artifacts": [
+            {
+              "bytes": 50706432,
+              "path": "archives/recursive-api-1.0.0-x86_64-linux.gem",
+              "sha256": "92c8547c456d3c8607696ff045e952301435f6e5c9ac86862b2fad3fda8a841c"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "recursive-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+          "target": "rubygems",
+          "version": "1.0.0"
+        },
+        "peers": [
+          {
+            "module": "recursive_peer",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50066432,
+                  "path": "archives/recursive-peer-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "bffc630b180767f421ec438cda5790a87272afa9563846fae3d1b6db5163bd3a"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "recursive-peer-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d9c38e91adb68fde9ba5e1ea5e14eb8b8341b70282e3324a2c43bc6e94af210d"
+          },
+          {
+            "module": "graph_names",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50083840,
+                  "path": "archives/graph-names-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "f3c4fe4d8d9d3926b25457d8bf49b611786b532ae4c12fc73e221bbe381e84dc"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "graph-names-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d1581c04dba837c3be725eb80ba58d98b447b01c647eada1cf15a7467787da51"
+          }
+        ],
+        "rejectsGraphReceiptDrift": 3,
+        "rejectsRegeneratedSourceDrift": 4,
+        "reviewed": true,
+        "rubyOnly": true
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "log": {
+    "text": "TAP version 13\n# Subtest: recursive Ruby packages expose named functions and keep native loading private\nok 1 - recursive Ruby packages expose named functions and keep native loading private\n  ---\n  duration_ms: 429.595408\n  type: 'test'\n  ...\n# Subtest: recursive Ruby admission validates every selected host and protects library names\nok 2 - recursive Ruby admission validates every selected host and protects library names\n  ---\n  duration_ms: 1037.923782\n  type: 'test'\n  ...\n# Subtest: prepared recursive Ruby gems install offline and run without the producer\nok 3 - prepared recursive Ruby gems install offline and run without the producer\n  ---\n  duration_ms: 688135.246726\n  type: 'test'\n  ...\n# ordinary: building recursive Ruby-only release\n# ordinary: building recursive_peer Ruby-only release\n# ordinary: building graph_names Ruby-only release\n# Original installed gems: public values, threads, shared loading, held-lock fork and retirement\n# reviewed: building recursive Ruby-only release\n# reviewed: building recursive_peer Ruby-only release\n# reviewed: building graph_names Ruby-only release\n# Original installed gems: public values, threads, shared loading, held-lock fork and retirement\n# Subtest: downstream CI requires original installed recursive gems and their report\nok 4 - downstream CI requires original installed recursive gems and their report\n  ---\n  duration_ms: 2.672972\n  type: 'test'\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 689890.762268\n",
+    "sha256": "bd796e48a43e3d86446284400a9b78ea70cf03cdeee2afc216fce6683f938632"
+  },
+  "sourceHashes": {
+    ".github/workflows/consumer-matrix.yml": "b88b5a46751b7d00b4ee8d4494093f6789d1599ff0d9c58bf9f53033b88cd95b",
+    "config/checked-javascript.json": "2c0a6a94bc6f488f711cfafa738b4b61c35645adca8238a144e6526ef3fc7123",
+    "config/cli-package.v1.json": "3aa2ebac088c69df1428b088a1e99a7afa31a3cdd23030c2d695d7ffee575ae1",
+    "nix/perl-engine-source-boundary.json": "a16b8f03b198c7d9cb1550740e8d22b5b2dacde54e7e2e257fb7b774cf126bd5",
+    "package.json": "08c6e8c6c7edfc2765edc60605e20b66d6b9799f474efa012d1790f77725566b",
+    "src/abi/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+    "src/abi/component-recursive.mjs": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9",
+    "src/adoption/test-profiles.mjs": "407b38aae834f1ae5a88d9ce24bc25001357b63aa73ee7febfd61bd31469ad2f",
+    "src/analyze/NativeExports.lean": "680431258f3f3cb184d97a2bbe752ad467f44e8dae2d1e581dcadf233142935d",
+    "src/analyze/elaborated-metadata.mjs": "de3874c97bec82ed5188ffe94a23a1d2b668ab9d9e5e0454e23b89d14e07ec6a",
+    "src/analyze/semantic-model.mjs": "03293750476dcd780ecccfdbffc5fe58bd2194383d5a792dacc0042870e4e7cf",
+    "src/backends/c/copied-graph-layout.mjs": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+    "src/backends/c/gmp-graph-conversions.mjs": "72dd1e39000293315efb21b1b8efb118c8dc34e45f5d6f83ed84a37504cafcc0",
+    "src/backends/c/gmp-graph-values.mjs": "4be2d24defb93830b66d8643221946fa1bc6c694239d625844b8faac4bd81208",
+    "src/backends/c/gmp.mjs": "f1e593796a33ccfa804a93e6ded229a55c43e5a6e7670be5a2d429bba19224e0",
+    "src/backends/c/graph-package.mjs": "4ac39d3b1888b28b84fdae479d42c3c3314e7e8336e45060f6b26bb747391547",
+    "src/backends/c/native-copied-values.mjs": "d7c9b1e0654524d5b605087b712b65c64781128f75c7e8a70db371a867b5594a",
+    "src/backends/c/native-graph-adapters.mjs": "6fc401617a64e628f188ca87d7ef5aba179402a8653a3cb0077331bb5eb2820d",
+    "src/backends/c/native-primitives.mjs": "335e9a43e986507ad5230618fa8b5a6ca682edc3d97997d505028bf700471a91",
+    "src/backends/cpp/boost.mjs": "3743a22d0186963a2100f404b14a19b8fda2554ae497eb83a35f3081f4da914d",
+    "src/backends/cpp/copied-graph-conversions.mjs": "2d4c25f0d98c672ee97fea136500dd25aa02885f0868d70ff71f674bddc4e0b1",
+    "src/backends/cpp/copied-graph-values.mjs": "1ebd4782ee9fcdbdadd4f25078f236c34792321b01a77c6ea84baec69e81b844",
+    "src/backends/jvm/callables.mjs": "53a0b9b60608bb9350728c5654d33b6c3500ab73b41008ade3bafcd292c702eb",
+    "src/backends/jvm/copied-aliases.mjs": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e",
+    "src/backends/jvm/copied-assets.mjs": "847302ed2a8ddab834a09c8b677f039ca8c9504f937c9ececea5f5fd212d2037",
+    "src/backends/jvm/copied-conversions.mjs": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe",
+    "src/backends/jvm/copied-kotlin.mjs": "658118d92e67ad14469541f931cd757d241fa0a5b6a96d668f0574a12eff7a3d",
+    "src/backends/jvm/copied-model.mjs": "28fdea63186791b5a0b2dd9cd8762253916aafb681219bb02c676b9deb31a644",
+    "src/backends/jvm/copied-runtime.mjs": "705592d8f75088679d3b7df4080adba5d7903d447a2e8e9aa0e46ae78ea71f6f",
+    "src/backends/jvm/copied-values.mjs": "4a881800e3d767468d255770fa268af84848896ba56aed5c80c7b7b993b230a1",
+    "src/backends/jvm/generate.mjs": "402aa70059d2fc22b435427141e2bc658ea76f5978f14399e94842b642697752",
+    "src/backends/native/runtime-broker.mjs": "7382b18f0b1efb38c8922aaadf5353f62d0f4f7c2b81cd93f272289a84c7842c",
+    "src/backends/python/copied-assets.mjs": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33",
+    "src/backends/python/copied-graph-conversions.mjs": "855e15d2d56cc4a54e66abbc2db6d45ddd7290d50cd3eb2a74d21bf30fb328cd",
+    "src/backends/python/copied-graph-package.mjs": "9f82bb2f7f20437671263b3e84da390841dcfda2baa89808de4709ed33dda428",
+    "src/backends/python/copied-graph-values.mjs": "7e3070d8a43e01fea41ce423557f0d7233fd656a476fe32335018d9b2a24e868",
+    "src/backends/ruby/callables.mjs": "21e585671c360c41317569c05c602d3286d9585731b87416a0591e57e732da49",
+    "src/backends/ruby/copied-assets.mjs": "431bfb6bcc74b7177d208a88305ed88eb5541c75d1b3ec105b8ae2a21d3001e2",
+    "src/backends/ruby/copied-graph-conversions.mjs": "1aab7ed78d91035febe851e157b78f3d9e58cb06f3b2b156f8caa37774b155f9",
+    "src/backends/ruby/copied-graph-layout.mjs": "bedda7fded4be4f5d8fec667e2a49abb2009266cf050694a85bee1c783579e9e",
+    "src/backends/ruby/copied-graph-package.mjs": "37e4c6f2a0d9480b5667b5a67e456e2766956f87f8e40ee8373ed12af7042507",
+    "src/backends/ruby/copied-graph-runtime.mjs": "ab8879ea2e281cd77231c1f7a693f19da28bbe59a1e703b95d1410744e842635",
+    "src/backends/ruby/copied-graph-values.mjs": "1bf99fe069be4a45ce7c8da1a0ec3d6fbfb7ee7803ac4bf57bd92c0433060067",
+    "src/backends/ruby/copied-values.mjs": "495c2a2c3ddfa3d65d47672e8328041d03dd60863908c53c65f0c3c2d7ffdc95",
+    "src/backends/rust/callables.mjs": "9f8abbf0da0c2f469ad9e647775a08933473467080b1a6e46abd6e0f470668db",
+    "src/backends/rust/copied-assets.mjs": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f",
+    "src/backends/rust/copied-graph-conversions.mjs": "0ea5214b5d099a3c99361c8d8a3adeb60731c3a418a0de43fc2b4140fa10947e",
+    "src/backends/rust/copied-graph-package.mjs": "28ca469064d697f80a5032a4349b636bc3dcf1c8901a64efb180d6002907037b",
+    "src/backends/rust/copied-graph-values.mjs": "38339e1f0af95c27853dc0da4a9e8c37820f08c32eaaa940b91967d8a2115c3b",
+    "src/backends/rust/copied-values.mjs": "254acb7d95a4e478504d8b9376e189b921a22d80312561661a6116f8e99bb960",
+    "src/build/canonical-build.mjs": "bb1d1ff0a1753a129420f241a7c598c9e17aa68e8a452ab38c5749f03f37e1c7",
+    "src/build/compile-jvm-sources.mjs": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c",
+    "src/build/component-recursive-lean.mjs": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28",
+    "src/build/native-allocation-guard.mjs": "8afef64367c009b05953a08b4a92d97c0a2f5fc7b47443ff2051784394f2c174",
+    "src/build/native-artifacts.mjs": "56614f680bba8aa78aad782abe8f47b89631f0b47a413dbc6802b86854d78f6a",
+    "src/build/native-c-projection.mjs": "3c4af09ebd1a471bb77011516debd4e4978eb460671180f0449a2710ad673c73",
+    "src/build/native-component.mjs": "50df9c79885e1b12459815463a13ec3ecc19c829be9f161cb04368e4b521a41f",
+    "src/build/native-gmp.mjs": "2bc6ca37ebda72f0433f8fa808ef28509f0851c453f053c319b2195a3707f272",
+    "src/build/native-graph-model.mjs": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84",
+    "src/build/native-graph-projection.mjs": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d",
+    "src/build/native-graph-sources.mjs": "f0a3edbab5da8ac0026a3d6ddb7530b6f881cf6dc8d854f8c70bafc8236dedc5",
+    "src/build/native-jvm-artifacts.mjs": "69f360fcd6c7c6e870c683025bc3357deb46c7ef472d061169b2afd93c47dd7a",
+    "src/build/native-jvm-projection.mjs": "0cef5c5761c81cd4709db554b5fd3cbfe10dd2e16709a13fb0f575dfab9c7b73",
+    "src/build/native-model.mjs": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd",
+    "src/build/native-project.mjs": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b",
+    "src/build/native-python-artifacts.mjs": "33ffedd1ec533d5b4091249a0c8a03bd9e5e9b4ec1fbfb722e3ed123ee803be2",
+    "src/build/native-ruby-artifacts.mjs": "dfce07c6d73d83f9d8f60ebb6f12d9891df04db9f96711a367eac3abd6a9ede1",
+    "src/build/native-rust-artifacts.mjs": "c59c21309f299cfc5820c4d79f30af372cd9121b3321114a2e0a621d6b030805",
+    "src/build/native-rust-projection.mjs": "447a4d802de819467ccd54c03cc099227babc22d4f224b34668ee814b7bed44d",
+    "src/release/native-c-family.mjs": "bffe30b0fef58f400f4f7088e923959bef1686820df4b465b72a68dd788670fb",
+    "src/release/native-cargo.mjs": "60e6e4d6aa1b61384dd7e2f1bd341e7f6eb5e60852d16489cf1c8ab40ac3437d",
+    "src/release/native-maven.mjs": "e37fbda26182e3014a560a0d09fc8e94059b221b4200431bb9d7542cb28d51d2",
+    "src/release/native-pypi.mjs": "29914ffa70620777320414aa9b67734d192c70318115d2029a1ab80b4e77420f",
+    "src/release/native-rubygems.mjs": "bfd36e553f335646db807f3783a0b832f7e64f5c63db8eb5a2b6167948a61d17",
+    "src/release/package-set-receipt.mjs": "e28e53184bfffba6bcc90adb113916483423c07ad1f3c77a24eba36721e9c249",
+    "tests/fixtures/onboarding/npm-recursive/Recursive.lean": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3",
+    "tests/fixtures/structured-types/recursive-ruby-composition.rb": "822937c081075056f6227c69b280fd12f922a84a85bf0e1a7645fe7778425e6c",
+    "tests/fixtures/structured-types/recursive-ruby-installed-faults.rb": "796fcd370ab46364d9d07efa3d3814a2fd8ae0db669b0bfae4a921883f0f323e",
+    "tests/fixtures/structured-types/recursive-ruby-installed.rb": "56f8464f0d0849c19cecc6c7a3d70e41b9c7a8af5974cfb710357b0c36240903",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/native-recursive-reviewed.mjs": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+    "tests/helpers/native-recursive-transport.mjs": "f6fa961b51501f6c287c614f351ad32746a3be82645517cd87d855e6fcbbc6eb",
+    "tests/helpers/native-ruby-graph-regression.mjs": "29979c18c444592ad0f64b5915d6c3e6dcb154a6a83fbc995858cae9c5b338a0",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/recursive-fixture.mjs": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb",
+    "tests/helpers/ruby-graph-packages.mjs": "16d9bdacc8ff2e9c51440c518c3ead72d8e2bea56e56da5966eaedb19474a0e9",
+    "tests/helpers/test-registration-history.mjs": "ba664a763120e97ad0ff698ea6cffe5f72911d597779ef18e8fa3fea6633b18a",
+    "tests/ruby-graph-package.test.mjs": "d7e67e0c932d25fd7e9563f70bba50e61bad350dfa6311f3714e9c19d267c230"
+  },
+  "reproduction": {
+    "log": {
+      "text": "TAP version 13\n# Subtest: recursive Ruby packages expose named functions and keep native loading private\nok 1 - recursive Ruby packages expose named functions and keep native loading private\n  ---\n  duration_ms: 374.608298\n  type: 'test'\n  ...\n# Subtest: recursive Ruby admission validates every selected host and protects library names\nok 2 - recursive Ruby admission validates every selected host and protects library names\n  ---\n  duration_ms: 728.27359\n  type: 'test'\n  ...\n# Subtest: prepared recursive Ruby gems install offline and run without the producer\nok 3 - prepared recursive Ruby gems install offline and run without the producer\n  ---\n  duration_ms: 601622.839239\n  type: 'test'\n  ...\n# ordinary: building recursive Ruby-only release\n# ordinary: building recursive_peer Ruby-only release\n# ordinary: building graph_names Ruby-only release\n# Original installed gems: public values, threads, shared loading, held-lock fork and retirement\n# reviewed: building recursive Ruby-only release\n# reviewed: building recursive_peer Ruby-only release\n# reviewed: building graph_names Ruby-only release\n# Original installed gems: public values, threads, shared loading, held-lock fork and retirement\n# Subtest: downstream CI requires original installed recursive gems and their report\nok 4 - downstream CI requires original installed recursive gems and their report\n  ---\n  duration_ms: 1.289528\n  type: 'test'\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 602829.042781\n",
+      "sha256": "b9b7edf045f0cf028ff6a7531b706b655657152d07c8d16c3603b048925dcc97"
+    },
+    "runs": [
+      {
+        "reviewed": false,
+        "package": {
+          "artifacts": [
+            {
+              "bytes": 50691584,
+              "path": "archives/recursive-api-1.0.0-x86_64-linux.gem",
+              "sha256": "656a49b80c150c179f28be1092b727438781edbe6d20939799965262a8c06832"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "recursive-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+          "target": "rubygems",
+          "version": "1.0.0"
+        },
+        "peers": [
+          {
+            "module": "recursive_peer",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50066432,
+                  "path": "archives/recursive-peer-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "bffc630b180767f421ec438cda5790a87272afa9563846fae3d1b6db5163bd3a"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "recursive-peer-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d9c38e91adb68fde9ba5e1ea5e14eb8b8341b70282e3324a2c43bc6e94af210d"
+          },
+          {
+            "module": "graph_names",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50083840,
+                  "path": "archives/graph-names-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "f3c4fe4d8d9d3926b25457d8bf49b611786b532ae4c12fc73e221bbe381e84dc"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "graph-names-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d1581c04dba837c3be725eb80ba58d98b447b01c647eada1cf15a7467787da51"
+          }
+        ],
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "layoutSha256": "7a3f76bd8e6be51acc0f0f6b4591077a8c7e6d7be4cc4b3681a586d735098aa0",
+        "installed": {
+          "publicSha256": "b578075d089a2b4c16eeebf6ba1044712f08fa5f5b440f79d59d268feb26c5ad",
+          "faultsSha256": "f26ea7f17eef89a5d77ebcd0a1e412be442fe7543bedf23490c8a5bfde5cd8ff",
+          "compositionSha256": "4cf5a7edc0250587a1db9ad915ccd082a6dc4c3cffebb9e36eb34c61177f653f",
+          "installedPackagesSha256": "69de0e8c405d5230a59c32354760044d9a6c57ae3471609fb9b5a76b2f9e63b0",
+          "sourceHashesSha256": "f1e266f190d7437802b6792ab5366df111d2c65e43723a287c074429bcb2539e"
+        }
+      },
+      {
+        "reviewed": true,
+        "package": {
+          "artifacts": [
+            {
+              "bytes": 50706432,
+              "path": "archives/recursive-api-1.0.0-x86_64-linux.gem",
+              "sha256": "92c8547c456d3c8607696ff045e952301435f6e5c9ac86862b2fad3fda8a841c"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "recursive-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+          "target": "rubygems",
+          "version": "1.0.0"
+        },
+        "peers": [
+          {
+            "module": "recursive_peer",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50066432,
+                  "path": "archives/recursive-peer-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "bffc630b180767f421ec438cda5790a87272afa9563846fae3d1b6db5163bd3a"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "recursive-peer-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d9c38e91adb68fde9ba5e1ea5e14eb8b8341b70282e3324a2c43bc6e94af210d"
+          },
+          {
+            "module": "graph_names",
+            "package": {
+              "artifacts": [
+                {
+                  "bytes": 50083840,
+                  "path": "archives/graph-names-api-1.0.0-x86_64-linux.gem",
+                  "sha256": "f3c4fe4d8d9d3926b25457d8bf49b611786b532ae4c12fc73e221bbe381e84dc"
+                }
+              ],
+              "ecosystem": "rubygems",
+              "name": "graph-names-api",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "rubygems",
+              "version": "1.0.0"
+            },
+            "sourceSha256": "d1581c04dba837c3be725eb80ba58d98b447b01c647eada1cf15a7467787da51"
+          }
+        ],
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "layoutSha256": "7a3f76bd8e6be51acc0f0f6b4591077a8c7e6d7be4cc4b3681a586d735098aa0",
+        "installed": {
+          "publicSha256": "b578075d089a2b4c16eeebf6ba1044712f08fa5f5b440f79d59d268feb26c5ad",
+          "faultsSha256": "f26ea7f17eef89a5d77ebcd0a1e412be442fe7543bedf23490c8a5bfde5cd8ff",
+          "compositionSha256": "4cf5a7edc0250587a1db9ad915ccd082a6dc4c3cffebb9e36eb34c61177f653f",
+          "installedPackagesSha256": "f001af7e5e57ffb4598c2a82b1b7bb626783af8ab0963d3c51d30e4bde401934",
+          "sourceHashesSha256": "f1e266f190d7437802b6792ab5366df111d2c65e43723a287c074429bcb2539e"
+        }
+      }
+    ]
+  },
+  "regressions": {
+    "path": "docs/evidence/ruby-recursive-regressions-20260923.json",
+    "sha256": "d935ae50204478913a79c5a90f3d9c1dc3fceab87daa62781c3fe39276ff196a"
+  }
+}

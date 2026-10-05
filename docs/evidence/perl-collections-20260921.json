@@ -1,0 +1,3501 @@
+{
+  "baseRevision": "37c2aabec7d656987f9be54cf6a729dafe5153eb",
+  "executions": [
+    {
+      "bindingIrSha256": "b4ab9306e0b53e8f96fa39e3d2aa284cd2c766aeb49008447c751dea7979ce46",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "044bd1f17fe5b03eca2b4dfff2989ec746e0b23c1e951ea324de57ee3e0e7fb5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 584,
+          "sha256": "51b36024ab23d8834fc6b63c610d961ce5bed86ba8a7d22402a59426ac90dd76"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 176816,
+          "sha256": "ad60bff52032a9962c6224a3ca9a46a080bdffc415f5cdd83244fd861319e58d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2380,
+          "sha256": "a2ecfe438e2c8c6aa07eb76e054fa066052d6d516fad0a975c83a120b7f1e5c8"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "6dccd56776c99724751f248d74a6bfb5ee4bfba098033af38c9d49f3f8a3f8e0"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "46e4411328d2a70b14a65f6b8a23561bc9ff4b615260d29f2b87b438367d3285",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": "ad60bff52032a9962c6224a3ca9a46a080bdffc415f5cdd83244fd861319e58d",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 345320,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "34090625d2b5f9fe3af555a133c0d8d7869a9a31d1751aba8360ca4bd2983c5a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "f6928fec0a23c56a0e76db5155048eb3347396bd2e946cf74bf7dbbe1ae5fe08",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "298d5002bdf7b11f768f42d314830dc4c78f1f02e71b8ff3dd61e45de7ea3360",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f6bfa12c9106cb69a1bc676239dbc8bb1c59a7fa0bd734b2a3f1a4500439bd85",
+      "threaded": true
+    },
+    {
+      "bindingIrSha256": "b4ab9306e0b53e8f96fa39e3d2aa284cd2c766aeb49008447c751dea7979ce46",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "f81fb2b69f83b734104ef5d4e4a06c6d0345f4f4fd9c553f29d159d292bf31d8"
+        },
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 532,
+          "sha256": "5d1607c37ed2822d356a204e5921c787205534636c58f82aa116cbb6886b74d7"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 148104,
+          "sha256": "3c16ee46b7be59ab99d0c4becfa9e5bc4200dfb50bbb5189b4d0d2c3beee8488"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2159,
+          "sha256": "bcef6ed268ab54d3023b4cc0598d4bafc012bc9f8bc1827501f1564da6c2639f"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "f9ec4518b27c983c98fa32295f950a4d747e98b06365d724cd7029a9b249ecb7"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "46e4411328d2a70b14a65f6b8a23561bc9ff4b615260d29f2b87b438367d3285",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": "3c16ee46b7be59ab99d0c4becfa9e5bc4200dfb50bbb5189b4d0d2c3beee8488",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 345320,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "34090625d2b5f9fe3af555a133c0d8d7869a9a31d1751aba8360ca4bd2983c5a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "dfea94ed86b96c33bfeef9f889d68729ce8c40645afc30af8c628fd6942c9d14",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "298d5002bdf7b11f768f42d314830dc4c78f1f02e71b8ff3dd61e45de7ea3360",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f6bfa12c9106cb69a1bc676239dbc8bb1c59a7fa0bd734b2a3f1a4500439bd85",
+      "threaded": false
+    },
+    {
+      "bindingIrSha256": "b4ab9306e0b53e8f96fa39e3d2aa284cd2c766aeb49008447c751dea7979ce46",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "91ff9c8f830e183722dd6135a9db53242e1b06332d1ef6fc77d7b03756d079c1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 584,
+          "sha256": "bc366a589cd4027f11c5b578dc6797641467802c0e4b301f488cf1d870fbc888"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 176744,
+          "sha256": "84cf6f08ec1efb9b4c88788f3b40c2e2c899eceff1286a43f88f9c16125a6a65"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2380,
+          "sha256": "c7eee322c188a80d2139e8fa8a1c14b7b216e8f8ad67a87b9838363e1153473a"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "e72a9769cff42a48669733b7d1d571b133e3e7a5836d6c4237187ca530d016a3"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "46e4411328d2a70b14a65f6b8a23561bc9ff4b615260d29f2b87b438367d3285",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": "84cf6f08ec1efb9b4c88788f3b40c2e2c899eceff1286a43f88f9c16125a6a65",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 345320,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "34090625d2b5f9fe3af555a133c0d8d7869a9a31d1751aba8360ca4bd2983c5a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "a8a42be59610035cb731f7a2057f0b3e7f1c53ed4e4c1b7c63094a4cca9465fa",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "298d5002bdf7b11f768f42d314830dc4c78f1f02e71b8ff3dd61e45de7ea3360",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f6bfa12c9106cb69a1bc676239dbc8bb1c59a7fa0bd734b2a3f1a4500439bd85",
+      "threaded": true
+    },
+    {
+      "bindingIrSha256": "b4ab9306e0b53e8f96fa39e3d2aa284cd2c766aeb49008447c751dea7979ce46",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "e7772f02725e9e84f87ebb070101d1ce862750362972f4b3d698022425f54586"
+        },
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 532,
+          "sha256": "6c863a0e5818d6345a690928473231c6950e71359d674f6475ba8926954da1be"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 148048,
+          "sha256": "fc71700bcaa55f40f2e718e0f3a617c252931f7e553539659caba22556d2639f"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2159,
+          "sha256": "5ee0e5c3cedba5a1172bb5999b7003120f8652caf989740fa4ef125b465047ed"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "b2eae5c1891c53978782de03fb794808e3f547acb9af037b69f31a98e58a417c"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "46e4411328d2a70b14a65f6b8a23561bc9ff4b615260d29f2b87b438367d3285",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": "fc71700bcaa55f40f2e718e0f3a617c252931f7e553539659caba22556d2639f",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 345320,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "34090625d2b5f9fe3af555a133c0d8d7869a9a31d1751aba8360ca4bd2983c5a"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "b56a65a91188dcd0dd03ef5806c17ae2f283335bbb53592a1fd3e4eca8dda6f2",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "298d5002bdf7b11f768f42d314830dc4c78f1f02e71b8ff3dd61e45de7ea3360",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f6bfa12c9106cb69a1bc676239dbc8bb1c59a7fa0bd734b2a3f1a4500439bd85",
+      "threaded": false
+    },
+    {
+      "bindingIrSha256": "b8b548d497bda0588431eab5f0bb2d40073f21f18a6686f0093cf82d0194cf02",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "044bd1f17fe5b03eca2b4dfff2989ec746e0b23c1e951ea324de57ee3e0e7fb5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 584,
+          "sha256": "74c454495b76d337ef735476348943d23cb075eb3ae00c9016866a3cde97c8db"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 176816,
+          "sha256": "ad60bff52032a9962c6224a3ca9a46a080bdffc415f5cdd83244fd861319e58d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2380,
+          "sha256": "b2b1c773eadf2574a18c8675776e02d1fcc4d1edb1258f9ec748485aa0e51446"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "97cb49ac2bdf62a58c844e783323ae835920c228bcef4c91d9016bb22167068e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "8616760734dda81e5b7c289c92374ef45d34500f150a2166e0de283eef122d50",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": "ad60bff52032a9962c6224a3ca9a46a080bdffc415f5cdd83244fd861319e58d",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 350977,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "858be02d9705c23f63914dc4765ca2daaf69e0d79c329a5e41db0231999b3967"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "f6928fec0a23c56a0e76db5155048eb3347396bd2e946cf74bf7dbbe1ae5fe08",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "7134d3bce9e908dbd4c1ca358713149f4f69f71e60ae2ac0b547cb33af20aec8",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "585ebfc6db6a6af1fbfdd9a60df14cdec04e276d4c72af28fa77b41ce4f55dae",
+      "threaded": true
+    },
+    {
+      "bindingIrSha256": "b8b548d497bda0588431eab5f0bb2d40073f21f18a6686f0093cf82d0194cf02",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "f81fb2b69f83b734104ef5d4e4a06c6d0345f4f4fd9c553f29d159d292bf31d8"
+        },
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 532,
+          "sha256": "3d2aefa902d4b14ebdb62edb315dfa6c502a0ff979feb7450856c4a4cc9577c4"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 148104,
+          "sha256": "3c16ee46b7be59ab99d0c4becfa9e5bc4200dfb50bbb5189b4d0d2c3beee8488"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2159,
+          "sha256": "04e5d5acb09778ac43b60306adf499ecd09fdaea8501743c650d333a48d0dc2d"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "94c2bcc321f8ed865411395caf7de189ad60c266aa33c0d8cdee6f044e4c40cd"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "8616760734dda81e5b7c289c92374ef45d34500f150a2166e0de283eef122d50",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": "3c16ee46b7be59ab99d0c4becfa9e5bc4200dfb50bbb5189b4d0d2c3beee8488",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 350977,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "858be02d9705c23f63914dc4765ca2daaf69e0d79c329a5e41db0231999b3967"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "dfea94ed86b96c33bfeef9f889d68729ce8c40645afc30af8c628fd6942c9d14",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "7134d3bce9e908dbd4c1ca358713149f4f69f71e60ae2ac0b547cb33af20aec8",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "585ebfc6db6a6af1fbfdd9a60df14cdec04e276d4c72af28fa77b41ce4f55dae",
+      "threaded": false
+    },
+    {
+      "bindingIrSha256": "b8b548d497bda0588431eab5f0bb2d40073f21f18a6686f0093cf82d0194cf02",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "91ff9c8f830e183722dd6135a9db53242e1b06332d1ef6fc77d7b03756d079c1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 584,
+          "sha256": "098eae2488f8151e31ef4803af812c08f70c99f7a741e30f1ffb17b2a65842b3"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 176744,
+          "sha256": "84cf6f08ec1efb9b4c88788f3b40c2e2c899eceff1286a43f88f9c16125a6a65"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2380,
+          "sha256": "cd47c177b62f3bae6e8889d548038716c0cedf3775fe5a2dccab6b69182f0e7c"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "9493984284660908b8e202f010acfbd28e57550d827b953f43c8dacc50426663"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "8616760734dda81e5b7c289c92374ef45d34500f150a2166e0de283eef122d50",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Collections/Collections.so": "84cf6f08ec1efb9b4c88788f3b40c2e2c899eceff1286a43f88f9c16125a6a65",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 350977,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "858be02d9705c23f63914dc4765ca2daaf69e0d79c329a5e41db0231999b3967"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "a8a42be59610035cb731f7a2057f0b3e7f1c53ed4e4c1b7c63094a4cca9465fa",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "7134d3bce9e908dbd4c1ca358713149f4f69f71e60ae2ac0b547cb33af20aec8",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "585ebfc6db6a6af1fbfdd9a60df14cdec04e276d4c72af28fa77b41ce4f55dae",
+      "threaded": true
+    },
+    {
+      "bindingIrSha256": "b8b548d497bda0588431eab5f0bb2d40073f21f18a6686f0093cf82d0194cf02",
+      "calls": 3008,
+      "checks": 239954,
+      "compilerFreeExecution": true,
+      "consumerSha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+      "faults": {
+        "checks": 1187,
+        "conversion_checkpoints": 1141,
+        "host_exceptions": 8,
+        "partial_inputs": 32,
+        "reentrant_fields": 3,
+        "reentrant_outer_arrays": 3
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Collections.pm": {
+          "bytes": 10469,
+          "sha256": "fc47642fa8c7df9d66b11f80794977ec3cf444c04d9a8fb804d653bfc693bfc8"
+        },
+        "x86_64-linux/LeanBridge/Collections/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "e7772f02725e9e84f87ebb070101d1ce862750362972f4b3d698022425f54586"
+        },
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/.packlist": {
+          "bytes": 532,
+          "sha256": "ca58b523819c94a08e1019febbb2b1a086983714c41f0b20cd6267bdc4896421"
+        },
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": {
+          "bytes": 148048,
+          "sha256": "fc71700bcaa55f40f2e718e0f3a617c252931f7e553539659caba22556d2639f"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2159,
+          "sha256": "49cca81ff090ebc924008586fd14e0e5d4ae2126b1e884f1506fa90856f1151b"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 669,
+          "sha256": "943f9e5d9d4102ad3a458347498a05eb44dc182cfa482a5b8c2d3bfc85737854"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "8616760734dda81e5b7c289c92374ef45d34500f150a2166e0de283eef122d50",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Collections/native/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Collections/Collections.so": "fc71700bcaa55f40f2e718e0f3a617c252931f7e553539659caba22556d2639f",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 350977,
+              "path": "archives/LeanBridge-Collections-1.000.tar.gz",
+              "sha256": "858be02d9705c23f63914dc4765ca2daaf69e0d79c329a5e41db0231999b3967"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Collections",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        {
+          "checks": 4112,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6418,
+          "name": "uint32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 6416,
+          "name": "uint64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int8",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int16",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "int64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4112,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 8724,
+          "name": "string",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 8722,
+          "name": "bytes",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 8728,
+          "name": "char",
+          "rejected_cases": 8
+        },
+        {
+          "checks": 6416,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 6416,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "b56a65a91188dcd0dd03ef5806c17ae2f283335bbb53592a1fd3e4eca8dda6f2",
+      "probeSourceSha256": "b41b62b315bb1f33ebfe0580803fd3047e4f35c514dfeff38e0831936b394359",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "7134d3bce9e908dbd4c1ca358713149f4f69f71e60ae2ac0b547cb33af20aec8",
+      "recordTypes": [
+        "Primitives",
+        "Empty",
+        "Single",
+        "Count",
+        "Pair",
+        "Reversed",
+        "Packet"
+      ],
+      "reentrantArrays": 3,
+      "rejected": 132,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "585ebfc6db6a6af1fbfdd9a60df14cdec04e276d4c72af28fa77b41ce4f55dae",
+      "threaded": false
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "perlAbis": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "profiles": [
+    "perl"
+  ],
+  "reportSha256": "eb5347f09f2943cfb9fe7ac88957037f108010916e892f28ed6bbdc75e3928ef",
+  "reproduction": {
+    "archivesIdentical": true,
+    "firstReportSha256": "3c627fe6dbfa0e319bb7e84307979e3e9e0f3735ab708d8805c6e9242daee283",
+    "installedPayloadsIdentical": true,
+    "nativeLibrariesIdentical": true,
+    "runs": [
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "3560156c23531cf9800c94abd5f7850149f3b7dc224ddf60799e206085323c5a",
+            "sha256": "51b36024ab23d8834fc6b63c610d961ce5bed86ba8a7d22402a59426ac90dd76"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "ef4eb3bfe1a0726c60aa5d00737d39ca80e5a080002b0589939c4c10e33fcc39",
+            "sha256": "a2ecfe438e2c8c6aa07eb76e054fa066052d6d516fad0a975c83a120b7f1e5c8"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "45e5d7988c727711552bd04609bb3f89378587b9275fb58b04ee723278afe29f",
+            "sha256": "6dccd56776c99724751f248d74a6bfb5ee4bfba098033af38c9d49f3f8a3f8e0"
+          }
+        ],
+        "installedPayloadSha256": "9a2cb227aaad7cb5f4c1d04f99c190fbeaf6dbe8dfbaa0ffab718e608e15fd3d",
+        "path": "ordinary-source",
+        "perl": "v5.36.3",
+        "threaded": true
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "60df79d0bcb23183f8454ed327dd5b8a637ce508d500bcc9be0f126cf0041ec1",
+            "sha256": "5d1607c37ed2822d356a204e5921c787205534636c58f82aa116cbb6886b74d7"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "074f0ee6fb3617a504c456b613269fc9a6a052af1a33558405d2be5af1990fbf",
+            "sha256": "bcef6ed268ab54d3023b4cc0598d4bafc012bc9f8bc1827501f1564da6c2639f"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "5c55397d9f27011587c4c9fad35e3b2df5af99268908e103c695e39998da276b",
+            "sha256": "f9ec4518b27c983c98fa32295f950a4d747e98b06365d724cd7029a9b249ecb7"
+          }
+        ],
+        "installedPayloadSha256": "42d56bbfec5a4092493daec39016698e2752c2fc7caf6146a2767511af83a672",
+        "path": "ordinary-source",
+        "perl": "v5.36.3",
+        "threaded": false
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "7afd5e938901fb4846474039613295197248f8bca9a29ca2cc8389be11532772",
+            "sha256": "bc366a589cd4027f11c5b578dc6797641467802c0e4b301f488cf1d870fbc888"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "ab2d6c09160f5bf675aa9eedb3e6fba4244720acf7212fe4eb9be2dc756dbc7d",
+            "sha256": "c7eee322c188a80d2139e8fa8a1c14b7b216e8f8ad67a87b9838363e1153473a"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "90395dcdc5d908fab1d1528c8fbb8eac6134b84702f804d86c04b5193cd98f2a",
+            "sha256": "e72a9769cff42a48669733b7d1d571b133e3e7a5836d6c4237187ca530d016a3"
+          }
+        ],
+        "installedPayloadSha256": "641fc5bf701c914410eedf176a9656c68a36afb54e0dd81a8d52cd0a1f184721",
+        "path": "ordinary-source",
+        "perl": "v5.38.2",
+        "threaded": true
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "6215d51e727337de72c8e2666eaf1befbbaaf5735c8e7390f7614f68354a042e",
+            "sha256": "6c863a0e5818d6345a690928473231c6950e71359d674f6475ba8926954da1be"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "ae56fb88b2c5b3dc526b1d8a7cd6c758b297112b0ab61d4cacf3f8e0d0314187",
+            "sha256": "5ee0e5c3cedba5a1172bb5999b7003120f8652caf989740fa4ef125b465047ed"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "1b99291d4704c619e54e6f0b4c5a2f08e6b017cfcffb3c7a8bc628b763b9432a",
+            "sha256": "b2eae5c1891c53978782de03fb794808e3f547acb9af037b69f31a98e58a417c"
+          }
+        ],
+        "installedPayloadSha256": "b3f595aedfa39d97a9b0e668f0fd8bd6acf7603c1baaf219133de750c7304021",
+        "path": "ordinary-source",
+        "perl": "v5.38.2",
+        "threaded": false
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "c4bbe089f03f3dd7ee798abd6ae493d5d077d2874ad81c2785e676e1b07d1353",
+            "sha256": "74c454495b76d337ef735476348943d23cb075eb3ae00c9016866a3cde97c8db"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "7c93419d01e94517d1e99046b286a1627c3c15d98af3533ad97a65d8223bbf75",
+            "sha256": "b2b1c773eadf2574a18c8675776e02d1fcc4d1edb1258f9ec748485aa0e51446"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "f14f4d2386f6fecf66a21bf9830848d4617ee5b35b9a66ab9d1a28bdd469364f",
+            "sha256": "97cb49ac2bdf62a58c844e783323ae835920c228bcef4c91d9016bb22167068e"
+          }
+        ],
+        "installedPayloadSha256": "9a2cb227aaad7cb5f4c1d04f99c190fbeaf6dbe8dfbaa0ffab718e608e15fd3d",
+        "path": "reviewed-ir",
+        "perl": "v5.36.3",
+        "threaded": true
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "e7e35dd2bb3ad4c7f2370c34fafb9ad2d2414507470c796d79aea11a80ad32a2",
+            "sha256": "3d2aefa902d4b14ebdb62edb315dfa6c502a0ff979feb7450856c4a4cc9577c4"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "fa0ba501b2b25f11300a02b603341a945f508fa840abfdd8a0a751639e0119b3",
+            "sha256": "04e5d5acb09778ac43b60306adf499ecd09fdaea8501743c650d333a48d0dc2d"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "7d647d58c72c94310a593935f124934eb2a34afb76b094440363d5b9ca5272a9",
+            "sha256": "94c2bcc321f8ed865411395caf7de189ad60c266aa33c0d8cdee6f044e4c40cd"
+          }
+        ],
+        "installedPayloadSha256": "42d56bbfec5a4092493daec39016698e2752c2fc7caf6146a2767511af83a672",
+        "path": "reviewed-ir",
+        "perl": "v5.36.3",
+        "threaded": false
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "bc6ece73db690aca1c215a52c7e1a6c4585797b1231e7f426623e41b8b6000c2",
+            "sha256": "098eae2488f8151e31ef4803af812c08f70c99f7a741e30f1ffb17b2a65842b3"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "0e2221b59c14ca877a88dcf18a088bd7a8d3f461b8f1cba2be8c2e48521daaa8",
+            "sha256": "cd47c177b62f3bae6e8889d548038716c0cedf3775fe5a2dccab6b69182f0e7c"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "0b5fd8da64ee4f42f14f87d35334b843629f594401ab5d6a15175ca248a26b73",
+            "sha256": "9493984284660908b8e202f010acfbd28e57550d827b953f43c8dacc50426663"
+          }
+        ],
+        "installedPayloadSha256": "641fc5bf701c914410eedf176a9656c68a36afb54e0dd81a8d52cd0a1f184721",
+        "path": "reviewed-ir",
+        "perl": "v5.38.2",
+        "threaded": true
+      },
+      {
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Collections/.packlist",
+            "previousSha256": "75fc975825f1ac9a7088b51139549859020f27c68c0833715eed43f0df7e176b",
+            "sha256": "ca58b523819c94a08e1019febbb2b1a086983714c41f0b20cd6267bdc4896421"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "bafb17a1e5890373cfe2ff287f0faa4fc73c0f7fca35b16f7bee2f321b818465",
+            "sha256": "49cca81ff090ebc924008586fd14e0e5d4ae2126b1e884f1506fa90856f1151b"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "31e00892a8e39c90386df5e192c7657617f07dba6847317e6d7fed13f8fdcb47",
+            "sha256": "943f9e5d9d4102ad3a458347498a05eb44dc182cfa482a5b8c2d3bfc85737854"
+          }
+        ],
+        "installedPayloadSha256": "b3f595aedfa39d97a9b0e668f0fd8bd6acf7603c1baaf219133de750c7304021",
+        "path": "reviewed-ir",
+        "perl": "v5.38.2",
+        "threaded": false
+      }
+    ]
+  },
+  "reviewedIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Collections.arrayAdd",
+      "parameters": [
+        "int",
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayCheckElements",
+      "parameters": [
+        {
+          "array": "unit"
+        },
+        {
+          "array": "bool"
+        },
+        {
+          "array": "uint8"
+        },
+        {
+          "array": "uint16"
+        },
+        {
+          "array": "uint32"
+        },
+        {
+          "array": "uint64"
+        },
+        {
+          "array": "int8"
+        },
+        {
+          "array": "int16"
+        },
+        {
+          "array": "int32"
+        },
+        {
+          "array": "int64"
+        },
+        {
+          "array": "nat"
+        },
+        {
+          "array": "int"
+        },
+        {
+          "array": "float32"
+        },
+        {
+          "array": "float64"
+        },
+        {
+          "array": "string"
+        },
+        {
+          "array": "bytes"
+        },
+        {
+          "array": "char"
+        },
+        {
+          "array": "usize"
+        },
+        {
+          "array": "isize"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.arrayDuplicate",
+      "parameters": [
+        {
+          "array": "bytes"
+        }
+      ],
+      "result": {
+        "array": "bytes"
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBool",
+      "parameters": [
+        {
+          "array": {
+            "array": "bool"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bool"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBytes",
+      "parameters": [
+        {
+          "array": {
+            "array": "bytes"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseChar",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat32",
+      "parameters": [
+        {
+          "array": {
+            "array": "float32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat64",
+      "parameters": [
+        {
+          "array": {
+            "array": "float64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt",
+      "parameters": [
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "int16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "int32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "int64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "int8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseISize",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseNat",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "nat"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseString",
+      "parameters": [
+        {
+          "array": {
+            "array": "string"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUnit",
+      "parameters": [
+        {
+          "array": {
+            "array": "unit"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "unit"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUSize",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arraySize",
+      "parameters": [
+        {
+          "array": "unit"
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Collections.arrayTotal",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Collections.arrayWords",
+      "parameters": [],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.deep",
+      "parameters": [
+        {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": {
+                                                        "array": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Collections.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "array": "unit"
+      }
+    },
+    {
+      "name": "Collections.recordCount",
+      "parameters": [
+        {
+          "fields": {
+            "value": "nat"
+          },
+          "record": "Records.Count"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "nat"
+        },
+        "record": "Records.Count"
+      }
+    },
+    {
+      "name": "Collections.recordDuplicate",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordEmpty",
+      "parameters": [
+        {
+          "fields": {},
+          "record": "Records.Empty"
+        }
+      ],
+      "result": {
+        "fields": {},
+        "record": "Records.Empty"
+      }
+    },
+    {
+      "name": "Collections.recordInspect",
+      "parameters": [
+        {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.recordMake",
+      "parameters": [],
+      "result": {
+        "fields": {
+          "first": "uint32",
+          "second": "string"
+        },
+        "record": "Records.Pair"
+      }
+    },
+    {
+      "name": "Collections.recordReverse",
+      "parameters": [
+        {
+          "array": {
+            "fields": {
+              "bytes": "bytes",
+              "char": "char",
+              "f32": "float32",
+              "f64": "float64",
+              "flag": "bool",
+              "i16": "int16",
+              "i32": "int32",
+              "i64": "int64",
+              "i8": "int8",
+              "integer": "int",
+              "isize": "isize",
+              "natural": "nat",
+              "text": "string",
+              "u16": "uint16",
+              "u32": "uint32",
+              "u64": "uint64",
+              "u8": "uint8",
+              "unit": "unit",
+              "usize": "usize"
+            },
+            "record": "Records.Primitives"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordShuffle",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "count": {
+            "fields": {
+              "value": "nat"
+            },
+            "record": "Records.Count"
+          },
+          "empty": {
+            "fields": {},
+            "record": "Records.Empty"
+          },
+          "label": "string",
+          "pair": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Pair"
+          },
+          "reversed": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Reversed"
+          },
+          "single": {
+            "fields": {
+              "value": "uint64"
+            },
+            "record": "Records.Single"
+          },
+          "values": {
+            "array": {
+              "array": {
+                "fields": {
+                  "bytes": "bytes",
+                  "char": "char",
+                  "f32": "float32",
+                  "f64": "float64",
+                  "flag": "bool",
+                  "i16": "int16",
+                  "i32": "int32",
+                  "i64": "int64",
+                  "i8": "int8",
+                  "integer": "int",
+                  "isize": "isize",
+                  "natural": "nat",
+                  "text": "string",
+                  "u16": "uint16",
+                  "u32": "uint32",
+                  "u64": "uint64",
+                  "u8": "uint8",
+                  "unit": "unit",
+                  "usize": "usize"
+                },
+                "record": "Records.Primitives"
+              }
+            }
+          }
+        },
+        "record": "Records.Packet"
+      }
+    },
+    {
+      "name": "Collections.recordSingle",
+      "parameters": [
+        {
+          "fields": {
+            "value": "uint64"
+          },
+          "record": "Records.Single"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "uint64"
+        },
+        "record": "Records.Single"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "tests/fixtures/collection-consumers/Collections.lean": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524",
+    "tests/fixtures/collection-consumers/perl-faults.pl": "0cede0ef5a1c70c04e882d328a780025db72d1a902643965ea2e788aaf2ee01e",
+    "tests/fixtures/collection-consumers/perl.pl": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89",
+    "tests/fixtures/list-consumers/perl-probe-build.pl": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69",
+    "tests/fixtures/list-consumers/perl-probe.h": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766",
+    "tests/fixtures/onboarding/npm-arrays/Arrays.lean": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668",
+    "tests/fixtures/onboarding/npm-arrays/LICENSE": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+    "tests/fixtures/onboarding/npm-arrays/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-records/Records.lean": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540",
+    "tests/helpers/array-fixture.mjs": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf",
+    "tests/helpers/collection-fixture.mjs": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/perl-collection-install.mjs": "31032e385f6f813f85b2475f8fd62011d01a4485ba8a353d5d6a735b76771796",
+    "tests/helpers/record-fixture.mjs": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+    "tests/perl-collection-contract.test.mjs": "b7c5ddf7d87c189c8fcb5bc67bf6eb06acb54750032a267e42eb5974f10f4e4c",
+    "tests/perl-collection-evidence.test.mjs": "e793d67cd6bb282f87fac07949942809891702689accf32b74fec960e1280eb3",
+    "tests/perl-collections.test.mjs": "d1545f7d2d3e36cb9daeef3376a018790f8c067a696670c89422fc1b0d3615c5"
+  },
+  "wordBits": 64
+}

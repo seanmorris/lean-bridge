@@ -1,0 +1,1658 @@
+{
+  "baseRevision": "4a83322cfc92383634f243f546537002120f0bfb",
+  "documentation": {
+    "compilerFreeExecution": true,
+    "consumerSha256": "bcd9ce290befb70265a005d6a6b6c927001252e5c39b1abb247b53e0019e7451",
+    "handoffRemovedBeforeExecution": true,
+    "installedFiles": {
+      "README.md": {
+        "bytes": 1834,
+        "sha256": "5a3c4bea6cfe79a2fe01fff72631f538bb7011e76cbef13b987fcf8c4257b253"
+      },
+      "binding-manifest.json": {
+        "bytes": 1072,
+        "sha256": "c7be2ba33e137271b4041557f983bc96671c3b2fc0ee3df58fd06f10fa613815"
+      },
+      "lean-bridge/component/artifacts.json": {
+        "bytes": 1388,
+        "sha256": "05f7d91fbf2c49bafb51a15bc41947c475f7a1e5571163a09d43624d22f6372e"
+      },
+      "lean-bridge/component/binding-ir.json": {
+        "bytes": 3426,
+        "sha256": "8ddce10fa2c9b4c2da5c2fc31cbcaa8941d0ea9fe17dd478cbb2cf65a6ac52e7"
+      },
+      "lean-bridge/component/component.h": {
+        "bytes": 523,
+        "sha256": "081d009afa07569f2fa20924b831bc7ea20704db9dba02975e5ef3bee7ee73f7"
+      },
+      "lean-bridge/component/generated.lean": {
+        "bytes": 1150,
+        "sha256": "25cd14a94b69adbc47d2c40b3de014d45691b0619e28f75dad3916de82da6325"
+      },
+      "lean-bridge/component/metadata.json": {
+        "bytes": 5482,
+        "sha256": "fce72d91902d775b869b2add59dfcd51af1e4a10bdd0e1324b7ece4aa1569e73"
+      },
+      "lean-bridge/component/model.json": {
+        "bytes": 12070,
+        "sha256": "52751617f33d5a3559068dec27d247f2e5379eb88f4002905dced253d559cc13"
+      },
+      "lean-bridge/component/native-component.json": {
+        "bytes": 3112,
+        "sha256": "c114f86fd7ba513a2b3651c4fce5ea8f87c541b91bca1aecf92f1fc7b2f3c12b"
+      },
+      "lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/licenses/source-notices.json": {
+        "bytes": 1928,
+        "sha256": "382f9c607c6736f20da370011d7248cf847c2d19a8e3279973b03e1902ed0cab"
+      },
+      "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+        "bytes": 1081,
+        "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+      },
+      "lean-bridge/native-c-adapter.json": {
+        "bytes": 1340,
+        "sha256": "01213db2aaace5c139e0f95e319e0e55e4c7d203fee74c0fbed2b71fc40b69da"
+      },
+      "lean-bridge/platform.json": {
+        "bytes": 117,
+        "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+      },
+      "lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+      },
+      "lib/lean_bridge/native_copied_runtime_v1.rb": {
+        "bytes": 198,
+        "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+      },
+      "lib/lean_bridge/parcels.rb": {
+        "bytes": 1035,
+        "sha256": "c8274605556cde01af5c964b6a33273ef0503d39f72917a464a5efe583b8b315"
+      },
+      "lib/lean_bridge/parcels/native.rb": {
+        "bytes": 10282,
+        "sha256": "d115f661d1a8a53e2c4b614e6650ef5cf35cd0bec071be2f962b284d632bafee"
+      },
+      "lib/lean_bridge/parcels/native/linux-x64/libcomponent_1d177a26bc5594cf24ff.so": {
+        "bytes": 16752,
+        "sha256": "b3c6b621c5e43f41b98d696ef51faa0aa78ae6bff03deeadae74f78289443bdf"
+      },
+      "lib/lean_bridge/parcels/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 17016,
+        "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+      },
+      "lib/lean_bridge/parcels/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "lib/lean_bridge/parcels/native/linux-x64/libparcels.so": {
+        "bytes": 21448,
+        "sha256": "a632d26d54dc13569241189b3489a356175ed1245821058d7d957b33e35e30d0"
+      }
+    },
+    "installedFilesUnchanged": true,
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50074112,
+            "path": "archives/parcels-api-1.0.0-x86_64-linux.gem",
+            "sha256": "d45305a54ed92ae48f381fc3f6bf4d57889a08b8a6fe958c442f5785c46d9abc"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "parcels-api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "passed": true,
+    "publisherSha256": "aa855d200ecac7a3af3b3e4203ace68ce54b386f7bf106b51ba0a81811dfac95",
+    "relocatedInstallation": true,
+    "sourceRemovedBeforeInstallation": true,
+    "stdout": "Seeds: 7, 2\n[2, 7]\n"
+  },
+  "executions": [
+    {
+      "bindingIrSha256": "c71b9d03ad368c6a6ab75d5369db644ee8f29fe15e3783863fe7f72f8820e982",
+      "calls": 3225,
+      "checks": 167545,
+      "compilerFreeExecution": true,
+      "consumerSha256": "c3bbe1c53bbaf9d9b9998d350ff65c34ee389a577062ad28c99e20e9ac89cf81",
+      "faults": {
+        "checks": 842,
+        "constructor_probes": 7,
+        "conversion_methods": 178,
+        "malformed_values": 8,
+        "partial_inputs": 64
+      },
+      "gemCacheRemoved": true,
+      "installedFiles": {
+        "README.md": {
+          "bytes": 4465,
+          "sha256": "0beff08040f003badbac4390739e566107f0d9c08d29ba6101d3f98d4d57b286"
+        },
+        "binding-manifest.json": {
+          "bytes": 1096,
+          "sha256": "0b00942fdc8961d66a1d062246bc56a7e5e844795fa346148aef3bb6fdffd4ff"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1397,
+          "sha256": "971d0c25782bbb62ddfe7fc2dae0e1d31b3e32dd18fe84b29407a6a3f72a0063"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 107696,
+          "sha256": "e0f37d68110689aed26a800ba7933e84aca1b6693147e970f30e770d5cac73f1"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 522304,
+          "sha256": "c24c1efacff3d082775d7a1acfe1afc722c06bd6269f33112bbe6803241ee42f"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 11056,
+          "sha256": "84e228f4e96937593c5a0064b818e28b9d7c5b89e30319465422eaed935f28a8"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3582,
+          "sha256": "d150ca32fb032368a95537e296da0f3004afe5482c9f9af98d39fc1db847e45a"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "11750e0c98f6abc3b8acbb1a5d90fc0d718e84b35f5524a83e678d76ab01baa7"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/collections.rb": {
+          "bytes": 11119,
+          "sha256": "0589b0b465c0c96641f7ac7840108d0d06471331d6d2ff71e467bb6e804f73f7"
+        },
+        "lib/lean_bridge/collections/native.rb": {
+          "bytes": 104117,
+          "sha256": "a7343a68a1bfa1481cf7ab8aaf2e1461aaae98200111a1305185c2331171ecba"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "166b010505dc7e0bcb5bc690cd0faf8c7a76917ce8f2ecb499224de514564036",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "c24c1efacff3d082775d7a1acfe1afc722c06bd6269f33112bbe6803241ee42f",
+      "nativeLibraries": {
+        "lib/lean_bridge/collections/native/linux-x64/libcollections.so": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a",
+        "lib/lean_bridge/collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "lib/lean_bridge/collections/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/collections/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50208768,
+              "path": "archives/collections-api-1.0.0-x86_64-linux.gem",
+              "sha256": "b681ecc5447a2ad25adee343b55efd4331325fbb593804cd5dda58ed19223a8b"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "primitives": [
+        {
+          "checks": 2960,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2962,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2964,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint64",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2962,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2960,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "string",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 4112,
+          "name": "bytes",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4118,
+          "name": "char",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 2960,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "1d8c2427c0f123cdd50fc58d41aa1014e899fed49f6f2403942cc6e33083477b",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "397ecfaa561c9cbbaa74cf984d6d94a0c925e798cb3d41134a7dd594b4fdd66e",
+      "recordTypes": [
+        "LeanBridge::Collections::Primitives",
+        "LeanBridge::Collections::Empty",
+        "LeanBridge::Collections::Single",
+        "LeanBridge::Collections::Count",
+        "LeanBridge::Collections::Pair",
+        "LeanBridge::Collections::Reversed",
+        "LeanBridge::Collections::Packet"
+      ],
+      "rejected": 118,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "0a5fc140236189555ec6a0af93bcdc51370715789853673ea936a0f28c392e54",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "29dcd799aae7515b51eff5f72aea9eabd536fb7b28bda1904d63abb1e3a466b2"
+    },
+    {
+      "bindingIrSha256": "4d2452d6c6e31fc10bf8ba3192833de44b3a0f6d10e46e39c4b8ed0bc6a47d83",
+      "calls": 3225,
+      "checks": 167545,
+      "compilerFreeExecution": true,
+      "consumerSha256": "c3bbe1c53bbaf9d9b9998d350ff65c34ee389a577062ad28c99e20e9ac89cf81",
+      "faults": {
+        "checks": 842,
+        "constructor_probes": 7,
+        "conversion_methods": 178,
+        "malformed_values": 8,
+        "partial_inputs": 64
+      },
+      "gemCacheRemoved": true,
+      "installedFiles": {
+        "README.md": {
+          "bytes": 4465,
+          "sha256": "0beff08040f003badbac4390739e566107f0d9c08d29ba6101d3f98d4d57b286"
+        },
+        "binding-manifest.json": {
+          "bytes": 1096,
+          "sha256": "bb9fe29a2cf99b192638b8b04487cbe0e74133e70d30d8281b89de98719fd831"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1398,
+          "sha256": "5ebacf9fe0d8a0cf191d1ea1817807e884145882e3372c0cc980e62fc7062bf9"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 108385,
+          "sha256": "5652350bf4bcdf94f405ca4ffebff37a407268e05941a842f920b5f607421c1d"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 632155,
+          "sha256": "962ae635281535014e3022d6f7b6304b3775a16113e188dcf289c64a40f445aa"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 120218,
+          "sha256": "30261bd0618c4dc3ccd5cf42f9a97e460eebc4862cce39fe7ccf30ff3a05c3bd"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2441,
+          "sha256": "5bd74adbfcccc40a1bdceee78054b97f2eee20182438aa128c8aadc021a627eb"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "0fb607adab69ee969611873cb2f06d5b979abad9afcbd0430d5dfe53175a9f5e"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/collections.rb": {
+          "bytes": 11119,
+          "sha256": "0589b0b465c0c96641f7ac7840108d0d06471331d6d2ff71e467bb6e804f73f7"
+        },
+        "lib/lean_bridge/collections/native.rb": {
+          "bytes": 104117,
+          "sha256": "11bb52ec26bf720024054c4bc385724ffbd2eafb9111e80f400be38175433e1a"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/collections/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "d10027f42b56edd7db2c2cacc2ad4984b33f46f94b04bd24c6ca193aee5b985a",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "962ae635281535014e3022d6f7b6304b3775a16113e188dcf289c64a40f445aa",
+      "nativeLibraries": {
+        "lib/lean_bridge/collections/native/linux-x64/libcollections.so": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a",
+        "lib/lean_bridge/collections/native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "lib/lean_bridge/collections/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/collections/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50216960,
+              "path": "archives/collections-api-1.0.0-x86_64-linux.gem",
+              "sha256": "e4babe266a5e0be77b7f99c122d26b2c49e6d2a429309ed0032921f56df9f85c"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "primitives": [
+        {
+          "checks": 2960,
+          "name": "unit",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2962,
+          "name": "bool",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2964,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2964,
+          "name": "uint64",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 2962,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2962,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 2960,
+          "name": "nat",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "int",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "float32",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "float64",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4114,
+          "name": "string",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 4112,
+          "name": "bytes",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 4118,
+          "name": "char",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 2960,
+          "name": "usize",
+          "rejected_cases": 4
+        },
+        {
+          "checks": 2960,
+          "name": "isize",
+          "rejected_cases": 4
+        }
+      ],
+      "probeSha256": "1d8c2427c0f123cdd50fc58d41aa1014e899fed49f6f2403942cc6e33083477b",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "95cd476516e26eefb32f161322bd34ba86154113665349355e60a70501b731c7",
+      "recordTypes": [
+        "LeanBridge::Collections::Primitives",
+        "LeanBridge::Collections::Empty",
+        "LeanBridge::Collections::Single",
+        "LeanBridge::Collections::Count",
+        "LeanBridge::Collections::Pair",
+        "LeanBridge::Collections::Reversed",
+        "LeanBridge::Collections::Packet"
+      ],
+      "rejected": 118,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "1c7f49e4367c95f4b558f8c6a8725bef2661f1be16211a2a0e2ac691e5a040c6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "06dd2ccf5aea23d25dee95ff6cf41d17e983246c0b6601ec95e0addc9d71a6ba"
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "profiles": [
+    "ruby"
+  ],
+  "reportSha256": "cba06eba4bfa9dbddffe4a9cd514bc633a5e6b06ef7dff4e39d18635c57d0f2f",
+  "reproduction": {
+    "archivesIdentical": true,
+    "firstLog": {
+      "sha256": "a4b0c87d8087b5f60aa6646869022ff770168e5a72bd12e1bacf9ba176544021",
+      "text": "TAP version 13\n# Subtest: installed Ruby arrays and records preserve values on both source paths\nok 1 - installed Ruby arrays and records preserve values on both source paths\n  ---\n  duration_ms: 89937.415502\n  type: 'test'\n  ...\n# ordinary-source: compiling Ruby collections\n# ordinary-source: offline installation, relocation, independent consumers and failure probes\n# ordinary-source: 167545 assertions, 3225 calls, 118 rejections\n# reviewed-ir: compiling Ruby collections\n# reviewed-ir: offline installation, relocation, independent consumers and failure probes\n# reviewed-ir: 167545 assertions, 3225 calls, 118 rejections\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 90100.33585\n"
+    },
+    "firstReportSha256": "cba06eba4bfa9dbddffe4a9cd514bc633a5e6b06ef7dff4e39d18635c57d0f2f",
+    "installedFilesIdentical": true,
+    "nativeLibrariesIdentical": true,
+    "publicObservationsIdentical": true,
+    "runs": [
+      {
+        "installedFilesSha256": "5d75cec22776d2c29896d25c1960695887c6a62e46e5a221cb21b38ec4137d49",
+        "packagesSha256": "7c39158ea0dde457f45561b7c00201011b53f89c5411f6d0c89b8fd69df7b962",
+        "path": "ordinary-source",
+        "reportSha256": "2b9c863aeaef079cf4b13b73f0d8f848b72027c4788d0d0130bf936123dde1ad"
+      },
+      {
+        "installedFilesSha256": "0f0e7e8c69933eaaf59f84066f501758ca591a2d34c88411f84b2f44521fc4be",
+        "packagesSha256": "905753be9131e8e9328e2401ee5db24e4c0798310790914a5f7365b9ffb3daed",
+        "path": "reviewed-ir",
+        "reportSha256": "a03ba5e6c364832bc2cd0323f2c6f20523c0a646f224393d81d7bc1ba866998a"
+      }
+    ],
+    "secondLog": {
+      "sha256": "6b841839999609407a28c14f36d03ab03f13b5b10c0313b7e75452a7938808d9",
+      "text": "TAP version 13\n# Subtest: installed Ruby arrays and records preserve values on both source paths\nok 1 - installed Ruby arrays and records preserve values on both source paths\n  ---\n  duration_ms: 103127.789608\n  type: 'test'\n  ...\n# ordinary-source: compiling Ruby collections\n# ordinary-source: offline installation, relocation, independent consumers and failure probes\n# ordinary-source: 167545 assertions, 3225 calls, 118 rejections\n# reviewed-ir: compiling Ruby collections\n# reviewed-ir: offline installation, relocation, independent consumers and failure probes\n# reviewed-ir: 167545 assertions, 3225 calls, 118 rejections\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 103331.120783\n"
+    }
+  },
+  "reviewedIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Collections.arrayAdd",
+      "parameters": [
+        "int",
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayCheckElements",
+      "parameters": [
+        {
+          "array": "unit"
+        },
+        {
+          "array": "bool"
+        },
+        {
+          "array": "uint8"
+        },
+        {
+          "array": "uint16"
+        },
+        {
+          "array": "uint32"
+        },
+        {
+          "array": "uint64"
+        },
+        {
+          "array": "int8"
+        },
+        {
+          "array": "int16"
+        },
+        {
+          "array": "int32"
+        },
+        {
+          "array": "int64"
+        },
+        {
+          "array": "nat"
+        },
+        {
+          "array": "int"
+        },
+        {
+          "array": "float32"
+        },
+        {
+          "array": "float64"
+        },
+        {
+          "array": "string"
+        },
+        {
+          "array": "bytes"
+        },
+        {
+          "array": "char"
+        },
+        {
+          "array": "usize"
+        },
+        {
+          "array": "isize"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.arrayDuplicate",
+      "parameters": [
+        {
+          "array": "bytes"
+        }
+      ],
+      "result": {
+        "array": "bytes"
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBool",
+      "parameters": [
+        {
+          "array": {
+            "array": "bool"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bool"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBytes",
+      "parameters": [
+        {
+          "array": {
+            "array": "bytes"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseChar",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat32",
+      "parameters": [
+        {
+          "array": {
+            "array": "float32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat64",
+      "parameters": [
+        {
+          "array": {
+            "array": "float64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt",
+      "parameters": [
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "int16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "int32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "int64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "int8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseISize",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseNat",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "nat"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseString",
+      "parameters": [
+        {
+          "array": {
+            "array": "string"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUnit",
+      "parameters": [
+        {
+          "array": {
+            "array": "unit"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "unit"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUSize",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arraySize",
+      "parameters": [
+        {
+          "array": "unit"
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Collections.arrayTotal",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Collections.arrayWords",
+      "parameters": [],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.deep",
+      "parameters": [
+        {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": {
+                                                        "array": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Collections.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "array": "unit"
+      }
+    },
+    {
+      "name": "Collections.recordCount",
+      "parameters": [
+        {
+          "fields": {
+            "value": "nat"
+          },
+          "record": "Records.Count"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "nat"
+        },
+        "record": "Records.Count"
+      }
+    },
+    {
+      "name": "Collections.recordDuplicate",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordEmpty",
+      "parameters": [
+        {
+          "fields": {},
+          "record": "Records.Empty"
+        }
+      ],
+      "result": {
+        "fields": {},
+        "record": "Records.Empty"
+      }
+    },
+    {
+      "name": "Collections.recordInspect",
+      "parameters": [
+        {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.recordMake",
+      "parameters": [],
+      "result": {
+        "fields": {
+          "first": "uint32",
+          "second": "string"
+        },
+        "record": "Records.Pair"
+      }
+    },
+    {
+      "name": "Collections.recordReverse",
+      "parameters": [
+        {
+          "array": {
+            "fields": {
+              "bytes": "bytes",
+              "char": "char",
+              "f32": "float32",
+              "f64": "float64",
+              "flag": "bool",
+              "i16": "int16",
+              "i32": "int32",
+              "i64": "int64",
+              "i8": "int8",
+              "integer": "int",
+              "isize": "isize",
+              "natural": "nat",
+              "text": "string",
+              "u16": "uint16",
+              "u32": "uint32",
+              "u64": "uint64",
+              "u8": "uint8",
+              "unit": "unit",
+              "usize": "usize"
+            },
+            "record": "Records.Primitives"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordShuffle",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "count": {
+            "fields": {
+              "value": "nat"
+            },
+            "record": "Records.Count"
+          },
+          "empty": {
+            "fields": {},
+            "record": "Records.Empty"
+          },
+          "label": "string",
+          "pair": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Pair"
+          },
+          "reversed": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Reversed"
+          },
+          "single": {
+            "fields": {
+              "value": "uint64"
+            },
+            "record": "Records.Single"
+          },
+          "values": {
+            "array": {
+              "array": {
+                "fields": {
+                  "bytes": "bytes",
+                  "char": "char",
+                  "f32": "float32",
+                  "f64": "float64",
+                  "flag": "bool",
+                  "i16": "int16",
+                  "i32": "int32",
+                  "i64": "int64",
+                  "i8": "int8",
+                  "integer": "int",
+                  "isize": "isize",
+                  "natural": "nat",
+                  "text": "string",
+                  "u16": "uint16",
+                  "u32": "uint32",
+                  "u64": "uint64",
+                  "u8": "uint8",
+                  "unit": "unit",
+                  "usize": "usize"
+                },
+                "record": "Records.Primitives"
+              }
+            }
+          }
+        },
+        "record": "Records.Packet"
+      }
+    },
+    {
+      "name": "Collections.recordSingle",
+      "parameters": [
+        {
+          "fields": {
+            "value": "uint64"
+          },
+          "record": "Records.Single"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "uint64"
+        },
+        "record": "Records.Single"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "tests/fixtures/collection-consumers/Collections.lean": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524",
+    "tests/fixtures/collection-consumers/ruby-faults.rb": "1d8c2427c0f123cdd50fc58d41aa1014e899fed49f6f2403942cc6e33083477b",
+    "tests/fixtures/collection-consumers/ruby-snapshots.rb": "084f6234e2b3899946f2dff64dff1dd1a1c59b29a524ce706d0e49c49b88cb6b",
+    "tests/fixtures/collection-consumers/ruby.rb": "c3bbe1c53bbaf9d9b9998d350ff65c34ee389a577062ad28c99e20e9ac89cf81",
+    "tests/fixtures/onboarding/npm-arrays/Arrays.lean": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668",
+    "tests/fixtures/onboarding/npm-arrays/LICENSE": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+    "tests/fixtures/onboarding/npm-arrays/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-records/Records.lean": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540",
+    "tests/helpers/array-fixture.mjs": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf",
+    "tests/helpers/collection-fixture.mjs": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/record-fixture.mjs": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f",
+    "tests/helpers/ruby-collection-install.mjs": "7d789c345da9840cabf4e20f78e3646f9b51d502c22d623b571945b3edc167f6",
+    "tests/helpers/ruby-source-history.mjs": "0cd1e4c8ffcd01d2ba4fb5938e333023b085e5b42cfc64e2498c560f09ee677a",
+    "tests/helpers/ruby-variant-fixture.mjs": "b46da73b0a3acd1ec24d64e582c8534491b1851348a1f66ef48c3b5124f01f75",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+    "tests/ruby-collection-contract.test.mjs": "610483c3a8522a7b6b923443f068bfb082b23ae549a0695909a7331b3751b771",
+    "tests/ruby-collection-evidence.test.mjs": "e52f05e994abb4d8693fe4cd028f859e3d2deaf64b56c56c064199843eb68ef5",
+    "tests/ruby-collections.test.mjs": "4666200f37092ababf868c6cbb278070734b1146da9aa02339b2f0becea11d5c",
+    "tests/ruby-variant-contract.test.mjs": "ea9055431519a54b5864235859a6c486c83a7701a70485ad4a51debb9f52f238",
+    "tests/ruby-variant-evidence.test.mjs": "1c94ab709b7d0e6a9ee6d50fe523d88b5075ffacc3456c236c2042a4a437bf40"
+  },
+  "wordBits": 64
+}

@@ -1,0 +1,683 @@
+{
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "tests/native-aliases.test.mjs": "0afc062610343417daa598435d702e4f91d8fc8df977f11ac2575032cda8ed03",
+    "tests/native-alias-contract.test.mjs": "de7c3b6f7ab18dd0b46f471f808d2c6615ac25ee6fb2244feed11f685529b913",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/native-alias-consumers.mjs": "01ce831dad40531ee076bbd4cc70a5d282b9dbb709bbad680fc282b49311f5f4",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "runs": [
+    {
+      "bindingIrSha256": "917388b0bc1118d0fd4af0685a1cb9640e35940bbd299384d67486dec05557f3",
+      "checks": 720,
+      "command": "/tmp/lean-bridge-alias-consumer-HATnuc/c/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "c067fe092dbafb9007ee78320141ac7e9fd2671f250d6cd771b883f4e5575bd4",
+      "executableSha256": "1b9110a7ac6771439e0b2cb5f286cba7d123f7476c1370b1bf97dfb646936a3e",
+      "installedFilesSha256": "6999ef2c2a702050fbea2ec50c18f3ff84f55e9bc6ada2ab10e692df75ed4a53",
+      "installedFilesUnchanged": true,
+      "modelSha256": "29728e19ce472de4940db4b7ced2dd235a6f83e500b0c05baa9ffec3803e2ef1",
+      "nativeLibraries": {
+        "lib/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lib/libaliases_gmp.so": {
+          "bytes": 66544,
+          "sha256": "be12ba5e9073ed540ba9502333974e98c8bd57271d8e119db8147510ac6177ba"
+        },
+        "lib/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lib/libgmp.so.10": {
+          "bytes": 706376,
+          "sha256": "bdb6ab8202f23707f6501fe97a1a5cef0ed0d7ee2d2c0287c93fad0698095468"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53903880,
+              "path": "archives/aliases-1.0.0-c.tar.gz",
+              "sha256": "757526be92bcf05270f6ca361219773dbd5f4128ec9f6f29e7607e0807f1bf25"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "09c5c189857b71520185629dd37658444a4fb3d10db2955a6bd0831c8c3bc555",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ba32749072e019ee599916e82cfabae539741d4874b12f4763f497cba1828d74"
+    },
+    {
+      "bindingIrSha256": "917388b0bc1118d0fd4af0685a1cb9640e35940bbd299384d67486dec05557f3",
+      "checks": 366,
+      "command": "/tmp/lean-bridge-alias-consumer-HATnuc/cpp/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "affc5d67fa78b2b8bfebe6cafb40d057cc2386f6068d52808b1b1143049b500d",
+      "executableSha256": "f92572f0616c287543c2601cc744bf59ee96eac4f24a56ae1066dee8828f6256",
+      "installedFilesSha256": "f262117f863c99471e0054e261d9a18a76c72d38cb7dc82a7741b14c49149db5",
+      "installedFilesUnchanged": true,
+      "modelSha256": "29728e19ce472de4940db4b7ced2dd235a6f83e500b0c05baa9ffec3803e2ef1",
+      "nativeLibraries": {
+        "lib/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lib/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51823076,
+              "path": "archives/aliases-1.0.0-cpp.tar.gz",
+              "sha256": "9c2ca2d76c6735715d47e97ba810fad0ec66b19de546209b3dcd4f55b1f207d7"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "09c5c189857b71520185629dd37658444a4fb3d10db2955a6bd0831c8c3bc555",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ba32749072e019ee599916e82cfabae539741d4874b12f4763f497cba1828d74"
+    },
+    {
+      "bindingIrSha256": "e6cba488b77853aa8e7e6cbe710511c905d5a82029da8492acbca5380bf73903",
+      "checks": 720,
+      "command": "/tmp/lean-bridge-alias-consumer-iCkN4M/c/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "c067fe092dbafb9007ee78320141ac7e9fd2671f250d6cd771b883f4e5575bd4",
+      "executableSha256": "1b9110a7ac6771439e0b2cb5f286cba7d123f7476c1370b1bf97dfb646936a3e",
+      "installedFilesSha256": "8cd41ec887dfec57133746ae97845be05f0ac414647ac9901d59c2cb2eeba832",
+      "installedFilesUnchanged": true,
+      "modelSha256": "9e898310adf4e342beea86c7b211dc2416d520b01b716a02f508488a859fc4b0",
+      "nativeLibraries": {
+        "lib/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lib/libaliases_gmp.so": {
+          "bytes": 66544,
+          "sha256": "be12ba5e9073ed540ba9502333974e98c8bd57271d8e119db8147510ac6177ba"
+        },
+        "lib/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lib/libgmp.so.10": {
+          "bytes": 706376,
+          "sha256": "bdb6ab8202f23707f6501fe97a1a5cef0ed0d7ee2d2c0287c93fad0698095468"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53907845,
+              "path": "archives/aliases-1.0.0-c.tar.gz",
+              "sha256": "640b301e1d202429db045626d874e6f2eda5643d070b1a7b9d9433bfdd4fad72"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "c",
+      "receiptSha256": "fd7dcf3bfc99bdb55a744d521b6ab762fb2b1151d96853733f9d4cfb14a1155c",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "5934ef376f8d02f5fedc8f5e5c95e42b0f5cf17b6d32ed16a99d27aa2fe177f4"
+    },
+    {
+      "bindingIrSha256": "e6cba488b77853aa8e7e6cbe710511c905d5a82029da8492acbca5380bf73903",
+      "checks": 366,
+      "command": "/tmp/lean-bridge-alias-consumer-iCkN4M/cpp/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "affc5d67fa78b2b8bfebe6cafb40d057cc2386f6068d52808b1b1143049b500d",
+      "executableSha256": "52157d6e980e129c07602a6bd81c1b9efa5cb0200b1ceb855b55f3a621a282ac",
+      "installedFilesSha256": "05858de1c17348661e042f8fc64031aaea2fc2b977f92d16c1f7897422ef4aa1",
+      "installedFilesUnchanged": true,
+      "modelSha256": "9e898310adf4e342beea86c7b211dc2416d520b01b716a02f508488a859fc4b0",
+      "nativeLibraries": {
+        "lib/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lib/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lib/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51828046,
+              "path": "archives/aliases-1.0.0-cpp.tar.gz",
+              "sha256": "baaf5a65088e85fce43279d25b3605ac831d17a3282c3c7dfc00b43f1b80726d"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "fd7dcf3bfc99bdb55a744d521b6ab762fb2b1151d96853733f9d4cfb14a1155c",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "5934ef376f8d02f5fedc8f5e5c95e42b0f5cf17b6d32ed16a99d27aa2fe177f4"
+    }
+  ]
+}

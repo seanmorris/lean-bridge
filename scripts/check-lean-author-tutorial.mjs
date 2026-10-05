@@ -78,21 +78,30 @@ try
 	const analysis = JSON.parse(await readFile(join(project, "build/analysis/project-analysis.json"), "utf8"));
 	assert.deepEqual(analysis.proposedExports, ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
 	assert.deepEqual(analysis.adapterHints.filter(item => item.required), []);
+	assert.equal(analysis.bindingIr.origin, "lean-elaborated");
+	assert.deepEqual(analysis.bindingIr.document.assurance, []);
+	assert.deepEqual(analysis.exportCandidates.find(item => item.declaration === "OnboardingSmall.add").theoremCandidates, ["OnboardingSmall.add_commutative"]);
 	await cli("Build the documented component", ["build", "--project", ".", "--target", "npm", "--output", "build/lean-bridge-release"]);
 	const assurance = JSON.parse(await readFile(join(project, "build/lean-bridge-release/bundle/metadata/assurance.json"), "utf8"));
-	assert.deepEqual(assurance.claims, analysis.bindingIr.document.assurance);
-	assert.ok(assurance.claims.every(claim => claim.state === "unverified"));
-	assert.deepEqual(assurance.claims.find(claim => claim.subject === "lean:OnboardingSmall.add").theorems, ["OnboardingSmall.add_commutative"]);
+	assert.deepEqual(assurance.claims, []);
+	const elaboration = JSON.parse(await readFile(join(project, "build/lean-bridge-release/bundle/metadata/lake-entry-exports.json"), "utf8"));
+	assert.deepEqual(elaboration.metadata.modules.flatMap(module => module.declarations).find(item => item.identity === "OnboardingSmall.add").theoremReferences, ["OnboardingSmall.add_commutative"]);
 	assert.equal((await run("Check source remains clean", "git", ["status", "--porcelain=v1", "--untracked-files=all"])).stdout, "");
 	await cli("Build and compare two committed source copies", ["publish", "--project", ".", "--target", "npm", "--dry-run", "--output", output]);
 	const packageRoot = join(output, "release/packages/npm");
 	const receiptPath = join(packageRoot, "component-package-receipt.json");
 	const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 	const verified = await verifyComponentPackageReceipt({ receiptPath });
+	const checkedHandoff = JSON.parse((await run("Verify the handoff through the CLI", process.execPath,
+		[join(engine, "scripts/lean-bridge.mjs"), "verify", "--receipt", receiptPath, "--json"], scratch)).stdout);
+	assert.deepEqual(checkedHandoff.result, { ...verified, verificationType: "local-npm", authenticated: false });
 	await run("Run the copied standalone receipt verifier", process.execPath, [join(packageRoot, "verify-component-package-receipt.mjs"), "--receipt", receiptPath], scratch);
 	await mkdir(consumer);
 	await run("Initialize a separate consumer", "npm", ["init", "-y"], consumer);
 	await run("Install the exact local archives", "npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund", join(packageRoot, receipt.runtime.archive), join(packageRoot, receipt.package.archive)], consumer);
+	await cp(join(repository, "tests/fixtures/documentation/lean-author-consumer/index.mjs"), join(consumer, "index.mjs"));
+	const example = await run("Run the documented JavaScript file", process.execPath, ["index.mjs"], consumer);
+	assert.equal(example.stdout, "123n\ntrue\nfalse\n");
 	const invocationSource = [
 		'import * as component from "onboarding-small";'
 		, 'const { add, isEmpty } = component;'

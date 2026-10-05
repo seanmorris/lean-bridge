@@ -2,7 +2,7 @@
 
 Build a named flake output, sign its Nix store closure, and publish that closure through a binary cache. Consumers select the same source revision and trust the cache's public signing key before downloading the result.
 
-This repository has no configured public binary cache, project cache key, or universal `publish --target nix`. The commands below belong to an operator-managed cache workflow. Apply the [publishing approvals](../publishing.md) and [production review](production-release.md) to its source revision, store paths, signer, and destination before distribution.
+This repository has no configured public binary cache, project cache key, or universal `publish --target nix`. The commands below belong to an operator-managed cache workflow. Apply the [publishing approvals](../publishing.md) and [production review](../publishing.md#build-and-approve-the-same-artifacts) to its source revision, store paths, signer, and destination before distribution.
 
 ## Choose a declared output
 
@@ -15,10 +15,11 @@ The repository's [flake](../../flake.nix) declares these useful distribution out
 | `npm-package`, `nuget-package`, `maven-package`, `rubygems-package`, `wasi-package` | Individual package projections. |
 | `php-native-package` | The separately built native PHP package. |
 | `component-build-engine` | The component builder executable and its runtime dependencies. |
+| `perl-build-engine` | The native Perl package builder and its pinned compiler environment. |
 
 The default package is `capsule-graph`, which validates capsule graph profiles. Specify the release output explicitly. The flake also declares `aarch64-linux`, but that system exposes the capsule graph package and its default alias, not the compiled release outputs above. Python, Rust, C, and C++ archives are included in `release-rehearsal`; they have no standalone `pypi-package`, `cargo-package`, `c-package`, or `cpp-package` attributes.
 
-Use an x86-64 Linux publisher with Nix, Bash, Git, curl, SSH, rsync, and enough disk space for the build and copied closure. These commands use the `nix-command` and `flakes` features and match the repository builder's Nix 2.24 CLI. Run the publisher snippets in one Bash session from a clean, reviewed checkout. Keep the committed `flake.lock` unchanged.
+Use an x86-64 Linux publisher with Nix, Node 22, Bash, Git, curl, SSH, rsync, and enough disk space for the build and copied closure. These commands use the `nix-command` and `flakes` features and match the repository builder's Nix 2.24 CLI. Node encodes local paths as store URLs. Run the publisher snippets in one Bash session from a clean, reviewed checkout. Keep the committed `flake.lock` unchanged.
 
 ## Build and record the candidate
 
@@ -59,6 +60,11 @@ Have the cache administrator provide a private parent directory outside the chec
 ```sh
 LEAN_BRIDGE_SIGNING_DIR=/absolute/private/lean-bridge-cache-keys
 LEAN_BRIDGE_CACHE_KEY_NAME=cache.example.org-1
+```
+
+Generate the key pair in that new directory:
+
+```sh
 (
   umask 077
   mkdir "$LEAN_BRIDGE_SIGNING_DIR"
@@ -70,7 +76,7 @@ LEAN_BRIDGE_CACHE_PUBLIC_KEY=$(< "$LEAN_BRIDGE_SIGNING_DIR/cache.public")
 sha256sum "$LEAN_BRIDGE_SIGNING_DIR/cache.public"
 ```
 
-`mkdir` deliberately fails if that key directory already exists. For later releases, load the existing key through the approved secret provider. Keep its file readable only by the signing account, retain an encrypted recovery copy, and disable shell tracing around secret-provider operations. Do not place a private key in a Nix expression, derivation, CI artifact, command argument, or cache directory. Distribute the public key and its authenticated fingerprint through the release team's trusted channel. [Nix binary-cache key generation](https://nix.dev/manual/nix/2.33/command-ref/nix-store/generate-binary-cache-key).
+`mkdir` deliberately fails if that key directory already exists. For later releases, load the existing key through the approved secret provider. Keep its file readable only by the signing account, retain an encrypted recovery copy, and disable shell tracing around secret-provider operations. Do not place a private key in a Nix expression, derivation, CI artifact, command argument, or cache directory. Distribute the public key and its authenticated fingerprint through the release team's trusted channel. [Nix binary-cache key generation](https://nix.dev/manual/nix/2.24/command-ref/nix-store/generate-binary-cache-key).
 
 ## Sign the closure and publish a file cache
 
@@ -86,17 +92,18 @@ nix --extra-experimental-features nix-command path-info --recursive --json --sig
   > "$LEAN_BRIDGE_NIX_RECORDS/closure-signed.json"
 
 LEAN_BRIDGE_CACHE_DIR=$(mktemp -d "$PWD/build/nix-binary-cache.XXXXXX")
+LEAN_BRIDGE_CACHE_URI=$(node -p 'require("node:url").pathToFileURL(process.argv[1]).href' "$LEAN_BRIDGE_CACHE_DIR")
 nix --extra-experimental-features nix-command copy \
-  --to "file://$LEAN_BRIDGE_CACHE_DIR" \
+  --to "$LEAN_BRIDGE_CACHE_URI" \
   "$LEAN_BRIDGE_BUNDLE_STORE" "$LEAN_BRIDGE_PACKAGES_STORE"
 nix --extra-experimental-features nix-command store verify \
-  --store "file://$LEAN_BRIDGE_CACHE_DIR" --recursive --sigs-needed 1 \
+  --store "$LEAN_BRIDGE_CACHE_URI" --recursive --sigs-needed 1 \
   --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
   --option secret-key-files '' \
   "$LEAN_BRIDGE_BUNDLE_STORE" "$LEAN_BRIDGE_PACKAGES_STORE"
 ```
 
-`nix store sign --recursive` attaches signatures to the closure. `nix copy` already copies the closure, including its signatures; it does not take `--recursive`. The `file://` prefix selects a binary cache, while a bare directory selects a local Nix store. [Store signing](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-sign), [Nix copy](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-copy).
+`nix store sign --recursive` attaches signatures to the closure. `nix copy` already copies the closure, including its signatures; it does not take `--recursive`. The `file://` prefix selects a binary cache, while a bare directory selects a local Nix store. Node's `pathToFileURL` encodes spaces, `#` and other reserved characters in the cache path. [Store signing](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-sign), [Nix copy](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-copy), [file URLs](https://nodejs.org/docs/latest-v22.x/api/url.html#urlpathtofileurlpath-options).
 
 The file cache contains `nix-cache-info`, `.narinfo` metadata, and compressed NAR files. The administrator must configure the HTTPS host to serve `/srv/www/nix-cache` read-only, and permit the publisher account to create release subdirectories there. Keep signing keys and private publication records outside that root.
 
@@ -119,7 +126,7 @@ ssh "$LEAN_BRIDGE_CACHE_HOST" \
 LEAN_BRIDGE_CACHE_URL="https://cache.example.org/$LEAN_BRIDGE_CACHE_RELEASE"
 ```
 
-Only the cache directory enters the upload. The new endpoint contains a complete cache tree; existing release endpoints remain unchanged. The rsync flags preserve the copied permissions while granting the web server read access. [rsync remote copying and permissions](https://download.samba.org/pub/rsync/rsync.1). For a local sandbox, consumers can use `file://$LEAN_BRIDGE_CACHE_DIR`. Verify the actual deployed endpoint before announcing it:
+Only the cache directory enters the upload. The new endpoint contains a complete cache tree; existing release endpoints remain unchanged. The rsync flags preserve the copied permissions while granting the web server read access. [rsync remote copying and permissions](https://download.samba.org/pub/rsync/rsync.1). For a local sandbox, consumers can use `$LEAN_BRIDGE_CACHE_URI`. Verify the actual deployed endpoint before announcing it:
 
 ```sh
 curl --fail --show-error "$LEAN_BRIDGE_CACHE_URL/nix-cache-info"
@@ -134,84 +141,15 @@ Keep the cache directory or object storage under retention policy after publicat
 
 ## Configure consumer trust
 
-Give consumers the approved cache URL, full source revision, explicit flake attribute, expected store paths, and public key. They must authenticate that key through the trusted release channel before accepting it. A cache operator whose key is trusted can supply executable store contents. [Configure a custom binary cache](https://nix.dev/guides/recipes/add-binary-cache).
-
-For persistent configuration, the Nix administrator adds these entries to the appropriate `nix.conf`, replacing the example URL and the entire public-key value:
-
-```ini
-extra-substituters = https://cache.example.org/REPLACE_WITH_PUBLISHED_CACHE_RELEASE
-extra-trusted-public-keys = cache.example.org-1:REPLACE_WITH_AUTHENTICATED_PUBLIC_KEY
-```
-
-The `extra-` settings preserve existing substituters and public keys. On NixOS, merge the equivalent entries into the existing configuration:
-
-```nix
-{
-  nix.settings.extra-substituters = [
-    "https://cache.example.org/REPLACE_WITH_PUBLISHED_CACHE_RELEASE"
-  ];
-  nix.settings.extra-trusted-public-keys = [
-    "cache.example.org-1:REPLACE_WITH_AUTHENTICATED_PUBLIC_KEY"
-  ];
-}
-```
-
-The administrator applies the configuration through the system's normal deployment process. Multi-user installations can reject or ignore unapproved user-supplied cache settings; ask the administrator to configure the daemon. Do not broaden `trusted-users` to make a download work. The following command examples use temporary `extra-` flags and do not edit configuration files.
+Consumer instructions now live in [configure consumer trust](../consume/receive-package.md#configure-consumer-trust). Supply the authenticated cache URL, public key, revision, and expected store paths with the release.
 
 ## Verify without installing, then test a clean fetch
 
-On the consumer, set these values from the authenticated release record. The public-key file contains only public bytes:
-
-```sh
-LEAN_BRIDGE_CACHE_URL=https://cache.example.org/REPLACE_WITH_PUBLISHED_CACHE_RELEASE
-LEAN_BRIDGE_CACHE_PUBLIC_KEY=$(< ./trusted-cache.public)
-LEAN_BRIDGE_PACKAGES_STORE=/nix/store/REPLACE_WITH_APPROVED_RELEASE_REHEARSAL_PATH
-nix --extra-experimental-features nix-command store verify \
-  --store "$LEAN_BRIDGE_CACHE_URL" --recursive --sigs-needed 1 \
-  --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
-  --option secret-key-files '' \
-  "$LEAN_BRIDGE_PACKAGES_STORE"
-```
-
-This reads the remote cache and verifies NAR contents and trust without installing the package in the active store. Success exits `0`; a nonzero result identifies corruption, untrusted content, or a verification error. These audit commands temporarily accept only the selected public key and clear implicit trust from configured secret-key files; they do not edit system settings. Keep `--sigs-needed 1`: the default verification mode also accepts locally built paths without requiring signatures. Nix can authenticate content-addressed dependencies through their content addresses. Listing signatures with `path-info --sigs` alone does not verify them. [Store verification](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-store-verify), [Nix trusted-key loading](https://raw.githubusercontent.com/NixOS/nix/2.24.11/src/libstore/keys.cc).
-
-A fresh temporary store proves that the closure can be fetched without using an already installed copy. It leaves the machine's active store intact:
-
-```sh
-LEAN_BRIDGE_FETCH_ROOT=$(mktemp -d /tmp/lean-bridge-nix-fetch.XXXXXX)
-LEAN_BRIDGE_FETCH_STORE="local?root=$LEAN_BRIDGE_FETCH_ROOT&require-sigs=true"
-nix --extra-experimental-features nix-command copy \
-  --from "$LEAN_BRIDGE_CACHE_URL" --to "$LEAN_BRIDGE_FETCH_STORE" \
-  --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
-  --option secret-key-files '' \
-  "$LEAN_BRIDGE_PACKAGES_STORE"
-nix --extra-experimental-features nix-command store verify \
-  --store "$LEAN_BRIDGE_FETCH_STORE" --recursive --sigs-needed 1 \
-  --option trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
-  --option secret-key-files '' \
-  "$LEAN_BRIDGE_PACKAGES_STORE"
-printf 'Verified fetched closure in %s\n' "$LEAN_BRIDGE_FETCH_ROOT"
-```
-
-`nix copy` downloads from the named cache and performs no compilation. The fresh store retains the logical `/nix/store` paths under its temporary root and requires trusted signatures. Do not add `--no-check-sigs`, `trusted=true`, or `require-sigs=false`. This is a download check; executables in a relocated store need its chroot environment. Retain the verification result, then remove only the printed temporary directory through your normal scratch cleanup process. [Local Nix stores](https://nix.dev/manual/nix/2.24/store/types/local-store).
+Consumer instructions now live in [verify without installing, then test a clean fetch](../consume/receive-package.md#verify-without-installing-then-test-a-clean-fetch). Supply the authenticated cache URL, public key, revision, and expected store paths with the release.
 
 ## Consume the pinned flake revision
 
-Use the reviewed 40-character commit from the release record, not a moving branch or an assumed published version. On a clean x86-64 Linux consumer configured for the cache:
-
-```sh
-LEAN_BRIDGE_SOURCE_REVISION=REPLACE_WITH_REVIEWED_40_CHARACTER_COMMIT
-LEAN_BRIDGE_CONSUMED_STORE=$(nix --extra-experimental-features 'nix-command flakes' build \
-  "github:seanmorris/lean-bridge/$LEAN_BRIDGE_SOURCE_REVISION#packages.x86_64-linux.release-rehearsal" \
-  --no-update-lock-file --no-write-lock-file --print-out-paths \
-  --out-link result-lean-bridge-packages \
-  --extra-substituters "$LEAN_BRIDGE_CACHE_URL" \
-  --extra-trusted-public-keys "$LEAN_BRIDGE_CACHE_PUBLIC_KEY" \
-  --max-jobs 0 --builders '')
-test "$LEAN_BRIDGE_CONSUMED_STORE" = "$LEAN_BRIDGE_PACKAGES_STORE"
-```
-
-`--max-jobs 0 --builders ''` prevents local and remote compilation of these release outputs for this substitution check. An absent or rejected output therefore fails instead of compiling a replacement. Nix still needs access to the pinned flake and its locked inputs for evaluation. Keep the printed store path equal to the approved record, then select its archive using [Use a prepared release](../consume/receive-package.md) and run the matching [consumer example](../consume.md). The output link protects the downloaded package from garbage collection. [Nix build options](https://nix.dev/manual/nix/2.24/command-ref/new-cli/nix3-build.html), [Nix build and substituter settings](https://nix.dev/manual/nix/2.24/command-ref/conf-file).
+Consumer instructions now live in [consume the pinned flake revision](../consume/receive-package.md#consume-the-pinned-flake-revision). Supply the authenticated cache URL, public key, revision, and expected store paths with the release.
 
 ## Rotate keys and recover publication
 

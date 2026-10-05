@@ -14,6 +14,7 @@ import { demos, docPages } from "./registry.mjs";
 import { waitForWorkbench } from "./workbench-readiness.mjs";
 import contributingCompatibility from "../tests/fixtures/documentation/contributing-compatibility.json" with { type: "json" };
 import consumerSections from "../tests/fixtures/documentation/consumer-sections.json" with { type: "json" };
+import workflowCompatibility from "../tests/fixtures/documentation/workflow-compatibility.json" with { type: "json" };
 import typeSurface from "../docs/type-surface.v1.json" with { type: "json" };
 import { typeGuideProfiles } from "../scripts/generate-type-docs.mjs";
 
@@ -107,16 +108,14 @@ const checkGuide = async (page, noScript, guide) => {
 	assert.equal(await page.locator("main").count(), 1, `${guide.id}: one main landmark`);
 	assert.equal(await page.locator("h1").count(), 1, `${guide.id}: one page heading`);
 	assert.equal(await page.locator("main article h1").isVisible(), true);
-	if(guide.consumerIds?.length || ["consume", "receive-package", "php"].includes(guide.id))
+	if(!guide.legacy && (guide.consumerIds?.length || ["consume", "receive-package", "php"].includes(guide.id)))
 	{
-		const expected = [
-			consumerSections.overrides.find(entry => entry.id === guide.id)?.prepared ?? consumerSections.prepared
-			, consumerSections.source
-		];
-		assert.deepEqual(await page.locator("article h2").allTextContents(),
-			expected, `${guide.id}: consumer flow precedes source preparation`);
-		assert.deepEqual(await page.locator(".doc-outline a").allTextContents(),
-			expected, `${guide.id}: both entry points are visible in the outline`);
+		const prepared = consumerSections.overrides.find(entry => entry.id === guide.id)?.prepared ?? consumerSections.prepared;
+		const headings = await page.locator("article h2").allTextContents();
+		assert.equal(headings[0], prepared, `${guide.id}: begin with a prepared package`);
+		assert.ok(headings.includes(consumerSections.source), `${guide.id}: preserve the source bookmark`);
+		assert.deepEqual(await page.locator(".doc-outline a").allTextContents(), headings,
+			`${guide.id}: the outline exposes the installation and integration sections`);
 	}
 	assert.equal(await page.locator(".portfolio-nav").count(), 0, `${guide.id}: no legacy shell`);
 	const active = page.locator('.doc-navigation a[aria-current="page"]');
@@ -179,9 +178,9 @@ const checkGuide = async (page, noScript, guide) => {
  * @param {import('playwright').Page} noScript JavaScript-disabled document.
  */
 const checkCompatibility = async (page, noScript) => {
-	for(const migration of contributingCompatibility)
+	for(const migration of [...contributingCompatibility, ...workflowCompatibility])
 	{
-		for(const [depth, id] of migration.headings)
+		for(const [depth, id, targetId = id] of migration.headings)
 		{
 			for(const [reader, javaScriptEnabled] of [[page, true], [noScript, false]])
 			{
@@ -194,12 +193,14 @@ const checkCompatibility = async (page, noScript) => {
 				const heading = reader.locator(`article h${depth}[id="${id}"]`);
 				assert.equal(await heading.count(), 1, `${migration.id}: historical ${id}`);
 				const forwarding = heading.locator("xpath=following-sibling::p[1]//a").first();
-				const destination = target(migration.target) + `#${id}`;
+				const destination = target(migration.target) + `#${targetId}`;
 				assert.equal(await forwarding.evaluate(link => link.href), destination);
 				if(javaScriptEnabled) await reader.evaluate(() => { globalThis.documentationVisit = "same-document"; });
 				await forwarding.click();
 				await reader.waitForURL(destination);
-				assert.equal(await reader.locator(`article [id="${id}"]`).count(), 1);
+				const current = docPages.find(guide => guide.route === migration.target);
+				await reader.locator(`.doc-source a[href$="/${current.source}"]`).waitFor();
+				assert.equal(await reader.locator(`article [id="${targetId}"]`).count(), 1);
 				if(javaScriptEnabled) assert.equal(await reader.evaluate(() => globalThis.documentationVisit), "same-document",
 					"Compatibility links stay in the React document");
 				report.compatibility.push({ from: bookmark, to: destination, javaScriptEnabled });
@@ -207,6 +208,51 @@ const checkCompatibility = async (page, noScript) => {
 		}
 		console.log(`PASS documentation bookmarks: ${migration.id} (reload, section links, with and without JavaScript)`);
 	}
+};
+
+/**
+ * Follow both homepage entries through actual guide links, including both PHP roles.
+ *
+ * @param {import('playwright').Page} page Hydrated document.
+ * @param {import('playwright').Page} noScript JavaScript-disabled document.
+ */
+const checkWorkflows = async (page, noScript) => {
+	const follow = async (route, heading) => {
+		const pathname = new URL(target(route)).pathname;
+		await page.locator(`article a[href="${pathname}"], article a[href^="${pathname}#"]`).first().click();
+		await page.waitForURL(url => url.pathname === pathname);
+		await page.getByRole("heading", { level: 1, name: heading, exact: true }).waitFor();
+	};
+	for(const reader of [page, noScript])
+	{
+		await reader.goto(base.href);
+		assert.deepEqual(await reader.locator(".workflow-cards a").evaluateAll(links => links.map(link => new URL(link.href).pathname)),
+			["/docs/lean/", "/docs/consume/"].map(route => new URL(target(route)).pathname));
+		for(const width of [320, 390, 1440])
+		{
+			await reader.setViewportSize({ width, height: 1000 });
+			assert.ok(await reader.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.innerWidth));
+		}
+	}
+	await page.locator(".workflow-cards a").first().click();
+	await page.waitForURL(target("/docs/lean/"));
+	await follow("/docs/lean/existing-package/", "Adapt an existing Lean library");
+	await follow("/docs/publish/", "Choose targets and package formats");
+	await follow("/docs/publish/php/", "Build and publish PHP packages");
+	assert.equal(await page.locator("article #native-php-with-composer").count(), 1);
+	assert.equal(await page.locator("article #php-wasm-with-npm").count(), 1);
+	await follow("/docs/consume/php/", "PHP");
+	assert.equal(await page.locator("article #native-php").count(), 1);
+	assert.equal(await page.locator("article #php-wasm").count(), 1);
+	assert.equal(await page.locator(".doc-navigation a").filter({ hasText: /^PHP$/ }).count(), 2,
+		"One PHP page in each workflow");
+	await page.goto(base.href);
+	await page.locator(".workflow-cards a").last().click();
+	await page.waitForURL(target("/docs/consume/"));
+	await follow("/docs/consume/python/", "Use a Lean package from Python");
+	assert.doesNotMatch(await page.locator("article").innerText(), /lean-bridge (?:analyze|build|publish)/);
+	assert.equal(await page.locator("article #install-the-wheel").count(), 1);
+	console.log("PASS workflows: author, existing library, PHP publishing and consumption, Python installation, two responsive homepage entries");
 };
 
 try
@@ -222,6 +268,7 @@ try
 	page.on("requestfailed", request => report.failedRequests.push({
 		url: request.url(), error: request.failure()?.errorText
 	}));
+	await checkWorkflows(page, noScript);
 	for(const guide of docPages) await checkGuide(page, noScript, guide);
 	await checkCompatibility(page, noScript);
 	await page.evaluate(() => { globalThis.documentationVisit = "same-document"; });
@@ -239,7 +286,7 @@ try
 	{
 		const guide = visibleGuides.filter(entry => entry.group === group).at(-1);
 		await page.locator(".doc-navigation > summary").click();
-		const link = page.locator(".doc-navigation a").filter({ hasText: guide.title });
+		const link = page.locator(`.doc-navigation a[href="${new URL(target(guide.route)).pathname}"]`);
 		await link.click();
 		await page.waitForURL(target(guide.route));
 		await page.waitForFunction(() => !globalThis.document.querySelector(".doc-navigation").open);

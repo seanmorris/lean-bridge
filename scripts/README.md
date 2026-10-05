@@ -33,7 +33,9 @@ Prefer the npm commands in [`../package.json`](../package.json) over invoking a 
 
 `check-*`, `compare-*`, and `verify-*` validate methodology, source closure, artifact inventories, release authorization, receipts, PHP transport parity, and cross-root reproducibility. They should exit nonzero when the named contract fails and retain enough diagnostics to identify the mismatched stage or file.
 
-[`verify-component-package-receipt.mjs`](verify-component-package-receipt.mjs) is a standalone consumer verifier. The component npm builder copies it beside the receipt and archives, so a clean consumer needs Node but does not need the repository or an installed CLI.
+`lean-bridge verify` checks local npm handoffs and signed archives through the installed CLI, without a project or build tools. [`verify-component-package-receipt.mjs`](verify-component-package-receipt.mjs) remains a standalone consumer fallback. The component npm builder copies its self-contained validator beside the receipt and archives, so a clean consumer can also verify with Node and no installed CLI.
+
+[`prepare-perl-platform-packages.mjs`](prepare-perl-platform-packages.mjs) prepares an acceptance copy of existing CPAN payloads with a stricter glibc floor. It requires `--release`, a new `--output` directory, and `--glibc-minimum`; it preserves native bytes and rejects every other payload hash change. [`check-perl-prepared-install.mjs`](check-perl-prepared-install.mjs) accepts `--release`, a new `--output`, and `--perls` containing a JSON array of absolute interpreter paths. It installs each prepared ABI in both installation modes and runs the Perl fixture and documentation example on a compatible host. Neither helper publishes packages.
 
 [`test-docker-consumer-ci.sh`](test-docker-consumer-ci.sh) retries only the observed transient Lean `MinMaxIdx` bootstrap failure and preserves immediate failure for every other diagnostic. The PyPI builder copies the repository-free [`python-wheel-preflight.mjs`](../src/release/python-wheel-preflight.mjs) beside its wheel.
 

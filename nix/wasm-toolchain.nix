@@ -6,6 +6,7 @@ let
   libuvCommit = "e9f29cb984231524e3931aa0ae2c5dae1a32884e";
   emscriptenVersion = "6.0.6";
   emscriptenRelease = "833aa203ba2283fc2b6adb504a79a3a0d692df81";
+  emscriptenArchiveHash = "sha256-bLfPRa2FsLm0ZqRMxLtl7zgOR/BAznPm+Va954J4f0Y=";
   nodeVersion = "24.19.0";
 
   leanArchive = pkgs.fetchurl {
@@ -25,7 +26,7 @@ let
 
   emscriptenArchive = pkgs.fetchurl {
     url = "https://storage.googleapis.com/webassembly/emscripten-releases-builds/linux/${emscriptenRelease}/wasm-binaries.tar.xz";
-    hash = "sha256-bLfPRa2FsLm0ZqRMxLtl7zgOR/BAznPm+Va954J4f0Y=";
+    hash = emscriptenArchiveHash;
   };
 
   nodeArchive = pkgs.fetchurl {
@@ -41,12 +42,12 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar --zstd -xf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
+      # Extract into the final output. A separate unpacked tree duplicates the
+      # SDK even with mv when the build directory and store are different mounts.
       mkdir -p "$out"
-      cp -a lean-${leanVersion}-linux/. "$out/"
+      tar --zstd -xf "$src" --strip-components=1 -C "$out"
     '';
   };
 
@@ -70,12 +71,10 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar -xJf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
       mkdir -p "$out"
-      cp -a node-v${nodeVersion}-linux-x64/. "$out/"
+      tar -xJf "$src" --strip-components=1 -C "$out"
     '';
   };
 
@@ -87,12 +86,10 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar -xJf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
       mkdir -p "$out"
-      cp -a install/. "$out/"
+      tar -xJf "$src" --strip-components=1 -C "$out"
       # The emsdk installer normalizes the release archive's development
       # marker to the selected release version.  Reproduce that step so the
       # immutable Nix toolchain emits the same producer metadata as an
@@ -105,6 +102,13 @@ let
 
   emsdk = pkgs.runCommand "emsdk-${emscriptenVersion}-immutable" { } ''
     mkdir -p "$out/node"
+    printf '%s\n' '${builtins.toJSON {
+      schemaVersion = 1;
+      kind = "emscripten-release-archive";
+      version = emscriptenVersion;
+      release = emscriptenRelease;
+      sha256 = emscriptenArchiveHash;
+    }}' > "$out/lean-bridge-toolchain.json"
     ln -s ${emscriptenUpstream} "$out/upstream"
     ln -s ${node} "$out/node/${nodeVersion}_64bit"
     printf '%s\n' \

@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { constants } from "node:fs";
-import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -220,7 +220,10 @@ test("a plain project runs the same closed request through separate Docker mount
     const copy = calls.find(call => call.command === "nix" && call.args.includes("copy"));
     assert.ok(calls.indexOf(realize) < calls.indexOf(copy));
     const run = calls.find(call => call.args[0] === "run");
-    assert.ok(sourceForMount(run.args, "/workspace/component").startsWith(join(scratch, ".lean-bridge-component-work-")));
+    const capturedComponent = sourceForMount(run.args, "/workspace/component");
+    assert.ok(capturedComponent.startsWith(join(await realpath(tmpdir()), ".lean-bridge-component-work-")));
+    assert.ok(!capturedComponent.startsWith(`${scratch}/`));
+    await assert.rejects(access(capturedComponent), { code: "ENOENT" });
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/engine,readonly")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/component,readonly")));
     assert.ok(run.args.some(argument => argument.endsWith("target=/workspace/request,readonly")));

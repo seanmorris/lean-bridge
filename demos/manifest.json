@@ -3,6 +3,16 @@
   "title": "Verified Lean/Wasm Algorithms",
   "demos": [
     {
+      "slug": "lean-tutte",
+      "title": "Tutte’s squared rectangles",
+      "category": "Geometry & electrical networks",
+      "status": "available",
+      "summary": "Turn a rectangle of unequal squares into a circuit. Inspect current balance, break the fit, and compare simple and compound constructions.",
+      "entrypoint": "lean-tutte/",
+      "theorems": ["exported_certificate", "threeConnectedCheck_sound", "closed_walk_zero"],
+      "accent": "gold"
+    },
+    {
       "slug": "lean-dijkstra",
       "title": "Dijkstra shortest path",
       "category": "Graphs",

@@ -120,6 +120,7 @@ const readPlans = async inputs => {
  * @param root0.backend - Backend identifier or implementation selected for generation, execution, or package projection.
  * @param root0.runner - Process runner used for isolated external commands.
  * @param root0.environment - Environment variables used to resolve tools and policy.
+ * @param root0.signal - Optional cancellation signal for compiler-only analysis.
  */
 export const executeComponentEngineRequest = async ({
 	requestPath
@@ -129,12 +130,28 @@ export const executeComponentEngineRequest = async ({
 	, backend = "direct-test"
 	, runner = undefined
 	, environment = process.env
+	, signal
 } = {}) => {
 	const inputs = resolve(inputRoot);
 	const output = resolve(outputRoot);
 	const engine = resolve(engineRoot);
 	await assertAbsent(output);
 	const verifiedRequest = await readVerifiedEngineExecutionRequest({ requestPath, engineRoot: engine, inputRoot: inputs });
+	if(verifiedRequest.document.schemaVersion === 4)
+	{
+		const { executeOwnedJavaScriptEngine } = await import("./javascript-wasm-owned-engine.mjs");
+		return executeOwnedJavaScriptEngine({ verifiedRequest, inputs, output, engine, backend, runner, environment, signal });
+	}
+	if(verifiedRequest.document.schemaVersion === 3)
+	{
+		const { executeLeanAnalysisEngine } = await import("./lean-analysis-engine.mjs");
+		return executeLeanAnalysisEngine({ verifiedRequest, inputs, output, engine, backend, runner, environment, signal });
+	}
+	if(verifiedRequest.document.schemaVersion === 2)
+	{
+		const { executeLakeEntryComponent } = await import("./lake-entry-engine.mjs");
+		return executeLakeEntryComponent({ verifiedRequest, inputs, output, engine, backend, runner, environment });
+	}
 	const { componentPlan, compilationPlan } = await readPlans(inputs);
 	const requested = verifiedRequest.document;
 	if(
@@ -146,11 +163,33 @@ export const executeComponentEngineRequest = async ({
 
 	const sourceRoot = join(inputs, "source");
 	const analysis = await analyzeLeanProject(sourceRoot, { targets: requested.targets });
-	if(analysis.sourceTreeSha256 !== componentPlan.document.source.treeSha256 || analysis.bindingIr?.semanticSha256 !== componentPlan.document.bindingIr.semanticSha256) fail("component-engine-analysis-drift", "Mounted source no longer produces the requested source and Binding IR identities");
+	if(analysis.sourceTreeSha256 !== componentPlan.document.source.treeSha256 || analysis.bindingIr?.semanticSha256 !== componentPlan.document.bindingIr.semanticSha256
+		|| analysis.bindingIr?.origin !== componentPlan.document.bindingIr.origin) fail("component-engine-analysis-drift", "Mounted source no longer produces the requested source, Binding IR and origin");
 	const compilerAdapters = await verifyGeneratedInputs({ inputs, analysis, componentPlan });
 	const preparedCompilationPlan = await prepareComponentCompilationPlan({ projectRoot: sourceRoot, analysis, componentPlan, compilerAdapters });
 	if(preparedCompilationPlan.sha256 !== compilationPlan.sha256 || canonicalJson(preparedCompilationPlan.document) !== canonicalJson(compilationPlan.document)) fail("component-engine-compilation-plan-drift", "Mounted source no longer produces the requested compilation plan");
+	return completeComponentEngineBuild({ verifiedRequest, inputs, output, engine, backend, runner, environment, analysis, componentPlan, compilationPlan, compilerAdapters });
+};
 
+/**
+ * Compile, link and inventory an API after the engine has authorized its plans.
+ *
+ * @param options - Verified request and internally prepared compilation inputs.
+ * @param options.verifiedRequest - Independently identified engine request.
+ * @param options.inputs - Captured source and generated adapter input directory.
+ * @param options.originalInputs - Original source-intent mount, if planning ran in the engine.
+ * @param options.output - New engine output directory.
+ * @param options.engine - Installed build engine source root.
+ * @param options.backend - Selected execution backend.
+ * @param options.runner - Optional process runner.
+ * @param options.environment - Selected compiler environment.
+ * @param options.analysis - Authorized semantic analysis.
+ * @param options.componentPlan - Compiler-authorized component plan.
+ * @param options.compilationPlan - Closed compilation and output plan.
+ * @param options.compilerAdapters - Adapters derived from the authorized signatures.
+ */
+export const completeComponentEngineBuild = async ({ verifiedRequest, inputs, originalInputs = inputs, output, engine, backend, runner, environment, analysis, componentPlan, compilationPlan, compilerAdapters }) => {
+	const requested = verifiedRequest.document, sourceRoot = join(inputs, "source");
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-engine-output-"));
 	try
@@ -180,7 +219,7 @@ export const executeComponentEngineRequest = async ({
 		});
 		const actualFiles = await listFiles(join(staging, requested.output.bundleDirectory));
 		if(JSON.stringify(actualFiles) !== JSON.stringify(requested.output.authorizedFiles)) fail("component-engine-unauthorized-output", "Component engine bundle differs from the authorized output contract", { expected: requested.output.authorizedFiles, actual: actualFiles });
-		const inputAfter = await identifyComponentInputClosure(inputs);
+		const inputAfter = await identifyComponentInputClosure(originalInputs);
 		if(inputAfter.identitySha256 !== requested.component.inputClosureSha256) fail("component-engine-source-write", "Component input closure changed during engine execution");
 		const report = Object.freeze({
 			schemaVersion: 1

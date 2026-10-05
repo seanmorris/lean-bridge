@@ -184,7 +184,7 @@ export const evaluateAnalysisPolicy = ({ analysis, policyRecord, policyPath = nu
 	));
 	const documentedCandidates = candidates.filter(Boolean);
 	const undocumentedExports = documentedCandidates.filter(candidate => candidate.documentation === null).length;
-	const compiledExports = candidates.filter(candidate => candidate?.evidence.includes("compiled-interface:present")).length;
+	const compiledExports = candidates.filter(candidate => candidate?.evidence.includes("compiled-interface:fresh")).length;
 	const proposedExports = analysis.proposedExports.length;
 	const semanticVersionPresent = analysis.project.version !== "0.0.0-local";
 	const bindingIrOrigin = analysis.bindingIr?.origin ?? null;
@@ -251,8 +251,8 @@ export const evaluateAnalysisPolicy = ({ analysis, policyRecord, policyPath = nu
 	{
 		violations.push(violation(
 			"analysis-policy-inferred-ir-forbidden",
-			"Policy requires an existing validated Binding IR",
-			"existing-validated",
+			"Policy requires compiler-owned or existing validated Binding IR",
+			"lean-elaborated or existing-validated",
 			bindingIrOrigin,
 		));
 	}

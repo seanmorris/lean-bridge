@@ -1,17 +1,17 @@
 # Native PHP and PHP-Wasm Conformance Evidence
 
-Status: one Binding IR-derived PHP corpus now executes unchanged through the native Zend package and PHP-Wasm package. Both transports produced observation SHA-256 `5b4537ff7bbd450be84e26cce09fc642df62c858f7d0ac5ea31ef0cce9c6bd14`.
+The Binding IR-derived PHP corpus executes through native Zend and PHP-Wasm. The 18 September 2026 UInt32 check produced semantic observation SHA-256 `da226e8f97d2a8b20835af9ea6476ee90ffd40c3d72073a0ef5a5b4c67ec67d1`. Native 64-bit PHP uses `int`; PHP-Wasm uses exact `BigInteger` values. [Boundary evidence](php-alpha-uint32-boundaries-20260918.md) records the installed checks.
 
 ## One generated consumer program
 
 `generatePhpConformanceCorpus` compiles the PHP projection and selects operations by their declared types, ownership, lifetime, effects, and failure policies. It does not select a transport. The generated PHP file contains no `NativeTransport`, Wasm URL, loader handle, dispatcher, `ccall`, or `cwrap` reference.
 
-The runner changes only the application environment:
+The runner selects the application environment:
 
 - native PHP loads the generated Zend extension and points Composer at the native package root;
-- PHP-Wasm loads the generated package descriptor and mounts the same Composer files at `/vendor`.
+- PHP-Wasm loads the generated package descriptor and mounts its 32-bit Composer projection at `/vendor`.
 
-Both hosts execute the same `conformance.php` bytes.
+Both hosts execute the same `conformance.php` bytes. The program constructs each profile's integer type and compares results as exact decimal text.
 
 ## Matched observations
 
@@ -31,11 +31,11 @@ The shared corpus established:
 | component initialization | one run |
 | live identities after cleanup | zero |
 | readonly record reflection | true |
-| Composer reflection metadata | byte-identical |
+| Composer reflection metadata | checked against the generated expectation for each host profile |
 | Composer assurance metadata | byte-identical |
-| generated package documentation | byte-identical |
+| generated package documentation | checked against the generated expectation for each host profile |
 
-The comparator validates required results before comparing the complete structured observations. Any differing field reports its exact path and fails the command.
+The comparator verifies every metadata hash before comparing shared observations. Profile-specific reflection and documentation may differ only by matching their independently generated expectations. Differences in values, failures, identities or runtime state fail the command.
 
 ## Current fixture gaps
 

@@ -1,18 +1,394 @@
-# Publish Rust crates
+# Build and publish Rust packages
+
+Build an ordinary Lake project with `--target cargo` to produce a typed Rust crate with compiled native libraries. Consumers use Cargo without Lean or handwritten FFI. Resource-containing values require the explicit ownership contract described below.
+
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
 Lean Bridge creates a deterministic `.crate` for direct installation. Cargo's publishing command creates another archive from a source directory before uploading it. It has no option that uploads an existing `.crate` unchanged. A Cargo CLI publication therefore needs its own reviewed archive and verification record. [cargo publish](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
+
+## Build an ordinary Lean project
+
+Install the [C author toolchain](c.md#build-an-ordinary-lean-project), Rust 1.90 or newer, and Cargo. Set `LEAN_BRIDGE_RUSTC` and `LEAN_BRIDGE_CARGO` only if the tools are not on `PATH`. The production target is Linux x86-64 with glibc 2.38 or newer.
+
+Configure the source exports and Cargo coordinates in the project's `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Cedar"],
+  "exports": ["Cedar.echo_u32", "Cedar.echo_nat", "Cedar.echo_text", "Cedar.array_u32"],
+  "targets": { "cargo": { "name": "cedar-api", "version": "2.0.0-rc.1" } }
+}
+```
+
+Use your own modules, exports and package coordinate. Build into a new directory:
+
+```sh
+lean-bridge build --project ./cedar --target cargo --output ./release-cargo
+```
+
+The build compiles Lean and its C adapter, checks the generated Rust with a pinned dependency lock, then archives those files without further compiler access. `release-cargo/archives/cedar-api-2.0.0-rc.1.crate` contains Rust sources, native libraries, licenses, source identities and package receipts. Repeat `--target c`, `--target nuget` or another supported ordinary target to share the native compilation. Name and version come from the export configuration, not an archive rename.
+
+The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
+
+This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Synchronous callbacks and returned closures accept those copied values, including recursive trees. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. Resource-containing aggregates use the [ownership profile](#export-resource-containing-values). Asynchronous operations remain unsupported. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+
+Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
+
+## Export arrays and records
+
+Select concrete exports using `Array T` and acyclic Lean structures in the shared
+configuration. Both source paths support all nineteen primitives, nested arrays
+and records, including empty and single-field structures. The compiler checks
+the source constructors and accessors before generating the Rust adapter.
+
+Inputs borrow slices and structs; results own vectors and named structs.
+Generated structs derive `Clone`, `Debug` and `PartialEq`, preserving nested
+value equality with Rust's floating-point semantics. Invalid fields and missing
+borrows fail compilation. The existing 32-level schema bound and 16 MiB
+accounting budgets apply. See the [consumer example](../consume/rust.md#arrays-and-records).
+The [installed collection record](../evidence/rust-collections-20260922.md) covers
+original crates, offline dependency resolution, source-free execution and failure cleanup.
+
+## Export options, results and products
+
+Ordinary-source and reviewed-IR builds compile `Option`, `Except` and nested binary `Prod` values, including mixtures with all nineteen primitives, arrays, Lists and acyclic record fields. Consumers use Rust `Option<T>`, `Result<T, E>` and `(A, B)` without native declarations. Inputs borrow the container; results own their copied data. The function's outer `Result<_, Error>` reports bridge failures separately from a Lean `Except` value.
+
+Use concrete signatures and select the exports in `lean-bridge.exports.json`. A [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract) receives the same fresh compiler checks. See the [consumer example](../consume/rust.md#options-results-and-products) and [installed crate evidence](../evidence/rust-compounds-20260920.md). Acyclic compounds can be callback and closure payloads, but cannot contain resource or callback identities.
+
+## Export copied Lists
+
+Export concrete `List` parameters, results and record fields through the shared
+configuration. No Cargo-specific type annotation is needed. Rust inputs borrow
+slices; outputs and record fields use owned vectors. Lists can nest with the
+other supported copied types within the existing 32-level and 16 MiB limits.
+They retain a distinct contract identity from Arrays. The generated adapter
+handles native cleanup on conversion failure and panic unwinding.
+
+See the [consumer example](../consume/rust.md#lists) and
+[installed crate checks](../evidence/rust-lists-20260920.md). Lists can also be
+callback and closure payloads. Combined packages require every selected target
+to accept the same API.
+
+## Export named copied aliases
+
+Use concrete `abbrev` declarations or type-valued `def` declarations in your
+selected signatures. The compiler preserves their names and targets, and a
+reviewed contract must match them. Cargo packages export `pub type` declarations
+for supported copied primitives, containers and records, including alias chains.
+Generated names cannot collide with Rust types, public exports or runtime
+helpers. Alias inputs keep the target's borrowing rules; results own their data.
+
+No Cargo-specific alias configuration is needed. See the
+[consumer example](../consume/rust.md#named-aliases) and
+[installed crate checks](../evidence/rust-aliases-20260921.md). Recursive targets
+use the graph profile below. Acyclic aliases can be callback and closure payloads;
+identity-bearing aggregates require explicit ownership. All selected targets must
+accept an alias's complete type graph.
+
+## Export copied tagged variants
+
+Select functions over concrete, non-recursive Lean inductives in your ordinary
+export configuration or independently reviewed contract. No numeric tag mapping
+or Rust-specific variant configuration is needed. The compiler records the
+constructors and payload types; generated Lean helpers construct and inspect
+values without exposing compiler object layouts.
+
+Cargo packages export named Rust enums with unit cases or named payload fields.
+Generated constructor names use PascalCase and fields use snake_case. Reserved
+words gain a trailing underscore; collisions fail before native compilation.
+Inputs borrow their enum; returned values own independent copies. Use the
+[consumer example](../consume/rust.md#tagged-variants) and
+[installed acceptance record](../evidence/rust-variants-20260921.md).
+
+Payloads may contain all nineteen primitives and supported copied containers,
+records and other non-recursive variants. Generic, indexed, recursive,
+proof-bearing, callable and identity-bearing payloads are not admitted by this
+profile. Native multi-target variant builds currently admit C, C++, Python,
+Rust, .NET, Java, Kotlin, Ruby and Perl when every selected target accepts the complete API.
+Other targets retain their own admission checks.
+
+## Export recursive copied values
+
+Select concrete recursive exports in the shared configuration or an independently
+reviewed contract, then build with `--target cargo`. The build chooses the graph
+adapter automatically. It produces named Rust enums and structs, using `Box`
+for recursive or oversized fields and native `Vec`, `Option`, `Result` and tuples
+for their containers. Transparent aliases keep their public names.
+
+Cargo-only graph builds need the native C compiler but do not require a public
+C package, GMP or Boost. Other copied-value targets can join when every selected
+target accepts the complete API. Synchronous recursive callbacks use the
+callable graph adapter below. Resources, asynchronous operations, open generics,
+dependent types and proof-bearing payloads are not part of this copied profile.
+
+The graph limit is depth 128, 262,144 visited nodes, 16 MiB of accounted native
+copy storage and a separate 16 MiB Rust conversion-storage budget per call.
+These budgets cover inputs and output; they do not bound Lean working memory.
+The prepared crate embeds authenticated libraries and loads the shared runtime
+automatically. See the [consumer example](../consume/rust.md#recursive-values)
+and [installed-package evidence](../evidence/rust-recursive-packages-20260923.md).
+
+## Export callbacks and closures
+
+Add concrete callable exports to your Lean module:
+
+```lean
+namespace Callables
+def callUInt32 (value : UInt32) (callback : UInt32 → UInt32) := callback value
+def makeString (captured : String) : Bool → String → String :=
+  fun useCaptured value => if useCaptured then captured else value
+end Callables
+```
+
+Select those exports in `lean-bridge.exports.json`, set `"arities": { "Callables.makeString": 1 }`, and choose your package's `targets.cargo.name` and `version`. The arity leaves the final two arguments in the returned closure. Build with `--target cargo`. The [consumer example](../consume/rust.md#callbacks-and-returned-lean-closures) uses these two functions.
+
+For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity; omit configuration `arities`. Primitive callbacks require repeated invocation, same-agent re-entry, deferred self-disposal, synchronous value delivery and the native callback failure policy. Host arguments borrow the call, while returned closures own explicit leases. Both source paths receive fresh Lean compiler checks before linking.
+
+You can combine Cargo with other native targets when every selected target accepts the API and export configuration. All native profiles support primitive callables; compound values have a narrower target set. Consumers need no native declarations or Lean toolchain; Cargo compiles only Rust and links the packaged libraries.
+
+### Structured callback values
+
+Use the same export configuration for acyclic copied callable payloads:
+
+```lean
+namespace Structured
+def callArray (values : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) := callback values
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun useCaptured values => if useCaptured then captured else values
+end Structured
+```
+
+Select `Structured.callArray` and `Structured.makeArray`, and set
+`"arities": { "Structured.makeArray": 1 }` for an ordinary-source build. A reviewed
+contract records that boundary instead. Arrays, Lists, options, results, products,
+acyclic records, variants and aliases share the copied-value mappings described
+above. Rust callbacks own their arguments; returned closures borrow call inputs.
+See the [consumer example](../consume/rust.md#structured-callback-values).
+The [installed checks](../evidence/rust-structured-callables-20260924.md) compile
+that example from both prepared package paths without author sources or Lean.
+
+Structured callable builds can combine `cargo`, `c` and `cpp`. Every selected
+target must admit the API. Identity-bearing copied fields, higher-order callbacks
+and asynchronous delivery remain unsupported.
+
+## Export recursive callbacks and closures
+
+Use concrete recursive types in callback signatures and captured values:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select `Structured.callRecursive` and `Structured.makeRecursive` in
+`lean-bridge.exports.json`, set `"arities": { "Structured.makeRecursive": 1 }`,
+and build with `--target cargo`. A reviewed contract records the outer arity
+instead, so omit `arities` from that build's configuration. The compiler checks
+the full recursive and callable signatures before generating Rust or C.
+
+Cargo-only builds produce one crate with embedded native libraries. No public
+C package, GMP or Boost dependency is needed. Recursive callable APIs can also
+target `c`, `cpp` and `pypi`; each selected target must accept the complete API.
+Consumer Cargo builds compile Rust and link the prepared libraries without Lean
+or C source compilation. Runtime loading is automatic.
+
+Rust borrows exported copied inputs and gives callbacks owned copies. Returned
+`LeanClosure` values own their captures, invoke on their creating thread and
+release with `close()` or `Drop`. The graph uses depth 128, 262,144 visited nodes,
+16 MiB native-copy and separate Rust conversion-storage budgets per call.
+Same-thread native reentry is bounded to 64 calls; closures share 4,096 identity
+slots. Resource or callable identities inside copied fields and asynchronous
+callbacks remain unsupported.
+
+See the [consumer example](../consume/rust.md#recursive-callback-values) and
+[installed acceptance](../evidence/rust-recursive-callables-20260925.md).
+
+## Export resource-containing values
+
+Declare the resource types and the lifetime policy for aggregates containing
+them. For the `Owned` acceptance module, the following configuration produces
+the consumer API shown under [resource-containing values](../consume/rust.md#resource-containing-values):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.bundle", "Owned.callbackRecord"],
+  "targets": { "cargo": { "name": "owned-values", "version": "1.2.3" } }
+}
+```
+
+Use your own module, resource names, exports and package coordinates. Build with
+`lean-bridge build --project ./owned --target cargo --output ./release-owned`.
+The compiler checks the resource definitions and all aggregate and callable
+signatures. Independently reviewed version-4 contracts receive the same fresh
+compiler checks. Missing ownership policies fail before native compilation.
+
+This profile requires the C author toolchain and Rust 1.90 or newer. The build
+compiles and bundles GMP 6.3.0, including its license and corresponding source.
+Cargo-only builds do not need Boost or a public C package. A combined
+`--target c --target cpp --target cargo` build shares one native component and
+owned-value adapter. Each selected target must accept the complete contract.
+
+Generated records and enums use native Rust containers, transparent aliases and
+`Box` fields for recursion. Resource leaves keep checked leases, including in
+callback arguments and returned closures. The Rust compiler rejects mismatched
+resource types, sending or sharing resource wrappers between threads, and
+callbacks missing required typed recovery. Runtime checks reject expired
+borrows and post-fork calls. Input transfer requires the explicit contracts below.
+Borrowed results use the [input-anchor contract](#anchor-a-result-to-an-input).
+Asynchronous delivery remains unsupported.
+
+The adapter enforces depth 128, 262,144 visits and separate 16 MiB Rust/native
+accounting budgets. Each package binds its generated types, lifetime rules,
+C/GMP ABI assertions and native libraries to the compiler-derived contract.
+Packaging rechecks these inputs before creating the archive. Consumers need
+neither Lean nor GMP installed and supply no native linker configuration.
+
+## Transfer input ownership
+
+Use the [shared export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) shows the full configuration.
+Keep `resources` and `ownedAggregates`, and set the Cargo coordinate under
+`targets.cargo`. Ordinary-source and independently reviewed APIs receive fresh
+Lean type checks before generating consuming calls.
+
+Rust consumers pass an explicit mutable reference. The bridge validates every
+input and prepares all native snapshots before handoff. It then consumes the
+represented resource leases together, so aliases observe closed inputs during
+callback reentry. Independent retains survive. Errors after handoff do not
+restore inputs. See the [complete consumer example](../consume/rust.md#transferred-inputs).
+
+Transfer-enabled crates use `owned-rust-v2`. Their Rust ownership contract is
+version 2; compiled Rust and package receipts use version 3. The shared C adapter
+uses version 4 and records its input-transfer contract. Packaging regenerates
+the expected signatures and ownership rules before accepting these receipts.
+Packages without transfers keep their existing versions and API.
+
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN.
+Other targets still reject these contracts. No registry publication is part of
+the build command.
+
+## Anchor a result to an input
+
+Declare `ownership: "borrow"` and a parameter lifetime in the
+[shared export contracts](../lean/existing-package.md#declare-export-contracts).
+The [C author example](c.md#anchor-a-result-to-an-input) shows the result declaration.
+Keep `resources`, `ownedAggregates`, and the Cargo package coordinate. The compiler
+checks the selected parameter against the Lean signature on both source paths.
+
+Cargo packages with anchored results return resource-containing values as
+`Value<T>`. They keep original owners for empty constructors as well as populated
+values. Consumers use checked `get()` access and explicit `retain()` or
+`copy_value()` for independent ownership. Consuming calls take `&mut Value<T>`
+and expire that owner's borrowed descendants. See the [consumer example](../consume/rust.md#borrowed-results).
+
+These crates use `owned-rust-v3`, Rust ownership contract version 3, and compiled
+Rust/package receipts version 4. The shared C adapter uses version 5 and binds
+the compiler-derived result-anchor contract. Packaging regenerates the native
+and Rust sources before accepting an archive. Every target in a combined build
+must accept the complete ownership contract.
+
+## Anchor a callback result to an argument
+
+Declare the borrowed result inside the callable contract. Anchor indices count
+the callback's own runtime parameters, excluding its closure and any enclosing
+export's arguments. For `makeRecord : Bundle → Bool → Bundle → Bundle`, export
+one argument and describe the returned closure's result:
+
+```json
+{
+  "arities": { "Owned.makeRecord": 1 },
+  "contracts": {
+    "Owned.makeRecord": {
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null },
+        "callable": {
+          "result": {
+            "ownership": "borrow",
+            "lifetime": { "scope": "parameter", "anchor": "arg1" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Merge these entries into the package's existing configuration. Keep its module,
+export, resource and owned-aggregate declarations. `arg1` selects the closure's
+`Bundle` argument after its `Bool` argument. Rust callers supply `&Value<Bundle>`;
+the returned value expires with that argument's original owner, even if Lean
+returns the captured bundle. Both ordinary source and reviewed contracts receive
+fresh compiler checks.
+
+Host callback results use the same nested `callable.result` declaration on the
+callback parameter. Rust accepts the exact raw reply or its `Value<T>` owner,
+validates it, and copies it before the callback's argument borrows expire.
+Recovery values follow the same rule. Returned Lean closures can be passed back
+as callable arguments. See the [consumer example](../consume/rust.md#borrowed-callback-results).
+
+These crates use `owned-rust-v5`, Rust ownership contract version 5, and compiled
+Rust/package receipts version 6. The native model records the callback-local
+anchor separately from export anchors, receivers and transfers. Packaging
+regenerates the source and ownership contracts before accepting the archive.
+The producer API can omit host callback support while preserving returned
+closure owners and independent `retain()` copies. The CLI enables host callbacks.
+Every target in a combined build must accept the complete contract.
+
+## Export methods and properties
+
+Use the [shared receiver configuration](c.md#export-methods-and-properties) to
+select a Lean function's first runtime argument as a method or property receiver.
+The receiver must be a named resource, owned record or owned variant. Properties
+take no remaining arguments. Declare a receiver-bound result with
+`"lifetime": { "scope": "receiver", "anchor": "receiver" }`; use the remaining
+parameter's original argument index to anchor a result elsewhere.
+
+Rust emits snake-case methods on `Value<T>` and zero-argument property accessors.
+Consuming receivers take `&mut self`; other receivers take `&self`. Methods cannot
+replace the ownership API's `close`, `get`, `is_closed`, `retain`, `try_equal`,
+`same_identity`, `call`, or internal owner-access helpers. Copied fields remain
+ordinary fields. See the [consumer example](../consume/rust.md#methods-and-properties).
+
+Receiver crates use `owned-rust-v4`, Rust ownership contract version 4, and
+compiled Rust/package receipts version 5. The shared C adapter uses version 6
+and authenticates both receiver and result-anchor descriptors. Receivers also
+work in resource-only APIs with no aggregate, callback or borrowed-result
+capability. C, C++ and Cargo may share a receiver build. Other targets reject
+receiver exports until their projections support them.
 
 ## Package identity and publisher prerequisites
 
 The Alpha fixture uses crate `lean_bridge_alpha@0.0.0` and Rust edition 2021. Its native libraries target Linux x86-64 with glibc 2.38 or newer. Build and run consumer checks on that platform.
 
-Use the fixture coordinate only in a registry you control. For crates.io, establish ownership of the intended name, select an unused version, and regenerate the canonical package mapping and artifacts through a reviewed build change. The package builder has no `--name` override. Changing only the tarball filename does not change the crate identity.
+Use the fixture coordinate only in a registry you control. For crates.io, establish ownership of the intended name and select an unused version. Ordinary source builds set these in `targets.cargo`. For Alpha, regenerate the canonical package mapping and artifacts through a reviewed build change. Changing only the tarball filename does not change the crate identity.
 
 Choose either an operator-controlled Cargo registry with a publishing API or crates.io. A static crate download directory alone is not a Cargo registry. Cargo needs an index and its associated API and download configuration. [Alternate registries](https://doc.rust-lang.org/cargo/reference/registries.html), [registry index format](https://doc.rust-lang.org/cargo/reference/registry-index.html).
 
 ## Build and verify the Lean Bridge archive
 
-Prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
+For the separate Alpha fixture, prepare the native universal bundle using the [example artifact build instructions](../consume/receive-package.md#build-the-example-artifacts-as-a-maintainer), then create the Cargo projection in a new directory:
 
 ```sh
 node scripts/build-cargo-package.mjs \
@@ -35,23 +411,31 @@ If you need to distribute the original approved archive now, give consumers the 
 
 ## Prepare a separate Cargo publisher source
 
-For an operator-approved Cargo CLI release, authenticate the original archive first, then extract a copy into a new review directory. These example coordinates match the fixture and are suitable only for an owned sandbox:
+For an operator-approved Cargo CLI release, authenticate the original archive first, then extract a copy into a new review directory. Set the path and exact coordinates from your prepared release:
 
 ```sh
-export LEAN_BRIDGE_CARGO_ARCHIVE=/absolute/path/to/lean_bridge_alpha-0.0.0.crate
-export LEAN_BRIDGE_CARGO_NAME=lean_bridge_alpha
-export LEAN_BRIDGE_CARGO_VERSION=0.0.0
+export LEAN_BRIDGE_CARGO_ARCHIVE=/absolute/path/to/cedar-api-2.0.0-rc.1.crate
+export LEAN_BRIDGE_CARGO_NAME=cedar-api
+export LEAN_BRIDGE_CARGO_VERSION=2.0.0-rc.1
 export LEAN_BRIDGE_CARGO_REGISTRY=lean_sandbox
 export LEAN_BRIDGE_CARGO_REVIEW="$(pwd)/build/cargo-publisher-review"
+```
+
+For the Alpha fixture, use its archive path, `lean_bridge_alpha` and `0.0.0` instead. Run the remaining snippets in the same Bash session:
+
+```sh
+set -euo pipefail
 mkdir -p build
 mkdir "$LEAN_BRIDGE_CARGO_REVIEW"
 tar -xzf "$LEAN_BRIDGE_CARGO_ARCHIVE" -C "$LEAN_BRIDGE_CARGO_REVIEW"
 cd "$LEAN_BRIDGE_CARGO_REVIEW/$LEAN_BRIDGE_CARGO_NAME-$LEAN_BRIDGE_CARGO_VERSION"
-mv .cargo_vcs_info.json ../original-cargo-vcs-info.json
+if [ -f .cargo_vcs_info.json ]; then
+  mv .cargo_vcs_info.json ../original-cargo-vcs-info.json
+fi
 mkdir .cargo
 ```
 
-The generated archive includes `.cargo_vcs_info.json`. Cargo rejects that reserved filename when it appears in the source it is about to package. Retain the original beside the extracted source, as above, and let Cargo manage its own archive metadata. Do not alter the approved input archive. This preparation starts a new packaging review.
+Alpha includes `.cargo_vcs_info.json`; ordinary-source crates do not. Cargo rejects that reserved filename when it appears in the source it is about to package. When present, retain the original beside the extracted source, as above, and let Cargo manage its own archive metadata. Do not alter the approved input archive. This preparation starts a new packaging review.
 
 Create `.cargo/config.toml` in this publisher source, replacing the deliberately invalid example URL with your registry's approved sparse-index URL:
 
@@ -71,7 +455,9 @@ Have the secret provider supply `CARGO_REGISTRIES_LEAN_SANDBOX_TOKEN`. The `carg
 Run from the extracted publisher source:
 
 ```sh
-cargo generate-lockfile --offline
+if [ ! -f Cargo.lock ]; then
+  cargo generate-lockfile --offline
+fi
 cargo package --locked --offline --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 cargo publish --dry-run --locked --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 sha256sum "$LEAN_BRIDGE_CARGO_ARCHIVE" \
@@ -80,7 +466,7 @@ cp "target/package/$LEAN_BRIDGE_CARGO_NAME-$LEAN_BRIDGE_CARGO_VERSION.crate" \
   "$LEAN_BRIDGE_CARGO_REVIEW/reviewed-cargo-archive.crate"
 ```
 
-Alpha has no external Rust dependencies, so its lockfile and local package check can run offline. The publishing dry run may inspect the registry, but does not upload. Keep Cargo's build verification enabled. `--locked` checks dependency resolution; it does not promise equality with Lean Bridge's original archive. Cargo normalizes packaging metadata and includes its lockfile. [cargo package](https://doc.rust-lang.org/cargo/commands/cargo-package.html), [cargo publish options](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
+Ordinary crates keep their supplied lockfile and need its dependencies in the local Cargo cache for this offline check. Alpha has no external Rust dependencies, so its missing lockfile can be generated offline. The publishing dry run may inspect the registry, but does not upload. Keep Cargo's build verification enabled. `--locked` checks dependency resolution; it does not promise equality with Lean Bridge's original archive. Cargo normalizes packaging metadata and includes its lockfile. [cargo package](https://doc.rust-lang.org/cargo/commands/cargo-package.html), [cargo publish options](https://doc.rust-lang.org/cargo/commands/cargo-publish.html).
 
 Install `reviewed-cargo-archive.crate` into a fresh vendor directory and run the complete [Rust consumer](../consume/rust.md). Review the new archive contents, platform requirements, version, and SHA-256. Preserve both the original Lean Bridge hash and the newly approved Cargo hash. The original signed receipt cannot authenticate these changed archive bytes.
 
@@ -94,7 +480,7 @@ cargo publish --locked --registry "$LEAN_BRIDGE_CARGO_REGISTRY"
 
 This command packages again, so the post-upload byte check remains required. Do not use `--no-verify` or `--allow-dirty` to hide a packaging failure. A successful upload is a manual registry result, not a Lean Bridge signed transaction receipt.
 
-For crates.io, first complete package ownership and [production review](production-release.md), including the applicable publisher integration. Supply the authorized production token as `CARGO_REGISTRY_TOKEN`, select the production registry, and repeat the package, consumer, and archive-approval steps in a new review directory for that registry before the write:
+For crates.io, first complete package ownership and [production review](../publishing.md#build-and-approve-the-same-artifacts), including the applicable publisher integration. Supply the authorized production token as `CARGO_REGISTRY_TOKEN`, select the production registry, and repeat the package, consumer, and archive-approval steps in a new review directory for that registry before the write:
 
 ```sh
 export LEAN_BRIDGE_CARGO_REGISTRY=crates-io
@@ -132,7 +518,7 @@ Then run the [Rust example](../consume/rust.md) in a fresh project with a pinned
 lean_bridge_alpha = { version = "=0.0.0", registry = "lean_sandbox" }
 ```
 
-Use the actual approved crate name and version. For crates.io, omit the `registry` field. Resolve the lockfile, then run `cargo run --release --locked`. Keep the installed crate's native files at its build-time location as required by the current Rust loader. Record the consumer result and registry checksum with the manual publication record.
+Use the actual approved crate name and version. For crates.io, omit the `registry` field. Resolve the lockfile, then run `cargo run --release --locked`. Alpha's loader requires its installed native files at their build-time location; ordinary crates embed them in the executable. Record the consumer result and registry checksum with the manual publication record.
 
 ## Recover an interrupted release
 
@@ -140,4 +526,8 @@ A Cargo publishing timeout may happen while the client waits for the index after
 
 The release owner may approve yanking a broken version after arranging a corrective release. Yanking changes dependency selection; it does not erase downloads or remove the version from existing lockfiles. [cargo yank](https://doc.rust-lang.org/cargo/commands/cargo-yank.html).
 
-Keep any universal candidate record separate from this repackaged release. [Sandbox release](sandbox-release.md) and [Publishing](../publishing.md) describe the signed transaction integration needed for the original exact-archive workflow.
+Keep any universal candidate record separate from this repackaged release. [Sandbox release](../contributing/sandbox-release.md#rehearse-a-registry-release) and [Publishing](../publishing.md) describe the signed transaction integration needed for the original exact-archive workflow.
+
+### Publish Rust crates
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

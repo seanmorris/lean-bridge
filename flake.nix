@@ -25,16 +25,19 @@
             cargo
             dotnet-sdk_8
             flex
+            gmp
             gperf
             git
             jdk22_headless
             jq
             kotlin
             lld
+            m4
             ninja
             nodejs_22
             openssl
             patchelf
+            perl
             php82
             php82.unwrapped.dev
             php82Packages.composer
@@ -75,6 +78,7 @@
           '';
           coreSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/core-source-boundary.json);
           componentEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/component-engine-source-boundary.json);
+          perlEngineSourceBoundary = builtins.fromJSON (builtins.readFile ./nix/perl-engine-source-boundary.json);
           sourceRoot = toString self;
           relativeSourcePath = path:
             let absolute = toString path;
@@ -104,12 +108,20 @@
             filter = path: type:
               let
                 relative = relativeSourcePath path;
+                files = componentEngineSourceBoundary.includedFiles
+                  ++ componentEngineSourceBoundary.identityFiles
+                  ++ coreSourceBoundary.includedFiles;
+                includedDirectory = pkgs.lib.any (directory: isWithin directory relative)
+                  coreSourceBoundary.includedDirectoryPrefixes;
+                parentDirectory = relative == "" || pkgs.lib.any
+                  (directory: pkgs.lib.hasPrefix "${relative}/" directory)
+                  coreSourceBoundary.includedDirectoryPrefixes;
                 parentFile = relative == "" || pkgs.lib.any
                   (file: pkgs.lib.hasPrefix "${relative}/" file)
-                  componentEngineSourceBoundary.includedFiles;
+                  files;
               in if type == "directory"
-                then parentFile
-                else builtins.elem relative componentEngineSourceBoundary.includedFiles;
+                then includedDirectory || parentDirectory || parentFile
+                else includedDirectory || builtins.elem relative files;
           };
           portablePackages = rec {
             capsule-graph = pkgs.stdenvNoCC.mkDerivation {
@@ -200,6 +212,7 @@
                 "$runtime_root/cmake/lib/lean/libleanrt.a" \
                 "$out/cmake/lib/lean/"
               cp -a "$runtime_root/source/src/include/." "$out/source/src/include/"
+              cp "$runtime_root/source/.lean-wasm-patched" "$runtime_root/source/LICENSE" "$out/source/"
               runHook postInstall
             '';
           };
@@ -318,6 +331,30 @@
             '';
           };
 
+          perl-build-engine = pkgs.writeShellApplication {
+            name = "lean-bridge-perl-engine";
+            runtimeInputs = [
+              pkgs.nodejs_22 pkgs.stdenv.cc pkgs.binutils pkgs.perl
+              pkgs.gnumake pkgs.gnutar pkgs.gzip pkgs.xz pkgs.m4
+              pkgs.gnused pkgs.gnugrep pkgs.gawk pkgs.diffutils pkgs.findutils
+              pkgs.coreutils pkgs.glibc.bin pkgs.git
+            ];
+            text = let perlSource = builtins.path {
+              name = "lean-bridge-perl-source";
+              path = self;
+              filter = path: type:
+                let relative = relativeSourcePath path;
+                in if type == "directory" then relative == "" || pkgs.lib.any
+                  (file: pkgs.lib.hasPrefix "${relative}/" file) perlEngineSourceBoundary.includedFiles
+                else builtins.elem relative perlEngineSourceBoundary.includedFiles;
+            }; in ''
+              export LEAN_BRIDGE_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export C_INCLUDE_PATH='${pkgs.lib.getDev pkgs.libxcrypt}/include'
+              '${pkgs.nodejs_22}/bin/node' '${perlSource}/scripts/run-perl-engine.mjs' "$@"
+            '';
+            meta.platforms = [ "x86_64-linux" ];
+          };
+
           component-build-engine = pkgs.writeShellApplication {
             name = "lean-bridge-component-engine";
             runtimeInputs = [ pkgs.coreutils pkgs.nodejs_22 pkgs.python3 ];
@@ -337,6 +374,9 @@
               export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
               export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
               export LEAN_BRIDGE_LEAN='${wasmToolchain.leanHost}/bin/lean'
+              export LEAN_BRIDGE_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_BRIDGE_JS_EMSDK='${wasmToolchain.emsdk}'
+              export LEAN_BRIDGE_JS_TARGET_RUNTIME='${component-runtime}'
               export LEAN_BRIDGE_EMCC='${wasmToolchain.emsdk}/upstream/emscripten/emcc'
               export LEAN_BRIDGE_RUNTIME_ROOT='${component-runtime}'
               '${pkgs.nodejs_22}/bin/node' '${componentEngineSource}/scripts/run-component-engine.mjs' "$@"
@@ -389,6 +429,8 @@
               runHook postInstall
             '';
           };
+
+          wasmtime-c-api = wasmtimeCapi;
 
           wasi-component-artifacts = pkgs.stdenvNoCC.mkDerivation {
             pname = "lean-alpha-wasi-component-artifacts";

@@ -10,6 +10,8 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { auditPhpPackage } from "./package-audit.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { compileCopiedPhpModel } from "./copied-model.mjs";
+import { renderCopiedPhpPackage } from "./copied-values.mjs";
 
 /**
  * Reports PHP binding generation failures with stable machine-readable codes and structured diagnostic context.
@@ -289,7 +291,7 @@ const fileHeader = (namespace, hash, imports = []) => [
 const emitValidators = (ir, projection) => {
 	const namespace = `${projection.package.namespace}\\Internal`;
 	const lines = fileHeader(namespace, projection.bindingIrSha256, [
-		`${projection.package.namespace}\\BigInteger`
+		"Brick\\Math\\BigInteger"
 		, `${projection.package.namespace}\\Bytes`
 	]);
 	lines.push("final class Validators", "{");
@@ -301,7 +303,18 @@ const emitValidators = (ir, projection) => {
 		{
 			if(ref.name === "unit") continue;
 			lines.push(`    public static function ${method}(${projected.phpType} $value, string $path): void`, "    {");
-			if(ref.name.startsWith("uint") && ref.name !== "uint64")
+			if(projected.validation?.kind === "decimal-integer-range")
+			{
+				const { minimum, maximum } = projected.validation;
+				lines.push("        $decimal = (string) $value;", "        $negative = str_starts_with($decimal, '-');"
+					, "        $magnitude = $negative ? substr($decimal, 1) : $decimal;"
+					, `        $limit = $negative ? '${minimum.replace(/^-/, "")}' : '${maximum}';`
+					, "        if (preg_match('/^(?:0|-?[1-9][0-9]*)$/D', $decimal) !== 1"
+					, ...(minimum === "0" ? ["            || $negative"] : [])
+					, "            || strlen($magnitude) > strlen($limit)"
+					, "            || (strlen($magnitude) === strlen($limit) && strcmp($magnitude, $limit) > 0)) {"
+					, `            throw new \\ValueError($path . ' must be ${ref.name}');`, "        }");
+			} else if(ref.name.startsWith("uint") && ref.name !== "uint64")
 			{
 				const maximum = (2n ** BigInt(Number(ref.name.slice(4))) - 1n).toString();
 				lines.push(`        if ($value < 0 || $value > ${maximum}) {`, `            throw new \\ValueError($path . ' must be ${ref.name}');`, "        }");
@@ -637,28 +650,6 @@ final readonly class Bytes implements \\Countable, \\Stringable
 }
 `;
 
-const emitBigInteger = projection => `${fileHeader(projection.package.namespace, projection.bindingIrSha256).join("\n")}
-final readonly class BigInteger implements \\Stringable
-{
-    private function __construct(private string $decimal)
-    {
-    }
-
-    public static function fromDecimal(string $decimal): self
-    {
-        if (preg_match('/^-?(?:0|[1-9][0-9]*)$/D', $decimal) !== 1) {
-            throw new \\ValueError('BigInteger requires canonical decimal text');
-        }
-        return new self($decimal);
-    }
-
-    public function __toString(): string
-    {
-        return $this->decimal;
-    }
-}
-`;
-
 const emitAwaitable = projection => `${fileHeader(projection.package.namespace, projection.bindingIrSha256).join("\n")}
 /** @template T */
 interface Awaitable
@@ -973,7 +964,6 @@ const stubParameter = (projection, parameter) => parameterCode(projection, param
 const emitStub = (ir, projection, support) => {
 	const lines = ["<?php", `// Generated from Binding IR SHA-256 ${projection.bindingIrSha256}.`, `namespace ${projection.package.namespace};`, ""];
 	if(support.bytes) lines.push("final readonly class Bytes implements \\Countable, \\Stringable { public static function fromString(string $value): self {} public function toString(): string {} public function count(): int {} public function __toString(): string {} }", "");
-	if(support.bigInteger) lines.push("final readonly class BigInteger implements \\Stringable { public static function fromDecimal(string $decimal): self {} public function __toString(): string {} }", "");
 	if(support.awaitable) lines.push("/** @template T */ interface Awaitable { /** @return T */ public function await(); public function cancel(): void; }", "");
 	if(support.asyncIterator) lines.push("/** @template T */ interface AsyncIterator { /** @return Awaitable<?T> */ public function next(): Awaitable; public function close(): void; }", "");
 	for(const error of projection.errors) lines.push(`class ${error.name} extends \\RuntimeException { public const ID = ${phpString(error.id)}; }`, "");
@@ -1028,9 +1018,9 @@ const exampleValue = (ir, projection, ref, stack = new Set()) => {
 	{
 		if(resolved.name === "unit") return "null";
 		if(resolved.name === "bool") return "false";
-		if(new Set(["uint64", "int64", "nat", "int"]).has(resolved.name))
+		if(projectionForRef(projection, resolved).phpType === "\\Brick\\Math\\BigInteger")
 		{
-			return `\\${projection.package.namespace}\\BigInteger::fromDecimal('1')`;
+			return "\\Brick\\Math\\BigInteger::of('1')";
 		}
 		if(resolved.name.startsWith("uint") || resolved.name.startsWith("int")) return "1";
 		if(resolved.name.startsWith("float")) return "1.0";
@@ -1073,7 +1063,7 @@ const emitReadme = (ir, projection) => {
 		, ""
 		, ir.documentation.summary
 		, ""
-		, "Install the package and one transport adapter. Native PHP and PHP-Wasm expose the same namespace, classes, functions, exceptions, and ownership behavior."
+		, "Install the package and one transport adapter. Native PHP and PHP-Wasm share resource, callback, exception and ownership behavior. Integer representations follow the host profile: UInt32 uses int on native 64-bit PHP and BigInteger on PHP-Wasm."
 		, ""
 		, "```sh"
 		, `composer require ${projection.package.composerName}`
@@ -1107,7 +1097,6 @@ const supportProfile = projection => ({
 
 const publicExports = (projection, support) => [
 	...(support.bytes ? [`${projection.package.namespace}\\Bytes`] : [])
-	, ...(support.bigInteger ? [`${projection.package.namespace}\\BigInteger`] : [])
 	, ...(support.awaitable ? [`${projection.package.namespace}\\Awaitable`] : [])
 	, ...(support.asyncIterator ? [`${projection.package.namespace}\\AsyncIterator`] : [])
 	, ...projection.types
@@ -1124,11 +1113,18 @@ const publicExports = (projection, support) => [
  * Compiles Binding IR into the validated PHP package projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Host projection settings, including integerBits.
  */
-export const compilePhpPackageModel = ir => {
+export const compilePhpPackageModel = (ir, options = {}) => {
 	validateBindingIr(ir);
+	const ordinary = ir.declarations.every(declaration => declaration.kind === "function") && (ir.types.every(type => ["record", "alias", "variant"].includes(type.kind)) || ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback")));
+	if(options.integerBits !== undefined && options.integerBits !== 64
+		&& ordinary)
+		fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
+	if(ordinary)
+		return Object.freeze({ ir, copied: compileCopiedPhpModel(ir, { structuredCallables: true, lists: true, variants: true }) });
 	validateCoverage(ir);
-	const projection = compilePhpProjection(ir);
+	const projection = compilePhpProjection(ir, options);
 	const support = supportProfile(projection);
 	return Object.freeze({ ir, projection, support });
 };
@@ -1139,6 +1135,7 @@ export const compilePhpPackageModel = ir => {
  * @param model - Validated PHP package projection model.
  */
 export const renderPhpPackageLayout = model => {
+	if(model.copied) return renderCopiedPhpPackage(model.copied);
 	const { ir, projection, support } = model;
 	const root = projection.package.namespace;
 	const files = {};
@@ -1148,7 +1145,6 @@ export const renderPhpPackageLayout = model => {
 	const addInternal = (path, source) => { files[path] = source; internalFiles.push(path); };
 
 	if(support.bytes) addPublic("src/Bytes.php", emitBytes(projection));
-	if(support.bigInteger) addPublic("src/BigInteger.php", emitBigInteger(projection));
 	if(support.awaitable) addPublic("src/Awaitable.php", emitAwaitable(projection));
 	if(support.asyncIterator) addPublic("src/AsyncIterator.php", emitAsyncIterator(projection));
 	for(const error of projection.errors) addPublic(`src/${error.name}.php`, emitError(projection, error.name, error.documentation, error.id));
@@ -1208,7 +1204,7 @@ export const renderPhpPackageLayout = model => {
 		, version: ir.component.version
 		, description: ir.documentation.summary
 		, type: "library"
-		, require: { php: ">=8.2" }
+		, require: { php: ">=8.2", ...(support.bigInteger ? { "brick/math": "1.0.0" } : {}) }
 		, autoload: {
 			"psr-4": { [`${root}\\`]: "src/" }
 			, files: ["src/functions.php"]
@@ -1248,10 +1244,11 @@ export const renderPhpPackageLayout = model => {
  * Generates and audits a PHP package through explicit model and rendering stages.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Host projection settings, including integerBits.
  */
-export const generatePhpBindingPackage = ir => {
-	const model = compilePhpPackageModel(ir);
+export const generatePhpBindingPackage = (ir, options = {}) => {
+	const model = compilePhpPackageModel(ir, options);
 	const files = renderPhpPackageLayout(model);
-	auditPhpPackage(ir, files);
+	auditPhpPackage(ir, files, options);
 	return files;
 };

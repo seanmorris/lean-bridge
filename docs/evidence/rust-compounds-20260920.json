@@ -1,0 +1,1454 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "d480dd32bcbea9985869a2db495f65ed2c767e7a",
+  "compiler": "rustc 1.90.0",
+  "signatures": [
+    {
+      "name": "Compounds.classify",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Compounds.deep",
+      "parameters": [
+        {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "option": {
+                                                          "result": [
+                                                            {
+                                                              "tuple": [
+                                                                "uint32",
+                                                                "unit"
+                                                              ]
+                                                            },
+                                                            "string"
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "result": [
+                                                          {
+                                                            "tuple": [
+                                                              "uint32",
+                                                              "unit"
+                                                            ]
+                                                          },
+                                                          "string"
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.duplicate",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": {
+              "array": "bytes"
+            }
+          },
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.flip",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                "uint32",
+                {
+                  "option": "unit"
+                }
+              ]
+            },
+            {
+              "option": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": "string"
+          },
+          {
+            "tuple": [
+              "uint32",
+              {
+                "option": "unit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Compounds.make",
+      "parameters": [],
+      "result": {
+        "option": {
+          "result": [
+            {
+              "tuple": [
+                "uint64",
+                "unit"
+              ]
+            },
+            "string"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Compounds.next",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": "unit"
+        }
+      }
+    },
+    {
+      "name": "Compounds.option_bool",
+      "parameters": [
+        {
+          "option": "bool"
+        }
+      ],
+      "result": {
+        "option": "bool"
+      }
+    },
+    {
+      "name": "Compounds.option_bytes",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "option": "bytes"
+      }
+    },
+    {
+      "name": "Compounds.option_char",
+      "parameters": [
+        {
+          "option": "char"
+        }
+      ],
+      "result": {
+        "option": "char"
+      }
+    },
+    {
+      "name": "Compounds.option_float32",
+      "parameters": [
+        {
+          "option": "float32"
+        }
+      ],
+      "result": {
+        "option": "float32"
+      }
+    },
+    {
+      "name": "Compounds.option_float64",
+      "parameters": [
+        {
+          "option": "float64"
+        }
+      ],
+      "result": {
+        "option": "float64"
+      }
+    },
+    {
+      "name": "Compounds.option_int",
+      "parameters": [
+        {
+          "option": "int"
+        }
+      ],
+      "result": {
+        "option": "int"
+      }
+    },
+    {
+      "name": "Compounds.option_int16",
+      "parameters": [
+        {
+          "option": "int16"
+        }
+      ],
+      "result": {
+        "option": "int16"
+      }
+    },
+    {
+      "name": "Compounds.option_int32",
+      "parameters": [
+        {
+          "option": "int32"
+        }
+      ],
+      "result": {
+        "option": "int32"
+      }
+    },
+    {
+      "name": "Compounds.option_int64",
+      "parameters": [
+        {
+          "option": "int64"
+        }
+      ],
+      "result": {
+        "option": "int64"
+      }
+    },
+    {
+      "name": "Compounds.option_int8",
+      "parameters": [
+        {
+          "option": "int8"
+        }
+      ],
+      "result": {
+        "option": "int8"
+      }
+    },
+    {
+      "name": "Compounds.option_isize",
+      "parameters": [
+        {
+          "option": "isize"
+        }
+      ],
+      "result": {
+        "option": "isize"
+      }
+    },
+    {
+      "name": "Compounds.option_nat",
+      "parameters": [
+        {
+          "option": "nat"
+        }
+      ],
+      "result": {
+        "option": "nat"
+      }
+    },
+    {
+      "name": "Compounds.option_string",
+      "parameters": [
+        {
+          "option": "string"
+        }
+      ],
+      "result": {
+        "option": "string"
+      }
+    },
+    {
+      "name": "Compounds.option_uint16",
+      "parameters": [
+        {
+          "option": "uint16"
+        }
+      ],
+      "result": {
+        "option": "uint16"
+      }
+    },
+    {
+      "name": "Compounds.option_uint32",
+      "parameters": [
+        {
+          "option": "uint32"
+        }
+      ],
+      "result": {
+        "option": "uint32"
+      }
+    },
+    {
+      "name": "Compounds.option_uint64",
+      "parameters": [
+        {
+          "option": "uint64"
+        }
+      ],
+      "result": {
+        "option": "uint64"
+      }
+    },
+    {
+      "name": "Compounds.option_uint8",
+      "parameters": [
+        {
+          "option": "uint8"
+        }
+      ],
+      "result": {
+        "option": "uint8"
+      }
+    },
+    {
+      "name": "Compounds.option_unit",
+      "parameters": [
+        {
+          "option": "unit"
+        }
+      ],
+      "result": {
+        "option": "unit"
+      }
+    },
+    {
+      "name": "Compounds.option_usize",
+      "parameters": [
+        {
+          "option": "usize"
+        }
+      ],
+      "result": {
+        "option": "usize"
+      }
+    },
+    {
+      "name": "Compounds.result_bool",
+      "parameters": [
+        {
+          "result": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_bytes",
+      "parameters": [
+        {
+          "result": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_char",
+      "parameters": [
+        {
+          "result": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float32",
+      "parameters": [
+        {
+          "result": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float64",
+      "parameters": [
+        {
+          "result": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int",
+      "parameters": [
+        {
+          "result": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int16",
+      "parameters": [
+        {
+          "result": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int32",
+      "parameters": [
+        {
+          "result": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int64",
+      "parameters": [
+        {
+          "result": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int8",
+      "parameters": [
+        {
+          "result": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_isize",
+      "parameters": [
+        {
+          "result": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_nat",
+      "parameters": [
+        {
+          "result": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_string",
+      "parameters": [
+        {
+          "result": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint16",
+      "parameters": [
+        {
+          "result": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint32",
+      "parameters": [
+        {
+          "result": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint64",
+      "parameters": [
+        {
+          "result": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint8",
+      "parameters": [
+        {
+          "result": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_unit",
+      "parameters": [
+        {
+          "result": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_usize",
+      "parameters": [
+        {
+          "result": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.transform",
+      "parameters": [
+        {
+          "fields": {
+            "choice": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            },
+            "nested": {
+              "result": [
+                {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "uint32",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                },
+                {
+                  "option": "nat"
+                }
+              ]
+            },
+            "products": {
+              "tuple": [
+                {
+                  "tuple": [
+                    "uint32",
+                    "string"
+                  ]
+                },
+                {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              ]
+            },
+            "rows": {
+              "array": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "string",
+                        "uint64"
+                      ]
+                    },
+                    {
+                      "tuple": [
+                        "bytes",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "record": "Compounds.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "choice": {
+            "option": {
+              "result": [
+                {
+                  "tuple": [
+                    "nat",
+                    "unit"
+                  ]
+                },
+                "string"
+              ]
+            }
+          },
+          "nested": {
+            "result": [
+              {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "uint32",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              },
+              {
+                "option": "nat"
+              }
+            ]
+          },
+          "products": {
+            "tuple": [
+              {
+                "tuple": [
+                  "uint32",
+                  "string"
+                ]
+              },
+              {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            ]
+          },
+          "rows": {
+            "array": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "string",
+                      "uint64"
+                    ]
+                  },
+                  {
+                    "tuple": [
+                      "bytes",
+                      "int"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "record": "Compounds.Packet"
+      }
+    },
+    {
+      "name": "Compounds.tuple_bool",
+      "parameters": [
+        {
+          "tuple": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bytes",
+      "parameters": [
+        {
+          "tuple": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_char",
+      "parameters": [
+        {
+          "tuple": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float32",
+      "parameters": [
+        {
+          "tuple": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float64",
+      "parameters": [
+        {
+          "tuple": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int",
+      "parameters": [
+        {
+          "tuple": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int16",
+      "parameters": [
+        {
+          "tuple": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int32",
+      "parameters": [
+        {
+          "tuple": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int64",
+      "parameters": [
+        {
+          "tuple": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int8",
+      "parameters": [
+        {
+          "tuple": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_isize",
+      "parameters": [
+        {
+          "tuple": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_nat",
+      "parameters": [
+        {
+          "tuple": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_string",
+      "parameters": [
+        {
+          "tuple": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint16",
+      "parameters": [
+        {
+          "tuple": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint32",
+      "parameters": [
+        {
+          "tuple": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint64",
+      "parameters": [
+        {
+          "tuple": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint8",
+      "parameters": [
+        {
+          "tuple": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_unit",
+      "parameters": [
+        {
+          "tuple": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_usize",
+      "parameters": [
+        {
+          "tuple": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "usize",
+          "usize"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "bindingIrSha256": "9dd51d0802d99fba30b8d50adde82da3369065be7e2f5964943adff186297823",
+      "checks": 5311,
+      "compilerFreePath": true,
+      "consumerSha256": "89ee696a144c05f5ae529f46d83f50d7626f409a895fd79be30559bbede197e0",
+      "modelSha256": "52f0d353f39ee87e4a79e4a2f0b195004aa708d630e3b7272bf8db3adc4346a1",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51530224,
+              "path": "archives/compounds-api-1.0.0.crate",
+              "sha256": "9ac4a339c03383b53ec58b269f81868d62d8c684e68f46b510d955e2646498d6"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "5e739feb78c0edc4323dadd2d73dbd4d4940099c55f261a665dfebc92d3eeef9",
+      "safety": {
+        "executableSha256": "2f1bdc72099cddcfcc8b32582bb8e448fb7856083a9472b610d0e2400e98db5a",
+        "faultChecks": 126,
+        "faultSourceSha256": "6140e9d7036b7ec8306f106956c34ef0481600e887df0fa9ae65e5ad8f7dec13",
+        "faultTests": 2,
+        "malformedSourceSha256": "8b46d546d306a3b85ca48e17c70aac3db693e738426fe4cdd93dfe94314e825e",
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-payload",
+            "sourceSha256": "e1e9ab12c0938c651cd5e25d2707ae29543fe532a11b5e44572cde4da03844c6"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-unit",
+            "sourceSha256": "35a6196490d51a6ba818f191fb8af17d5039d3f99fab8dede4400379640f7725"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "result-payload",
+            "sourceSha256": "a00db03c82d1f9119eb998fc804ccb4d2c62358cb31195aac6651b271aaa9a9a"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "bare-payload",
+            "sourceSha256": "977e30c75ba0ad68c206c580c8b0173b7db8ed96bbd64794b2d50ee30f31d91e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "missing-borrow",
+            "sourceSha256": "d19505d02456e754d04d59a0b3c9722012102bd567e8652b06dd3a6bedcb5b5e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-arity",
+            "sourceSha256": "87a7bab8d02cd4ca7fcdc9c7d5d194d744c818511ffbfd6ad2fb8bf763798db8"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-array",
+            "sourceSha256": "6d88b4366e12c25c84162ed94fb31255fefcbf0dd300ee64a84bc8fca4ccd963"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "nested-option",
+            "sourceSha256": "475aa3afbc68bc4751f81c2cd501e5f4655a68200df31facdd7b1799e448af73"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "negative-nat",
+            "sourceSha256": "2d001f9763d6df38f39b30137584db6ce938351abf5f0f4ec154dcf88bec3211"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "domain-versus-boundary",
+            "sourceSha256": "a172e87efb21739b7592a4bbe3e9dce6d18b939972e373dc7f4344ae5cd4f3ed"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "fixed-overflow",
+            "sourceSha256": "d9eb952eb75145afc0a06aa3d53e3080cd4eade1557aa0288e2f28a8796f6fe0"
+          }
+        ],
+        "sourceFreeChecks": 5311
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "3217ce8ee09a745ff97ab8a48b14da37aa33d49f984b04c73b7d18a63ca91221"
+    },
+    {
+      "bindingIrSha256": "e0bf9efc3728de3fdf1d6f263a76909d33a909f3f51081b4cd43ede8b2ec45f1",
+      "checks": 5311,
+      "compilerFreePath": true,
+      "consumerSha256": "89ee696a144c05f5ae529f46d83f50d7626f409a895fd79be30559bbede197e0",
+      "modelSha256": "704252f6907f983d4a6f1f318edf17830a8dff94608c2d74a84acb3fb09840b9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51541631,
+              "path": "archives/compounds-api-1.0.0.crate",
+              "sha256": "0f58dc9ecef6ed95b1fc4042a823ce61fd56d2a08e064da4349c69e5635c0394"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "compounds-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "rust",
+      "receiptSha256": "05de916928e3d82ae130a35a93fe52c42ebaeaa6ae3fce3d214f1231425f1643",
+      "safety": {
+        "executableSha256": "b504cfedfbb6d5345c4c197dea2132a848fc93e2fe7a1ac256030230d3eac86f",
+        "faultChecks": 126,
+        "faultSourceSha256": "6140e9d7036b7ec8306f106956c34ef0481600e887df0fa9ae65e5ad8f7dec13",
+        "faultTests": 2,
+        "malformedSourceSha256": "8b46d546d306a3b85ca48e17c70aac3db693e738426fe4cdd93dfe94314e825e",
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-payload",
+            "sourceSha256": "e1e9ab12c0938c651cd5e25d2707ae29543fe532a11b5e44572cde4da03844c6"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "option-unit",
+            "sourceSha256": "35a6196490d51a6ba818f191fb8af17d5039d3f99fab8dede4400379640f7725"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "result-payload",
+            "sourceSha256": "a00db03c82d1f9119eb998fc804ccb4d2c62358cb31195aac6651b271aaa9a9a"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "bare-payload",
+            "sourceSha256": "977e30c75ba0ad68c206c580c8b0173b7db8ed96bbd64794b2d50ee30f31d91e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "missing-borrow",
+            "sourceSha256": "d19505d02456e754d04d59a0b3c9722012102bd567e8652b06dd3a6bedcb5b5e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-arity",
+            "sourceSha256": "87a7bab8d02cd4ca7fcdc9c7d5d194d744c818511ffbfd6ad2fb8bf763798db8"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "product-array",
+            "sourceSha256": "6d88b4366e12c25c84162ed94fb31255fefcbf0dd300ee64a84bc8fca4ccd963"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "nested-option",
+            "sourceSha256": "475aa3afbc68bc4751f81c2cd501e5f4655a68200df31facdd7b1799e448af73"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "negative-nat",
+            "sourceSha256": "2d001f9763d6df38f39b30137584db6ce938351abf5f0f4ec154dcf88bec3211"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "domain-versus-boundary",
+            "sourceSha256": "a172e87efb21739b7592a4bbe3e9dce6d18b939972e373dc7f4344ae5cd4f3ed"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "fixed-overflow",
+            "sourceSha256": "d9eb952eb75145afc0a06aa3d53e3080cd4eade1557aa0288e2f28a8796f6fe0"
+          }
+        ],
+        "sourceFreeChecks": 5311
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4ad5558e4e4d84bac2f3f5599206a207cfcbf46205768c83ec07d97c7c320730"
+    }
+  ]
+}

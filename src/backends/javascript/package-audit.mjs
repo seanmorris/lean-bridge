@@ -6,6 +6,7 @@
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { auditOwnedJavaScriptPackage } from "./owned-package.mjs";
 
 /**
  * Reports JavaScript package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -215,6 +216,7 @@ const assertPackageExports = source => {
  * @param files - Generated file map or inventory checked for required paths, content, and public-surface constraints.
  */
 export const auditJavaScriptPackage = (ir, files) => {
+	if(ir.schemaVersion === 4) return auditOwnedJavaScriptPackage(ir, files);
 	validateBindingIr(ir);
 	if(files === null || typeof files !== "object" || Array.isArray(files))
 	{

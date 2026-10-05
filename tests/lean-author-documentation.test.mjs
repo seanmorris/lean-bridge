@@ -8,17 +8,48 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
-import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
+import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
+import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
 	"docs/lean-author-guide.md", "docs/lean/setup.md"
 	, "docs/lean/first-component.md", "docs/lean/proofs-and-assurance.md"
 	, "docs/lean/export-decisions.md", "docs/lean/diagnostics.md"
+	, "docs/lean/existing-package.md"
 ];
 const fences = source => [...source.matchAll(/^```([^\n]*)\n([\s\S]*?)^```\s*$/gm)]
 	.map(match => ({ language: match[1], source: match[2] }));
+
+test("shared publisher metadata is documented for every ordinary package format", async () => {
+	const source = await readFile("docs/publishing.md", "utf8");
+	const metadata = source.split("## Declare package metadata\n")[1].split("## Retain library and dependency licenses\n")[0];
+	const configuration = JSON.parse(fences(metadata).find(block => block.language === "json").source);
+	validateExportConfiguration(configuration);
+	assert.deepEqual(Object.keys(configuration.package).sort(), ["authors", "description", "homepage", "license", "licenseFiles", "repository"]);
+	for(const name of ["npm", "PyPI", "Cargo", "NuGet", "Maven", "RubyGems", "CPAN", "Composer", "native PHP", "PHP-Wasm", "C, C++, WIT/WASI"])
+		assert.ok(metadata.includes(name), name);
+	assert.match(metadata, /sourceIdentity.exportConfigurationSource/);
+	assert.match(metadata, /Shared-runtime packages keep their own metadata/);
+	for(const field of ["License-Expression", "License-File", "spdx_expression", "x_spdx_expression", "licenseFiles"])
+		assert.ok(source.includes(field), field);
+	assert.match(source, /Version-one inventories remain readable/);
+	assert.match(await readFile("docs/lean/existing-package.md", "utf8"), /publishing.md#declare-package-metadata/);
+});
+
+test("the npm author guide uses validated shared settings without renaming the Lean component", async () => {
+	const source = await readFile("docs/publish/npm.md", "utf8");
+	const settings = JSON.parse(fences(source.split("### Choose the npm name and version\n")[1]).find(block => block.language === "json").source);
+	validateExportConfiguration(settings);
+	assert.deepEqual(componentNpmIdentity({ name: "onboarding-small", version: "1.0.0" }, settings.targets.npm), {
+		name: "@your-org/your-component", version: "0.1.0"
+		, coordinate: "@your-org/your-component@0.1.0"
+	});
+	assert.match(source, /package assembly reads them from the sealed build bundle/i);
+	assert.match(source, /receipt records both identities; use `lean-bridge verify`/);
+});
 
 test("author setup starts with a prepared CLI and keeps checkout-only runtime work separate", async () => {
 	const [setup, hub, tutorial, diagnostics, publishing, manifest] = await Promise.all([
@@ -39,7 +70,8 @@ test("author setup starts with a prepared CLI and keeps checkout-only runtime wo
 	assert.match(commands, /npm install --prefix "\$LEAN_BRIDGE_WORK\/cli" --offline --ignore-scripts --no-audit --no-fund "\$LEAN_BRIDGE_CLI_ARCHIVE"/);
 	assert.match(commands, /export PATH="\$LEAN_BRIDGE_WORK\/cli\/node_modules\/\.bin:\$PATH"/);
 	assert.doesNotMatch(commands, /LEAN_BRIDGE_CHECKOUT|LEAN_BRIDGE_RUNTIME_ROOT|npm run bootstrap/);
-	assert.match(checkout, /export LEAN_BRIDGE_RUNTIME_ROOT=/);
+	assert.doesNotMatch(checkout, /^```/m);
+	assert.match(await readFile("docs/contributing/author-toolchain.md", "utf8"), /export LEAN_BRIDGE_RUNTIME_ROOT=/);
 	assert.match(hub, /prepared CLI archive/);
 	assert.match(tutorial, /only the checkout-based setup needs `LEAN_BRIDGE_RUNTIME_ROOT`/);
 	assert.ok(publishing.includes("../lean/setup.md#install-a-prepared-cli"));
@@ -57,22 +89,77 @@ test("the first component's copyable files exactly match the author fixture", as
 	assert.ok((await readFile(`${fixture}/OnboardingSmall.lean`, "utf8")).includes(proof.trimEnd()));
 });
 
-test("the author example exports two functions and records its theorem without promoting assurance", async () => {
-	const analysis = await analyzeLeanProject(fixture, { targets: ["npm"] });
-	assert.deepEqual(analysis.proposedExports, ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
-	assert.deepEqual(analysis.adapterHints.filter(item => item.required), []);
-	const claims = analysis.bindingIr.document.assurance;
-	const add = claims.find(item => item.subject === "lean:OnboardingSmall.add");
-	assert.equal(add.state, "unverified");
-	assert.deepEqual(add.theorems, ["OnboardingSmall.add_commutative"]);
-	assert.deepEqual(claims.find(item => item.subject === "lean:OnboardingSmall.isEmpty").theorems, []);
+test("shared author selections and the CPAN example match executable configurations", async () => {
+	const source = await readFile("docs/lean/existing-package.md", "utf8");
+	for(const file of ["docs/lean/existing-package.md", "docs/publish/cpan.md", "docs/lean/diagnostics.md", "docs/architecture/cross-language-authoring.md"])
+		assert.doesNotMatch(await readFile(file, "utf8"), /lean-bridge\.native\.json|migrate-the-perl-only-configuration|migration instructions/);
+	const selected = JSON.parse(fences(source).find(block => block.language === "json").source);
+	const fixtureSelection = JSON.parse(await readFile("tests/fixtures/export-selection/lean-bridge.exports.json", "utf8"));
+	assert.deepEqual(selected, { schemaVersion: fixtureSelection.schemaVersion, modules: fixtureSelection.modules, exports: fixtureSelection.exports });
+	const cpan = await readFile("docs/publish/cpan.md", "utf8");
+	assert.deepEqual(JSON.parse(fences(cpan).find(block => block.language === "json").source),
+		JSON.parse(await readFile("tests/fixtures/perl/ordinary/lean-bridge.exports.json", "utf8")));
+});
+
+test("export contract examples validate and distinguish implemented decisions from pending behavior", async () => {
+	const existing = await readFile("docs/lean/existing-package.md", "utf8");
+	const native = await readFile("docs/publish/cpan.md", "utf8");
+	const shared = JSON.parse(fences(existing.split("### Declare export contracts\n")[1]).find(block => block.language === "json").source);
+	const closure = JSON.parse(fences(native.split("### Export a specialized closure\n")[1]).find(block => block.language === "json").source);
+	for(const config of [shared, closure]) validateExportConfiguration(config);
+	assert.equal(shared.contracts["Library.echoWord"].result.refinement, "reject");
+	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
+	assert.match(existing, /after specialization and configured closure arity/);
+	assert.match(existing, /C, C\+\+, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support \[explicit input transfers\]/);
+	assert.match(existing, /WIT\/WASI\]\(\.\.\/consume\/wit-wasi\.md#consuming-inputs\)/);
+	assert.match(existing, /JavaScript\/TypeScript\]\(\.\.\/javascript-typescript\.md#consuming-inputs\)/);
+	assert.match(existing, /Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis/);
+	assert.match(existing, /not memory allocation inside Lean/);
+	const wit = await readFile("docs/publish/wit-wasi.md", "utf8");
+	const owned = JSON.parse(fences(wit.split("## Export resource-containing values\n")[1]).find(block => block.language === "json").source);
+	const transferred = JSON.parse(fences(wit.split("### Transfer input ownership\n")[1]).find(block => block.language === "json").source);
+	owned.exports.push("Owned.retainTicket"); Object.assign(owned, transferred);
+	validateExportConfiguration(owned);
+	assert.deepEqual(owned.contracts["Owned.retainTicket"].parameters, [{ ownership: "transfer", lifetime: { scope: "call", anchor: null } }]);
+	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");
+	for(const code of ["export-contract-mismatch", "unused-export-contract", "contracts-require-elaboration"])
+		assert.ok(diagnostics.includes(`\`${code}\``));
+});
+
+test("the installed-package example uses npm and a runnable JavaScript file", async () => {
+	const content = await readFile("docs/lean/first-component.md", "utf8");
+	const section = content.split("## Call the installed package\n")[1];
+	const blocks = fences(section);
+	assert.equal(blocks.find(block => block.language === "js").source,
+		await readFile("tests/fixtures/documentation/lean-author-consumer/index.mjs", "utf8"));
+	const commands = blocks.filter(block => block.language === "sh").map(block => block.source).join("\n");
+	assert.doesNotMatch(commands, /--input-type|\bnode\s+-e\b|execFileSync/);
+	assert.match(commands, /require\(process\.env\.LEAN_BRIDGE_RECEIPT\)\.runtime\.archive/);
+	assert.match(commands, /require\(process\.env\.LEAN_BRIDGE_RECEIPT\)\.package\.archive/);
+	assert.match(commands, /^npm install --ignore-scripts --no-audit --no-fund \\$/m);
+	assert.match(commands, /"\$LEAN_BRIDGE_PACKAGE_DIR\/\$LEAN_BRIDGE_RUNTIME_FILE"/);
+	assert.match(commands, /"\$LEAN_BRIDGE_PACKAGE_DIR\/\$LEAN_BRIDGE_COMPONENT_FILE"/);
+	assert.match(commands, /^node index\.mjs$/m);
+	assert.equal(blocks.find(block => block.language === "text").source, "123n\ntrue\nfalse\n");
+});
+
+test("the documented compiler API keeps theorem references separate from assurance claims", async () => {
+	const { ir } = await packageReference(fixture);
+	assert.deepEqual(ir.declarations.map(item => item.id), ["lean:OnboardingSmall.add", "lean:OnboardingSmall.isEmpty"]);
+	assert.deepEqual(ir.assurance, []);
+	assert.ok(ir.declarations.every(item => item.assurance.length === 0));
+	const add = ir.declarations.find(item => item.id === "lean:OnboardingSmall.add");
+	const theorems = add.source.extensions["lean-lang.org/theorem-references"];
+	assert.deepEqual(theorems, ["OnboardingSmall.add_commutative"]);
 	const source = await readFile("docs/lean/proofs-and-assurance.md", "utf8");
 	const documented = JSON.parse(fences(source).find(block => block.language === "json").source);
-	assert.deepEqual(documented, { subject: add.subject, state: add.state, theorems: add.theorems });
-	const generated = generateJavaScriptPackage(analysis.bindingIr.document);
+	assert.deepEqual(documented, { declaration: "OnboardingSmall.add", theoremCandidates: theorems });
+	assert.match(source, /source\.extensions/);
+	assert.match(source, /assurance arrays stay empty/);
+	const generated = generateJavaScriptPackage(ir);
 	assert.doesNotMatch(generated["index.d.ts"], /\bany\b|export.*add_commutative/);
-	assert.match(generated["index.d.ts"], /add\(left: bigint, right: bigint\): bigint/);
-	assert.match(generated["index.d.ts"], /isEmpty\(value: string\): boolean/);
+	assert.match(generated["index.d.ts"], /add\(arg0: bigint, arg1: bigint\): bigint/);
+	assert.match(generated["index.d.ts"], /isEmpty\(arg0: string\): boolean/);
 });
 
 test("author pages use portable local links, explicit dry runs, and public examples", async () => {

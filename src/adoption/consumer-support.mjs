@@ -16,6 +16,7 @@ const expectedConsumers = Object.freeze([
 	, "dotnet"
 	, "jvm"
 	, "ruby"
+	, "perl"
 	, "python"
 	, "rust"
 	, "c"

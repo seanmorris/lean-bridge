@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "installedPackage": false,
+  "sourceHashes": {
+    "src/backends/ruby/copied-graph-conversions.mjs": "1aab7ed78d91035febe851e157b78f3d9e58cb06f3b2b156f8caa37774b155f9",
+    "src/backends/ruby/copied-graph-layout.mjs": "bedda7fded4be4f5d8fec667e2a49abb2009266cf050694a85bee1c783579e9e",
+    "src/backends/ruby/copied-graph-runtime.mjs": "ab8879ea2e281cd77231c1f7a693f19da28bbe59a1e703b95d1410744e842635",
+    "src/backends/ruby/copied-graph-values.mjs": "1bf99fe069be4a45ce7c8da1a0ec3d6fbfb7ee7803ac4bf57bd92c0433060067",
+    "src/backends/c/copied-graph-layout.mjs": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+    "src/backends/c/native-graph-adapters.mjs": "6fc401617a64e628f188ca87d7ef5aba179402a8653a3cb0077331bb5eb2820d",
+    "src/build/native-graph-model.mjs": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84",
+    "src/build/component-recursive-lean.mjs": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28",
+    "src/abi/component-recursive.mjs": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9",
+    "tests/ruby-copied-graph-conversions.test.mjs": "064a03d301f910fd65b732a087f341addb9aa712578f05f2ec91d900cef643d2",
+    "tests/helpers/ruby-graph-probes.mjs": "bf900f7c236eed6a676ce176eeca7803834f4f2fca15ce6312f946849d5ddf4e",
+    "tests/helpers/ruby-native-graphs.mjs": "ed4cd81ba98624e6dcd095f746366450d3b0236abb5ad51544d0c43cd2ea073a",
+    "tests/helpers/native-recursive-reviewed.mjs": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+    "tests/helpers/native-recursive-transport.mjs": "f6fa961b51501f6c287c614f351ad32746a3be82645517cd87d855e6fcbbc6eb",
+    "tests/helpers/recursive-fixture.mjs": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb",
+    "tests/fixtures/structured-types/recursive-conversions.rb": "234b1dbd973e4c8bf6cf3e40642abde99598df6e4454073deab7977a6b690b2b",
+    "tests/fixtures/structured-types/recursive-ruby-lean.rb": "c8ee7cbadc4f26fd0b464113841bb2dfc1b965f903c8a1f4db822388a1a9fa19",
+    "tests/fixtures/structured-types/recursive-rust-native.c": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "tests/fixtures/onboarding/npm-recursive/Recursive.lean": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3",
+    ".github/workflows/consumer-matrix.yml": "c7359eaf73d1745efeec63e98cbfb10ea1f69c58b14a2b1aaa02b17c23697916",
+    "src/adoption/test-profiles.mjs": "34c87e0dac138faf277de9b0e1cdea1d81853390d995cfaa3d035c90f4b2db56",
+    "package.json": "9b115f44cd27bf8cc06e6e3d17c46cfa0110c3c3ff88475acd1a5f4f565a3e35",
+    "config/cli-package.v1.json": "c69e5c53ddb2b2dda2e7775b6c2cbfe37500f4c8262181fe43b3630688722281",
+    "config/checked-javascript.json": "bd50c98f8b5f9ec6afdbc158b9788a5910563c896466720d6f6bf59241f22a36",
+    "nix/perl-engine-source-boundary.json": "8383c5a1bea19d68cf0c103f196f106fc2da321e1cb50d92a7854f0b78d59734"
+  },
+  "isolated": {
+    "compiledLean": false,
+    "installedPackage": false,
+    "layoutSha256": "ce4a721732f48ae4c10e4dd588a653f91ee49ea16f1c6569ef8d56d7f9b63354",
+    "nativeSha256": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "probeSha256": "234b1dbd973e4c8bf6cf3e40642abde99598df6e4454073deab7977a6b690b2b",
+    "report": {
+      "checkpoints": 231,
+      "checks": 2612,
+      "inputFailures": 276,
+      "layoutChecks": 478,
+      "outputFailures": 186,
+      "ruby": "3.3.12"
+    },
+    "schemaVersion": 1,
+    "sourceSha256": "ca2b63d8d12be5fe3c061feeae0c09a477dac84f9e6a447f4921b4d51e2d34e7",
+    "valuesSha256": "f51393eae54a0b74c4791598d8aa7a8256e8cd945bd4069250c512f058cf2413"
+  },
+  "native": {
+    "compiledLean": true,
+    "installedPackage": false,
+    "observations": [
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "exports": 18,
+        "modelSha256": "8c17a2eb76ca6f8013f7a13b4a02440ae13798c7fc587013ade7555729f12793",
+        "nativeSourceSha256": "c5025aa88efa9c7f77f5c1cc61864ebcc378a902b9c09074e0fdfac7b6913ab5",
+        "probeSha256": "c8ee7cbadc4f26fd0b464113841bb2dfc1b965f903c8a1f4db822388a1a9fa19",
+        "reviewed": false,
+        "rubySourceSha256": "6419cab1f2ff0c2f14c1f5f0352a8681d004eba8f17df86a1c88e395e9d5db3b",
+        "rubyValuesSha256": "ad2962bf256bd60c3cd1e1653f25b2f1271829279f2c14118bd00cb7891ec6f9",
+        "scenarios": [
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          },
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "raw",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          },
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "during",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          }
+        ]
+      },
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "exports": 18,
+        "modelSha256": "4319ef34881082af5fa2184fcee3cdafdf386bc0b9b8a14226509a4e550956e1",
+        "nativeSourceSha256": "c5025aa88efa9c7f77f5c1cc61864ebcc378a902b9c09074e0fdfac7b6913ab5",
+        "probeSha256": "c8ee7cbadc4f26fd0b464113841bb2dfc1b965f903c8a1f4db822388a1a9fa19",
+        "reviewed": true,
+        "rubySourceSha256": "6419cab1f2ff0c2f14c1f5f0352a8681d004eba8f17df86a1c88e395e9d5db3b",
+        "rubyValuesSha256": "ad2962bf256bd60c3cd1e1653f25b2f1271829279f2c14118bd00cb7891ec6f9",
+        "scenarios": [
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          },
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "raw",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          },
+          {
+            "checks": 1553,
+            "inputFailures": 93,
+            "mode": "during",
+            "nativeCheckpoints": 28,
+            "outputFailures": 64,
+            "ruby": "3.3.12",
+            "rubyCheckpoints": 157
+          }
+        ]
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

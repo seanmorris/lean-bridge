@@ -1,0 +1,1781 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "npm-structured-callable-execution",
+  "scope": {
+    "profiles": [
+      "node-javascript",
+      "node-typescript",
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "paths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "shapes": [
+      "alias",
+      "array",
+      "list",
+      "option",
+      "record",
+      "recursive",
+      "result",
+      "tuple",
+      "variant"
+    ],
+    "positions": [
+      "callback-parameter",
+      "callback-result"
+    ],
+    "recursiveCallbacks": true,
+    "ownedResourceAggregates": false
+  },
+  "installed": {
+    "command": "source scripts/env.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-structured-callables.test.mjs",
+    "exitCode": 0,
+    "text": "TAP version 13\n# Subtest: installed npm structured callbacks preserve all nine shapes in Node, strict TypeScript, browsers, React and workers\nok 1 - installed npm structured callbacks preserve all nine shapes in Node, strict TypeScript, browsers, React and workers\n  ---\n  duration_ms: 358026.475002\n  type: 'test'\n  ...\n# Compiling ordinary-source Structured release\n# Compiling reviewed-ir Structured release\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 358422.105989\n",
+    "sha256": "b725f9f627dc5e6f9633575b8b4e24327748de85839d952f929e4e97872157cd"
+  },
+  "report": {
+    "runs": [
+      {
+        "browsers": [
+          {
+            "engine": "chromium",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "151.0.7922.34"
+          },
+          {
+            "engine": "firefox",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "153.0"
+          },
+          {
+            "engine": "webkit",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "26.5"
+          }
+        ],
+        "compilerFreePath": true,
+        "consumerSha256": "12f54ecb825b9a07ba2cce4631bda36af34426b375dd0903a8d5c2ab3dc12fce",
+        "documentation": {
+          "executions": 2,
+          "installedPublicApi": true,
+          "path": "docs/javascript-typescript.md",
+          "sourceSha256": "65afa40fd5323b20dc43b41cd8e12b75041cc1ef6024c1c7d5c83c6645af7594",
+          "stderr": "",
+          "stdout": "copied\n2\nleaf\n"
+        },
+        "node": "v22.23.2",
+        "offlineInstall": true,
+        "packagesRelocatedBeforeInstallation": true,
+        "path": "ordinary-source",
+        "producerBuildsRemovedBeforeInstallation": true,
+        "receipt": {
+          "bindingIrSha256": "5900774bccf42edbc5489dc629ca6e33bb8f470181a04e31a0fc4735df4f27ad",
+          "component": {
+            "id": "structured@1.0.0",
+            "name": "structured",
+            "version": "1.0.0"
+          },
+          "componentArtifactSha256": "6a3823996f96b37bdfd3503b97933edd9d1dfdc5aab3ee2b64344f291c554bf4",
+          "componentBundleSha256": "c315afa213153e7f63339173b4a2710839709dad1942687396526ccb62f3d5f5",
+          "componentIdentitySha256": "5fb1fc773ee0cdf2e6ee92139b3b011d436c13d7925c7f8fa49e2432ab9635ef",
+          "kind": "lean-bridge-component-package-receipt",
+          "package": {
+            "archive": "structured-1.0.0.tgz",
+            "package": "structured@1.0.0",
+            "sha256": "5691c9c0b40ca10136bdb53f9cf2e095d87ed7a5a0e44ae9dcb78a92fd388e79"
+          },
+          "policies": {
+            "componentCompiledOnce": true,
+            "nativeCallablesOnly": true,
+            "runtimeBinaryInComponent": false,
+            "runtimeShared": true
+          },
+          "provenanceSha256": "164f585b23e5a1fb5a4d38d3d8ea349469c05f74086307d1ed0bb78b00e54950",
+          "runtime": {
+            "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+            "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+            "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+          },
+          "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "604cc6aa838d9a532990497e55a2fc110bb8db07e73c99495273f31147644133"
+          },
+          "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+        },
+        "result": {
+          "checks": 133120,
+          "primitive": {
+            "checks": 8084,
+            "primitives": 19,
+            "wordBits": 32
+          },
+          "rejections": 53,
+          "shapes": 9
+        },
+        "sourceRelocatedBeforeInstallation": true,
+        "sourceRemovedBeforeInstallation": true,
+        "sourceSha256": "184800f362307abdf7bbe5e4bb5c521310de496e6447536456828c968144f9cb",
+        "typescript": {
+          "executed": true,
+          "strict": true
+        }
+      },
+      {
+        "browsers": [
+          {
+            "engine": "chromium",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "151.0.7922.34"
+          },
+          {
+            "engine": "firefox",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "153.0"
+          },
+          {
+            "engine": "webkit",
+            "result": {
+              "page": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "react": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              },
+              "worker": {
+                "checks": 133120,
+                "primitive": {
+                  "checks": 8084,
+                  "primitives": 19,
+                  "wordBits": 32
+                },
+                "rejections": 53,
+                "shapes": 9
+              }
+            },
+            "version": "26.5"
+          }
+        ],
+        "compilerFreePath": true,
+        "consumerSha256": "12f54ecb825b9a07ba2cce4631bda36af34426b375dd0903a8d5c2ab3dc12fce",
+        "documentation": {
+          "executions": 2,
+          "installedPublicApi": true,
+          "path": "docs/javascript-typescript.md",
+          "sourceSha256": "65afa40fd5323b20dc43b41cd8e12b75041cc1ef6024c1c7d5c83c6645af7594",
+          "stderr": "",
+          "stdout": "copied\n2\nleaf\n"
+        },
+        "node": "v22.23.2",
+        "offlineInstall": true,
+        "packagesRelocatedBeforeInstallation": true,
+        "path": "reviewed-ir",
+        "producerBuildsRemovedBeforeInstallation": true,
+        "receipt": {
+          "bindingIrSha256": "812217065f56e8ec11acc16c23da8ffbbc25fd5d65969d148f730e6f088b5518",
+          "component": {
+            "id": "structured@1.0.0",
+            "name": "structured",
+            "version": "1.0.0"
+          },
+          "componentArtifactSha256": "6a3823996f96b37bdfd3503b97933edd9d1dfdc5aab3ee2b64344f291c554bf4",
+          "componentBundleSha256": "378d5bdf68e9ce10b62e559ebce800e85257c296b2ebfafd3528c7fb55d531f4",
+          "componentIdentitySha256": "2e88344393bacb061ede8b2c245770f304bd7a68c7d3932577289c56be31289d",
+          "kind": "lean-bridge-component-package-receipt",
+          "package": {
+            "archive": "structured-1.0.0.tgz",
+            "package": "structured@1.0.0",
+            "sha256": "796ccc34bffe9ad5946b60ebd2087c6078b4f2bc67080c580f1aa3859ef1d4fd"
+          },
+          "policies": {
+            "componentCompiledOnce": true,
+            "nativeCallablesOnly": true,
+            "runtimeBinaryInComponent": false,
+            "runtimeShared": true
+          },
+          "provenanceSha256": "a265dc3c4e4724cabd27cabcd6395ed6ff1c952a67a46c05526fb3b6e1ffa2f4",
+          "runtime": {
+            "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+            "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+            "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+          },
+          "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "ad52137b4c858e4c43320bc120d92bcd6030c70546afcf516afa61a3028fdf04"
+          },
+          "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+        },
+        "result": {
+          "checks": 133120,
+          "primitive": {
+            "checks": 8084,
+            "primitives": 19,
+            "wordBits": 32
+          },
+          "rejections": 53,
+          "shapes": 9
+        },
+        "sourceRelocatedBeforeInstallation": true,
+        "sourceRemovedBeforeInstallation": true,
+        "sourceSha256": "184800f362307abdf7bbe5e4bb5c521310de496e6447536456828c968144f9cb",
+        "typescript": {
+          "executed": true,
+          "strict": true
+        }
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "transport": {
+    "command": "source scripts/env.sh && LEAN_BRIDGE_STRUCTURED_CALLABLE_WASM_TEST=1 node --test tests/component-structured-callable-wasm.test.mjs",
+    "exitCode": 0,
+    "text": "TAP version 13\n# Subtest: compiled structured callables recover every injected copied-allocation failure and share scalar lifecycle limits\nok 1 - compiled structured callables recover every injected copied-allocation failure and share scalar lifecycle limits\n  ---\n  duration_ms: 40695.990031\n  type: 'test'\n  ...\n# Array: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# List: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Option: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Result: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Tuple: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Record: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Alias: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Variant: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# Recursive: all constructors, call/twice/make and both closure branches passed allocation-failure recovery\n# 833 native copied-output faults and 998 JS allocation faults recovered; 7 malformed/trapped heaps retired\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40813.41747\n",
+    "sha256": "d7b03ef3c5f3ea46fb5001f8ccd4d09f9abbab181565848d13ebabed45312f32",
+    "report": {
+      "schemaVersion": 1,
+      "kind": "npm-structured-callable-wasm-probe",
+      "sourceSha256": "371c3d3a33678378f92862878b06bc9a8daf1555812cb03e3cd5a4781bb92a98",
+      "generatedAdapterSha256": "3c5f8911a7d8acbcd67de4a2209e54a1eb62686cc49416040261521df01c4ced",
+      "binarySha256": "bfac90e10fcea61fc44450d1f5825201c8d3d95044a3828dd05c0c314a3c332e",
+      "runtimeSha256": "12e5ad3ba0feedc60d8e830fa960a7c9d1bd2e62b04cd78585b9e013ef1e28fc",
+      "shapes": 9,
+      "scenarios": [
+        {
+          "shape": "Array",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 12,
+          "jsFaults": 12
+        },
+        {
+          "shape": "Array",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 18,
+          "jsFaults": 17
+        },
+        {
+          "shape": "Array",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 6,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Array",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 6,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Array",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Array",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 2,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Array",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 3,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Array",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Array",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Array",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 2
+        },
+        {
+          "shape": "List",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 14,
+          "jsFaults": 14
+        },
+        {
+          "shape": "List",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 21,
+          "jsFaults": 20
+        },
+        {
+          "shape": "List",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 7,
+          "jsFaults": 8
+        },
+        {
+          "shape": "List",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 7,
+          "jsFaults": 8
+        },
+        {
+          "shape": "List",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 8
+        },
+        {
+          "shape": "List",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 2,
+          "jsFaults": 2
+        },
+        {
+          "shape": "List",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 3,
+          "jsFaults": 2
+        },
+        {
+          "shape": "List",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "List",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "List",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 2,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 3,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Option",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 4,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Option",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 6,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Option",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Option",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Option",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Option",
+          "branch": 2,
+          "operation": "call",
+          "nativeFaults": 6,
+          "jsFaults": 6
+        },
+        {
+          "shape": "Option",
+          "branch": 2,
+          "operation": "twice",
+          "nativeFaults": 9,
+          "jsFaults": 8
+        },
+        {
+          "shape": "Option",
+          "branch": 2,
+          "operation": "captured",
+          "nativeFaults": 3,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Option",
+          "branch": 2,
+          "operation": "argument",
+          "nativeFaults": 3,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Option",
+          "branch": 2,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 10,
+          "jsFaults": 12
+        },
+        {
+          "shape": "Result",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 15,
+          "jsFaults": 17
+        },
+        {
+          "shape": "Result",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Result",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Result",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Result",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 4,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 6,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Result",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Result",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Result",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Result",
+          "branch": 2,
+          "operation": "call",
+          "nativeFaults": 6,
+          "jsFaults": 6
+        },
+        {
+          "shape": "Result",
+          "branch": 2,
+          "operation": "twice",
+          "nativeFaults": 9,
+          "jsFaults": 8
+        },
+        {
+          "shape": "Result",
+          "branch": 2,
+          "operation": "captured",
+          "nativeFaults": 3,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 2,
+          "operation": "argument",
+          "nativeFaults": 3,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 2,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 3,
+          "operation": "call",
+          "nativeFaults": 4,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Result",
+          "branch": 3,
+          "operation": "twice",
+          "nativeFaults": 6,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Result",
+          "branch": 3,
+          "operation": "captured",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Result",
+          "branch": 3,
+          "operation": "argument",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Result",
+          "branch": 3,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Tuple",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 10,
+          "jsFaults": 12
+        },
+        {
+          "shape": "Tuple",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 15,
+          "jsFaults": 17
+        },
+        {
+          "shape": "Tuple",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Tuple",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Tuple",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Tuple",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 10,
+          "jsFaults": 12
+        },
+        {
+          "shape": "Tuple",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 15,
+          "jsFaults": 17
+        },
+        {
+          "shape": "Tuple",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Tuple",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 5,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Tuple",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 7
+        },
+        {
+          "shape": "Record",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 28,
+          "jsFaults": 24
+        },
+        {
+          "shape": "Record",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 42,
+          "jsFaults": 35
+        },
+        {
+          "shape": "Record",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 14,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Record",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 14,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Record",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Record",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 20,
+          "jsFaults": 18
+        },
+        {
+          "shape": "Record",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 30,
+          "jsFaults": 26
+        },
+        {
+          "shape": "Record",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 10,
+          "jsFaults": 10
+        },
+        {
+          "shape": "Record",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 10,
+          "jsFaults": 10
+        },
+        {
+          "shape": "Record",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 10
+        },
+        {
+          "shape": "Record",
+          "branch": 2,
+          "operation": "call",
+          "nativeFaults": 24,
+          "jsFaults": 24
+        },
+        {
+          "shape": "Record",
+          "branch": 2,
+          "operation": "twice",
+          "nativeFaults": 36,
+          "jsFaults": 35
+        },
+        {
+          "shape": "Record",
+          "branch": 2,
+          "operation": "captured",
+          "nativeFaults": 12,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Record",
+          "branch": 2,
+          "operation": "argument",
+          "nativeFaults": 12,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Record",
+          "branch": 2,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Alias",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 28,
+          "jsFaults": 24
+        },
+        {
+          "shape": "Alias",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 42,
+          "jsFaults": 35
+        },
+        {
+          "shape": "Alias",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 14,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Alias",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 14,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Alias",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 13
+        },
+        {
+          "shape": "Variant",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 6,
+          "jsFaults": 8
+        },
+        {
+          "shape": "Variant",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 9,
+          "jsFaults": 11
+        },
+        {
+          "shape": "Variant",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 3,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Variant",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 3,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Variant",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Variant",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 2,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Variant",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 3,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Variant",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Variant",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 1,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Variant",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 2
+        },
+        {
+          "shape": "Variant",
+          "branch": 2,
+          "operation": "call",
+          "nativeFaults": 16,
+          "jsFaults": 16
+        },
+        {
+          "shape": "Variant",
+          "branch": 2,
+          "operation": "twice",
+          "nativeFaults": 24,
+          "jsFaults": 23
+        },
+        {
+          "shape": "Variant",
+          "branch": 2,
+          "operation": "captured",
+          "nativeFaults": 8,
+          "jsFaults": 9
+        },
+        {
+          "shape": "Variant",
+          "branch": 2,
+          "operation": "argument",
+          "nativeFaults": 8,
+          "jsFaults": 9
+        },
+        {
+          "shape": "Variant",
+          "branch": 2,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 9
+        },
+        {
+          "shape": "Recursive",
+          "branch": 0,
+          "operation": "call",
+          "nativeFaults": 20,
+          "jsFaults": 20
+        },
+        {
+          "shape": "Recursive",
+          "branch": 0,
+          "operation": "twice",
+          "nativeFaults": 30,
+          "jsFaults": 29
+        },
+        {
+          "shape": "Recursive",
+          "branch": 0,
+          "operation": "captured",
+          "nativeFaults": 10,
+          "jsFaults": 11
+        },
+        {
+          "shape": "Recursive",
+          "branch": 0,
+          "operation": "argument",
+          "nativeFaults": 10,
+          "jsFaults": 11
+        },
+        {
+          "shape": "Recursive",
+          "branch": 0,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 11
+        },
+        {
+          "shape": "Recursive",
+          "branch": 1,
+          "operation": "call",
+          "nativeFaults": 4,
+          "jsFaults": 6
+        },
+        {
+          "shape": "Recursive",
+          "branch": 1,
+          "operation": "twice",
+          "nativeFaults": 6,
+          "jsFaults": 8
+        },
+        {
+          "shape": "Recursive",
+          "branch": 1,
+          "operation": "captured",
+          "nativeFaults": 2,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Recursive",
+          "branch": 1,
+          "operation": "argument",
+          "nativeFaults": 2,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Recursive",
+          "branch": 1,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Recursive",
+          "branch": 2,
+          "operation": "call",
+          "nativeFaults": 4,
+          "jsFaults": 4
+        },
+        {
+          "shape": "Recursive",
+          "branch": 2,
+          "operation": "twice",
+          "nativeFaults": 6,
+          "jsFaults": 5
+        },
+        {
+          "shape": "Recursive",
+          "branch": 2,
+          "operation": "captured",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Recursive",
+          "branch": 2,
+          "operation": "argument",
+          "nativeFaults": 2,
+          "jsFaults": 3
+        },
+        {
+          "shape": "Recursive",
+          "branch": 2,
+          "operation": "make",
+          "nativeFaults": 0,
+          "jsFaults": 3
+        }
+      ],
+      "nativeFaults": 833,
+      "jsFaults": 998,
+      "poisonCases": [
+        {
+          "mode": "reply",
+          "hostCalls": 1,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "receipt",
+          "hostCalls": 0,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "result",
+          "hostCalls": 1,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "status",
+          "hostCalls": 1,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "cleanup",
+          "hostCalls": 1,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "cleanup-after-error",
+          "hostCalls": 1,
+          "retired": true,
+          "unsafeFrees": 0
+        },
+        {
+          "mode": "release",
+          "hostCalls": 0,
+          "retired": true,
+          "unsafeFrees": 0
+        }
+      ],
+      "ownership": {
+        "nativeCopiedOutputOwnersAfterRecoverableFailures": 0,
+        "jsAllocationsAfterRecoverableFailures": 0,
+        "allLeanHeapAllocationsTracked": false,
+        "installedPackagesInstrumented": false
+      },
+      "sharedScalarAndStructured": {
+        "reentryDepth": 64,
+        "closureCapacity": 1024,
+        "recoveredAfterLimit": true
+      }
+    }
+  },
+  "regressions": [
+    {
+      "family": "callables",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-callables.test.mjs",
+      "exitCode": 0,
+      "text": "TAP version 13\n# Subtest: installed npm primitive callables work in Node, strict TypeScript, browsers, React and workers\nok 1 - installed npm primitive callables work in Node, strict TypeScript, browsers, React and workers\n  ---\n  duration_ms: 287609.97861\n  type: 'test'\n  ...\n# Compiling ordinary-source Callables release\n# Compiling reviewed-ir Callables release\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 288002.659118\n",
+      "sha256": "2b9ca21f4c41f225bad733991a117553fcca4558d6e6cea035a6847a4b602876",
+      "report": {
+        "runs": [
+          {
+            "browsers": [
+              {
+                "engine": "chromium",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "151.0.7922.34"
+              },
+              {
+                "engine": "firefox",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "153.0"
+              },
+              {
+                "engine": "webkit",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "26.5"
+              }
+            ],
+            "compilerFreePath": true,
+            "consumerSha256": "8dd3920f70bd419788114323e28c4d3fb99a104668224a4d92752079513d1c05",
+            "node": "v22.23.2",
+            "offlineInstall": true,
+            "path": "ordinary-source",
+            "receipt": {
+              "bindingIrSha256": "4fd5aadfd593a30922a186154a9c97eece1990c56956b3f52d2ad1067e1aa748",
+              "component": {
+                "id": "callables@1.0.0",
+                "name": "callables",
+                "version": "1.0.0"
+              },
+              "componentArtifactSha256": "dc5ddce22c71d1dbe51f651b7bffd3c4967d1c5d0772c127325b2f5994bc3216",
+              "componentBundleSha256": "624c002d4bd957139f35deb2d2000ece9acfc47824010c0581c1ee58c09ee90d",
+              "componentIdentitySha256": "ff5f43f5ceea8ba4434c8cd733e71299f99d9e3c9ac7d7cff9081fe15c783a40",
+              "kind": "lean-bridge-component-package-receipt",
+              "package": {
+                "archive": "callables-1.0.0.tgz",
+                "package": "callables@1.0.0",
+                "sha256": "096231a7cc2b5a863a990ade81c286e9d8b564e8b9eb4a5639606570b50f0aa8"
+              },
+              "policies": {
+                "componentCompiledOnce": true,
+                "nativeCallablesOnly": true,
+                "runtimeBinaryInComponent": false,
+                "runtimeShared": true
+              },
+              "provenanceSha256": "b2b25bee93b10a4e8c597040be58322e81091abcf5b1697a406fb992c5016ded",
+              "runtime": {
+                "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+                "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+                "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+              },
+              "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+              "schemaVersion": 1,
+              "source": {
+                "treeSha256": "76fa135153a4dcbfd6317b72ebbf99899fae68949c471168ccfa73e19082e356"
+              },
+              "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+            },
+            "result": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "sourceRelocatedBeforeInstallation": true,
+            "sourceSha256": "13a1a675fa5bdb06f562bf6d5f3cfd79a86684569a2be8840d52d63f65b5f269",
+            "typescript": {
+              "executed": true,
+              "strict": true
+            }
+          },
+          {
+            "browsers": [
+              {
+                "engine": "chromium",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "151.0.7922.34"
+              },
+              {
+                "engine": "firefox",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "153.0"
+              },
+              {
+                "engine": "webkit",
+                "result": {
+                  "page": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "react": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  },
+                  "worker": {
+                    "checks": 8084,
+                    "primitives": 19,
+                    "wordBits": 32
+                  }
+                },
+                "version": "26.5"
+              }
+            ],
+            "compilerFreePath": true,
+            "consumerSha256": "8dd3920f70bd419788114323e28c4d3fb99a104668224a4d92752079513d1c05",
+            "node": "v22.23.2",
+            "offlineInstall": true,
+            "path": "reviewed-ir",
+            "receipt": {
+              "bindingIrSha256": "9a007cd2ecbfe1973360e4c90e7c226fbba13a928340d1a36d90a08c5c0db33c",
+              "component": {
+                "id": "callables@1.0.0",
+                "name": "callables",
+                "version": "1.0.0"
+              },
+              "componentArtifactSha256": "dc5ddce22c71d1dbe51f651b7bffd3c4967d1c5d0772c127325b2f5994bc3216",
+              "componentBundleSha256": "206e9f9bf0ac05a1ba7bfea4410ff4f3e61f1a3cf91b48d8a62015c70c65b0d3",
+              "componentIdentitySha256": "2816d3e6551904f3aa0bf659d669e54b7923438d7220a5a0078374020539131d",
+              "kind": "lean-bridge-component-package-receipt",
+              "package": {
+                "archive": "callables-1.0.0.tgz",
+                "package": "callables@1.0.0",
+                "sha256": "dac9d012102bcc30bc06d0223d17cae0498540b18b709540b6f9d0c2e6284c81"
+              },
+              "policies": {
+                "componentCompiledOnce": true,
+                "nativeCallablesOnly": true,
+                "runtimeBinaryInComponent": false,
+                "runtimeShared": true
+              },
+              "provenanceSha256": "46428dc6a031287ed5d91387fabeca09952138e9fb9c8a50dfe5630b74e37495",
+              "runtime": {
+                "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+                "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+                "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+              },
+              "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+              "schemaVersion": 1,
+              "source": {
+                "treeSha256": "67300b998df6fa54e966759117d671d289d5c446a8d2a64d043dac429a659568"
+              },
+              "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+            },
+            "result": {
+              "checks": 8084,
+              "primitives": 19,
+              "wordBits": 32
+            },
+            "sourceRelocatedBeforeInstallation": true,
+            "sourceSha256": "13a1a675fa5bdb06f562bf6d5f3cfd79a86684569a2be8840d52d63f65b5f269",
+            "typescript": {
+              "executed": true,
+              "strict": true
+            }
+          }
+        ],
+        "schemaVersion": 1
+      }
+    },
+    {
+      "family": "recursive",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-recursive.test.mjs",
+      "exitCode": 0,
+      "text": "TAP version 13\n# Subtest: installed npm recursive copies preserve finite values and reject cycles and excess depth\nok 1 - installed npm recursive copies preserve finite values and reject cycles and excess depth\n  ---\n  duration_ms: 125571.486682\n  type: 'test'\n  ...\n# Compiling ordinary-source Recursive release\n# Compiling reviewed-ir Recursive release\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 125951.13454\n",
+      "sha256": "a45c567632d329a82bbf537e1b6819a6e6cfab7b176dcec8beeb1784c9758d5d",
+      "report": {
+        "runs": [
+          {
+            "browsers": [
+              {
+                "engine": "chromium",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "151.0.7922.34"
+              },
+              {
+                "engine": "firefox",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "153.0"
+              },
+              {
+                "engine": "webkit",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "26.5"
+              }
+            ],
+            "compilerFreePath": true,
+            "consumerSha256": "9a6b9e471d7346a6d29846ff32b17d84db64d15365b5677e6711ad7c6b366221",
+            "node": "v22.23.2",
+            "offlineInstall": true,
+            "path": "ordinary-source",
+            "receipt": {
+              "bindingIrSha256": "7786d5a5fc46017c278807b180b66d4ba0315a81d4cfbbcda5412f62deb430b9",
+              "component": {
+                "id": "recursive@1.0.0",
+                "name": "recursive",
+                "version": "1.0.0"
+              },
+              "componentArtifactSha256": "f1b1381ed9c995b7c5d88e61b9d3db6c0f4e4150ebf27f918b0c305b1b27076d",
+              "componentBundleSha256": "40a6cef96f7d01e60366be2ce1de5e0119235ceea37a9b428e2076ae84b39464",
+              "componentIdentitySha256": "1c6576b9a4f2d72213c010406867611028e67b1c6066c1234ee4dcbb7edda1fe",
+              "kind": "lean-bridge-component-package-receipt",
+              "package": {
+                "archive": "recursive-1.0.0.tgz",
+                "package": "recursive@1.0.0",
+                "sha256": "d38ccc61fb65a56351f4f9cff43877899791f2e080885307226de87e61c14188"
+              },
+              "policies": {
+                "componentCompiledOnce": true,
+                "nativeCallablesOnly": true,
+                "runtimeBinaryInComponent": false,
+                "runtimeShared": true
+              },
+              "provenanceSha256": "9429940898c01be7c157baa58be0700cbb5d84e7658ee6e6dedd846c634283d3",
+              "runtime": {
+                "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+                "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+                "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+              },
+              "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+              "schemaVersion": 1,
+              "source": {
+                "treeSha256": "85f49114af4fac243e939fd8e67c25b6588be4aaf42aadbbf40fee6034ffb6e8"
+              },
+              "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+            },
+            "result": {
+              "checks": 199675,
+              "primitives": 19,
+              "rejections": 46
+            },
+            "sourceRelocatedBeforeInstallation": true,
+            "sourceSha256": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3",
+            "typescript": {
+              "executed": true,
+              "strict": true
+            }
+          },
+          {
+            "browsers": [
+              {
+                "engine": "chromium",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "151.0.7922.34"
+              },
+              {
+                "engine": "firefox",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "153.0"
+              },
+              {
+                "engine": "webkit",
+                "result": {
+                  "page": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "react": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  },
+                  "worker": {
+                    "checks": 199675,
+                    "primitives": 19,
+                    "rejections": 46
+                  }
+                },
+                "version": "26.5"
+              }
+            ],
+            "compilerFreePath": true,
+            "consumerSha256": "9a6b9e471d7346a6d29846ff32b17d84db64d15365b5677e6711ad7c6b366221",
+            "node": "v22.23.2",
+            "offlineInstall": true,
+            "path": "reviewed-ir",
+            "receipt": {
+              "bindingIrSha256": "9b28401419cc819f4c074b63eafeaa5555e2d55f33094ce15f533ae62b3d0ba6",
+              "component": {
+                "id": "recursive@1.0.0",
+                "name": "recursive",
+                "version": "1.0.0"
+              },
+              "componentArtifactSha256": "f1b1381ed9c995b7c5d88e61b9d3db6c0f4e4150ebf27f918b0c305b1b27076d",
+              "componentBundleSha256": "7d5abf8bb0f8c19db14c109e55fd2658246a181a82b14c586de5216f4e5570ee",
+              "componentIdentitySha256": "9384631b660662ec809e9a60ba60df7e6fa5f57863faed447385b3a4eea2996a",
+              "kind": "lean-bridge-component-package-receipt",
+              "package": {
+                "archive": "recursive-1.0.0.tgz",
+                "package": "recursive@1.0.0",
+                "sha256": "45f2365bd0a46c3da51d458dedb75f63cfde79daaf639bbae1ec7a5b9dfb9843"
+              },
+              "policies": {
+                "componentCompiledOnce": true,
+                "nativeCallablesOnly": true,
+                "runtimeBinaryInComponent": false,
+                "runtimeShared": true
+              },
+              "provenanceSha256": "91ec97f524115f867fa1b78b5aa240202ca0934f68b6db8fb1142e79866c6424",
+              "runtime": {
+                "archive": "lean-bridge-runtime-0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881.tgz",
+                "package": "@lean-bridge/runtime@0.0.0-abi2.972f8dc21466d995c8d447b2150cf53188140b7cd90c6b6660b3e64702159881",
+                "sha256": "795bb40695ccccbfa8bfeee70ae1df9413a8cb132b5addae276efc0067867463"
+              },
+              "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+              "schemaVersion": 1,
+              "source": {
+                "treeSha256": "b2d18ce9c6fb9fb79bebbea69910479779726964461876832727cb7ef93222e8"
+              },
+              "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+            },
+            "result": {
+              "checks": 199675,
+              "primitives": 19,
+              "rejections": 46
+            },
+            "sourceRelocatedBeforeInstallation": true,
+            "sourceSha256": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3",
+            "typescript": {
+              "executed": true,
+              "strict": true
+            }
+          }
+        ],
+        "schemaVersion": 1
+      }
+    }
+  ]
+}

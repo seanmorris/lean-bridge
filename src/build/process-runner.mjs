@@ -19,9 +19,11 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
 	const stderr = [];
 	let bytes = 0;
 	let settled = false;
+	let cancellation = null, cancellationTimer;
 	const maximum = 32 * 1024 * 1024;
 	const cleanup = () => {
 		clearTimeout(timer);
+		clearTimeout(cancellationTimer);
 		signal?.removeEventListener("abort", abort);
 	};
 	const rejectOnce = error => {
@@ -53,8 +55,10 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
     rejectOnce(new CanonicalBuildError("build-timeout", `${command} exceeded its execution deadline`));
 	}, timeoutMs);
 	const abort = () => {
+		cancellation = new CanonicalBuildError("build-cancelled", signal.reason?.message ?? `Build cancelled while running ${command}`);
 		child.kill("SIGTERM");
-		rejectOnce(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? `Build cancelled while running ${command}`));
+		// Wait for exit before callers dispose workspaces the child may still use.
+		cancellationTimer = setTimeout(() => child.kill("SIGKILL"), 5000);
 	};
 	signal?.addEventListener("abort", abort, { once: true });
 	if(signal?.aborted) abort();
@@ -62,6 +66,8 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
     rejectOnce(error);
 	});
 	child.once("close", code => {
+		if(cancellation)
+		{ rejectOnce(cancellation); return; }
     const result = {
       code
       , stdout: Buffer.concat(stdout).toString("utf8")

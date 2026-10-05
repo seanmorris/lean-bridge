@@ -19,7 +19,7 @@ Lean proofs let a team check a stated property across every input covered by tha
 
 [Dijkstra](dijkstra.md) finds a least-cost delivery route. [Flood fill](flood-fill.md) finds which locations become reachable as capabilities are acquired. Both guides include a small graph that you can run with the maintained compiled adapter.
 
-For text, dependency, cache, limiter, and geometry problems, use the [algorithm reference](../reference/algorithms.md). It links all twelve live demos, their exported adapter functions, selected theorems, and receipts.
+For text, dependency, cache, limiter, and geometry problems, use the [algorithm reference](../reference/algorithms.md). It links the live demos, their exported adapter functions, selected theorems, and receipts.
 
 ## Pick an implementation path
 

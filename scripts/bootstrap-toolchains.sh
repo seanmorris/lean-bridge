@@ -27,9 +27,20 @@ LEAN_SOURCE_DIR="$LEAN_WASM_TOOLCHAINS/lean4-src"
 
 mkdir -p "$LEAN_WASM_DOWNLOADS" "$LEAN_WASM_TOOLCHAINS/elan-installer"
 
+download_archive() {
+  local url="$1"
+  local destination="$2"
+  local partial="$destination.part"
+  curl --fail --location --silent --show-error \
+    --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
+    --connect-timeout 30 --max-time 600 --remove-on-error \
+    "$url" -o "$partial"
+  mv "$partial" "$destination"
+}
+
 install_wasm_tools() {
   if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" ]]; then
-    curl --fail --location --silent --show-error "$WASM_TOOLS_URL" -o "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
+    download_archive "$WASM_TOOLS_URL" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
   fi
   printf '%s  %s\n' "$WASM_TOOLS_SHA256" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" | sha256sum -c -
   if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" ]] || \
@@ -49,7 +60,7 @@ if [[ "${1:-}" == "--wasm-tools-only" ]]; then
 fi
 
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE" ]]; then
-  curl --fail --location --silent --show-error "$ELAN_URL" -o "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE"
+  download_archive "$ELAN_URL" "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE"
 fi
 printf '%s  %s\n' "$ELAN_SHA256" "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE" | sha256sum -c -
 
@@ -70,6 +81,10 @@ actual_lean_commit=$("$ELAN_HOME/bin/lean" --version | sed -n 's/.*commit \([^,)
 if [[ "$actual_lean_commit" != "$LEAN_COMMIT" ]]; then
   echo "Lean commit mismatch: expected $LEAN_COMMIT, got $actual_lean_commit" >&2
   exit 1
+fi
+
+if [[ "${1:-}" == "--lean-only" ]]; then
+  exit 0
 fi
 
 if [[ ! -d "$LEAN_SOURCE_DIR/.git" ]]; then
@@ -100,7 +115,7 @@ fi
 install_wasm_tools
 
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE" ]]; then
-  curl --fail --location --silent --show-error "$WABT_URL" -o "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE"
+  download_archive "$WABT_URL" "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE"
 fi
 printf '%s  %s\n' "$WABT_SHA256" "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE" | sha256sum -c -
 if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wabt/bin/wasm-objdump" ]] || \

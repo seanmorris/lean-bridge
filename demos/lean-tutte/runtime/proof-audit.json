@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "checker": "Lean v4.32.2",
+  "assurance": "Exact integer-coordinate tiling, electrical equations, simplicity and vertex connectivity",
+  "sourceFiles": {
+    "TutteCore.lean": {
+      "bytes": 6555,
+      "sha256": "cbc8093421f7796f573ffced35f45c2b5ea2bb596ad9666a9ae5dff81f5d4f6c"
+    },
+    "Tutte.lean": {
+      "bytes": 7470,
+      "sha256": "9c53338f307103868372f0e8c6c76ef55697f988badc95ea034689c8cde5213b"
+    }
+  },
+  "theorems": [
+    "tilingCheck_sound",
+    "coverage_exact",
+    "electricalCheck_sound",
+    "current_eq_side",
+    "junction_balanced",
+    "voltageSum_eq",
+    "closed_walk_zero",
+    "sublist_mem_subsets",
+    "simpleCheck_sound",
+    "no_rectangular_sublist",
+    "perfectCheck_sound",
+    "flood_sound",
+    "connectedCheck_sound",
+    "threeConnectedCheck_sound",
+    "exported_certificate",
+    "exported_simple",
+    "exported_threeConnected"
+  ]
+}

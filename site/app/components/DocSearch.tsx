@@ -41,6 +41,6 @@ export const DocSearch = () => {
 	}, [active, entries, attempt]);
 	const matches = entries ? searchDocumentation(entries, query) : [];
 	return <div className="doc-search"><label htmlFor="doc-search">Search documentation</label><input ref={input} id="doc-search" type="search" placeholder="Exports, packages, runtimes…" value={query} onFocus={() => setActive(true)} onChange={event => { setQuery(event.target.value); setActive(true); }} />
-		{query && <div className="search-results" aria-live="polite">{error ? <p>Search could not load. <button type="button" onClick={() => { setError(false); setActive(true); setAttempt(value => value + 1); input.current?.focus(); }}>Retry search</button></p> : !entries ? <p>Loading index…</p> : matches.length ? <ul>{matches.map(entry => <li key={entry.route}><Link to={entry.route} onClick={() => setQuery("")}>{entry.title}</Link></li>)}</ul> : <p>No matching pages.</p>}</div>}
+		{query && <div className="search-results" aria-live="polite">{error ? <p>Search could not load. <button type="button" onClick={() => { setError(false); setActive(true); setAttempt(value => value + 1); input.current?.focus(); }}>Retry search</button></p> : !entries ? <p>Loading index…</p> : matches.length ? <ul>{matches.map(entry => <li key={entry.route}><Link to={entry.route} onClick={() => setQuery("")}>{entry.title}<small>{docPages.find(page => page.route === entry.route)?.group}</small></Link></li>)}</ul> : <p>No matching pages.</p>}</div>}
 	</div>;
 };

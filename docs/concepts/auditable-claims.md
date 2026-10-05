@@ -17,7 +17,7 @@ In [Dijkstra](dijkstra.md), the claim is that a returned route is a valid shorte
 | Can I reproduce the check? | The demo's pinned build command and proof audit. |
 | Does the application use the API correctly? | Adapter tests, boundary cases, and the real compiled-call tests. |
 
-The [generated algorithm reference](../reference/algorithms.md) links these sources for all twelve demos. Its build rejects selected theorem names missing from a receipt and rejects changed Lean files whose hashes no longer match.
+The [generated algorithm reference](../reference/algorithms.md) links these sources for every demo. Its build rejects selected theorem names missing from a receipt and rejects changed Lean files whose hashes no longer match.
 
 ## Read the proof in either checker
 
@@ -31,9 +31,9 @@ The browser checker is an independent way to inspect the source. Normal algorith
 
 A demo proof receipt records source hashes and required declarations after its proof build. The site identity records delivered file hashes and a repository revision. A signed package-release receipt additionally binds a publication decision to archive identities and a signer policy.
 
-Matching a hash answers “are these the same bytes?” A trusted signature answers a separate question about who authorized those bytes. The [release workflow](../publish/production-release.md) describes the latter check.
+Matching a hash answers “are these the same bytes?” A trusted signature answers a separate question about who authorized those bytes. The [release workflow](../contributing/production-release.md#review-a-production-release) describes the latter check.
 
-Ordinary-project analysis records discovered theorem relationships as `unverified`. A successful source analysis does not upgrade them to a demo's artifact-bound proof audit. See [the author assurance record](../lean/proofs-and-assurance.md).
+Ordinary-project analysis and npm builds record compiler-extracted theorem references and leave assurance claims empty. A separate theorem audit supplies artifact-bound claims. See [the author assurance record](../lean/proofs-and-assurance.md).
 
 ## Record a review
 

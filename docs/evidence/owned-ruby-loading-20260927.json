@@ -1,0 +1,204 @@
+{
+  "commands": [
+    {
+      "command": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-package.test.mjs",
+      "exitCode": 0,
+      "log": "build-owned-ruby-loading-reproducible.log",
+      "sha256": "d98095b9d9cd9e9b42082fe26cec674b5a703e0779de80e4a31843d2a59b7460",
+      "stdout": "TAP version 13\n# Subtest: owned Ruby package sources preserve the public API and enforce private layouts\nok 1 - owned Ruby package sources preserve the public API and enforce private layouts\n  ---\n  duration_ms: 54.85028\n  type: 'test'\n  ...\n# Subtest: owned Ruby package sources load compiled Lean without the producer (ordinary)\nok 2 - owned Ruby package sources load compiled Lean without the producer (ordinary)\n  ---\n  duration_ms: 92092.713216\n  type: 'test'\n  ...\n# {\"checks\":17,\"identities\":0,\"privateGmp\":true,\"forkBeforeLock\":true}\n# Subtest: owned Ruby package sources load compiled Lean without the producer (reviewed)\nok 3 - owned Ruby package sources load compiled Lean without the producer (reviewed)\n  ---\n  duration_ms: 91825.014202\n  type: 'test'\n  ...\n# {\"checks\":17,\"identities\":0,\"privateGmp\":true,\"forkBeforeLock\":true}\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 184088.006748\n"
+    },
+    {
+      "command": "node_modules/.bin/eslint src/backends/ruby/verified-assets.mjs src/backends/ruby/owned-abi.mjs src/backends/ruby/owned-package.mjs tests/owned-ruby-package.test.mjs",
+      "exitCode": 0,
+      "log": "build-owned-ruby-package-lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    }
+  ],
+  "date": "2026-09-27",
+  "kind": "owned-ruby-generated-loading",
+  "planNode": 1219,
+  "references": [
+    {
+      "bytes": 329839,
+      "path": "docs/evidence/owned-ruby-conversions-20260927.json",
+      "sha256": "06929a2030803f0112f6f959bf5f24e9bd744cdbbb5081dcf219866e13ba5f1b"
+    },
+    {
+      "bytes": 8538,
+      "path": "docs/evidence/owned-ruby-gmp-20260927.json",
+      "sha256": "bd85cdefcd5998931c79ca46caac5f3554d54acb65eb7ae95b7fff32e84128a7"
+    }
+  ],
+  "reports": [
+    {
+      "bytes": 2713,
+      "path": "build/owned-ruby-loading/ordinary.json",
+      "report": {
+        "compiledLean": true,
+        "compilerWorkspaceRemoved": true,
+        "contract": {
+          "abiHeaderSha256": "54272cea6ea6b0915c996c08ba0e296acc81f857c3eb9e43fd66af43b487ea10",
+          "boundarySha256": "5f9a903dc73e45d53f5ea62b36a26fe80f28fd1e51516c122a2557acbd0f8dc2",
+          "callbackFailure": "raise-after-native-return",
+          "callbackLifetime": "call",
+          "conversionsSha256": "8ed151108143ce168a13e5656124de08284ab3b497d1dd811aaf7a1b800d9768",
+          "exactIntegers": "ruby-integer",
+          "explicitRetention": "retain",
+          "gmp": "libgmp-lean-bridge.so.10",
+          "language": "ruby-3.3",
+          "limits": {
+            "bytes": 16777216,
+            "depth": 128,
+            "retained": 4096,
+            "visits": 262144
+          },
+          "loader": "authenticated-bundled-native",
+          "loadingPolicy": "linux-x64-deepbind-v1",
+          "ownership": "checked-result-leases",
+          "publicSha256": "e5112f4315156af7fe2e6f92cbadddcc301ac2742754d33125a1d2491b95d3b8",
+          "runtimeSha256": "dd78ceaaa96cfd700677a2d072c6bf932174a6d7567d70ff3e058f2d5d7357c8",
+          "schemaVersion": 1
+        },
+        "evidence": {
+          "componentId": "owned-aggregates@1.0.0",
+          "libraries": {
+            "libgmp-lean-bridge.so.10": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a",
+            "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+            "libowned_aggregates_ruby.so": "f7b9ee1113df50f22d09ba2c87bab1ded797534c293ffde79c467dc284908c16"
+          },
+          "library": "libowned_aggregates_ruby.so",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+        },
+        "generatedFiles": {
+          "README.md": "7a6bd8ca567c8bf9a1c3a4ae16d2ac67898d6c6a16e178dd05edb52b7b184c84",
+          "binding-manifest.json": "2e551de80041ac2abfd01b645d6451d3645727b1f51ac375bb97c9186c222aba",
+          "lib/lean_bridge/native_copied_runtime_v1.rb": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac",
+          "lib/lean_bridge/owned_aggregates.rb": "3534af261e6bf850fe9e469abc92020c4802ef4c9dd4620b7333b443cbf1e679",
+          "lib/lean_bridge/owned_aggregates/native.rb": "7d5533424fd1ad7af2aaef309418bb53aa65dd7591f7ebbb02e8cd016c0a7b5a",
+          "lib/lean_bridge/owned_aggregates/owned.rb": "6a615370b0039430e6bb86b3f397060ada0fdc5a50f69800f4a7a30f709d5694"
+        },
+        "installedPackage": false,
+        "observation": {
+          "checks": 17,
+          "forkBeforeLock": true,
+          "identities": 0,
+          "privateGmp": true
+        },
+        "probeSha256": "8916265bb594a2dceca648547e909a74246f2338bfa05efb9645341482c7ac63",
+        "rejectsMnThreads": true,
+        "rejectsSymlinkLibrary": true,
+        "rejectsTamperedLibrary": true,
+        "rejectsUnverifiedPreload": true,
+        "relocated": true
+      },
+      "sha256": "021bc2b0c5f99b8b30eef10afa5e9607232b6cf3100d8ceb430d741147a71edd"
+    },
+    {
+      "bytes": 2713,
+      "path": "build/owned-ruby-loading/reviewed.json",
+      "report": {
+        "compiledLean": true,
+        "compilerWorkspaceRemoved": true,
+        "contract": {
+          "abiHeaderSha256": "54272cea6ea6b0915c996c08ba0e296acc81f857c3eb9e43fd66af43b487ea10",
+          "boundarySha256": "5f9a903dc73e45d53f5ea62b36a26fe80f28fd1e51516c122a2557acbd0f8dc2",
+          "callbackFailure": "raise-after-native-return",
+          "callbackLifetime": "call",
+          "conversionsSha256": "8ed151108143ce168a13e5656124de08284ab3b497d1dd811aaf7a1b800d9768",
+          "exactIntegers": "ruby-integer",
+          "explicitRetention": "retain",
+          "gmp": "libgmp-lean-bridge.so.10",
+          "language": "ruby-3.3",
+          "limits": {
+            "bytes": 16777216,
+            "depth": 128,
+            "retained": 4096,
+            "visits": 262144
+          },
+          "loader": "authenticated-bundled-native",
+          "loadingPolicy": "linux-x64-deepbind-v1",
+          "ownership": "checked-result-leases",
+          "publicSha256": "e5112f4315156af7fe2e6f92cbadddcc301ac2742754d33125a1d2491b95d3b8",
+          "runtimeSha256": "dd78ceaaa96cfd700677a2d072c6bf932174a6d7567d70ff3e058f2d5d7357c8",
+          "schemaVersion": 1
+        },
+        "evidence": {
+          "componentId": "owned-aggregates@1.0.0",
+          "libraries": {
+            "libgmp-lean-bridge.so.10": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a",
+            "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+            "libowned_aggregates_ruby.so": "53753a3cf9122bb094d012c4025fb67e9982d8a57d4398e49b1e03140fd44c7f"
+          },
+          "library": "libowned_aggregates_ruby.so",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+        },
+        "generatedFiles": {
+          "README.md": "7a6bd8ca567c8bf9a1c3a4ae16d2ac67898d6c6a16e178dd05edb52b7b184c84",
+          "binding-manifest.json": "01b6b404f9f06b8112334effc6ff2e7efee92a8a03e6ad67da875a82d6987727",
+          "lib/lean_bridge/native_copied_runtime_v1.rb": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac",
+          "lib/lean_bridge/owned_aggregates.rb": "3534af261e6bf850fe9e469abc92020c4802ef4c9dd4620b7333b443cbf1e679",
+          "lib/lean_bridge/owned_aggregates/native.rb": "0be30e245ae5761ad3d749ad810e13a4797c6b3667af49f4a7a7f3c849f3692b",
+          "lib/lean_bridge/owned_aggregates/owned.rb": "6a615370b0039430e6bb86b3f397060ada0fdc5a50f69800f4a7a30f709d5694"
+        },
+        "installedPackage": false,
+        "observation": {
+          "checks": 17,
+          "forkBeforeLock": true,
+          "identities": 0,
+          "privateGmp": true
+        },
+        "probeSha256": "8916265bb594a2dceca648547e909a74246f2338bfa05efb9645341482c7ac63",
+        "rejectsMnThreads": true,
+        "rejectsSymlinkLibrary": true,
+        "rejectsTamperedLibrary": true,
+        "rejectsUnverifiedPreload": true,
+        "relocated": true
+      },
+      "sha256": "1d25178ba1392df536f6feb7cc4b02aafbbedd1dfbffd9a08cbf39f623d4ae9e"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "compiledLean": true,
+    "generatedModules": true,
+    "installedPackage": false,
+    "relocated": true,
+    "sourceFree": true,
+    "typeSurfacePromotions": 0
+  },
+  "sources": [
+    {
+      "bytes": 5552,
+      "path": "src/backends/ruby/verified-assets.mjs",
+      "sha256": "801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49"
+    },
+    {
+      "bytes": 2212,
+      "path": "src/backends/ruby/owned-abi.mjs",
+      "sha256": "83279c3cb91e19c0036c5ca0206a7480a3296f5a87835436dee0049bb0f3eacd"
+    },
+    {
+      "bytes": 5631,
+      "path": "src/backends/ruby/owned-package.mjs",
+      "sha256": "effe845d07fc2d8bb0a2e175d59ebfc7084ef0ec6c6f88b292416973aee91d2d"
+    },
+    {
+      "bytes": 3853,
+      "path": "src/backends/ruby/copied-assets.mjs",
+      "sha256": "431bfb6bcc74b7177d208a88305ed88eb5541c75d1b3ec105b8ae2a21d3001e2"
+    },
+    {
+      "bytes": 9380,
+      "path": "tests/owned-ruby-package.test.mjs",
+      "sha256": "951e6b11a5147e1799dae544336da3531ea15f3934f6d2cb040dc3a8da54b679"
+    },
+    {
+      "bytes": 2556,
+      "path": "tests/fixtures/structured-types/owned-ruby-loading.rb",
+      "sha256": "8916265bb594a2dceca648547e909a74246f2338bfa05efb9645341482c7ac63"
+    }
+  ]
+}

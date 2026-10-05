@@ -43,7 +43,7 @@
         "semanticVersionPresent": { "type": "boolean" },
         "bindingIrOrigin": {
           "oneOf": [
-            { "enum": ["existing-validated", "statically-inferred"] },
+            { "enum": ["existing-validated", "statically-inferred", "lean-elaborated"] },
             { "type": "null" }
           ]
         }

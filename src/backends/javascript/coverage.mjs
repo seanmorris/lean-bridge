@@ -5,6 +5,7 @@
  */
 
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { compileOwnedJavaScriptPackageModel } from "./owned-package.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";
 import {
@@ -27,6 +28,13 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  * @param ir - Binding IR document that defines the source types and operations.
  */
 export const analyzeJavaScriptCoverage = ir => {
+	if(ir.schemaVersion === 4)
+	{
+		try
+		{ compileOwnedJavaScriptPackageModel(ir); return Object.freeze({ backend: "javascript", supported: true, gaps: Object.freeze([]) }); }
+		catch(error)
+		{ return Object.freeze({ backend: "javascript", supported: false, gaps: Object.freeze([gap(error.code ?? "owned-javascript-projection", error.message)]) }); }
+	}
 	validateBindingIr(ir);
 	const gaps = [];
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));
@@ -50,7 +58,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		if(typeRef.kind === "apply")
 		{
-			if(typeRef.constructor !== "array")
+			if(!["array", "list", "option", "result", "tuple"].includes(typeRef.constructor))
 			{
 				report(
 					"unsupported-type-constructor",
@@ -59,7 +67,7 @@ export const analyzeJavaScriptCoverage = ir => {
 				);
 				return;
 			}
-			inspectTypeRef(typeRef.arguments[0], `${path}.items`);
+			typeRef.arguments.forEach((argument, index) => inspectTypeRef(argument, `${path}.items[${index}]`));
 			return;
 		}
 		const type = typeMap.get(typeRef.id);

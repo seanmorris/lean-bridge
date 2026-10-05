@@ -1,8 +1,433 @@
-# Publish a NuGet package
+# Build and publish C# / .NET packages
+
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, and finite recursive values, including synchronous callback and closure payloads. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
 Build the NuGet projection, test the installed C# API, and upload the approved `.nupkg` to a feed controlled by your organization. Use a sandbox feed and sandbox credentials for the first external run.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md) with the pinned Lean compiler, a native C compiler, and the .NET 8 SDK. Set `LEAN_BRIDGE_DOTNET` if the SDK executable is not named `dotnet` on your PATH. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select your modules and functions in `lean-bridge.exports.json`. Set a package ID you control and an exact version:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Aurora"],
+  "exports": ["Aurora.echo_nat", "Aurora.echo_text", "Aurora.matrix"],
+  "targets": {
+    "nuget": { "name": "Acme.Aurora", "version": "2.0.0-rc.1" }
+  }
+}
+```
+
+Build into a new output directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/aurora --target nuget \
+  --output /absolute/path/to/aurora-release
+```
+
+The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
+
+The native profile accepts concrete functions with copied values and synchronous callbacks and returned closures, including finite recursive payloads. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Acyclic nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) and [recursive callbacks](#export-recursive-callbacks-and-closures) use separately documented depth and storage limits. Resource-containing aggregates use the [explicit ownership profile](#export-resource-containing-values). Asynchronous delivery remains unsupported.
+
+Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
+
+NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export arrays and records
+
+Select concrete exports using `Array T` and acyclic Lean structures in the same
+export configuration. Both source paths support all nineteen primitives, nested
+arrays and records, including empty and single-field structures. The compiler
+checks the source constructors and accessors before generating the adapter.
+
+NuGet consumers use typed `T[]` arrays and named sealed C# records. Copies own
+independent nested storage. Record properties are init-only; records compare
+nested payloads by value and provide matching hash codes. Their contained arrays
+remain mutable. The existing 32-level type bound and 16 MiB accounting budgets
+apply. See the [consumer example](../consume/dotnet.md#arrays-and-records) and
+[installed NuGet collection checks](../evidence/dotnet-collections-20260922.md).
+
+## Export options, results and products
+
+Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain the admitted copied primitives, arrays and acyclic records. Consumers use generated readonly `Option<T>` and `Result<T, E>` value types and native C# `(A, B)` tuples. Default options mean None; default results have no branch and reject. Lean domain errors return `Err` values, while bridge failures throw exceptions.
+
+Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Both paths receive fresh Lean compiler checks before generating the C# adapter. See the [consumer example](../consume/dotnet.md#options-results-and-products) and [installed NuGet evidence](../evidence/dotnet-compounds-20260920.md). Compound signatures can be combined with C, C++, Python and Rust; every selected target must admit the complete API.
+
+## Export named copied aliases
+
+Select concrete exports that use Lean `abbrev` or reducible type aliases. Both
+source paths preserve compiler-authenticated alias names, targets and chains.
+Aliases can refer to all nineteen primitives, copied records and nested copied
+containers. An independently reviewed contract must match the extracted aliases,
+including their use in parameters, results and fields.
+
+NuGet exposes the target's CLR value type. C# `using` aliases cannot be exported
+from an assembly, so Lean Bridge records alias identities in the installed binding
+manifest, README and XML API documentation. It does not create distinct wrapper
+types or inject `global using` directives into consumer projects. Aliased `Nat`
+keeps its nonnegative-value check even though both `Nat` and `Int` use
+`BigInteger`. See the [consumer example](../consume/dotnet.md#named-aliases)
+and [installed alias evidence](../evidence/dotnet-aliases-20260921.md).
+
+## Export Lists
+
+Both ordinary-source and reviewed-IR builds accept `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, copied records, `Option`, `Except` and binary products. Select concrete Lean exports as usual; no List-specific configuration is required.
+
+C# consumers pass and receive typed `T[]` values. Copies preserve empty Lists, order, duplicates and every nesting level. Returned arrays have independent storage. The existing 16 MiB accounting budgets and 32-level type limit apply. Lists also work in [structured callbacks](#structured-callback-values). See the [consumer example](../consume/dotnet.md#lists) and [installed NuGet List evidence](../evidence/dotnet-lists-20260920.md).
+
+## Export copied tagged variants
+
+Select functions over concrete, non-recursive Lean inductives in your export
+configuration or independently reviewed contract. The compiler records the
+constructors and payloads. Generated Lean helpers construct and read values
+without exposing runtime object layouts.
+
+The NuGet assembly exports an abstract record and a sealed record per
+constructor, with typed init-only payload properties. Names use PascalCase and
+retain trailing underscores that distinguish source members. Generated type
+names and inherited record members cannot collide. Private unmanaged unions
+carry values to C; consumers use only the named C# records.
+
+Payloads may contain all nineteen primitives, supported copied containers,
+records and other non-recursive variants. Unknown derived records, null cases
+and active null payloads reject. Generic, indexed, proof-bearing,
+callable and identity-bearing payloads are not admitted. Native multi-target
+variant builds currently accept C, C++, Python, Rust, .NET, Java, Kotlin, Ruby and Perl when
+every selected target accepts the entire API.
+
+No variant-specific author configuration is needed. Run the
+[consumer example](../consume/dotnet.md#tagged-variants) and inspect the
+[installed acceptance record](../evidence/dotnet-variants-20260921.md) before
+publishing.
+
+## Export callbacks and returned functions
+
+Select functions with primitive callback parameters in the same export configuration:
+
+```lean
+namespace Aurora
+def call_word (value : UInt32) (callback : UInt32 → UInt32) : UInt32 :=
+  callback (callback value)
+def make_word (captured value : UInt32) : UInt32 := captured + value
+end Aurora
+```
+
+Include both exports and set `"arities": { "Aurora.make_word": 1 }` to leave the final argument on the returned closure. For a reviewed Binding IR, its outer parameter count supplies that decision; do not also configure `arities`.
+
+Callbacks accept one to sixteen primitive or admitted copied arguments and a primitive or copied result. They borrow one synchronous call. C# uses `Func` or `Action` delegates and `LeanClosure<TDelegate>` with `Invoke`, `IsClosed` and `Dispose`. `Nat`/`Int` stay exact `BigInteger` values, and temporary native buffers remain private. See [consumer ownership and exception behavior](../consume/dotnet.md#callbacks-and-returned-lean-functions).
+
+A combined build rejects the complete request if any selected target does not support its callable signatures. Ordinary-source and reviewed NuGet packages run through the same private C callable ABI and shared runtime.
+
+### Structured callback values
+
+Both source paths support arrays, Lists, options, results, nested binary
+products, acyclic copied records, variants and aliases in callbacks and returned
+closures. For example:
+
+```lean
+namespace Structured
+def callArray (rows : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) :=
+  callback rows
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected rows => if selected then captured else rows
+end Structured
+```
+
+Select both exports and leave the final two arguments on the returned function:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callArray", "Structured.makeArray"],
+  "arities": { "Structured.makeArray": 1 },
+  "targets": {
+    "nuget": { "name": "Lean.Structured", "version": "1.0.0" }
+  }
+}
+```
+
+C# consumers use `Func` delegates and `LeanClosure<TDelegate>`. Callback
+arguments, results and captured values own independent copied storage. Scoped
+buffers retain callback results until native copying finishes. Exceptions retain
+their original object and stack after cleanup. Closures require creating-thread
+invocation and support deterministic `Dispose` through `using`.
+
+The 32-level acyclic type bound and 16 MiB per-call copy budget apply to this
+projection. [Recursive callback payloads](#export-recursive-callbacks-and-closures)
+use the finite-graph projection below. Copied callback identities,
+resource-containing aggregates and asynchronous delivery remain separate work. See the
+[installed consumer example](../consume/dotnet.md#structured-callback-values)
+and [NuGet acceptance record](../evidence/dotnet-structured-callables-20260924.md).
+
+### Export recursive callbacks and closures
+
+Recursive records and variants keep their C# value types inside synchronous
+callbacks and returned Lean functions. Select NuGet without adding a C target.
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree := fun selected value => if selected then captured else value
+
+end Structured
+```
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": { "nuget": { "name": "Lean.Structured" } }
+}
+```
+
+The exported arity of `makeRecursive` is one: Lean receives the captured tree and
+returns an owned function. Its C# type is `LeanClosure<Func<bool, Tree, Tree>>`.
+No constructor numbers, native pointers or handwritten marshalling appear in the
+consumer API.
+
+## Export resource-containing values
+
+Select resource types and the aggregate ownership contract explicitly. In a
+Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "nuget": { "name": "Owned.Values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `--target nuget`. The [C# consumer](../consume/dotnet.md#resource-containing-values)
+references the resulting `Owned.Values` archive and calls
+`LeanBridge.OwnedAggregates.Api`. Consumers need no Lean or native compiler.
+They need the .NET SDK to compile their C# application; deployed applications
+need only the matching .NET 8 runtime.
+
+The ownership profile accepts resource-containing records, variants, recursive
+values and synchronous callback arguments and results. It preserves all nineteen
+primitive types inside these structures. Both ordinary source and reviewed
+Binding IR pass through the Lean compiler and the same checked native layout.
+Declare returned closures with their outer argument count in `arities`, as in
+the [closure example](#export-recursive-callbacks-and-closures).
+
+Resource and closure results have explicit leases. Borrowed callback values
+expire at callback return; `Retain` creates an independent owner. A retained
+resource does not retain a host callback. Input-anchored function results use
+the whole-owner projection below. Retained host callbacks and asynchronous
+delivery remain unsupported.
+
+NuGet bundles the component, shared Lean runtime and a private GMP 6.3.0
+library, together with source and license notices. Its loader checks native
+hashes, runtime identity and loading policy before use. The managed assembly
+uses a private C/C++ lifetime adapter; combined C, C++, Cargo, PyPI, RubyGems
+and NuGet builds still share the compiled Lean component.
+
+The generated API enforces creator-thread use, queues cross-thread/finalizer
+disposal, and drains native owners when the creator exits. Per-call conversion
+limits are depth 128, 262,144 values, 16 MiB native storage and a separate
+16 MiB accounted managed-storage budget, including callbacks and results.
+These limits do not bound Lean working memory or all CLR allocation overhead.
+
+### Transfer input ownership
+
+Select `ownership: "transfer"` through
+[export contracts](../lean/existing-package.md#declare-export-contracts).
+The [C author example](c.md#transfer-input-ownership) shows the configuration.
+Keep `resources` and `ownedAggregates`, and set the package coordinate under
+`targets.nuget`. Ordinary-source and independently reviewed APIs receive fresh
+Lean checks before generating consuming calls.
+
+Build with `lean-bridge build --project ./owned --target nuget --output ./release-owned`.
+Packages without result anchors accept ordinary C# values. Generated XML documentation names the
+consuming arguments. Validation precedes handoff; shared aliases close at the
+Lean call boundary, while independent `Retain()` owners survive. See the
+[consumer example](../consume/dotnet.md#consuming-inputs).
+
+Transfer-enabled packages use `owned-dotnet-v2` and ownership contract version 2.
+Their private native adapter, compiled managed receipt and NuGet package receipt
+use version 2; the native ownership description uses `ownedValues` version 3.
+Packaging reconstructs the expected sources and ownership rules from compiler
+metadata before accepting the artifacts. Borrow-only packages keep their
+existing versions and generated APIs.
+
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN.
+C# keeps its private thread-exit adapter and GMP library while sharing the
+compiled Lean component. Other consumer bindings still reject transfer
+contracts. Building a package does not publish it.
+
+### Borrow a result from an input
+
+Use an input anchor in the result's export contract, as shown in the
+[C author example](c.md#anchor-a-result-to-an-input), and select `nuget`.
+Ordinary source and reviewed Binding IR both pass through the Lean compiler.
+The anchor names the original input owner; a copied argument snapshot cannot
+replace that owner.
+
+This projection uses `owned-dotnet-v3` and contract version 3. The private
+adapter, compiled managed receipt and NuGet receipt use version 3, while the
+native owned-value description uses version 4. Packaging reconstructs
+`resultAnchors`, generated C# sources and native artifacts before accepting
+them. Unanchored packages keep their existing APIs and receipt versions.
+
+Resource-containing results use `Value<T>`, including empty values. Anchor and
+consuming parameters require that wrapper. `Get()` checks its lifetime;
+`Share()` shares the original owner and `Retain()` creates independent ownership.
+See the [consumer example](../consume/dotnet.md#results-borrowed-from-an-input)
+for disposal and declaration-selected copy factories.
+
+Combined anchored builds can select C, C++, Cargo, PyPI, RubyGems and NuGet.
+C# retains its private thread-exit adapter and GMP while sharing the compiled
+Lean component and runtime. [Callback-result anchors](#anchor-a-callback-result-to-its-argument)
+use their own nested contracts.
+Building the archive does not publish it.
+
+### Export methods and properties
+
+Select a first-argument receiver in `lean-bridge.exports.json`: use
+`"receiver": "method"` or `"receiver": "property"` on the export contract.
+Properties take only the receiver. The receiver must be a declared resource
+or owned record or variant. A receiver-anchored result uses
+`"lifetime": { "scope": "receiver", "anchor": "receiver" }` and
+`"ownership": "borrow"`. Other argument anchors keep their declared lifetimes.
+
+For example, contracts for the `Owned` fixture can include:
+
+```json
+{
+  "Owned.serial": { "receiver": "property" },
+  "Owned.retainTicket": {
+    "receiver": "method",
+    "result": {
+      "ownership": "borrow",
+      "lifetime": { "scope": "receiver", "anchor": "receiver" }
+    }
+  }
+}
+```
+
+Place these entries inside `contracts`, keep the normal `modules`, `exports`
+and `resources` selections, and build with `--target nuget`. Consumers receive
+nominal owners such as `TicketValue : Value<Ticket>`, PascalCase methods and
+read-only C# properties. Unit-valued properties return `Unit`; Unit-valued
+functions and methods return `void`. See the
+[consumer example](../consume/dotnet.md#methods-and-properties).
+
+Receiver-enabled packages use `owned-dotnet-v4` and contract version 4. The
+adapter, compiled managed receipt and NuGet receipt use version 4; the native
+owned-value description uses version 5. Packaging verifies the receiver
+declarations and generated member sources against compiler metadata. Packages
+without receiver exports retain their existing versions and generated APIs.
+
+A receiver-enabled build can select C, C++, Cargo, PyPI, RubyGems and NuGet
+together. Each package shares the compiled Lean component and compatible
+runtime. The C# package also includes its private GMP library and thread-exit
+cleanup adapter. Building the archive does not publish it.
+
+### Anchor a callback result to its argument
+
+Keep `resources` and `ownedAggregates`, and place the lifetime inside the
+export's `callable.result` contract. For `Owned.makeRecord` with type
+`Bundle → Bool → Bundle → Bundle`, select one outer argument with
+`"arities": { "Owned.makeRecord": 1 }`. The returned function takes two
+arguments. Place this object under `contracts["Owned.makeRecord"]` to anchor
+its result to its second argument:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+Argument names belong to the returned function, not the outer export or its
+private closure handle. Reviewed Binding IR records the same decision on the
+callable result; both authoring paths pass through the Lean compiler.
+
+C# callers pass `Value<Bundle>` for the selected argument. Its original owner
+controls the result's lifetime even when the function returns captured data.
+The result and borrowed descendants expire together, including empty values.
+`Retain()` and `Api.CopyValue` create independent owners. See the
+[consumer examples](../consume/dotnet.md#callback-results-borrowed-from-an-argument).
+
+Host delegates receive raw borrowed arguments and return `CallbackResult<T>`.
+An implicit conversion accepts a raw reply or a whole `Value<T>`, including a
+recovery reply. The bridge checks and converts the reply before the borrowed
+frame expires. Native closures use typed overloads that preserve their original
+identity; their anchored `Invoke` still requires the selected whole owner.
+Callback storage remains call-scoped. This contract does not enable asynchronous
+delivery or transfer callback inputs.
+
+Build with `--target nuget`. These packages use `owned-dotnet-v5`, managed
+ownership contract and NuGet receipt version 5, and native ownership model
+version 6. Packaging reconstructs the callback contracts and generated C# from
+compiler-authenticated metadata. Callback-result anchors do not require
+export-result anchors, receiver members, consuming inputs or host callbacks.
+Packages without callback-result anchors retain their existing receipt versions.
+
 ## Build and inspect the package
+
+The existing Alpha interoperability fixture remains available separately. It exercises resources and callbacks through the reviewed fixture API.
 
 From the Lean Bridge checkout with its pinned Nix environment:
 
@@ -24,15 +449,17 @@ Run the [C# consumer example](../consume/dotnet.md) against the package before r
 
 ## Choose an owned identity
 
-The current source fixes the example package ID to `LeanBridge.Alpha`; its version comes from Alpha's Binding IR. Do not upload that fixture to a public registry.
+For an ordinary package, configure `targets.nuget.name` and `targets.nuget.version` before building. Names must be ASCII NuGet IDs of at most 100 characters; versions use three numeric parts with an optional prerelease suffix and no build metadata.
 
-For your own release, review the coordinate mapping in [universal bundle generation](../../src/release/universal-release-bundle.mjs), the [.NET generator](../../src/backends/dotnet/generate.mjs), and the [Alpha identity input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json). Adopt an ID your organization controls and a new version, regenerate the bindings and bundle, then rerun package and consumer checks. This profile's API model is Alpha-specific; it has no general `--package-name` override.
+The separate Alpha fixture fixes its package ID to `LeanBridge.Alpha`, with a version from Alpha's Binding IR. Do not upload that fixture to a public registry or edit its generated files to represent another library.
 
 Renaming the `.nupkg` or editing its embedded `.nuspec` after approval changes neither the reviewed source nor its authorization. Produce a new candidate when metadata changes. NuGet associates publication permissions with the owning account and its scoped API key. [NuGet publishing and ownership](https://learn.microsoft.com/en-us/nuget/nuget-org/publish-a-package)
 
 ## Review the candidate
 
-From a clean committed checkout, select the publication ecosystem `nuget`. The binding target inside the package is `dotnet`.
+For an ordinary package, reproduce the build from a separate source location, compare the archive digest, and run a fresh consumer against that exact archive. Review source and dependency licenses before publication. Preserve `native-release.json` and the original `.nupkg` with the release record.
+
+The following signed-candidate workflow applies to the repository's universal fixture bundle, not to ordinary NuGet outputs. From a clean committed checkout, select ecosystem `nuget`; its binding target is `dotnet`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target nuget --dry-run \
@@ -51,7 +478,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/nuget-candidate/publish-manifest.json
 ```
 
-Use the printed archive path, coordinate, and SHA-256. This check establishes candidate consistency; the [production review](production-release.md) supplies required approvals and signer authority. Retain the [sandbox evidence](sandbox-release.md) before requesting production access.
+Use the printed archive path, coordinate, and SHA-256. This check establishes candidate consistency; the [production review](../publishing.md#build-and-approve-the-same-artifacts) supplies required approvals and signer authority. Retain the [sandbox evidence](../contributing/sandbox-release.md#rehearse-a-registry-release) before requesting production access.
 
 The installed CLI has only the npm transaction adapter. The NuGet command below does not create a Lean Bridge signed completion receipt. A reviewed release integration must bind the actual feed, authority, and archive identity; a manifest naming the public NuGet endpoint does not authorize a different private feed.
 
@@ -115,3 +542,7 @@ If an integrated publisher has supplied a signed release receipt, also perform t
 After a timeout or conflict, fetch the existing coordinate and compare its bytes before deciding whether to retry. Identical bytes need no second upload. A different archive at the same coordinate requires investigation and an approved new version.
 
 For nuget.org, unlisting hides a version from ordinary discovery but exact-version downloads remain available; routine permanent deletion is unavailable. Private feeds have their own retention policies. Follow the release owner's recovery decision rather than deleting evidence or overwriting the version. [NuGet deletion and unlisting policy](https://learn.microsoft.com/en-us/nuget/nuget-org/policies/deleting-packages)
+
+### Publish a NuGet package
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

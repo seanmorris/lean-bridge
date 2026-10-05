@@ -1,0 +1,3999 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "cd0e8c28abcd60c4eeaab42e9be8d27a1015f53c",
+  "profiles": [
+    "perl"
+  ],
+  "wordBits": 64,
+  "perlAbis": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "4d7565a0f3254e81c13f7bdad39623ab6d1593caf561bae4144d97dcb1a05b9c",
+  "sourceHashes": {
+    "tests/perl-variants.test.mjs": "dd80da25efca1e992570921d0eb7f25ce8aad3fd38ac446f4cd45ba6f1c347b3",
+    "tests/perl-variant-contract.test.mjs": "f9a05835e894d3da217fa674951dd527c9ea316b6649edccdb15bc86231d7df6",
+    "tests/perl-variant-evidence.test.mjs": "d60d8cc65a507e6a0638eae34d477cebfda3e374db28c04b7d5c2c6cfda1c06e",
+    "tests/helpers/perl-variant-install.mjs": "63bdc2c1a45bffc768ee08d6c2ea44d4034bac1bf4d7c31fb2452ee684fa1387",
+    "tests/helpers/perl-variant-probe.mjs": "abc3d9415e12156081785187673d7add09dacc84207245be40b95cdd9a3f4511",
+    "tests/helpers/c-variant-fixture.mjs": "f6446818fd57352ea8f2b6212c0ce0b8e0e984592bab8da7f9a393ae12b696f9",
+    "tests/helpers/native-variant-fixture.mjs": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e",
+    "tests/helpers/variant-fixture.mjs": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/fixtures/list-consumers/perl-probe.h": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766",
+    "tests/fixtures/list-consumers/perl-probe-build.pl": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69",
+    "tests/fixtures/variant-consumers/perl.pl": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+    "tests/fixtures/variant-consumers/perl-faults.pl": "d8cc57cb4a6719f6d0086ca720c2072b5ab893161874d554ab2e04e48cdaca71",
+    "tests/fixtures/variant-consumers/Extra.lean": "e2974d8f0073ea7f7241e3c676824c911714a0cf6d6cc812f4f4c1c97b7e5968",
+    "tests/fixtures/onboarding/native-variants/Variants.lean": "b1ea2c169d60cb150f5f875067f6e872157e58c66a511cef052ba9ddf5630255",
+    "tests/fixtures/onboarding/native-variants/lakefile.toml": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31",
+    "tests/fixtures/onboarding/native-variants/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-variants/package.json": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85",
+    "tests/fixtures/onboarding/native-variants/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "signatures": [
+    {
+      "name": "Variants.echo",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.echo_mode",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Mode"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Mode"
+      }
+    },
+    {
+      "name": "Variants.echo_nested",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Nested"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Nested"
+      }
+    },
+    {
+      "name": "Variants.signals",
+      "parameters": [
+        {
+          "kind": "apply",
+          "constructor": "array",
+          "arguments": [
+            {
+              "kind": "apply",
+              "constructor": "list",
+              "arguments": [
+                {
+                  "kind": "named",
+                  "id": "lean:Variants.Signal"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "result": {
+        "kind": "apply",
+        "constructor": "array",
+        "arguments": [
+          {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Variants.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Scalars"
+      }
+    },
+    {
+      "name": "Variants.echo_anonymous",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Anonymous"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Anonymous"
+      }
+    },
+    {
+      "name": "Variants.echo_one",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.One"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.One"
+      }
+    },
+    {
+      "name": "Variants.next",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.code",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "uint32"
+      }
+    },
+    {
+      "name": "Variants.make",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Variants.duplicate",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "bytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.produce",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.echo_buffers",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Buffers"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    }
+  ],
+  "reviewedIrSha256": "21cba6e0f721d83261c4b21eb7cde9f9e476789dd6c3dad4adf7bd29b72c1069",
+  "types": [
+    {
+      "id": "lean:Variants.Anonymous",
+      "name": "Anonymous",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "number",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "collision",
+          "fields": [
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1_",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Anonymous",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Buffers",
+      "name": "Buffers",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "first",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "second",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Buffers",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Mode",
+      "name": "Mode",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "first",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "second",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "third",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Mode",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Nested",
+      "name": "Nested",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "packet",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "named",
+                "id": "lean:Variants.Packet"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "outcome",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "apply",
+                "constructor": "result",
+                "arguments": [
+                  {
+                    "kind": "apply",
+                    "constructor": "tuple",
+                    "arguments": [
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Signal"
+                      },
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Mode"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "primitive",
+                    "name": "string"
+                  }
+                ]
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Nested",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.One",
+      "name": "One",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "only",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.One",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Packet",
+      "name": "Packet",
+      "kind": "record",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [
+        {
+          "name": "current",
+          "type": {
+            "kind": "named",
+            "id": "lean:Variants.Signal"
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "events",
+          "type": {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "fallback",
+          "type": {
+            "kind": "apply",
+            "constructor": "option",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "modes",
+          "type": {
+            "kind": "apply",
+            "constructor": "array",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Mode"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "cases": [],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Packet",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Scalars",
+      "name": "Scalars",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "absent",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "all",
+          "fields": [
+            {
+              "name": "unit",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bool",
+              "type": {
+                "kind": "primitive",
+                "name": "bool"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u8",
+              "type": {
+                "kind": "primitive",
+                "name": "uint8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u16",
+              "type": {
+                "kind": "primitive",
+                "name": "uint16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u32",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u64",
+              "type": {
+                "kind": "primitive",
+                "name": "uint64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i8",
+              "type": {
+                "kind": "primitive",
+                "name": "int8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i16",
+              "type": {
+                "kind": "primitive",
+                "name": "int16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i32",
+              "type": {
+                "kind": "primitive",
+                "name": "int32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i64",
+              "type": {
+                "kind": "primitive",
+                "name": "int64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "natural",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "integer",
+              "type": {
+                "kind": "primitive",
+                "name": "int"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f32",
+              "type": {
+                "kind": "primitive",
+                "name": "float32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f64",
+              "type": {
+                "kind": "primitive",
+                "name": "float64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bytes",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "char",
+              "type": {
+                "kind": "primitive",
+                "name": "char"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "word",
+              "type": {
+                "kind": "primitive",
+                "name": "usize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "signedWord",
+              "type": {
+                "kind": "primitive",
+                "name": "isize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Scalars",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Signal",
+      "name": "Signal",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "idle",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "stopped",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "data",
+          "fields": [
+            {
+              "name": "count",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "label",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "marker",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Signal",
+        "extensions": {}
+      },
+      "assurance": []
+    }
+  ],
+  "contract": {
+    "declarations": [
+      {
+        "id": "lean:Variants.code",
+        "parameters": [
+          {
+            "id": "lean:Variants.Signal",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      },
+      {
+        "id": "lean:Variants.duplicate",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "bytes"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Buffers",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo",
+        "parameters": [
+          {
+            "id": "lean:Variants.Signal",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Signal",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_anonymous",
+        "parameters": [
+          {
+            "id": "lean:Variants.Anonymous",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Anonymous",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_buffers",
+        "parameters": [
+          {
+            "id": "lean:Variants.Buffers",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Buffers",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_mode",
+        "parameters": [
+          {
+            "id": "lean:Variants.Mode",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Mode",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_nested",
+        "parameters": [
+          {
+            "id": "lean:Variants.Nested",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Nested",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_one",
+        "parameters": [
+          {
+            "id": "lean:Variants.One",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.One",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.echo_scalars",
+        "parameters": [
+          {
+            "id": "lean:Variants.Scalars",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Scalars",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.inspect",
+        "parameters": [
+          {
+            "id": "lean:Variants.Scalars",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "bool"
+        }
+      },
+      {
+        "id": "lean:Variants.make",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "uint32"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Signal",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.next",
+        "parameters": [
+          {
+            "id": "lean:Variants.Signal",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Signal",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.produce",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:Variants.Buffers",
+          "kind": "named"
+        }
+      },
+      {
+        "id": "lean:Variants.signals",
+        "parameters": [
+          {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:Variants.Signal",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "list",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:Variants.Signal",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      }
+    ],
+    "types": [
+      {
+        "cases": [
+          {
+            "fields": [
+              {
+                "name": "arg0",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              }
+            ],
+            "name": "number"
+          },
+          {
+            "fields": [
+              {
+                "name": "arg0",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "name": "arg1",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              }
+            ],
+            "name": "pair"
+          },
+          {
+            "fields": [
+              {
+                "name": "arg1",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "name": "arg1_",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              }
+            ],
+            "name": "collision"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Anonymous",
+        "kind": "variant",
+        "name": "Anonymous"
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "first",
+                "type": {
+                  "kind": "primitive",
+                  "name": "bytes"
+                }
+              },
+              {
+                "name": "second",
+                "type": {
+                  "kind": "primitive",
+                  "name": "bytes"
+                }
+              }
+            ],
+            "name": "pair"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Buffers",
+        "kind": "variant",
+        "name": "Buffers"
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "first"
+          },
+          {
+            "fields": [],
+            "name": "second"
+          },
+          {
+            "fields": [],
+            "name": "third"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Mode",
+        "kind": "variant",
+        "name": "Mode"
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "empty"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "id": "lean:Variants.Packet",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "packet"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Variants.Signal",
+                          "kind": "named"
+                        },
+                        {
+                          "id": "lean:Variants.Mode",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "tuple",
+                      "kind": "apply"
+                    },
+                    {
+                      "kind": "primitive",
+                      "name": "string"
+                    }
+                  ],
+                  "constructor": "result",
+                  "kind": "apply"
+                }
+              }
+            ],
+            "name": "outcome"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Nested",
+        "kind": "variant",
+        "name": "Nested"
+      },
+      {
+        "cases": [
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              }
+            ],
+            "name": "only"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.One",
+        "kind": "variant",
+        "name": "One"
+      },
+      {
+        "cases": [],
+        "fields": [
+          {
+            "name": "current",
+            "type": {
+              "id": "lean:Variants.Signal",
+              "kind": "named"
+            }
+          },
+          {
+            "name": "events",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Variants.Signal",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "name": "fallback",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Variants.Signal",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "name": "modes",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:Variants.Mode",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:Variants.Packet",
+        "kind": "record",
+        "name": "Packet"
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "absent"
+          },
+          {
+            "fields": [
+              {
+                "name": "unit",
+                "type": {
+                  "kind": "primitive",
+                  "name": "unit"
+                }
+              },
+              {
+                "name": "bool",
+                "type": {
+                  "kind": "primitive",
+                  "name": "bool"
+                }
+              },
+              {
+                "name": "u8",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint8"
+                }
+              },
+              {
+                "name": "u16",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint16"
+                }
+              },
+              {
+                "name": "u32",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "name": "u64",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint64"
+                }
+              },
+              {
+                "name": "i8",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int8"
+                }
+              },
+              {
+                "name": "i16",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int16"
+                }
+              },
+              {
+                "name": "i32",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int32"
+                }
+              },
+              {
+                "name": "i64",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int64"
+                }
+              },
+              {
+                "name": "natural",
+                "type": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "name": "integer",
+                "type": {
+                  "kind": "primitive",
+                  "name": "int"
+                }
+              },
+              {
+                "name": "f32",
+                "type": {
+                  "kind": "primitive",
+                  "name": "float32"
+                }
+              },
+              {
+                "name": "f64",
+                "type": {
+                  "kind": "primitive",
+                  "name": "float64"
+                }
+              },
+              {
+                "name": "text",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              },
+              {
+                "name": "bytes",
+                "type": {
+                  "kind": "primitive",
+                  "name": "bytes"
+                }
+              },
+              {
+                "name": "char",
+                "type": {
+                  "kind": "primitive",
+                  "name": "char"
+                }
+              },
+              {
+                "name": "word",
+                "type": {
+                  "kind": "primitive",
+                  "name": "usize"
+                }
+              },
+              {
+                "name": "signedWord",
+                "type": {
+                  "kind": "primitive",
+                  "name": "isize"
+                }
+              }
+            ],
+            "name": "all"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Scalars",
+        "kind": "variant",
+        "name": "Scalars"
+      },
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "idle"
+          },
+          {
+            "fields": [],
+            "name": "stopped"
+          },
+          {
+            "fields": [
+              {
+                "name": "count",
+                "type": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "name": "label",
+                "type": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              }
+            ],
+            "name": "data"
+          },
+          {
+            "fields": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "primitive",
+                  "name": "unit"
+                }
+              }
+            ],
+            "name": "marker"
+          }
+        ],
+        "fields": [],
+        "id": "lean:Variants.Signal",
+        "kind": "variant",
+        "name": "Signal"
+      }
+    ]
+  },
+  "executions": [
+    {
+      "bindingIrSha256": "4ebc2fa3e1e27c9d1844b1f0e187c0f95adfd1a3750271537f9ba30201877358",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4cdb445a21ab270def434b2eb8a0543a4a601c18135fa6b0191a1e3f2d58250f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2329,
+          "sha256": "e2047f7d009b67f8981a5d042d4d661383e9b491dfa133339e6024e23aafbb1e"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 557,
+          "sha256": "3d05f398fbaee5179ff38b0f3d8debfb1268eb61ca719ae3242b06700f643ccc"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 95392,
+          "sha256": "3f6c715f6785d7ccd8f253ee886ec62f87aba2d5a32815734053a315fe98702a"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "3512d195f378d43da4c1151387c3f7c5e080a0a7974d66ed01c5ecce11320206"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "fa33b4f9d6d1899ccd43dc186d84685112e0423e90ade0d14caf5ca8d7ee2bea",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": "3f6c715f6785d7ccd8f253ee886ec62f87aba2d5a32815734053a315fe98702a"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 236049,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "59b9b65d0b95f125ab8a1fa4de69bc2d664841868380771192db90cfc821e951"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "eef9eccad1135854d4fa67de68d1dcecdaa72e73ca47b0024e4c0e9e435e35a4",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44434c7aa4b09f73ae38d44a20225f941bccb679576060f90388fc523ae62f81",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "17a4c6aad6f07e9cfed54d1493a87d31988508273ecc9fdf2e16c4fa800bb8a6",
+      "threaded": true,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "4ebc2fa3e1e27c9d1844b1f0e187c0f95adfd1a3750271537f9ba30201877358",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "32b60da0fe8ebaa7bf2eb567e94ceb4a211521fb5364134abcd0d76acb0d2fbd"
+        },
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2108,
+          "sha256": "fd59907e0a26d7c9eabe6430c680b741087c200b96b7af641d1be3e281566298"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 505,
+          "sha256": "20623fe613c77bfbc8e202ab4b45d662d5b6c770b7c149465d08931f9bf53d91"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 83192,
+          "sha256": "6803634f0772184128fa4bf1cf5f65c8cfb49297d284208c363ea09dc5ca818e"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "d35b361bca19f7c38d778a48f2e2eb47cb9ae279bd59d28cc5a681432c830d0b"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "fa33b4f9d6d1899ccd43dc186d84685112e0423e90ade0d14caf5ca8d7ee2bea",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac",
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": "6803634f0772184128fa4bf1cf5f65c8cfb49297d284208c363ea09dc5ca818e"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 236049,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "59b9b65d0b95f125ab8a1fa4de69bc2d664841868380771192db90cfc821e951"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "4ae9cb0cedaf5a3441d60cf741dc6385035510ccae4826313cbb44f2283cbd86",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44434c7aa4b09f73ae38d44a20225f941bccb679576060f90388fc523ae62f81",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "17a4c6aad6f07e9cfed54d1493a87d31988508273ecc9fdf2e16c4fa800bb8a6",
+      "threaded": false,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "4ebc2fa3e1e27c9d1844b1f0e187c0f95adfd1a3750271537f9ba30201877358",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "d47a6ea15e0a61296c48704fc9966aab2dc637770052b780e12b49c6dac3f276"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2329,
+          "sha256": "0443ef39d3c6ceea608165dab5c1e619bcaf0ef4a52885243d529d11fc21ed05"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 557,
+          "sha256": "4a768c45fbd7c8b8e3cb33e3a49f9c5a96e97223637bb0414c6ac3194e464392"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 95392,
+          "sha256": "f8e909eda3ab484ae12a37c2b8ac5557b84d7d1a1c98574bf865a4ef20a8cb36"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "e9460b2f8d554552f59352e13a2b15b2eb171f5dbcdc43fb12dc00835e613a1c"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "fa33b4f9d6d1899ccd43dc186d84685112e0423e90ade0d14caf5ca8d7ee2bea",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": "f8e909eda3ab484ae12a37c2b8ac5557b84d7d1a1c98574bf865a4ef20a8cb36"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 236049,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "59b9b65d0b95f125ab8a1fa4de69bc2d664841868380771192db90cfc821e951"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "ceaa6441efda74d8db3404b7c17ab64b7060079ebb9be346d450fbfbde6daefc",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44434c7aa4b09f73ae38d44a20225f941bccb679576060f90388fc523ae62f81",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "17a4c6aad6f07e9cfed54d1493a87d31988508273ecc9fdf2e16c4fa800bb8a6",
+      "threaded": true,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "4ebc2fa3e1e27c9d1844b1f0e187c0f95adfd1a3750271537f9ba30201877358",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "758046b2b2dfa3237a2b80b12dbad85a98b76a00d5bd7b180ba978908f4c59ea"
+        },
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2108,
+          "sha256": "8a14b5031105ae428bc41e11693aa95fbb5db9987e5f369220973aa90f3d217d"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 505,
+          "sha256": "5c0045b5fc3a728083f35e97d62bb3317804243f120cb3b67b51ce2c6b867277"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 83192,
+          "sha256": "56eff9bbe690bbef74f9e160dec9bf839252ae44d3826faad0709fa05afb9fd6"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "3245a86729d87ce1db494b1491f6260457b1b6fbecf32956ed348993eea84e51"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "fa33b4f9d6d1899ccd43dc186d84685112e0423e90ade0d14caf5ca8d7ee2bea",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856",
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": "56eff9bbe690bbef74f9e160dec9bf839252ae44d3826faad0709fa05afb9fd6"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 236049,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "59b9b65d0b95f125ab8a1fa4de69bc2d664841868380771192db90cfc821e951"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "f8558b092f8ee5fe2d386918bd2cf2427f0bd177504ba0d89419324fabd8ec8b",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44434c7aa4b09f73ae38d44a20225f941bccb679576060f90388fc523ae62f81",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "17a4c6aad6f07e9cfed54d1493a87d31988508273ecc9fdf2e16c4fa800bb8a6",
+      "threaded": false,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "d7a04a7b3cfaf5de5315290fc2c3de79cb096c27cad6b59c39245bba8e130505",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4cdb445a21ab270def434b2eb8a0543a4a601c18135fa6b0191a1e3f2d58250f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2329,
+          "sha256": "430e07ce82bfa0b6c0f3dcbac279d075cd4d33a32ebcdc87d78374485e3b95f3"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 557,
+          "sha256": "60ddd6bf9092244765310209d22cd60f4df3b2928b2ff5fdb52004c3577347a6"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 95392,
+          "sha256": "3f6c715f6785d7ccd8f253ee886ec62f87aba2d5a32815734053a315fe98702a"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "ec5a9fe6deef5c9900e3c8a0a33242463e6ccc254bbd7995195aca71c98a8a9d"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "7d72f3df20e2b1f884288eb1e5fe36f77da4787179a04628c8e2d3eac4fce141",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": "3f6c715f6785d7ccd8f253ee886ec62f87aba2d5a32815734053a315fe98702a"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 239439,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "6c6f2f2af0c0c1813c277a755ad559f750b6c932fc65c6b193f431f65ce30551"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "eef9eccad1135854d4fa67de68d1dcecdaa72e73ca47b0024e4c0e9e435e35a4",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "ba6bcb32c36cc404efaad054925b736d49d30a0f875f75154f6ad0e5a7517bdb",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0b1575e0200c1547426a7ae5395478dcc03b2e91024e4ba3540a3eafe859f7ec",
+      "threaded": true,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "d7a04a7b3cfaf5de5315290fc2c3de79cb096c27cad6b59c39245bba8e130505",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "32b60da0fe8ebaa7bf2eb567e94ceb4a211521fb5364134abcd0d76acb0d2fbd"
+        },
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2108,
+          "sha256": "5a53404f6625230fe342cc37613fdcda97d50c04da234e8f3282244096983841"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 505,
+          "sha256": "b9d3c63c0293818cce31c2277aa3d7cfa31555c3adfb9e597fcb2b498739369b"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 83192,
+          "sha256": "6803634f0772184128fa4bf1cf5f65c8cfb49297d284208c363ea09dc5ca818e"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "8f96b587de6fc2c883403c5c6f37faecd7c1321bbf4a3ee45db064ffd3dc323a"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "7d72f3df20e2b1f884288eb1e5fe36f77da4787179a04628c8e2d3eac4fce141",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac",
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": "6803634f0772184128fa4bf1cf5f65c8cfb49297d284208c363ea09dc5ca818e"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 239439,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "6c6f2f2af0c0c1813c277a755ad559f750b6c932fc65c6b193f431f65ce30551"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "4ae9cb0cedaf5a3441d60cf741dc6385035510ccae4826313cbb44f2283cbd86",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "ba6bcb32c36cc404efaad054925b736d49d30a0f875f75154f6ad0e5a7517bdb",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0b1575e0200c1547426a7ae5395478dcc03b2e91024e4ba3540a3eafe859f7ec",
+      "threaded": false,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "d7a04a7b3cfaf5de5315290fc2c3de79cb096c27cad6b59c39245bba8e130505",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "d47a6ea15e0a61296c48704fc9966aab2dc637770052b780e12b49c6dac3f276"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2329,
+          "sha256": "b4fb00ff6908014eb7e09835e84937f68c246f409341654de55c20db7df75d92"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 557,
+          "sha256": "c847af930844088fc6e880a3c2c9c64b1aebf40847d854943be4c6d44c0b1e4a"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 95392,
+          "sha256": "f8e909eda3ab484ae12a37c2b8ac5557b84d7d1a1c98574bf865a4ef20a8cb36"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "18590769be09aeeedaa1d6d49ca44f79259b5ab86bbd6aa3117ff29eb94986db"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "7d72f3df20e2b1f884288eb1e5fe36f77da4787179a04628c8e2d3eac4fce141",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Variants/Variants.so": "f8e909eda3ab484ae12a37c2b8ac5557b84d7d1a1c98574bf865a4ef20a8cb36"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 239439,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "6c6f2f2af0c0c1813c277a755ad559f750b6c932fc65c6b193f431f65ce30551"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "ceaa6441efda74d8db3404b7c17ab64b7060079ebb9be346d450fbfbde6daefc",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "ba6bcb32c36cc404efaad054925b736d49d30a0f875f75154f6ad0e5a7517bdb",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0b1575e0200c1547426a7ae5395478dcc03b2e91024e4ba3540a3eafe859f7ec",
+      "threaded": true,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    },
+    {
+      "bindingIrSha256": "d7a04a7b3cfaf5de5315290fc2c3de79cb096c27cad6b59c39245bba8e130505",
+      "calls": 4226,
+      "checks": 53680,
+      "compilerFreeExecution": true,
+      "consumerSha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271",
+      "families": [
+        {
+          "index": 1,
+          "name": "Signal"
+        },
+        {
+          "index": 2,
+          "name": "Buffers"
+        },
+        {
+          "index": 3,
+          "name": "Anonymous"
+        },
+        {
+          "index": 4,
+          "name": "Mode"
+        },
+        {
+          "index": 5,
+          "name": "Nested"
+        },
+        {
+          "index": 6,
+          "name": "One"
+        },
+        {
+          "index": 7,
+          "name": "Scalars"
+        }
+      ],
+      "faults": {
+        "active_accessor_checks": 1132,
+        "checks": 572,
+        "constructor_probes": [
+          "Signal::Idle",
+          "Signal::Stopped",
+          "Signal::Data",
+          "Signal::Marker",
+          "Mode::First",
+          "Mode::Second",
+          "Mode::Third",
+          "Nested::Empty",
+          "Nested::Packet",
+          "Nested::Outcome",
+          "Scalars::Absent",
+          "Scalars::All",
+          "Anonymous::Number",
+          "Anonymous::Pair",
+          "Anonymous::Collision",
+          "One::Only",
+          "Buffers::Empty",
+          "Buffers::Pair"
+        ],
+        "conversion_checkpoints": 494,
+        "host_exceptions": 4,
+        "malformed_tags": 7,
+        "partial_inputs": 64,
+        "reentrant_fields": 3,
+        "wrong_accessors": 0
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/LeanBridge/Variants.pm": {
+          "bytes": 21720,
+          "sha256": "a1a7574d7cb5f9b5ca5873753528d976cb8dce6d09285b4b77a0d245d9eaf404"
+        },
+        "x86_64-linux/LeanBridge/Variants/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "758046b2b2dfa3237a2b80b12dbad85a98b76a00d5bd7b180ba978908f4c59ea"
+        },
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2108,
+          "sha256": "621abcf4b3993570b39e96360f4e1f6ae324b7a78173226b0e8a47cd9324fa26"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/.packlist": {
+          "bytes": 505,
+          "sha256": "464161229b8649f3d48c7a28639d01adfd2d0f2e508202e1a988265d54966e36"
+        },
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": {
+          "bytes": 83192,
+          "sha256": "56eff9bbe690bbef74f9e160dec9bf839252ae44d3826faad0709fa05afb9fd6"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 657,
+          "sha256": "bad633f47b795fe9a60386474a11d0db6a09f1ca95284ace2fd8d27fffb84f1a"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedPodChecked": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "7d72f3df20e2b1f884288eb1e5fe36f77da4787179a04628c8e2d3eac4fce141",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/LeanBridge/Variants/native/libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856",
+        "x86_64-linux/auto/LeanBridge/Variants/Variants.so": "56eff9bbe690bbef74f9e160dec9bf839252ae44d3826faad0709fa05afb9fd6"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 239439,
+              "path": "archives/LeanBridge-Variants-1.000.tar.gz",
+              "sha256": "6c6f2f2af0c0c1813c277a755ad559f750b6c932fc65c6b193f431f65ce30551"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Variants",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes",
+        "char",
+        "usize",
+        "isize"
+      ],
+      "probeSha256": "f8558b092f8ee5fe2d386918bd2cf2427f0bd177504ba0d89419324fabd8ec8b",
+      "probeSourceSha256": "0ad7a5d9bf603dc8d840378715cc86489a9dc49849ffa283297ef31b54e970e8",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "ba6bcb32c36cc404efaad054925b736d49d30a0f875f75154f6ad0e5a7517bdb",
+      "rejected": 116,
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0b1575e0200c1547426a7ae5395478dcc03b2e91024e4ba3540a3eafe859f7ec",
+      "threaded": false,
+      "contractSha256": "e7373dfe8b8579b6acd4e39f128a951ad0cbfb3e17652046133254f6f65d2b2d"
+    }
+  ],
+  "reproduction": {
+    "firstReportSha256": "d219e71c0f5399e764567316162b5ae65a322e2b73406d32efe511a4ace76643",
+    "probeConsumerSha256": "d8cc57cb4a6719f6d0086ca720c2072b5ab893161874d554ab2e04e48cdaca71",
+    "executions": 8,
+    "archivesIdentical": true,
+    "installedPayloadsIdentical": true,
+    "nativeLibrariesIdentical": true,
+    "runs": [
+      {
+        "path": "ordinary-source",
+        "perl": "v5.36.3",
+        "threaded": true,
+        "installedPayloadSha256": "c0b93bacdad9723a7a62cb3306bb7b3e72160c5545b41dade68013d18b2b8e0c",
+        "previousInstalledPayloadSha256": "c0b93bacdad9723a7a62cb3306bb7b3e72160c5545b41dade68013d18b2b8e0c",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "0d9823cce9fe57a16271fb1fd4bd15c9a2df93d23a7a8d9a1a26761cb7ee2c9d",
+            "sha256": "e2047f7d009b67f8981a5d042d4d661383e9b491dfa133339e6024e23aafbb1e"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "0f83bda7ecd2bbdffdb8ea89b9fc1c59ca2077c967675fa3e1bbc41e1251c6c5",
+            "sha256": "3d05f398fbaee5179ff38b0f3d8debfb1268eb61ca719ae3242b06700f643ccc"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "1c228787fbb20b3a1df6dbf034cfe747d8e2aa93b36055230deaf30c128383b4",
+            "sha256": "3512d195f378d43da4c1151387c3f7c5e080a0a7974d66ed01c5ecce11320206"
+          }
+        ]
+      },
+      {
+        "path": "ordinary-source",
+        "perl": "v5.36.3",
+        "threaded": false,
+        "installedPayloadSha256": "0da12644014cb809cb2fd1dbd1f551721f146d503784c0957b0de4c04a02bd25",
+        "previousInstalledPayloadSha256": "0da12644014cb809cb2fd1dbd1f551721f146d503784c0957b0de4c04a02bd25",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "550cdfc4e2076a982dd1ef83de6f7f97986e47b47636116b76e68be4f4225c14",
+            "sha256": "fd59907e0a26d7c9eabe6430c680b741087c200b96b7af641d1be3e281566298"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "d4e502fd651a456166da58d11dea058262bae271fc4ab56de504f8ec69c70edf",
+            "sha256": "20623fe613c77bfbc8e202ab4b45d662d5b6c770b7c149465d08931f9bf53d91"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "1f8710e8d5cc8bc40134f21a5c12a75e3afa8783243e1a60c064494b6c140e1a",
+            "sha256": "d35b361bca19f7c38d778a48f2e2eb47cb9ae279bd59d28cc5a681432c830d0b"
+          }
+        ]
+      },
+      {
+        "path": "ordinary-source",
+        "perl": "v5.38.2",
+        "threaded": true,
+        "installedPayloadSha256": "c6fa50c2b7b980828bbaec73f0fc0cfdbf95ac5104f95081e736af4abb66fbf8",
+        "previousInstalledPayloadSha256": "c6fa50c2b7b980828bbaec73f0fc0cfdbf95ac5104f95081e736af4abb66fbf8",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "b3a1333d3a4665a2a237131b53133e969ec96e1b2861c2cfc38fa12e58fee8f1",
+            "sha256": "0443ef39d3c6ceea608165dab5c1e619bcaf0ef4a52885243d529d11fc21ed05"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "12010659681cd62327a3d00cef35f72efc16b0c850cf86700b187994be87c432",
+            "sha256": "4a768c45fbd7c8b8e3cb33e3a49f9c5a96e97223637bb0414c6ac3194e464392"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "40732df09a767b418ef296708da85ac6feee56695fbf478a4ef1bd29d049ddbe",
+            "sha256": "e9460b2f8d554552f59352e13a2b15b2eb171f5dbcdc43fb12dc00835e613a1c"
+          }
+        ]
+      },
+      {
+        "path": "ordinary-source",
+        "perl": "v5.38.2",
+        "threaded": false,
+        "installedPayloadSha256": "555dc5b56ab85b392adf698e0151141a6a0c776962c95bf34a4bad0a94d47153",
+        "previousInstalledPayloadSha256": "555dc5b56ab85b392adf698e0151141a6a0c776962c95bf34a4bad0a94d47153",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "808f098c2058873a60bd7e76a4f161035bda5b5d1d718e7a82754cf18c969cbe",
+            "sha256": "8a14b5031105ae428bc41e11693aa95fbb5db9987e5f369220973aa90f3d217d"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "db2ce56ff2482e31ebe703d14b6ceecd97137b50ac0b96144d4839d5d68b6111",
+            "sha256": "5c0045b5fc3a728083f35e97d62bb3317804243f120cb3b67b51ce2c6b867277"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "5742f30ee1cf0f33a9ed8a78bde9c92ee56afffb6074253bfbc4c8dcf48d3a05",
+            "sha256": "3245a86729d87ce1db494b1491f6260457b1b6fbecf32956ed348993eea84e51"
+          }
+        ]
+      },
+      {
+        "path": "reviewed-ir",
+        "perl": "v5.36.3",
+        "threaded": true,
+        "installedPayloadSha256": "c0b93bacdad9723a7a62cb3306bb7b3e72160c5545b41dade68013d18b2b8e0c",
+        "previousInstalledPayloadSha256": "c0b93bacdad9723a7a62cb3306bb7b3e72160c5545b41dade68013d18b2b8e0c",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "ffcc22251c7fdaf2bbc0eb1ec0184a934419bf3004a28186f3629d97fea23549",
+            "sha256": "430e07ce82bfa0b6c0f3dcbac279d075cd4d33a32ebcdc87d78374485e3b95f3"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "935ce011ad3e64adfcff6e91f009de558cd110f392d27018ac7cda35fb3fe38a",
+            "sha256": "60ddd6bf9092244765310209d22cd60f4df3b2928b2ff5fdb52004c3577347a6"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "148b9369b7c38e8d0778ba051b864e8efd025d6088acba8ac5b3e5cc649f97b7",
+            "sha256": "ec5a9fe6deef5c9900e3c8a0a33242463e6ccc254bbd7995195aca71c98a8a9d"
+          }
+        ]
+      },
+      {
+        "path": "reviewed-ir",
+        "perl": "v5.36.3",
+        "threaded": false,
+        "installedPayloadSha256": "0da12644014cb809cb2fd1dbd1f551721f146d503784c0957b0de4c04a02bd25",
+        "previousInstalledPayloadSha256": "0da12644014cb809cb2fd1dbd1f551721f146d503784c0957b0de4c04a02bd25",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "1ad5b02740281d0aa0baadfd6dea35cf052632b0e56236ebe111fb6ac4c9438c",
+            "sha256": "5a53404f6625230fe342cc37613fdcda97d50c04da234e8f3282244096983841"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "22e70f7aee2cf515955bae13de677c27243ae822b28ebfa35b0f775c381a0cda",
+            "sha256": "b9d3c63c0293818cce31c2277aa3d7cfa31555c3adfb9e597fcb2b498739369b"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "3a44ff9784458cbaac129cea13490ab5c8b4792a43d517503e4dc8cfb53a1160",
+            "sha256": "8f96b587de6fc2c883403c5c6f37faecd7c1321bbf4a3ee45db064ffd3dc323a"
+          }
+        ]
+      },
+      {
+        "path": "reviewed-ir",
+        "perl": "v5.38.2",
+        "threaded": true,
+        "installedPayloadSha256": "c6fa50c2b7b980828bbaec73f0fc0cfdbf95ac5104f95081e736af4abb66fbf8",
+        "previousInstalledPayloadSha256": "c6fa50c2b7b980828bbaec73f0fc0cfdbf95ac5104f95081e736af4abb66fbf8",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "94728699a42cdfc2bd0f3b4d983264919bc16bdb36b724d773663669e13ae441",
+            "sha256": "b4fb00ff6908014eb7e09835e84937f68c246f409341654de55c20db7df75d92"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "e4c5623c69ab35702d9292873168c167cb963eeee9df8ec1a762345e163cdaa2",
+            "sha256": "c847af930844088fc6e880a3c2c9c64b1aebf40847d854943be4c6d44c0b1e4a"
+          },
+          {
+            "path": "x86_64-linux-thread-multi/perllocal.pod",
+            "previousSha256": "460806ce5236fa5ec70e2d8e694278f193171d84a8a8a4ff502b9569d7546312",
+            "sha256": "18590769be09aeeedaa1d6d49ca44f79259b5ab86bbd6aa3117ff29eb94986db"
+          }
+        ]
+      },
+      {
+        "path": "reviewed-ir",
+        "perl": "v5.38.2",
+        "threaded": false,
+        "installedPayloadSha256": "555dc5b56ab85b392adf698e0151141a6a0c776962c95bf34a4bad0a94d47153",
+        "previousInstalledPayloadSha256": "555dc5b56ab85b392adf698e0151141a6a0c776962c95bf34a4bad0a94d47153",
+        "installationMetadataDifferences": [
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Runtime/.packlist",
+            "previousSha256": "316ae7983b0f28e4cd14ab4bf0e4f4401001ad2a342754d16362e88fda90da61",
+            "sha256": "621abcf4b3993570b39e96360f4e1f6ae324b7a78173226b0e8a47cd9324fa26"
+          },
+          {
+            "path": "x86_64-linux/auto/LeanBridge/Variants/.packlist",
+            "previousSha256": "d4ea88693039b8c01f6af4fa8153937eab87df480e549abed58c11bcf7859b57",
+            "sha256": "464161229b8649f3d48c7a28639d01adfd2d0f2e508202e1a988265d54966e36"
+          },
+          {
+            "path": "x86_64-linux/perllocal.pod",
+            "previousSha256": "efac7be72fcb63a7d4c9d3c34513f72fdf98bb0187b66bc0ff3d9636350ca794",
+            "sha256": "bad633f47b795fe9a60386474a11d0db6a09f1ca95284ace2fd8d27fffb84f1a"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lean-bridge:schema:lake-generated-sources:v1",
+  "title": "Digest-bound generated Lake source handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "snapshotSha256", "requestedModules", "prerequisites", "prerequisitesSha256", "overlay", "overlaySha256", "resolution", "resolutionSha256", "outputs"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "lean-bridge-lake-generated-sources" },
+    "snapshotSha256": { "$ref": "#/$defs/hash" },
+    "requestedModules": { "type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "prerequisites": { "$ref": "lake-generator-prerequisite-receipt.schema.json" },
+    "prerequisitesSha256": { "$ref": "#/$defs/hash" },
+    "overlay": { "$ref": "lake-generated-workspace.schema.json" },
+    "overlaySha256": { "$ref": "#/$defs/hash" },
+    "resolution": { "$ref": "lake-generated-resolution.schema.json" },
+    "resolutionSha256": { "$ref": "#/$defs/hash" },
+    "outputs": {
+      "type": "array", "maxItems": 16384,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["path", "text"],
+        "properties": { "path": { "type": "string", "minLength": 1 }, "text": { "type": "string", "maxLength": 8388608 } }
+      }
+    }
+  },
+  "$defs": { "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" } }
+}

@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
-import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
+import { createComponentBuildPlan, prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { CompilerAdapterError, generateCompilerAdapters, validateCompilerAdapterPlan, writeCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 
 const generate = async projectRoot => {
@@ -24,8 +24,8 @@ test("plain functions receive deterministic generated Lean exports and direct pr
   const generated = await generate("tests/fixtures/onboarding/small");
   assert.deepEqual(Object.keys(generated.files), ["LeanBridgeGenerated.lean", "compiler-adapters.json", "private-abi.json"]);
   assert.match(generated.files["LeanBridgeGenerated.lean"], /^import OnboardingSmall$/m);
-  assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(left : Nat\) \(right : Nat\) : Nat :=\n {2}OnboardingSmall\.add left right/);
-  assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(value : String\) : Bool :=\n {2}OnboardingSmall\.isEmpty value/);
+  assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(left : _root_\.Nat\) \(right : _root_\.Nat\) : _root_\.Nat :=\n {2}_root_\.OnboardingSmall\.add left right/);
+  assert.match(generated.files["LeanBridgeGenerated.lean"], /def export_[0-9a-f]{20} \(value : _root_\.String\) : _root_\.Bool :=\n {2}_root_\.OnboardingSmall\.isEmpty value/);
   assert.equal((generated.files["LeanBridgeGenerated.lean"].match(/@\[export lean_bridge_/g) ?? []).length, 2);
   assert.equal(generated.plan.privateAbi.dispatch, "scalar-frame-v2");
   assert.ok(generated.plan.privateAbi.exports.every(item => /^lean_bridge_[0-9a-f]{24}$/.test(item.symbol)));
@@ -58,7 +58,8 @@ test("ordinary IO exports are blocked before compilation", async () => {
 
 test("existing hand-authored Binding IR cannot silently enter the inferred adapter generator", async () => {
   const analysis = await analyzeLeanProject(process.cwd());
-  const componentPlan = await prepareComponentBuildPlan({ projectRoot: process.cwd(), engineRoot: process.cwd() });
+  const runtime = JSON.parse(await readFile("poc/lean-link-spike/graph-lock.json", "utf8")).runtime;
+  const componentPlan = createComponentBuildPlan({ analysis, runtime });
   assert.throws(
     () => generateCompilerAdapters({ analysis, componentPlan }),
     error => error instanceof CompilerAdapterError && error.code === "compiler-adapter-ir-origin",
@@ -73,6 +74,17 @@ test("compiler adapter plan fields and direct dispatch fail closed", async () =>
     () => validateCompilerAdapterPlan(changed),
     error => error instanceof CompilerAdapterError && error.code === "invalid-compiler-adapter-plan",
   );
+});
+
+test("source-scanned APIs cannot supply compiler specialization applications", async () => {
+	const projectRoot = "tests/fixtures/onboarding/small";
+	const analysis = await analyzeLeanProject(projectRoot);
+	const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), targets: ["npm"] });
+	const declaration = analysis.bindingIr.document.declarations[0];
+	declaration.source.extensions["lean-lang.org/specialization"] = { name: declaration.source.declaration
+		, declaration: declaration.source.declaration
+		, types: ["Nat"], application: "fun _ _ => 0" };
+	assert.throws(() => generateCompilerAdapters({ analysis, componentPlan }), { code: "compiler-specialization-drift" });
 });
 
 test("adapter materialization is atomic and never changes the plain project", async () => {

@@ -15,15 +15,15 @@ Every native Lean component links to `liblean_bridge_native.so`. The operating s
 
 The Alpha and probe extensions contain their own generated Lean component code. Neither extension contains `libleanrt.a` or `libInit.a`. Their ELF dynamic sections both name the same `liblean_bridge_native.so` dependency.
 
-The executed artifact sizes are:
+The 23 September 2026 execution produced these artifact sizes:
 
 | Artifact | Bytes |
 |---|---:|
-| shared Lean runtime and `Init` | 14,048,976 |
-| generated Alpha Zend extension | 249,064 |
-| independent probe extension | 54,368 |
+| shared Lean runtime and `Init` | 14,049,160 |
+| generated Alpha Zend extension | 263,544 |
+| independent probe extension | 57,232 |
 
-Adding the second component costs 54,368 bytes in this fixture. It does not add another 14 MB runtime image.
+Adding the second component costs 57,232 bytes in this fixture. It does not add another 14 MB runtime image.
 
 ## Pinned native build
 
@@ -54,7 +54,7 @@ The broker assigns a 64-bit token that contains a slot and generation. It keys a
 
 The token remains inside `LeanAlpha\Internal\Identity`. Public PHP objects expose no pointer, token, or handle. The userland weak cache uses the opaque token only to recover the canonical `Box` or callable wrapper.
 
-The real-runtime test observes the identity count while it creates a temporary `Box`, lets the Zend destructor perform fallback cleanup, and closes the remaining objects explicitly. The count changes from 2 to 3 to 2, then reaches zero after deterministic close.
+The real-runtime test observes the identity count while it creates a temporary `Box`, lets the Zend destructor perform fallback cleanup, and closes the remaining objects explicitly. Each value registers both its native Lean identity and its Zend wrapper identity. The count changes from 4 to 6 to 4, then reaches zero after deterministic close.
 
 ## Request, callback, and shutdown rules
 
@@ -63,6 +63,11 @@ The POC compiles only against non-thread-safe PHP. Generated Zend source rejects
 PHP request shutdown destroys remaining wrapper objects before module shutdown. Each component's module shutdown detaches its component record. The shared runtime remains loaded and cannot restart inside the process. The shared object's process destructor finalizes the Lean task manager when no identities remain. The operating system reclaims the runtime heap at process exit.
 
 A PHP exception thrown during a real Lean callback returns through the generated C status, becomes the cause of `CallbackThrew`, and leaves the runtime usable for the next call.
+
+[Explicit runtime retirement](native-retirement-20260923.md) is permanent. A
+separate process test retires the broker during a PHP callback and verifies
+eight rejected transport operations. Existing resources and closures remain
+disposable; both identity layers return to zero after cleanup.
 
 ## Executed gate
 

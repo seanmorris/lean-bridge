@@ -43,6 +43,8 @@ The canonical input boundary requires the manifest file to equal its canonical n
 
 [`deterministic-archive.mjs`](deterministic-archive.mjs) and [`deterministic-zip.mjs`](deterministic-zip.mjs) normalize entry order, paths, modes, and timestamps. [`install-trace.mjs`](install-trace.mjs) records what a clean package installation selected. [`backend-policy.mjs`](backend-policy.mjs) verifies that an ecosystem package uses an authorized generated backend.
 
+Shared npm, PHP-Wasm and CPAN runtime coordinates also bind the tar/gzip implementation and its host environment through `tarGzipPackingIdentity`. These runtime archives normalize file modes to `0644`. Reconstructing archives requires the recorded producer environment. Portable package receipts verify downloaded bytes without reproducing the archives. See the [packing acceptance record](../../docs/evidence/runtime-packing-identities-20260916.md).
+
 ### Ecosystem projections
 
 | Modules | Output family |
@@ -50,11 +52,12 @@ The canonical input boundary requires the manifest file to equal its canonical n
 | [`npm-package.mjs`](npm-package.mjs), [`component-npm-package.mjs`](component-npm-package.mjs) | JavaScript runtime and component archives. |
 | [`pypi-package.mjs`](pypi-package.mjs), [`python-wheel-preflight.mjs`](python-wheel-preflight.mjs) | Python wheel and source package layout, plus the repository-free host compatibility preflight. |
 | [`cargo-package.mjs`](cargo-package.mjs) | Rust crate layout. |
+| [`cpan-package.mjs`](cpan-package.mjs) | Native Perl archives, payload-derived shared-runtime versions and exact configure/runtime dependencies. |
 | [`c-family-package.mjs`](c-family-package.mjs) | C and C++ archives, headers, and metadata. |
 | [`nuget-package.mjs`](nuget-package.mjs), [`maven-package.mjs`](maven-package.mjs), [`rubygems-package.mjs`](rubygems-package.mjs) | .NET, JVM, and Ruby registry layouts. |
 | [`wasi-package.mjs`](wasi-package.mjs) | WIT, component, native host source, and WASI consumer metadata. |
 
-PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They take PHP package manifests and compiler inputs, rather than the universal bundle's `--bundle` input. Neither PHP package is a target in the universal publication manifest. [Composer distribution](../../docs/publish/composer.md) covers native PHP; [npm publication](../../docs/publish/npm.md#publish-the-php-wasm-profile) covers PHP-Wasm.
+PHP native and PHP-Wasm package builders live with the PHP backend because they share projection and transport conformance logic. They take PHP package manifests and compiler inputs, rather than the universal bundle's `--bundle` input. Neither PHP package is a target in the universal publication manifest. [Composer distribution](../../docs/publish/php.md#native-php-with-composer) covers native PHP; [npm publication](../../docs/publish/php.md#publish-the-php-wasm-profile) covers PHP-Wasm.
 
 ### Reproducibility and independent confirmation
 
@@ -67,6 +70,8 @@ PHP native and PHP-Wasm package builders live with the PHP backend because they 
 [`credentials.mjs`](credentials.mjs) keeps credentials outside package-generation code. [`publication-attestation.mjs`](publication-attestation.mjs) binds signer policy to the authorized statement. [`registry-transaction.mjs`](registry-transaction.mjs) records preflight, publication, and recovery state. [`archive-subjects.mjs`](archive-subjects.mjs) records each ecosystem, coordinate, filename, byte length, and hash. [`release-receipt.mjs`](release-receipt.mjs) signs the completed result and copies [`release-archive-verifier.mjs`](release-archive-verifier.mjs), the receipt, and the public policy beside every archive. The verifier requires a separately trusted policy hash and no repository checkout. [`component-package-receipt.mjs`](component-package-receipt.mjs) checks unsigned local dry-run packages.
 
 The installed CLI includes the npm transaction adapter. Ordinary component publications use version-two `lean-bridge.cli.json` to select the registry, tag, access, authentication mode, and signer policy. The dry run binds those settings into the publication manifest. The author's explicit configuration authorizes that destination; these publications do not require the project's deployment-profile approvals or `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN`. Follow [ordinary component publishing](../../docs/publish/npm.md#publish-an-ordinary-component).
+
+[`package-set-assembly.mjs`](package-set-assembly.mjs) adds ecosystem-neutral receipts to ordinary npm, native, PHP-Wasm, and combined builds. It projects checked producer metadata and exact archive hashes without changing the archives. [`package-set-receipt.mjs`](package-set-receipt.mjs) provides the Node-only validator used by `lean-bridge verify`. The [closed schema](../../schema/package-set-receipt.schema.json) records package coordinates, ABI profiles, runtime identities, exact in-set dependencies and bounded relative archive paths. The reader checks canonical JSON, the mandatory `.json.sha256` sidecar, unique ecosystem names, dependency closure, runtime agreement and file bytes. It rejects symlinked artifacts without extraction or package execution. These unsigned consistency checks neither authenticate a signer nor inspect metadata inside archives. Existing npm receipt versions and signed handoffs keep their original formats.
 
 Universal version-one releases retain the project deployment-profile gate. Their installed adapter defaults to production mode and requires `LEAN_BRIDGE_NPM_PRODUCTION_OPT_IN=publish-to-production` before production writes. A universal local-registry rehearsal uses `LEAN_BRIDGE_NPM_REGISTRY_MODE=sandbox` and optionally `LEAN_BRIDGE_NPM_REGISTRY_URL`; sandbox mode defaults to `http://127.0.0.1:4873/` and rejects the production npm endpoint.
 
@@ -103,7 +108,7 @@ The current profile requires the release owner, runtime owner, and security owne
 
 The responsible reviewers must inspect that evidence and record their decisions through the project's review process. The deployment evaluator checks profile state and approval records; it does not perform the external reviews. Editing `status` or inserting names does not supply approval.
 
-The [production release procedure](../../docs/publish/production-release.md#inspect-the-approval-state) gives the approval-state check and the commands for candidate and receipt verification. Approval applies to the reviewed candidate and profile revision. Rebuilds or target changes require renewed review.
+The [production release procedure](../../docs/contributing/production-release.md#inspect-the-approval-state) gives the approval-state check and the commands for candidate and receipt verification. Approval applies to the reviewed candidate and profile revision. Rebuilds or target changes require renewed review.
 
 ## Publisher signer integration
 
@@ -125,7 +130,7 @@ The signer provider exposes `kind`, `keyId`, and `sign(bytes)`. Its `keyId` must
 
 The handler verifies the manifest and candidate, checks the deployment profile when configured, and preflights required credential names before signing the publication statement. It verifies that signature before invoking the transaction publisher. The transaction preflights every target before its first write and accesses credentials through the scoped boundary. The handler uses the same policy and signer to create the completion receipt only after the transaction reports `complete`.
 
-Follow [sandbox publisher configuration](../../docs/publish/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Universal production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/publish/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
+Follow [sandbox publisher configuration](../../docs/contributing/sandbox-release.md#configure-the-publisher-integration) for endpoint isolation and registry settings. Universal production integrations also require the [project approval policy](#project-release-approval-policy) and the operator opt-in described in [production release](../../docs/contributing/production-release.md#freeze-the-candidate-and-authority). Neither signer injection nor adapter availability supplies those approvals.
 
 ## Adding an ecosystem package
 

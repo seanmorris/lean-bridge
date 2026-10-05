@@ -48,7 +48,7 @@ const observationFixture = () => {
 test("the versioned inventory classifies every profile, IR alternative and required source shape", async () => {
 	await assertJsonSchema("type-surface", document);
 	assert.equal(validateTypeSurface(document, contracts), true);
-	assert.equal(document.profiles.length, 16);
+	assert.equal(document.profiles.length, 17);
 	assert.equal(document.shapes.length, 48);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "jvm").map(profile => profile.id), ["java", "kotlin"]);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "browser-javascript").map(profile => profile.id),
@@ -62,6 +62,314 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 		assert.ok(cell.owner > 0 && cell.bounds && cell.ownership && cell.absence && cell.failure && cell.platform);
 		assert.deepEqual(Object.keys(cell.stages), document.stages);
 	}
+});
+
+test("recursive copied values and callback payloads have installed checks in all seventeen profiles", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
+	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(installed.length, 170);
+	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
+	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && !cell.position.startsWith("callback-"));
+	assert.equal(promoted.length, 30);
+	for(const cell of promoted)
+	{
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(cell.hostType && cell.conversionNote);
+		for(const stage of Object.values(cell.stages))
+		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["managed-recursive-installed"]); }
+	}
+	const wit = installed.filter(cell => cell.profile === "wit-wasi");
+	assert.equal(wit.length, 10);
+	for(const cell of wit) for(const stage of Object.values(cell.stages))
+	{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [cell.position.startsWith("callback-") ? "wit-wasi-recursive-callables-installed" : "wit-wasi-recursive-installed"]); }
+	for(const cell of cells.filter(cell => cell.position.startsWith("callback-")))
+	{
+		if(["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-structured-callables-installed"]);
+		else if(["c", "cpp"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["native-recursive-callables-installed"]);
+		else if(cell.profile === "python")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["python-recursive-callables-installed"]);
+		else if(cell.profile === "rust")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["rust-recursive-callables-installed"]);
+		else if(cell.profile === "ruby")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["ruby-recursive-callables-installed"]);
+		else if(cell.profile === "perl")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
+		else if(cell.profile === "dotnet")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["dotnet-recursive-callables-installed"]);
+		else if(["java", "kotlin"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["jvm-recursive-callables-installed"]);
+		else if(cell.profile === "php-native")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-native-recursive-callables-installed"]);
+		else if(cell.profile === "php-wasm")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-recursive-callables-installed"]);
+		else if(cell.profile === "wit-wasi")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["wit-wasi-recursive-callables-installed"]);
+		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
+	}
+});
+
+test("Char installed evidence distinguishes npm record fields from scalar and callable evidence", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "char");
+	const observed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(observed.length, 170);
+	for(const cell of cells)
+	{
+		const npm = profiles.includes(cell.profile);
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const covered = callable || ["parameter", "result", "field"].includes(cell.position);
+		assert.equal(cell.stages.installedExecution.state, covered ? "passed" : "unreviewed", cell.id);
+		if(!covered) continue;
+		assert.equal(cell.hostType, npm ? "string" : hosts[cell.profile]);
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, [callable ? callableEvidence : npm ? cell.position === "field" ? "npm-records-installed" : "npm-installed-char" : "native-installed-char"]);
+		}
+	}
+});
+
+test("platform-word evidence binds all seventeen profiles to compiled widths and audited positions", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => ["usize", "isize"].includes(cell.shape));
+	const wasm = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker", "php-wasm"];
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 340);
+	for(const cell of cells)
+	{
+		assert.equal(cell.wordBits, wasm.includes(cell.profile) ? 32 : 64);
+		const npm = wasm.includes(cell.profile) && cell.profile !== "php-wasm";
+		const callable = cell.position.startsWith("callback-");
+		const callableEvidence = npm ? "npm-callables-installed" : ["java", "kotlin"].includes(cell.profile) ? "jvm-callables-installed" : `${cell.profile}-callables-installed`;
+		const audited = callable || ["parameter", "result", "field"].includes(cell.position);
+		assert.equal(cell.stages.installedExecution.state, audited ? "passed" : "unreviewed");
+		if(audited)
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, [callable ? callableEvidence : npm && cell.position === "field" ? "npm-records-installed" : "platform-words-installed"]);
+			assert.ok(cell.conversionNote.includes(`${cell.wordBits}-bit compiled Lean target`));
+		}
+	}
+});
+
+test("List evidence covers all copied profiles and accepted npm/native callbacks", () => {
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 170);
+	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
+	for(const cell of cells)
+	{
+		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile), python = cell.profile === "python", rust = cell.profile === "rust", dotnet = cell.profile === "dotnet";
+		const jvm = ["java", "kotlin"].includes(cell.profile), wit = cell.profile === "wit-wasi";
+		const ruby = cell.profile === "ruby", perl = cell.profile === "perl", php = ["php-native", "php-wasm"].includes(cell.profile);
+		if((npm || native || python || rust || dotnet || jvm || ruby || perl || php || wit) && copied)
+		{
+			const pythonType = { parameter: "tuple[T, ...] | list[T]", result: "tuple[T, ...]", field: "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)" };
+			assert.equal(cell.hostType, wit ? "list<T> (owned Wasmtime component values)" : php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
+			for(const stage of Object.values(cell.stages))
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [wit ? "wit-wasi-lists-installed" : php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
+		} else if((npm || native || rust || python || ruby || dotnet || jvm || perl || php || wit) && cell.position.startsWith("callback-"))
+		{
+			assert.equal(cell.stages.installedExecution.state, "passed");
+			assert.deepEqual(cell.stages.installedExecution.evidence, [`${npm ? "npm" : jvm ? "jvm" : cell.profile}-structured-callables-installed`]);
+		} else
+		{
+			assert.equal(cell.stages.installedExecution.state, "unreviewed");
+		}
+	}
+});
+
+test("collection evidence covers all seventeen profiles, both source paths and nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell =>
+		["array", "record"].includes(cell.shape) && ["parameter", "result", "field"].includes(cell.position)
+		|| document.irFacets.primitive.includes(cell.shape) && cell.position === "field");
+	assert.equal(document.profiles.length, 17); assert.equal(document.irFacets.primitive.length, 19);
+	assert.equal(cells.length, 850);
+	for(const profile of document.profiles) assert.equal(cells.filter(cell => cell.profile === profile.id).length, 50);
+	for(const cell of cells)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed", cell.id);
+		assert.ok(cell.stages.installedExecution.evidence.length > 0, cell.id);
+		assert.ok(cell.hostType, cell.id);
+	}
+});
+
+test("npm record evidence covers only copied positions and all nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-records-installed"));
+	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
+	assert.equal(observed.length, 250);
+	for(const cell of observed)
+	{
+		assert.ok(profiles.includes(cell.profile));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["array", "record"].includes(cell.shape) || cell.position === "field" && document.irFacets.primitive.includes(cell.shape));
+	}
+	for(const profile of profiles) for(const path of document.paths)
+	{
+		for(const shape of document.irFacets.primitive)
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === "field"));
+		for(const shape of ["record", "array"]) for(const position of ["parameter", "result", "field"])
+			assert.ok(observed.some(cell => cell.profile === profile && cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+test("native compound evidence promotes exactly C/C++ copied positions on both paths", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("native-compounds-installed"));
+	assert.equal(observed.length, 36);
+	for(const cell of observed)
+	{
+		assert.ok(["c", "cpp"].includes(cell.profile));
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
+for(const profile of ["python", "rust", "dotnet", "java", "kotlin", "ruby", "perl", "php-native", "php-wasm", "wit-wasi"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
+	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
+	assert.equal(observed.length, 18);
+	for(const cell of observed)
+	{
+		assert.equal(cell.profile, profile);
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(["option", "result", "tuple"].includes(cell.shape));
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+});
+
+test("npm callable evidence covers five installed profiles without claiming fields or compound values", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-callables-installed"));
+	assert.equal(observed.length, 720);
+	assert.equal(observed.filter(cell => cell.position.startsWith("callback-") || ["callback", "closure"].includes(cell.shape)).length, 400);
+	assert.deepEqual([...new Set(observed.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker", "node-javascript", "node-typescript"]);
+	for(const cell of observed)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.notEqual(cell.position, "field");
+		assert.ok([...document.irFacets.primitive, "callback", "closure"].includes(cell.shape));
+		assert.ok(cell.conversionNote !== null || cell.hostType === "number" || cell.hostType === "bigint" || cell.hostType === "boolean");
+	}
+});
+
+test("historical C callable evidence excludes GMP integers, other hosts and copied fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("c-callables-installed"));
+	assert.equal(observed.length, 100);
+	assert.ok(observed.every(cell => cell.profile === "c" && cell.position !== "field" && cell.stages.installedExecution.state === "passed"));
+	assert.ok(observed.every(cell => !["nat", "int"].includes(cell.shape)));
+	for(const path of document.paths)
+	{
+		for(const primitive of document.irFacets.primitive.filter(shape => !["nat", "int"].includes(shape))) for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+for(const profile of ["python", "ruby", "rust", "cpp", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"]) test(`${profile} callable evidence promotes only its installed primitive and callable positions`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-callables-installed" : `${profile}-callables-installed`;
+	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
+	assert.equal(observed.length, profile === "cpp" ? 120 : 112);
+	assert.ok(observed.every(cell => cell.profile === profile && (cell.position !== "field" || profile === "cpp" && ["nat", "int"].includes(cell.shape)) && cell.stages.installedExecution.state === "passed"));
+	if(profile === "cpp") assert.ok(observed.filter(cell => ["nat", "int"].includes(cell.shape)).every(cell => cell.hostType === "boost::multiprecision::cpp_int"));
+	for(const path of document.paths)
+	{
+		for(const primitive of document.irFacets.primitive) for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+		for(const [shape, position] of [["callback", "parameter"], ["closure", "result"]])
+			assert.ok(observed.some(cell => cell.path === path && cell.shape === shape && cell.position === position));
+	}
+});
+
+test("C exact integers use installed GMP values in every copied and primitive callable position", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "c" && ["nat", "int"].includes(cell.shape));
+	assert.equal(cells.length, 20);
+	for(const cell of cells)
+	{
+		assert.equal(cell.hostType, "mpz_t");
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, ["c-gmp-installed"]);
+		}
+	}
+});
+
+test("Perl installed evidence stays scoped to audited source paths and positions", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.profile === "perl");
+	const state = (shape, position, sourcePath = "ordinary-source") => cells.find(cell => cell.shape === shape
+		&& cell.position === position && cell.path === sourcePath).stages.installedExecution.state;
+	for(const scalar of document.irFacets.primitive.filter(name => !["char", "usize", "isize"].includes(name)))
+		for(const position of document.families.primitive.positions)
+			assert.equal(state(scalar, position), "passed", `${scalar}/${position}`);
+	for(const path of document.paths) for(const shape of ["array", "record"])
+		for(const position of ["parameter", "result", "field"])
+			assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
+	for(const path of document.paths)
+		for(const shape of ["array", "record", "list", "option", "result", "tuple", "variant", "alias", "recursive"])
+			for(const position of ["callback-parameter", "callback-result"])
+				assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
+	assert.equal(state("resource", "result"), "passed");
+	assert.equal(state("resource", "field"), "unreviewed");
+	assert.equal(state("callback", "parameter"), "passed");
+	assert.equal(state("closure", "result"), "passed");
+	assert.equal(state("nat", "parameter", "reviewed-ir"), "passed");
+	assert.equal(state("nat", "field", "reviewed-ir"), "passed");
+	assert.equal(state("task", "signature"), "unreviewed");
+});
+
+test("Perl primitive callable evidence promotes no other profile or copied fields", () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const covered = cells.filter(cell => cell.stages.installedExecution.evidence.includes("perl-callables-installed"));
+	assert.equal(covered.length, 110);
+	for(const cell of covered)
+	{
+		assert.equal(cell.profile, "perl");
+		assert.notEqual(cell.position, "field");
+		assert.equal(cell.stages.installedExecution.state, "passed");
+	}
+	for(const path of document.paths) for(const primitive of document.irFacets.primitive)
+		for(const position of ["callback-parameter", "callback-result"])
+			assert.ok(covered.some(cell => cell.path === path && cell.shape === primitive && cell.position === position));
+});
+
+for(const [profile, evidence] of [["php-native", "native-php-installed-copied"], ["php-wasm", "php-wasm-installed-copied"], ["rust", "native-rust-installed-copied"], ["dotnet", "native-dotnet-installed-copied"], ["java", "native-jvm-installed-copied"], ["kotlin", "native-jvm-installed-copied"], ["ruby", "native-ruby-installed-copied"], ["wit-wasi", "native-wit-installed-copied"], ["python", "native-python-installed-copied"]]) test(`ordinary ${profile} installed evidence stays within copied-value positions`, () => {
+	const cells = typeSurfaceCells(document, contracts);
+	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
+		&& cell.stages.installedExecution.state === "passed"
+		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
+	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
+	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["alias"] : [];
+	const variants = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["variant"] : [];
+	const recursive = ["rust", "python", "ruby", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["recursive"] : [];
+	const recursiveEvidence = ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? "managed-recursive-installed" : `${profile}-recursive-installed`;
+	const variantEvidence = ["java", "kotlin"].includes(profile) ? "jvm-variants-installed" : `${profile}-variants-installed`;
+	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
+	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length));
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive].sort());
+	for(const cell of observed)
+	{
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, [recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+		}
+	}
+	for(const cell of cells.filter(cell => cell.profile === profile
+		&& cell.path === "ordinary-source" && !observed.includes(cell)
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "php-wasm-owned-callback-results-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed"].includes(id))))
+		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
 for(const [name, change] of [
@@ -192,7 +500,7 @@ test("rejections and partial ranges remain required work, and exclusions need re
 });
 
 test("the inventory command keeps unknown filters closed and emits unreviewed cells as JSON", async () => {
-	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "rust", "--shape", "char"], { cwd: root });
+	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "resource"], { cwd: root });
 	const report = JSON.parse(result.stdout);
 	assert.equal(report.complete, false);
 	assert.equal(report.selectedCells.length, 10);
@@ -200,8 +508,12 @@ test("the inventory command keeps unknown filters closed and emits unreviewed ce
 	assert.equal(report.profiles, 1);
 	assert.equal(report.shapes, 1);
 	assert.equal(report.requiredGaps, report.gaps.length);
-	assert.ok(report.selectedCells.every(cell => cell.profile === "rust" && cell.shape === "char"));
-	assert.ok(report.gaps.every(gap => gap.cell.startsWith("rust/char/")));
+	assert.ok(report.selectedCells.every(cell => cell.profile === "wit-wasi" && cell.shape === "resource"));
+	assert.ok(report.gaps.every(gap => gap.cell.startsWith("wit-wasi/resource/") && gap.state === "unreviewed"));
+	const recursive = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "recursive"], { cwd: root })).stdout);
+	assert.equal(recursive.complete, true); assert.equal(recursive.requiredGaps, 0); assert.equal(recursive.selectedCells.length, 10);
+	const complete = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "char"], { cwd: root })).stdout);
+	assert.equal(complete.complete, true); assert.equal(complete.requiredGaps, 0);
 	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "unknown"], { cwd: root }), /Unknown profile/);
 	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--unknown"], { cwd: root }), /Use --json/);
 });

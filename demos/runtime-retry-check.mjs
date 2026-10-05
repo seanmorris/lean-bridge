@@ -129,6 +129,12 @@ try
 					case "lean-sweep-and-prune":
 						return [...(await api.findOverlaps({ boxes: new Int32Array(8), dimensions: 2 })).overlaps]
 							.join(",") === "0,1";
+					case "lean-tutte":
+					{
+						const check = await api.createChecker();
+						return check({ width: 1, height: 1, levels: words(1, 0)
+							, squares: words(0, 0, 1, 0, 1) }).tiling;
+					}
 					default: throw new Error(`No runtime probe for ${name}`);
 				}
 			}, slug);

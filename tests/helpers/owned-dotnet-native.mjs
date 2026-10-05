@@ -1,0 +1,113 @@
+/**
+ * Compile generated owned C# call bindings against a fresh Lean native component.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { dirname, join, resolve } from "node:path";
+import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { generateOwnedDotnetCalls } from "../../src/backends/dotnet/owned-calls.mjs";
+import { ownedDotnetThreadExit } from "../../src/backends/dotnet/owned-thread-exit.mjs";
+import { compileOwnedAggregateFixture } from "./owned-aggregate-native.mjs";
+import { saveLakeFile } from "./lake-workspace.mjs";
+import { runCopied } from "./copied-fixture-install.mjs";
+
+/**
+ * Render the exact native allocation and original-owner handoff probe.
+ *
+ * @param c - Generated private C package.
+ * @param transferredInputs - Include the handoff counter for consuming APIs.
+ */
+export const ownedDotnetNativeProbe = (c, transferredInputs) => {
+	const cleanup = ownedDotnetThreadExit(c.values.prefix);
+	const handoff = "static inline void oc_transfer_consume(void *context) {";
+	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
+	return `#include <stdlib.h>
+#include <stddef.h>
+#include <stdatomic.h>
+static _Atomic size_t live;${transferredInputs ? "\nstatic _Atomic size_t handoffs;" : ""}
+static _Thread_local ptrdiff_t remaining = -1;
+static void *probe_alloc(size_t size) {
+  if (remaining == 0) return NULL;
+  if (remaining > 0) --remaining;
+  void *value = malloc(size); if (value) atomic_fetch_add(&live, 1); return value;
+}
+static void probe_free(void *value) { if (value) { atomic_fetch_sub(&live, 1); free(value); } }
+#define LB_OWNED_ALLOC probe_alloc
+#define LB_OWNED_FREE probe_free
+${transferredInputs ? c.source.replace(handoff, handoff + "\n  atomic_fetch_add(&handoffs, 1);") : c.source}
+${cleanup.source}
+size_t probe_live(void) { return atomic_load(&live); }${transferredInputs ? "\nsize_t probe_handoffs(void) { return atomic_load(&handoffs); }" : ""}
+size_t probe_identities(void) { lean_bridge_native_snapshot s; lean_bridge_native_snapshot_read(&s); return s.live_identities; }
+void probe_fail(ptrdiff_t value) { remaining = value; }
+void probe_retire(void) { lean_bridge_native_runtime_retire(); }
+`;
+};
+
+/**
+ * Render the isolated runtime probe loader, without package admission.
+ *
+ * @param namespace - Generated CLR namespace.
+ */
+export const ownedDotnetProbeLoader = namespace => `namespace ${namespace}.Interop;
+internal static class OwnedLoader
+{
+    internal static OwnedBindings Bindings = null!;
+}
+`;
+
+/**
+ * Test-only loader resolves one caller-supplied library; not package admission.
+ *
+ * @param t - Test context that owns and removes its native fixture directory.
+ * @param options - Fresh Lean fixture and optional independent reviewed contract.
+ */
+export const compileOwnedDotnetFixture = async (t, options = {}) => {
+	const transferredInputs = options.transferredInputs === true;
+	const anchoredResults = options.anchoredResults === true;
+	const callbackResultAnchors = options.callbackResultAnchors === true;
+	const receiverExports = options.receiverExports === true, hostCallbacks = options.hostCallbacks !== false;
+	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
+	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
+	const c = generateOwnedCPackage({ metadata: compiled.metadata
+		, sourceIdentity: compiled.sourceIdentity
+		, component: compiled.model.component, hostCallbacks
+		, transferredInputs, anchoredResults, receiverExports
+		, callbackResultAnchors, valueCopies: callbackResultAnchors });
+	const cleanup = ownedDotnetThreadExit(c.values.prefix);
+	const implementation = ownedDotnetNativeProbe(c, transferredInputs);
+	for(const [path, content] of Object.entries(c.files))
+		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : content);
+	await saveLakeFile(compiled.directory, "guard.cpp", cleanup.guardSource);
+	const env = { PATH: "/usr/bin:/bin" }, includes = ["-I", join(compiled.directory, "runtime/include")];
+	await runCopied("/usr/bin/cc", ["-std=c11", "-O1", "-g", "-Wall", "-Wextra", "-Werror", "-fPIC", ...includes, "-c", "api.c", "-o", "api.o"], compiled.directory, env);
+	await runCopied("/usr/bin/c++", ["-std=c++17", "-O1", "-g", "-Wall", "-Wextra", "-Werror", "-fPIC", ...includes, "-c", "guard.cpp", "-o", "guard.o"], compiled.directory, env);
+	await runCopied("/usr/bin/c++", ["-shared", "-pthread", "api.o", "guard.o"
+		, "Owned.o", "Carriers.o", "Witness.o"
+		, ...compiled.callbackSource ? ["Callbacks.o"] : []
+		, "-L", join(compiled.directory, "runtime/lib")
+		, "-lgmp", "-llean_bridge_native", "-lleanshared"
+		, "-Wl,-rpath," + join(compiled.directory, "runtime/lib")
+		, "-Wl,-z,defs", "-Wl,-z,nodelete", "-o", "libprobe.so"
+	], compiled.directory, env);
+	const checkpoint = "internal static void Checkpoint() { }";
+	assert.equal(model.files["Lifetime.cs"].split(checkpoint).length, 2);
+	const files = { ...model.files, "Lifetime.cs": model.files["Lifetime.cs"].replace(checkpoint, "internal static void Checkpoint() { global::Program.Allocation(); }") };
+	const loader = ownedDotnetProbeLoader(model.namespace);
+	for(const [path, content] of Object.entries({ ...files, "Loader.cs": loader
+		, "Calls.csproj": '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup></Project>'
+		, "NuGet.Config": '<configuration><packageSources><clear/></packageSources></configuration>'
+	})) await saveLakeFile(compiled.directory, path, content);
+	const dotnet = resolve(process.env.LEAN_BRIDGE_DOTNET ?? ".toolchains/dotnet/dotnet");
+	const environment = { ...env, DOTNET_ROOT: dirname(dotnet)
+		, DOTNET_CLI_HOME: join(compiled.directory, "home")
+		, DOTNET_NOLOGO: "1", DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+		, NUGET_PACKAGES: join(compiled.directory, "packages") };
+	return { ...compiled, model, implementation, loader
+		, compile: async probes => {
+			for(const [name, source] of Object.entries(probes)) await saveLakeFile(compiled.directory, name, source);
+			await runCopied(dotnet, ["build", "Calls.csproj", "--disable-build-servers", "-p:UseSharedCompilation=false", "-o", "out"], compiled.directory, environment);
+			return (mode = "callbacks") => runCopied(dotnet, ["out/Calls.dll", join(compiled.directory, "libprobe.so"), mode], compiled.directory, environment);
+		}
+	};
+};

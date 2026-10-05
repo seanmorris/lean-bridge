@@ -1,0 +1,2467 @@
+{
+  "schemaVersion": 1,
+  "description": "Historical installed archives are unchanged. Source lineage records test registration and provenance changes. C/C++ graph build branches additionally require a separate fresh Java/Kotlin installed regression receipt. Each original archive keeps its original source hashes; the new runs bind current build sources to their own archives and public observations.",
+  "historicalReceipts": {
+    "npm-recursive-callable-repair-20260922": {
+      "receiptSha256": "1d9a3413586208111ce6be5ddcdaf999fc98e04a5c2f13f659c432aa5d4c6c43",
+      "sources": {
+        "tests/component-structured-codec.test.mjs": {
+          "previousSha256": "936c3125665e2bfe38b4a8c27e9c481c5b4f6dbae5d62fe4f54484d5ef1b451c",
+          "currentSha256": "e8f2b0c355ff6d5bb7aa965d2610be528e6429c31aef08026873c06141fe1969"
+        }
+      }
+    },
+    "npm-aliases-20260921": {
+      "receiptSha256": "b169dc438ff64f0f823db733aa7d9f0beaa8ef97f502b5ff700a5f986b46c9d0",
+      "sources": {
+        "tests/helpers/component-scalar-install.mjs": {
+          "previousSha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779",
+          "currentSha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
+        }
+      }
+    },
+    "npm-variants-20260921": {
+      "receiptSha256": "d0c3bf39f03aecec94a8077e0134cd875331a38864901ea604d1dbebb9299087",
+      "sources": {
+        "tests/component-variant-contract.test.mjs": {
+          "previousSha256": "d67656f36d1eb6b935e3f1a81a6a65ab92a4bb7cc15d090b41ef2f1c3136387f",
+          "currentSha256": "e88517997190f59e9323d114f4f27f74446004704baa5061cf9bdbbad4ba75f0"
+        },
+        "tests/helpers/component-scalar-install.mjs": {
+          "previousSha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779",
+          "currentSha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
+        }
+      }
+    },
+    "wit-collections-20260922": {
+      "receiptSha256": "4f611a8f3f0c808034932ea1f0f39353be779a32f5d0b2d8d53b7ef221ed543f",
+      "sources": {
+        "src/release/native-wasi.mjs": {
+          "previousSha256": "1ca734a32ce44b42b7d1926479a49ccdda51dd800329becf267e99c1dbc5f9d9",
+          "currentSha256": "94eb9e370bd3880de1681470e127b49d2c4a7883a7b6d46a3ac1b3e10f0f4b69"
+        },
+        "tests/wit-collection-evidence.test.mjs": {
+          "previousSha256": "bf1f170f8ef3aafd4fbf9f413eee08f26abd8033de401e74aefe7e7cb8236289",
+          "currentSha256": "a6f9304d6573fdf71f1ed2c3200cae49b2892b050ea917cb740a0cac75c0e2c2"
+        }
+      }
+    },
+    "kotlin-collections-20260922": {
+      "receiptSha256": "c7a1b371b89de0099fd1d2af45cb557071ae15cb7701abce4fd1eba5e83013b2",
+      "sources": {
+        "src/release/native-maven.mjs": {
+          "previousSha256": "b874b36fcec5aa146c870f30be7420929482441575a240ab3d7201fa28041a41",
+          "currentSha256": "e37fbda26182e3014a560a0d09fc8e94059b221b4200431bb9d7542cb28d51d2"
+        },
+        "src/adoption/test-profiles.mjs": {
+          "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
+          "currentSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8"
+        },
+        "tests/kotlin-collection-evidence.test.mjs": {
+          "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
+          "currentSha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
+        },
+        "src/build/native-project.mjs": {
+          "previousSha256": "d653bfd9ab3078316ebb3b152840a62485c77f0d41cd873612ccad405af60a14",
+          "currentSha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
+        },
+        "src/build/native-c-projection.mjs": {
+          "previousSha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41",
+          "currentSha256": "3c4af09ebd1a471bb77011516debd4e4978eb460671180f0449a2710ad673c73"
+        }
+      },
+      "regression": {
+        "path": "docs/evidence/native-recursive-jvm-regression-20260923.json",
+        "sha256": "b24f2f5a8a11f5adcbc74bd4149328f695d7a4d457a758d8c06d48e9dffa7237"
+      }
+    }
+  },
+  "registrationUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5a56a334752d19736c01e23a8b48a14f998a3128435b04af340f554659114ca5",
+      "currentSha256": "f525b043c21c0ce707a998dce78133a77df2d462341a1c3abef898af46274c69",
+      "addedTests": [
+        "wit-copied-graph-model",
+        "wit-copied-graph-conversions",
+        "wit-copied-graph-native"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "6f3be45dc9cb1762c634707ba5369c2aac49951485f60ad0394a9839dea73537",
+      "currentSha256": "5ff23d42b6175f7ac110e5adcf90256532748a7ada9af648a10e891abc17cd6a",
+      "addedTests": [
+        "php-wasm-shared-regressions"
+      ],
+      "change": "Require measured acyclic PHP-Wasm compatibility before accepting graph source transitions."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "99ac613e261f7586f810b067f59ef99958bef96882fbfff1b7d888e63cd8ef05",
+      "currentSha256": "6f3be45dc9cb1762c634707ba5369c2aac49951485f60ad0394a9839dea73537",
+      "addedTests": [
+        "source-inventory-order"
+      ],
+      "change": "Verify sorted source inventories without changing membership or previous receipt hashes."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c1a57674fdf416ee42c8fd3cf0194ec2c3c7c4e2fcb135595c23d8c8cdf9e597",
+      "currentSha256": "99ac613e261f7586f810b067f59ef99958bef96882fbfff1b7d888e63cd8ef05",
+      "addedTests": [
+        "php-wasm-graph-reproduction",
+        "php-wasm-graph-loading"
+      ],
+      "change": "Require independent recursive PHP-Wasm rebuilds and installed multi-package shared loading."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "aa7b13d6195cd1bb7b0a72f58debc22dad22ad4662f061348bd5b4caf013fda1",
+      "currentSha256": "c1a57674fdf416ee42c8fd3cf0194ec2c3c7c4e2fcb135595c23d8c8cdf9e597",
+      "addedTests": [
+        "php-wasm-graph-package"
+      ],
+      "change": "Require canonical recursive PHP-Wasm builds and offline installed npm/Composer execution."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2",
+      "currentSha256": "86a40ac04f7c5bb3888ca5ca9986db66b7e4de21963dd620b2b8314f558c038d",
+      "change": "Add the native-copied-graph-layout contract test. Existing profile registrations and historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "86a40ac04f7c5bb3888ca5ca9986db66b7e4de21963dd620b2b8314f558c038d",
+      "currentSha256": "94bf425467d51dbe8401580c48445cb70780a879f7e3100dcabd3a53560c71c9",
+      "change": "Add native-recursive-transport checks, including explicit opt-in compiled Lean/C acceptance. Historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "94bf425467d51dbe8401580c48445cb70780a879f7e3100dcabd3a53560c71c9",
+      "currentSha256": "89785ee6fef474a15f4c2b35ee4d6f69abf79297d3f1244cb948b9f94bf81e20",
+      "change": "Add native allocator boundary and guarded-component acceptance tests. Historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "89785ee6fef474a15f4c2b35ee4d6f69abf79297d3f1244cb948b9f94bf81e20",
+      "currentSha256": "3942e34621d85a2e048eb06f2835c7a33df98b1a20a46d5e933929f6adb8b4e1",
+      "change": "Add authenticated native graph component models and opt-in ordinary/reviewed compiled component checks. Historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "3942e34621d85a2e048eb06f2835c7a33df98b1a20a46d5e933929f6adb8b4e1",
+      "currentSha256": "233b6bc16f3e5de4477f887988503167381b888be6373b8266232fa494dbbe39",
+      "change": "Add compiled C++ recursive value and ownership checks. Historical installed receipts and host conversions are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "233b6bc16f3e5de4477f887988503167381b888be6373b8266232fa494dbbe39",
+      "currentSha256": "78a5f7fcdf6445295a4cb140053db1fca196353b8d0bb9e63b06c3b8b6cf470d",
+      "change": "Register independent C++ recursive conversion and allocation-failure checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "78a5f7fcdf6445295a4cb140053db1fca196353b8d0bb9e63b06c3b8b6cf470d",
+      "currentSha256": "9f1249dffbc5348a2fba9f178a61e150d9d8e2dc878dc4e698eeaf66abb2b503",
+      "change": "Register native broker retirement and retained-owner cleanup checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "9f1249dffbc5348a2fba9f178a61e150d9d8e2dc878dc4e698eeaf66abb2b503",
+      "currentSha256": "105b552f4d4b53cbae12730f36e38860353866bd36354ea08c87443422e4fb00",
+      "change": "Register C/GMP recursive conversion, ownership and allocation-failure checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "105b552f4d4b53cbae12730f36e38860353866bd36354ea08c87443422e4fb00",
+      "currentSha256": "623a92d73e2ab4a8fb14db56cbdeb5f933e3c36bbba991ebd5d6e1fcdc386c19",
+      "change": "Register public C/C++ recursive package and installed-consumer checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "623a92d73e2ab4a8fb14db56cbdeb5f933e3c36bbba991ebd5d6e1fcdc386c19",
+      "currentSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7",
+      "addedTests": [
+        "rust-copied-graph-values",
+        "rust-copied-graph-conversions"
+      ],
+      "change": "Register owned Rust recursive values and bounded native graph conversion tests. Reversing only these two added entries reconstructs the exact previous test manifest; installed JVM receipt bytes are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7",
+      "currentSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd",
+      "addedTests": [
+        "rust-graph-package"
+      ],
+      "change": "Register prepared recursive Cargo package tests. Removing this exact added entry reconstructs the previous test manifest; historical receipts retain their original source hashes."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd",
+      "currentSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2",
+      "addedTests": [
+        "python-copied-graph-values",
+        "source-registration-history"
+      ],
+      "change": "Add recursive Python value declarations, runtime and strict typing checks, and strict additive source-registration validation. Historical installed receipts and existing registrations remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2",
+      "currentSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163",
+      "addedTests": [
+        "python-copied-graph-conversions"
+      ],
+      "change": "Add checked Python recursive conversions and independent C/compiled Lean probes. Historical installed receipts and existing registrations remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163",
+      "currentSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e",
+      "addedTests": [
+        "python-graph-package"
+      ],
+      "change": "Require original recursive Python wheel installation and public/typed/failure acceptance; preserve all earlier test registrations and receipts."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e",
+      "currentSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b",
+      "addedTests": [
+        "ruby-copied-graph-values"
+      ],
+      "change": "Require finite Ruby recursive declarations and MRI execution without promoting compiled or installed acceptance; preserve earlier test registrations."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b",
+      "currentSha256": "34c87e0dac138faf277de9b0e1cdea1d81853390d995cfaa3d035c90f4b2db56",
+      "addedTests": [
+        "ruby-copied-graph-conversions"
+      ],
+      "change": "Require independent C layout/failure probes and ordinary/reviewed compiled Lean Ruby conversions; no prepared gem promotion."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "34c87e0dac138faf277de9b0e1cdea1d81853390d995cfaa3d035c90f4b2db56",
+      "currentSha256": "407b38aae834f1ae5a88d9ce24bc25001357b63aa73ee7febfd61bd31469ad2f",
+      "addedTests": [
+        "ruby-graph-package"
+      ],
+      "change": "Require original installed recursive gems, shared loading, cleanup and source-free consumers."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "407b38aae834f1ae5a88d9ce24bc25001357b63aa73ee7febfd61bd31469ad2f",
+      "currentSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f",
+      "addedTests": [
+        "perl-copied-graph-values"
+      ],
+      "change": "Require finite recursive Perl declarations and selected pinned-ABI execution without promoting native or installed coverage."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f",
+      "currentSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015",
+      "addedTests": [
+        "perl-copied-graph-conversions"
+      ],
+      "change": "Require bounded Perl XS graph conversion, exception and signal cleanup, and ordinary/reviewed compiled Lean execution on each selected ABI. CPAN admission and installed coverage remain gated."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015",
+      "currentSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf",
+      "addedTests": [
+        "perl-graph-package"
+      ],
+      "change": "Add finite recursive CPAN generation and original source-free package installation checks. Installed type coverage is unchanged pending complete CPAN acceptance and regressions."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf",
+      "currentSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c",
+      "addedTests": [
+        "dotnet-copied-graph-values"
+      ],
+      "change": "Require compiled recursive C# declaration, structural equality and rejected-consumer checks. Native conversions and installed NuGet coverage remain pending."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c",
+      "currentSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8",
+      "addedTests": [
+        "dotnet-copied-graph-conversions"
+      ],
+      "change": "Add bounded C# graph conversion checks and ordinary/reviewed native Lean execution. Historical installed receipts and coverage remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8",
+      "currentSha256": "0cb081df0bf710cfb84625dada0763439c65fe2f8562364bc011d82a4ed8e035",
+      "addedTests": [
+        "dotnet-graph-package"
+      ],
+      "change": "Add recursive C# package compilation, original offline NuGet installs and source-free runtime checks. Installed coverage remains unchanged pending full acceptance."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "0cb081df0bf710cfb84625dada0763439c65fe2f8562364bc011d82a4ed8e035",
+      "currentSha256": "28494d0824e1b2366fe3827332fc3bd59270a6cbf30b1faa0b7cce6a4b7abe71",
+      "addedTests": [
+        "native-asset-tamper"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "28494d0824e1b2366fe3827332fc3bd59270a6cbf30b1faa0b7cce6a4b7abe71",
+      "currentSha256": "d317c85fa68f44a2568c9086ddd25b8d67e9a378e5000d60e7466bd9aeae0fdb",
+      "addedTests": [
+        "jvm-copied-graph-values"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d317c85fa68f44a2568c9086ddd25b8d67e9a378e5000d60e7466bd9aeae0fdb",
+      "currentSha256": "5db78687652662623228256409c3f85f138905fddef49695c67b1fb1395d4433",
+      "addedTests": [
+        "jvm-copied-graph-conversions"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5db78687652662623228256409c3f85f138905fddef49695c67b1fb1395d4433",
+      "currentSha256": "7e61100fe41b1fd1fe620d0d92ba70ae3e21ab375ee1baa5ed15ac438301920a",
+      "addedTests": [
+        "jvm-copied-graph-kotlin",
+        "jvm-graph-package"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "7e61100fe41b1fd1fe620d0d92ba70ae3e21ab375ee1baa5ed15ac438301920a",
+      "currentSha256": "e2ace96f41d4f4a800d1b35514f29c0c90463c56d51d205cd37bf1d47761ab26",
+      "addedTests": [
+        "php-copied-graph-values"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "e2ace96f41d4f4a800d1b35514f29c0c90463c56d51d205cd37bf1d47761ab26",
+      "currentSha256": "d63722fec7bc28707c48e754fd479cd25aa6166b4273bf928a08f42df0ab07ef",
+      "addedTests": [
+        "php-copied-graph-conversions"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d63722fec7bc28707c48e754fd479cd25aa6166b4273bf928a08f42df0ab07ef",
+      "currentSha256": "ede9fef83b0637c5371979c25c808db15ae2f38c65a83b4626d16d1855c89b62",
+      "addedTests": [
+        "php-graph-package"
+      ],
+      "change": "Add recursive PHP package admission, cold-call, Composer installation and independent reproduction checks."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "ede9fef83b0637c5371979c25c808db15ae2f38c65a83b4626d16d1855c89b62",
+      "currentSha256": "2e148ffb8f97dfb079d4bf9b70e42d3df04e6d217c5e5e2c1b8e84bef5ef245e",
+      "addedTests": [
+        "wasm32-recursive-transport"
+      ],
+      "change": "Add explicit wasm32 recursive transport, real Lean execution and unchanged native-output checks."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "2e148ffb8f97dfb079d4bf9b70e42d3df04e6d217c5e5e2c1b8e84bef5ef245e",
+      "currentSha256": "aa7b13d6195cd1bb7b0a72f58debc22dad22ad4662f061348bd5b4caf013fda1",
+      "addedTests": [
+        "php-copied-graph-zend"
+      ],
+      "change": "Require actual wasm32 Zend conversion, cleanup faults and fresh compiled Lean execution; package admission remains separate."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5ff23d42b6175f7ac110e5adcf90256532748a7ada9af648a10e891abc17cd6a",
+      "currentSha256": "1e12142b762683d3c57f7133439e58ef5f0a4b5f1cfcb8ff03bca2d8965f1663",
+      "addedTests": [
+        "native-shared-admission"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1e12142b762683d3c57f7133439e58ef5f0a4b5f1cfcb8ff03bca2d8965f1663",
+      "currentSha256": "369a9d3e2922babc5d330c8963dcccd54da405b796de3cda400f24f3afa2a144",
+      "addedTests": [
+        "jvm-shared-regressions"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "369a9d3e2922babc5d330c8963dcccd54da405b796de3cda400f24f3afa2a144",
+      "currentSha256": "aca96423ad14e20744609c2e1fc292704d992da7e54415c2d2d3cee5ae873a06",
+      "addedTests": [
+        "jvm-graph-metadata-source"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "aca96423ad14e20744609c2e1fc292704d992da7e54415c2d2d3cee5ae873a06",
+      "currentSha256": "501de2bf172185d543dfb4170349de587c20221bf1d3da05e2ab93a7639b2861",
+      "addedTests": [
+        "dotnet-repeat-observations"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "501de2bf172185d543dfb4170349de587c20221bf1d3da05e2ab93a7639b2861",
+      "currentSha256": "01b1c4be04bb03c78228c2f0ea2e99e5166e6e7be8f24eb23196c7ddef7026ef",
+      "addedTests": [
+        "dotnet-current-graphs"
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "01b1c4be04bb03c78228c2f0ea2e99e5166e6e7be8f24eb23196c7ddef7026ef",
+      "currentSha256": "5a56a334752d19736c01e23a8b48a14f998a3128435b04af340f554659114ca5",
+      "addedTests": [
+        "current-source-evidence"
+      ]
+    }
+  ],
+  "sourceRegistrationUpdates": [
+    {
+      "path": "package.json",
+      "previousSha256": "b8f9e3c7062280246939714dbf38b65d1103856b9797f563e66babb1b3f7648e",
+      "currentSha256": "d0e751e42456836f58bccdd00594ce7e8fef2b5162b78be8d940b44330b6150e",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "e4f1759774e0fff3415ebf4264a31cd36e4c619e541bac0c4e8bdabcc5d5dc03",
+      "currentSha256": "f314bda3a66f2023542af13913fb2e246f13c8bc90e94ed037e6f0885c89b9f1",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "20d917b9b75afd8d895e2d30764be3c939380cb22b871d8e1708830c9ec998ce",
+      "currentSha256": "92ee24a84310a13959e5ff716019257797f140661d39e7889583a2767da2211f",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-host.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-model.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "6b89f0dc7edb7d5c13bd69373c057f75a5bfef1da332a95aa95759a9e59ed299",
+      "currentSha256": "ff6073d1dab2e5a0599d82c16044e012e4fc8f70d5dca8c3e64df2c176129227",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "8675b1956a80e0e3a75f0702abd91e52f8076e549d164c5bec03fe3c15b588ca",
+      "currentSha256": "a7e15b2be677ff599af5611b2d6c51c4529ed1f02e2aaa1fb0154e0825a3334e",
+      "addedLines": [
+        "          LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs",
+        "          LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "0609303e4b309755a12e725362761256b968de69ea5c962bab6a031914c8db48",
+      "currentSha256": "6b89f0dc7edb7d5c13bd69373c057f75a5bfef1da332a95aa95759a9e59ed299",
+      "addedLines": [
+        "    \"src/backends/php/copied-zend-conversions.mjs\",",
+        "    \"src/backends/php/copied-zend-support.mjs\",",
+        "    \"src/backends/php/copied-zend-variants.mjs\",",
+        "    \"src/backends/php/php-wasm-copied-loader.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "5b3074d4756d9e0cd32455c7baaae248e0361a78e1ecee734051b950093c33f0",
+      "currentSha256": "8675b1956a80e0e3a75f0702abd91e52f8076e549d164c5bec03fe3c15b588ca",
+      "addedLines": [
+        "          test -s build/recursive/php-wasm-shared-regressions.json",
+        "            build/recursive/php-wasm-shared-regressions.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "kind": "reorder-files",
+      "previousSha256": "a562fa6a42f04b23d5beb31328ae8c95de994f5384537ff9138a63d67aa4ecb0",
+      "currentSha256": "b8f9e3c7062280246939714dbf38b65d1103856b9797f563e66babb1b3f7648e",
+      "previousFiles": [
+        "LICENSE",
+        "SECURITY.md",
+        "config/production-deployment-profile.v1.json",
+        "containers/builder/.dockerignore",
+        "containers/builder/Dockerfile",
+        "containers/builder/entrypoint.sh",
+        "containers/builder/manifest.json",
+        "containers/builder/nix.conf",
+        "flake.lock",
+        "flake.nix",
+        "lean-toolchain",
+        "nix/component-engine-source-boundary.json",
+        "nix/core-source-boundary.json",
+        "nix/perl-engine-source-boundary.json",
+        "nix/wasm-toolchain.nix",
+        "notices/php-wasm.txt",
+        "notices/runtime/NOTICE.txt",
+        "notices/runtime/emscripten.txt",
+        "notices/runtime/lean-bundled.txt",
+        "notices/runtime/lean.txt",
+        "notices/runtime/libuv.txt",
+        "notices/runtime/llvm.txt",
+        "notices/runtime/musl.txt",
+        "patches/README.md",
+        "patches/lean4-4.32.2-emscripten-conditional-pthreads.patch",
+        "patches/lean4-4.32.2-emscripten-runtime-signatures.patch",
+        "patches/lean4-4.32.2-offline-libuv-source.patch",
+        "poc/lean-link-spike/Alpha.lean",
+        "poc/lean-link-spike/Beta.lean",
+        "poc/lean-link-spike/Gamma.lean",
+        "poc/lean-link-spike/alpha_shim.c",
+        "poc/lean-link-spike/beta_shim.c",
+        "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+        "poc/lean-link-spike/capsules/alpha.json",
+        "poc/lean-link-spike/capsules/beta.json",
+        "poc/lean-link-spike/capsules/gamma.json",
+        "poc/lean-link-spike/component_scalar.cpp",
+        "poc/lean-link-spike/component_scalar.h",
+        "poc/lean-link-spike/gamma_shim.c",
+        "poc/lean-link-spike/graph-lock.json",
+        "poc/lean-link-spike/main.c",
+        "poc/lean-link-spike/private-abi.mjs",
+        "poc/lean-link-spike/runtime_lifecycle.cpp",
+        "schema/analysis-policy-report.schema.json",
+        "schema/analysis-policy.schema.json",
+        "schema/binding-ir.schema.json",
+        "schema/bridge-config.schema.json",
+        "schema/builder-manifest.schema.json",
+        "schema/canonical-package-manifest.schema.json",
+        "schema/clean-room-sessions.schema.json",
+        "schema/cli-config.schema.json",
+        "schema/cli-result.schema.json",
+        "schema/compiler-adapter-plan.schema.json",
+        "schema/component-artifact-manifest.schema.json",
+        "schema/component-authorization.schema.json",
+        "schema/component-build-plan.schema.json",
+        "schema/component-compilation-plan.schema.json",
+        "schema/component-package-receipt-v2.schema.json",
+        "schema/component-package-receipt.schema.json",
+        "schema/component-publication.schema.json",
+        "schema/component-release-bundle.schema.json",
+        "schema/consumer-support.schema.json",
+        "schema/credential-audit.schema.json",
+        "schema/elaborated-export-metadata.schema.json",
+        "schema/engine-execution-request.schema.json",
+        "schema/independent-confirmation.schema.json",
+        "schema/lake-dependency-snapshot.schema.json",
+        "schema/lake-entry-elaboration.schema.json",
+        "schema/lake-entry-intent.schema.json",
+        "schema/lake-generated-resolution.schema.json",
+        "schema/lake-generated-sources.schema.json",
+        "schema/lake-generated-workspace.schema.json",
+        "schema/lake-generator-configuration.schema.json",
+        "schema/lake-generator-definition.schema.json",
+        "schema/lake-generator-prerequisite-receipt.schema.json",
+        "schema/lake-generator-receipt.schema.json",
+        "schema/lake-generator-selection.schema.json",
+        "schema/lake-native-compilation.schema.json",
+        "schema/lean-export-configuration.schema.json",
+        "schema/lean-target-c-manifest.schema.json",
+        "schema/library-capsule.schema.json",
+        "schema/library-graph-lock.schema.json",
+        "schema/native-metadata-type.schema.json",
+        "schema/onboarding-fixtures.schema.json",
+        "schema/package-set-receipt.schema.json",
+        "schema/performance-baseline.schema.json",
+        "schema/performance-budget.schema.json",
+        "schema/performance-build-reproducibility.schema.json",
+        "schema/performance-ci-report.schema.json",
+        "schema/performance-corpus.schema.json",
+        "schema/performance-environment-report.schema.json",
+        "schema/performance-evidence-bundle.schema.json",
+        "schema/performance-evidence-index.schema.json",
+        "schema/performance-lifecycle-result.schema.json",
+        "schema/performance-methodology.schema.json",
+        "schema/performance-overhead-result.schema.json",
+        "schema/performance-regression-report.schema.json",
+        "schema/performance-result.schema.json",
+        "schema/performance-scaling-result.schema.json",
+        "schema/performance-self-consistency-result.schema.json",
+        "schema/performance-workloads.schema.json",
+        "schema/php-native-package.schema.json",
+        "schema/php-wasm-package.schema.json",
+        "schema/project-analysis.schema.json",
+        "schema/publication-attestation.schema.json",
+        "schema/publication-signer-policy.schema.json",
+        "schema/publish-manifest.schema.json",
+        "schema/registry-transaction.schema.json",
+        "schema/release-authorization.schema.json",
+        "schema/release-receipt.schema.json",
+        "schema/reproducibility-report.schema.json",
+        "schema/side-module-audit.schema.json",
+        "schema/side-module-link-manifest.schema.json",
+        "schema/target-runtime-profiles.schema.json",
+        "schema/time-to-package-budgets.schema.json",
+        "schema/time-to-package-report.schema.json",
+        "schema/zero-config-audit.schema.json",
+        "scripts/binding-ir.mjs",
+        "scripts/build-lean-link-spike.sh",
+        "scripts/build-lean-runtime.sh",
+        "scripts/create-publication-signer-policy.mjs",
+        "scripts/env.sh",
+        "scripts/generate-lean-link-projection.mjs",
+        "scripts/generate-value-frame.mjs",
+        "scripts/lean-bridge.mjs",
+        "scripts/lean-runtime-config.sh",
+        "scripts/resolve-lean-graph.mjs",
+        "scripts/run-component-engine.mjs",
+        "scripts/run-perl-engine.mjs",
+        "scripts/verify-lean-artifacts.mjs",
+        "src/abi/callback-signature.mjs",
+        "src/abi/component-callables.mjs",
+        "src/abi/component-copied.mjs",
+        "src/abi/component-records.mjs",
+        "src/abi/component-recursive-abi.mjs",
+        "src/abi/component-recursive.mjs",
+        "src/abi/component-scalars.mjs",
+        "src/abi/error-envelope.mjs",
+        "src/abi/generic-specialization.mjs",
+        "src/abi/initialization.mjs",
+        "src/abi/iterator.mjs",
+        "src/abi/overload.mjs",
+        "src/abi/pending-operation.mjs",
+        "src/abi/resource-lifecycle.mjs",
+        "src/abi/value-frame.mjs",
+        "src/adoption/production-deployment-profile.mjs",
+        "src/analyze/NativeExports.lean",
+        "src/analyze/compiler-analysis.mjs",
+        "src/analyze/copied-metadata-graph.mjs",
+        "src/analyze/elaborated-metadata.mjs",
+        "src/analyze/export-configuration.mjs",
+        "src/analyze/generator-configuration.mjs",
+        "src/analyze/lean-project.mjs",
+        "src/analyze/native-metadata.mjs",
+        "src/analyze/native-types.mjs",
+        "src/analyze/output.mjs",
+        "src/analyze/package-license.mjs",
+        "src/analyze/package-metadata.mjs",
+        "src/analyze/policy.mjs",
+        "src/analyze/project-analysis.mjs",
+        "src/analyze/project-elaborated.mjs",
+        "src/analyze/reviewed-source.mjs",
+        "src/analyze/semantic-model.mjs",
+        "src/analyze/spdx-data.json",
+        "src/backends/c/copied-graph-layout.mjs",
+        "src/backends/c/generate.mjs",
+        "src/backends/c/gmp-graph-conversions.mjs",
+        "src/backends/c/gmp-graph-values.mjs",
+        "src/backends/c/gmp-projection.mjs",
+        "src/backends/c/gmp-values.mjs",
+        "src/backends/c/gmp.mjs",
+        "src/backends/c/gmp.source.tar.xz",
+        "src/backends/c/graph-package.mjs",
+        "src/backends/c/native-callables.mjs",
+        "src/backends/c/native-copied-values.mjs",
+        "src/backends/c/native-graph-adapters.mjs",
+        "src/backends/c/native-primitives.mjs",
+        "src/backends/c/package-audit.mjs",
+        "src/backends/c/primitive-surface.mjs",
+        "src/backends/cpp/boost.mjs",
+        "src/backends/cpp/boost.source.json",
+        "src/backends/cpp/callables.mjs",
+        "src/backends/cpp/copied-graph-conversions.mjs",
+        "src/backends/cpp/copied-graph-values.mjs",
+        "src/backends/cpp/copied-values.mjs",
+        "src/backends/cpp/generate.mjs",
+        "src/backends/cpp/primitives.mjs",
+        "src/backends/dotnet/callables.mjs",
+        "src/backends/dotnet/copied-aliases.mjs",
+        "src/backends/dotnet/copied-conversions.mjs",
+        "src/backends/dotnet/copied-graph-assets.mjs",
+        "src/backends/dotnet/copied-graph-conversions.mjs",
+        "src/backends/dotnet/copied-graph-equality.mjs",
+        "src/backends/dotnet/copied-graph-layout.mjs",
+        "src/backends/dotnet/copied-graph-package.mjs",
+        "src/backends/dotnet/copied-graph-runtime.mjs",
+        "src/backends/dotnet/copied-graph-scalars.mjs",
+        "src/backends/dotnet/copied-graph-values.mjs",
+        "src/backends/dotnet/copied-model.mjs",
+        "src/backends/dotnet/copied-values.mjs",
+        "src/backends/javascript/copied-validators.mjs",
+        "src/backends/javascript/coverage.mjs",
+        "src/backends/javascript/generate.mjs",
+        "src/backends/javascript/package-audit.mjs",
+        "src/backends/javascript/projection.mjs",
+        "src/backends/jvm/callables.mjs",
+        "src/backends/jvm/copied-aliases.mjs",
+        "src/backends/jvm/copied-assets.mjs",
+        "src/backends/jvm/copied-conversions.mjs",
+        "src/backends/jvm/copied-graph-assets.mjs",
+        "src/backends/jvm/copied-graph-conversions.mjs",
+        "src/backends/jvm/copied-graph-equality.mjs",
+        "src/backends/jvm/copied-graph-kotlin.mjs",
+        "src/backends/jvm/copied-graph-layout.mjs",
+        "src/backends/jvm/copied-graph-package.mjs",
+        "src/backends/jvm/copied-graph-runtime.mjs",
+        "src/backends/jvm/copied-graph-scalars.mjs",
+        "src/backends/jvm/copied-graph-values.mjs",
+        "src/backends/jvm/copied-kotlin.mjs",
+        "src/backends/jvm/copied-model.mjs",
+        "src/backends/jvm/copied-runtime.mjs",
+        "src/backends/jvm/copied-values.mjs",
+        "src/backends/managed/package-audit.mjs",
+        "src/backends/native/runtime-broker.mjs",
+        "src/backends/perl/Build.pm",
+        "src/backends/perl/Platform.pm",
+        "src/backends/perl/Runtime.pm",
+        "src/backends/perl/Runtime.xs",
+        "src/backends/perl/copied-aliases.mjs",
+        "src/backends/perl/copied-graph-conversions.mjs",
+        "src/backends/perl/copied-graph-package.mjs",
+        "src/backends/perl/copied-graph-runtime.mjs",
+        "src/backends/perl/copied-graph-values.mjs",
+        "src/backends/perl/copied-graph-xs.mjs",
+        "src/backends/perl/copied-variants.mjs",
+        "src/backends/perl/generate.mjs",
+        "src/backends/perl/naming.mjs",
+        "src/backends/perl/runtime.h",
+        "src/backends/php/brick-math.mjs",
+        "src/backends/php/brick-math.source.json",
+        "src/backends/php/callables.mjs",
+        "src/backends/php/copied-aliases.mjs",
+        "src/backends/php/copied-assets.mjs",
+        "src/backends/php/copied-conversions.mjs",
+        "src/backends/php/copied-equality.mjs",
+        "src/backends/php/copied-graph-scalars.mjs",
+        "src/backends/php/copied-graph-conversions.mjs",
+        "src/backends/php/copied-graph-assets.mjs",
+        "src/backends/php/copied-graph-package.mjs",
+        "src/backends/php/copied-graph-native.mjs",
+        "src/backends/php/copied-graph-transfer.mjs",
+        "src/backends/php/copied-graph-values.mjs",
+        "src/backends/php/copied-graph-walk.mjs",
+        "src/backends/php/copied-graph-wire.mjs",
+        "src/backends/php/copied-graph-zend-runtime.mjs",
+        "src/backends/php/copied-graph-zend.mjs",
+        "src/backends/php/copied-model.mjs",
+        "src/backends/php/copied-names.mjs",
+        "src/backends/php/copied-support.mjs",
+        "src/backends/php/copied-values.mjs",
+        "src/backends/php/copied-variants.mjs",
+        "src/backends/php/copied-zend-conversions.mjs",
+        "src/backends/php/copied-zend-support.mjs",
+        "src/backends/php/copied-zend-variants.mjs",
+        "src/backends/php/copied-zend.mjs",
+        "src/backends/php/generate.mjs",
+        "src/backends/php/package-audit.mjs",
+        "src/backends/php/php-wasm-copied-host.mjs",
+        "src/backends/php/php-wasm-copied-loader.mjs",
+        "src/backends/php/php-wasm-libuv.mjs",
+        "src/backends/php/projection.mjs",
+        "src/backends/php/zend-callables.mjs",
+        "src/backends/python/callables.mjs",
+        "src/backends/python/compounds.mjs",
+        "src/backends/python/copied-assets.mjs",
+        "src/backends/python/copied-conversions.mjs",
+        "src/backends/python/copied-graph-conversions.mjs",
+        "src/backends/python/copied-graph-package.mjs",
+        "src/backends/python/copied-graph-values.mjs",
+        "src/backends/python/copied-model.mjs",
+        "src/backends/python/copied-values.mjs",
+        "src/backends/python/package-audit.mjs",
+        "src/backends/ruby/callables.mjs",
+        "src/backends/ruby/copied-aliases.mjs",
+        "src/backends/ruby/copied-assets.mjs",
+        "src/backends/ruby/copied-conversions.mjs",
+        "src/backends/ruby/copied-graph-conversions.mjs",
+        "src/backends/ruby/copied-graph-layout.mjs",
+        "src/backends/ruby/copied-graph-package.mjs",
+        "src/backends/ruby/copied-graph-runtime.mjs",
+        "src/backends/ruby/copied-graph-values.mjs",
+        "src/backends/ruby/copied-model.mjs",
+        "src/backends/ruby/copied-values.mjs",
+        "src/backends/rust/callables.mjs",
+        "src/backends/rust/copied-assets.mjs",
+        "src/backends/rust/copied-conversions.mjs",
+        "src/backends/rust/copied-graph-conversions.mjs",
+        "src/backends/rust/copied-graph-package.mjs",
+        "src/backends/rust/copied-graph-values.mjs",
+        "src/backends/rust/copied-model.mjs",
+        "src/backends/rust/copied-values.mjs",
+        "src/backends/rust/dependencies.lock",
+        "src/backends/rust/package-audit.mjs",
+        "src/backends/wit/callable-host-runtime.mjs",
+        "src/backends/wit/callable-host.mjs",
+        "src/backends/wit/copied-aliases.mjs",
+        "src/backends/wit/copied-component.mjs",
+        "src/backends/wit/copied-conversions.mjs",
+        "src/backends/wit/copied-host.mjs",
+        "src/backends/wit/copied-model.mjs",
+        "src/backends/wit/copied-variants.mjs",
+        "src/binding-ir/canonical.mjs",
+        "src/binding-ir/contract.mjs",
+        "src/binding-ir/sha256.mjs",
+        "src/build/ResolveLakeWorkspace.lean",
+        "src/build/build-error.mjs",
+        "src/build/canonical-build.mjs",
+        "src/build/compile-jvm-sources.mjs",
+        "src/build/compiler-adapters.mjs",
+        "src/build/component-artifact-manifest.mjs",
+        "src/build/component-callable-adapters.mjs",
+        "src/build/component-compilation-plan.mjs",
+        "src/build/component-copied-adapters.mjs",
+        "src/build/component-engine.mjs",
+        "src/build/component-plan.mjs",
+        "src/build/component-record-adapters.mjs",
+        "src/build/component-recursive-adapters.mjs",
+        "src/build/component-recursive-lean.mjs",
+        "src/build/component-recursive-types.mjs",
+        "src/build/component-scalar-adapters.mjs",
+        "src/build/component-side-linker.mjs",
+        "src/build/cpan-projection.mjs",
+        "src/build/elaborated-component.mjs",
+        "src/build/engine-execution-request.mjs",
+        "src/build/lake-build-workspace.mjs",
+        "src/build/lake-dependency-snapshot.mjs",
+        "src/build/lake-entry-elaboration.mjs",
+        "src/build/lake-entry-engine.mjs",
+        "src/build/lake-entry-intent.mjs",
+        "src/build/lake-entry-modules.mjs",
+        "src/build/lake-generated-workspace.mjs",
+        "src/build/lake-generator-prerequisites.mjs",
+        "src/build/lake-generators.mjs",
+        "src/build/lake-native-inputs.mjs",
+        "src/build/lake-workspace.mjs",
+        "src/build/lean-analysis-engine.mjs",
+        "src/build/lean-component-compiler.mjs",
+        "src/build/multi-profile-project.mjs",
+        "src/build/native-allocation-guard.mjs",
+        "src/build/native-artifacts.mjs",
+        "src/build/native-c-projection.mjs",
+        "src/build/native-component.mjs",
+        "src/build/native-dotnet-artifacts.mjs",
+        "src/build/native-dotnet-projection.mjs",
+        "src/build/native-gmp.mjs",
+        "src/build/native-graph-model.mjs",
+        "src/build/native-graph-projection.mjs",
+        "src/build/native-graph-sources.mjs",
+        "src/build/native-jvm-artifacts.mjs",
+        "src/build/native-jvm-projection.mjs",
+        "src/build/native-model.mjs",
+        "src/build/native-php-artifacts.mjs",
+        "src/build/native-project.mjs",
+        "src/build/native-python-artifacts.mjs",
+        "src/build/native-ruby-artifacts.mjs",
+        "src/build/native-rust-artifacts.mjs",
+        "src/build/native-rust-projection.mjs",
+        "src/build/native-wit-artifacts.mjs",
+        "src/build/native-wit-projection.mjs",
+        "src/build/perl-xs.mjs",
+        "src/build/php-wasm-copied-artifacts.mjs",
+        "src/build/php-wasm-copied-component.mjs",
+        "src/build/php-wasm-graph-component.mjs",
+        "src/build/php-wasm-graph-model.mjs",
+        "src/build/php-wasm-project.mjs",
+        "src/build/process-runner.mjs",
+        "src/build/side-module-audit.mjs",
+        "src/capsule/contract.mjs",
+        "src/capsule/node.mjs",
+        "src/cli/commands.mjs",
+        "src/cli/contract.mjs",
+        "src/cli/run.mjs",
+        "src/cli/verify.mjs",
+        "src/release/archive-subjects.mjs",
+        "src/release/backend-policy.mjs",
+        "src/release/c-family-package.mjs",
+        "src/release/canonical-bundle-input.mjs",
+        "src/release/canonical-package-manifest.mjs",
+        "src/release/cargo-package.mjs",
+        "src/release/component-callable-runtime.mjs",
+        "src/release/component-copied-codec.mjs",
+        "src/release/component-copied-runtime.mjs",
+        "src/release/component-npm-package.mjs",
+        "src/release/component-package-receipt.mjs",
+        "src/release/component-publication.mjs",
+        "src/release/component-recursive-codec.mjs",
+        "src/release/component-recursive-ownership.mjs",
+        "src/release/component-release-bundle.mjs",
+        "src/release/component-reproducibility-gate.mjs",
+        "src/release/component-runtime-root.mjs",
+        "src/release/component-runtime.mjs",
+        "src/release/component-scalar-codec.mjs",
+        "src/release/cpan-install-trace.mjs",
+        "src/release/cpan-install.mjs",
+        "src/release/cpan-package.mjs",
+        "src/release/credentials.mjs",
+        "src/release/deterministic-archive.mjs",
+        "src/release/deterministic-zip.mjs",
+        "src/release/managed-registry-package.mjs",
+        "src/release/maven-package.mjs",
+        "src/release/native-c-family.mjs",
+        "src/release/native-cargo.mjs",
+        "src/release/native-composer.mjs",
+        "src/release/native-maven.mjs",
+        "src/release/native-nuget.mjs",
+        "src/release/native-pypi.mjs",
+        "src/release/native-rubygems.mjs",
+        "src/release/native-wasi.mjs",
+        "src/release/npm-package.mjs",
+        "src/release/npm-registry-adapter.mjs",
+        "src/release/nuget-package.mjs",
+        "src/release/package-set-assembly.mjs",
+        "src/release/package-set-receipt.mjs",
+        "src/release/php-wasm-compiler-inputs.mjs",
+        "src/release/php-wasm-copied-package.mjs",
+        "src/release/publication-attestation.mjs",
+        "src/release/publish-configuration.mjs",
+        "src/release/publish-manifest.mjs",
+        "src/release/pypi-package.mjs",
+        "src/release/python-wheel-preflight.mjs",
+        "src/release/registry-transaction.mjs",
+        "src/release/release-archive-verifier.mjs",
+        "src/release/release-candidate-state.mjs",
+        "src/release/release-receipt.mjs",
+        "src/release/release-rehearsal.mjs",
+        "src/release/reproducibility-gate.mjs",
+        "src/release/reproducibility.mjs",
+        "src/release/rubygems-package.mjs",
+        "src/release/source-identity.mjs",
+        "src/release/source-notices.mjs",
+        "src/release/wasi-package.mjs"
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "kind": "reorder-files",
+      "previousSha256": "a0c7fb35efb5eb568148f3388b8c722971c4ff1a5e4128c3a2e5eb129050033d",
+      "currentSha256": "e4f1759774e0fff3415ebf4264a31cd36e4c619e541bac0c4e8bdabcc5d5dc03",
+      "previousFiles": [
+        "LICENSE",
+        "SECURITY.md",
+        "config/production-deployment-profile.v1.json",
+        "containers/builder/.dockerignore",
+        "containers/builder/Dockerfile",
+        "containers/builder/entrypoint.sh",
+        "containers/builder/manifest.json",
+        "containers/builder/nix.conf",
+        "flake.lock",
+        "flake.nix",
+        "lean-toolchain",
+        "nix/component-engine-source-boundary.json",
+        "nix/core-source-boundary.json",
+        "nix/perl-engine-source-boundary.json",
+        "nix/wasm-toolchain.nix",
+        "notices/php-wasm.txt",
+        "notices/runtime/NOTICE.txt",
+        "notices/runtime/emscripten.txt",
+        "notices/runtime/lean-bundled.txt",
+        "notices/runtime/lean.txt",
+        "notices/runtime/libuv.txt",
+        "notices/runtime/llvm.txt",
+        "notices/runtime/musl.txt",
+        "patches/README.md",
+        "patches/lean4-4.32.2-emscripten-conditional-pthreads.patch",
+        "patches/lean4-4.32.2-emscripten-runtime-signatures.patch",
+        "patches/lean4-4.32.2-offline-libuv-source.patch",
+        "poc/lean-link-spike/Alpha.lean",
+        "poc/lean-link-spike/Beta.lean",
+        "poc/lean-link-spike/Gamma.lean",
+        "poc/lean-link-spike/alpha_shim.c",
+        "poc/lean-link-spike/beta_shim.c",
+        "poc/lean-link-spike/bindings/alpha.binding-ir.json",
+        "poc/lean-link-spike/capsules/alpha.json",
+        "poc/lean-link-spike/capsules/beta.json",
+        "poc/lean-link-spike/capsules/gamma.json",
+        "poc/lean-link-spike/component_scalar.cpp",
+        "poc/lean-link-spike/component_scalar.h",
+        "poc/lean-link-spike/gamma_shim.c",
+        "poc/lean-link-spike/graph-lock.json",
+        "poc/lean-link-spike/main.c",
+        "poc/lean-link-spike/private-abi.mjs",
+        "poc/lean-link-spike/runtime_lifecycle.cpp",
+        "schema/analysis-policy-report.schema.json",
+        "schema/analysis-policy.schema.json",
+        "schema/binding-ir.schema.json",
+        "schema/bridge-config.schema.json",
+        "schema/builder-manifest.schema.json",
+        "schema/canonical-package-manifest.schema.json",
+        "schema/clean-room-sessions.schema.json",
+        "schema/cli-config.schema.json",
+        "schema/cli-result.schema.json",
+        "schema/compiler-adapter-plan.schema.json",
+        "schema/component-artifact-manifest.schema.json",
+        "schema/component-authorization.schema.json",
+        "schema/component-build-plan.schema.json",
+        "schema/component-compilation-plan.schema.json",
+        "schema/component-package-receipt-v2.schema.json",
+        "schema/component-package-receipt.schema.json",
+        "schema/component-publication.schema.json",
+        "schema/component-release-bundle.schema.json",
+        "schema/consumer-support.schema.json",
+        "schema/credential-audit.schema.json",
+        "schema/elaborated-export-metadata.schema.json",
+        "schema/engine-execution-request.schema.json",
+        "schema/independent-confirmation.schema.json",
+        "schema/lake-dependency-snapshot.schema.json",
+        "schema/lake-entry-elaboration.schema.json",
+        "schema/lake-entry-intent.schema.json",
+        "schema/lake-generated-resolution.schema.json",
+        "schema/lake-generated-sources.schema.json",
+        "schema/lake-generated-workspace.schema.json",
+        "schema/lake-generator-configuration.schema.json",
+        "schema/lake-generator-definition.schema.json",
+        "schema/lake-generator-prerequisite-receipt.schema.json",
+        "schema/lake-generator-receipt.schema.json",
+        "schema/lake-generator-selection.schema.json",
+        "schema/lake-native-compilation.schema.json",
+        "schema/lean-export-configuration.schema.json",
+        "schema/lean-target-c-manifest.schema.json",
+        "schema/library-capsule.schema.json",
+        "schema/library-graph-lock.schema.json",
+        "schema/native-metadata-type.schema.json",
+        "schema/onboarding-fixtures.schema.json",
+        "schema/package-set-receipt.schema.json",
+        "schema/performance-baseline.schema.json",
+        "schema/performance-budget.schema.json",
+        "schema/performance-build-reproducibility.schema.json",
+        "schema/performance-ci-report.schema.json",
+        "schema/performance-corpus.schema.json",
+        "schema/performance-environment-report.schema.json",
+        "schema/performance-evidence-bundle.schema.json",
+        "schema/performance-evidence-index.schema.json",
+        "schema/performance-lifecycle-result.schema.json",
+        "schema/performance-methodology.schema.json",
+        "schema/performance-overhead-result.schema.json",
+        "schema/performance-regression-report.schema.json",
+        "schema/performance-result.schema.json",
+        "schema/performance-scaling-result.schema.json",
+        "schema/performance-self-consistency-result.schema.json",
+        "schema/performance-workloads.schema.json",
+        "schema/php-native-package.schema.json",
+        "schema/php-wasm-package.schema.json",
+        "schema/project-analysis.schema.json",
+        "schema/publication-attestation.schema.json",
+        "schema/publication-signer-policy.schema.json",
+        "schema/publish-manifest.schema.json",
+        "schema/registry-transaction.schema.json",
+        "schema/release-authorization.schema.json",
+        "schema/release-receipt.schema.json",
+        "schema/reproducibility-report.schema.json",
+        "schema/side-module-audit.schema.json",
+        "schema/side-module-link-manifest.schema.json",
+        "schema/target-runtime-profiles.schema.json",
+        "schema/time-to-package-budgets.schema.json",
+        "schema/time-to-package-report.schema.json",
+        "schema/zero-config-audit.schema.json",
+        "scripts/binding-ir.mjs",
+        "scripts/build-lean-link-spike.sh",
+        "scripts/build-lean-runtime.sh",
+        "scripts/create-publication-signer-policy.mjs",
+        "scripts/env.sh",
+        "scripts/generate-lean-link-projection.mjs",
+        "scripts/generate-value-frame.mjs",
+        "scripts/lean-bridge.mjs",
+        "scripts/lean-runtime-config.sh",
+        "scripts/resolve-lean-graph.mjs",
+        "scripts/run-component-engine.mjs",
+        "scripts/run-perl-engine.mjs",
+        "scripts/verify-lean-artifacts.mjs",
+        "src/abi/callback-signature.mjs",
+        "src/abi/component-callables.mjs",
+        "src/abi/component-copied.mjs",
+        "src/abi/component-records.mjs",
+        "src/abi/component-recursive-abi.mjs",
+        "src/abi/component-recursive.mjs",
+        "src/abi/component-scalars.mjs",
+        "src/abi/error-envelope.mjs",
+        "src/abi/generic-specialization.mjs",
+        "src/abi/initialization.mjs",
+        "src/abi/iterator.mjs",
+        "src/abi/overload.mjs",
+        "src/abi/pending-operation.mjs",
+        "src/abi/resource-lifecycle.mjs",
+        "src/abi/value-frame.mjs",
+        "src/adoption/production-deployment-profile.mjs",
+        "src/analyze/NativeExports.lean",
+        "src/analyze/compiler-analysis.mjs",
+        "src/analyze/copied-metadata-graph.mjs",
+        "src/analyze/elaborated-metadata.mjs",
+        "src/analyze/export-configuration.mjs",
+        "src/analyze/generator-configuration.mjs",
+        "src/analyze/lean-project.mjs",
+        "src/analyze/native-metadata.mjs",
+        "src/analyze/native-types.mjs",
+        "src/analyze/output.mjs",
+        "src/analyze/package-license.mjs",
+        "src/analyze/package-metadata.mjs",
+        "src/analyze/policy.mjs",
+        "src/analyze/project-analysis.mjs",
+        "src/analyze/project-elaborated.mjs",
+        "src/analyze/reviewed-source.mjs",
+        "src/analyze/semantic-model.mjs",
+        "src/analyze/spdx-data.json",
+        "src/backends/c/copied-graph-layout.mjs",
+        "src/backends/c/generate.mjs",
+        "src/backends/c/gmp-graph-conversions.mjs",
+        "src/backends/c/gmp-graph-values.mjs",
+        "src/backends/c/gmp-projection.mjs",
+        "src/backends/c/gmp-values.mjs",
+        "src/backends/c/gmp.mjs",
+        "src/backends/c/gmp.source.tar.xz",
+        "src/backends/c/graph-package.mjs",
+        "src/backends/c/native-callables.mjs",
+        "src/backends/c/native-copied-values.mjs",
+        "src/backends/c/native-graph-adapters.mjs",
+        "src/backends/c/native-primitives.mjs",
+        "src/backends/c/package-audit.mjs",
+        "src/backends/c/primitive-surface.mjs",
+        "src/backends/cpp/boost.mjs",
+        "src/backends/cpp/boost.source.json",
+        "src/backends/cpp/callables.mjs",
+        "src/backends/cpp/copied-graph-conversions.mjs",
+        "src/backends/cpp/copied-graph-values.mjs",
+        "src/backends/cpp/copied-values.mjs",
+        "src/backends/cpp/generate.mjs",
+        "src/backends/cpp/primitives.mjs",
+        "src/backends/dotnet/callables.mjs",
+        "src/backends/dotnet/copied-aliases.mjs",
+        "src/backends/dotnet/copied-conversions.mjs",
+        "src/backends/dotnet/copied-graph-assets.mjs",
+        "src/backends/dotnet/copied-graph-conversions.mjs",
+        "src/backends/dotnet/copied-graph-equality.mjs",
+        "src/backends/dotnet/copied-graph-layout.mjs",
+        "src/backends/dotnet/copied-graph-package.mjs",
+        "src/backends/dotnet/copied-graph-runtime.mjs",
+        "src/backends/dotnet/copied-graph-scalars.mjs",
+        "src/backends/dotnet/copied-graph-values.mjs",
+        "src/backends/dotnet/copied-model.mjs",
+        "src/backends/dotnet/copied-values.mjs",
+        "src/backends/javascript/copied-validators.mjs",
+        "src/backends/javascript/coverage.mjs",
+        "src/backends/javascript/generate.mjs",
+        "src/backends/javascript/package-audit.mjs",
+        "src/backends/javascript/projection.mjs",
+        "src/backends/jvm/callables.mjs",
+        "src/backends/jvm/copied-aliases.mjs",
+        "src/backends/jvm/copied-assets.mjs",
+        "src/backends/jvm/copied-conversions.mjs",
+        "src/backends/jvm/copied-graph-assets.mjs",
+        "src/backends/jvm/copied-graph-conversions.mjs",
+        "src/backends/jvm/copied-graph-equality.mjs",
+        "src/backends/jvm/copied-graph-kotlin.mjs",
+        "src/backends/jvm/copied-graph-layout.mjs",
+        "src/backends/jvm/copied-graph-package.mjs",
+        "src/backends/jvm/copied-graph-runtime.mjs",
+        "src/backends/jvm/copied-graph-scalars.mjs",
+        "src/backends/jvm/copied-graph-values.mjs",
+        "src/backends/jvm/copied-kotlin.mjs",
+        "src/backends/jvm/copied-model.mjs",
+        "src/backends/jvm/copied-runtime.mjs",
+        "src/backends/jvm/copied-values.mjs",
+        "src/backends/managed/package-audit.mjs",
+        "src/backends/native/runtime-broker.mjs",
+        "src/backends/perl/Build.pm",
+        "src/backends/perl/Platform.pm",
+        "src/backends/perl/Runtime.pm",
+        "src/backends/perl/Runtime.xs",
+        "src/backends/perl/copied-aliases.mjs",
+        "src/backends/perl/copied-graph-conversions.mjs",
+        "src/backends/perl/copied-graph-package.mjs",
+        "src/backends/perl/copied-graph-runtime.mjs",
+        "src/backends/perl/copied-graph-values.mjs",
+        "src/backends/perl/copied-graph-xs.mjs",
+        "src/backends/perl/copied-variants.mjs",
+        "src/backends/perl/generate.mjs",
+        "src/backends/perl/naming.mjs",
+        "src/backends/perl/runtime.h",
+        "src/backends/php/brick-math.mjs",
+        "src/backends/php/brick-math.source.json",
+        "src/backends/php/callables.mjs",
+        "src/backends/php/copied-aliases.mjs",
+        "src/backends/php/copied-assets.mjs",
+        "src/backends/php/copied-conversions.mjs",
+        "src/backends/php/copied-equality.mjs",
+        "src/backends/php/copied-graph-scalars.mjs",
+        "src/backends/php/copied-graph-conversions.mjs",
+        "src/backends/php/copied-graph-assets.mjs",
+        "src/backends/php/copied-graph-package.mjs",
+        "src/backends/php/copied-graph-native.mjs",
+        "src/backends/php/copied-graph-transfer.mjs",
+        "src/backends/php/copied-graph-values.mjs",
+        "src/backends/php/copied-graph-walk.mjs",
+        "src/backends/php/copied-graph-wire.mjs",
+        "src/backends/php/copied-graph-zend-runtime.mjs",
+        "src/backends/php/copied-graph-zend.mjs",
+        "src/backends/php/copied-model.mjs",
+        "src/backends/php/copied-names.mjs",
+        "src/backends/php/copied-support.mjs",
+        "src/backends/php/copied-values.mjs",
+        "src/backends/php/copied-variants.mjs",
+        "src/backends/php/copied-zend-conversions.mjs",
+        "src/backends/php/copied-zend-support.mjs",
+        "src/backends/php/copied-zend-variants.mjs",
+        "src/backends/php/copied-zend.mjs",
+        "src/backends/php/generate.mjs",
+        "src/backends/php/package-audit.mjs",
+        "src/backends/php/php-wasm-copied-host.mjs",
+        "src/backends/php/php-wasm-copied-loader.mjs",
+        "src/backends/php/php-wasm-libuv.mjs",
+        "src/backends/php/projection.mjs",
+        "src/backends/php/zend-callables.mjs",
+        "src/backends/python/callables.mjs",
+        "src/backends/python/compounds.mjs",
+        "src/backends/python/copied-assets.mjs",
+        "src/backends/python/copied-conversions.mjs",
+        "src/backends/python/copied-graph-conversions.mjs",
+        "src/backends/python/copied-graph-package.mjs",
+        "src/backends/python/copied-graph-values.mjs",
+        "src/backends/python/copied-model.mjs",
+        "src/backends/python/copied-values.mjs",
+        "src/backends/python/package-audit.mjs",
+        "src/backends/ruby/callables.mjs",
+        "src/backends/ruby/copied-aliases.mjs",
+        "src/backends/ruby/copied-assets.mjs",
+        "src/backends/ruby/copied-conversions.mjs",
+        "src/backends/ruby/copied-graph-conversions.mjs",
+        "src/backends/ruby/copied-graph-layout.mjs",
+        "src/backends/ruby/copied-graph-package.mjs",
+        "src/backends/ruby/copied-graph-runtime.mjs",
+        "src/backends/ruby/copied-graph-values.mjs",
+        "src/backends/ruby/copied-model.mjs",
+        "src/backends/ruby/copied-values.mjs",
+        "src/backends/rust/callables.mjs",
+        "src/backends/rust/copied-assets.mjs",
+        "src/backends/rust/copied-conversions.mjs",
+        "src/backends/rust/copied-graph-conversions.mjs",
+        "src/backends/rust/copied-graph-package.mjs",
+        "src/backends/rust/copied-graph-values.mjs",
+        "src/backends/rust/copied-model.mjs",
+        "src/backends/rust/copied-values.mjs",
+        "src/backends/rust/dependencies.lock",
+        "src/backends/rust/package-audit.mjs",
+        "src/backends/wit/callable-host-runtime.mjs",
+        "src/backends/wit/callable-host.mjs",
+        "src/backends/wit/copied-aliases.mjs",
+        "src/backends/wit/copied-component.mjs",
+        "src/backends/wit/copied-conversions.mjs",
+        "src/backends/wit/copied-host.mjs",
+        "src/backends/wit/copied-model.mjs",
+        "src/backends/wit/copied-variants.mjs",
+        "src/binding-ir/canonical.mjs",
+        "src/binding-ir/contract.mjs",
+        "src/binding-ir/sha256.mjs",
+        "src/build/ResolveLakeWorkspace.lean",
+        "src/build/build-error.mjs",
+        "src/build/canonical-build.mjs",
+        "src/build/compile-jvm-sources.mjs",
+        "src/build/compiler-adapters.mjs",
+        "src/build/component-artifact-manifest.mjs",
+        "src/build/component-callable-adapters.mjs",
+        "src/build/component-compilation-plan.mjs",
+        "src/build/component-copied-adapters.mjs",
+        "src/build/component-engine.mjs",
+        "src/build/component-plan.mjs",
+        "src/build/component-record-adapters.mjs",
+        "src/build/component-recursive-adapters.mjs",
+        "src/build/component-recursive-lean.mjs",
+        "src/build/component-recursive-types.mjs",
+        "src/build/component-scalar-adapters.mjs",
+        "src/build/component-side-linker.mjs",
+        "src/build/cpan-projection.mjs",
+        "src/build/elaborated-component.mjs",
+        "src/build/engine-execution-request.mjs",
+        "src/build/lake-build-workspace.mjs",
+        "src/build/lake-dependency-snapshot.mjs",
+        "src/build/lake-entry-elaboration.mjs",
+        "src/build/lake-entry-engine.mjs",
+        "src/build/lake-entry-intent.mjs",
+        "src/build/lake-entry-modules.mjs",
+        "src/build/lake-generated-workspace.mjs",
+        "src/build/lake-generator-prerequisites.mjs",
+        "src/build/lake-generators.mjs",
+        "src/build/lake-native-inputs.mjs",
+        "src/build/lake-workspace.mjs",
+        "src/build/lean-analysis-engine.mjs",
+        "src/build/lean-component-compiler.mjs",
+        "src/build/multi-profile-project.mjs",
+        "src/build/native-allocation-guard.mjs",
+        "src/build/native-artifacts.mjs",
+        "src/build/native-c-projection.mjs",
+        "src/build/native-component.mjs",
+        "src/build/native-dotnet-artifacts.mjs",
+        "src/build/native-dotnet-projection.mjs",
+        "src/build/native-gmp.mjs",
+        "src/build/native-graph-model.mjs",
+        "src/build/native-graph-projection.mjs",
+        "src/build/native-graph-sources.mjs",
+        "src/build/native-jvm-artifacts.mjs",
+        "src/build/native-jvm-projection.mjs",
+        "src/build/native-model.mjs",
+        "src/build/native-php-artifacts.mjs",
+        "src/build/native-project.mjs",
+        "src/build/native-python-artifacts.mjs",
+        "src/build/native-ruby-artifacts.mjs",
+        "src/build/native-rust-artifacts.mjs",
+        "src/build/native-rust-projection.mjs",
+        "src/build/native-wit-artifacts.mjs",
+        "src/build/native-wit-projection.mjs",
+        "src/build/perl-xs.mjs",
+        "src/build/php-wasm-copied-artifacts.mjs",
+        "src/build/php-wasm-copied-component.mjs",
+        "src/build/php-wasm-graph-component.mjs",
+        "src/build/php-wasm-graph-model.mjs",
+        "src/build/php-wasm-project.mjs",
+        "src/build/process-runner.mjs",
+        "src/build/side-module-audit.mjs",
+        "src/capsule/contract.mjs",
+        "src/capsule/node.mjs",
+        "src/cli/commands.mjs",
+        "src/cli/contract.mjs",
+        "src/cli/run.mjs",
+        "src/cli/verify.mjs",
+        "src/release/archive-subjects.mjs",
+        "src/release/backend-policy.mjs",
+        "src/release/c-family-package.mjs",
+        "src/release/canonical-bundle-input.mjs",
+        "src/release/canonical-package-manifest.mjs",
+        "src/release/cargo-package.mjs",
+        "src/release/component-callable-runtime.mjs",
+        "src/release/component-copied-codec.mjs",
+        "src/release/component-copied-runtime.mjs",
+        "src/release/component-npm-package.mjs",
+        "src/release/component-package-receipt.mjs",
+        "src/release/component-publication.mjs",
+        "src/release/component-recursive-codec.mjs",
+        "src/release/component-recursive-ownership.mjs",
+        "src/release/component-release-bundle.mjs",
+        "src/release/component-reproducibility-gate.mjs",
+        "src/release/component-runtime-root.mjs",
+        "src/release/component-runtime.mjs",
+        "src/release/component-scalar-codec.mjs",
+        "src/release/cpan-install-trace.mjs",
+        "src/release/cpan-install.mjs",
+        "src/release/cpan-package.mjs",
+        "src/release/credentials.mjs",
+        "src/release/deterministic-archive.mjs",
+        "src/release/deterministic-zip.mjs",
+        "src/release/managed-registry-package.mjs",
+        "src/release/maven-package.mjs",
+        "src/release/native-c-family.mjs",
+        "src/release/native-cargo.mjs",
+        "src/release/native-composer.mjs",
+        "src/release/native-maven.mjs",
+        "src/release/native-nuget.mjs",
+        "src/release/native-pypi.mjs",
+        "src/release/native-rubygems.mjs",
+        "src/release/native-wasi.mjs",
+        "src/release/npm-package.mjs",
+        "src/release/npm-registry-adapter.mjs",
+        "src/release/nuget-package.mjs",
+        "src/release/package-set-assembly.mjs",
+        "src/release/package-set-receipt.mjs",
+        "src/release/php-wasm-compiler-inputs.mjs",
+        "src/release/php-wasm-copied-package.mjs",
+        "src/release/publication-attestation.mjs",
+        "src/release/publish-configuration.mjs",
+        "src/release/publish-manifest.mjs",
+        "src/release/pypi-package.mjs",
+        "src/release/python-wheel-preflight.mjs",
+        "src/release/registry-transaction.mjs",
+        "src/release/release-archive-verifier.mjs",
+        "src/release/release-candidate-state.mjs",
+        "src/release/release-receipt.mjs",
+        "src/release/release-rehearsal.mjs",
+        "src/release/reproducibility-gate.mjs",
+        "src/release/reproducibility.mjs",
+        "src/release/rubygems-package.mjs",
+        "src/release/source-identity.mjs",
+        "src/release/source-notices.mjs",
+        "src/release/wasi-package.mjs"
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "75910ae8222e7fb15809a006c9ed0265f63d09a63581c962fd4c0796455ae7ed",
+      "currentSha256": "5b3074d4756d9e0cd32455c7baaae248e0361a78e1ecee734051b950093c33f0",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_WASM_GRAPH_REPRO_TEST=1 node --test tests/php-wasm-graph-reproduction.test.mjs",
+        "          test -s build/recursive/php-wasm-graph-reproduction.json",
+        "          LEAN_BRIDGE_PHP_WASM_GRAPH_LOADING_TEST=1 node --test tests/php-wasm-graph-loading.test.mjs",
+        "          test -s build/recursive/php-wasm-graph-loading.json",
+        "            build/recursive/php-wasm-graph-reproduction.json",
+        "            build/recursive/php-wasm-graph-loading.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "f414f6b7ef472c56460471d4a9cc523b2e935c959395035fa5991b5442438083",
+      "currentSha256": "a562fa6a42f04b23d5beb31328ae8c95de994f5384537ff9138a63d67aa4ecb0",
+      "addedLines": [
+        "    \"src/build/php-wasm-graph-component.mjs\",",
+        "    \"src/build/php-wasm-graph-model.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "27bbee3dbc66827068907f54687b0080c553d7a5086a585801f97e52bf480197",
+      "currentSha256": "a0c7fb35efb5eb568148f3388b8c722971c4ff1a5e4128c3a2e5eb129050033d",
+      "addedLines": [
+        "    \"src/build/php-wasm-graph-component.mjs\",",
+        "    \"src/build/php-wasm-graph-model.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "f0988e1f7e0ea91243762053dc5b4bfe7302ac52253e224df11dc863e774fe18",
+      "currentSha256": "20d917b9b75afd8d895e2d30764be3c939380cb22b871d8e1708830c9ec998ce",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/build/php-wasm-graph-component.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/build/php-wasm-graph-model.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "cf6229796a48c951a029491b812ea80df9a14c056b764b52deaf3b02250c6361",
+      "currentSha256": "0609303e4b309755a12e725362761256b968de69ea5c962bab6a031914c8db48",
+      "addedLines": [
+        "    \"src/build/php-wasm-graph-component.mjs\",",
+        "    \"src/build/php-wasm-graph-model.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "9ac055c9f8f7a669bce12f87572a4d392e690f05c5d7f1dee2699ceff67e6620",
+      "currentSha256": "75910ae8222e7fb15809a006c9ed0265f63d09a63581c962fd4c0796455ae7ed",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_WASM_GRAPH_PACKAGE_TEST=1 node --test tests/php-wasm-graph-package.test.mjs",
+        "          test -s build/recursive/php-wasm-graph-packages.json",
+        "            build/recursive/php-wasm-graph-packages.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "3d81729afc272c549df7ab8c97673e0892f2a1af2a8eb163045c7fed31d37f6c",
+      "currentSha256": "7024d4be4b6e2f16cd5c72a16b216d9eafe6a91c3f0d3c560eb6870ac77d6075",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "bd0208572053b530933ca49b35e44ef058a8db7b5c54e8202e9014a94123952b",
+      "currentSha256": "5c9e24160c858168e786ee28fa9969ed21dbafb82eed6a09eced5366f5b29fd3",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "19ccbb39bddf7dcc9a70f5645da6d8ed4f38ec095e8c4e9451c8b0ef87adf0ae",
+      "currentSha256": "f948147fa8f51aeb9ce43eff78309dde72645e54be0a18b2baf4c6ce71350732",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "ab65424a2d79ca9468420cd4d40e270f95fde40aa3e03eac96a1a9ae31c721bb",
+      "currentSha256": "efc424f0781a54777a98aed5093cc1173e2125efdeb604998dd3742d05b10726",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2d21408282a482fce95205c6bf3858c4515b745ce175fdc2954b220c4527057e",
+      "currentSha256": "bcd558391aac637236b9f31ca9874c2c8b7983eb0e6084592611b5ad7e509f69",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs",
+        "          test -s build/recursive/python-values.json",
+        "            build/recursive/python-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "7024d4be4b6e2f16cd5c72a16b216d9eafe6a91c3f0d3c560eb6870ac77d6075",
+      "currentSha256": "bc12c9b20fed3f0c69811aaaf2d0537e8e54ee1e9a1e6ee08c032f3a82c99947",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "5c9e24160c858168e786ee28fa9969ed21dbafb82eed6a09eced5366f5b29fd3",
+      "currentSha256": "3060e3f64e8f95c28025a73828d96931c4cb9f74c7248f4b4cd7859316899828",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "f948147fa8f51aeb9ce43eff78309dde72645e54be0a18b2baf4c6ce71350732",
+      "currentSha256": "6bb69e45156c74302da22792488250655203977186879ad720244a87dc83f76f",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "efc424f0781a54777a98aed5093cc1173e2125efdeb604998dd3742d05b10726",
+      "currentSha256": "c85572e84d8408b5f0a9aa00e4c33f3590e9b80eb8c89f098c46e101aa4bd133",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "bcd558391aac637236b9f31ca9874c2c8b7983eb0e6084592611b5ad7e509f69",
+      "currentSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/python-conversions.json",
+        "          test -s build/recursive/python-native.json",
+        "            build/recursive/python-conversions.json",
+        "            build/recursive/python-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "bc12c9b20fed3f0c69811aaaf2d0537e8e54ee1e9a1e6ee08c032f3a82c99947",
+      "currentSha256": "176d84a0d01f845176d9ad941ee46a694dc6d5f01c0616c95ddb4718864bcd55",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "3060e3f64e8f95c28025a73828d96931c4cb9f74c7248f4b4cd7859316899828",
+      "currentSha256": "7c22fb04779d1535398712cb7639d09e0921e769e9905793552d4c625692e381",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "6bb69e45156c74302da22792488250655203977186879ad720244a87dc83f76f",
+      "currentSha256": "fb21c6aabf0f635c56707b46f281197c93c6e8b614f18e706a6ab8ffaae745ae",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/build/native-graph-sources.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "c85572e84d8408b5f0a9aa00e4c33f3590e9b80eb8c89f098c46e101aa4bd133",
+      "currentSha256": "dcd3de0f5fbe33902fee67c426b576bba772e2728cc101017643477818372efc",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "currentSha256": "fe7725b91b21bd7ceb8d343410a4dbcb0465a3a742385bfdbef093be413a1435",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs",
+        "          test -s build/recursive/python-packages.json",
+        "            build/recursive/python-packages.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "currentSha256": "c186605b61d26039ec618ac4b5d28e4656ad571bdbb3305915227d9e95a00be5",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs",
+        "          test -s build/recursive/python-packages.json",
+        "            build/recursive/python-packages.json",
+        "          export CARGO_HOME=\"${CARGO_HOME:-$HOME/.cargo}\"",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "176d84a0d01f845176d9ad941ee46a694dc6d5f01c0616c95ddb4718864bcd55",
+      "currentSha256": "86120622e94fcbbf73773a669798e8940d99fb3149b493aeb7711644072159d9",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "7c22fb04779d1535398712cb7639d09e0921e769e9905793552d4c625692e381",
+      "currentSha256": "01f1e76ca7ed5f862fa1a39ddf6797686ce5874dca52f30d1e221581a8cbd195",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "fb21c6aabf0f635c56707b46f281197c93c6e8b614f18e706a6ab8ffaae745ae",
+      "currentSha256": "7704479ed6d1dd6270fe13b14715cb6fc239087bb92a3f904863e5a14f14b8cb",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "dcd3de0f5fbe33902fee67c426b576bba772e2728cc101017643477818372efc",
+      "currentSha256": "a7cd8481d0be4beb00129d59147a63bbef5052411fdd801526807da99402318b",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c186605b61d26039ec618ac4b5d28e4656ad571bdbb3305915227d9e95a00be5",
+      "currentSha256": "88994d80f918c8f4096ba569816cebf89156129ee6cd9f76a8e036f88384cef2",
+      "addedLines": [
+        "          LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs",
+        "          test -s build/recursive/ruby-values.json",
+        "            build/recursive/ruby-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "86120622e94fcbbf73773a669798e8940d99fb3149b493aeb7711644072159d9",
+      "currentSha256": "9b115f44cd27bf8cc06e6e3d17c46cfa0110c3c3ff88475acd1a5f4f565a3e35",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "01f1e76ca7ed5f862fa1a39ddf6797686ce5874dca52f30d1e221581a8cbd195",
+      "currentSha256": "c69e5c53ddb2b2dda2e7775b6c2cbfe37500f4c8262181fe43b3630688722281",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "7704479ed6d1dd6270fe13b14715cb6fc239087bb92a3f904863e5a14f14b8cb",
+      "currentSha256": "bd50c98f8b5f9ec6afdbc158b9788a5910563c896466720d6f6bf59241f22a36",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-layout.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "a7cd8481d0be4beb00129d59147a63bbef5052411fdd801526807da99402318b",
+      "currentSha256": "8383c5a1bea19d68cf0c103f196f106fc2da321e1cb50d92a7854f0b78d59734",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "88994d80f918c8f4096ba569816cebf89156129ee6cd9f76a8e036f88384cef2",
+      "currentSha256": "c7359eaf73d1745efeec63e98cbfb10ea1f69c58b14a2b1aaa02b17c23697916",
+      "addedLines": [
+        "          LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/ruby-conversions.json",
+        "          test -s build/recursive/ruby-native.json",
+        "            build/recursive/ruby-conversions.json",
+        "            build/recursive/ruby-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "9b115f44cd27bf8cc06e6e3d17c46cfa0110c3c3ff88475acd1a5f4f565a3e35",
+      "currentSha256": "08c6e8c6c7edfc2765edc60605e20b66d6b9799f474efa012d1790f77725566b",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "c69e5c53ddb2b2dda2e7775b6c2cbfe37500f4c8262181fe43b3630688722281",
+      "currentSha256": "3aa2ebac088c69df1428b088a1e99a7afa31a3cdd23030c2d695d7ffee575ae1",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "bd50c98f8b5f9ec6afdbc158b9788a5910563c896466720d6f6bf59241f22a36",
+      "currentSha256": "2c0a6a94bc6f488f711cfafa738b4b61c35645adca8238a144e6526ef3fc7123",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "8383c5a1bea19d68cf0c103f196f106fc2da321e1cb50d92a7854f0b78d59734",
+      "currentSha256": "a16b8f03b198c7d9cb1550740e8d22b5b2dacde54e7e2e257fb7b774cf126bd5",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c7359eaf73d1745efeec63e98cbfb10ea1f69c58b14a2b1aaa02b17c23697916",
+      "currentSha256": "b88b5a46751b7d00b4ee8d4494093f6789d1599ff0d9c58bf9f53033b88cd95b",
+      "addedLines": [
+        "          LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs",
+        "          test -s build/recursive/ruby-packages.json",
+        "            build/recursive/ruby-packages.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "08c6e8c6c7edfc2765edc60605e20b66d6b9799f474efa012d1790f77725566b",
+      "currentSha256": "beed44a4b77d717b4a4df1b7ac443287369d2cf521f11a56cb30ad49a4a6354d",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "3aa2ebac088c69df1428b088a1e99a7afa31a3cdd23030c2d695d7ffee575ae1",
+      "currentSha256": "45322c12ebdcb413e793df198e4a8c91a891b895fa7e0cc3107fc65a75c983ad",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "2c0a6a94bc6f488f711cfafa738b4b61c35645adca8238a144e6526ef3fc7123",
+      "currentSha256": "e6f0b4ae7661686b9f0b782e493345bdf3d85d4f592c58272e957d868e5abae2",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "a16b8f03b198c7d9cb1550740e8d22b5b2dacde54e7e2e257fb7b774cf126bd5",
+      "currentSha256": "2d3d063778bdcd639e8dd2b8f86b57a0eecff4c1ee48e8d0e41358afcb1e761a",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "beed44a4b77d717b4a4df1b7ac443287369d2cf521f11a56cb30ad49a4a6354d",
+      "currentSha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "45322c12ebdcb413e793df198e4a8c91a891b895fa7e0cc3107fc65a75c983ad",
+      "currentSha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "e6f0b4ae7661686b9f0b782e493345bdf3d85d4f592c58272e957d868e5abae2",
+      "currentSha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-xs.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "2d3d063778bdcd639e8dd2b8f86b57a0eecff4c1ee48e8d0e41358afcb1e761a",
+      "currentSha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "6525cdf64975b31e3772ef9230e0154eb3ebdb8b70c2e1fb06b6f7f1af0df0b4",
+      "currentSha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103",
+      "addedLines": [
+        "          LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/perl-conversions.json",
+        "          test -s build/recursive/perl-native.json",
+        "            build/recursive/perl-conversions.json",
+        "            build/recursive/perl-native.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451",
+      "currentSha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416",
+      "currentSha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74",
+      "currentSha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f",
+      "currentSha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103",
+      "currentSha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c",
+      "addedLines": [
+        "          LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs",
+        "          test -s build/recursive/perl-packages.json",
+        "          test -s build/recursive/perl-component-collision.json",
+        "          test -s build/recursive/perl-composition.json",
+        "          test -s build/recursive/perl-documentation.json",
+        "            build/recursive/perl-packages.json",
+        "            build/recursive/perl-component-collision.json",
+        "            build/recursive/perl-composition.json",
+        "            build/recursive/perl-documentation.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3",
+      "currentSha256": "5dd8bf05172eed7b1b60cd2c48ee69606e9994588785bd24602b79c04d1cde7f",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069",
+      "currentSha256": "9a9df1cc4871286ef4906f7c87543527da4ca2be696067fe8252d4908bab6f39",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a",
+      "currentSha256": "59d037740aa90590f3b09b9b5a05be4622a9a21dea2e95e78407ac7bb89db0e7",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-equality.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc",
+      "currentSha256": "61fe0e7c95e8f83327dc4509666109a8a2251fe9f97c80bc964e127356ab7af8",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b88b5a46751b7d00b4ee8d4494093f6789d1599ff0d9c58bf9f53033b88cd95b",
+      "currentSha256": "b9b6f4d172d3b2947a3d2c1caccc3a72066622ef01a6954e46a74105a05d9266",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs",
+        "          test -s build/recursive/dotnet-values.json",
+        "            build/recursive/dotnet-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "5dd8bf05172eed7b1b60cd2c48ee69606e9994588785bd24602b79c04d1cde7f",
+      "currentSha256": "1a79cf1802cfa0ec1fae20e2374f438c3c23780b51bed3ca90f4d1073c13e239",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "9a9df1cc4871286ef4906f7c87543527da4ca2be696067fe8252d4908bab6f39",
+      "currentSha256": "b383bcf21b1740c41c4315f89b3efbe740d9c6d5bd6e4ab628997c0cc39dd639",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "59d037740aa90590f3b09b9b5a05be4622a9a21dea2e95e78407ac7bb89db0e7",
+      "currentSha256": "bc1c0c8cf31b7a9e91f0cbf1b5f3ca782a1376cd5010011420ec56125440ba2e",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-layout.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-scalars.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "61fe0e7c95e8f83327dc4509666109a8a2251fe9f97c80bc964e127356ab7af8",
+      "currentSha256": "21c861cc0b928389bf10988689ee2b3c53408b2821683efc1f81dc2c407e09fa",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b9b6f4d172d3b2947a3d2c1caccc3a72066622ef01a6954e46a74105a05d9266",
+      "currentSha256": "cc50b17f95e9543ae07fd39f58c36d09c0c8eb33725382495442838452e6921a",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/dotnet-conversions.json",
+        "          test -s build/recursive/dotnet-native.json",
+        "            build/recursive/dotnet-conversions.json",
+        "            build/recursive/dotnet-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "1a79cf1802cfa0ec1fae20e2374f438c3c23780b51bed3ca90f4d1073c13e239",
+      "currentSha256": "9dce8a93c5c276975945bbc4a998224ed2adcb70791ff0863c7034aa2c8c0c6b",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-assets.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "b383bcf21b1740c41c4315f89b3efbe740d9c6d5bd6e4ab628997c0cc39dd639",
+      "currentSha256": "ea53ed4e780b7ec755ba3437674549cf901f87ce109519d4ba86d9912bc8d2fb",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-assets.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "bc1c0c8cf31b7a9e91f0cbf1b5f3ca782a1376cd5010011420ec56125440ba2e",
+      "currentSha256": "21f5e4e432f6604733e208c94878b0281003e31838873b230826459416a213b0",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-assets.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "21c861cc0b928389bf10988689ee2b3c53408b2821683efc1f81dc2c407e09fa",
+      "currentSha256": "7fc35b5bbabcb6fb88bfa0dfd207962177f4922cf205f81c7290d6f7cb775030",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-assets.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "cc50b17f95e9543ae07fd39f58c36d09c0c8eb33725382495442838452e6921a",
+      "currentSha256": "69a1d01891f0588a5daef0199852f79dd6529f764b7c1777e0162ef4dafafadc",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs",
+        "          test -s build/recursive/dotnet-packages.json",
+        "            build/recursive/dotnet-packages.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "69a1d01891f0588a5daef0199852f79dd6529f764b7c1777e0162ef4dafafadc",
+      "currentSha256": "170830c034715327e1210e8bd9addcb713a4fe7af73891f9d41fa8aabaf7478b",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs",
+        "          test -s build/recursive/dotnet-composition.json",
+        "            build/recursive/dotnet-composition.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "170830c034715327e1210e8bd9addcb713a4fe7af73891f9d41fa8aabaf7478b",
+      "currentSha256": "0676b227b81f082c6acae422a4abe2b92403c391a74a2c633d64b30cdec3b684",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs",
+        "          test -s build/recursive/dotnet-reproducibility.json",
+        "          LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs",
+        "          test -s build/recursive/dotnet-conflicts.json",
+        "            build/recursive/dotnet-reproducibility.json",
+        "            build/recursive/dotnet-conflicts.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs\"",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "9dce8a93c5c276975945bbc4a998224ed2adcb70791ff0863c7034aa2c8c0c6b",
+      "currentSha256": "bf4a34cc5e1a4f2410f033f03b557c19f0eda2f81a864d5fac9dd57a118bbab1",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-equality.mjs\",",
+        "    \"src/backends/jvm/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "ea53ed4e780b7ec755ba3437674549cf901f87ce109519d4ba86d9912bc8d2fb",
+      "currentSha256": "0bf0e4bb5f6872e873191e54cdd3e391ca80ead27c08d174beef9ba3cc9a54b3",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-equality.mjs\",",
+        "    \"src/backends/jvm/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "7fc35b5bbabcb6fb88bfa0dfd207962177f4922cf205f81c7290d6f7cb775030",
+      "currentSha256": "d9b8ae326959476410127c1955ed8939349af0f5ea8ddf283449361a9d6091be",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-equality.mjs\",",
+        "    \"src/backends/jvm/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "21f5e4e432f6604733e208c94878b0281003e31838873b230826459416a213b0",
+      "currentSha256": "a91b04c2871ac94446192f9820567c343a4e09392f1b5d05aad2b94d72ebe2b5",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-equality.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "0676b227b81f082c6acae422a4abe2b92403c391a74a2c633d64b30cdec3b684",
+      "currentSha256": "5df34bfb42e3fc5085e1816faa1e8b7cc512972fdcef3df62ecb3bc486281fca",
+      "addedLines": [
+        "          LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs",
+        "          test -s build/recursive/jvm-values.json",
+        "            build/recursive/jvm-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "bf4a34cc5e1a4f2410f033f03b557c19f0eda2f81a864d5fac9dd57a118bbab1",
+      "currentSha256": "a2d41cb11127d8ba03c7a8a6a875ed0bb1d514a33dae3b6c43dbf50f72a78e85",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-conversions.mjs\",",
+        "    \"src/backends/jvm/copied-graph-layout.mjs\",",
+        "    \"src/backends/jvm/copied-graph-runtime.mjs\",",
+        "    \"src/backends/jvm/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "0bf0e4bb5f6872e873191e54cdd3e391ca80ead27c08d174beef9ba3cc9a54b3",
+      "currentSha256": "d3ff5cb95f912ed380fd993457c231c6d6a2e6f61e77313074cb2a1d55d971ba",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-conversions.mjs\",",
+        "    \"src/backends/jvm/copied-graph-layout.mjs\",",
+        "    \"src/backends/jvm/copied-graph-runtime.mjs\",",
+        "    \"src/backends/jvm/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "a91b04c2871ac94446192f9820567c343a4e09392f1b5d05aad2b94d72ebe2b5",
+      "currentSha256": "5b6841685f015d6006ec1dc73cbda91f5bea808a1e10ee6887d15a2640b5c3b4",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-layout.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-scalars.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "d9b8ae326959476410127c1955ed8939349af0f5ea8ddf283449361a9d6091be",
+      "currentSha256": "b24a2f1a98142463caa9f33eb93c685bee52d853b65463161183401324869ac0",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-conversions.mjs\",",
+        "    \"src/backends/jvm/copied-graph-layout.mjs\",",
+        "    \"src/backends/jvm/copied-graph-runtime.mjs\",",
+        "    \"src/backends/jvm/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "5df34bfb42e3fc5085e1816faa1e8b7cc512972fdcef3df62ecb3bc486281fca",
+      "currentSha256": "d3e1b25371c08b3694889195445255572e94d84c5e2e9c7ab6782d91450fec4d",
+      "addedLines": [
+        "          LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/jvm-conversions.json",
+        "          test -s build/recursive/jvm-native.json",
+        "            build/recursive/jvm-conversions.json",
+        "            build/recursive/jvm-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "a2d41cb11127d8ba03c7a8a6a875ed0bb1d514a33dae3b6c43dbf50f72a78e85",
+      "currentSha256": "15eed62fc75097f3acf4bed2ab63cc0e688e8df643c542da4b9b7bcb75e7b6ea",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-assets.mjs\",",
+        "    \"src/backends/jvm/copied-graph-kotlin.mjs\",",
+        "    \"src/backends/jvm/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "d3ff5cb95f912ed380fd993457c231c6d6a2e6f61e77313074cb2a1d55d971ba",
+      "currentSha256": "9adf6a650d31ef6faf1cf0b0c09253b144e6fc02c18c8c41bb8c24f32d51f4d1",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-assets.mjs\",",
+        "    \"src/backends/jvm/copied-graph-kotlin.mjs\",",
+        "    \"src/backends/jvm/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "5b6841685f015d6006ec1dc73cbda91f5bea808a1e10ee6887d15a2640b5c3b4",
+      "currentSha256": "7013dadd3537184f239d580e516ef6986e09d4725f9bd69916105c00dd52505d",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-assets.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-kotlin.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/jvm/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "b24a2f1a98142463caa9f33eb93c685bee52d853b65463161183401324869ac0",
+      "currentSha256": "f37b6c08c675458db77dd416ca87b890c06db001832d57b72f625dbe21065ff2",
+      "addedLines": [
+        "    \"src/backends/jvm/copied-graph-assets.mjs\",",
+        "    \"src/backends/jvm/copied-graph-kotlin.mjs\",",
+        "    \"src/backends/jvm/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "d3e1b25371c08b3694889195445255572e94d84c5e2e9c7ab6782d91450fec4d",
+      "currentSha256": "964953fc4c0de24d16376ea933d576446e3c18982f8119e08d84ad63a71d9454",
+      "addedLines": [
+        "          LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs",
+        "          LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs",
+        "          test -s build/recursive/kotlin-values.json",
+        "          test -s build/recursive/jvm-package-cold.json",
+        "          test -s build/recursive/jvm-packages.json",
+        "            build/recursive/kotlin-values.json",
+        "            build/recursive/jvm-package-cold.json",
+        "            build/recursive/jvm-packages.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs\"",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "964953fc4c0de24d16376ea933d576446e3c18982f8119e08d84ad63a71d9454",
+      "currentSha256": "79a747f8ef78ec642fd90d0787b8a0037042e1d38511b5c17552402887648831",
+      "addedLines": [
+        "          LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs",
+        "          test -s build/recursive/jvm-reproducibility.json",
+        "          test -s build/recursive/jvm-composition.json",
+        "          test -s build/recursive/jvm-conflicts.json",
+        "            build/recursive/jvm-reproducibility.json",
+        "            build/recursive/jvm-composition.json",
+        "            build/recursive/jvm-conflicts.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "15eed62fc75097f3acf4bed2ab63cc0e688e8df643c542da4b9b7bcb75e7b6ea",
+      "currentSha256": "5608087e3b32f88e2946b3d35bcc0627033f1ded1e82ea0f4a7cc5d7cece7131",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-scalars.mjs\",",
+        "    \"src/backends/php/copied-graph-values.mjs\",",
+        "    \"src/backends/php/copied-graph-walk.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "9adf6a650d31ef6faf1cf0b0c09253b144e6fc02c18c8c41bb8c24f32d51f4d1",
+      "currentSha256": "1bfc6ea4e62c74b9d3b1e83e392882e47aa23e6656580fa172d6c22dac5282b1",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-scalars.mjs\",",
+        "    \"src/backends/php/copied-graph-values.mjs\",",
+        "    \"src/backends/php/copied-graph-walk.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "7013dadd3537184f239d580e516ef6986e09d4725f9bd69916105c00dd52505d",
+      "currentSha256": "fb7909d500bf5fe6df3763582882e1e4f19d676e2c3f9ad6818d551602ea6e3f",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-scalars.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-walk.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "f37b6c08c675458db77dd416ca87b890c06db001832d57b72f625dbe21065ff2",
+      "currentSha256": "5e43302ecd88df16ced2760cd9a9c09240435988cd4f4c46f961c54ebd140a1e",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-scalars.mjs\",",
+        "    \"src/backends/php/copied-graph-values.mjs\",",
+        "    \"src/backends/php/copied-graph-walk.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "79a747f8ef78ec642fd90d0787b8a0037042e1d38511b5c17552402887648831",
+      "currentSha256": "1b0a0b1e76345b464858f1a1938bd130a7ad36c440a0563532f76cc9a1ca3ab8",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_GRAPH_VALUES_TEST=1 node --test tests/php-copied-graph-values.test.mjs",
+        "          test -s build/recursive/php-values.json",
+        "            build/recursive/php-values.json",
+        "          LEAN_BRIDGE_PHP_WASM_GRAPH_VALUES_TEST=1 node --test tests/php-copied-graph-values.test.mjs",
+        "          test -s build/recursive/php-wasm-values.json",
+        "            build/recursive/php-wasm-values.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "5608087e3b32f88e2946b3d35bcc0627033f1ded1e82ea0f4a7cc5d7cece7131",
+      "currentSha256": "fb587e0be9d3efc394b16aa9bd29982eacd49b15fbefcbd812368c29fde500c1",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-conversions.mjs\",",
+        "    \"src/backends/php/copied-graph-native.mjs\",",
+        "    \"src/backends/php/copied-graph-transfer.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "1bfc6ea4e62c74b9d3b1e83e392882e47aa23e6656580fa172d6c22dac5282b1",
+      "currentSha256": "95c4bd750a65038d84cb23265979893bfd30c40e57a8aee509c0e880b80fcfe0",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-conversions.mjs\",",
+        "    \"src/backends/php/copied-graph-native.mjs\",",
+        "    \"src/backends/php/copied-graph-transfer.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "fb7909d500bf5fe6df3763582882e1e4f19d676e2c3f9ad6818d551602ea6e3f",
+      "currentSha256": "f80ae6fdb11899b5177e3318beef8e93b72a9e5a0eae705b084932e0d8c5a378",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-native.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-transfer.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "5e43302ecd88df16ced2760cd9a9c09240435988cd4f4c46f961c54ebd140a1e",
+      "currentSha256": "4ae2a9aa169b5a992817397049383522911cff3517e85f31f7e5289e648f2d12",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-conversions.mjs\",",
+        "    \"src/backends/php/copied-graph-native.mjs\",",
+        "    \"src/backends/php/copied-graph-transfer.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "1b0a0b1e76345b464858f1a1938bd130a7ad36c440a0563532f76cc9a1ca3ab8",
+      "currentSha256": "7171923313e096c46a6684ac719477d1e27b1c57843072bd86f76087335aa282",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PHP_GRAPH_NATIVE_TEST=1 node --test tests/php-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/php-conversions.json",
+        "          test -s build/recursive/php-native.json",
+        "            build/recursive/php-conversions.json",
+        "            build/recursive/php-native.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "fb587e0be9d3efc394b16aa9bd29982eacd49b15fbefcbd812368c29fde500c1",
+      "currentSha256": "a7e540b6930778ad66c933708fdba8d7114b8f54a67755647c554c8908e48fa1",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-assets.mjs\",",
+        "    \"src/backends/php/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "95c4bd750a65038d84cb23265979893bfd30c40e57a8aee509c0e880b80fcfe0",
+      "currentSha256": "9cea00ccf51f0ba91ae5920533fd09eec096b7f2bb57aa6c74c5dfb8220f7325",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-assets.mjs\",",
+        "    \"src/backends/php/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "f80ae6fdb11899b5177e3318beef8e93b72a9e5a0eae705b084932e0d8c5a378",
+      "currentSha256": "424bfeed67129bf330410bb38f50c9591cfb43508c720d142d85a4d5d2ba9ce4",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-assets.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "4ae2a9aa169b5a992817397049383522911cff3517e85f31f7e5289e648f2d12",
+      "currentSha256": "58c705a26226c0267a71bd40a1e0ac3ad5a06817a5ced732fd66a1dbd8dcaa4a",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-assets.mjs\",",
+        "    \"src/backends/php/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "7171923313e096c46a6684ac719477d1e27b1c57843072bd86f76087335aa282",
+      "currentSha256": "99cf94fca2855b234fe1b3fa7330a5efe9f383702b9d30c3edab3c565d615a54",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_GRAPH_INSTALLED_TEST=1 node --test tests/php-graph-package.test.mjs",
+        "          test -s build/recursive/php-package-cold.json",
+        "          test -s build/recursive/php-packages.json",
+        "          LEAN_BRIDGE_PHP_GRAPH_REPRO_TEST=1 node --test tests/php-graph-package.test.mjs",
+        "          test -s build/recursive/php-reproducibility.json",
+        "            build/recursive/php-package-cold.json",
+        "            build/recursive/php-packages.json",
+        "            build/recursive/php-reproducibility.json"
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "99cf94fca2855b234fe1b3fa7330a5efe9f383702b9d30c3edab3c565d615a54",
+      "currentSha256": "866ad1da3c743fb31b151a6ed72def8534fa5f43ad73c5bd2b2ee62ffa4c0620",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_GRAPH_LOADING_TEST=1 node --test tests/php-graph-package.test.mjs",
+        "          test -s build/recursive/php-composition.json",
+        "          test -s build/recursive/php-conflicts.json",
+        "            build/recursive/php-composition.json",
+        "            build/recursive/php-conflicts.json"
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "866ad1da3c743fb31b151a6ed72def8534fa5f43ad73c5bd2b2ee62ffa4c0620",
+      "currentSha256": "ff14d6be7eec635872107148ca53c818e4692fe1657e68548f05cef1d82e64d0",
+      "addedLines": [
+        "          LEAN_BRIDGE_WASM32_RECURSIVE_TEST=1 node --test tests/wasm32-recursive-transport.test.mjs",
+        "          test -s build/recursive/wasm32-transport.json",
+        "            build/recursive/wasm32-transport.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "a7e540b6930778ad66c933708fdba8d7114b8f54a67755647c554c8908e48fa1",
+      "currentSha256": "f414f6b7ef472c56460471d4a9cc523b2e935c959395035fa5991b5442438083",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-wire.mjs\",",
+        "    \"src/backends/php/copied-graph-zend-runtime.mjs\",",
+        "    \"src/backends/php/copied-graph-zend.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "9cea00ccf51f0ba91ae5920533fd09eec096b7f2bb57aa6c74c5dfb8220f7325",
+      "currentSha256": "27bbee3dbc66827068907f54687b0080c553d7a5086a585801f97e52bf480197",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-wire.mjs\",",
+        "    \"src/backends/php/copied-graph-zend-runtime.mjs\",",
+        "    \"src/backends/php/copied-graph-zend.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "424bfeed67129bf330410bb38f50c9591cfb43508c720d142d85a4d5d2ba9ce4",
+      "currentSha256": "f0988e1f7e0ea91243762053dc5b4bfe7302ac52253e224df11dc863e774fe18",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-wire.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-zend-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/php/copied-graph-zend.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "58c705a26226c0267a71bd40a1e0ac3ad5a06817a5ced732fd66a1dbd8dcaa4a",
+      "currentSha256": "cf6229796a48c951a029491b812ea80df9a14c056b764b52deaf3b02250c6361",
+      "addedLines": [
+        "    \"src/backends/php/copied-graph-wire.mjs\",",
+        "    \"src/backends/php/copied-graph-zend-runtime.mjs\",",
+        "    \"src/backends/php/copied-graph-zend.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "ff14d6be7eec635872107148ca53c818e4692fe1657e68548f05cef1d82e64d0",
+      "currentSha256": "9ac055c9f8f7a669bce12f87572a4d392e690f05c5d7f1dee2699ceff67e6620",
+      "addedLines": [
+        "          LEAN_BRIDGE_PHP_WASM_GRAPH_ZEND_TEST=1 LEAN_BRIDGE_PHP_WASM_GRAPH_LEAN_TEST=1 node --test tests/php-copied-graph-zend.test.mjs",
+        "          test -s build/recursive/php-wasm-zend.json",
+        "          test -s build/recursive/php-wasm-zend-lean.json",
+        "            build/recursive/php-wasm-zend.json",
+        "            build/recursive/php-wasm-zend-lean.json"
+      ]
+    }
+  ]
+}

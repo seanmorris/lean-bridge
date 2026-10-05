@@ -6,8 +6,8 @@
  */
 
 
-import { cliHandlers } from "../src/cli/commands.mjs";
 import { renderProgressEvent, runCli } from "../src/cli/run.mjs";
+import { verificationHandler } from "../src/cli/verify.mjs";
 
 const cancellation = new AbortController();
 let signalCount = 0;
@@ -21,7 +21,11 @@ process.once("SIGTERM", () => cancel("SIGTERM"));
 
 const outcome = await runCli({
 	argv: process.argv.slice(2)
-	, handlers: cliHandlers
+	, handlers: {
+		verify: verificationHandler
+		, ...Object.fromEntries(["analyze", "build", "publish"].map(command => [command
+			, async (request, context) => (await import("../src/cli/commands.mjs")).cliHandlers[command](request, context)]))
+	}
 	, signal: cancellation.signal
 	, onProgress: (event, mode) => process.stderr.write(renderProgressEvent(event, mode))
 });

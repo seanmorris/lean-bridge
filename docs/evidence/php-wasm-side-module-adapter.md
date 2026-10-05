@@ -49,7 +49,7 @@ The shared Lean runtime and initialized component set survive request shutdown. 
 
 ## Shared adapter sources
 
-The PHP-Wasm generator reuses the same outputs as the native PHP transport:
+The PHP-Wasm generator reuses the native PHP generators with an explicit 32-bit integer profile:
 
 - the generated Composer projection;
 - the generated Zend value, object, callback, and exception handlers;
@@ -58,6 +58,8 @@ The PHP-Wasm generator reuses the same outputs as the native PHP transport:
 - the shared runtime broker header.
 
 The PHP-Wasm backend adds Emscripten host hooks and request lifecycle slots. It does not maintain a second marshalling implementation. The generated package manifest records each shared generator identity.
+
+`UInt32` uses `BigInteger` throughout this profile, including callback arguments, payload elements and cross-component results. Native 64-bit PHP uses `int`. The [installed boundary checks](php-alpha-uint32-boundaries-20260918.md) cover both unsigned halves.
 
 All generic call machinery remains private. PHP consumers continue to use the same `LeanAlpha` namespace, `Box` class, `Payload` value object, functions, exceptions, callables, and `close()` behavior as the native Zend package.
 

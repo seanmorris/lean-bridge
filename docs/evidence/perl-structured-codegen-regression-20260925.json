@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "perl-structured-codegen-regression",
+  "baselineRevision": "aecdcd13d9caffed826aa79ae09af006803da650",
+  "syntheticModels": true,
+  "installedAcceptance": false,
+  "predecessors": {
+    "src/backends/perl/generate.mjs": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af",
+    "src/backends/perl/copied-aliases.mjs": "1edfe52c00c5320d00f2b43fa84b783ad106e87a378c16b9e982e614ad623148"
+  },
+  "sourceHashes": {
+    "src/backends/perl/generate.mjs": "a3f7c6db27e9ddf69672b19c111411fa45f084c76a1c4d961800d87f2431de75",
+    "src/backends/perl/copied-aliases.mjs": "3e77c70117d27939a323383a9ef772a6d713d4ed23483445a777d8e277bd0956"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "modelSha256": "ff118cf45ad32746ede703d70c553a1f757010cd7a50d12036b01b9249cad4bc",
+      "identicalToPredecessor": true,
+      "scalarStorageRepairs": {
+        "absentOption": 0,
+        "unit": 0,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 4249,
+          "sha256": "92f72417fbbf258a02ba3e841dda4e378e31fea5f58af5399d8562606b923cd6"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 975,
+          "sha256": "74e16cd64dcf2645647b3713b58b23602445708f26f45bc2bace27c1a7899b5d"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "d71984ec97a46bbf9fa8564fe4fb19810b48f9910edab8885bf83cc5f1291327"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 4249,
+          "sha256": "92f72417fbbf258a02ba3e841dda4e378e31fea5f58af5399d8562606b923cd6"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 975,
+          "sha256": "74e16cd64dcf2645647b3713b58b23602445708f26f45bc2bace27c1a7899b5d"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "d71984ec97a46bbf9fa8564fe4fb19810b48f9910edab8885bf83cc5f1291327"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "modelSha256": "665c46c169a326774733adb7d339d617295dea9ab2fbc4e2312f3539f90b6a4c",
+      "identicalToPredecessor": true,
+      "scalarStorageRepairs": {
+        "absentOption": 0,
+        "unit": 0,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 9497,
+          "sha256": "0b374017dae0e25dfc0ad77dbf86dcc3493dcca901a6c42df09200e0a0884120"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2994,
+          "sha256": "048ba6720c3b1c9552e13528f17db723384b5d1715052b63318898073fa0b0ff"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "c8258cf237d19802958d85442b2052dd6504d787067a619d2ff3c831dbb39244"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 9497,
+          "sha256": "0b374017dae0e25dfc0ad77dbf86dcc3493dcca901a6c42df09200e0a0884120"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2994,
+          "sha256": "048ba6720c3b1c9552e13528f17db723384b5d1715052b63318898073fa0b0ff"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "c8258cf237d19802958d85442b2052dd6504d787067a619d2ff3c831dbb39244"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "modelSha256": "80775844e91753458f5229cc53684f5162fbd7ee089d00291be7e1cdb4414f38",
+      "identicalToPredecessor": false,
+      "scalarStorageRepairs": {
+        "absentOption": 2,
+        "unit": 1,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 10178,
+          "sha256": "786f6f808a75c9c2ef4fd9bda7ae9d80fefaa07d5a6450ccf286ec708e1039c8"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 3311,
+          "sha256": "0b6c0be786a78ab97d5af06233cc58e32520df9cc0e72000f661e7d0222e94c8"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "e8194c36f3085eb9bbec8970b7feafc7d3b10f2a11a9c3cbb088b2269bd5efd0"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 10154,
+          "sha256": "6cda890065277a4979164c809e10a967075bbceb9e6cb55862c8a4da9885a405"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 3311,
+          "sha256": "0b6c0be786a78ab97d5af06233cc58e32520df9cc0e72000f661e7d0222e94c8"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "e8194c36f3085eb9bbec8970b7feafc7d3b10f2a11a9c3cbb088b2269bd5efd0"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "modelSha256": "879e38239a074b06f4e5a9ecdc26bdea221f0c89d0e32d29853651ec78de1708",
+      "identicalToPredecessor": true,
+      "scalarStorageRepairs": {
+        "absentOption": 0,
+        "unit": 0,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 7825,
+          "sha256": "952f062e8262e428404ef8e0e7a641002ed39b14bb46ff38bfe4117adebfb1f1"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2676,
+          "sha256": "99fe598ff0af8430056b3f2622808631efec2a91370db48a31a556a34505f247"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "0bcefcd54315a5073ad662becafb1dd93bf4384715404fb8ecdc70e9dbb47308"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 7825,
+          "sha256": "952f062e8262e428404ef8e0e7a641002ed39b14bb46ff38bfe4117adebfb1f1"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2676,
+          "sha256": "99fe598ff0af8430056b3f2622808631efec2a91370db48a31a556a34505f247"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "0bcefcd54315a5073ad662becafb1dd93bf4384715404fb8ecdc70e9dbb47308"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "modelSha256": "54cb9bc813aadbf0b0fa48881ec9395323e067b7b8375f69b6ca29444fdda069",
+      "identicalToPredecessor": true,
+      "scalarStorageRepairs": {
+        "absentOption": 0,
+        "unit": 0,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 3872,
+          "sha256": "18f463d8fb4b954340222dfb3a53040fb9b6da4d2adeb7a18944e057866aaced"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2220,
+          "sha256": "12dda5e5d9fbd17797598f03fece659af69c6f92f5e9990813f552cd89fa2b95"
+        },
+        "binding-manifest.json": {
+          "bytes": 657,
+          "sha256": "86b478b764a3fd8e8b977baec776ab61a2e50ee19c90b3d517e1dabf66a33c08"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 3872,
+          "sha256": "18f463d8fb4b954340222dfb3a53040fb9b6da4d2adeb7a18944e057866aaced"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 2220,
+          "sha256": "12dda5e5d9fbd17797598f03fece659af69c6f92f5e9990813f552cd89fa2b95"
+        },
+        "binding-manifest.json": {
+          "bytes": 657,
+          "sha256": "86b478b764a3fd8e8b977baec776ab61a2e50ee19c90b3d517e1dabf66a33c08"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "modelSha256": "79b900c5c84b3cce030c86f9339eea7af4abe28253d9e4a708fdc8b7503cfb1a",
+      "identicalToPredecessor": false,
+      "scalarStorageRepairs": {
+        "absentOption": 1,
+        "unit": 0,
+        "bool": 0
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 5367,
+          "sha256": "4253d94a7e6bec3db8afe941ce3d1b21027b932d2b357acde8dfa119fe184f90"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 4557,
+          "sha256": "c7c8343f21e215908f5ec560c2a8092387c4012585f9fad13293985eaa9d1835"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "e53197fadfcd7427ed2905650103fbc46c5bb2d2c9fe205098440af108440bf9"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 5359,
+          "sha256": "21e730d1c94679dddb804a4c00544ddf7726e37d6ea50969bb28b8aa08c2533b"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 4557,
+          "sha256": "c7c8343f21e215908f5ec560c2a8092387c4012585f9fad13293985eaa9d1835"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "e53197fadfcd7427ed2905650103fbc46c5bb2d2c9fe205098440af108440bf9"
+        }
+      }
+    },
+    {
+      "name": "scalars",
+      "modelSha256": "1169ab79b0e3f718052e169a4039ab55a49e3f798d0f201f2db75638e8e37966",
+      "identicalToPredecessor": false,
+      "scalarStorageRepairs": {
+        "absentOption": 1,
+        "unit": 1,
+        "bool": 1
+      },
+      "files": {
+        "Component.xs": {
+          "bytes": 10009,
+          "sha256": "d830a03c4a43b356925c4e05eec6509b73591e9ca24ace46bbb4d06d6577b1f3"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 3551,
+          "sha256": "6592a57ec706bdde2ff0cb76115c095784b693ea8ad51e0735843e36ee2e84c4"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "2d0776d810038a33a07f3df0392e176bb6f68c6fd97c4b402103efc71ceb401b"
+        }
+      },
+      "predecessorFiles": {
+        "Component.xs": {
+          "bytes": 9972,
+          "sha256": "c176ce197c048caeeadbc18b5493a09bc64c62811388aa831fbaa99d7abfb008"
+        },
+        "lib/LeanBridge/Sample.pm": {
+          "bytes": 3551,
+          "sha256": "6592a57ec706bdde2ff0cb76115c095784b693ea8ad51e0735843e36ee2e84c4"
+        },
+        "binding-manifest.json": {
+          "bytes": 304,
+          "sha256": "2d0776d810038a33a07f3df0392e176bb6f68c6fd97c4b402103efc71ceb401b"
+        }
+      }
+    }
+  ]
+}

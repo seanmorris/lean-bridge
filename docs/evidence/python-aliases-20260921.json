@@ -1,0 +1,563 @@
+{
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "tests/python-aliases.test.mjs": "ba1a660f545aee805c211187a6892712710b26a13b2c0572e59b9b930f0ebd74",
+    "tests/python-alias-contract.test.mjs": "c5650f93b1455a5318f3fcd6f715df4f605043f973211820c1d8dbf85586d20b",
+    "tests/fixtures/alias-consumers/python.py": "650a382729f253ac5e5b45d071225ab20a2cdc293cfba3b94631512f0c8177c4",
+    "tests/fixtures/alias-consumers/python-typed.py": "208eb44a6588fee8bbd682ed77a2c6e5c75368b56e8e4db679c6b1e6b955d336",
+    "tests/fixtures/alias-consumers/python-invalid.py": "ac34f4ccefc2ba3089f22d7719b4e2b9960c04b519c94f20b77da034081f2fed",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "runs": [
+    {
+      "bindingIrSha256": "e7d31975c406f7c093f8036844174ac28470b3c45eb744116c3366dbe91cda5f",
+      "checks": 4460,
+      "compilerFreePath": true,
+      "consumerSha256": "650a382729f253ac5e5b45d071225ab20a2cdc293cfba3b94631512f0c8177c4",
+      "installedFilesSha256": "dc7a65afca2d85583660ccc1d39a5ded580cc6018fc6f1ba5faed07e2e5e90ee",
+      "installedFilesUnchanged": true,
+      "modelSha256": "db19b344639df25dc71f90e2ff0e38aab097ba6205650e943aa943756f3ecc9a",
+      "nativeLibraries": {
+        "lean_aliases/native/linux-x64/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lean_aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lean_aliases/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lean_aliases/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51419824,
+              "path": "archives/aliases_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "80786cdd87016c4a245d421a115ffc2ff04b2b46621fcfa232e09d58be650bfb"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "21c0ecb19d82881750e841423ecff2a9b62dc10ff5816d4896cffec627025d47",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "20c3c9f54a6e27ff42dfba5d50d1139568c3df7daf7876e35ede60cd0a1da913",
+      "strictTypecheck": {
+        "rejectedCalls": 8,
+        "rejectionSourceSha256": "ac34f4ccefc2ba3089f22d7719b4e2b9960c04b519c94f20b77da034081f2fed",
+        "repeatedAfterRelocation": true,
+        "sourceSha256": "208eb44a6588fee8bbd682ed77a2c6e5c75368b56e8e4db679c6b1e6b955d336",
+        "version": "mypy 1.17.1 (compiled: yes)"
+      }
+    },
+    {
+      "bindingIrSha256": "396c15f42664f9b08c4c62fd5da0da199c60da2a78de11a1607568b3c1e86ecf",
+      "checks": 4460,
+      "compilerFreePath": true,
+      "consumerSha256": "650a382729f253ac5e5b45d071225ab20a2cdc293cfba3b94631512f0c8177c4",
+      "installedFilesSha256": "775bb9a2bc99395e1beb0e880d4460313605fdb78e77c59d542be2dbf6d037f6",
+      "installedFilesUnchanged": true,
+      "modelSha256": "567c70ac760d803680de84a8c7ed403f56c7cff9f23b55f32d83a0dfe195b571",
+      "nativeLibraries": {
+        "lean_aliases/native/linux-x64/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "lean_aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "lean_aliases/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lean_aliases/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51427606,
+              "path": "archives/aliases_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "806f82b4ef8d338d1009b5629399e2769b096851dfadce214cff628929267d20"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "1302750495efb64b8b3b8af44fe606c0ee5e947ee6836e5a43c589da5cc107ff",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "528f2ef283b16cfe823e8dbc4f5660eb8fc183adc3a177b4be4287ee27a23aff",
+      "strictTypecheck": {
+        "rejectedCalls": 8,
+        "rejectionSourceSha256": "ac34f4ccefc2ba3089f22d7719b4e2b9960c04b519c94f20b77da034081f2fed",
+        "repeatedAfterRelocation": true,
+        "sourceSha256": "208eb44a6588fee8bbd682ed77a2c6e5c75368b56e8e4db679c6b1e6b955d336",
+        "version": "mypy 1.17.1 (compiled: yes)"
+      }
+    }
+  ]
+}

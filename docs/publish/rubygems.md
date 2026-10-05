@@ -1,8 +1,510 @@
-# Publish a RubyGem
+# Build and publish Ruby packages
+
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, copied records, tagged variants, options, results, nested binary products, named copied aliases, bounded recursive values, synchronous callbacks over copied values, and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+
+For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
+## Build an ordinary Lean project
+
+Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler and MRI Ruby 3.3 with RubyGems. Set `LEAN_BRIDGE_RUBY` to the Ruby executable if it is not on PATH. The current native profile is Linux x86-64 with glibc 2.38 or newer.
+
+Select modules and functions in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Willow"],
+  "exports": ["Willow.echo_nat", "Willow.echo_text", "Willow.matrix"],
+  "targets": {
+    "rubygems": { "name": "willow-api", "version": "2.0.0.rc.1" }
+  }
+}
+```
+
+Use a gem name your organization owns, then build into a new directory:
+
+```sh
+lean-bridge build --project /absolute/path/to/willow --target rubygems \
+  --output /absolute/path/to/willow-release
+```
+
+The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
+
+The acyclic copied profile supports up to 32 type levels. Packages with recursive types use the [recursive limits](#export-recursive-values). Native input/output conversion shares a 16 MiB budget; Ruby conversion scratch has a separate 16 MiB budget. Resource-containing aggregates use the [explicit ownership profile](#export-resource-containing-values). Asynchronous effects remain unsupported. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+
+Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export arrays and records
+
+Add these definitions to `Parcels.lean`:
+
+```lean
+namespace Parcels
+
+structure Parcel where
+  label : String
+  counts : Array Nat
+
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+
+end Parcels
+```
+
+Select `Parcels` in `modules` and `Parcels.reverse` in `exports`, then set
+`targets.rubygems` to a gem name and version your organization owns. Build with
+`--target rubygems` as above. The generated module is `LeanBridge::Parcels`;
+its `Parcel` class takes the required keywords `label:` and `counts:`.
+
+Arrays and acyclic copied records can nest with supported copied types.
+Ruby callers use `Array`, exact integers and named record classes. Generated
+records and variant constructors provide value equality, hashing and key
+pattern matching. Frozen records can contain mutable arrays and strings;
+conversions copy those payloads. See the [consumer example](../consume/ruby.md#arrays-and-records).
+
+The [installed collection record](../evidence/ruby-collections-20260922.md)
+includes this Lean example and its Ruby caller, original archive identities
+and both compiler-checked source paths.
+
+## Export named copied aliases
+
+Declare concrete aliases in Lean and select the functions that use them. No
+alias-specific configuration is needed:
+
+```lean
+namespace Aliases
+
+abbrev Count := UInt32
+abbrev Rows := Array (List Count)
+
+def increment (value : Count) : Count := value + 1
+def reverse_rows (value : Rows) : Rows := value.map List.reverse
+
+end Aliases
+```
+
+Ruby calls use target values such as `Integer` and nested `Array`. The generated
+gem records alias names, unflattened targets and chains in its binding manifest,
+README and public API comments, including parameter, result and record-field
+types. It does not create alias constants or wrapper classes. Target validation
+and copied ownership still apply.
+
+Ordinary-source and reviewed-IR builds share this behavior. A reviewed contract
+must retain named alias references and their definitions; replacing them with
+flattened primitive or container types fails compiler reconciliation. See the
+[consumer example](../consume/ruby.md#named-copied-aliases) and
+[installed evidence](../evidence/ruby-aliases-20260921.md). Aliases can also refer
+to [recursive copied types](#export-recursive-values). Acyclic copied aliases
+work in [callback and closure payloads](#structured-callback-values).
+Recursive callable payloads and identity-bearing alias targets remain unsupported.
+
+## Export copied tagged variants
+
+Select concrete, non-recursive Lean inductives through the normal export
+configuration or a reviewed contract. Lean checks each source constructor and
+payload before generation. No Ruby-specific variant configuration is required.
+
+Each family becomes a Ruby class with nested constructor classes, such as
+`Signal::Data`. Constructors take required keyword arguments and expose
+read-only accessors and `deconstruct_keys` for pattern matching. Objects are
+frozen, while contained arrays and strings remain mutable copied values. Calls
+reject unknown subclasses, invalid fields and null cases. The private Fiddle
+adapter checks aligned C union layouts and converts only the active payload.
+Generated Lean helpers keep runtime tags and object offsets private.
+
+Payloads can contain all nineteen primitives and supported copied containers,
+records and other admitted variants. Recursive families use the profile below.
+Generic, indexed, proof-bearing, callable and identity-bearing payloads remain
+outside this copied profile.
+Combined native variant builds admit C, C++, Python, Rust, .NET, JVM, Ruby and Perl
+when every selected target accepts the complete API.
+
+Use the [consumer example](../consume/ruby.md#tagged-variants) and inspect the
+[installed acceptance record](../evidence/ruby-variants-20260921.md) before
+publishing the original gem.
+
+## Export Lists
+
+Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, records, `Option`, `Except` and binary products. Select concrete exports as usual; no List-specific configuration is required.
+
+Ruby callers use exact `Array` instances. Conversions preserve empty Lists, order, duplicates, nesting and independent result storage. The existing 16 MiB accounting budgets and 32-level type limit apply. Lists also work in [structured callbacks and closures](#structured-callback-values). See the [consumer example](../consume/ruby.md#lists) and [installed gem evidence](../evidence/ruby-lists-20260921.md).
+
+## Export options, results and products
+
+Add these definitions to `Compounds.lean`:
+
+```lean
+namespace Compounds
+def classify (value : Option (Option Unit)) : UInt32 :=
+  match value with
+  | none => 0
+  | some none => 1
+  | some (some ()) => 2
+def result_nat (value : Except Nat Nat) : Except Nat Nat :=
+  match value with
+  | .ok value => .error value
+  | .error error => .ok error
+def tuple_nat (value : Nat × Nat) : Nat × Nat :=
+  (value.2, value.1)
+end Compounds
+```
+
+Select `Compounds` in `modules` and its three functions in `exports`. Set the RubyGems name and version, then use the ordinary build command above. The [consumer example](../consume/ruby.md#options-results-and-products) calls this API without native glue.
+
+Ruby maps `Option` to `nil` or `Some`, `Except` to `Ok` or `Err`, and each `Prod` to an exactly two-element array. Constructors are generated inside the package's public module only when needed. Each call checks the concrete payload types and preserves nested options and products. Mutable payloads are copied. Both ordinary source and [reviewed contracts](../lean/existing-package.md#compile-a-reviewed-contract) have [installed package evidence](../evidence/ruby-compounds-20260920.md); compiler validation still checks reviewed contracts against the Lean definitions.
+
+## Export recursive values
+
+In a Lake package named `recursive`, add these definitions to `Recursive.lean`:
+
+```lean
+namespace Recursive
+
+inductive Spine where
+  | next (value : Spine)
+  | leaf (value : UInt32)
+
+def spine (value : Spine) : Spine := value
+
+end Recursive
+```
+
+Select `Recursive` in `modules` and `Recursive.spine` in `exports`. Set
+`targets.rubygems.name` to `recursive-api` and `version` to `1.0.0`, then build
+with `--target rubygems`. The Lake package name determines the Ruby namespace;
+the gem coordinate does not change it.
+The [Ruby caller](../consume/ruby.md#recursive-values) uses
+`LeanBridge::Recursive::Spine::Next` and `Spine::Leaf` with required `value:`
+keywords. The gem bundles its compiled component and runtime; installation does
+not invoke a compiler.
+
+The compiler validates finite, concrete copied type graphs, including direct
+and mutual recursion, aliases, records and nested containers. Conversion permits
+up to 128 levels and 262,144 nodes, with a shared 16 MiB native-copy budget and a
+separate 16 MiB accounted conversion-storage budget. Cyclic Ruby objects and
+uninhabited values are rejected. Generated APIs preserve all nineteen primitive
+conversions and return independent copies. Recursive values also work in
+[callbacks and closures](#export-recursive-callbacks-and-closures). Resources
+and callable identities inside copied fields, and asynchronous payloads, remain
+unsupported.
+
+Recursive Ruby packages can share a native build with C, C++, Rust and Python
+when every selected target accepts the complete API. Native calls hold MRI's
+GVL; post-fork calls, Ractors and experimental M:N threads are rejected. A
+malformed native result retires the shared runtime across compatible packages.
+
+## Export callbacks and closures
+
+Callback arguments and results can use any of the nineteen primitives, [acyclic copied structures](#structured-callback-values) or [recursive copied values](#export-recursive-callbacks-and-closures). Add these definitions to a Lean module:
+
+```lean
+namespace Callables
+def callNat (value : Nat) (callback : Nat → Nat) : Nat := callback value
+def makeString (captured : String) : Bool → String → String :=
+  fun useCaptured value => if useCaptured then captured else value
+end Callables
+```
+
+Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-bridge.exports.json`. That arity leaves the final two arguments in the returned closure. Set `targets.rubygems.name` and `version`, then use the build command above.
+
+For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`. The callback contract requires repeated invocation, same-agent re-entry, deferred self-disposal, synchronous value delivery and the native callback failure policy. Arguments borrow the call; returned closures have explicit leases. Both source paths receive fresh Lean compiler checks before linking.
+
+Generated Ruby functions accept callable objects or a final block. Returned `LeanClosure` objects have `call`, `close`, `closed?` and `with` for scoped cleanup. Exceptions return to Ruby after native cleanup. Non-local block exits are rejected. Calls use MRI's default 1:1 threading, and closure invocation stays on its creating thread. See the [consumer example](../consume/ruby.md#callbacks-and-returned-lean-closures) and [installed evidence](../evidence/ruby-callables-20260919.md).
+
+### Structured callback values
+
+Arrays, Lists, options, results, products, records, variants and transparent
+aliases can appear in callback signatures and returned closures. Select concrete
+acyclic copied types. In a Lake package named `structured`, add `Structured.lean`:
+
+```lean
+namespace Structured
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) := callback value
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callArray", "Structured.makeArray"],
+  "arities": { "Structured.makeArray": 1 },
+  "targets": { "rubygems": { "name": "structured-api", "version": "1.0.0" } }
+}
+```
+
+Build with `--target rubygems`. The [Ruby example](../consume/ruby.md#structured-callback-values)
+calls these functions from the prepared gem. Reviewed contracts state the outer
+signature instead of using configuration `arities`.
+
+Callback arguments and results copy their nested storage. Returned closures copy
+captured values and expose `with` and `close` for cleanup. `Some.new(API::UNIT)`
+preserves a present Unit; domain errors use `Err`, while callback exceptions
+return to Ruby after native cleanup. Resources in copied structures, retained
+host callbacks and asynchronous delivery remain unsupported.
+
+## Export recursive callbacks and closures
+
+Export a finite recursive type directly in callback arguments and results:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select these exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": { "rubygems": { "name": "structured-api", "version": "1.0.0" } }
+}
+```
+
+Build with `--target rubygems`. The
+[Ruby caller](../consume/ruby.md#recursive-callback-values) uses generated
+`Tree::Leaf` and `Tree::Branch` classes, a Ruby block and an owned `LeanClosure`.
+The adapter validates finite values and retains callback reply storage until
+Lean has copied it. Named aliases keep their target representation, including
+aliases used only inside callback signatures.
+
+The [recursive conversion limits](#export-recursive-values) apply. Returned
+closures retain captures until `close`, scoped `with` cleanup or finalization.
+Invocation belongs to the creating process and Ruby thread lifetime. Native
+reentry permits 64 active calls, and compatible packages share 4,096 closure
+slots. Malformed native output retires the runtime. Resources and callable
+identities inside copied fields, retained host callbacks and asynchronous
+delivery remain unsupported.
+
+RubyGems-only builds need no extra C package target. A combined native build can
+also select C, C++, PyPI and Cargo when each accepts the complete contract.
+
+## Export resource-containing values
+
+Select resource types and the aggregate ownership contract explicitly. In a
+Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "rubygems": { "name": "owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with the ordinary `--target rubygems` command. The
+[Ruby example](../consume/ruby.md#resource-containing-values) requires the
+installed gem and uses generated value classes, `retain`, `with` and `close`.
+
+The ownership profile supports resource-bearing records, variants, recursive
+values and synchronous callback payloads. All nineteen primitive fields retain
+their normal Ruby meaning. Ordinary source and independently reviewed Binding
+IR use the same compiler-checked C layouts and lifetime rules. Host callbacks
+borrow for one call; retaining a callback argument retains its resource, not
+the host callback itself. Parameter-anchored results use the whole-owner API
+below. Asynchronous delivery remains unsupported.
+
+The gem bundles an isolated GMP 6.3.0 library and its source and license notices.
+Its loader authenticates native files and shares compatible Lean libraries
+across gems. Ruby's system GMP keeps its own allocator. The producer records
+both the public C implementation and Ruby's private pointer-call adapter, with
+compiler-checked storage assertions. Consumers need no compiler or extension
+build. Ruby uses a separate adapter from C, C++, Cargo and PyPI in combined
+builds; those targets still reuse the same compiled Lean component.
+
+Limits are depth 128, 262,144 visits, 16 MiB of native conversion data and a
+separate 16 MiB of accounted Ruby conversion storage per call, including
+callbacks and results. Resource use belongs to the creating Ruby thread and
+process. MRI Ruby 3.3 on Linux x86-64 with 1:1 threads is required.
+
+## Transfer input ownership
+
+Use the [export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) includes the full configuration.
+Keep `resources` and `ownedAggregates`, and set the gem coordinate under
+`targets.rubygems`. Ordinary Lean analysis and independently reviewed contracts
+use the same compiler-checked ownership decisions.
+
+Build with `lean-bridge build --project ./owned --target rubygems --output ./release-owned`.
+The Ruby adapter validates all arguments and prepares native snapshots before
+consuming their resource leases at the Lean call boundary. Shared aliases close
+together; independent retains survive. Errors after handoff do not restore
+ownership. See the [Ruby example](../consume/ruby.md#transferred-inputs).
+
+Transfer-enabled gems use `owned-ruby-v2`, ownership contract version 2 and
+package receipt version 2. The private Ruby adapter uses version 2 with
+`ownedValues` version 3. Package verification reconstructs these contracts from
+compiler metadata and rejects changed consumption or alias rules. Packages
+without transfers keep their existing versions and generated API.
+
+A combined transfer build can select the implemented native consumer targets.
+Ruby keeps its private pointer-call adapter and isolated GMP library while sharing the
+compiled Lean component. Building a gem does not upload it.
+
+## Anchor a result to an input
+
+Use the [result-anchor configuration](c.md#anchor-a-result-to-an-input) and set
+the package coordinate under `targets.rubygems`. The analyzer checks the same
+parameter-relative lifetime contract for ordinary Lean source and reviewed IR.
+Build with the ordinary `--target rubygems` command.
+
+The gem returns checked `Value` owners for resource-containing results,
+including empty values. Result anchors and transferred parameters require
+whole owners. Releasing or consuming an owner expires borrowed descendants;
+`retain` and `copy_value` create independent ownership. Raw resource views from
+`get` borrow the whole owner. See the
+[consumer example](../consume/ruby.md#results-borrowed-from-an-input).
+
+These gems use `owned-ruby-v3`, ownership contract version 3 and package receipt
+version 3. The private Ruby adapter uses version 3 with `ownedValues` version 4.
+Its receipt authenticates `resultAnchors` separately from `inputTransfers`,
+including original-owner selection, transitive expiration, empty-value owners,
+copy selectors and canonical equality. Readers regenerate these rules from
+compiler metadata and reject changes. Packages without result anchors retain
+their existing API and contract versions.
+
+A combined anchored-result build can select C, C++, Cargo, PyPI and RubyGems.
+The Ruby gem keeps its isolated GMP and private pointer-call adapter while
+sharing the compiled Lean component and runtime. Other consumer projections
+of result anchors remain unfinished.
+
+## Export methods and properties
+
+Use `receiver: "method"` or `receiver: "property"` in the
+[export contracts](../lean/existing-package.md#declare-export-contracts).
+Lean checks the first argument's nominal type; a property has no remaining
+arguments. Keep ownership and result-anchor annotations on that same export.
+The [C author example](c.md#export-methods-and-properties) shows the shared
+configuration. Set your gem coordinate under `targets.rubygems` and build with
+`--target rubygems`.
+
+Ruby exposes snake-case methods and zero-argument property readers on checked
+`Value` owners while retaining module functions. Generated members verify the
+nominal receiver and preserve original-owner transfers, receiver-relative
+results and anchors on other arguments. Record fields remain fields on the
+raw value. Members do not replace `get`, `retain`, `close` or other ownership
+operations; conflicting names reject during generation. See the
+[installed consumer example](../consume/ruby.md#methods-and-properties).
+
+Receiver gems use `owned-ruby-v4`, ownership contract version 4 and package
+receipt version 4. Their private adapter uses version 4 with `ownedValues`
+version 5. Authentication checks `receiverExports`, member names, declaration
+kinds and lifetimes against compiler metadata. Packages without receivers keep
+their existing APIs and versions. Receiver-only APIs need no callback, copied
+aggregate or borrowed-result capability unless their declarations use it.
+
+Combined receiver builds can select C, C++, Cargo, PyPI and RubyGems. Ruby keeps
+its private pointer-call adapter and isolated GMP library. The targets share
+the compiled Lean component and runtime; each generated package carries its
+own authenticated loader and ownership contract.
+
+## Anchor a callback result to its argument
+
+A returned Lean function can borrow its result from one of its own arguments.
+Keep `resources` and `ownedAggregates`, and place the decision inside the
+export's `callable.result` contract. For a function with the type
+`Bundle → Bool → Bundle → Bundle`, select one outer argument with
+`"arities": { "Owned.makeRecord": 1 }`. The returned function then has two
+arguments; this contract selects its second argument:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+Place that object under `contracts["Owned.makeRecord"]`. Reviewed contracts
+record the same decision on the callable result. The anchor names belong to
+that callable, not the outer export or its private closure handle.
+
+Ruby callers pass a checked `Value` for the selected argument. That argument's
+original owner controls the result and every borrowed descendant, including
+empty recursive values. Closing its last alias, exiting its creating thread or
+transferring it expires the result. `retain` and `copy_value` create independent
+ownership. See the [Ruby example](../consume/ruby.md#results-borrowed-from-a-callback-argument).
+
+Host callbacks may return the declared payload or a whole `Value`. The bridge
+validates and converts the reply before the callback's borrowed arguments
+expire. Recovery replies obey the same rule. Host callback storage still lasts
+only for the call; this contract does not enable asynchronous delivery.
+
+Build with `--target rubygems`. Callback-result gems use `owned-ruby-v5`,
+Ruby ownership contract and gem receipt version 5, and native ownership model
+version 6. The builder keeps callback-result anchors separate from export-result
+anchors, receiver members and consuming inputs. Combined releases can select
+C, C++, Cargo, PyPI, RubyGems and npm when every target accepts the complete API.
+Ruby retains its private adapter and GMP library while sharing the native Lean
+component with the other native packages.
+
 ## Build the gem
+
+The separate Alpha fixture retains its resource and callback examples.
 
 From the Lean Bridge checkout with its pinned Nix environment:
 
@@ -27,13 +529,17 @@ Run the [Ruby consumer example](../consume/ruby.md) against the package before p
 
 The example gem is `lean_bridge_alpha` version `0.0.0`. Do not upload that fixture to RubyGems.org.
 
-Choose a name your account or organization controls. Update the reviewed [universal package mapping](../../src/release/universal-release-bundle.mjs), [Ruby generator](../../src/backends/ruby/generate.mjs), and [Alpha identity/version input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json), then regenerate and test the bindings, canonical bundle, and gem. The current profile implements Alpha's API model and has no general package-renaming CLI.
+For ordinary projects, set `targets.rubygems.name` and `targets.rubygems.version` before building. Names use lowercase letters, digits, underscores and hyphens. Versions use three numeric parts and an optional dot-separated prerelease, such as `2.0.0.rc.1`. Hyphenated prereleases are rejected to prevent RubyGems from silently changing the version. Review source licenses and author metadata before publication; the generated gem marks the package license as `Nonstandard`.
+
+For the separate Alpha fixture, update the reviewed [universal package mapping](../../src/release/universal-release-bundle.mjs), [Ruby generator](../../src/backends/ruby/generate.mjs), and [Alpha identity/version input](../../poc/lean-link-spike/bindings/alpha.binding-ir.json), then regenerate and test the bundle and gem.
 
 Do not rename the archive or edit its gemspec after candidate approval. For a private package, review generating `allowed_push_host` metadata to restrict the destination; the current generated gemspec does not set it. [RubyGems publishing and private hosts](https://guides.rubygems.org/publishing/)
 
 ## Freeze and verify the candidate
 
-Use a clean committed checkout. The publication ecosystem is `rubygems`; its binding target is `ruby`.
+For an ordinary release, reproduce the build from another source location, compare its archive hash, and execute a fresh installed consumer. Preserve the original gem and `native-release.json` for review.
+
+The signed-candidate workflow below applies to the universal Alpha bundle, not ordinary gems. Use a clean committed checkout. The publication ecosystem is `rubygems`; its binding target is `ruby`.
 
 ```sh
 node scripts/lean-bridge.mjs publish --project . --target rubygems --dry-run \
@@ -52,7 +558,7 @@ console.log(JSON.stringify(result.manifest.targets, null, 2));
 ' build/rubygems-candidate/publish-manifest.json
 ```
 
-Use the reviewed archive path, name, version, and hash. Retain the [sandbox record](sandbox-release.md) and complete the [production approvals](production-release.md) for the chosen host.
+Use the reviewed archive path, name, version, and hash. Retain the [sandbox record](../contributing/sandbox-release.md#rehearse-a-registry-release) and complete the [production approvals](../publishing.md#build-and-approve-the-same-artifacts) for the chosen host.
 
 The installed CLI has only the npm transaction adapter. `gem push` does not create a Lean Bridge signed completion receipt. A reviewed integration must bind the actual host and authority; a universal manifest naming RubyGems.org does not authorize a different private host.
 
@@ -97,13 +603,13 @@ export LEAN_BRIDGE_GEM_VERSION=1.0.0
 mkdir build/rubygems-published-download
 cd build/rubygems-published-download
 gem fetch "$LEAN_BRIDGE_GEM_NAME" --version "$LEAN_BRIDGE_GEM_VERSION" \
-  --clear-sources --source "$LEAN_BRIDGE_GEM_HOST"
-export LEAN_BRIDGE_GEM_FILE="$LEAN_BRIDGE_GEM_NAME-$LEAN_BRIDGE_GEM_VERSION.gem"
+  --platform x86_64-linux --clear-sources --source "$LEAN_BRIDGE_GEM_HOST"
+export LEAN_BRIDGE_GEM_FILE="$LEAN_BRIDGE_GEM_NAME-$LEAN_BRIDGE_GEM_VERSION-x86_64-linux.gem"
 cmp "$LEAN_BRIDGE_GEM_ARCHIVE" "$LEAN_BRIDGE_GEM_FILE"
 sha256sum "$LEAN_BRIDGE_GEM_FILE"
 ```
 
-This generated package uses the generic Ruby gem platform, so the filename has no additional platform suffix. If the private host requires download authentication, configure its approved read credential separately. `GEM_HOST_API_KEY` authenticates publication; do not assume it configures every private download client. [RubyGems fetch command](https://guides.rubygems.org/command-reference/#gem-fetch)
+Ordinary gems use the `x86_64-linux` platform suffix. The Alpha fixture uses the generic `ruby` platform and has no filename suffix; select that platform and filename when downloading the fixture. If the private host requires download authentication, configure its approved read credential separately. `GEM_HOST_API_KEY` authenticates publication; do not assume it configures every private download client. [RubyGems fetch command](https://guides.rubygems.org/command-reference/#gem-fetch)
 
 The downloaded digest must match the reviewed manifest. Install only after comparison:
 
@@ -126,3 +632,7 @@ If the release owner authorizes removal, `gem yank` removes the selected version
 Use a new reviewed version for corrected content; do not use yanking to replace the archive under an existing release identity.
 
 Keep the failed upload records, original archive, and recovery decision. Do not grant a publishing token yank rights merely to make retries easier.
+
+### Publish a RubyGem
+
+The package-manager recipe above remains available at this address. Return to [target selection](../publishing.md) or [consumer installation](../consume.md).

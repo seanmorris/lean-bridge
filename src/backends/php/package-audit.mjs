@@ -9,6 +9,9 @@ import { createHash } from "node:crypto";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compilePhpProjection } from "./projection.mjs";
+import { generateCopiedPhpPackage } from "./copied-values.mjs";
+import { generateCopiedPhpGraphPackage } from "./copied-graph-package.mjs";
+import { generateCallablePhpGraphPackage } from "./callable-graph-package.mjs";
 
 /**
  * Reports PHP package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -59,7 +62,6 @@ const sorted = values => [...values].sort((left, right) => left.localeCompare(ri
 
 const expectedExports = projection => [
 	...(projection.requiredCapabilities.includes("bytes-value-v1") ? [`${projection.package.namespace}\\Bytes`] : [])
-	, ...(projection.requiredCapabilities.includes("big-integer-value-v1") ? [`${projection.package.namespace}\\BigInteger`] : [])
 	, ...(projection.requiredCapabilities.includes("bridge-awaitable-v1") ? [`${projection.package.namespace}\\Awaitable`] : [])
 	, ...(projection.requiredCapabilities.includes("bridge-async-iterator-v1") ? [`${projection.package.namespace}\\AsyncIterator`] : [])
 	, ...projection.types
@@ -101,14 +103,45 @@ const assertCleanPublicSurface = (source, path) => {
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param files - Generated file map or inventory checked for required paths, content, and public-surface constraints.
+ * @param options - Expected host projection settings, including integerBits.
  */
-export const auditPhpPackage = (ir, files) => {
+export const auditPhpPackage = (ir, files, options = {}) => {
 	validateBindingIr(ir);
 	if(files === null || typeof files !== "object" || Array.isArray(files))
 	{
 		fail("invalid-package", "generated PHP package must be a file map");
 	}
-	const projection = compilePhpProjection(ir);
+	if(["lean-wasm/php-copied-graph", "lean-wasm/php-callable-graph"].includes(parseJson(files, "binding-manifest.json").generator?.id))
+	{
+		if(options.integerBits !== undefined && options.integerBits !== 64)
+			fail("unsupported-copied-php-profile", "Native PHP copied graphs require the 64-bit profile");
+		const manifest = parseJson(files, "binding-manifest.json");
+		const expected = (manifest.generator.id === "lean-wasm/php-callable-graph" ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(ir, manifest.nativeEvidence);
+		if(JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
+			|| Object.entries(expected).some(([path, source]) => files[path] !== source))
+			fail("copied-graph-source-drift", "PHP graph package differs from its complete generated source");
+		return true;
+	}
+	if(parseJson(files, "binding-manifest.json").generator?.id === "lean-wasm/php-copied")
+	{
+		if(options.integerBits !== undefined && options.integerBits !== 64)
+			fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
+		const expected = generateCopiedPhpPackage(ir), manifest = parseJson(files, "binding-manifest.json");
+		const reference = parseJson(expected, "binding-manifest.json");
+		if(files["src/Api.php"] !== expected["src/Api.php"]
+			|| ["schemaVersion", "generator", "component", "bindingIrSha256", "namespace", "publicFiles", "aliases", "exports", "files"].some(key => JSON.stringify(manifest[key]) !== JSON.stringify(reference[key]))
+			|| JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
+			|| JSON.stringify(sorted(Object.keys(manifest.filesSha256 ?? {}))) !== JSON.stringify(sorted(Object.keys(expected).filter(path => path !== "binding-manifest.json"))))
+			fail("copied-surface-drift", "PHP copied package differs from the admitted source API");
+		for(const [path, digest] of Object.entries(manifest.filesSha256))
+			if(sha256(requireFile(files, path)) !== digest) fail("generated-file-drift", `${path} differs from its generated hash`);
+		// The source must exactly match the generator above. Alias documentation
+		// may name Pointer or WebAssembly without exposing either as PHP state.
+		const declarations = files["src/Api.php"].replace(/\/\*\*[\s\S]*?\*\//g, comment => comment.replace(/[^\r\n]/g, " "));
+		assertCleanPublicSurface(declarations, "src/Api.php");
+		return true;
+	}
+	const projection = compilePhpProjection(ir, options);
 	const manifest = parseJson(files, "binding-manifest.json");
 	const composer = parseJson(files, "composer.json");
 	const reflection = parseJson(files, "reflection.json");
@@ -186,6 +219,7 @@ export const auditPhpPackage = (ir, files) => {
 		composer.name !== projection.package.composerName
     || composer.version !== ir.component.version
     || composer.require?.php !== ">=8.2"
+    || composer.require?.["brick/math"] !== (projection.requiredCapabilities.includes("big-integer-value-v1") ? "1.0.0" : undefined)
     || composer.autoload?.["psr-4"]?.[namespacePrefix] !== "src/"
     || JSON.stringify(composer.autoload?.files) !== JSON.stringify(["src/functions.php"])
     || composer.extra?.["lean-bridge"]?.bindingIrSha256 !== hashBindingIr(ir)

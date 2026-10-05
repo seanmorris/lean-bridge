@@ -1,0 +1,17 @@
+[
+  { "name": "wrong-scalar", "statement": "let _ = api::array_reverse_uint32(&[vec![true]]);", "code": "E0308" },
+  { "name": "mixed-elements", "statement": "let _ = api::array_reverse_uint32(&[vec![1u32, \"two\"]]);", "code": "E0308" },
+  { "name": "signed-natural", "statement": "let _ = api::array_reverse_nat(&[vec![api::BigInt::from(-1)]]);", "code": "E0308" },
+  { "name": "machine-natural", "statement": "let _ = api::array_reverse_nat(&[vec![1u64]]);", "code": "E0308" },
+  { "name": "bytes-as-text", "statement": "let _ = api::array_reverse_string(&[vec![vec![0u8, 255]]]);", "code": "E0308" },
+  { "name": "text-as-char", "statement": "let _ = api::array_reverse_char(&[vec![String::from(\"x\")]]);", "code": "E0308" },
+  { "name": "wrong-depth", "statement": "let _ = api::deep(&[vec![7u32]]);", "code": "E0308" },
+  { "name": "nominal-record", "statement": "let _ = api::record_single(&api::Count { value: api::BigUint::from(1u8) });", "code": "E0308" },
+  { "name": "unit-as-record", "statement": "let _ = api::record_empty(&());", "code": "E0308" },
+  { "name": "missing-field", "statement": "let _ = api::Pair { first: 1 };", "code": "E0063" },
+  { "name": "unknown-field", "statement": "let _ = api::Pair { first: 1, second: String::new(), ignored: 0 };", "code": "E0560" },
+  { "name": "wrong-field", "statement": "let _ = api::Pair { first: \"1\", second: String::new() };", "code": "E0308" },
+  { "name": "borrowed-result", "statement": "let _: &[Vec<u32>] = api::array_reverse_uint32(&[]).unwrap();", "code": "E0308" },
+  { "name": "unsigned-overflow", "statement": "let _ = api::array_reverse_uint8(&[vec![256u8]]);", "code": "overflowing_literals" },
+  { "name": "signed-overflow", "statement": "let _ = api::array_reverse_int8(&[vec![128i8]]);", "code": "overflowing_literals" }
+]

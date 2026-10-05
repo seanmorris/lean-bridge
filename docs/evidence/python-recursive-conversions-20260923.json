@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "installedPackage": false,
+  "sourceHashes": {
+    "src/backends/python/copied-graph-conversions.mjs": "855e15d2d56cc4a54e66abbc2db6d45ddd7290d50cd3eb2a74d21bf30fb328cd",
+    "src/backends/python/copied-graph-values.mjs": "7e3070d8a43e01fea41ce423557f0d7233fd656a476fe32335018d9b2a24e868",
+    "src/backends/python/compounds.mjs": "56d7dccee4c415e121f6f811c8e95a4fd72b038c0336def4ff54217e8d7b0f64",
+    "src/backends/c/copied-graph-layout.mjs": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+    "src/backends/c/native-graph-adapters.mjs": "6fc401617a64e628f188ca87d7ef5aba179402a8653a3cb0077331bb5eb2820d",
+    "src/build/native-graph-model.mjs": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84",
+    "src/build/component-recursive-lean.mjs": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28",
+    "src/abi/component-recursive.mjs": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9",
+    "tests/python-copied-graph-conversions.test.mjs": "fadb3e7b897bcb5e98ef387dd6f8f4ada0d5cc45b936677e89e86d4c9c50ca1b",
+    "tests/helpers/python-graph-probes.mjs": "46fd659b45825516ab6ffe73e307b95da621866db038a33d26a7233bd2c4afe7",
+    "tests/helpers/python-native-graphs.mjs": "ce80115b59fe7cd9068072c42ccd38978ea7507f8f2dc0be298f43b1b2ad6c76",
+    "tests/helpers/native-recursive-reviewed.mjs": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+    "tests/helpers/native-recursive-transport.mjs": "f6fa961b51501f6c287c614f351ad32746a3be82645517cd87d855e6fcbbc6eb",
+    "tests/helpers/recursive-fixture.mjs": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb",
+    "tests/fixtures/structured-types/recursive-conversions.py": "367d20bcd2df10405491c1b1b612dc33acd1d1d47f958b336278129d0814c144",
+    "tests/fixtures/structured-types/recursive-python-checks.py": "6f908c16a5e0669298c0218102c2b999640142a1702d4adfcaca65e603d13a7a",
+    "tests/fixtures/structured-types/recursive-python-lean.py": "dcb8d4ffbd362c0b6a843c471d2234c3bee2276c2b8aa83138c1e696578fd948",
+    "tests/fixtures/structured-types/recursive-rust-native.c": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "tests/fixtures/onboarding/npm-recursive/Recursive.lean": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3",
+    ".github/workflows/consumer-matrix.yml": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+    "src/adoption/test-profiles.mjs": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163",
+    "package.json": "bc12c9b20fed3f0c69811aaaf2d0537e8e54ee1e9a1e6ee08c032f3a82c99947",
+    "config/cli-package.v1.json": "3060e3f64e8f95c28025a73828d96931c4cb9f74c7248f4b4cd7859316899828",
+    "config/checked-javascript.json": "6bb69e45156c74302da22792488250655203977186879ad720244a87dc83f76f",
+    "nix/perl-engine-source-boundary.json": "c85572e84d8408b5f0a9aa00e4c33f3590e9b80eb8c89f098c46e101aa4bd133"
+  },
+  "isolated": {
+    "checksSha256": "6f908c16a5e0669298c0218102c2b999640142a1702d4adfcaca65e603d13a7a",
+    "collisionSourceSha256": "4b327103ffd1f27acda3a250a0d9cc3d6b1e395b03680d83d7e78e832742be99",
+    "collisionValuesSha256": "b08c631cd78beceba4f7c1ac0d3d7e26355c64c11fc2fce13e3c57d944ecc9eb",
+    "compiledLean": false,
+    "installedPackage": false,
+    "nativeSha256": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "probeSha256": "367d20bcd2df10405491c1b1b612dc33acd1d1d47f958b336278129d0814c144",
+    "reports": [
+      {
+        "checkpoints": 170,
+        "checks": 2458,
+        "inputFailures": 93,
+        "layoutChecks": 478,
+        "name": "3.11-minimum",
+        "outputFailures": 77,
+        "python": "3.11.16",
+        "typing": "4.6.0"
+      },
+      {
+        "checkpoints": 170,
+        "checks": 2458,
+        "inputFailures": 93,
+        "layoutChecks": 478,
+        "name": "3.11-current",
+        "outputFailures": 77,
+        "python": "3.11.16",
+        "typing": "4.16.0"
+      },
+      {
+        "checkpoints": 170,
+        "checks": 2458,
+        "inputFailures": 93,
+        "layoutChecks": 478,
+        "name": "3.12-standard",
+        "outputFailures": 77,
+        "python": "3.12.14",
+        "typing": null
+      }
+    ],
+    "schemaVersion": 1,
+    "sourceSha256": "073b7a075ad82e59950d436d1e9531650c20a824d051e7526a957e310e80a9b1",
+    "valuesSha256": "36b1f3c2169f42a01c43def741ef23d86712f2264baec196b62a1cb1dfe84f28"
+  },
+  "native": {
+    "compiledLean": true,
+    "installedPackage": false,
+    "observations": [
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "checksSha256": "6f908c16a5e0669298c0218102c2b999640142a1702d4adfcaca65e603d13a7a",
+        "exports": 18,
+        "modelSha256": "8c17a2eb76ca6f8013f7a13b4a02440ae13798c7fc587013ade7555729f12793",
+        "nativeSourceSha256": "eea4b6f02473827c0ddcd56ec36084c56af9104fd7a2bf98aea33affef0c8d45",
+        "probeSha256": "dcb8d4ffbd362c0b6a843c471d2234c3bee2276c2b8aa83138c1e696578fd948",
+        "pythonSourceSha256": "8525c2e52f2657b8c730a5e2132f61bc040b087f0c15eb6ab6065fb183f6752d",
+        "pythonValuesSha256": "30de03f0b33eeef280a9e7645a55b9929b32e70a42ac3153b13ce2dda3eebce9",
+        "reviewed": false,
+        "scenarios": [
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          }
+        ]
+      },
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "checksSha256": "6f908c16a5e0669298c0218102c2b999640142a1702d4adfcaca65e603d13a7a",
+        "exports": 18,
+        "modelSha256": "4319ef34881082af5fa2184fcee3cdafdf386bc0b9b8a14226509a4e550956e1",
+        "nativeSourceSha256": "eea4b6f02473827c0ddcd56ec36084c56af9104fd7a2bf98aea33affef0c8d45",
+        "probeSha256": "dcb8d4ffbd362c0b6a843c471d2234c3bee2276c2b8aa83138c1e696578fd948",
+        "pythonSourceSha256": "8525c2e52f2657b8c730a5e2132f61bc040b087f0c15eb6ab6065fb183f6752d",
+        "pythonValuesSha256": "30de03f0b33eeef280a9e7645a55b9929b32e70a42ac3153b13ce2dda3eebce9",
+        "reviewed": true,
+        "scenarios": [
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.11-minimum",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.6.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.11-current",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.11.16",
+            "pythonCheckpoints": 170,
+            "typing": "4.16.0"
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "carrier",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "raw",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          },
+          {
+            "checks": 2464,
+            "inputFailures": 93,
+            "mode": "during",
+            "name": "3.12-standard",
+            "nativeCheckpoints": 28,
+            "outputFailures": 77,
+            "python": "3.12.14",
+            "pythonCheckpoints": 170,
+            "typing": null
+          }
+        ]
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

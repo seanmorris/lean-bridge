@@ -2,7 +2,7 @@
 
 This directory owns the React presentation layer. Lean algorithms, C bridges, runtime APIs, proof sources, and benchmarks remain in `demos/`.
 
-The site renders the documentation and all twelve algorithm workbenches. Author, consumer, publisher, contributor, and concept guides share searchable Markdown, grouped navigation, and previous/next links. Building this site does not publish an algorithm package.
+The site renders the documentation and all registered workbenches, including the squared-rectangle visual construction. Build-and-publish and consumer guides share searchable Markdown, grouped navigation, and previous/next links. Concepts, reference material, and Contributing support those two workflows. Building this site does not publish an algorithm package.
 
 ## Develop
 
@@ -30,7 +30,7 @@ DEMO_BROWSERS=chromium,firefox,webkit npm run demos:browser
 
 Install the audit browsers with `npx playwright install --with-deps chromium firefox webkit`. `CHROMIUM_PATH` can select an existing Chromium binary. Browser checks serve the assembled artifact themselves; they do not require a running development server.
 
-`demos:verify` runs the twelve proof builds, differential suites, and benchmark regression checks. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, workbench models, and scoped controller ownership. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
+`demos:verify` runs the proof builds, differential suites, and benchmark regression checks. `site:test` covers the content pipeline, copy allowlists, staged publication, proof services, benchmark teardown, workbench models, and scoped controller ownership. Browser checks add no-JavaScript guides, direct loads, navigation, exact-text editing, IME, dragging, animated flow, proof failure recovery, and repeated resource cleanup.
 
 `test:docs` checks copyable author files against the maintained fixture, theorem metadata, public consumer imports, numeric input guards, and a local demo-API example against the compiled solver. `test:docs:proof` uses the pinned Lean version and commit to check the tutorial theorem, require an empty axiom set, and reject changed-implementation and `sorry` variants. It reads the fixture and passes mutations through stdin without changing source files. Pages CI runs both commands after toolchain bootstrap.
 
@@ -63,7 +63,9 @@ Run `npm run test:docs` before committing. The documentation test checks local l
 
 ## Content and ownership
 
-- `site/reference/` contains the reviewed templates for generated CLI, npm API, type, and algorithm reference pages. The same command generates each consumer guide's `Type conversions` section from `docs/type-surface.v1.json`, including both PHP transports and separate Java/Kotlin profiles. Run `npm run docs:reference:write` after changing a template or its source contract. `npm run docs:reference` compares the generated Markdown without writing; site generation runs this check automatically.
+- `site/reference/` contains the reviewed templates for generated CLI, npm API, type, and algorithm reference pages. The same command generates each consumer guide's `Type conversions` section from `docs/type-surface.v1.json`, including both PHP transports in one guide and separate Java/Kotlin profiles. Run `npm run docs:reference:write` after changing a template or its source contract. `npm run docs:reference` compares the generated Markdown without writing; site generation runs this check automatically.
+
+The npm API examples use compiler-captured fixtures in `tests/fixtures/documentation/package-api/`. After changing their Lean source, run `node scripts/capture-reference-apis.mjs --write` with a working compiler backend, review the API diff, then regenerate the references. Omit `--write` to check the captures against fresh public analysis. CI also compares them with the Binding IR in the compiled npm bundles. These captures contain no artifact-bound assurance claims.
 - `scripts/generate-type-docs.mjs` owns only the `Type conversions` section, ending at the next guide heading. Installation commands, runnable snippets, Alpha's worked API and raw-source workflows remain hand-maintained. Edit audited observations and conversion notes in the inventory instead of changing a generated table. New claims require evidence for their exact profile, source path and position.
 - The reference generator uses actual CLI help and result schemas, emitted TypeScript declarations, the scalar capability list, and each algorithm's adapter exports and proof receipt. It rejects selected theorems missing from a receipt and Lean sources whose hashes differ. The downstream support table remains owned by `docs/consumer-support.v1.json` and its existing checked guide.
 - Concept examples for Dijkstra, flood fill, and prepared ownership execute against the maintained compiled adapters in `npm run test:docs`. The [prepared-package reference check](../docs/contributing/testing.md#reference-package-examples) also runs the documented imports from installed archives in Node and three browser engines.
@@ -74,7 +76,7 @@ Run `npm run test:docs` before committing. The documentation test checks local l
 - Source-relative Markdown links become documentation routes or revision-pinned GitHub links. Unknown images, raw HTML, private paths, untracked source links, and broken fragments fail generation.
 - Documentation search loads its separate index only on use. Prose pages do not import or request a Wasm runtime. The initial JavaScript budget is 200 KiB gzip per landing or documentation page.
 - `app/components/DocSidebar.tsx` retains the desktop rail's scroll position across guide navigation and reloads using tab-scoped storage for the deployment base. Mobile navigation leaves that offset intact; blocked storage falls back to in-page memory. Article scroll history remains independent.
-- `demos/shared/site.css` supplies the header styles for both React and standalone pages. `app/root.tsx` and `demos/shared/site-nav.mjs` render the same brand, navigation, active section, and mobile menu. `site:browser` checks their layout and links across all twelve demos, along with guide-rail scroll restoration.
+- `demos/shared/site.css` supplies the header styles for both React and standalone pages. `app/root.tsx` and `demos/shared/site-nav.mjs` render the same brand, navigation, active section, and mobile menu. `site:browser` checks their layout and links across all registered demos, along with guide-rail scroll restoration.
 - `app/components/ProofViewer.tsx` owns source loading and controls. Framework-neutral proof services verify hashes and construct checker payloads; legacy pages use the same services.
 - `BenchmarkPanel.tsx` owns one scoped controller and prepared solver. The controller owns metric and histogram leaves. Unmount disposes observers, listeners, animation frames, and prepared handles.
 - Each React route supplies its benchmark copy and summary projection; workload modules and sample counts stay unchanged. `app/components/demo-page.css` supplies shared proof, receipt, and benchmark styling.
