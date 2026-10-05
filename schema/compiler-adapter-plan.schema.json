@@ -43,8 +43,28 @@
         "symbol": { "type": "string", "pattern": "^lean_bridge_[0-9a-f]{24}$" },
         "parameters": { "type": "array", "items": { "$ref": "#/$defs/parameter" } },
         "leanResultType": { "type": "string", "minLength": 1 },
+        "refinements": { "$ref": "#/$defs/refinements" },
         "resultMode": { "enum": ["value", "promise"] },
         "leanEffect": { "type": ["string", "null"], "enum": ["IO", "Task", null] }
+      }
+    },
+    "finRefinement": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
+          "properties": {
+            "kind": { "const": "fin" },
+            "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
+          }
+        }
+      ]
+    },
+    "refinements": {
+      "type": "object", "additionalProperties": false, "required": ["parameters", "result"],
+      "properties": {
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/finRefinement" } },
+        "result": { "$ref": "#/$defs/finRefinement" }
       }
     },
     "privateExport": {

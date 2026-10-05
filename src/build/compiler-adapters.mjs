@@ -18,6 +18,7 @@ import { assertComponentRecursiveAbi, componentRecursiveAbi } from "../abi/compo
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
+import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -103,6 +104,27 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
+const validateFinRefinement = (value, path) => {
+	if(value === null) return;
+	exactKeys(value, ["kind", "bound"], path);
+	if(value.kind !== "fin" || typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound))
+		fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound`);
+};
+
+const validateRefinements = (value, item) => {
+	exactKeys(value, ["parameters", "result"], "compiler export refinements");
+	if(!Array.isArray(value.parameters) || value.parameters.length !== item.parameters.length)
+		fail("invalid-compiler-adapter-plan", "Compiler refinements must cover the exact runtime signature");
+	value.parameters.forEach((refinement, index) => {
+		validateFinRefinement(refinement, `parameter ${index} refinement`);
+		if(refinement !== null && item.parameters[index].leanType !== "_root_.Nat")
+			fail("invalid-compiler-adapter-plan", "Fin parameters must erase to Nat");
+	});
+	validateFinRefinement(value.result, "result refinement");
+	if(value.result !== null && item.leanResultType !== "_root_.Nat")
+		fail("invalid-compiler-adapter-plan", "Fin results must erase to Nat");
+};
+
 /**
  * Validates compiler adapter plan against its closed contract before it enters the isolated component build pipeline.
  *
@@ -119,13 +141,14 @@ export const validateCompilerAdapterPlan = plan => {
 	const symbols = new Set();
 	for(const item of plan.exports)
 	{
-		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect", ...(item.sourceApplication === undefined ? [] : ["sourceApplication"])], "compiler export");
+		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect", ...(item.sourceApplication === undefined ? [] : ["sourceApplication"]), ...(item.refinements === undefined ? [] : ["refinements"])], "compiler export");
 		if(item.sourceApplication !== undefined && (typeof item.sourceApplication !== "string" || !item.sourceApplication.length)) fail("invalid-compiler-adapter-plan", "Specialized exports require a compiler application");
 		for(const key of ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "leanResultType"]) if(typeof item[key] !== "string" || item[key] === "") fail("invalid-compiler-adapter-plan", `compiler export ${key} must be a string`);
 		if(!/^lean_bridge_[0-9a-f]{24}$/.test(item.symbol) || symbols.has(item.symbol)) fail("invalid-compiler-adapter-plan", "compiler export symbols must be unique generated names");
 		symbols.add(item.symbol);
 		if(!Array.isArray(item.parameters)) fail("invalid-compiler-adapter-plan", "compiler export parameters must be an array");
 		item.parameters.forEach((parameter, index) => validateParameter(parameter, `parameter ${index}`));
+		if(item.refinements !== undefined) validateRefinements(item.refinements, item);
 		if(!new Set(["value", "promise"]).has(item.resultMode)) fail("invalid-compiler-adapter-plan", "compiler adapters currently support value and promise results");
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
@@ -179,10 +202,11 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
 		const callback = privateAbi.callbacks?.find(type => type.id === signature.result.id);
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
-		const arguments_ = item.parameters.map(parameter => parameter.name).join(" ");
+		const refined = componentRefinedCall(item, item.parameters.map(parameter => parameter.name));
+		const body = componentRefinementGuards(refined.guards, refined.call, `panic! "Lean Bridge rejected an invalid Fin value"`);
 		lines.push(`@[export ${item.symbol}_lean]`);
 		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : _root_.Unit)" : parameters} : ${callback ? `ClosureCarry${callback.key}` : item.leanEffect === null ? item.leanResultType : `_root_.${item.leanEffect} ${item.leanResultType}`} :=`);
-		lines.push(`  ${callback ? "⟨" : ""}${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${arguments_ === "" ? "" : ` ${arguments_}`}${callback ? "⟩" : ""}`);
+		lines.push(`  ${callback ? "⟨" : ""}${body}${callback ? "⟩" : ""}`);
 		lines.push("");
 	}
 	lines.push(`end ${module}`, "");
@@ -222,6 +246,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
         fail("compiler-specialization-drift", "Specialization lacks its matching compiler-owned application");
     }
     const effect = declaration.source.extensions["lean-lang.org/effect"] ?? null;
+    const refinements = declaration.source.extensions["lean-lang.org/refinements"];
     const item = Object.freeze({
       bindingId: declaration.id
       , sourceDeclaration
@@ -231,6 +256,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
       , symbol: exportSymbol(analysis.bindingIr.document.component.id, declaration.id)
       , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type, callbackTypes) })))
       , leanResultType: leanType(declaration.result.type, callbackTypes)
+      , ...(refinements === undefined ? {} : { refinements: structuredClone(refinements) })
       , resultMode: declaration.resultMode
       , leanEffect: effect
     });

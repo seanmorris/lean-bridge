@@ -330,6 +330,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 	if(contract.result) sites.push({ site: contract.result, type: projection.result, result: true, label: "result" });
 	for(const { site, type, result, label } of sites)
 	{
+		if(site.refinement === "reject" && type.kind === "refinement") return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject") return `${label}: checked refinement constructors are not implemented by this profile`;
 		if(site.callable !== undefined)
 		{

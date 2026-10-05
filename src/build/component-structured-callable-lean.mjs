@@ -8,6 +8,7 @@ import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
+import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -106,10 +107,11 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		seen.add(item.bindingId);
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
-		const call = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`} ${names.join(" ")}`;
+		const refined = componentRefinedCall(item, names);
+		const body = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
 		lines.push(`@[export ${item.symbol}_lean]`
 			, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${carrier(signature.result)} :=`
-			, ...checked(names, call).map(line => `  ${line}`), "");
+			, ...["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), ...body.split("\n").map(line => `  ${line}`), ")"].map(line => `  ${line}`), "");
 	}
 	return lines;
 };

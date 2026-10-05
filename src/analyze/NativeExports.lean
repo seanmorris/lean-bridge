@@ -128,6 +128,20 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
   modify fun state => { state with nodes := state.nodes + 1 }
   if e.hasFVar || e.hasLooseBVars || e.hasMVar then
     reject e "dependent or unresolved native type"
+  if e.isAppOfArity ``Fin 1 then
+    if depth != 0 || copied then
+      reject e "Fin refinements currently require a top-level parameter or result"
+    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" then
+      reject e "Fin refinements are not implemented by the native-library profile"
+    let bound ← whnf e.appArg!
+    let .lit (.natVal bound) := bound
+      | reject e "Fin refinements require a closed literal bound"
+    return obj [
+      ("kind", str "refinement"),
+      ("base", obj [("kind", str "primitive"), ("name", str "nat"),
+        ("lean", str "Nat"), ("abi", ← abi (mkConst ``Nat))]),
+      ("predicate", obj [("kind", str "fin"), ("bound", str (toString bound))]),
+      ("abi", ← abi e)]
   if let .const name levels := e then
     if !(primitives.any (·.1 == name)) && !request.resources.contains name.toString then
       if (← get).types.any (fun type => (type.getObjValAs? String "name").toOption == some name.toString) then
@@ -145,7 +159,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                 unless guarded do reject e "cyclic copied alias"
                 return ← nominalReference e name
               let target ← shapeTree request definition.value (name :: seen) 0 copied
-              if ["resource", "callback"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
+              if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
                 ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
@@ -431,6 +445,10 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "refinement" then
+    return obj [("kind", str kind),
+      ("base", ← componentCopiedType (← ofExcept <| value.getObjVal? "base")),
+      ("predicate", ← ofExcept <| value.getObjVal? "predicate")]
   if kind == "alias" then
     return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name"),
       ("target", ← componentCopiedType (← ofExcept <| value.getObjVal? "target"))]
@@ -501,7 +519,10 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
 def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     (owned : Bool := false) : Option String := Id.run do
   if let .ok refinement := site.getObjVal? "refinement" then
-    if refinement != str "reject" then
+    if refinement == str "reject" then
+      if (type.getObjValAs? String "kind").toOption == some "refinement" then
+        return some s!"{label}: the contract rejects compiler-checked refined values"
+    else
       return some s!"{label}: checked refinement constructors are not implemented by this profile"
   let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
   let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null

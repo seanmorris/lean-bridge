@@ -166,6 +166,16 @@ export const validateElaboratedMetadata = (report, request) => {
 						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)) fail("Invalid component alias");
 						recurse(type.target); return;
 					}
+					if(type?.kind === "refinement")
+					{
+						closed(type, ["kind", "base", "predicate"]);
+						scalar(type.base);
+						closed(type.predicate, ["kind", "bound"]);
+						if(type.base.name !== "nat" || type.predicate.kind !== "fin"
+							|| typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))
+							fail("Invalid Fin refinement");
+						return;
+					}
 					if(type?.kind === "variant")
 					{
 						closed(type, ["kind", "name", "cases"]);

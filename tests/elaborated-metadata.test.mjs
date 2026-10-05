@@ -163,6 +163,49 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
+test("literal Fin bounds remain compiler-owned while the runtime signature erases only the proof", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+abbrev Slot := Fin 7
+def bounded (value : Fin 5) : Fin 5 := value
+def aliased (value : Slot) : Slot := value
+def impossible (value : Fin 0) : Nat := value.val
+def nested (values : Array (Fin 5)) : Nat := values.size
+end Shop
+`);
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: ["Shop.aliased", "Shop.bounded", "Shop.impossible", "Shop.nested"] }));
+	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
+	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
+	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
+	const declarations = analysis.elaboration.metadata.modules.flatMap(module => module.declarations);
+	const aliased = declarations.find(item => item.identity === "Shop.aliased");
+	const bounded = declarations.find(item => item.identity === "Shop.bounded");
+	const impossible = declarations.find(item => item.identity === "Shop.impossible");
+	const nested = declarations.find(item => item.identity === "Shop.nested");
+	const fin = bound => ({ kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound } });
+	assert.deepEqual(aliased.projection.parameters[0].type, fin("7"));
+	assert.deepEqual(aliased.projection.result, fin("7"));
+	assert.deepEqual(bounded.projection.parameters[0].type, fin("5"));
+	assert.deepEqual(bounded.projection.result, fin("5"));
+	assert.deepEqual(impossible.projection.parameters[0].type, fin("0"));
+	assert.equal(nested.projection.status, "unsupported");
+	assert.equal(nested.projection.reason, "unsupported-parameter-type");
+	const ir = analysis.bindingIr.document.declarations;
+	assert.deepEqual(ir.map(item => item.id), ["lean:Shop.aliased", "lean:Shop.bounded", "lean:Shop.impossible"]);
+	assert.deepEqual(ir[1].parameters[0].type, { kind: "primitive", name: "nat" });
+	assert.deepEqual(ir[1].result.type, { kind: "primitive", name: "nat" });
+	assert.deepEqual(ir[0].source.extensions["lean-lang.org/refinements"], {
+		parameters: [{ kind: "fin", bound: "7" }], result: { kind: "fin", bound: "7" }
+	});
+	assert.deepEqual(ir[1].source.extensions["lean-lang.org/refinements"], {
+		parameters: [{ kind: "fin", bound: "5" }], result: { kind: "fin", bound: "5" }
+	});
+	assert.deepEqual(ir[2].source.extensions["lean-lang.org/refinements"], {
+		parameters: [{ kind: "fin", bound: "0" }], result: null
+	});
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
+
 test("fresh metadata preserves aliases, documentation, UTF-16 ranges and actual theorem relationships after relocation", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, "Shop.lean", `import Catalog

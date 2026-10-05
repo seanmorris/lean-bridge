@@ -7,6 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes, scalarCopyLimit, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { assertComponentRecordAbi, componentCompoundAbi, componentNominalAbi } from "../abi/component-records.mjs";
+import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
@@ -139,10 +140,12 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 	{
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		const parameters = signature.parameters.map((type, index) => `(${item.parameters[index].name} : ${transportType(type)})`).join(" ");
-		const args = signature.parameters.map((type, index) => convert(type, item.parameters[index].name, true)).join(" ");
-		const call = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${args ? ` ${args}` : ""}`;
+		const args = signature.parameters.map((type, index) => convert(type, item.parameters[index].name, true));
+		const refined = componentRefinedCall(item, args);
+		const body = componentRefinementGuards(refined.guards, convert(signature.result, `(${refined.call})`, false)
+			, `panic! "Lean Bridge rejected an invalid Fin value"`);
 		lines.push(`@[export ${item.symbol}_lean]`, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${transportType(signature.result)} :=`
-			, `  ${convert(signature.result, `(${call})`, false)}`, "");
+			, `  ${body.replaceAll("\n", "\n  ")}`, "");
 	}
 	return lines;
 };

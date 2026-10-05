@@ -25,6 +25,34 @@ const fail = (code, message, details = {}) => {
 const quote = value => JSON.stringify(value);
 const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefined);
 
+const declarationRefinements = declaration => {
+	const value = declaration.source.extensions["lean-lang.org/refinements"];
+	if(value === undefined) return { parameters: declaration.parameters.map(() => null), result: null };
+	if(value === null || typeof value !== "object" || Array.isArray(value)
+		|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(["parameters", "result"])
+		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length)
+		fail("invalid-refinement", `${declaration.id} has malformed refinement metadata`);
+	for(const refinement of [...value.parameters, value.result])
+	{
+		if(refinement === null) continue;
+		if(refinement === undefined || typeof refinement !== "object" || Array.isArray(refinement)
+			|| JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["bound", "kind"])
+			|| refinement.kind !== "fin" || typeof refinement.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))
+			fail("invalid-refinement", `${declaration.id} has an unsupported refinement`);
+	}
+	value.parameters.forEach((refinement, index) => {
+		if(refinement !== null && (declaration.parameters[index].type.kind !== "primitive" || declaration.parameters[index].type.name !== "nat"))
+			fail("invalid-refinement", `${declaration.id} has a Fin parameter that does not erase to Nat`);
+	});
+	if(value.result !== null && (declaration.result.type.kind !== "primitive" || declaration.result.type.name !== "nat"))
+		fail("invalid-refinement", `${declaration.id} has a Fin result that does not erase to Nat`);
+	return value;
+};
+
+const emitFinCheck = (output, refinement, expression, path, indent) => {
+	if(refinement !== null) output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
+};
+
 const typeScriptType = (typeRef, typeMap) => {
 	if(typeRef.kind === "primitive")
 	{
@@ -456,6 +484,7 @@ const emitDeclarations = (ir, typeMap) => {
 			for(const branch of dispatch.branches)
 			{
 				const target = overloads.find(item => item.id === branch.declarationId);
+				const refinements = declarationRefinements(target);
 				output.push(`    case ${branch.arity}: {`);
 				if(target.parameters.length > 0)
 				{
@@ -463,11 +492,12 @@ const emitDeclarations = (ir, typeMap) => {
 						`      const [${target.parameters.map(parameter => parameter.name).join(", ")}] = args;`,
 					);
 				}
-				for(const parameter of target.parameters)
+				for(const [index, parameter] of target.parameters.entries())
 				{
 					output.push(
 						`      validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${target.name}.${parameter.name}`)});`,
 					);
+					emitFinCheck(output, refinements.parameters[index], parameter.name, `${target.name}.${parameter.name}`, "      ");
 				}
 				const mappedErrors = declarationErrors(ir, target);
 				const indent = mappedErrors.length > 0 ? "        " : "      ";
@@ -475,8 +505,9 @@ const emitDeclarations = (ir, typeMap) => {
 				output.push(
 					`${indent}const result = runtime.call(${quote(target.id)}, [${target.parameters.map(parameter => parameter.name).join(", ")}]);`,
 					`${indent}validate.${validatorName(target.result.type, typeMap)}(result, ${quote(`${target.name}.result`)});`,
-					`${indent}return result;`,
 				);
+				emitFinCheck(output, refinements.result, "result", `${target.name}.result`, indent);
+				output.push(`${indent}return result;`);
 				if(mappedErrors.length > 0)
 				{
 					output.push(
@@ -524,15 +555,17 @@ const emitDeclarations = (ir, typeMap) => {
 			continue;
 		}
 		ensureSupportedGenerics(declaration);
+		const refinements = declarationRefinements(declaration);
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 		output.push(docComment(declaration.documentation));
 		output.push(
 			`export ${asyncPrefix}function ${declaration.name}(${declaration.parameters.map(parameter => parameter.name).join(", ")}) {`,
 		);
-		declaration.parameters.forEach(parameter => {
+		declaration.parameters.forEach((parameter, index) => {
       output.push(
         `  validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${declaration.name}.${parameter.name}`)});`,
       );
+			emitFinCheck(output, refinements.parameters[index], parameter.name, `${declaration.name}.${parameter.name}`, "  ");
 		});
 		const operation = declaration.resultMode === "iterator" ? "iterate" : declaration.resultMode === "async-iterator" ? "iterateAsync" : "call";
 		const awaitPrefix = declaration.resultMode === "promise" ? "await " : "";
@@ -547,6 +580,7 @@ const emitDeclarations = (ir, typeMap) => {
 			output.push(
 				`${indent}validate.${validatorName(declaration.result.type, typeMap)}(result, ${quote(`${declaration.name}.result`)});`,
 			);
+			emitFinCheck(output, refinements.result, "result", `${declaration.name}.result`, indent);
 		}
 		output.push(`${indent}return result;`);
 		if(mappedErrors.length > 0)
@@ -599,6 +633,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt64 = (value, path) => { assertBigInt(value, path); if (value < -0x8000000000000000n || value > 0x7fffffffffffffffn) invalid(path, \"int64\"); return value; };"
 		, "export const assertInt = assertBigInt;"
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
+		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
 		, "const assertNumber = (value, path) => { if (typeof value !== \"number\") invalid(path, \"number\"); return value; };"
 		, "export const assertFloat32 = assertNumber;"
 		, "export const assertFloat64 = assertNumber;"

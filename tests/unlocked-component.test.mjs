@@ -248,6 +248,7 @@ def choose {α : Type u} [Inhabited α] (useValue : Bool) (value : α) : α :=
   if useValue then value else default
 def first (α : Type u) (β : Type v) (a : α) (_b : β) : α := a
 def plainWord (value : UInt32) : UInt32 := value + 3
+def bounded (value : Fin 5) : Fin 5 := value
 end OnboardingSmall
 namespace LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 def OnboardingSmall.choose {α : Type u} [Inhabited α] (_useValue : Bool) (value : α) : α := value
@@ -265,7 +266,7 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 	const copy = { ownership: "copy", lifetime: null };
 	const contracts = { "OnboardingSmall.echoWord": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
 		, "OnboardingSmall.plainWord": { parameters: [copy], result: copy, effects: [] } };
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.plainWord"], specializations, contracts }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.bounded", "OnboardingSmall.plainWord"], specializations, contracts }));
 	const before = await lakeInputState(root), moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	const movedBefore = await lakeInputState(moved);
@@ -274,7 +275,11 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 		const outputRoot = join(directory, `build-${index}`);
 		await build(projectRoot, outputRoot).catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
 		const bundleRoot = join(outputRoot, "bundle"), ir = await json(join(bundleRoot, "binding/binding-ir.json"));
-		assert.deepEqual(ir.declarations.map(item => item.name), ["chooseWord", "echoNat", "echoText", "echoWord", "firstWord", "plainWord"]);
+		assert.deepEqual(ir.declarations.map(item => item.name), ["bounded", "chooseWord", "echoNat", "echoText", "echoWord", "firstWord", "plainWord"]);
+		assert.deepEqual(ir.declarations.find(item => item.name === "bounded").source.extensions["lean-lang.org/refinements"], {
+			parameters: [{ kind: "fin", bound: "5" }]
+			, result: { kind: "fin", bound: "5" }
+		});
 		assert.deepEqual(ir.assurance, []);
 		assert.ok(ir.declarations.every(item => item.typeParameters.length === 0 && item.assurance.length === 0));
 		for(const [name, contract] of Object.entries(contracts))
@@ -299,9 +304,13 @@ assert.equal(api.chooseWord(false, 9), 37);
 assert.equal(api.chooseWord(true, 9), 9);
 assert.equal(api.firstWord(71, "ignored"), 71);
 assert.equal(api.plainWord(71), 74);
+assert.equal(api.bounded(0n), 0n);
+assert.equal(api.bounded(4n), 4n);
 assert.equal(api.echo, undefined);
 assert.throws(() => api.echoWord(-1));
 assert.throws(() => api.echoText(7));
+assert.throws(() => api.bounded(5n));
+assert.throws(() => api.bounded(-1n));
 console.log("finite exports passed");
 `);
 	const installed = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer })
@@ -315,6 +324,7 @@ console.log("finite exports passed");
 	assert.match(declarations, /chooseWord\(arg0: boolean, arg1: number\): number/);
 	assert.match(declarations, /firstWord\(arg0: number, arg1: string\): number/);
 	assert.match(declarations, /plainWord\(arg0: number\): number/);
+	assert.match(declarations, /bounded\(arg0: bigint\): bigint/);
 	assert.doesNotMatch(declarations, /<T>|\bany\b/);
 	await saveLakeFile(consumer, "index.mts", `import * as api from "onboarding-small";
 const word: number = api.echoWord(4294967295);
@@ -323,12 +333,23 @@ const natural: bigint = api.echoNat(2n ** 100n);
 const chosen: number = api.chooseWord(false, 9);
 const first: number = api.firstWord(71, "ignored");
 const plain: number = api.plainWord(71);
-if(word !== 4294967295 || text !== "Lean λ 🙂" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74)
+const bounded: bigint = api.bounded(4n);
+if(word !== 4294967295 || text !== "Lean λ 🙂" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74 || bounded !== 4n)
   throw new Error("finite TypeScript specialization failed");
 `);
 	await processBuildRunner.capture({ command: process.execPath
-		, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false"
-			, "--target", "ES2022", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]
+		, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js")
+			, "--strict"
+			, "--noEmit"
+			, "--skipLibCheck"
+			, "false"
+			, "--target"
+			, "ES2022"
+			, "--module"
+			, "NodeNext"
+			, "--moduleResolution"
+			, "NodeNext"
+			, "index.mts"]
 		, cwd: consumer }).catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
 	await lakeGit(root, "init", "--quiet");
 	await lakeGit(root, "add", ".");

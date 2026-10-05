@@ -87,6 +87,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			return remember(type.root);
 		}
 		const value = { ...type };
+		if(type.kind === "refinement") value.base = remember(type.base);
 		if(type.kind === "alias") value.target = remember(type.target);
 		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
 		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
@@ -118,6 +119,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			return reference(target);
 		}
 		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
+		if(type.kind === "refinement") return reference(type.base);
 		if(["array", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
 		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(value => reference(value)) };
 		// Callback identity describes its semantic signature, not native boxing or C layout.
@@ -153,9 +155,13 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		return { kind: "named", id };
 	};
+	const refinement = type => type.kind === "refinement" ? structuredClone(type.predicate) : null;
 	const declarations = included.map(item => {
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);
+		const refinements = { parameters: projection.parameters.map(parameter => refinement(parameter.type))
+			, result: refinement(projection.result) };
+		const hasRefinements = refinements.result !== null || refinements.parameters.some(value => value !== null);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
 		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));
 		const receiver = contract?.receiver ? (({ type, ownership, lifetime, mutability }) =>
@@ -174,6 +180,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, declaration: item.specialization?.declaration ?? item.identity
 				, extensions: { "lean-lang.org/theorem-references": item.theoremReferences
 					, "lean-lang.org/source-position": item.source
+					, ...(hasRefinements ? { "lean-lang.org/refinements": refinements } : {})
 					, ...(item.specialization ? { "lean-lang.org/specialization": { name: item.identity, ...item.specialization } } : {})
 					, ...(exportContractFor(request.contracts, item.identity) ? { "lean-lang.org/export-contract": request.contracts[item.identity] } : {}) } } };
 	}).sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0);
