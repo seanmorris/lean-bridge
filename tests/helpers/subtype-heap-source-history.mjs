@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeSubtypeComponentSource } from "./subtype-component-source-history.mjs";
 
 export const subtypeHeapHistoryPath = "docs/evidence/npm-subtype-heap-source-history-20261005.json";
 export const subtypeHeapChangedPaths = [
@@ -69,6 +70,7 @@ export const reverseSubtypeHeapUpdate = (source, update) => {
  * @param expected - Optional intermediate digest at which to stop.
  */
 export const beforeSubtypeHeapSource = (path, source, expected) => {
+	source = beforeSubtypeComponentSource(path, source, expected);
 	if(typeof source !== "string" || !subtypeHeapChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

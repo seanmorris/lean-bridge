@@ -53,3 +53,19 @@ export const componentRefinementGuards = (guards, success, rejected) => {
 	}
 	return body;
 };
+
+/**
+ * Validate copied carriers before dispatch so a rejected predicate can return
+ * an ordinary call failure rather than an invalid result carrier.
+ *
+ * @param item - Compiler-owned source export with primitive refinement bases.
+ */
+export const componentCarrierRefinementValidators = item => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement?.kind === "subtype" ? [
+	`@[export ${item.symbol}_refinement_${index}]`
+	, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
+	, "  match carrierValue carrier with"
+	, "  | .none => 0"
+	, "  | .some value =>"
+	, `    match _root_.${refinement.constructor} value with`
+	, "    | .some _ => 1", "    | .none => 0", ""
+] : []);

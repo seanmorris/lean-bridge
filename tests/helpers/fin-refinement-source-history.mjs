@@ -454,9 +454,12 @@ const beforeFinTypeSurface = source => {
  *
  * @param path - Current repository path.
  * @param source - Complete current source.
+ * @param expected - Optional exact stopping SHA-256.
  */
-export const beforeFinRefinementSource = (path, source) => {
-	source = beforeSubtypeRefinementSource(path, source);
+export const beforeFinRefinementSource = (path, source, expected) => {
+	const original = source;
+	source = beforeSubtypeRefinementSource(path, source.toString(), expected);
+	if(sha256(source) === expected) return source;
 	if(path === typeSurfacePath) return beforeFinTypeSurface(source);
 	const verification = verifierEdits[path];
 	if(verification && verification.some(([current]) => source.includes(current)))
@@ -468,7 +471,7 @@ export const beforeFinRefinementSource = (path, source) => {
 		return previous;
 	}
 	const transition = transitions[path];
-	if(!transition || sha256(source) !== transition.current) return source;
+	if(!transition || sha256(source) !== transition.current) return source === original.toString() ? original : source;
 	for(const [start, end] of transition.removeRanges ?? [])
 	{
 		const first = source.indexOf(start), last = source.indexOf(end);

@@ -118,8 +118,9 @@ const decode = (slot, type, name) => object(type) ? [`  ${cType(type)} ${name} =
  * Consume Lean arguments, contain host failures and retain no copied views.
  *
  * @param abi - Authenticated private descriptor emitted beside Lean wrappers.
+ * @param exports - Compiler-owned source exports carrying checked refinement metadata.
  */
-export const generateComponentCallableAdapters = abi => {
+export const generateComponentCallableAdapters = (abi, exports = []) => {
 	assertComponentCallableAbi(abi);
 	const lines = ['#include "component_scalar.h"', "#include <string.h>", '_Static_assert(sizeof(size_t) == 4, "callable frames require wasm32 Lean");', ""];
 	const signatures = new Map(abi.callbacks.map(signature => [signature.id, signature]));
@@ -145,9 +146,15 @@ export const generateComponentCallableAdapters = abi => {
 	}
 	for(const item of abi.exports)
 	{
+		const source = exports.find(value => value.bindingId === item.bindingId);
+		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
 		if([...item.parameters, item.result].every(type => type.kind === "primitive"))
-		{ lines.push(generateComponentScalarAdapters({ exports: [item] })); continue; }
+		{ lines.push(generateComponentScalarAdapters({ exports: [item] }, source ? [source] : [])); continue; }
+		const owned = type => type.kind === "named" || object(type);
+		const rejectionCleanup = item.parameters.flatMap((type, index) => owned(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
+			, ...refinements.flatMap((refinement, index) => refinement?.kind === "subtype"
+				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_scalar_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", "  if (bridge_callable_abi() != 1) return 9;");
@@ -155,6 +162,11 @@ export const generateComponentCallableAdapters = abi => {
 		for(const [index, type] of item.parameters.entries())
 			if(type.kind === "named") lines.push(`  lean_object *a${index} = ${prefix(abi, signatures.get(type.id))}_wrap((size_t)frame->args[${index}].bits);`);
 			else lines.push(...decode(`frame->args[${index}]`, type, `a${index}`));
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+		{
+			if(owned(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`);
 		if(item.result.kind === "named")
 		{

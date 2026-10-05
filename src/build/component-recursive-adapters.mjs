@@ -30,8 +30,9 @@ export const componentRecursiveWalker = (abi, type) => {
  * @param abi - Validated recursive private ABI, authenticated against public IR.
  * @param options - Select shared codecs without ordinary exported call frames.
  * @param options.exportFrames - Keep existing public frame generation by default.
+ * @param options.exports - Compiler-owned source exports carrying refinements.
  */
-export const generateComponentRecursiveAdapters = (abi, { exportFrames = true } = {}) => {
+export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, exports = [] } = {}) => {
 	const refs = componentRecursiveTypes(abi);
 	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
 	const reference = type => {
@@ -193,6 +194,10 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true } 
 	}
 	for(const item of exportFrames ? abi.exports : [])
 	{
+		const refinements = exports.find(value => value.bindingId === item.bindingId)?.refinements?.parameters ?? [];
+		const cleanup = item.parameters.map((_, index) => `lean_dec(a${index});`).join(" ");
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(lean_object *);`);
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, item.parameters.length)).fill("lean_object *").join(", ")});`
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_recursive_frame_validate(frame, ${item.parameters.length});`
@@ -202,6 +207,9 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true } 
 		lines.push("  if (budget.bytes < 16 || !budget.nodes) return 4;", "  budget.bytes -= 16;");
 		lines.push("  if ((status = bridge_recursive_arena_open(frame, &budget.owner))) return status;");
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`  lean_inc(a${index});`
+				, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  status = ${walker(item.result)}_encode(&frame->result, result, 0, &budget);`
 			, "  if (status) bridge_recursive_frame_clear(frame);", "  return status;", "}", "");

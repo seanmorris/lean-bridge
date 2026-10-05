@@ -23,6 +23,7 @@ import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { lakeGit, lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { generatedLakeEntryFixture } from "./helpers/lake-generator.mjs";
 import { packageReference } from "../scripts/generate-reference-docs.mjs";
+import { checkSubtypeComponentPackages } from "./helpers/subtype-component-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -53,6 +54,10 @@ const transport = ({ execute, after, compiler } = {}) => ({ capture: async comma
 	return { stdout: "", stderr: "", code: 0 };
 } });
 const build = (root, outputRoot, runner = transport()) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner });
+
+test("checked Subtype inputs compose with copied and callable npm packages", { skip: !enabled }, async t => {
+	await checkSubtypeComponentPackages(t, { fixture, build, runtimeRoot, engineRoot });
+});
 
 test("unlocked build intent is source-only, relocatable, and records lockfile absence", async t => {
 	const { directory, root } = await fixture(t), before = await lakeInputState(root);
@@ -328,7 +333,9 @@ assert.throws(() => api.echoText(7));
 assert.throws(() => api.bounded(5n));
 assert.throws(() => api.bounded(-1n));
 assert.throws(() => api.echoSmall(10));
+assert.equal(api.echoSmall(9), 9);
 assert.throws(() => api.echoNonEmpty(""));
+assert.equal(api.echoNonEmpty("recovered"), "recovered");
 console.log("finite exports passed");
 `);
 	const installed = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer })

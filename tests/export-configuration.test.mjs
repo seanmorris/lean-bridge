@@ -79,7 +79,7 @@ test("contract decisions constrain the existing adapter instead of supplying typ
 	assert.equal(exportContractProblem({ parameters: [copySite], result: { ...copySite, refinement: "reject" }, effects: [] }, scalar), null);
 	assert.match(exportContractProblem({ parameters: [] }, scalar), /runtime argument count/);
 	assert.match(exportContractProblem({ effects: ["async"] }, scalar), /effects/);
-	assert.match(exportContractProblem({ result: { ...copySite, refinement: { constructor: "Library.make" } } }, scalar), /not implemented/);
+	assert.match(exportContractProblem({ result: { ...copySite, refinement: { constructor: "Library.make" } } }, scalar), /does not match the compiler-checked Subtype/);
 	assert.match(exportContractProblem({ result: { ownership: "lease", lifetime: { scope: "explicit", anchor: null } } }, scalar), /ownership/);
 	const identity = { status: "supported", parameters: [{ name: "resource", type: { kind: "resource" } }, { name: "fn", type: { kind: "callback" } }], result: { kind: "resource" } };
 	const borrow = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };

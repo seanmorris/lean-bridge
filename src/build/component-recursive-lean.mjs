@@ -7,7 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
-import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators } from "./component-refinements.mjs";
 
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
 const key = type => sha256(identity(type)).slice(0, 20);
@@ -146,6 +146,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType) => {
 	}
 	for(const item of exports)
 	{
+		lines.push(...componentCarrierRefinementValidators(item));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		if(!signature) throw new TypeError("Missing recursive export signature");
 		const names = signature.parameters.map((_, index) => `a${index}`);

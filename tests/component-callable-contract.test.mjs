@@ -34,6 +34,22 @@ test("callable compiler plans and schemas agree on carriers and closed signature
 	assert.match(c, /if \(status\) \{ lean_dec\(closure\); return status; \}/);
 });
 
+test("callable packages reject checked scalar inputs and release decoded closures", () => {
+	const ir = source();
+	const declaration = ir.declarations.find(item => item.id === "lean:Callables.callString");
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [{ kind: "subtype", constructor: "Callables.checkedText" }, null]
+		, result: { kind: "subtype", constructor: "Callables.checkedText" }
+	};
+	const generated = plan(ir), item = generated.plan.exports.find(value => value.bindingId === declaration.id);
+	assert.equal(generated.plan.privateAbi.version, 3);
+	const c = generateComponentCallableAdapters(generated.plan.privateAbi, generated.plan.exports);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], new RegExp(`@\\[export ${item.symbol}_refinement_0\\]`));
+	assert.match(c, new RegExp(`extern uint8_t ${item.symbol}_refinement_0\\(lean_object \\*\\);`));
+	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${item.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 6; \\}`));
+	assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
+});
+
 test("callable admission rejects changed semantics and preserves the scalar-only ABI contract", () => {
 	const ir = source(), abi = createComponentPrivateAbi(ir);
 	assertComponentCallableBindings(abi, ir);

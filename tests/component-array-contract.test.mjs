@@ -16,6 +16,7 @@ import { compileComponentCopiedCall } from "../src/release/component-copied-runt
 import { createComponentRuntime } from "../src/release/component-runtime.mjs";
 import { arrayReviewedIr } from "./helpers/array-fixture.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from "./helpers/subtype-component-source-history.mjs";
 
 test("array compiler plans agree with schemas and preserve parenthesized nested types", async () => {
 	const ir = arrayReviewedIr();
@@ -32,6 +33,44 @@ test("array compiler plans agree with schemas and preserve parenthesized nested 
 	assert.match(c, /bridge_copied_validate\(&frame->args\[0\], 4, 2, &budget\)/);
 	assert.match(c, /bridge_copied_encode\(&frame->result, 4, 2, result, &budget\)/);
 	assert.ok(c.indexOf("bridge_copied_validate") < c.indexOf("bridge_copied_decode"));
+});
+
+test("copied-array packages retain and clean checked scalar refinements before dispatch", () => {
+	const ir = arrayReviewedIr();
+	const declaration = ir.declarations.find(item => item.id === "lean:Arrays.add");
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [{ kind: "subtype", constructor: "Arrays.checkedInt" }, null]
+		, result: null
+	};
+	const generated = generateCompilerAdapters({ analysis: {
+		bindingIr: { origin: "lean-elaborated", document: ir, semanticSha256: "1".repeat(64) }
+		, exportCandidates: ir.declarations.map(item => ({ declaration: item.source.declaration, sourceModule: "Arrays", status: "exportable" }))
+	}
+	, componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
+	assert.equal(generated.plan.privateAbi.version, 4);
+	const source = generated.plan.exports.find(item => item.bindingId === declaration.id);
+	const c = generateComponentCopiedAdapters(generated.plan.privateAbi, generated.plan.exports);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], new RegExp(`@\\[export ${source.symbol}_refinement_0\\]`));
+	assert.match(c, new RegExp(`extern uint8_t ${source.symbol}_refinement_0\\(lean_object \\*\\);`));
+	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${source.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
+	assert.ok(c.indexOf(`${source.symbol}_refinement_0(a0)`) < c.indexOf(`${source.symbol}_lean(a0, a1)`));
+});
+
+test("Subtype component history preserves predecessors and rejects altered source spans", async () => {
+	const history = JSON.parse(await readFile(subtypeComponentHistoryPath, "utf8"));
+	assert.equal(history.schemaVersion, 1);
+	assert.equal(history.predecessorCommit, "8daefcd2ececf2e7d2aefc70245848305c2bf33a");
+	assert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);
+	for(const update of history.updates)
+	{
+		const source = await readFile(update.path, "utf8");
+		assert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);
+		assert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);
+		assert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);
+		assert.throws(() => reverseSubtypeComponentUpdate(source + "\nunreviewed\n", update));
+		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, edits: [] }));
+		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
 });
 
 test("array admission rejects changed types, ownership, effects and unsupported compounds", () => {

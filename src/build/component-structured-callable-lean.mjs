@@ -8,7 +8,7 @@ import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
-import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators } from "./component-refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -102,6 +102,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	const seen = new Set();
 	for(const item of sourceExports)
 	{
+		lines.push(...componentCarrierRefinementValidators(item));
 		const signature = abi.exports.find(signature => signature.bindingId === item.bindingId);
 		if(!signature || seen.has(item.bindingId) || item.symbol !== signature.symbol) throw new TypeError("Structured source export identity mismatch");
 		seen.add(item.bindingId);

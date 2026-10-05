@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
@@ -343,6 +344,7 @@ export const reversePhpWasmCallbackResultUpdate = (source, update, category = "u
  * @param expected - Optional exact stopping SHA-256.
  */
 export const beforePhpWasmCallbackResultAcceptance = (path, source, expected) => {
+	source = beforeFinRefinementSource(path, source, expected);
 	for(const category of ["readerUpdates", "updates"])
 	{
 		const update = readPhpWasmCallbackResultHistory()[category].find(value => value.path === path);

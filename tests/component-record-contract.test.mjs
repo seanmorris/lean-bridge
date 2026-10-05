@@ -77,6 +77,17 @@ test("record compiler plans use typed Lean constructors and carriers without gue
 	assert.ok(c.lastIndexOf("_validate(&frame->args") < c.lastIndexOf("_decode(&frame->args"));
 });
 
+test("checked record inputs reject recoverably and release every decoded object", () => {
+	const ir = recordReviewedIr();
+	const declaration = ir.declarations[0];
+	declaration.parameters.unshift({ ...declaration.parameters[0], name: "text", type: primitive("string") });
+	const abi = createComponentPrivateAbi(ir), item = abi.exports[0];
+	const c = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId
+		, refinements: { parameters: [{ kind: "subtype", constructor: "Records.checkedText" }, null] } }]);
+	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${item.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
+	assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
+});
+
 test("record ABI rejects mismatched nominal identities, fields, ownership and unsupported kinds", () => {
 	const ir = recordReviewedIr(), abi = createComponentPrivateAbi(ir);
 	for(const mutate of [

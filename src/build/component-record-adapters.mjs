@@ -322,7 +322,7 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
 		{
 			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);
 		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  lean_object *boxed = ${box(item.result, "result")};`, "  if (budget < 16) { lean_dec(boxed); return 4; }", "  budget -= 16;"

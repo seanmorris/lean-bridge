@@ -241,8 +241,8 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 		const value = declaration.source.extensions["lean-lang.org/refinements"];
 		return value === undefined ? [] : [...value.parameters, value.result].filter(refinement => refinement?.kind === "subtype");
 	});
-	if(subtypeRefinements.length && ![2, componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(privateAbi.version))
-		fail("unsupported-subtype-refinement", `Checked Subtype constructors currently require a scalar or finite record component package (private ABI ${privateAbi.version})`);
+	if(subtypeRefinements.length && ![2, 3, componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi, componentStructuredCallableAbi].includes(privateAbi.version))
+		fail("unsupported-subtype-refinement", `Checked Subtype constructors do not support private ABI ${privateAbi.version}`);
 	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");
 	if([componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(privateAbi.version) && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Copied adapters require freshly elaborated Binding IR");
 	const callbackTypes = new Map(callbacks.map(type => [type.id, type]));

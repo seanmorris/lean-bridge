@@ -9,6 +9,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { generateComponentStructuredCallableAdapters } from "../src/build/component-structured-callable-adapters.mjs";
+import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
 import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../src/build/compiler-adapters.mjs";
 import { createComponentRuntime } from "../src/release/component-runtime.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
@@ -45,6 +46,39 @@ test("structured compiler admission matches independent acyclic, recursive and m
 		}
 	}
 	assert.equal(createComponentPrivateAbi(callableReviewedIr()).version, 3);
+});
+
+test("recursive and structured packages reject refinements before dispatch with owned carrier cleanup", () => {
+	for(const version of [8, 9])
+	{
+		const ir = structuredCallableReviewedIr({ recursive: true });
+		const declaration = ir.declarations.find(item => item.name === "afterFailure");
+		declaration.parameters[0].type = { kind: "primitive", name: "string" };
+		declaration.source.extensions["lean-lang.org/refinements"] = {
+			parameters: [{ kind: "subtype", constructor: "Structured.checkedText" }, null]
+			, result: { kind: "subtype", constructor: "Structured.checkedText" }
+		};
+		if(version === 8)
+		{
+			ir.declarations = [declaration];
+			ir.types = ir.types.filter(type => type.name === "Tree");
+			Object.assign(declaration.parameters[1], { type: { kind: "named", id: "lean:Structured.Tree" }, ownership: "copy", lifetime: null });
+			declaration.effects = [];
+			ir.errors = [];
+			declaration.failure = { mode: "none", errors: [], unexpected: "poison-runtime" };
+		}
+		const generated = plan(ir), item = generated.plan.exports.find(item => item.bindingId === declaration.id);
+		assert.equal(generated.plan.privateAbi.version, version);
+		const lean = generated.files["LeanBridgeGenerated.lean"];
+		assert.match(lean, /carrier : _root_\.Array _root_\.String/);
+		assert.match(lean, /match carrierValue carrier with\n {2}\| \.none => 0/);
+		assert.match(lean, /match _root_\.Structured\.checkedText value with/);
+		assert.doesNotMatch(lean, /unsafe|sorry|panic!/);
+		const c = version === 8 ? generateComponentRecursiveAdapters(generated.plan.privateAbi, { exports: generated.plan.exports })
+			: generateComponentStructuredCallableAdapters(generated.plan.privateAbi, generated.plan.exports);
+		assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${item.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); bridge_recursive_frame_clear\\(frame\\); frame->status = 5; return 5; \\}`));
+		assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
+	}
 });
 
 test("structured array-only callbacks keep an explicit empty nominal table", async () => {

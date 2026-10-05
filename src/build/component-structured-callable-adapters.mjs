@@ -18,8 +18,9 @@ const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join
  * All decoded values and closures use one-element Array carriers from Lean.
  *
  * @param abi - Authenticated copied-payload callable descriptor.
+ * @param exports - Compiler-owned source exports carrying refinements.
  */
-export const generateComponentStructuredCallableAdapters = abi => {
+export const generateComponentStructuredCallableAdapters = (abi, exports = []) => {
 	assertComponentStructuredCallableAbi(abi);
 	const copied = componentStructuredCopiedView(abi);
 	const walker = type => componentRecursiveWalker(copied, type);
@@ -33,6 +34,9 @@ export const generateComponentStructuredCallableAdapters = abi => {
 			, `static uint32_t ${prefix(signature)}_frame(lean_object *, bridge_scalar_frame *);`);
 	const frame = (signature, name, target, closure = false) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
+		const refinements = closure ? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`extern uint8_t ${name}_refinement_${index}(lean_object *);`);
 		lines.push(closure ? `static uint32_t ${name}(lean_object *closure, bridge_scalar_frame *frame) {`
 			: `LEAN_EXPORT uint32_t ${name}(bridge_scalar_frame *frame) {`
 		, `  uint32_t status = bridge_recursive_frame_validate(frame, ${names.length});`
@@ -53,6 +57,9 @@ export const generateComponentStructuredCallableAdapters = abi => {
 			lines.push(`  lean_object *a${index} = ${identity(type)
 				? `${prefix(callbacks.get(type.id))}_wrap((size_t)frame->args[${index}].bits)`
 				: `${walker(type)}_decode(&frame->args[${index}])`};`);
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`  lean_inc(a${index});`
+				, `  if (!${name}_refinement_${index}(a${index})) { ${names.map(name => `lean_dec(${name});`).join(" ")} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${target}(${[...(closure ? ["closure"] : []), ...names].join(", ") || "lean_box(0)"});`);
 		if(identity(signature.result))
 		{

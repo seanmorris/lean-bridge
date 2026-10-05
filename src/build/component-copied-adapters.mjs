@@ -18,13 +18,19 @@ const shape = type => { const { kind, depth } = componentArrayShape(type); retur
  * Generate typed C entry points. Every input validates before Lean allocation.
  *
  * @param abi - Closed copied-array private descriptor.
+ * @param exports - Compiler-owned source exports carrying checked refinement metadata.
  */
-export const generateComponentCopiedAdapters = abi => {
+export const generateComponentCopiedAdapters = (abi, exports = []) => {
 	assertComponentCopiedAbi(abi);
 	const lines = ['#include "component_scalar.h"', '_Static_assert(sizeof(size_t) == 4, "copied arrays require wasm32 Lean");', ""];
 	for(const item of abi.exports)
 	{
+		const source = exports.find(value => value.bindingId === item.bindingId);
+		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
+		const rejectionCleanup = item.parameters.flatMap((type, index) => object(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
+			, ...refinements.flatMap((refinement, index) => refinement?.kind === "subtype"
+				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_copied_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", "  if (bridge_copied_abi() != 1) return 6;"
@@ -36,6 +42,11 @@ export const generateComponentCopiedAdapters = abi => {
 			lines.push(`  lean_object *boxed${index} = bridge_copied_decode(&frame->args[${index}], ${shape(type)});`);
 			lines.push(`  ${cType(type)} a${index} = ${object(type) ? `boxed${index}` : `(${cType(type)})lean_unbox${suffix(type)}(boxed${index})`};`);
 			if(!object(type)) lines.push(`  lean_dec(boxed${index});`);
+		}
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+		{
+			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);
 		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  return bridge_copied_encode(&frame->result, ${shape(item.result)}, ${object(item.result) ? "result" : `lean_box${suffix(item.result)}(result)`}, &budget);`
