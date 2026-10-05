@@ -26,7 +26,7 @@ LEAN_BRIDGE_PERL_NATIVE_TEST=1 node --test --test-name-pattern='native finite sp
 The npm acceptance produced the component archive SHA-256:
 
 ```text
-a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87
+c469c95e0fd787450ea6288c8d03f73dca9b5b8c78e860d08fb7807759d5ada5
 ```
 
 The retained native CPAN acceptance produced the component archive SHA-256:

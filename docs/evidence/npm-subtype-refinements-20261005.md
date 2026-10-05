@@ -6,11 +6,11 @@ VO1220 milestone, 2026-10-05.
 
 Compiler-backed ordinary-source npm builds accept a top-level `Subtype` parameter or result when its export contract names an exact checked constructor. Lean verifies that the constructor belongs to a selected module, takes one explicit value of the subtype's base type, and returns `Option` of that exact subtype. Analysis also rejects constructors whose selected-module implementation graph reaches unsafe, partial, foreign, or `implemented_by` code.
 
-The first accepted slice uses unboxed primitive bases in scalar or finite record component packages. Binding IR exposes the base primitive and retains the constructor identity as compiler-owned refinement metadata. A generated Wasm export calls the Lean constructor before the source function: `.none` becomes a boundary rejection and `.some value` supplies the proof-carrying subtype. Results originate as the declared Lean subtype and cross the host boundary only after the generated Lean adapter projects `.val`.
+The accepted slice uses primitive bases in scalar or finite record component packages, including heap-backed `Nat`, `Int`, `String`, and `ByteArray`. Binding IR exposes the base primitive and retains the constructor identity as compiler-owned refinement metadata. A generated Wasm export calls the Lean constructor before the source function: `.none` becomes a boundary rejection and `.some value` supplies the proof-carrying subtype. For heap-backed values, the native adapter retains a separate reference for validation and releases all decoded inputs if validation rejects. Results originate as the declared Lean subtype and cross the host boundary only after the generated Lean adapter projects `.val`.
 
-The installed fixture defines `Small := { value : UInt32 // value < 10 }`, exports `echoSmall : Small -> Small`, and configures `checkedSmall : UInt32 -> Option Small`. It builds from two relocated roots, reproduces both npm archives, verifies the component-package receipt, installs the archives offline, accepts `9`, rejects `10` before `echoSmall` runs, and compiles a strict TypeScript consumer whose public signature is `(arg0: number) => number`. A separate real-Lean extraction test verifies exact metadata and Binding IR while confirming that an unconfigured subtype remains unsupported.
+The installed fixture defines checked subtypes over `UInt32` and `String`. It builds from two relocated roots, reproduces both npm archives, verifies the component-package receipt, installs the archives offline, accepts `9` and nonempty Unicode text, rejects `10` and the empty string before the source functions run, and compiles strict TypeScript signatures using `number` and `string`. A separate real-Lean extraction test verifies exact metadata and Binding IR while confirming that an unconfigured subtype remains unsupported. A generated-C regression checks that heap validation retains its argument and releases every decoded object on rejection.
 
-This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for configured top-level subtypes over unboxed primitives. It does not claim nested subtypes, callback positions, heap-backed bases such as `Nat` or `String`, synthesized constructors from arbitrary predicates, reviewed IR, browser execution, native profiles, or unsafe/partial/foreign constructor implementations.
+This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for configured top-level subtypes over primitives. Installed execution covers `UInt32` and `String`; the shared primitive transport covers the remaining primitive bases. It does not claim nested subtypes, callback positions, synthesized constructors from arbitrary predicates, reviewed IR, browser execution, native profiles, or unsafe/partial/foreign constructor implementations.
 
 ## Commands
 
@@ -23,5 +23,5 @@ LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializat
 The reproducible installed component archive SHA-256 is:
 
 ```text
-a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87
+c469c95e0fd787450ea6288c8d03f73dca9b5b8c78e860d08fb7807759d5ada5
 ```

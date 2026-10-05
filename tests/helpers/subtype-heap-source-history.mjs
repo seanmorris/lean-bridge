@@ -1,52 +1,43 @@
 /**
- * Exact source transition for the first checked Subtype constructor slice.
- * Older package receipts remain immutable while current-source verification
- * can remove this isolated admission before following the existing lineage.
+ * Exact source transition for heap-backed primitive Subtype constructors.
+ * This layer restores the first checked-Subtype milestone before the older
+ * refinement lineage continues.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeSubtypeHeapSource } from "./subtype-heap-source-history.mjs";
 
-export const subtypeRefinementHistoryPath = "docs/evidence/npm-subtype-refinement-source-history-20261005.json";
-export const subtypeRefinementChangedPaths = [
+export const subtypeHeapHistoryPath = "docs/evidence/npm-subtype-heap-source-history-20261005.json";
+export const subtypeHeapChangedPaths = [
 	"docs/evidence/finite-specialization-20261005.md"
 	, "docs/evidence/npm-fin-refinements-20261005.md"
+	, "docs/evidence/npm-subtype-refinements-20261005.md"
 	, "docs/javascript-typescript.md"
 	, "docs/lean/diagnostics.md"
 	, "docs/lean/existing-package.md"
 	, "docs/lean/export-decisions.md"
 	, "docs/type-surface.v1.json"
-	, "schema/compiler-adapter-plan.schema.json"
-	, "schema/elaborated-export-metadata.schema.json"
 	, "src/analyze/NativeExports.lean"
-	, "src/analyze/elaborated-metadata.mjs"
-	, "src/analyze/export-configuration.mjs"
-	, "src/backends/javascript/generate.mjs"
-	, "src/build/compiler-adapters.mjs"
 	, "src/build/component-record-adapters.mjs"
-	, "src/build/component-refinements.mjs"
 	, "src/build/component-scalar-adapters.mjs"
-	, "src/build/lean-component-compiler.mjs"
 	, "tests/elaborated-metadata.test.mjs"
-	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/wit-host-evidence.mjs"
+	, "tests/helpers/subtype-refinement-source-history.mjs"
 	, "tests/type-surface.test.mjs"
 	, "tests/unlocked-component.test.mjs"
-	, "tests/wit-host-isolation-evidence.test.mjs"
+	, "tests/word-contract.test.mjs"
 ];
 let history;
 
 /**
  * Reverse one fully authenticated ordered source transition.
  *
- * @param source - Complete source at the Subtype milestone.
+ * @param source - Complete source at the heap-backed Subtype milestone.
  * @param update - Recorded predecessor and replacement spans.
  */
-export const reverseSubtypeRefinementUpdate = (source, update) => {
-	assert.ok(subtypeRefinementChangedPaths.includes(update.path));
+export const reverseSubtypeHeapUpdate = (source, update) => {
+	assert.ok(subtypeHeapChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let end = 0;
@@ -71,18 +62,17 @@ export const reverseSubtypeRefinementUpdate = (source, update) => {
 };
 
 /**
- * Restore only exact checked-Subtype milestone bytes.
+ * Restore only exact heap-backed Subtype milestone bytes.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source.
  * @param expected - Optional intermediate digest at which to stop.
  */
-export const beforeSubtypeRefinementSource = (path, source, expected) => {
-	source = beforeSubtypeHeapSource(path, source, expected);
-	if(typeof source !== "string" || !subtypeRefinementChangedPaths.includes(path)) return source;
+export const beforeSubtypeHeapSource = (path, source, expected) => {
+	if(typeof source !== "string" || !subtypeHeapChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(subtypeRefinementHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(subtypeHeapHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseSubtypeRefinementUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseSubtypeHeapUpdate(source, update) : source;
 };

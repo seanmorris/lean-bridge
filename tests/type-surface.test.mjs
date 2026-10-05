@@ -427,7 +427,7 @@ test("checked Subtype evidence promotes only Node parameters and results", () =>
 	{
 		assert.equal(cell.path, "ordinary-source");
 		assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-subtype-refinements-installed"]);
-		assert.match(cell.hostType, /declared unboxed primitive/u);
+		assert.match(cell.hostType, /declared primitive/u);
 	}
 });
 
