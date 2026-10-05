@@ -175,7 +175,7 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 `effects` must match the adapter's boundary effects: `[]` for the current scalar and native APIs without callback arguments, or `["host-call", "fails"]` when an argument is a callback. Order does not matter. These labels describe the host-call protocol, not memory allocation inside Lean or a proof that arbitrary function bodies are pure. Returned `IO`, `EIO`, `Task` and other unsupported actions still fail signature checking.
 
-`refinement: "reject"` refuses refined values, including refinements nested inside containers, records, variants, aliases, and recursive types. It never erases a `Fin` bound or `Subtype` predicate.
+`refinement: "reject"` refuses refined values, including refinements nested inside containers, records, variants, aliases, recursive types, and callback signatures. It never erases a `Fin` bound or `Subtype` predicate.
 
 ### Export bounded integers
 
@@ -214,7 +214,17 @@ def echoPacket (value : Packet) : Packet := value
 
 The consumer passes `{ digit: 9n, digits: [0n, 9n] }`. Every constrained field is checked, including fields reached through aliases and recursive constructors. A record with a `Fin 0` field has no valid value, but `Option.none` of that record is valid. The adapter never fabricates a default inhabitant.
 
-Refinements inside callback signatures and native packages remain unsupported. Components using nominal `Fin` fields or container aliases cannot yet include callbacks or returned closures. Top-level and structural-container `Fin` exports can still share a component with unrefined callbacks.
+Synchronous callbacks and returned closures also preserve `Fin` bounds, including bounds in copied fields, aliases, and nested containers:
+
+```lean
+def transformDigit (f : Fin 10 → Fin 10) (value : Fin 10) : Fin 10 := f value
+```
+
+The JavaScript consumer calls `transformDigit(value => (value + 1n) % 10n, 9n)`. A reply of `10n` fails the bound check. The compiled adapter checks replies independently of the JavaScript wrapper, and later valid calls still work. Returned closures check their arguments and keep their usual `dispose()` lifecycle. Nominal `Fin` values and callbacks can share one component.
+
+Callback recovery must have a valid Lean result while the call unwinds. Positive `Fin` bounds provide zero; empty arrays and lists, absent options, and inhabited variant branches can provide recovery values without constructing their elements. A callback or returned-closure result with no finite recovery value, such as bare `Fin 0` or a record requiring `Fin 0`, is rejected at build time. `Option (Fin 0)` and `Array (Fin 0)` results are accepted, but only absent or empty values can cross the boundary. The callback error is reported to the caller, not returned as a successful fallback value.
+
+Native refinements and `Subtype` constraints inside callback signatures remain unsupported. This installed-package evidence covers Node JavaScript and TypeScript; browser profiles are not yet audited for refined callbacks.
 
 ### Export a checked Subtype
 

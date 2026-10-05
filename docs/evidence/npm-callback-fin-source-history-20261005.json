@@ -1,0 +1,2349 @@
+{
+  "schemaVersion": 1,
+  "milestone": "npm-callback-fin-v1",
+  "predecessorCommit": "1d19858cec6f825c11ffa8b852baa4fc3ce5d3de",
+  "updates": [
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "209f9b3f4c0e3daa7c424f025ad231a7aca8ab155e522354d2de612475aff550",
+      "previousSha256": "447d460e34daa9a21e6bd8c785b05aa9312eecc43d285ccf715746084fd305f2",
+      "edits": [
+        {
+          "start": 32903,
+          "previous": "| `Fin n` | Node JavaScript / TypeScript: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `bigint checked against the declared bound in copied fields and aliases` (field); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed (input, result, field); Not audited (callback input, callback result); Browser / React / Worker: Not audited. Reviewed IR: Not audited | Node JavaScript / TypeScript: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the Lean adapter independently checks the input bound before constructing Fin. Copied nominal fields keep their bigint representation. JavaScript and typed Lean constructors validate their bounds, including through container aliases and finite recursive values. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | Node JavaScript / TypeScript: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `bigint checked against the declared bound in copied fields and aliases` (field); `bigint checked against the declared bound in callback arguments` (callback input); `bigint checked against the declared bound in callback results` (callback result); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Not audited | Node JavaScript / TypeScript: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the Lean adapter independently checks the input bound before constructing Fin. Copied nominal fields keep their bigint representation. JavaScript and typed Lean constructors validate their bounds, including through container aliases and finite recursive values. Callback arguments and replies keep bigint leaves, including in copied fields, aliases and recursive values. JS validates both directions; compiled Lean independently checks host replies and closure inputs before constructing proof-carrying values. Callback errors unwind with valid typed recovery values and leave later calls usable. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2",
+      "previousSha256": "1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0",
+      "edits": [
+        {
+          "start": 20873,
+          "previous": "`refinement: \"reject\"` refuses refined values, including refinements nested inside containers, records, variants, aliases, and recursive types. It never erases a `Fin` bound or `Subtype` predicate.\n",
+          "current": "`refinement: \"reject\"` refuses refined values, including refinements nested inside containers, records, variants, aliases, recursive types, and callback signatures. It never erases a `Fin` bound or `Subtype` predicate.\n"
+        },
+        {
+          "start": 22726,
+          "previous": "Refinements inside callback signatures and native packages remain unsupported. Components using nominal `Fin` fields or container aliases cannot yet include callbacks or returned closures. Top-level and structural-container `Fin` exports can still share a component with unrefined callbacks.\n",
+          "current": "Synchronous callbacks and returned closures also preserve `Fin` bounds, including bounds in copied fields, aliases, and nested containers:\n\n```lean\ndef transformDigit (f : Fin 10 → Fin 10) (value : Fin 10) : Fin 10 := f value\n```\n\nThe JavaScript consumer calls `transformDigit(value => (value + 1n) % 10n, 9n)`. A reply of `10n` fails the bound check. The compiled adapter checks replies independently of the JavaScript wrapper, and later valid calls still work. Returned closures check their arguments and keep their usual `dispose()` lifecycle. Nominal `Fin` values and callbacks can share one component.\n\nCallback recovery must have a valid Lean result while the call unwinds. Positive `Fin` bounds provide zero; empty arrays and lists, absent options, and inhabited variant branches can provide recovery values without constructing their elements. A callback or returned-closure result with no finite recovery value, such as bare `Fin 0` or a record requiring `Fin 0`, is rejected at build time. `Option (Fin 0)` and `Array (Fin 0)` results are accepted, but only absent or empty values can cross the boundary. The callback error is reported to the caller, not returned as a successful fallback value.\n\nNative refinements and `Subtype` constraints inside callback signatures remain unsupported. This installed-package evidence covers Node JavaScript and TypeScript; browser profiles are not yet audited for refined callbacks.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4",
+      "previousSha256": "cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3",
+      "edits": [
+        {
+          "start": 2885,
+          "previous": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, and recursive values](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases, including exports alongside copied values, recursive values, callbacks, and returned closures. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.\n",
+          "current": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/reference/types.md",
+      "currentSha256": "d4ada955276f4b7ad2516be738a8d9f1cc5cae558481d399ea744b6de8aae0c4",
+      "previousSha256": "548fce8c92d0cadf97fafcd1a9701dccc6b8c586c8c48787a263981bd63ba5f9",
+      "edits": [
+        {
+          "start": 322,
+          "previous": "Inventory 0.108.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.\n",
+          "current": "Inventory 0.109.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "79fd77bb095ffc11bfdff86482f1bf1207135b220f56cc60fc86398c22bca722",
+      "previousSha256": "63ad1461dd5ba00fe766618308441c7fc1fe3a8c2d19d80c8a091f4435a7e103",
+      "edits": [
+        {
+          "start": 24,
+          "previous": "  \"contractVersion\": \"0.108.0\",\n",
+          "current": "  \"contractVersion\": \"0.109.0\",\n"
+        },
+        {
+          "start": 34417,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 34582,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 34900,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 56975,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 57140,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 57300,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 74178,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 74343,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 74503,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 90471,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 90636,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 90796,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 104091,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 104256,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 104416,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 114230,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 114883,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 115058,
+          "previous": "          \"sha256\": \"de1eb450c54644a9c8b617fe6d3ba0104c10952f12fe183bcccaf48910b3cf4a\"\n",
+          "current": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n"
+        },
+        {
+          "start": 115224,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 115385,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 115556,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 115728,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 116561,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 117070,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 146350,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 159316,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 174215,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 187148,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 200367,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 208905,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 217336,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 226350,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 235016,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 244591,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 253692,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 263541,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 275680,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 285714,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 294266,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 303560,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 316249,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 325500,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 334787,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 343910,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 352773,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 360158,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 368092,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 378742,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 385627,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 392836,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 399932,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 410791,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 417907,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 424285,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 430448,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 437207,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 437372,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 437851,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 443250,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 444049,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 444376,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 444537,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 444708,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 445711,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 445874,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 450891,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 451056,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 451696,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 460195,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 460360,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 461000,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 471429,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 471594,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 472234,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 481118,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 481283,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 481923,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 490711,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 490876,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 491516,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 502241,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 502406,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 503046,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 510804,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 510969,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 511609,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 521818,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 521983,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 522623,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 530150,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 530315,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 530955,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 537880,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 538045,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 538685,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 545427,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 545592,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 546232,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 554353,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 554671,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 554992,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 555324,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 555642,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 560344,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 560509,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 561149,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 570607,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 570772,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 571412,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 579920,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 580085,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 580725,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 591468,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 591633,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 592273,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 599989,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 600154,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 600794,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 610945,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 611110,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 611750,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 619194,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 619359,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 619999,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 626658,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 626823,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 627463,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 634056,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 634221,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 634861,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 642647,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 643621,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 643786,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 644107,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 644439,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 644600,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 644771,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 646100,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 646263,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 651862,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 652676,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 652841,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 653007,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 653168,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 653339,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 654341,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 654504,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 659386,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 660361,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 660526,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 660692,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 660853,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 661024,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 662026,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 662189,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"271232b661907219f8e24965bf37e38d020472de65974305bd4197b5cf1273ad\"\n",
+          "current": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n"
+        },
+        {
+          "start": 667815,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 667976,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 668303,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 668468,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 668959,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 669298,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 669968,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 787891,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 788051,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 803581,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 804907,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 807890,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 808382,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 808545,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 833708,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 834185,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 834517,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 834683,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 843026,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 853691,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 863008,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 872177,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 877762,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 877927,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 878567,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 889247,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 898055,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 907545,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 918719,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 928423,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 938595,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 950470,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 953482,
+          "previous": "          \"sha256\": \"d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b\"\n",
+          "current": "          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n"
+        },
+        {
+          "start": 954835,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 955319,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 967271,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 967762,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 968097,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 978323,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 993337,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 993669,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 993835,
+          "previous": "          \"sha256\": \"d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b\"\n",
+          "current": "          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n"
+        },
+        {
+          "start": 995451,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1001295,
+          "previous": "          \"sha256\": \"de1eb450c54644a9c8b617fe6d3ba0104c10952f12fe183bcccaf48910b3cf4a\"\n",
+          "current": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n"
+        },
+        {
+          "start": 1001627,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 1020851,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 1021022,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 1021691,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 1030020,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 1049753,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1049912,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1057342,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1057501,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1063943,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1064102,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1071051,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1071210,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1078545,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1078704,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1085601,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1085760,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1093202,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1093361,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1103483,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1103642,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1115816,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1115975,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1116607,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 1117114,
+          "previous": "          \"sha256\": \"04ba94b6ff2993e140ec39e4f9187bafc3546dc08a1c29ffb58c8f26c6792291\"\n",
+          "current": "          \"sha256\": \"ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2\"\n"
+        },
+        {
+          "start": 1117434,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1117599,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1117760,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 1117931,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 1118103,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 1118285,
+          "previous": "          \"sha256\": \"fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016\"\n",
+          "current": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n"
+        },
+        {
+          "start": 1118467,
+          "previous": "          \"sha256\": \"05f317e3b90912a1959d3086875f36213e8022a85f09a05cd23a4b95fe9ac46f\"\n",
+          "current": "          \"sha256\": \"2ea9abf411fab0b43a8a87ba04b37b956f8ca45806ad09ccc15425548055d641\"\n"
+        },
+        {
+          "start": 1118645,
+          "previous": "          \"sha256\": \"d44041e58434e1d00497391469879b8d34a86c454655991ab55cfc645d9f2c33\"\n",
+          "current": "          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n"
+        },
+        {
+          "start": 1119151,
+          "previous": "          \"sha256\": \"40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2\"\n",
+          "current": "          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n"
+        },
+        {
+          "start": 1119314,
+          "previous": "          \"sha256\": \"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"\n",
+          "current": "          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n"
+        },
+        {
+          "start": 1120541,
+          "previous": "          \"sha256\": \"efca4b65d78529641ece6ca4a41ae5c6cee5ec6b59741be33066a154eda2f21f\"\n",
+          "current": "          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n"
+        },
+        {
+          "start": 1120724,
+          "previous": "          \"sha256\": \"f5e48ea4686f10aaad4ee4dc31144d81437c468016d54cc8f8b926c1631d07c6\"\n",
+          "current": "          \"sha256\": \"a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76\"\n"
+        },
+        {
+          "start": 1127063,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1134949,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1145373,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1155491,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1169275,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1169434,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1170994,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1171159,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1171319,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1201818,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1201977,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1203538,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1203703,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1203863,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1232097,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1232256,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1233820,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1233985,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1234145,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1265064,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1265223,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1266783,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1266948,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1267266,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1306474,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1306633,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1332322,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1332481,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1355002,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1355161,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1374694,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1374853,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1395179,
+          "previous": "          \"sha256\": \"1dcfe4e2fd93e523978a6a284861665c29ab1aa766716d51c92c513a6ac1d6c0\"\n",
+          "current": "          \"sha256\": \"7548fa4dccaf42eb26a5e161ec7c5bd4a5ea49f55676b9344162966f35b420f2\"\n"
+        },
+        {
+          "start": 1395338,
+          "previous": "          \"sha256\": \"cc392131aebcde9c3ec829401978c6c2feb3b7ed89700ad382901bcd802daee3\"\n",
+          "current": "          \"sha256\": \"4265dd7202588b209dd621fbafc0962cfdff1557fbfc532ff8147fc338ce49d4\"\n"
+        },
+        {
+          "start": 1409023,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1409186,
+          "previous": "          \"sha256\": \"907b8672b40ecc6c8e5ac23ad7ed23cb59fbefc89f28240076eb35f5598a7163\"\n",
+          "current": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n"
+        },
+        {
+          "start": 1410705,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 1410858,
+          "previous": "          \"sha256\": \"d7e9574fcf6763b6afa878e146f65836c41602a96a86b4e9ef40fc463c2d8593\"\n",
+          "current": "          \"sha256\": \"e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0\"\n"
+        },
+        {
+          "start": 1411018,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1411350,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1411516,
+          "previous": "          \"sha256\": \"d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b\"\n",
+          "current": "          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n"
+        },
+        {
+          "start": 1411676,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1411851,
+          "previous": "          \"sha256\": \"de1eb450c54644a9c8b617fe6d3ba0104c10952f12fe183bcccaf48910b3cf4a\"\n",
+          "current": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n"
+        },
+        {
+          "start": 1412017,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 1412178,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 1412349,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 1412521,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 1413020,
+          "previous": "          \"sha256\": \"d3a5c1a1fc385068f056e7c1f22be4d999aac208ce149ec6f9f0875d57e61301\"\n",
+          "current": "          \"sha256\": \"a010ff01348cec2d4a99f7fa1d52b04aa34d270bd47a8936e6a2b1da4e395d65\"\n"
+        },
+        {
+          "start": 1413183,
+          "previous": "          \"sha256\": \"907b8672b40ecc6c8e5ac23ad7ed23cb59fbefc89f28240076eb35f5598a7163\"\n",
+          "current": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n"
+        },
+        {
+          "start": 1413525,
+          "previous": "          \"sha256\": \"f2b4232127e6b4d850669ae85652d4cac221c518009f097be4c78e9a7392ad5c\"\n",
+          "current": "          \"sha256\": \"5bafa2944a4734f98b8875de82df3aa4f711bd7528f9e90f59f36cc8c84daff2\"\n"
+        },
+        {
+          "start": 1415265,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1415430,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1415590,
+          "previous": "          \"sha256\": \"9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f\"\n",
+          "current": "          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n"
+        },
+        {
+          "start": 1415756,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 1415917,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 1416246,
+          "previous": "          \"sha256\": \"d3a5c1a1fc385068f056e7c1f22be4d999aac208ce149ec6f9f0875d57e61301\"\n",
+          "current": "          \"sha256\": \"a010ff01348cec2d4a99f7fa1d52b04aa34d270bd47a8936e6a2b1da4e395d65\"\n"
+        },
+        {
+          "start": 1416409,
+          "previous": "          \"sha256\": \"907b8672b40ecc6c8e5ac23ad7ed23cb59fbefc89f28240076eb35f5598a7163\"\n",
+          "current": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n"
+        },
+        {
+          "start": 1416732,
+          "previous": "          \"sha256\": \"d7e9574fcf6763b6afa878e146f65836c41602a96a86b4e9ef40fc463c2d8593\"\n",
+          "current": "          \"sha256\": \"e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0\"\n"
+        },
+        {
+          "start": 1416898,
+          "previous": "          \"sha256\": \"d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b\"\n",
+          "current": "          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n"
+        },
+        {
+          "start": 1417408,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 1417590,
+          "previous": "          \"sha256\": \"fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016\"\n",
+          "current": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"271232b661907219f8e24965bf37e38d020472de65974305bd4197b5cf1273ad\"\n",
+          "current": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n"
+        },
+        {
+          "start": 1420751,
+          "previous": "          \"sha256\": \"2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed\"\n",
+          "current": "          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n"
+        },
+        {
+          "start": 1421091,
+          "previous": "          \"sha256\": \"60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd\"\n",
+          "current": "          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n"
+        },
+        {
+          "start": 1421257,
+          "previous": "          \"sha256\": \"d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b\"\n",
+          "current": "          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n"
+        },
+        {
+          "start": 1421417,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1421583,
+          "previous": "          \"sha256\": \"95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a\"\n",
+          "current": "          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n"
+        },
+        {
+          "start": 1421744,
+          "previous": "          \"sha256\": \"40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98\"\n",
+          "current": "          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n"
+        },
+        {
+          "start": 1422411,
+          "previous": "          \"sha256\": \"d3a5c1a1fc385068f056e7c1f22be4d999aac208ce149ec6f9f0875d57e61301\"\n",
+          "current": "          \"sha256\": \"a010ff01348cec2d4a99f7fa1d52b04aa34d270bd47a8936e6a2b1da4e395d65\"\n"
+        },
+        {
+          "start": 1422574,
+          "previous": "          \"sha256\": \"907b8672b40ecc6c8e5ac23ad7ed23cb59fbefc89f28240076eb35f5598a7163\"\n",
+          "current": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n"
+        },
+        {
+          "start": 1423255,
+          "previous": "          \"sha256\": \"ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772\"\n",
+          "current": "          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n"
+        },
+        {
+          "start": 1423596,
+          "previous": "          \"sha256\": \"0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c\"\n",
+          "current": "          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n"
+        },
+        {
+          "start": 1423946,
+          "previous": "          \"sha256\": \"fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016\"\n",
+          "current": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n"
+        },
+        {
+          "start": 1424124,
+          "previous": "          \"sha256\": \"d44041e58434e1d00497391469879b8d34a86c454655991ab55cfc645d9f2c33\"\n",
+          "current": "          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"271232b661907219f8e24965bf37e38d020472de65974305bd4197b5cf1273ad\"\n",
+          "current": "          \"sha256\": \"fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5\"\n"
+        },
+        {
+          "start": 1424985,
+          "previous": "          \"sha256\": \"efca4b65d78529641ece6ca4a41ae5c6cee5ec6b59741be33066a154eda2f21f\"\n",
+          "current": "          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n"
+        },
+        {
+          "start": 1427908,
+          "previous": "          \"sha256\": \"80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0\"\n",
+          "current": "          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n"
+        },
+        {
+          "start": 1428390,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"npm-callback-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"a03579e87cdb2ee83beadc7b5166aec494c916a2\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds|Subtype constraints' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='checked Fin callbacks' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source Node JavaScript and TypeScript packages preserve closed Fin bounds in callback arguments and results, including nominal fields, aliases, nested containers, recursive payloads and returned closures. Relocated source-free installs verify bound rejection and recovery through public wrappers and raw compiled dispatch. Bare Fin 0 callback results are rejected at build time; empty containers remain valid. No native, browser or reviewed-IR positions are promoted.\",\n      \"files\": [\n        {\n          \"path\": \"schema/compiler-adapter-plan.schema.json\",\n          \"sha256\": \"78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520\"\n        },\n        {\n          \"path\": \"src/abi/component-structured-callables.mjs\",\n          \"sha256\": \"ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2\"\n        },\n        {\n          \"path\": \"src/abi/refinements.mjs\",\n          \"sha256\": \"e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0\"\n        },\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd\"\n        },\n        {\n          \"path\": \"src/analyze/elaborated-metadata.mjs\",\n          \"sha256\": \"97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5\"\n        },\n        {\n          \"path\": \"src/analyze/export-configuration.mjs\",\n          \"sha256\": \"8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6\"\n        },\n        {\n          \"path\": \"src/backends/javascript/copied-validators.mjs\",\n          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n        },\n        {\n          \"path\": \"src/backends/javascript/generate.mjs\",\n          \"sha256\": \"dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd\"\n        },\n        {\n          \"path\": \"src/build/compiler-adapters.mjs\",\n          \"sha256\": \"c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f\"\n        },\n        {\n          \"path\": \"src/build/component-callable-adapters.mjs\",\n          \"sha256\": \"23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47\"\n        },\n        {\n          \"path\": \"src/build/component-recursive-adapters.mjs\",\n          \"sha256\": \"cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-adapters.mjs\",\n          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-defaults.mjs\",\n          \"sha256\": \"2ea9abf411fab0b43a8a87ba04b37b956f8ca45806ad09ccc15425548055d641\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-lean.mjs\",\n          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n        },\n        {\n          \"path\": \"src/release/component-npm-package.mjs\",\n          \"sha256\": \"fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0\"\n        },\n        {\n          \"path\": \"src/release/component-runtime.mjs\",\n          \"sha256\": \"34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad\"\n        },\n        {\n          \"path\": \"tests/component-structured-callable-contract.test.mjs\",\n          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n        },\n        {\n          \"path\": \"tests/component-structured-callable-defaults.test.mjs\",\n          \"sha256\": \"a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76\"\n        },\n        {\n          \"path\": \"tests/elaborated-metadata.test.mjs\",\n          \"sha256\": \"a010ff01348cec2d4a99f7fa1d52b04aa34d270bd47a8936e6a2b1da4e395d65\"\n        },\n        {\n          \"path\": \"tests/unlocked-component.test.mjs\",\n          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-fin-packages.mjs\",\n          \"sha256\": \"c1ec96cc37b00793c2535df180c9071773233c5148cea07c97a8c862c59c3b69\"\n        },\n        {\n          \"path\": \"docs/evidence/npm-callback-fin-20261005.md\",\n          \"sha256\": \"1759cf43a51a2fec21883f0f2f1c56805ee19bd979ceabb46c2108bb800c3efe\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"npm/callback-fin-scalar-abi9/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"bdc7aebddf2848eee11170b1de461f63d6a7d25c25e795b7f3aeb314df149b10\"\n        },\n        {\n          \"path\": \"npm/callback-fin-nominal-abi9/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"f1aa62d7acd5e0b34df5771a07600fda6b5d98818247c0c73babe7cca5491011\"\n        }\n      ]\n"
+        },
+        {
+          "start": 3605429,
+          "previous": "        \"Nominal Fin components cannot yet include callbacks or returned closures. Callback-internal refinements and nominal Subtype fields remain unsupported.\",\n",
+          "current": "        \"Nominal Subtype fields remain unsupported. Refined callback acceptance is recorded separately.\",\n"
+        },
+        {
+          "start": 3608450,
+          "previous": "        \"Closed literal bounds in top-level parameters/results and Array/List/Option/pair/Except containers. Nominal-field acceptance is recorded separately; callback-internal positions remain unsupported.\",\n",
+          "current": "        \"Closed literal bounds in top-level parameters/results and Array/List/Option/pair/Except containers. Nominal-field and callback-internal acceptance are recorded separately.\",\n"
+        },
+        {
+          "start": 3619667,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"npm-callback-fin-ordinary-source\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Node JavaScript and TypeScript packages preserve closed Fin bounds in callback arguments and results, including nominal fields, aliases, nested containers, recursive payloads and returned closures. Relocated source-free installs verify bound rejection and recovery through public wrappers and raw compiled dispatch. Bare Fin 0 callback results are rejected at build time; empty containers remain valid. No native, browser or reviewed-IR positions are promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"callback-parameter\": \"bigint checked against the declared bound in callback arguments\",\n          \"callback-result\": \"bigint checked against the declared bound in callback results\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-callback-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata retains callback bounds and distinct refined identities; reject policies inspect callback payloads.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-callback-fin-installed\"\n          ],\n          \"note\": \"JS wrappers validate both directions and preserve closure disposal. ABI 9 keys authenticate direct and nominal constraints.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-callback-fin-installed\"\n          ],\n          \"note\": \"Typed Lean carriers check replies before constructing Fin. Fin 0 callback results without a finite recovery value fail generation.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-callback-fin-installed\"\n          ],\n          \"note\": \"Both scalar and nominal profiles reproduce across relocated source roots and verify npm receipts.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-callback-fin-installed\"\n          ],\n          \"note\": \"Source-free offline Node and strict TypeScript installs pass nested and nominal payloads, raw boundary rejection, 32-round recovery, exception identity, reentry and disposal.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source Node JavaScript and TypeScript only; native, browser and reviewed-IR positions remain unaudited.\",\n        \"Closed literal bounds and synchronous copied payloads only. Nested Subtype constraints, async callbacks and retained host callbacks are unsupported.\",\n        \"Callback and returned-closure results require a finite recovery value. Bare Fin 0 and records requiring Fin 0 are rejected; empty containers and inhabited variant branches remain valid.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Callback arguments and replies keep bigint leaves, including in copied fields, aliases and recursive values. JS validates both directions; compiled Lean independently checks host replies and closure inputs before constructing proof-carrying values. Callback errors unwind with valid typed recovery values and leave later calls usable.\"\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "currentSha256": "78e449c845f65b56d647430382cfbf89f587882cd453e2816fead87d4face520",
+      "previousSha256": "2612f9097a88ca32276c055291c688f29dd5baa00b14a4a57f696b0cf1d659ed",
+      "edits": [
+        {
+          "start": 6200,
+          "previous": "",
+          "current": "        \"nominalRefinements\": { \"$ref\": \"#/properties/nominalRefinements\" },\n"
+        },
+        {
+          "start": 6386,
+          "previous": "      \"allOf\": [{ \"if\": { \"properties\": { \"version\": { \"enum\": [2, 3, 4, 5, 6] } } }, \"then\": { \"not\": { \"required\": [\"types\"] } } }],\n",
+          "current": "      \"allOf\": [\n        { \"if\": { \"properties\": { \"version\": { \"enum\": [2, 3, 4, 5, 6] } } }, \"then\": { \"not\": { \"required\": [\"types\"] } } },\n        { \"if\": { \"properties\": { \"version\": { \"not\": { \"const\": 9 } } } }, \"then\": { \"not\": { \"required\": [\"nominalRefinements\"] } } }\n      ],\n"
+        },
+        {
+          "start": 10497,
+          "previous": "",
+          "current": "        \"refinements\": { \"$ref\": \"#/$defs/refinements\" },\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/component-structured-callables.mjs",
+      "currentSha256": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "previousSha256": "04ba94b6ff2993e140ec39e4f9187bafc3546dc08a1c29ffb58c8f26c6792291",
+      "edits": [
+        {
+          "start": 384,
+          "previous": "",
+          "current": "import { callbackRefinement, callbackDefinitionRefinement, nominalRefinement, nominalRefinementEntries } from \"./refinements.mjs\";\n"
+        },
+        {
+          "start": 1831,
+          "previous": "",
+          "current": "const ordered = value => Array.isArray(value) ? value.map(ordered)\n\t: value && typeof value === \"object\" ? Object.fromEntries(Object.keys(value).sort().map(key => [key, ordered(value[key])])) : value;\n"
+        },
+        {
+          "start": 2713,
+          "previous": "",
+          "current": " * @param nominalRefinements - Optional checked nominal field constraints.\n"
+        },
+        {
+          "start": 2792,
+          "previous": "export const componentStructuredCallableSignatureText = (signature, types) => {\n",
+          "current": "export const componentStructuredCallableSignatureText = (signature, types, nominalRefinements = []) => {\n"
+        },
+        {
+          "start": 3116,
+          "previous": "",
+          "current": "\tconst refinements = callbackRefinement(signature, signature.refinements);\n"
+        },
+        {
+          "start": 3296,
+          "previous": "\t\t, checked.root, checked.types]);\n",
+          "current": "\t\t, checked.root\n\t\t, checked.types\n\t\t, ...(refinements || nominalRefinements.length ? [ordered({ refinements, nominalRefinements })] : [])]);\n"
+        },
+        {
+          "start": 3737,
+          "previous": "\tclosed(abi, [\"version\", \"dispatch\", \"types\", \"callbacks\", \"exports\"]);\n",
+          "current": "\tclosed(abi, [\"version\", \"dispatch\", \"types\", \"callbacks\", \"exports\", ...(abi.nominalRefinements === undefined ? [] : [\"nominalRefinements\"])]);\n"
+        },
+        {
+          "start": 4102,
+          "previous": "",
+          "current": "\tif(abi.nominalRefinements !== undefined)\n\t{\n\t\tdense(abi.nominalRefinements, 1024);\n\t\tif(!abi.nominalRefinements.length) fail(\"empty nominal refinements\");\n\t\tlet previous = \"\";\n\t\tfor(const entry of abi.nominalRefinements)\n\t\t{\n\t\t\tclosed(entry, [\"id\", \"refinement\"]);\n\t\t\tconst definition = copied.types.find(type => type.id === entry.id);\n\t\t\tif(!definition || entry.id <= previous || nominalRefinement(definition, entry.refinement) === null) fail(\"invalid nominal refinements\");\n\t\t\tprevious = entry.id;\n\t\t}\n\t}\n"
+        },
+        {
+          "start": 4813,
+          "previous": "\t\tclosed(callback, [\"id\", \"key\", \"parameters\", \"result\"]);\n",
+          "current": "\t\tclosed(callback, [\"id\", \"key\", \"parameters\", \"result\", ...(callback.refinements === undefined ? [] : [\"refinements\"])]);\n"
+        },
+        {
+          "start": 5250,
+          "previous": "\t\tcomponentStructuredCallableSignatureText(callback, copied.types);\n",
+          "current": "\t\tcomponentStructuredCallableSignatureText(callback, copied.types, abi.nominalRefinements);\n"
+        },
+        {
+          "start": 7187,
+          "previous": "",
+          "current": "\tif(!same(ordered(abi.nominalRefinements ?? []), ordered(nominalRefinementEntries(ir.types)))) fail(\"nominal refinement mismatch\");\n"
+        },
+        {
+          "start": 9185,
+          "previous": "",
+          "current": "\t\tif(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type)))) fail(\"callback refinement mismatch\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "currentSha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0",
+      "previousSha256": "d7e9574fcf6763b6afa878e146f65836c41602a96a86b4e9ef40fc463c2d8593",
+      "edits": [
+        {
+          "start": 4009,
+          "previous": "",
+          "current": "\n/**\n * Validate Fin-only callback constraints against an erased callable signature.\n *\n * @param signature - Erased parameter and result type references.\n * @param value - Optional compiler-owned parameter/result refinement trees.\n */\nexport const callbackRefinement = (signature, value) => {\n\tif(value === undefined) return null;\n\tif(!value || typeof value !== \"object\" || Array.isArray(value)\n\t\t|| Object.keys(value).length !== 2 || !Object.hasOwn(value, \"parameters\") || !Object.hasOwn(value, \"result\")\n\t\t|| !Array.isArray(value.parameters) || value.parameters.length !== signature.parameters.length)\n\t\tthrow new TypeError(\"Invalid callback refinement metadata\");\n\tfor(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1);\n\tassertRefinement(value.result, signature.result, 1);\n\tif(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError(\"Empty callback refinement metadata\");\n\treturn value;\n};\n\n/**\n * Read optional constraints from a public callback definition.\n *\n * @param definition - Public Binding IR callback definition.\n */\nexport const callbackDefinitionRefinement = definition => callbackRefinement({\n\tparameters: definition.callable.parameters.map(parameter => parameter.type)\n\t, result: definition.callable.result.type\n}, definition.source?.extensions?.[\"lean-lang.org/refinements\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "cebd40c8e7b4cbb2ec58d274d387fc9cb13bb76a710b7d531809f385d9e6f7dd",
+      "previousSha256": "80e6146b6eaaf4e004bb088aab3d51ecff3ee46db9466242a523707a26bd62c0",
+      "edits": [
+        {
+          "start": 18800,
+          "previous": "        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none false)\n",
+          "current": "        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin)\n"
+        },
+        {
+          "start": 19029,
+          "previous": "      (\"result\", ← shapeTree request result seen (depth + 1) false none false), (\"abi\", ← abi e)]\n",
+          "current": "      (\"result\", ← shapeTree request result seen (depth + 1) false none containerFin), (\"abi\", ← abi e)]\n"
+        },
+        {
+          "start": 33012,
+          "previous": "",
+          "current": "  else if kind == \"callback\" then\n    ((type.getObjValAs? (Array Json) \"parameters\").toOption.getD #[]).any containsRefinement ||\n      containsRefinement ((type.getObjVal? \"result\").toOption.getD Json.null)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "currentSha256": "97fb957ee1b525e63705e963a4d54a107a42bf34ce648213112087d06db990c5",
+      "previousSha256": "60ca3a197121ec2a55189edc4840009ca96bbdc0af0799734a33b6d1589751dd",
+      "edits": [
+        {
+          "start": 11663,
+          "previous": "\t\t\t\t\t\tif(!refinements || (depth !== 0 && type.predicate?.kind !== \"fin\")) fail(\"Unsupported nested refinement position\");\n",
+          "current": "\t\t\t\t\t\tif(!refinements || ((depth !== 0 || refinements === \"fin-only\") && type.predicate?.kind !== \"fin\")) fail(\"Unsupported nested refinement position\");\n"
+        },
+        {
+          "start": 15005,
+          "previous": "\t\t\t\t\tfor(const parameter of type.parameters) copied(parameter, 0, undefined, false);\n\t\t\t\t\tcopied(type.result, 0, undefined, false);\n",
+          "current": "\t\t\t\t\tfor(const parameter of type.parameters) copied(parameter, 0, undefined, \"fin-only\");\n\t\t\t\t\tcopied(type.result, 0, undefined, \"fin-only\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/export-configuration.mjs",
+      "currentSha256": "8d3221baa248b8417d95ea1904893a64154e1f1e7c34e96ce867b73338ccbfa1",
+      "previousSha256": "d553079694b69f687ec9ef338487a273106b5eba8f74cf27071a7531ea81349b",
+      "edits": [
+        {
+          "start": 17319,
+          "previous": "\t\t\t: type.kind === \"alias\" ? refined(type.target)\n\t\t\t\t: type.kind === \"record\" ? type.fields.some(field => refined(field.type))\n\t\t\t\t\t: type.kind === \"variant\" ? type.cases.some(branch => branch.fields.some(field => refined(field.type)))\n\t\t\t\t\t\t: [\"array\", \"list\", \"option\"].includes(type.kind) ? refined(type.element)\n\t\t\t\t\t\t\t: [\"tuple\", \"result\"].includes(type.kind) && type.arguments.some(refined));\n",
+          "current": "\t\t\t: type.kind === \"callback\" ? type.parameters.some(refined) || refined(type.result)\n\t\t\t\t: type.kind === \"alias\" ? refined(type.target)\n\t\t\t\t\t: type.kind === \"record\" ? type.fields.some(field => refined(field.type))\n\t\t\t\t\t\t: type.kind === \"variant\" ? type.cases.some(branch => branch.fields.some(field => refined(field.type)))\n\t\t\t\t\t\t\t: [\"array\", \"list\", \"option\"].includes(type.kind) ? refined(type.element)\n\t\t\t\t\t\t\t\t: [\"tuple\", \"result\"].includes(type.kind) && type.arguments.some(refined));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "currentSha256": "ded16c838c3cda47b91b5d415977af551c18531634db176cca9a782b712fe9c6",
+      "previousSha256": "9921caf7ef793c3b568f2be897fab827eabfbd31d193bb5b96c445989daaa77f",
+      "edits": [
+        {
+          "start": 7756,
+          "previous": "\t\tconst signature = callable && callbackSemanticSignature(callable);\n",
+          "current": "\t\tconst callbackRefinements = callable && { parameters: type.parameters.map(refinement), result: refinement(type.result) };\n\t\tconst constrainedCallback = callbackRefinements && [...callbackRefinements.parameters, callbackRefinements.result].some(value => value !== null);\n\t\tconst signature = callable && { ...callbackSemanticSignature(callable), ...(constrainedCallback ? { refinements: callbackRefinements } : {}) };\n"
+        },
+        {
+          "start": 10571,
+          "previous": "",
+          "current": "\t\t\tif(constrainedCallback) definition.source.extensions[\"lean-lang.org/refinements\"] = callbackRefinements;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/copied-validators.mjs",
+      "currentSha256": "1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e",
+      "previousSha256": "de1eb450c54644a9c8b617fe6d3ba0104c10952f12fe183bcccaf48910b3cf4a",
+      "edits": [
+        {
+          "start": 235,
+          "previous": "import { nominalRefinementEntries } from \"../../abi/refinements.mjs\";\n",
+          "current": "import { nominalRefinementEntries, callbackDefinitionRefinement } from \"../../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 2714,
+          "previous": "",
+          "current": "\tconst wrappers = ir.types.filter(type => type.kind === \"callback\" && (constraints.size || callbackDefinitionRefinement(type))).map(type => {\n\t\tconst refinement = callbackDefinitionRefinement(type), call = type.callable;\n\t\tconst checks = call.parameters.flatMap((parameter, index) => [\n\t\t\t`    ${reference(parameter.type)}(args[${index}], path + \".arg${index}\");`\n\t\t\t, ...refinement?.parameters[index] ? [`    assertNestedFin(args[${index}], ${JSON.stringify(refinement.parameters[index])}, path + \".arg${index}\");`] : []\n\t\t]);\n\t\treturn [`export const wrap${type.name} = (value, path) => new Proxy(value, {`\n\t\t\t, \"  apply(target, receiver, args) {\"\n\t\t\t, `    if (args.length !== ${call.parameters.length}) throw new TypeError(path + \" expects ${call.parameters.length} arguments\");`\n\t\t\t, ...checks, \"    const result = Reflect.apply(target, receiver, args);\"\n\t\t\t, `    ${reference(call.result.type)}(result, path + \".result\");`\n\t\t\t, ...refinement?.result ? [`    assertNestedFin(result, ${JSON.stringify(refinement.result)}, path + \".result\");`] : []\n\t\t\t, \"    return result;\", \"  }\", \"});\"].join(\"\\n\");\n\t});\n"
+        },
+        {
+          "start": 8511,
+          "previous": "",
+          "current": "${wrappers.length ? wrappers.join(\"\\n\") + \"\\n\" : \"\"}\\\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/generate.mjs",
+      "currentSha256": "dc89a2c8025596ceaa469388c1d0ce02c8bf77b6110ef52f7bd2e5f15ce986dd",
+      "previousSha256": "95863bcb3b1102dbf38a51c2d5e08912da896d0d458718ebb0b36f68b907877a",
+      "edits": [
+        {
+          "start": 386,
+          "previous": "import { assertRefinement, nominalRefinementEntries } from \"../../abi/refinements.mjs\";\n",
+          "current": "import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement } from \"../../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 21578,
+          "previous": "",
+          "current": "\t\tconst callbackWrapper = (type, value, path) => {\n\t\t\tconst definition = typeMap.get(type.id);\n\t\t\treturn definition?.kind === \"callback\" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition))\n\t\t\t\t? `validate.wrap${definition.name}(${value}, ${quote(path)})` : value;\n\t\t};\n"
+        },
+        {
+          "start": 22148,
+          "previous": "\t\t\t`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => parameter.name).join(\", \")}]);`,\n",
+          "current": "\t\t\t`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => callbackWrapper(parameter.type, parameter.name, `${declaration.name}.${parameter.name}`)).join(\", \")}]);`,\n"
+        },
+        {
+          "start": 22704,
+          "previous": "\t\toutput.push(`${indent}return result;`);\n",
+          "current": "\t\toutput.push(`${indent}return ${callbackWrapper(declaration.result.type, \"result\", `${declaration.name}.result`)};`);\n"
+        },
+        {
+          "start": 26242,
+          "previous": "\t\t, ...(nominalRefinementEntries(ir.types).length || ir.declarations.some(item => {\n",
+          "current": "\t\t, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === \"callback\" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "currentSha256": "c65313473af86cdafb3f5a14e228755348b07f40cf242d0f7c9d443aeacbfb2f",
+      "previousSha256": "40ae17a7336e932664bd8d767217583a25afbf47333eff7e539641004fa6dc98",
+      "edits": [
+        {
+          "start": 1274,
+          "previous": "import { componentStructuredCallableLeanSource } from \"./component-structured-callable-lean.mjs\";\n",
+          "current": "import { componentStructuredCallableLeanSource, componentStructuredLeanType } from \"./component-structured-callable-lean.mjs\";\n"
+        },
+        {
+          "start": 3566,
+          "previous": "",
+          "current": "\t\tif(callback?.refinements) return componentStructuredLeanType(type, callbacks);\n"
+        },
+        {
+          "start": 11624,
+          "previous": "\t\tif(plan.privateAbi.version !== componentRecursiveAbi || !Array.isArray(plan.nominalRefinements) || !plan.nominalRefinements.length)\n",
+          "current": "\t\tif(![componentRecursiveAbi, componentStructuredCallableAbi].includes(plan.privateAbi.version) || !Array.isArray(plan.nominalRefinements) || !plan.nominalRefinements.length)\n"
+        },
+        {
+          "start": 12495,
+          "previous": "",
+          "current": "\tif(plan.privateAbi.version === componentStructuredCallableAbi && canonicalJson(plan.nominalRefinements ?? []) !== canonicalJson(plan.privateAbi.nominalRefinements ?? []))\n\t\tfail(\"invalid-compiler-adapter-plan\", \"Callable nominal refinements must match their private descriptor\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-callable-adapters.mjs",
+      "currentSha256": "23611fed1b08a70b3808985e312de153aff4bb1fa6115fc75bb6ea4bb4588c47",
+      "previousSha256": "ab870de848bf3c661ed63767c55fe6e96d72acfbc381a3e7bc033ba802cd4772",
+      "edits": [
+        {
+          "start": 580,
+          "previous": "import { nominalRefinementEntries } from \"../abi/refinements.mjs\";\n",
+          "current": "import { nominalRefinementEntries, callbackDefinitionRefinement } from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 2186,
+          "previous": "\tconst constrained = nominalRefinementEntries(document.types).length > 0;\n\tif(constrained && callbackTypes.length) throw new TypeError(\"Nominal Fin refinements do not yet support callable components\");\n\tconst structured = callbackTypes.length > 0 && (records || nominal || copied\n",
+          "current": "\tconst nominalRefinements = nominalRefinementEntries(document.types), constrained = nominalRefinements.length > 0;\n\tconst structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(callbackDefinitionRefinement)\n"
+        },
+        {
+          "start": 2776,
+          "previous": "\t\tconst signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };\n\t\tconst key = structured ? componentStructuredCallableSignatureText(signature, definitions) : componentCallableSignatureText(signature);\n",
+          "current": "\t\tconst refinements = callbackDefinitionRefinement(type);\n\t\tconst signature = { parameters: type.callable.parameters.map(parameter => parameter.type)\n\t\t\t, result: type.callable.result.type\n\t\t\t, ...(refinements ? { refinements } : {}) };\n\t\tconst key = structured ? componentStructuredCallableSignatureText(signature, definitions, nominalRefinements) : componentCallableSignatureText(signature);\n"
+        },
+        {
+          "start": 3847,
+          "previous": "",
+          "current": "\t\t, ...(structured && constrained ? { nominalRefinements } : {})\n"
+        },
+        {
+          "start": 4450,
+          "previous": "\tif(constrained)\n",
+          "current": "\tif(constrained && !callbacks.length)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-recursive-adapters.mjs",
+      "currentSha256": "cf06da6e537e7a031423783496b5473bdfd2567657dceb6d817be210b5aed802",
+      "previousSha256": "0ecfe112c04f15e3e25ced8a235ab039dec122a886831635b0c8f0be7bec103c",
+      "edits": [
+        {
+          "start": 714,
+          "previous": "",
+          "current": " * @param nominalRefinements - Constraints requiring preserved alias constructors.\n"
+        },
+        {
+          "start": 801,
+          "previous": "export const componentRecursiveWalker = (abi, type) => {\n",
+          "current": "export const componentRecursiveWalker = (abi, type, nominalRefinements = []) => {\n"
+        },
+        {
+          "start": 1002,
+          "previous": "\tconst value = resolve(type);\n\tconst reference = value.kind === \"record\" || value.kind === \"variant\" ? { kind: \"named\", id: value.id } : value;\n",
+          "current": "\tconst definition = type.kind === \"named\" && nominalRefinements.length ? abi.types.find(value => value.id === type.id) : null;\n\tconst value = definition?.kind === \"alias\" ? definition : resolve(type);\n\tconst reference = [\"alias\", \"record\", \"variant\"].includes(value.kind) ? { kind: \"named\", id: value.id } : value;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "currentSha256": "37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c",
+      "previousSha256": "fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016",
+      "edits": [
+        {
+          "start": 1403,
+          "previous": "\tconst walker = type => componentRecursiveWalker(copied, type);\n",
+          "current": "\tconst nominalRefinements = abi.nominalRefinements ?? [];\n\tconst constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);\n\tconst walker = type => componentRecursiveWalker(copied, type, nominalRefinements);\n"
+        },
+        {
+          "start": 1887,
+          "previous": "\tconst lines = [generateComponentRecursiveAdapters(copied, { exportFrames: false })];\n",
+          "current": "\tconst lines = [generateComponentRecursiveAdapters(copied, { exportFrames: false, nominalRefinements })];\n"
+        },
+        {
+          "start": 2439,
+          "previous": "\t\tconst refinements = closure ? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];\n\t\tfor(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== \"fin\")\n",
+          "current": "\t\tconst refinements = closure ? signature.refinements?.parameters ?? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];\n\t\tconst cleanup = [...(closure ? [\"lean_dec(closure);\"] : []), ...names.map(name => `lean_dec(${name});`)].join(\" \");\n\t\tfor(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== \"fin\"))\n"
+        },
+        {
+          "start": 4364,
+          "previous": "\t\tfor(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== \"fin\")\n",
+          "current": "\t\tif(constrained) for(const name of names) lines.push(`  if (!lean_is_array(${name}) || lean_array_size(${name}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n\t\tfor(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== \"fin\"))\n"
+        },
+        {
+          "start": 4725,
+          "previous": "\t\t\t\t, `  if (!${name}_refinement_${index}(a${index})) { ${names.map(name => `lean_dec(${name});`).join(\" \")} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n",
+          "current": "\t\t\t\t, `  if (!${name}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);\n"
+        },
+        {
+          "start": 5836,
+          "previous": "",
+          "current": "\t\tif(signature.refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);\n"
+        },
+        {
+          "start": 7371,
+          "previous": "\t\t\t, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`\n\t\t\t, \"  bridge_recursive_frame_clear(frame);\", \"  return result;\", \"}\", \"\");\n",
+          "current": "\t\t\t, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);\n\t\tif(constrained)\n\t\t{\n\t\t\tlines.push(\"  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) status = 5;\");\n\t\t\tif(signature.refinements?.result) lines.push(\"  if (!status) {\", \"    lean_inc(result);\"\n\t\t\t\t, `    if (!${symbol}_result_refinement_0(result)) status = 5;`, \"  }\");\n\t\t\tlines.push(\"  if (status == 5) {\", \"    lean_dec(result); result = lean_alloc_array(0, 0);\"\n\t\t\t\t, \"    frame->status = 5;\"\n\t\t\t\t, `    bridge_callable_dispatch((uint32_t)token, \"${signature.key}\", frame);`, \"  }\");\n\t\t}\n\t\tlines.push(\"  bridge_recursive_frame_clear(frame);\", \"  return result;\", \"}\", \"\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-structured-callable-defaults.mjs",
+      "currentSha256": "2ea9abf411fab0b43a8a87ba04b37b956f8ca45806ad09ccc15425548055d641",
+      "previousSha256": "05f317e3b90912a1959d3086875f36213e8022a85f09a05cd23a4b95fe9ac46f",
+      "edits": [
+        {
+          "start": 301,
+          "previous": "",
+          "current": "import { assertRefinement, nominalRefinement } from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 928,
+          "previous": "",
+          "current": " * @param nominalRefinements - Checked constraints on copied constructors.\n"
+        },
+        {
+          "start": 1007,
+          "previous": "export const componentStructuredCallableDefaults = types => {\n",
+          "current": "export const componentStructuredCallableDefaults = (types, nominalRefinements = []) => {\n"
+        },
+        {
+          "start": 1213,
+          "previous": "",
+          "current": "\tconst constraints = new Map(nominalRefinements.map(entry => {\n\t\tconst definition = graph.types.find(type => type.id === entry.id);\n\t\tif(!definition) throw new TypeError(\"Unknown recovery refinement type\");\n\t\treturn [entry.id, nominalRefinement(definition, entry.refinement)];\n\t}));\n"
+        },
+        {
+          "start": 1555,
+          "previous": "\tconst expression = type => {\n",
+          "current": "\tconst expression = (type, refinement = null) => {\n\t\tif(refinement?.kind === \"fin\") return refinement.bound === \"0\" ? null : `(⟨0, by decide⟩ : _root_.Fin ${refinement.bound})`;\n"
+        },
+        {
+          "start": 2025,
+          "previous": "\t\tconst left = expression(type.arguments[0]);\n",
+          "current": "\t\tconst left = expression(type.arguments[0], refinement?.arguments[0]);\n"
+        },
+        {
+          "start": 2197,
+          "previous": "\t\t\tconst right = expression(type.arguments[1]);\n",
+          "current": "\t\t\tconst right = expression(type.arguments[1], refinement?.arguments[1]);\n"
+        },
+        {
+          "start": 2345,
+          "previous": "\t\tconst right = expression(type.arguments[1]);\n",
+          "current": "\t\tconst right = expression(type.arguments[1], refinement?.arguments[1]);\n"
+        },
+        {
+          "start": 2495,
+          "previous": "\tconst fields = values => {\n\t\tconst result = values.map(field => expression(field.type));\n",
+          "current": "\tconst fields = (values, refinements = []) => {\n\t\tconst result = values.map((field, index) => expression(field.type, refinements[index]));\n"
+        },
+        {
+          "start": 2853,
+          "previous": "\t\t\tif(type.kind === \"alias\") body = expression(type.target);\n",
+          "current": "\t\t\tconst refinement = constraints.get(type.id);\n\t\t\tif(type.kind === \"alias\") body = expression(type.target, refinement?.target);\n"
+        },
+        {
+          "start": 3022,
+          "previous": "\t\t\t\tconst values = fields(type.fields);\n",
+          "current": "\t\t\t\tconst values = fields(type.fields, refinement?.fields);\n"
+        },
+        {
+          "start": 3211,
+          "previous": "\t\t\t\tfor(const item of type.cases)\n",
+          "current": "\t\t\t\tfor(const [index, item] of type.cases.entries())\n"
+        },
+        {
+          "start": 3270,
+          "previous": "\t\t\t\t\tconst values = fields(item.fields);\n",
+          "current": "\t\t\t\t\tconst values = fields(item.fields, refinement?.cases[index]);\n"
+        },
+        {
+          "start": 3873,
+          "previous": "\t\t, expression: type => {\n",
+          "current": "\t\t, expression: (type, refinement = null) => {\n\t\t\tassertRefinement(refinement, type, 1);\n"
+        },
+        {
+          "start": 4067,
+          "previous": "\t\t\tconst value = expression(root);\n",
+          "current": "\t\t\tconst value = expression(root, refinement);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "currentSha256": "c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d",
+      "previousSha256": "d44041e58434e1d00497391469879b8d34a86c454655991ab55cfc645d9f2c33",
+      "edits": [
+        {
+          "start": 526,
+          "previous": "import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators } from \"./component-refinements.mjs\";\n",
+          "current": "import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from \"./component-refinements.mjs\";\n"
+        },
+        {
+          "start": 1235,
+          "previous": "",
+          "current": " * @param refinement - Optional scalar or structural Fin constraints.\n"
+        },
+        {
+          "start": 1309,
+          "previous": "export const componentStructuredLeanType = (type, callbacks = new Map()) => {\n",
+          "current": "export const componentStructuredLeanType = (type, callbacks = new Map(), refinement = null) => {\n\tif(refinement?.kind === \"fin\") return `(_root_.Fin ${refinement.bound})`;\n"
+        },
+        {
+          "start": 1627,
+          "previous": "\t\treturn signature ? `(${[...signature.parameters, signature.result].map(type => componentStructuredLeanType(type)).join(\" → \")})`\n",
+          "current": "\t\treturn signature ? `(${[...signature.parameters, signature.result].map((type, index) => componentStructuredLeanType(type, new Map(),\n\t\t\tindex < signature.parameters.length ? signature.refinements?.parameters[index] : signature.refinements?.result)).join(\" → \")})`\n"
+        },
+        {
+          "start": 1931,
+          "previous": "\tconst children = type.arguments.map(type => componentStructuredLeanType(type));\n",
+          "current": "\tconst children = type.arguments.map((type, index) => componentStructuredLeanType(type, new Map(), refinement?.arguments[index]));\n"
+        },
+        {
+          "start": 4301,
+          "previous": "\tconst defaults = componentStructuredCallableDefaults(abi.types);\n\tconst lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType), ...defaults.declarations];\n",
+          "current": "\tconst nominalRefinements = abi.nominalRefinements ?? [];\n\tconst constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);\n\tconst defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);\n\tconst lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType, nominalRefinements), ...defaults.declarations];\n"
+        },
+        {
+          "start": 5232,
+          "previous": "\t\tconst fallback = defaults.expression(signature.result);\n",
+          "current": "\t\tconst refinements = signature.refinements;\n\t\tconst fallback = defaults.expression(signature.result, refinements?.result);\n\t\tconst validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({\n\t\t\tsymbol\n\t\t\t, wrapper: `checked_${key}_${symbol.endsWith(\"result\") ? \"result\" : \"frame\"}`\n\t\t\t, parameters: parameters.map(type => ({ leanType: componentStructuredLeanType(type) }))\n\t\t\t, refinements: { parameters: selected, result: null }\n\t\t}, true);\n\t\tif(refinements)\n\t\t{\n\t\t\tlines.push(...validators(`${prefix}_frame`, signature.parameters, refinements.parameters));\n\t\t\tif(refinements.result) lines.push(...validators(`${prefix}_result`, [signature.result], [refinements.result]));\n\t\t}\n\t\tconst invokeArguments = names.map((name, index) => `#[${refinements?.parameters[index] ? `wire_${name}` : name}]`).join(\" \");\n\t\tconst projections = names.flatMap((name, index) => refinements?.parameters[index]\n\t\t\t? [`    let wire_${name} := ${componentRefinementConversion(refinements.parameters[index], name, false)}`] : []);\n\t\tconst lambdaParameters = names.map((name, index) => refinements ? `(${name} : ${componentStructuredLeanType(signature.parameters[index], new Map(), refinements.parameters[index])})` : name);\n\t\tconst invocation = `carrierValue (invoke_${key} token ${invokeArguments})`;\n\t\tconst result = refinements?.result ? `(show _root_.Option ${componentStructuredLeanType(signature.result, new Map(), refinements.result)} from do let value : ${componentStructuredLeanType(signature.result)} ← ${invocation}; ${componentRefinementConversion(refinements.result, \"value\")})` : invocation;\n\t\tconst application = refinements ? [\"carrierResult (do\"\n\t\t\t, ...[\"closure\", ...names].map(name => `  let ${name} ← carrierValue ${name}`)\n\t\t\t, ...refinements.parameters.flatMap((refinement, index) => refinement ? [`  let ${names[index]} ← ${componentRefinementConversion(refinement, names[index])}`] : [])\n\t\t\t, `  let result := closure ${names.join(\" \")}`\n\t\t\t, `  pure (${componentRefinementConversion(refinements.result, \"result\", false)})`\n\t\t\t, \")\"] : checked([\"closure\", ...names], `closure ${names.join(\" \")}`);\n"
+        },
+        {
+          "start": 7603,
+          "previous": "\t\t\t, `  #[fun ${names.join(\" \")} =>`\n\t\t\t, `    match carrierValue (invoke_${key} token ${names.map(name => `#[${name}]`).join(\" \")}) with`\n",
+          "current": "\t\t\t, `  #[fun ${lambdaParameters.join(\" \")} =>`\n\t\t\t, ...projections\n\t\t\t, `    match ${result} with`\n"
+        },
+        {
+          "start": 7900,
+          "previous": "\t\t\t, ...checked([\"closure\", ...names], `closure ${names.join(\" \")}`).map(line => `  ${line}`), \"\");\n",
+          "current": "\t\t\t, ...application.map(line => `  ${line}`), \"\");\n"
+        },
+        {
+          "start": 8129,
+          "previous": "\t\tlines.push(...componentCarrierRefinementValidators(item));\n",
+          "current": "\t\tlines.push(...componentCarrierRefinementValidators(item, constrained));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "currentSha256": "fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0",
+      "previousSha256": "40b7d6997f807e7f5f44333cfdab3b7876d7cbd1c079deb6f403c70fdb6f43b2",
+      "edits": [
+        {
+          "start": 7719,
+          "previous": "",
+          "current": "\t\t, [\"internal/refinements.mjs\", await readFile(new URL(\"../abi/refinements.mjs\", import.meta.url))]\n"
+        },
+        {
+          "start": 13248,
+          "previous": "\t\t\tconst signatureText = abi.version === 9 ? componentStructuredCallableSignatureText(signature, abi.types) : componentCallableSignatureText(signature);\n",
+          "current": "\t\t\tconst signatureText = abi.version === 9 ? componentStructuredCallableSignatureText(signature, abi.types, abi.nominalRefinements) : componentCallableSignatureText(signature);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/component-runtime.mjs",
+      "currentSha256": "34e71aed9cbcfa16d4a6641eb310ba03917207435ae4a4ddb9a834f0c05b67ad",
+      "previousSha256": "efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f",
+      "edits": [
+        {
+          "start": 9830,
+          "previous": "\t\t\t\t\tconst signatureText = structured ? componentStructuredCallableSignatureText(signature, descriptor.privateAbi.types) : componentCallableSignatureText(signature);\n",
+          "current": "\t\t\t\t\tconst signatureText = structured ? componentStructuredCallableSignatureText(signature, descriptor.privateAbi.types, descriptor.privateAbi.nominalRefinements) : componentCallableSignatureText(signature);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "fdbd86cb1aba926e15ebf2279b6a35ccfe2718321dca5c1548a68846e407d0d5",
+      "previousSha256": "271232b661907219f8e24965bf37e38d020472de65974305bd4197b5cf1273ad",
+      "edits": [
+        {
+          "start": 1973,
+          "previous": "",
+          "current": "import \"./helpers/callback-fin-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "currentSha256": "dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245",
+      "previousSha256": "efca4b65d78529641ece6ca4a41ae5c6cee5ec6b59741be33066a154eda2f21f",
+      "edits": [
+        {
+          "start": 164,
+          "previous": "import { sha256 } from \"../src/capsule/node.mjs\";\nimport { assertComponentStructuredCallableBindings } from \"../src/abi/component-structured-callables.mjs\";\n",
+          "current": "import { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\nimport { assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from \"../src/abi/component-structured-callables.mjs\";\nimport { generateJavaScriptPackage } from \"../src/backends/javascript/generate.mjs\";\n"
+        },
+        {
+          "start": 1763,
+          "previous": "",
+          "current": "const fin = bound => ({ kind: \"fin\", bound });\nconst finCallback = (bound = \"3\") => {\n\tconst ir = callableReviewedIr([{ name: \"Structured.call\", parameters: [{ callback: { parameters: [\"nat\"], result: \"nat\" } }], result: \"nat\" }]);\n\tir.types[0].source.extensions[\"lean-lang.org/refinements\"] = { parameters: [fin(bound)], result: fin(bound) };\n\treturn ir;\n};\n\ntest(\"Fin callback keys retain bounds and authenticate compiler and public metadata\", async () => {\n\tconst ir = finCallback(), generated = plan(ir), abi = generated.plan.privateAbi;\n\tassert.equal(abi.version, 9);\n\tassert.deepEqual(abi.types, []);\n\tassert.equal(generated.plan.exports[0].parameters[0].leanType, \"((_root_.Fin 3) → (_root_.Fin 3))\");\n\tassertComponentStructuredCallableBindings(abi, ir);\n\tassertComponentStructuredCallableBindings(JSON.parse(canonicalJson(abi)), ir);\n\tassert.equal(componentStructuredCallableSignatureText(abi.callbacks[0], []), componentStructuredCallableSignatureText(JSON.parse(canonicalJson(abi.callbacks[0])), []));\n\tawait assertJsonSchema(\"compiler-adapter-plan\", generated.plan);\n\tconst other = plan(finCallback(\"5\")).plan.privateAbi;\n\tassert.notEqual(abi.callbacks[0].key, other.callbacks[0].key);\n\tassert.notEqual(componentStructuredCallableSignatureText(abi.callbacks[0], []), componentStructuredCallableSignatureText(other.callbacks[0], []));\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], /Fin 3.*→.*Fin 3/);\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], /⟨0, by decide⟩ : _root_\\.Fin 3/);\n\tassert.doesNotMatch(generated.files[\"LeanBridgeGenerated.lean\"], /sorry|unsafeCast|axiom|panic!/);\n\tconst c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);\n\tassert.match(c, /refinement_0\\(a0\\)\\) \\{ lean_dec\\(closure\\); lean_dec\\(a0\\);/);\n\tassert.match(c, /result_refinement_0\\(result\\)\\) status = 5/);\n\tfor(const mutate of [\n\t\tvalue => { value.privateAbi.callbacks[0].refinements.parameters = []; }\n\t\t, value => { value.privateAbi.callbacks[0].refinements.parameters[0].bound = \"03\"; }\n\t\t, value => { value.privateAbi.callbacks[0].refinements.result = { kind: \"subtype\", constructor: \"Structured.checked\" }; }\n\t\t, value => { value.privateAbi.callbacks[0].refinements = { parameters: [null], result: null }; }\n\t\t, value => { value.privateAbi.callbacks[0].refinements.extra = true; }\n\t\t, value => { value.privateAbi.nominalRefinements = []; }\n\t]) {\n\t\tconst forged = structuredClone(generated.plan); mutate(forged);\n\t\tassert.throws(() => validateCompilerAdapterPlan(forged));\n\t}\n\tconst mismatched = structuredClone(abi); mismatched.callbacks[0].refinements.result.bound = \"5\";\n\tassert.throws(() => assertComponentStructuredCallableBindings(mismatched, ir), /refinement mismatch/);\n});\n\ntest(\"Fin callback JS wrappers validate both directions and preserve closure disposal\", async () => {\n\tconst ir = finCallback(), files = generateJavaScriptPackage(ir);\n\tconst validators = await import(`data:text/javascript,${encodeURIComponent(files[\"internal/validators.mjs\"])}`);\n\tconst wrap = validators[`wrap${ir.types[0].name}`];\n\tlet calls = 0, disposed = false;\n\tconst closure = value => { calls++; return value; };\n\tObject.defineProperties(closure, { dispose: { value: () => { disposed = true; } }, disposed: { get: () => disposed } });\n\tObject.freeze(closure);\n\tconst checked = wrap(closure, \"callback\");\n\tassert.throws(() => checked(3n), /below/); assert.equal(calls, 0);\n\tassert.throws(() => checked(1), /bigint/);\n\tassert.throws(() => checked(), /expects 1 arguments/);\n\tassert.throws(() => checked(1n, 2n), /expects 1 arguments/);\n\tassert.equal(checked(2n), 2n);\n\tassert.throws(() => wrap(() => 3n, \"callback\")(1n), /below/);\n\tassert.equal(checked.dispose, closure.dispose); checked.dispose(); assert.equal(checked.disposed, true);\n});\n\ntest(\"nominal Fin callback metadata binds field constraints and rejects missing recovery values\", async () => {\n\tconst ir = structuredCallableReviewedIr({ recursive: true });\n\tconst tree = ir.types.find(type => type.name === \"Tree\");\n\ttree.source.extensions[\"lean-lang.org/nominal-refinements\"] = { kind: \"variant\", cases: [[fin(\"0\")], [null]] };\n\tconst generated = plan(ir), abi = generated.plan.privateAbi;\n\tassert.deepEqual(generated.plan.nominalRefinements, abi.nominalRefinements);\n\tassertComponentStructuredCallableBindings(abi, ir);\n\tawait assertJsonSchema(\"compiler-adapter-plan\", generated.plan);\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], /Tree\\.«branch» \\(#\\[\\]\\)/);\n\tfor(const mutate of [\n\t\tvalue => { delete value.nominalRefinements; }\n\t\t, value => { value.privateAbi.nominalRefinements = structuredClone(value.privateAbi.nominalRefinements); value.privateAbi.nominalRefinements[0].refinement.cases[0][0].bound = \"1\"; }\n\t\t, value => { value.privateAbi.nominalRefinements.push(value.privateAbi.nominalRefinements[0]); }\n\t]) {\n\t\tconst forged = structuredClone(generated.plan); mutate(forged);\n\t\tassert.throws(() => validateCompilerAdapterPlan(forged));\n\t}\n\tassert.throws(() => plan(finCallback(\"0\")), /no finite recovery value/);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-structured-callable-defaults.test.mjs",
+      "currentSha256": "a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76",
+      "previousSha256": "f5e48ea4686f10aaad4ee4dc31144d81437c468016d54cc8f8b926c1631d07c6",
+      "edits": [
+        {
+          "start": 4916,
+          "previous": "",
+          "current": "\ntest(\"Fin recovery constructs checked values and never invents an inhabitant of Fin zero\", () => {\n  const nat = { kind: \"primitive\", name: \"nat\" }, fin = bound => ({ kind: \"fin\", bound });\n  const defaults = componentStructuredCallableDefaults([]);\n  assert.equal(defaults.expression(nat, fin(\"5\")), \"(⟨0, by decide⟩ : _root_.Fin 5)\");\n  assert.throws(() => defaults.expression(nat, fin(\"0\")), /no finite recovery value/);\n  for(const constructor of [\"array\", \"list\", \"option\"])\n    assert.ok(defaults.expression(apply(constructor, nat), { kind: constructor, arguments: [fin(\"0\")] }));\n  assert.equal(defaults.expression(apply(\"result\", nat, nat), { kind: \"result\", arguments: [fin(\"0\"), fin(\"2\")] }), \"(_root_.Except.error ((⟨0, by decide⟩ : _root_.Fin 2)))\");\n  assert.throws(() => defaults.expression(apply(\"tuple\", nat, nat), { kind: \"tuple\", arguments: [fin(\"0\"), null] }), /no finite recovery value/);\n  const record = { kind: \"record\", id: \"lean:Example.Impossible\", fields: fields(nat) };\n  const nominal = componentStructuredCallableDefaults([record], [{ id: record.id, refinement: { kind: \"record\", fields: [fin(\"0\")] } }]);\n  assert.equal(nominal.declarations.length, 0);\n  assert.throws(() => nominal.expression(named(\"Example.Impossible\")), /no finite recovery value/);\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "currentSha256": "a010ff01348cec2d4a99f7fa1d52b04aa34d270bd47a8936e6a2b1da4e395d65",
+      "previousSha256": "d3a5c1a1fc385068f056e7c1f22be4d999aac208ce149ec6f9f0875d57e61301",
+      "edits": [
+        {
+          "start": 10272,
+          "previous": "test(\"nested refinement metadata cannot erase callback or nested Subtype constraints\", () => {\n\tconst fin = { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"fin\", bound: \"5\" } };\n",
+          "current": "test(\"callback and nested Subtype constraints are rejected rather than erased\", () => {\n\tconst fin = { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"subtype\", constructor: \"Sample.checked\" } };\n"
+        },
+        {
+          "start": 11794,
+          "previous": "",
+          "current": "def refusedCallback (_f : Slot → Nat) : Nat := 0\n"
+        },
+        {
+          "start": 12352,
+          "previous": "\t\t, exports: [\"aliased\", \"bounded\", \"impossible\", \"nested\", \"refused\", \"callback\", \"record\", \"aliasContainer\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\"].map(name => `Shop.${name}`)\n\t\t, contracts: Object.fromEntries([\"refused\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\"].map(name => [`Shop.${name}`, { parameters: [{ ownership: \"copy\", lifetime: null, refinement: \"reject\" }] }])) }));\n",
+          "current": "\t\t, exports: [\"aliased\", \"bounded\", \"impossible\", \"nested\", \"refused\", \"callback\", \"record\", \"aliasContainer\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\", \"refusedCallback\"].map(name => `Shop.${name}`)\n\t\t, contracts: Object.fromEntries([\"refused\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\", \"refusedCallback\"].map(name => [`Shop.${name}`, { parameters: [name === \"refusedCallback\" ? { ownership: \"borrow\", lifetime: { scope: \"call\", anchor: null }, refinement: \"reject\" } : { ownership: \"copy\", lifetime: null, refinement: \"reject\" }] }])) }));\n"
+        },
+        {
+          "start": 13573,
+          "previous": "\tfor(const name of [\"callback\"])\n\t\tassert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.status, \"unsupported\", name);\n\tfor(const name of [\"record\", \"aliasContainer\"])\n",
+          "current": "\tfor(const name of [\"callback\", \"record\", \"aliasContainer\"])\n"
+        },
+        {
+          "start": 13748,
+          "previous": "\tfor(const name of [\"refused\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\"])\n",
+          "current": "\tfor(const name of [\"refused\", \"refusedRecord\", \"refusedAlias\", \"refusedTree\", \"refusedCallback\"])\n"
+        },
+        {
+          "start": 14941,
+          "previous": "\tconst ir = analysis.bindingIr.document.declarations.filter(item => ![\"lean:Shop.record\", \"lean:Shop.aliasContainer\"].includes(item.id));\n",
+          "current": "\tconst callback = types.find(type => type.kind === \"callback\");\n\tassert.deepEqual(callback.source.extensions[\"lean-lang.org/refinements\"], { parameters: [{ kind: \"fin\", bound: \"7\" }], result: null });\n\tconst ir = analysis.bindingIr.document.declarations.filter(item => ![\"lean:Shop.callback\", \"lean:Shop.record\", \"lean:Shop.aliasContainer\"].includes(item.id));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "701eee0f2aca3c123504c1f2f5f386dfbe020f550a727eb09250dc7ab18ddbe9",
+      "previousSha256": "29a6b6a43bd9d3b4b9b9927750cfcebcbc0d867afd34bbcb98a3e328c030c2d2",
+      "edits": [
+        {
+          "start": 813,
+          "previous": "",
+          "current": "import { callbackFinChangedPaths } from \"./callback-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 34170,
+          "previous": "\t, ...nominalFinChangedPaths\n",
+          "current": "\t, ...nominalFinChangedPaths, ...callbackFinChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-contract-tests.mjs",
+      "currentSha256": "5bafa2944a4734f98b8875de82df3aa4f711bd7528f9e90f59f36cc8c84daff2",
+      "previousSha256": "f2b4232127e6b4d850669ae85652d4cac221c518009f097be4c78e9a7392ad5c",
+      "edits": [
+        {
+          "start": 541,
+          "previous": "import { createComponentPrivateAbi } from \"../../src/build/component-callable-adapters.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 3540,
+          "previous": "\tconst withCallback = fixture(); withCallback.types.push({ kind: \"callback\", fields: [] });\n\tassert.throws(() => createComponentPrivateAbi(withCallback), /do not yet support callable/);\n",
+          "current": ""
+        },
+        {
+          "start": 7493,
+          "previous": "\tfor(const cell of cells.filter(cell => cell.position.startsWith(\"callback-\") || cell.path === \"reviewed-ir\"))\n",
+          "current": "\tfor(const cell of cells.filter(cell => cell.path === \"reviewed-ir\" || cell.position.startsWith(\"callback-\") && ![\"node-javascript\", \"node-typescript\"].includes(cell.profile)))\n"
+        },
+        {
+          "start": 7751,
+          "previous": "",
+          "current": "\ntest(\"Fin callback evidence promotes only four ordinary-source Node cells\", async () => {\n\tconst { document, irSchema, consumers } = await readTypeSurface();\n\tconst cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === \"fin\" && cell.position.startsWith(\"callback-\") && cell.stages.installedExecution.state === \"passed\");\n\tassert.equal(cells.length, 4);\n\tassert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), [\"node-javascript\", \"node-typescript\"]);\n\tfor(const cell of cells)\n\t{\n\t\tassert.equal(cell.path, \"ordinary-source\");\n\t\tfor(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, [\"npm-callback-fin-installed\"]);\n\t}\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-source-history-tests.mjs",
+      "currentSha256": "cb2df2b1af8062e119bb903c32874aa059f4a6ab28dd0199c5260eba44dd6735",
+      "previousSha256": "d4d5d75d5243a97c6b7e9c99281ac6689af54a352f8d855c98e4c5e1ea487e6e",
+      "edits": [
+        {
+          "start": 356,
+          "previous": "",
+          "current": "import { beforeCallbackFinSource } from \"./callback-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 962,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCallbackFinSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-source-history.mjs",
+      "currentSha256": "b95cfb1b813695b3b2fb0d5046fc1a2c9b2b29f1e95fea9eda84561f4d612613",
+      "previousSha256": "12769903cfe6e9b828223ce7c979b58b945fbaa7c79f86653117b1c98ebe673a",
+      "edits": [
+        {
+          "start": 219,
+          "previous": "",
+          "current": "import { beforeCallbackFinSource } from \"./callback-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2949,
+          "previous": "",
+          "current": "\tsource = beforeCallbackFinSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/unlocked-component.test.mjs",
+      "currentSha256": "c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de",
+      "previousSha256": "907b8672b40ecc6c8e5ac23ad7ed23cb59fbefc89f28240076eb35f5598a7163",
+      "edits": [
+        {
+          "start": 1864,
+          "previous": "",
+          "current": "import { checkCallbackFinPackages } from \"./helpers/callback-fin-packages.mjs\";\n"
+        },
+        {
+          "start": 4141,
+          "previous": "",
+          "current": "test(\"checked Fin callbacks and closures compile, reproduce and recover in installed npm packages\", { skip: !enabled }, async t => {\n\tawait checkCallbackFinPackages(t, { fixture, build, runtimeRoot, engineRoot });\n});\n\n"
+        }
+      ]
+    }
+  ]
+}

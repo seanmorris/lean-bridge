@@ -9,7 +9,6 @@ import { nominalRefinement } from "../../src/abi/refinements.mjs";
 import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
 import { generateComponentRecursiveAdapters } from "../../src/build/component-recursive-adapters.mjs";
-import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
@@ -54,8 +53,6 @@ test("nominal Fin constructors are total and reject empty carriers before source
 		const forged = structuredClone(plan); mutate(forged);
 		assert.throws(() => validateCompilerAdapterPlan(forged), { code: "invalid-compiler-adapter-plan" });
 	}
-	const withCallback = fixture(); withCallback.types.push({ kind: "callback", fields: [] });
-	assert.throws(() => createComponentPrivateAbi(withCallback), /do not yet support callable/);
 });
 
 test("nominal Fin JS validators check fields after validating owned data shapes", async () => {
@@ -109,6 +106,18 @@ test("nominal Fin installed evidence promotes only the two ordinary Node field c
 		assert.equal(cell.path, "ordinary-source");
 		for(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, ["npm-nominal-fin-installed"]);
 	}
-	for(const cell of cells.filter(cell => cell.position.startsWith("callback-") || cell.path === "reviewed-ir"))
+	for(const cell of cells.filter(cell => cell.path === "reviewed-ir" || cell.position.startsWith("callback-") && !["node-javascript", "node-typescript"].includes(cell.profile)))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
+});
+
+test("Fin callback evidence promotes only four ordinary-source Node cells", async () => {
+	const { document, irSchema, consumers } = await readTypeSurface();
+	const cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin" && cell.position.startsWith("callback-") && cell.stages.installedExecution.state === "passed");
+	assert.equal(cells.length, 4);
+	assert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript"]);
+	for(const cell of cells)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		for(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, ["npm-callback-fin-installed"]);
+	}
 });

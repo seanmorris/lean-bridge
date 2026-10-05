@@ -1,24 +1,23 @@
 /**
- * Preserve the exact predecessors of the nominal Fin admission.
+ * Preserve the exact predecessors of the callback Fin admission.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
 
-export const nominalFinHistoryPath = "docs/evidence/npm-nominal-fin-source-history-20261005.json";
-export const nominalFinChangedPaths = [
+export const callbackFinHistoryPath = "docs/evidence/npm-callback-fin-source-history-20261005.json";
+export const callbackFinChangedPaths = [
 	"docs/javascript-typescript.md"
 	, "docs/lean/existing-package.md"
 	, "docs/lean/export-decisions.md"
 	, "docs/reference/types.md"
 	, "docs/type-surface.v1.json"
 	, "schema/compiler-adapter-plan.schema.json"
+	, "src/abi/component-structured-callables.mjs"
 	, "src/abi/refinements.mjs"
 	, "src/analyze/NativeExports.lean"
-	, "src/analyze/copied-metadata-graph.mjs"
 	, "src/analyze/elaborated-metadata.mjs"
 	, "src/analyze/export-configuration.mjs"
 	, "src/analyze/semantic-model.mjs"
@@ -27,14 +26,19 @@ export const nominalFinChangedPaths = [
 	, "src/build/compiler-adapters.mjs"
 	, "src/build/component-callable-adapters.mjs"
 	, "src/build/component-recursive-adapters.mjs"
-	, "src/build/component-recursive-lean.mjs"
-	, "src/build/component-refinements.mjs"
-	, "src/build/lean-component-compiler.mjs"
+	, "src/build/component-structured-callable-adapters.mjs"
+	, "src/build/component-structured-callable-defaults.mjs"
+	, "src/build/component-structured-callable-lean.mjs"
+	, "src/release/component-npm-package.mjs"
+	, "src/release/component-runtime.mjs"
 	, "tests/component-array-contract.test.mjs"
+	, "tests/component-structured-callable-contract.test.mjs"
+	, "tests/component-structured-callable-defaults.test.mjs"
 	, "tests/elaborated-metadata.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/refinement-closure-source-history-tests.mjs"
-	, "tests/helpers/refinement-closure-source-history.mjs"
+	, "tests/helpers/nominal-fin-contract-tests.mjs"
+	, "tests/helpers/nominal-fin-source-history-tests.mjs"
+	, "tests/helpers/nominal-fin-source-history.mjs"
 	, "tests/unlocked-component.test.mjs"
 ];
 let history;
@@ -45,8 +49,8 @@ let history;
  * @param source - Complete current text.
  * @param update - Recorded transition.
  */
-export const reverseNominalFinUpdate = (source, update) => {
-	assert.ok(nominalFinChangedPaths.includes(update.path));
+export const reverseCallbackFinUpdate = (source, update) => {
+	assert.ok(callbackFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -66,18 +70,17 @@ export const reverseNominalFinUpdate = (source, update) => {
 };
 
 /**
- * Undo only the nominal Fin admission before following older refinement transitions.
+ * Undo only the callback Fin admission before following older refinement transitions.
  *
  * @param path - Repository-relative path.
  * @param source - Complete current or historical text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNominalFinSource = (path, source, expected) => {
-	source = beforeCallbackFinSource(path, source, expected);
-	if(typeof source !== "string" || !nominalFinChangedPaths.includes(path)) return source;
+export const beforeCallbackFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !callbackFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nominalFinHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(callbackFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNominalFinUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseCallbackFinUpdate(source, update) : source;
 };
