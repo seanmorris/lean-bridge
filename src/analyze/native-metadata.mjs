@@ -21,8 +21,9 @@ const containsGraph = (value, kind = "graph") => value !== null && typeof value 
  * @param options - Internal compiled-transport admission.
  * @param options.copiedGraphs - Allow finite graphs only for the typed carrier compiler.
  * @param options.ownedGraphs - Allow retained resource graphs only for ownership-aware lowering.
+ * @param options.refinements - Allow top-level checked Fin sites only for consumers with bound-checking adapters.
  */
-export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs = false, ownedGraphs = false } = {}) => {
+export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs = false, ownedGraphs = false, refinements = false } = {}) => {
 	if(!sourceIdentity || !digest(sourceIdentity.leanCompilerSha256) || !digest(sourceIdentity.extractorSha256)
 		|| !digest(sourceIdentity.sourceTreeSha256) || !/^[a-f0-9]{40}$/.test(sourceIdentity.leanCommit)
 		|| !Array.isArray(sourceIdentity.modules) || !sourceIdentity.modules.length) fail("Native metadata requires measured compiler and source identities");
@@ -53,6 +54,11 @@ export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs =
 		code: "native-elaboration-unsupported"
 		, details: { diagnostics
 			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, ...item.projection })) }
+	});
+	const refined = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection, "refinement"));
+	if(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary C and C++ native packages`), {
+		code: "native-refinements-unsupported"
+		, details: { declaration: refined.identity }
 	});
 	const graph = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection));
 	if(graph && !copiedGraphs) throw Object.assign(new Error(`${graph.identity}: copied graph exports require the bounded graph transport`), {

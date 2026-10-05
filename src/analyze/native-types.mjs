@@ -56,7 +56,8 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 		, record: ["kind", "name", "lean", "constructor", "fields", "abi"]
 		, variant: ["kind", "name", "lean", "cases", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
-		, callback: ["kind", "parameters", "result", "abi"] }[type.kind];
+		, callback: ["kind", "parameters", "result", "abi"]
+		, refinement: ["kind", "base", "predicate", "abi"] }[type.kind];
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
 	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
@@ -83,6 +84,15 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");
 		if(["usize", "isize"].includes(type.name) && (type.abi.cType !== "size_t" || type.abi.heap)) fail("platform integer requires the compiler's size_t representation");
 		if(type.abi.cType === "size_t" && !["usize", "isize"].includes(type.name)) fail("size_t is not a fixed-width primitive representation");
+	} else if(type.kind === "refinement")
+	{
+		// Bounds stay decimal text; only top-level native sites have checked adapters.
+		if(depth !== 0 || copied || references) fail("Fin refinements require a top-level native parameter or result");
+		closed(type.predicate, ["kind", "bound"], "refinement predicate");
+		if(type.predicate.kind !== "fin" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound)) fail("invalid Fin refinement");
+		recurse(type.base, true);
+		if(type.base.kind !== "primitive" || type.base.name !== "nat") fail("Fin refinements require a Nat base");
+		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== type.base.abi[field])) fail("refinement representation differs from its base");
 	} else if(type.kind === "alias")
 	{
 		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean) fail("invalid alias identity");

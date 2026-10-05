@@ -147,8 +147,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
   if e.isAppOfArity ``Fin 1 then
     if (depth != 0 || copied) && !containerFin then
       reject e "Fin refinements require a top-level or structural-container parameter or result"
-    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" then
-      reject e "Fin refinements are not implemented by the native-library profile"
+    -- Native libraries check bounds only around top-level parameters and results.
+    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && (depth != 0 || copied) then
+      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters and results"
     let bound ← whnf e.appArg!
     let .lit (.natVal bound) := bound
       | reject e "Fin refinements require a closed literal bound"

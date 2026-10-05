@@ -97,8 +97,9 @@ export async function readVerifiedNativeRuntime(root)
  * @param options.ownedAnchoredResults - The caller validates original-owner result lifetimes.
  * @param options.ownedReceiverExports - The caller preserves receiver signatures and ownership.
  * @param options.ownedCallbackResultAnchors - The caller preserves callback-local result owners.
+ * @param options.nativeRefinements - The caller checks top-level Fin bounds before Lean dispatch.
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
@@ -120,7 +121,10 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 		throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
 	if(hostCallbacks && (!ownedGraphs || !ownedHostCallbacks))
 		throw Object.assign(new TypeError("This native component requires an owned host-callback consumer adapter"), { code: "native-owned-callbacks-unavailable" });
-	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers, ownedCallbackResultAnchors: callbackResults });
+	const refined = Array.isArray(model.exports) && model.exports.some(item => item?.refinements !== undefined);
+	if(refined && nativeRefinements !== true)
+		throw Object.assign(new TypeError("This native component requires a checked Fin consumer adapter"), { code: "native-refinements-unavailable" });
+	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers, ownedCallbackResultAnchors: callbackResults, nativeRefinements: refined });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
 	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (callbackResults ? 7 : receivers ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2)
 		|| canonicalJson(receipt.inputTransfers ?? null) !== canonicalJson(model.ownedGraph?.inputTransfers ?? null)

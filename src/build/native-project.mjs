@@ -49,6 +49,13 @@ export const supportsNativeCallbackResultTargets = targets => targets.every(targ
 	["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target));
 
 /**
+ * Admit checked top-level Fin sites only when every requested projection checks bounds.
+ *
+ * @param targets - Validated native package target names.
+ */
+export const supportsNativeRefinementTargets = targets => targets.every(target => ["c", "cpp"].includes(target));
+
+/**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
  *
  * @param root0 - Named inputs for this native build or packaging operation.
@@ -122,6 +129,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedCallbackResultAnchors: supportsNativeCallbackResultTargets(targets)
+			, nativeRefinements: supportsNativeRefinementTargets(targets)
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)

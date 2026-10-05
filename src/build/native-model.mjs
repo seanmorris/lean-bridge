@@ -10,6 +10,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
+import { componentRefinementGuards } from "./component-refinements.mjs";
 
 export { validateNativeType };
 
@@ -113,6 +114,7 @@ const closed = (value, fields, label) => {
 // Alias names remain in compiler metadata and Binding IR. Native conversion
 // helpers use the compiler-checked target representation without a new wrapper.
 const nativeRepresentation = type => {
+	if(type.kind === "refinement") return type.base;
 	if(type.kind === "alias") return nativeRepresentation(type.target);
 	if(["array", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
 	if(["result", "tuple"].includes(type.kind)) return { ...type, arguments: type.arguments.map(nativeRepresentation) };
@@ -120,6 +122,25 @@ const nativeRepresentation = type => {
 	if(type.kind === "variant") return { ...type, cases: type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) })) };
 	if(type.kind === "callback") return { ...type, parameters: type.parameters.map(nativeRepresentation), result: nativeRepresentation(type.result) };
 	return type;
+};
+
+/**
+ * Retain exact top-level Fin bounds beside the Nat transport. Only exports with a
+ * checked adapter may carry them; callbacks keep their existing unchecked ABI.
+ *
+ * @param declaration - Compiler-selected native declaration.
+ */
+const nativeRefinements = declaration => {
+	const predicate = type => {
+		if(type.kind !== "refinement") return null;
+		validateNativeType(type);
+		return { kind: type.predicate.kind, bound: type.predicate.bound };
+	};
+	const value = { parameters: declaration.parameters.map(parameter => predicate(parameter.type)), result: predicate(declaration.result) };
+	if(value.result === null && value.parameters.every(item => item === null)) return null;
+	if([...declaration.parameters.map(parameter => parameter.type), declaration.result].some(type => type.kind === "callback"))
+		throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements cannot share a native export with callbacks`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+	return value;
 };
 
 /**
@@ -132,9 +153,11 @@ const nativeRepresentation = type => {
  * @param root0.sourceIdentity - Pinned compiler, source and interface identities.
  * @param profile - Fixed compilation profile.
  * @param pointerBits - Fixed target pointer width.
+ * @param root1 - Explicit consumer capabilities for this model.
+ * @param root1.refinements - Admit checked top-level Fin sites for C-family adapters.
  */
-const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }, profile, pointerBits) => {
-	const elaborated = projectNativeMetadata(metadata, sourceIdentity);
+const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }, profile, pointerBits, { refinements: admitRefinements = false } = {}) => {
+	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { refinements: admitRefinements });
 	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
@@ -149,13 +172,19 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		allTypes.set(key, { ...type, key });
 	};
 	const checked = elaborated.declarations.map(source => {
-		const declaration = { ...source, parameters: source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) })), result: nativeRepresentation(source.result) };
+		const refinements = nativeRefinements(source);
+		const parameters = source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) }));
+		const declaration = { ...source, parameters, result: nativeRepresentation(source.result), ...(refinements ? { refinements } : {}) };
 		if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
 		declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); });
 		visit(declaration.result);
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
 	if(!checked.length) fail("empty export set");
+	// Reviewed Binding IR has no audited Fin reconciliation yet; never erase the bound silently.
+	const refined = checked.find(item => item.refinements);
+	if(refined && sourceIdentity.reviewedBindingIr !== undefined)
+		throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements are not yet supported with reviewed Binding IR`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const exports = moduleName === undefined ? checked : projectPerlNames(moduleName, checked);
 	const semantic = createElaboratedSemanticModel({
 		metadata, request: sourceIdentity.request, component
@@ -181,8 +210,9 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
  * Build the fixed 64-bit native profile from fresh compiler metadata.
  *
  * @param options - Elaborated metadata, component and source identity.
+ * @param capabilities - Optional consumer capabilities, such as checked Fin sites.
  */
-export const createNativeModel = options => createCompiledModel(options, "native-library-v1", 64);
+export const createNativeModel = (options, capabilities) => createCompiledModel(options, "native-library-v1", 64, capabilities);
 
 /**
  * Reuse C-shape elaboration, not a compiled native receipt, for wasm32.
@@ -208,6 +238,14 @@ export const createPhpWasmCopiedModel = options => {
 };
 
 /**
+ * Box a checked export's result so rejected Fin inputs need no fabricated value.
+ *
+ * @param result - Native representation of the source result.
+ */
+export const nativeRefinedResult = result => ({ kind: "option", element: result
+	, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } });
+
+/**
  * Per-type constructor/projection functions keep Lean object layout private.
  *
  * @param model - Compiler-checked native model and Binding IR.
@@ -227,7 +265,23 @@ export const generateNativeLeanAdapters = model => {
 		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${absoluteLeanType(p.type)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : absoluteLeanType(result)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
 		prototypes.push(`${nativeCType(result)} ${symbol}(${ps.map(p => `${nativeCType(p.type)} ${p.name}`).join(", ")});`);
 	};
-	for(const item of model.exports) emit(item.symbol, item.parameters.map((p, i) => ({ name: `a${i}`, type: p.type })), item.result, `${item.specialization ? `(${item.specialization.application})` : `_root_.${item.name}`} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
+	for(const item of model.exports)
+	{
+		const parameters = item.parameters.map((p, i) => ({ name: `a${i}`, type: p.type }));
+		const application = item.specialization ? `(${item.specialization.application})` : `_root_.${item.name}`;
+		if(!item.refinements)
+		{
+			emit(item.symbol, parameters, item.result, `${application} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
+			continue;
+		}
+		// The proof exists only inside the decidable branch; rejected inputs return none.
+		const call = `${application} ${item.parameters.map((_, i) => item.refinements.parameters[i] ? `⟨a${i}, _bridgeFin${i}⟩` : `a${i}`).join(" ")}`;
+		const value = item.refinements.result ? `(${call}).val` : call;
+		const guards = item.refinements.parameters.flatMap((refinement, i) => refinement ? [{ kind: "fin", bound: refinement.bound, proof: `_bridgeFin${i}`, value: `a${i}` }] : []);
+		if(!guards.length) emit(item.symbol, parameters, item.result, value);
+		else emit(item.symbol, parameters, nativeRefinedResult(item.result)
+			, componentRefinementGuards(guards, `_root_.Option.some (${value})`, "_root_.Option.none").replaceAll("\n", "\n  "));
+	}
 	for(const type of model.types)
 	{
 		const bool = { kind: "primitive", name: "bool", lean: "Bool" };

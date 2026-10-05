@@ -19,6 +19,25 @@ export const nativeCReference = type => type.kind === "primitive" ? { kind: "pri
 const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
 
 /**
+ * Split an exact decimal Fin bound into little-endian uint32 limbs.
+ *
+ * @param bound - Compiler-owned decimal bound.
+ */
+export const finBoundLimbs = bound => {
+	if(typeof bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(bound)) throw new TypeError("Invalid Fin bound");
+	const limbs = [];
+	for(let value = BigInt(bound); value > 0n; value >>= 32n) limbs.push(Number(value & 0xffffffffn));
+	return limbs;
+};
+// Compare caller limbs with a normalized bound; high zero limbs are permitted.
+const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t length, const uint32_t *bound, size_t bound_length) {
+  while (length && data[length - 1] == 0) --length;
+  if (length != bound_length) return length < bound_length;
+  while (length--) if (data[length] != bound[length]) return data[length] < bound[length];
+  return 0;
+}`;
+
+/**
  * Render recursive validation, conversion and typed calls.
  *
  * @param model - Verified native compiler model.
@@ -165,17 +184,33 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			, "  (void)value; (void)budget;", ...output.map(line => `  ${line}`)
 			, "  return 1;", "}"].join("\n");
 	});
-	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item]));
+	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item])), bounds = [];
 	const calls = surface.functions.filter(fn => ![...fn.declaration.parameters, fn.declaration.result].some(site => surface.callbacks.has(site.type.id))).map(fn => {
 		const native = exports.get(fn.declaration.id), lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`
 			, "  (void)context; size_t budget = 16u * 1024u * 1024u;"
 			, `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`];
+		const refinements = native.refinements?.parameters ?? [];
 		const args = fn.parameters.map(({ name }, i) => {
 			const type = native.parameters[i].type, value = copy(type).aggregate ? name : `&${name}`;
 			lines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
 			return `${id(type)}_in(${value})`;
 		});
-		lines.push(`  ${nativeCType(native.result)} value = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`);
+		// Every bound is checked on caller limbs before any Lean value is allocated.
+		refinements.forEach((refinement, i) => {
+			if(!refinement) return;
+			const limbs = finBoundLimbs(refinement.bound), value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
+			if(limbs.length) bounds.push(`static const uint32_t lb_fin_${fn.field}_${i}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
+			lines.push(`  if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? `lb_fin_${fn.field}_${i}` : "NULL"}, ${limbs.length})) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} is not below its Fin ${refinement.bound} bound`)});`);
+		});
+		if(refinements.some(Boolean))
+		{
+			lines.push(`  lean_object *checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
+				, '  if (lean_is_scalar(checked)) return lb_invalid(error, "Lean rejected an argument outside its Fin bound");'
+				, "  lean_object *boxed = lean_ctor_get(checked, 0);");
+			if(nativeObjectType(native.result)) lines.push("  lean_inc(boxed);");
+			lines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, "boxed")};`, "  lean_dec(checked);");
+		}
+		else lines.push(`  ${nativeCType(native.result)} value = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`);
 		if(native.result.kind !== "primitive" || native.result.name !== "unit")
 		{
 			lines.push(`  ${copy(native.result).name} result = {0};`, `  int status = ${id(native.result)}_out(value, &result, &budget);`);
@@ -189,5 +224,6 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");
 		return lines.join("\n");
 	});
-	return `${definitions.join("\n\n")}\n\n${calls.join("\n\n")}`;
+	const fin = bounds.length || model.exports.some(item => item.refinements?.parameters.some(Boolean)) ? [finBelow, ...bounds].join("\n") + "\n\n" : "";
+	return `${definitions.join("\n\n")}\n\n${fin}${calls.join("\n\n")}`;
 };

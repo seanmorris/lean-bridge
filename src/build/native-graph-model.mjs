@@ -33,6 +33,8 @@ const leanType = type => {
 };
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
+const containsRefinement = value => value && typeof value === "object"
+	&& (value.kind === "refinement" || Object.values(value).some(containsRefinement));
 
 const descriptor = ir => ir.types.some(type => type.kind === "callback")
 	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
@@ -75,8 +77,9 @@ export const nativeGraphCarrierAbi = model => {
  * @param root0.ownedAnchoredResults - Admit results that expire with an input owner.
  * @param root0.ownedReceiverExports - Admit methods and properties with typed receivers.
  * @param root0.ownedCallbackResultAnchors - Admit callback-local result ownership anchors.
+ * @param root0.nativeRefinements - Admit checked top-level Fin sites for C-family adapters.
  */
-export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {}) => {
+export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false } = {}) => {
 	const { metadata, component, moduleName, sourceIdentity } = options;
 	if(ownedHostCallbacks && !ownedGraphs) throw new TypeError("Owned callbacks require an ownership-aware transport");
 	if(ownedInputTransfers && !ownedGraphs) throw new TypeError("Owned input transfers require an ownership-aware transport");
@@ -86,8 +89,12 @@ export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedH
 	if(ownedCallbackResultAnchors && !ownedGraphs) throw new TypeError("Owned callback result anchors require an ownership-aware transport");
 	if(ownedGraphs && sourceIdentity.request.ownedAggregates !== undefined)
 		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports, callbackResultAnchors: ownedCallbackResultAnchors });
-	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
-	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options);
+	if(typeof nativeRefinements !== "boolean") throw new TypeError("Native refinement capability must be explicit");
+	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: nativeRefinements });
+	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options, { refinements: nativeRefinements });
+	// Graph carriers have no Fin guard, so refined exports cannot join that transport.
+	const refined = elaborated.declarations.find(containsRefinement);
+	if(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a component with copied graph exports`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
