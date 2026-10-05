@@ -226,6 +226,25 @@ Callback recovery must have a valid Lean result while the call unwinds. Positive
 
 Native refinements and `Subtype` constraints inside callback signatures remain unsupported. This installed-package evidence covers Node JavaScript and TypeScript; browser profiles are not yet audited for refined callbacks.
 
+#### Bounded integers in C and C++ packages
+
+Ordinary-source C and C++ packages support `Fin n` as a top-level parameter or result, including through transparent aliases. The bound must reduce to a closed natural-number literal, and bounds wider than a machine word stay exact:
+
+```lean
+namespace Library
+
+abbrev Slot := Fin 300
+
+def mirror (value : Fin 10) : Fin 10 := ⟨9 - value.val, by omega⟩
+def twice (value : Slot) : Nat := value.val * 2
+
+end Library
+```
+
+The C package passes these values as GMP `mpz_t` and the C++ package as `boost::multiprecision::cpp_int`, the same as `Nat`. An argument at or above its bound, or a negative value, returns the package's `INVALID_ARGUMENT` status in C, or throws its `Error` in C++. The check runs before any argument is converted or Lean is called, and outputs and caller data are left unchanged. The compiled Lean adapter checks each bound again before it constructs `Fin`, so code that calls the exported adapter symbol directly cannot skip the check. Every input to a `Fin 0` parameter is rejected, and later valid calls still work.
+
+A build that requests any other native target for a declaration with `Fin` fails with a diagnostic, rather than treating the value as an unchecked `Nat`. `Fin` inside arrays, lists, options, products, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages.
+
 ### Export a checked Subtype
 
 For a top-level `Subtype` parameter or result, provide a total Lean function that checks a host value and returns the exact subtype:

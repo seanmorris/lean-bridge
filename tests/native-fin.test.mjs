@@ -127,6 +127,15 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 	await assert.rejects(() => readVerifiedNativeComponent(outputRoot, identity, { copiedGraphs: true }), error => error.code === "native-refinements-unavailable");
 	const verified = await readVerifiedNativeComponent(outputRoot, identity, { copiedGraphs: true, nativeRefinements: true });
 	assert.equal(canonicalJson(verified.model), canonicalJson(model));
+	// Reviewed Binding IR is outside this slice; the same document must not erase a bound.
+	const reviewed = await project(t);
+	const reviewedIr = structuredClone(model.bindingIr);
+	// Author-reviewed documents omit compiler extensions, including the bound itself.
+	for(const producer of reviewedIr.producers) producer.extensions = {};
+	for(const declaration of reviewedIr.declarations) declaration.source.extensions = {};
+	await saveLakeFile(reviewed.projectRoot, "reviewed.binding-ir.json", canonicalJson(reviewedIr));
+	await assert.rejects(() => component(reviewed, true), error => error.code === "native-refinements-unsupported"
+		&& /not yet supported with reviewed Binding IR/.test(error.message));
 });
 
 test("native builds reject Fin for every non-C-family target and every nested position", { skip: !enabled, timeout: 900_000 }, async t => {

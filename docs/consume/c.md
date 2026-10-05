@@ -573,6 +573,24 @@ Negative `Nat` inputs return `INVALID_ARGUMENT`. `Int` preserves the sign. Calls
 
 The 16 MiB conversion limit still applies. GMP's default allocator aborts if its allocation fails; the bridge does not change its global allocation hooks. See [GMP allocation behavior](https://gmplib.org/manual/Custom-Allocation).
 
+### Bounded integers
+
+A Lean `Fin n` parameter or result uses the same GMP `mpz_t` as `Nat`. The header does not repeat the bound, so read it from the Lean signature or the package's `share/lean-bridge/component/binding-ir.json`. For `Library.mirror (value : Fin 10) : Fin 10`:
+
+```c
+mpz_t input, output;
+mpz_init_set_ui(input, 3);
+mpz_init(output);
+library_error error = {0};
+library_status status = library_mirror(input, output, &error); /* OK; output is 6 */
+mpz_set_ui(input, 10);
+status = library_mirror(input, output, &error); /* INVALID_ARGUMENT; output is still 6 */
+mpz_clear(output);
+mpz_clear(input);
+```
+
+A value at or above the bound, or a negative value, returns `INVALID_ARGUMENT` with an error message naming the bound. No argument is converted and Lean is not called, so outputs and caller-owned values stay unchanged and the next call works normally. `Fin 0` parameters reject every value. Bounds wider than 64 bits are compared exactly. Results are always below their bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-20261005.md).
+
 ## Callbacks and returned closures
 
 Ordinary-source and compiler-checked reviewed C packages support synchronous callbacks and returned Lean closures across all nineteen primitives, arrays, Lists, options, results, products, acyclic records, variants and transparent aliases. Use the callback struct and closure functions declared in your package's public header. Their generated names distinguish each complete signature. Alpha's `transform` names above belong to that example, not every package.
@@ -704,7 +722,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Char` | `uint32_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. The shared C boundary rejects out-of-range values before calling Lean. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `uint64_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `int64_t` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
-| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
+| `Fin n` | `GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound` (input); `GMP mpz_ptr (C) or cpp_int (C++) below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
 | `Recursive copied structures` | `Named structs, constructor tags, typed borrowed children and GMP integers` (input, result, field); `Named C structs, constructor tags, borrowed recursive inputs and owned GMP-backed replies` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy. Callback arguments borrow initialized values for the call. Use generated TYPE_copy or initialized fields for owned replies, never shallow-copy GMP values or owners. The adapter releases replies on success and failure. Failed calls preserve outputs. Returned closures retain independent captures and require explicit disposal. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |

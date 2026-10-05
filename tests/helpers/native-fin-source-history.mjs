@@ -1,24 +1,34 @@
 /**
- * Preserve the exact predecessors of the Perl live-receipt evidence repair (#1417).
+ * Preserve the exact predecessors of the checked native Fin admission (#1418).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeNativeFinSource } from "./native-fin-source-history.mjs";
 
-export const perlEvidenceRepairHistoryPath = "docs/evidence/perl-evidence-repair-source-history-20261005.json";
-export const perlEvidenceRepairChangedPaths = [
-	"docs/type-surface.v1.json"
+export const nativeFinHistoryPath = "docs/evidence/native-fin-source-history-20261005.json";
+export const nativeFinChangedPaths = [
+	"docs/consume/c.md"
+	, "docs/consume/cpp.md"
+	, "docs/lean/existing-package.md"
+	, "docs/type-surface.v1.json"
+	, "src/analyze/NativeExports.lean"
+	, "src/analyze/native-metadata.mjs"
+	, "src/analyze/native-types.mjs"
+	, "src/backends/c/native-copied-values.mjs"
+	, "src/build/multi-profile-project.mjs"
+	, "src/build/native-artifacts.mjs"
+	, "src/build/native-c-projection.mjs"
+	, "src/build/native-component.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/native-model.mjs"
+	, "src/build/native-project.mjs"
+	, "src/release/native-c-family.mjs"
 	, "tests/component-array-contract.test.mjs"
-	, "tests/helpers/callback-compiler-identity-tests.mjs"
-	, "tests/helpers/callback-compiler-identity.mjs"
-	, "tests/helpers/callback-fin-source-history-tests.mjs"
-	, "tests/helpers/callback-fin-source-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
-	, "tests/helpers/owned-perl-callback-result-variant-evidence.mjs"
+	, "tests/helpers/perl-evidence-repair-source-history-tests.mjs"
+	, "tests/helpers/perl-evidence-repair-source-history.mjs"
 ];
 let history;
 
@@ -28,8 +38,8 @@ let history;
  * @param source - Complete current text.
  * @param update - Recorded transition.
  */
-export const reversePerlEvidenceRepairUpdate = (source, update) => {
-	assert.ok(perlEvidenceRepairChangedPaths.includes(update.path));
+export const reverseNativeFinUpdate = (source, update) => {
+	assert.ok(nativeFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -49,18 +59,17 @@ export const reversePerlEvidenceRepairUpdate = (source, update) => {
 };
 
 /**
- * Undo only the Perl live-receipt evidence repair (#1417) before following older refinement transitions.
+ * Undo only the checked native Fin admission (#1418) before following older refinement transitions.
  *
  * @param path - Repository-relative path.
  * @param source - Complete current or historical text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePerlEvidenceRepairSource = (path, source, expected) => {
-	source = beforeNativeFinSource(path, source, expected);
-	if(typeof source !== "string" || !perlEvidenceRepairChangedPaths.includes(path)) return source;
+export const beforeNativeFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(perlEvidenceRepairHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePerlEvidenceRepairUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeFinUpdate(source, update) : source;
 };
