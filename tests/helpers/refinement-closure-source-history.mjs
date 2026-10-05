@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNominalFinSource } from "./nominal-fin-source-history.mjs";
 
 export const refinementClosureHistoryPath = "docs/evidence/refinement-closure-source-history-20261005.json";
 export const refinementClosureChangedPaths = [
@@ -56,6 +57,7 @@ export const reverseRefinementClosureUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeRefinementClosureSource = (path, source, expected) => {
+	source = beforeNominalFinSource(path, source, expected);
 	if(typeof source !== "string" || !refinementClosureChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
