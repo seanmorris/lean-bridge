@@ -150,7 +150,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType) => {
 		if(!signature) throw new TypeError("Missing recursive export signature");
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
-		const refined = componentRefinedCall(item, names);
+		const refined = componentRefinedCall(item, names, true);
 		const body = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
 		lines.push(`@[export ${item.symbol}_lean]`, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${carrier(signature.result)} :=`
 			, ...checked(names, body.split("\n")).map(line => `  ${line}`), "");

@@ -12,6 +12,7 @@ import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regress
 import { assertPhpWasmSharedSourceTransition } from "./php-wasm-shared-regression-receipt.mjs";
 import { assertJvmSharedSourceTransition } from "./jvm-shared-regression-receipt.mjs";
 import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 /**
  * Undo only recorded, uniquely occurring manifest entries and verify each hash.
@@ -51,6 +52,7 @@ export const verifyAddedTestRegistrations = (source, expected, updates) => {
  */
 export const assertAdministrativeSourceUpdate = async (path, expected) => {
 	let source = await readFile(path, "utf8");
+	source = beforeFinRefinementSource(path, source);
 	source = beforeWitPackageIntegration(path, source, expected);
 	if(sha256(source) === expected) return;
 	if(await assertPhpWasmSharedSourceTransition(path, source, expected)) return;

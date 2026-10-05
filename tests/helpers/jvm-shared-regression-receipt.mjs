@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { beforeJvmSharedVerification } from "./jvm-shared-verifier-updates.mjs";
 import { beforeNativeSharedVerification } from "./native-shared-verifier-updates.mjs";
 import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 const receiptPath = "docs/evidence/jvm-shared-regressions-20260924.json";
 export const jvmSharedProductionPaths = [
@@ -74,7 +75,7 @@ export const assertJvmSharedRegressionEvidence = async record => {
 		, "tests/helpers/jvm-shared-verifier-updates.mjs"
 		, "tests/jvm-shared-regressions.test.mjs"
 	].sort());
-	for(const [path, hash] of Object.entries(record.verifierSources)) assert.equal(sha256(beforeNativeSharedVerification(path, await readFile(path, "utf8"))), hash, path);
+	for(const [path, hash] of Object.entries(record.verifierSources)) assert.equal(sha256(beforeNativeSharedVerification(path, beforeFinRefinementSource(path, await readFile(path, "utf8")))), hash, path);
 	assert.equal(record.executionsSha256, sha256(canonicalJson(record.executions)));
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), [
 		"ordinary-source/java", "ordinary-source/kotlin"

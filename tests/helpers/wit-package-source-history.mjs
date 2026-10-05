@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { beforeWitHostIntegration } from "./wit-host-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 export const witPackageHistoryPath = "docs/evidence/wit-recursive-package-integration-20260924.json";
 export const witPackageChangedPaths = [
@@ -83,6 +84,7 @@ export const reverseWitPackageUpdate = (source, update) => {
  * @param expected - Optional intermediate predecessor at which to stop.
  */
 export const beforeWitPackageIntegration = (path, source, expected) => {
+	source = beforeFinRefinementSource(path, source);
 	source = beforePhpCallbackInstalledStaging(path, source, expected);
 	source = beforeWitHostIntegration(path, source, expected);
 	if(typeof source === "string" && !witPackageChangedPaths.includes(path)) return source;

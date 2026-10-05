@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeNativeSharedVerification } from "./native-shared-verifier-updates.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 const changes = {
 	"tests/helpers/test-registration-history.mjs": [
@@ -26,6 +27,7 @@ const changes = {
  * @param source - Complete current source text.
  */
 export const beforeJvmSharedVerification = (path, source) => {
+	source = beforeFinRefinementSource(path, source);
 	source = beforeNativeSharedVerification(path, source);
 	const edits = changes[path];
 	if(!edits || edits.every(([current]) => !source.includes(current))) return source;
