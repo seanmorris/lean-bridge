@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import ts from "typescript";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedWitCallbackRuntimeMatrix, assertOwnedWitCallbackRuntimeLogs
@@ -88,7 +89,7 @@ export const ownedWitCallbackSourcePaths = async () => {
 		if(visited.has(path)) continue;
 		visited.add(path); paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, await readFile(path, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;

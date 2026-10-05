@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { callbackCompilerInputAtBaseline, callbackCarrierCDigest } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
@@ -111,6 +112,7 @@ export const assertOwnedJvmCallbackRuntime = async (name, item) => {
 		callbackResultAnchors: true, hostCallbacks, transferredInputs: combined
 		, anchoredResults: combined, receiverExports: combined };
 	const { metadata, sourceIdentity: identity, component, ...capabilities } = item.input;
+	assert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);
 	assert.deepEqual(capabilities, {
 		hostCallbacks, callbackResultAnchors: true, valueCopies: true
 		, ...combined ? { transferredInputs: true, anchoredResults: true, receiverExports: true } : {} });
@@ -119,7 +121,8 @@ export const assertOwnedJvmCallbackRuntime = async (name, item) => {
 	assert.equal(identity.leanCommit, "f3b06c705e6c85f5314019d5d3baab0fec5b580c");
 	assert.equal(identity.leanCompilerSha256, "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550");
 	assert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), identity.extractorSha256)));
-	assert.equal(hash(metadata), compilerOutputs[`${mode}-${variant}`][0]);
+	const baseline = await callbackCompilerInputAtBaseline(item.input);
+	assert.equal(hash(baseline.metadata), compilerOutputs[`${mode}-${variant}`][0]);
 	const lean = (await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8"))
 		+ (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource);
 	assert.equal(identity.sourceTreeSha256, sha256(lean));
@@ -153,7 +156,7 @@ export const assertOwnedJvmCallbackRuntime = async (name, item) => {
 		"Owned.lean": sha256(lean)
 		, "Owned.c": combined ? "548eb1e30a48a01b5b0023c8e4c2e4465231485d023356af3eee84c83f6af7e9" : "e82f27deb6ad1e97b6b2293e0248e566bf8f467fcc8a7061654d97b903e8805e"
 		, [carriers.module + ".lean"]: sha256(carriers.leanSource)
-		, "Carriers.c": compilerOutputs[`${mode}-${variant}`][1]
+		, "Carriers.c": await callbackCarrierCDigest(item.input, carriers, compilerOutputs[`${mode}-${variant}`][1])
 		, "Witness.lean": sha256(witness)
 		, "Witness.c": "02568afb0b8a9ec59623a12d4ddf52f63b0ea79f71c5a312087fa240d0be9d96"
 		, "api.c": sha256(probe.implementation)

@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { callbackCompilerInputAtBaseline } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
@@ -49,10 +50,12 @@ export const assertOwnedPerlCallbackSources = async (mode, variant, item) => {
 		, receiverExports: combined };
 	assert.deepEqual(item.options, options);
 	const { metadata, sourceIdentity: identity, component, ...extra } = item.input;
+	assert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);
 	assert.deepEqual(extra, {});
 	assert.deepEqual(component, { id: "owned-aggregates@1.0.0", name: "owned-aggregates", version: "1.0.0" });
-	assert.equal(hash(metadata), metadataHashes[mode][Number(combined)]);
-	assert.equal(hash(identity), identityHashes[mode][Number(combined)]);
+	const baseline = await callbackCompilerInputAtBaseline(item.input);
+	assert.equal(hash(baseline.metadata), metadataHashes[mode][Number(combined)]);
+	assert.equal(hash(baseline.sourceIdentity), identityHashes[mode][Number(combined)]);
 	assert.equal(identity.leanVersion, "4.32.2");
 	assert.equal(identity.leanCommit, "f3b06c705e6c85f5314019d5d3baab0fec5b580c");
 	assert.equal(identity.leanCompilerSha256, "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550");

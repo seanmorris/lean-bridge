@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-historical-import-closures-v1",
+  "predecessorCommit": "d6bc8bcde0592883dda8f26af7d8cb4111648fca",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "51ff34a2fa52694d48e4bc52428eeb77a20d58006e1fcf24f8109479af6f7331",
+      "previousSha256": "bfe2fdfc78641ebe60a1f08cf0d9df6c7b0f5a91643744e5c7d8d384daa62e0a",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c\"\n",
+          "current": "          \"sha256\": \"d19934796b47369e867012ae279ad0ee36ebfbbbfedadc1c874d400a0ec05db9\"\n"
+        },
+        {
+          "start": 1413416,
+          "previous": "          \"sha256\": \"a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c\"\n",
+          "current": "          \"sha256\": \"d19934796b47369e867012ae279ad0ee36ebfbbbfedadc1c874d400a0ec05db9\"\n"
+        },
+        {
+          "start": 1419950,
+          "previous": "          \"sha256\": \"a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c\"\n",
+          "current": "          \"sha256\": \"d19934796b47369e867012ae279ad0ee36ebfbbbfedadc1c874d400a0ec05db9\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "d19934796b47369e867012ae279ad0ee36ebfbbbfedadc1c874d400a0ec05db9",
+      "previousSha256": "a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c",
+      "edits": [
+        {
+          "start": 1647,
+          "previous": "",
+          "current": "import { beforeRefinementClosureSource } from \"./helpers/refinement-closure-source-history.mjs\";\nimport \"./helpers/callback-compiler-identity-tests.mjs\";\nimport \"./helpers/refinement-closure-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 9227,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementClosureSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "b3373381135ac9c237b63d93e5cd23730e374b8a717de63c062806f38c57093c",
+      "previousSha256": "fe6c02b2afbcf45ec779c844b1bf085c810d599386dda97c915f86d3cce5d149",
+      "edits": [
+        {
+          "start": 634,
+          "previous": "import { nestedFinChangedPaths } from \"./nested-fin-source-history.mjs\";\n",
+          "current": "import { nestedFinChangedPaths, refinementClosureChangedPaths } from \"./nested-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 33956,
+          "previous": "\t, ...nestedFinChangedPaths\n",
+          "current": "\t, ...nestedFinChangedPaths, ...refinementClosureChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-callback-result-runtime-evidence.mjs",
+      "currentSha256": "27bc98aa82a710c8747ade050bef5d11def97feb4b9c85fd709fd3ade22f5c29",
+      "previousSha256": "70cd472798f8ff999ab5c1c67dd229bd75dce6bb03e21376770d5767a6be9d2c",
+      "edits": [
+        {
+          "start": 223,
+          "previous": "",
+          "current": "import { callbackCompilerInputAtBaseline, callbackCarrierCDigest } from \"./callback-compiler-identity.mjs\";\n"
+        },
+        {
+          "start": 6709,
+          "previous": "",
+          "current": "\tassert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);\n"
+        },
+        {
+          "start": 7552,
+          "previous": "\tassert.equal(hash(metadata), compilerOutputs[`${mode}-${variant}`][0]);\n",
+          "current": "\tconst baseline = await callbackCompilerInputAtBaseline(item.input);\n\tassert.equal(hash(baseline.metadata), compilerOutputs[`${mode}-${variant}`][0]);\n"
+        },
+        {
+          "start": 9920,
+          "previous": "\t\t, \"Carriers.c\": compilerOutputs[`${mode}-${variant}`][1]\n",
+          "current": "\t\t, \"Carriers.c\": await callbackCarrierCDigest(item.input, carriers, compilerOutputs[`${mode}-${variant}`][1])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-runtime-evidence.mjs",
+      "currentSha256": "f4a23ed85c310a92633104f8a35428656f844c62e4b877c0dfccdc8ecaecfb80",
+      "previousSha256": "232c893fdeb8b1dfe587c2f610cde8a152481e82bcce981975d2e7a0b551e49b",
+      "edits": [
+        {
+          "start": 224,
+          "previous": "",
+          "current": "import { callbackCompilerInputAtBaseline } from \"./callback-compiler-identity.mjs\";\n"
+        },
+        {
+          "start": 3164,
+          "previous": "",
+          "current": "\tassert.equal(metadata.producer.invocationIdentitySha256, identity.request.metadata.invocationIdentitySha256);\n"
+        },
+        {
+          "start": 3413,
+          "previous": "\tassert.equal(hash(metadata), metadataHashes[mode][Number(combined)]);\n\tassert.equal(hash(identity), identityHashes[mode][Number(combined)]);\n",
+          "current": "\tconst baseline = await callbackCompilerInputAtBaseline(item.input);\n\tassert.equal(hash(baseline.metadata), metadataHashes[mode][Number(combined)]);\n\tassert.equal(hash(baseline.sourceIdentity), identityHashes[mode][Number(combined)]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs",
+      "currentSha256": "2441a16d8c848dc29caf1eb9bd0348c0abfad800a0a1b095e34ad95adfecf041",
+      "previousSha256": "92106d44fc99b32bd52acda7152dff385ca90a06b7c989e552e912d5586747e9",
+      "edits": [
+        {
+          "start": 141,
+          "previous": "",
+          "current": "import { callbackCarrierCDigest } from \"./callback-compiler-identity.mjs\";\n"
+        },
+        {
+          "start": 7087,
+          "previous": "\tfor(const [path, digest] of Object.entries({ ...compilerC, \"Carriers.c\": carrierC[mode] }))\n",
+          "current": "\tfor(const [path, digest] of Object.entries({ ...compilerC, \"Carriers.c\": await callbackCarrierCDigest(item.input, carriers, carrierC[mode]) }))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-php-callback-result-acceptance.mjs",
+      "currentSha256": "b73d97f7ff5f0b54f997bf33370b08f4c30b379e8ddc469e962c7f34e4f5bb95",
+      "previousSha256": "aaa20648c784eeaca99117252f096d668337523f2d4d6813dda7b08d514d0511",
+      "edits": [
+        {
+          "start": 348,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 5698,
+          "previous": "\t\tconst tree = ts.createSourceFile(path, await readFile(path, \"utf8\"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n",
+          "current": "\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-wit-callback-result-acceptance.mjs",
+      "currentSha256": "5573022a9649561a9abae9931a6b3d0ca720aaa971498feb9a4d2ff6f04f096a",
+      "previousSha256": "6329da8d85d6ff6a3f49ebf85717a71b3ffeec37421d5cdb4340711d228493a2",
+      "edits": [
+        {
+          "start": 365,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 4621,
+          "previous": "\t\tconst tree = ts.createSourceFile(path, await readFile(path, \"utf8\"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n",
+          "current": "\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-wit-callback-result-installed-acceptance.mjs",
+      "currentSha256": "3a09de56e59c9bd3c68ab6d04255cef7338828f716825817c29cce2c0605320b",
+      "previousSha256": "1ea7c3d6cbc6dcd06956c03a13defed10ebcf8becc97fea7b2376cdcb8cd4ce1",
+      "edits": [
+        {
+          "start": 255,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 3869,
+          "previous": "\t\tconst tree = ts.createSourceFile(path, await readFile(path, \"utf8\")\n",
+          "current": "\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\"))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-callback-installed-acceptance-history-tests.mjs",
+      "currentSha256": "a50d6576ed5a282b62919de40a6e3507e8550d443a2b0f513275a77d9bcbd8d3",
+      "previousSha256": "00b25a06e952e69df428429d02c4f5c7ee8317a5cda92979e33ce4e88766e518",
+      "edits": [
+        {
+          "start": 2089,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeWitCallbackInstalledAcceptance(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

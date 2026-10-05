@@ -39,7 +39,7 @@ test("installed WIT callback history reconstructs integration and prior source b
 	}
 	for(const update of record.readerUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeWitCallbackInstalledAcceptance(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = at(witCallbackInstalledIntegration, update.path);
 		assert.equal(reverseWitCallbackInstalledUpdate(current, update, "readerUpdates")
 			, previous, update.path);

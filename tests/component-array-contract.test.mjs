@@ -22,6 +22,9 @@ import { assertRefinement } from "../src/abi/refinements.mjs";
 import { componentRefinedCall } from "../src/build/component-refinements.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
+import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
+import "./helpers/callback-compiler-identity-tests.mjs";
+import "./helpers/refinement-closure-source-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);
@@ -128,7 +131,7 @@ test("nested Fin history authenticates complete source transitions and stopping 
 	assert.deepEqual(history.updates.map(item => item.path), nestedFinChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeRefinementClosureSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNestedFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNestedFinSource(update.path, source)), update.previousSha256);
 		const bytes = Buffer.from(source);

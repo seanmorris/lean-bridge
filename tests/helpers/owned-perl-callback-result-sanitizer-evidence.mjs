@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { callbackCarrierCDigest } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
@@ -111,7 +112,7 @@ const assertSources = async (mode, item) => {
 		, ["faults.pl", "owned-perl-callback-result-faults.pl"]
 		, ["lifetime.pl", "owned-perl-callback-result-lifetime.pl"]])
 		expected[file] = await readFile("tests/fixtures/structured-types/" + name, "utf8");
-	for(const [path, digest] of Object.entries({ ...compilerC, "Carriers.c": carrierC[mode] }))
+	for(const [path, digest] of Object.entries({ ...compilerC, "Carriers.c": await callbackCarrierCDigest(item.input, carriers, carrierC[mode]) }))
 	{ expected[path] = item.sources[path].source; assert.equal(sha256(expected[path]), digest, path); }
 	const scripts = [...producer.matchAll(/await save\("sanitized\/build\.pl", `([^]*?)`\);/gu)];
 	assert.equal(scripts.length, 1); expected["sanitized/build.pl"] = scripts[0][1];

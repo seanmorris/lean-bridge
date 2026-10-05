@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeRefinementClosureSource } from "./refinement-closure-source-history.mjs";
+export { refinementClosureChangedPaths } from "./refinement-closure-source-history.mjs";
 
 export const nestedFinHistoryPath = "docs/evidence/npm-nested-fin-source-history-20261005.json";
 export const nestedFinChangedPaths = [
@@ -95,6 +97,7 @@ export const reverseNestedFinUpdate = (source, update) => {
  * @param expected - Optional exact digest at which to stop.
  */
 export const beforeNestedFinSource = (path, source, expected) => {
+	source = beforeRefinementClosureSource(path, source, expected);
 	if(typeof source !== "string" || !nestedFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
