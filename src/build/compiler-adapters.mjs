@@ -18,7 +18,7 @@ import { componentRecordLeanSource } from "./component-record-adapters.mjs";
 import { assertComponentRecursiveAbi, componentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
-import { componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
+import { componentStructuredCallableLeanSource, componentStructuredLeanType } from "./component-structured-callable-lean.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
 
 const primitiveLeanTypes = new Map([
@@ -78,6 +78,7 @@ const leanType = (type, callbacks = new Map()) => {
 	if(type.kind === "named")
 	{
 		const callback = callbacks.get(type.id);
+		if(callback?.refinements) return componentStructuredLeanType(type, callbacks);
 		if(callback) return `(${[...callback.parameters, callback.result].map(type => leanType(type)).join(" → ")})`;
 		const separator = type.id.indexOf(":");
 		if(separator === -1 || type.id.slice(0, separator) !== "lean") fail("unsupported-compiler-type", `Named compiler type must come from Lean: ${type.id}`);

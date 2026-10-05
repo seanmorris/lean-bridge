@@ -36,6 +36,7 @@ test("Fin callback keys retain bounds and authenticate compiler and public metad
 	const ir = finCallback(), generated = plan(ir), abi = generated.plan.privateAbi;
 	assert.equal(abi.version, 9);
 	assert.deepEqual(abi.types, []);
+	assert.equal(generated.plan.exports[0].parameters[0].leanType, "((_root_.Fin 3) → (_root_.Fin 3))");
 	assertComponentStructuredCallableBindings(abi, ir);
 	assertComponentStructuredCallableBindings(JSON.parse(canonicalJson(abi)), ir);
 	assert.equal(componentStructuredCallableSignatureText(abi.callbacks[0], []), componentStructuredCallableSignatureText(JSON.parse(canonicalJson(abi.callbacks[0])), []));
