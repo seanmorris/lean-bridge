@@ -8,6 +8,7 @@ import { componentScalarTypes, assertComponentSignature } from "../abi/component
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
+import { nominalRefinementEntries } from "../abi/refinements.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
@@ -25,6 +26,8 @@ export const createComponentPrivateAbi = document => {
 		|| document.types.some(type => type.fields.some(field => compound(field.type)));
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
+	const constrained = nominalRefinementEntries(document.types).length > 0;
+	if(constrained && callbackTypes.length) throw new TypeError("Nominal Fin refinements do not yet support callable components");
 	const structured = callbackTypes.length > 0 && (records || nominal || copied
 		|| callbackTypes.some(type => [...type.callable.parameters.map(item => item.type), type.callable.result.type].some(type => type.kind !== "primitive")));
 	const definitions = structured ? componentRecordDefinitions({ types: document.types.filter(type => type.kind !== "callback") }, true) : null;
@@ -46,6 +49,14 @@ export const createComponentPrivateAbi = document => {
 			, result: declaration.result.type
 			, resultMode: declaration.resultMode }))
 	};
+	if(constrained)
+	{
+		const graph = { version: componentRecursiveAbi
+			, dispatch: componentRecursiveDispatch
+			, types: componentRecordDefinitions(document, true), exports: abi.exports };
+		assertComponentRecursiveBindings(graph, document);
+		return graph;
+	}
 	if(structured) assertComponentStructuredCallableBindings(abi, document);
 	else if(callbacks.length) assertComponentCallableBindings(abi, document);
 	else if(nominal || records || compounds)

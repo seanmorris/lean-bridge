@@ -152,6 +152,12 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, effects: ["host-call", "fails"], failure: callbackFailure
 				, resultMode: "value", invocation: "many", reentry: "same-agent"
 				, selfDisposal: "defer" };
+			const constraints = type.kind === "alias" ? { kind: "alias", target: refinement(type.target) }
+				: type.kind === "record" ? { kind: "record", fields: type.fields.map(field => refinement(field.type)) }
+					: type.kind === "variant" ? { kind: "variant", cases: type.cases.map(item => item.fields.map(field => refinement(field.type))) } : null;
+			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
+				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
+			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
 		}
 		return { kind: "named", id };
 	};

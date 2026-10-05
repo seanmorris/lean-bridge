@@ -211,7 +211,7 @@ export const compileLeanComponentSources = async ({
 			if(generated)
 			{
 				const abi = adapterPlan.privateAbi;
-				const source = abi.version === 8 ? generateComponentRecursiveAdapters(abi, { exports: adapterPlan.exports })
+				const source = abi.version === 8 ? generateComponentRecursiveAdapters(abi, { exports: adapterPlan.exports, nominalRefinements: adapterPlan.nominalRefinements })
 					: (abi.version === 9 ? generateComponentStructuredCallableAdapters : [5, 6, 7].includes(abi.version) ? generateComponentRecordAdapters : abi.version === 4 ? generateComponentCopiedAdapters : abi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(abi, adapterPlan.exports);
 				await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${source}`);
 			}

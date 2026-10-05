@@ -205,10 +205,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
                 return ← nominalReference e name
-              -- A direct Fin alias erases like Fin. Aliases around containers
-              -- still need a nominal codec; do not admit those by accident.
+              -- Alias spelling does not change the permitted refinement position.
               let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked (containerFin && directFin)
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
@@ -248,7 +247,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true none false)])
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin)])
       return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
     if let .inductInfo induct ← getConstInfo name then
@@ -288,7 +287,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shapeTree request fieldType (name :: seen) 0 true none false)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin)])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
@@ -556,7 +555,17 @@ partial def containsRefinement (type : Json) : Bool :=
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
   if kind == "refinement" then true
   else if kind == "graph" then
-    containsRefinement ((type.getObjVal? "root").toOption.getD Json.null)
+    containsRefinement ((type.getObjVal? "root").toOption.getD Json.null) ||
+      ((type.getObjValAs? (Array Json) "types").toOption.getD #[]).any containsRefinement
+  else if kind == "alias" then
+    containsRefinement ((type.getObjVal? "target").toOption.getD Json.null)
+  else if kind == "record" then
+    ((type.getObjValAs? (Array Json) "fields").toOption.getD #[]).any fun field =>
+      containsRefinement ((field.getObjVal? "type").toOption.getD Json.null)
+  else if kind == "variant" then
+    ((type.getObjValAs? (Array Json) "cases").toOption.getD #[]).any fun branch =>
+      ((branch.getObjValAs? (Array Json) "fields").toOption.getD #[]).any fun field =>
+        containsRefinement ((field.getObjVal? "type").toOption.getD Json.null)
   else if ["array", "list", "option"].contains kind then
     containsRefinement ((type.getObjVal? "element").toOption.getD Json.null)
   else if ["tuple", "result"].contains kind then

@@ -31,13 +31,17 @@ export const componentRecursiveWalker = (abi, type) => {
  * @param options - Select shared codecs without ordinary exported call frames.
  * @param options.exportFrames - Keep existing public frame generation by default.
  * @param options.exports - Compiler-owned source exports carrying refinements.
+ * @param options.nominalRefinements - Constraints requiring typed alias construction.
  */
-export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, exports = [] } = {}) => {
+export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, exports = [], nominalRefinements = [] } = {}) => {
 	const refs = componentRecursiveTypes(abi);
 	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
+	const definitions = new Map(abi.types.map(type => [type.id, type]));
+	const definitionOf = type => nominalRefinements.length && type.kind === "named" && definitions.get(type.id)?.kind === "alias"
+		? definitions.get(type.id) : resolve(type);
 	const reference = type => {
-		const value = resolve(type);
-		return value.kind === "record" || value.kind === "variant" ? { kind: "named", id: value.id } : value;
+		const value = definitionOf(type);
+		return ["alias", "record", "variant"].includes(value.kind) ? { kind: "named", id: value.id } : value;
 	};
 	const identity = type => sha256(canonicalJson(reference(type))).slice(0, 20);
 	const walker = type => `recursive_${identity(type)}`;
@@ -62,10 +66,12 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 			, `static lean_object *${id}_decode(bridge_scalar_slot const *);`
 			, `static uint32_t ${id}_encode(bridge_scalar_slot *, lean_object *, uint32_t, recursive_budget *);`);
 		if(type.kind === "primitive") continue;
-		const definition = resolve(type), symbol = componentRecursiveHelper(abi, type);
+		const definition = definitionOf(type), symbol = componentRecursiveHelper(abi, type);
 		const make = (name, count) => lines.push(`extern lean_object *${symbol}_${name}(${Array(Math.max(1, count)).fill("lean_object *").join(", ")});`);
 		const field = name => lines.push(`extern lean_object *${symbol}_${name}(lean_object *);`);
-		if(definition.kind === "variant")
+		if(definition.kind === "alias")
+		{ make("make", 1); field("field0"); }
+		else if(definition.kind === "variant")
 		{
 			lines.push(`extern uint32_t ${symbol}_branch(lean_object *);`);
 			definition.cases.forEach((item, branch) => {
@@ -112,7 +118,18 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 				, `  return bridge_recursive_encode_leaf(budget->owner, slot, ${tag}, child, &budget->bytes);`, "}");
 			continue;
 		}
-		const definition = resolve(type), symbol = componentRecursiveHelper(abi, type);
+		const definition = definitionOf(type), symbol = componentRecursiveHelper(abi, type);
+		if(definition.kind === "alias")
+		{
+			const target = walker(definition.target);
+			lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t depth, recursive_budget *budget) {`
+				, `  return ${target}_validate(slot, depth, budget);`, "}"
+				, `static lean_object *${id}_decode(bridge_scalar_slot const *slot) {`
+				, `  return ${symbol}_make(${target}_decode(slot));`, "}"
+				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t depth, recursive_budget *budget) {`
+				, `  return ${target}_encode(slot, ${symbol}_field0(value), depth, budget);`, "}");
+			continue;
+		}
 		const variant = definition.kind === "variant", array = ["array", "list"].includes(type.constructor);
 		const option = type.constructor === "option", sum = option || type.constructor === "result";
 		const children = definition.kind === "record" ? definition.fields.map(field => field.type) : type.arguments;
@@ -207,6 +224,8 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		lines.push("  if (budget.bytes < 16 || !budget.nodes) return 4;", "  budget.bytes -= 16;");
 		lines.push("  if ((status = bridge_recursive_arena_open(frame, &budget.owner))) return status;");
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
+		if(nominalRefinements.length) item.parameters.forEach((_, index) => lines.push(
+			`  if (!lean_is_array(a${index}) || lean_array_size(a${index}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
 		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
 			lines.push(`  lean_inc(a${index});`
 				, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);

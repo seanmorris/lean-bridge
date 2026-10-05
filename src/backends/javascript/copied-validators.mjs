@@ -5,6 +5,7 @@
  */
 import { componentScalarTypes } from "../../abi/component-scalars.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
+import { nominalRefinementEntries } from "../../abi/refinements.mjs";
 
 /**
  * Emit named validators sharing an explicit traversal stack and cycle checks.
@@ -15,19 +16,33 @@ import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
  */
 export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 	const table = new Map();
-	const reference = type => {
+	const constraints = new Map(nominalRefinementEntries(ir.types).map(entry => [entry.id, entry.refinement]));
+	const refined = new Map();
+	const reference = (type, refinement = null) => {
 		if(type.kind === "parameter") return null;
 		const name = validatorName(type, typeMap);
 		if(type.kind === "apply" && !table.has(name))
-			table.set(name, { kind: type.constructor, arguments: type.arguments.map(reference) });
+			table.set(name, { kind: type.constructor, arguments: type.arguments.map(type => reference(type)) });
+		if(refinement)
+		{
+			const key = JSON.stringify([name, refinement]);
+			if(!refined.has(key))
+			{
+				const constrained = `$nominalFin${refined.size}`;
+				refined.set(key, constrained);
+				table.set(constrained, { kind: "alias", target: name, refinement });
+			}
+			return refined.get(key);
+		}
 		return name;
 	};
-	const fields = values => values.map(field => [field.name, reference(field.type)]);
+	const fields = (values, refinements = []) => values.map((field, index) => [field.name, reference(field.type, refinements[index])]);
 	for(const type of ir.types)
 	{
 		const name = `assert${type.name}`;
-		if(type.kind === "record") table.set(name, { kind: "record", fields: fields(type.fields) });
-		if(type.kind === "variant") table.set(name, { kind: "variant", cases: Object.fromEntries(type.cases.map(item => [item.name, fields(item.fields)])) });
+		const refinement = constraints.get(type.id);
+		if(type.kind === "record") table.set(name, { kind: "record", fields: fields(type.fields, refinement?.fields) });
+		if(type.kind === "variant") table.set(name, { kind: "variant", cases: Object.fromEntries(type.cases.map((item, index) => [item.name, fields(item.fields, refinement?.cases[index])])) });
 		if(type.kind === "alias")
 		{
 			let target = type.target;
@@ -37,7 +52,7 @@ export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 				if(seen.has(target.id)) throw new TypeError("Cyclic copied alias");
 				seen.add(target.id); target = typeMap.get(target.id).target;
 			}
-			table.set(name, { kind: "alias", target: reference(target) });
+			table.set(name, { kind: "alias", target: reference(constraints.size ? type.target : target, refinement?.target) });
 		}
 	}
 	for(const declaration of ir.declarations)
@@ -46,6 +61,7 @@ export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 		reference(declaration.result.type);
 	}
 	const scalars = componentScalarTypes.map(name => validatorName({ kind: "primitive", name }, typeMap));
+	const check = constraints.size ? "for (const refinement of frame.checks ?? []) assertNestedFin(frame.value, refinement, frame.path); " : "";
 	return `const copiedTypes = ${JSON.stringify(Object.fromEntries(table))};
 const scalarValidators = { ${scalars.join(", ")} };
 const ownData = (value, key, path, expected = "own data fields") => {
@@ -64,7 +80,7 @@ const copiedValue = (root, input, path) => {
   while (stack.length) {
     const frame = stack.at(-1);
     if (frame.children) {
-      if (frame.index === frame.count) { active.delete(frame.value); stack.pop(); continue; }
+      if (frame.index === frame.count) { ${check}active.delete(frame.value); stack.pop(); continue; }
       const index = frame.index++, field = frame.sequence ? [index, frame.element ?? frame.children[index]] : frame.children[index];
       stack.push({ type: field[1], value: ownData(frame.value, field[0], frame.path, frame.sequence ? "dense data array" : "own data fields"), path: frame.path + "." + field[0], depth: frame.depth + 1 });
       continue;
@@ -72,8 +88,8 @@ const copiedValue = (root, input, path) => {
     if (frame.depth > ${componentRecursiveLimits.valueDepth}) throw new RangeError("Component recursive value depth exceeded");
     if (++nodes > ${componentRecursiveLimits.valueNodes}) throw new RangeError("Component recursive value node budget exceeded");
     let type = copiedTypes[frame.type];
-    while (type?.kind === "alias") { frame.type = type.target; type = copiedTypes[frame.type]; }
-    if (Object.hasOwn(scalarValidators, frame.type)) { scalarValidators[frame.type](frame.value, frame.path); stack.pop(); continue; }
+    while (type?.kind === "alias") { ${constraints.size ? "if (type.refinement) (frame.checks ??= []).push(type.refinement); " : ""}frame.type = type.target; type = copiedTypes[frame.type]; }
+    if (Object.hasOwn(scalarValidators, frame.type)) { scalarValidators[frame.type](frame.value, frame.path); ${check}stack.pop(); continue; }
     if (!type) invalid(frame.path, "a declared copied type");
     const value = frame.value, sequence = ["array", "list", "tuple"].includes(type.kind);
     if (!value || typeof value !== "object") invalid(frame.path, "plain " + type.kind);

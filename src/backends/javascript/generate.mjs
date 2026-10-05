@@ -11,7 +11,7 @@ import {
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
-import { assertRefinement } from "../../abi/refinements.mjs";
+import { assertRefinement, nominalRefinementEntries } from "../../abi/refinements.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -629,10 +629,10 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt = assertBigInt;"
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
-		, ...ir.declarations.some(item => {
+		, ...(nominalRefinementEntries(ir.types).length || ir.declarations.some(item => {
 			const value = declarationRefinements(item);
 			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype"].includes(refinement.kind));
-		}) ? [
+		})) ? [
 				"export const assertNestedFin = (value, refinement, path) => {"
 				, "  if (refinement === null) return;"
 				, "  if (refinement.kind === 'fin') { assertFin(value, refinement.bound, path); return; }"

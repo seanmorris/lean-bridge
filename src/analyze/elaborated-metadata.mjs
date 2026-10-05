@@ -164,7 +164,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					{
 						closed(type, ["kind", "name", "target"]);
 						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)) fail("Invalid component alias");
-						copied(type.target, depth + 1, references, false); return;
+						copied(type.target, depth + 1, references, refinements); return;
 					}
 					if(type?.kind === "refinement")
 					{
@@ -204,7 +204,7 @@ export const validateElaboratedMetadata = (report, request) => {
 								closed(field, ["name", "type"]);
 								if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || fields.has(field.name)
 									|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("Invalid variant field");
-								fields.add(field.name); copied(field.type, depth + 1, references, false);
+								fields.add(field.name); copied(field.type, depth + 1, references, refinements);
 							}
 						}
 						return;
@@ -226,7 +226,7 @@ export const validateElaboratedMetadata = (report, request) => {
 						{
 							closed(field, ["name", "type"]);
 							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
-							names.add(field.name); copied(field.type, depth + 1, references, false);
+							names.add(field.name); copied(field.type, depth + 1, references, refinements);
 						}
 						return;
 					}

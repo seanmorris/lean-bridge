@@ -44,6 +44,11 @@ export const validateCopiedMetadataGraph = (graph, validate, native = false) => 
 	const reference = (type, depth = 0) => {
 		charge(depth);
 		const kind = kindOf(type);
+		if(kind === "refinement" && !native)
+		{
+			keys(type, ["kind", "base", "predicate"]);
+			return reference(type.base, depth + 1);
+		}
 		if(kind === "primitive" || kind === "reference")
 		{
 			keys(type, ["kind", "name"], true);

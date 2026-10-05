@@ -15,9 +15,41 @@
     "imports": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
     "exports": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/export" } },
     "privateAbi": { "$ref": "#/$defs/privateAbi" },
+    "nominalRefinements": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "refinement"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^lean:.+" },
+          "refinement": { "$ref": "#/$defs/nominalRefinement" }
+        }
+      }
+    },
     "leanSourceSha256": { "$ref": "#/$defs/sha256" }
   },
   "$defs": {
+    "nominalRefinement": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "target"],
+          "properties": { "kind": { "const": "alias" }, "target": { "$ref": "#/$defs/refinement" } }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "fields"],
+          "properties": {
+            "kind": { "const": "record" },
+            "fields": { "type": "array", "items": { "$ref": "#/$defs/refinement" } }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "cases"],
+          "properties": {
+            "kind": { "const": "variant" },
+            "cases": { "type": "array", "items": { "type": "array", "items": { "$ref": "#/$defs/refinement" } } }
+          }
+        }
+      ]
+    },
     "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "parameter": {
       "type": "object",

@@ -9,7 +9,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
-import { assertRefinement } from "../abi/refinements.mjs";
+import { assertRefinement, nominalRefinement, nominalRefinementEntries } from "../abi/refinements.mjs";
 import { assertComponentCallableAbi } from "../abi/component-callables.mjs";
 import { assertComponentCopiedAbi, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { componentCallableLeanPrelude, createComponentPrivateAbi } from "./component-callable-adapters.mjs";
@@ -145,7 +145,7 @@ const validateRefinements = (value, item) => {
  * @param plan - Validated plan that defines the allowed operation and targets.
  */
 export const validateCompilerAdapterPlan = plan => {
-	exactKeys(plan, ["schemaVersion", "component", "componentPlanSha256", "module", "imports", "exports", "privateAbi", "leanSourceSha256"], "compiler adapter plan");
+	exactKeys(plan, ["schemaVersion", "component", "componentPlanSha256", "module", "imports", "exports", "privateAbi", "leanSourceSha256", ...(plan.nominalRefinements === undefined ? [] : ["nominalRefinements"])], "compiler adapter plan");
 	if(plan.schemaVersion !== 1) fail("invalid-compiler-adapter-plan", "compiler adapter plan version must be 1");
 	if(typeof plan.component !== "string" || plan.component === "") fail("invalid-compiler-adapter-plan", "component must be a string");
 	for(const value of [plan.componentPlanSha256, plan.leanSourceSha256]) if(typeof value !== "string" || !/^[0-9a-f]{64}$/.test(value)) fail("invalid-compiler-adapter-plan", "compiler adapter hashes must be SHA-256 values");
@@ -178,6 +178,23 @@ export const validateCompilerAdapterPlan = plan => {
 		exactKeys(plan.privateAbi, ["version", "dispatch", "exports"], "private ABI");
 		if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2, callable frame 3 or copied frame 4");
 	}
+	if(plan.nominalRefinements !== undefined)
+	{
+		if(plan.privateAbi.version !== componentRecursiveAbi || !Array.isArray(plan.nominalRefinements) || !plan.nominalRefinements.length)
+			fail("invalid-compiler-adapter-plan", "Nominal refinements require copied graph carriers");
+		let previous = "";
+		for(const entry of plan.nominalRefinements)
+		{
+			exactKeys(entry, ["id", "refinement"], "nominal refinement");
+			const definition = plan.privateAbi.types.find(type => type.id === entry.id);
+			if(!definition || entry.id <= previous) fail("invalid-compiler-adapter-plan", "Nominal refinement identities must be declared, unique and sorted");
+			try
+			{ if(nominalRefinement(definition, entry.refinement) === null) throw new TypeError("Missing nominal refinement"); }
+			catch(error)
+			{ fail("invalid-compiler-adapter-plan", error.message); }
+			previous = entry.id;
+		}
+	}
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{
@@ -203,7 +220,7 @@ export const validateCompilerAdapterPlan = plan => {
 	return true;
 };
 
-const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
+const renderLeanSource = ({ imports, exports, module, privateAbi, nominalRefinements }) => {
 	const lines = [
 		...imports.map(module => `import ${module}`)
 		, ""
@@ -218,7 +235,7 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 	if([componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(privateAbi.version))
 	{
 		const generate = privateAbi.version === componentRecursiveAbi ? componentRecursiveLeanSource : componentRecordLeanSource;
-		lines.push(...generate(privateAbi, exports, leanType), `end ${module}`, "");
+		lines.push(...generate(privateAbi, exports, leanType, nominalRefinements), `end ${module}`, "");
 		return lines.join("\n");
 	}
 	if(privateAbi.version === 3) lines.push(...componentCallableLeanPrelude(privateAbi, leanType));
@@ -258,6 +275,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
 	const document = analysis.bindingIr.document;
 	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
+	const nominalRefinements = nominalRefinementEntries(document.types);
 	const subtypeRefinements = document.declarations.flatMap(declaration => {
 		const value = declaration.source.extensions["lean-lang.org/refinements"];
 		return value === undefined ? [] : [...value.parameters, value.result].filter(refinement => refinement?.kind === "subtype");
@@ -302,7 +320,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	});
 	const imports = Object.freeze([...new Set(exports.map(item => item.sourceModule))].sort());
 	const module = `LeanBridgeGenerated${sha256(analysis.bindingIr.document.component.id).slice(0, 16)}`;
-	const leanSource = renderLeanSource({ imports, exports, module, privateAbi });
+	const leanSource = renderLeanSource({ imports, exports, module, privateAbi, nominalRefinements });
 	const plan = Object.freeze({
 		schemaVersion: 1
 		, component: analysis.bindingIr.document.component.id
@@ -311,6 +329,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 		, imports
 		, exports: Object.freeze(exports)
 		, privateAbi
+		, ...(nominalRefinements.length ? { nominalRefinements } : {})
 		, leanSourceSha256: sha256(leanSource)
 	});
 	validateCompilerAdapterPlan(plan);

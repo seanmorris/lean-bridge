@@ -1,0 +1,76 @@
+/**
+ * Authenticate nominal constraints and exercise field validation independently.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import test from "node:test";
+import { nominalRefinement } from "../../src/abi/refinements.mjs";
+import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
+import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
+import { generateComponentRecursiveAdapters } from "../../src/build/component-recursive-adapters.mjs";
+import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
+import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
+import { assertJsonSchema } from "./json-schema.mjs";
+
+const fin = bound => ({ kind: "fin", bound });
+const fixture = () => {
+	const packet = { record: "Refinements.Packet", fields: { digit: "nat", digits: { array: "nat" }, impossible: { option: "nat" } } };
+	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [packet, packet], result: packet }]);
+	ir.types[0].source.extensions["lean-lang.org/nominal-refinements"] = { kind: "record", fields: [fin("10"), { kind: "array", arguments: [fin("7")] }, { kind: "option", arguments: [fin("0")] }] };
+	return ir;
+};
+const compile = ir => generateCompilerAdapters({ analysis: {
+	bindingIr: { origin: "lean-elaborated", document: ir, semanticSha256: "1".repeat(64) }
+	, exportCandidates: ir.declarations.map(item => ({ declaration: item.source.declaration, sourceModule: "Refinements", status: "exportable" }))
+}
+, componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
+
+test("nominal Fin constructors are total and reject empty carriers before source dispatch", async () => {
+	const generated = compile(fixture()), plan = generated.plan;
+	assert.equal(plan.privateAbi.version, 8);
+	await assertJsonSchema("compiler-adapter-plan", plan);
+	const lean = generated.files["LeanBridgeGenerated.lean"];
+	assert.match(lean, /let a0 ← \(if proof : \(a0\) < 10/);
+	assert.match(lean, /: _root_\.Fin 0/);
+	assert.match(lean, /value\.«digit»\)\.val/);
+	assert.doesNotMatch(lean, /panic!|sorry|unsafeCast|axiom/);
+	const c = generateComponentRecursiveAdapters(plan.privateAbi, plan);
+	assert.match(c, /if \(!lean_is_array\(a0\) \|\| lean_array_size\(a0\) != 1\) \{ lean_dec\(a0\); lean_dec\(a1\); bridge_recursive_frame_clear\(frame\); frame->status = 5; return 5; \}/);
+	assert.ok(c.indexOf("lean_array_size(a1) != 1") < c.indexOf(`${plan.exports[0].symbol}_lean(a0, a1)`));
+	for(const mutate of [
+		value => { value.nominalRefinements = []; }
+		, value => { value.nominalRefinements.push(value.nominalRefinements[0]); }
+		, value => { value.nominalRefinements[0].id = "lean:Missing"; }
+		, value => { value.nominalRefinements[0].extra = true; }
+		, value => { value.nominalRefinements[0].refinement = undefined; }
+		, value => { value.nominalRefinements[0].refinement.fields = [null, null, null]; }
+		, value => { value.nominalRefinements[0].refinement.fields.pop(); }
+		, value => { value.nominalRefinements[0].refinement.fields[0] = fin("01"); }
+		, value => { value.nominalRefinements[0].refinement.fields[1] = fin("7"); }
+		, value => { value.nominalRefinements[0].refinement.fields[0] = { kind: "subtype", constructor: "Refinements.checked" }; }
+	]) {
+		const forged = structuredClone(plan); mutate(forged);
+		assert.throws(() => validateCompilerAdapterPlan(forged), { code: "invalid-compiler-adapter-plan" });
+	}
+	const withCallback = fixture(); withCallback.types.push({ kind: "callback", fields: [] });
+	assert.throws(() => createComponentPrivateAbi(withCallback), /do not yet support callable/);
+});
+
+test("nominal Fin JS validators check fields after validating owned data shapes", async () => {
+	const ir = fixture(), files = generateJavaScriptPackage(ir);
+	const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+	const good = { digit: 9n, digits: [0n, 6n], impossible: { tag: "none" } };
+	assert.equal(validators.assertPacket(good, "packet"), good);
+	for(const value of [{ ...good, digit: 10n }, { ...good, digits: [7n] }, { ...good, impossible: { tag: "some", value: 0n } }])
+		assert.throws(() => validators.assertPacket(value, "packet"), /below/);
+	let reads = 0;
+	const getter = { ...good };
+	Object.defineProperty(getter, "digit", { get: () => { reads++; return 0n; }, enumerable: true });
+	assert.throws(() => validators.assertPacket(getter, "packet"), /own data fields/);
+	assert.equal(reads, 0);
+	const sparse = []; sparse.length = 2;
+	assert.throws(() => validators.assertPacket({ ...good, digits: sparse }, "packet"), /dense data array/);
+	assert.throws(() => nominalRefinement(ir.types[0], { kind: "record", fields: Array(3) }));
+	assert.throws(() => nominalRefinement(ir.types[0], { kind: "record", fields: [fin("10"), null, null], extra: true }));
+});

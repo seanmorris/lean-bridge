@@ -330,9 +330,12 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 	if(contract.result) sites.push({ site: contract.result, type: projection.result, result: true, label: "result" });
 	for(const { site, type, result, label } of sites)
 	{
-		const refined = type => type.kind === "refinement" || (type.kind === "graph" ? refined(type.root)
-			: ["array", "list", "option"].includes(type.kind) ? refined(type.element)
-				: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
+		const refined = type => type.kind === "refinement" || (type.kind === "graph" ? refined(type.root) || type.types.some(refined)
+			: type.kind === "alias" ? refined(type.target)
+				: type.kind === "record" ? type.fields.some(field => refined(field.type))
+					: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => refined(field.type)))
+						: ["array", "list", "option"].includes(type.kind) ? refined(type.element)
+							: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
 		if(site.refinement === "reject" && refined(type)) return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject"
 			&& (type.kind !== "refinement" || type.predicate.kind !== "subtype" || type.predicate.constructor !== site.refinement.constructor))

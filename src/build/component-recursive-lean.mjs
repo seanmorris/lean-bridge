@@ -7,7 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
-import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
 const key = type => sha256(identity(type)).slice(0, 20);
@@ -53,9 +53,11 @@ export const componentRecursiveTypes = abi => {
  * @param abi - Closed copied-graph ABI, authenticated separately against IR.
  * @param exports - Compiler-selected source declarations and wrapper identities.
  * @param leanType - Renderer for semantic source type references.
+ * @param nominalRefinements - Validated constraints at nominal field boundaries.
  */
-export const componentRecursiveLeanSource = (abi, exports, leanType) => {
+export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefinements = []) => {
 	const types = componentRecursiveTypes(abi), definitions = new Map(abi.types.map(type => [type.id, type]));
+	const constraints = new Map(nominalRefinements.map(entry => [entry.id, entry.refinement]));
 	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
 	const carrier = type => `(_root_.Array ${sourceType(type)})`;
 	const lines = [
@@ -86,33 +88,38 @@ export const componentRecursiveLeanSource = (abi, exports, leanType) => {
 		const symbol = componentRecursiveHelper(abi, type), hash = key(type);
 		const emit = (name, parameters, result, body) => lines.push(`@[export ${symbol}_${name}]`, `def ${name}${hash} ${parameters} : ${result} :=`, ...body.map(line => `  ${line}`), "");
 		const input = `(value : ${carrier(type)})`;
-		const make = (name, children, body) => {
+		const make = (name, children, body, refinements = []) => {
 			const names = children.map((_, index) => `a${index}`);
 			emit(name, children.map((child, index) => `(${names[index]} : ${carrier(child)})`).join(" ") || "(_bridgeUnit : _root_.Unit)"
-				, carrier(type), checked(names, [`pure (${body})`]));
+				, carrier(type), checked(names, [...refinements.flatMap((refinement, index) => refinement
+					? [`let ${names[index]} ← ${componentRefinementConversion(refinement, names[index])}`] : [])
+				, `pure (${body})`]));
 		};
 		const field = (name, child, body) => emit(name, input, carrier(child), checked(["value"], body));
 		const branch = cases => emit("branch", input, "_root_.UInt32", ["match carrierValue value with", "| .none => 4294967295", "| .some value =>", "  match value with", ...cases.map((pattern, index) => `  | ${pattern} => ${index}`)]);
 		const definition = type.kind === "named" ? definitions.get(type.id) : null;
+		const refinement = constraints.get(type.id);
+		const project = (value, constraint) => constraint ? componentRefinementConversion(constraint, value, false) : value;
 		if(definition?.kind === "alias")
 		{
-			make("make", [definition.target], "a0"); field("field0", definition.target, ["pure value"]);
+			make("make", [definition.target], "a0", [refinement?.target]);
+			field("field0", definition.target, [`pure ${project("value", refinement?.target)}`]);
 			continue;
 		}
 		if(definition?.kind === "record")
 		{
-			make("make", definition.fields.map(field => field.type), `({ ${definition.fields.map((field, index) => `«${field.name}» := a${index}`).join(", ")} } : ${sourceType(type)})`);
-			definition.fields.forEach((item, index) => field(`field${index}`, item.type, [`pure value.«${item.name}»`]));
+			make("make", definition.fields.map(field => field.type), `({ ${definition.fields.map((field, index) => `«${field.name}» := a${index}`).join(", ")} } : ${sourceType(type)})`, refinement?.fields);
+			definition.fields.forEach((item, index) => field(`field${index}`, item.type, [`pure ${project(`value.«${item.name}»`, refinement?.fields[index])}`]));
 			continue;
 		}
 		if(definition?.kind === "variant")
 		{
 			branch(definition.cases.map(item => `.«${item.name}» ${item.fields.map(() => "_").join(" ")}`));
 			definition.cases.forEach((item, index) => {
-				make(`make${index}`, item.fields.map(field => field.type), `.«${item.name}» ${item.fields.map((_, index) => `a${index}`).join(" ")}`);
+				make(`make${index}`, item.fields.map(field => field.type), `.«${item.name}» ${item.fields.map((_, index) => `a${index}`).join(" ")}`, refinement?.cases[index]);
 				item.fields.forEach((child, fieldIndex) => field(`case${index}_field${fieldIndex}`, child.type, [
 					"match value with"
-					, `| .«${item.name}» ${item.fields.map((_, index) => index === fieldIndex ? "child" : "_").join(" ")} => pure child`
+					, `| .«${item.name}» ${item.fields.map((_, index) => index === fieldIndex ? "child" : "_").join(" ")} => pure ${project("child", refinement?.cases[index][fieldIndex])}`
 					, ...(definition.cases.length > 1 ? ["| _ => .none"] : [])
 				]));
 			});

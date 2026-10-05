@@ -163,14 +163,12 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("nested refinement metadata cannot erase constraints on callbacks or nominal fields", () => {
+test("nested refinement metadata cannot erase callback or nested Subtype constraints", () => {
 	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound: "5" } };
 	for(const type of [
 		{ kind: "callback", parameters: [fin], result: { kind: "primitive", name: "nat" } }
 		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: fin } }
-		, { kind: "alias", name: "Sample.Alias", target: { kind: "array", element: fin } }
-		, { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: fin }] }
-		, { kind: "variant", name: "Sample.Variant", cases: [{ name: "one", fields: [{ name: "value", type: fin }] }] }
+		, { kind: "callback", parameters: [{ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: fin }] }], result: { kind: "primitive", name: "nat" } }
 		, { kind: "array", element: { ...fin, predicate: { kind: "subtype", constructor: "Sample.checked" } } }
 	]) {
 		const { request, report } = sample();
@@ -194,12 +192,18 @@ structure Bad where
 def record (value : Bad) : Bad := value
 abbrev Slots := Array Slot
 def aliasContainer (value : Slots) : Slots := value
+def refusedRecord (value : Bad) : Bad := value
+def refusedAlias (value : Slots) : Slots := value
+inductive Tree where
+  | leaf : Slot → Tree
+  | branch : Array Tree → Tree
+def refusedTree (value : Tree) : Tree := value
 end Shop
 `);
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: ["Shop"]
-		, exports: ["aliased", "bounded", "impossible", "nested", "refused", "callback", "record", "aliasContainer"].map(name => `Shop.${name}`)
-		, contracts: { "Shop.refused": { parameters: [{ ownership: "copy", lifetime: null, refinement: "reject" }] } } }));
+		, exports: ["aliased", "bounded", "impossible", "nested", "refused", "callback", "record", "aliasContainer", "refusedRecord", "refusedAlias", "refusedTree"].map(name => `Shop.${name}`)
+		, contracts: Object.fromEntries(["refused", "refusedRecord", "refusedAlias", "refusedTree"].map(name => [`Shop.${name}`, { parameters: [{ ownership: "copy", lifetime: null, refinement: "reject" }] }])) }));
 	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
 	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
 	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
@@ -208,9 +212,12 @@ end Shop
 	const bounded = declarations.find(item => item.identity === "Shop.bounded");
 	const impossible = declarations.find(item => item.identity === "Shop.impossible");
 	const nested = declarations.find(item => item.identity === "Shop.nested");
-	for(const name of ["callback", "record", "aliasContainer"])
+	for(const name of ["callback"])
 		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.status, "unsupported", name);
-	assert.equal(declarations.find(item => item.identity === "Shop.refused").projection.reason, "export-contract-mismatch");
+	for(const name of ["record", "aliasContainer"])
+		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.status, "supported", name);
+	for(const name of ["refused", "refusedRecord", "refusedAlias", "refusedTree"])
+		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.reason, "export-contract-mismatch", name);
 	const fin = bound => ({ kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound } });
 	assert.deepEqual(aliased.projection.parameters[0].type, fin("7"));
 	assert.deepEqual(aliased.projection.result, fin("7"));
@@ -218,7 +225,15 @@ end Shop
 	assert.deepEqual(bounded.projection.result, fin("5"));
 	assert.deepEqual(impossible.projection.parameters[0].type, fin("0"));
 	assert.deepEqual(nested.projection.parameters[0].type, { kind: "array", element: fin("5") });
-	const ir = analysis.bindingIr.document.declarations;
+	const types = analysis.bindingIr.document.types;
+	for(const name of ["Bad", "Slots"])
+	{
+		const type = types.find(item => item.id === `lean:Shop.${name}`);
+		const refinement = { kind: "array", arguments: [{ kind: "fin", bound: "7" }] };
+		assert.deepEqual(type.source.extensions["lean-lang.org/nominal-refinements"], name === "Bad"
+			? { kind: "record", fields: [refinement] } : { kind: "alias", target: refinement });
+	}
+	const ir = analysis.bindingIr.document.declarations.filter(item => !["lean:Shop.record", "lean:Shop.aliasContainer"].includes(item.id));
 	assert.deepEqual(ir.map(item => item.id), ["lean:Shop.aliased", "lean:Shop.bounded", "lean:Shop.impossible", "lean:Shop.nested"]);
 	assert.deepEqual(ir[1].parameters[0].type, { kind: "primitive", name: "nat" });
 	assert.deepEqual(ir[1].result.type, { kind: "primitive", name: "nat" });
