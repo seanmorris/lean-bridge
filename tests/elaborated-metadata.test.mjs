@@ -213,6 +213,10 @@ abbrev Small := { value : UInt32 // value < 10 }
 def checkedSmall (value : UInt32) : Option Small :=
   if bound : value < 10 then some ⟨value, bound⟩ else none
 def echoSmall (value : Small) : Small := value
+abbrev NonEmptyText := { value : String // value != "" }
+def checkedText (value : String) : Option NonEmptyText :=
+  if present : value != "" then some ⟨value, present⟩ else none
+def echoText (value : NonEmptyText) : NonEmptyText := value
 def unchecked (value : { value : UInt32 // value != 0 }) : UInt32 := value.val
 end Shop
 `);
@@ -220,10 +224,15 @@ end Shop
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({
 		schemaVersion: 1
 		, modules: ["Shop"]
-		, exports: ["Shop.echoSmall", "Shop.unchecked"]
+		, exports: ["Shop.echoSmall", "Shop.echoText", "Shop.unchecked"]
 		, contracts: { "Shop.echoSmall": {
 			parameters: [{ ...copy, refinement: { constructor: "Shop.checkedSmall" } }]
 			, result: { ...copy, refinement: { constructor: "Shop.checkedSmall" } }
+			, effects: []
+		}
+		, "Shop.echoText": {
+			parameters: [{ ...copy, refinement: { constructor: "Shop.checkedText" } }]
+			, result: { ...copy, refinement: { constructor: "Shop.checkedText" } }
 			, effects: []
 		} }
 	}));
@@ -232,6 +241,7 @@ end Shop
 	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
 	const declarations = analysis.elaboration.metadata.modules.flatMap(module => module.declarations);
 	const checked = declarations.find(item => item.identity === "Shop.echoSmall");
+	const checkedText = declarations.find(item => item.identity === "Shop.echoText");
 	const unchecked = declarations.find(item => item.identity === "Shop.unchecked");
 	assert.equal(checked.projection.status, "supported", JSON.stringify(checked.projection));
 	const subtype = { kind: "refinement"
@@ -239,6 +249,10 @@ end Shop
 		, predicate: { kind: "subtype", constructor: "Shop.checkedSmall" } };
 	assert.deepEqual(checked.projection.parameters[0].type, subtype);
 	assert.deepEqual(checked.projection.result, subtype);
+	assert.deepEqual(checkedText.projection.parameters[0].type, { kind: "refinement"
+		, base: { kind: "primitive", name: "string" }
+		, predicate: { kind: "subtype", constructor: "Shop.checkedText" } });
+	assert.deepEqual(checkedText.projection.result, checkedText.projection.parameters[0].type);
 	assert.equal(unchecked.projection.status, "unsupported");
 	assert.equal(unchecked.projection.reason, "unsupported-parameter-type");
 	const declaration = analysis.bindingIr.document.declarations.find(item => item.name === "echoSmall");

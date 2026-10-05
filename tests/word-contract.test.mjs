@@ -184,3 +184,21 @@ test("word adapters validate the frame and enforce the compiled width", () => {
 	assert.ok(source.indexOf("bridge_scalar_slot_validate") < source.indexOf("size_t result = word_lean"));
 	assert.match(source, /int32_t signed_result; memcpy/);
 });
+
+test("checked heap refinements retain inputs for validation and clean rejected calls", () => {
+	const abi = { exports: [{
+		bindingId: "lean:Library.echoText"
+		, symbol: "refined_text"
+		, parameters: [scalar("string"), scalar("string")]
+		, result: scalar("string")
+		, resultMode: "value" }] };
+	const exports = [{ bindingId: "lean:Library.echoText"
+	, refinements: {
+		parameters: [{ kind: "subtype", constructor: "Library.checkedText" }, null]
+		, result: null
+	} }];
+	const source = generateComponentScalarAdapters(abi, exports);
+	assert.match(source, /lean_inc\(a0\);\n {2}if \(!refined_text_refinement_0\(a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); return 6; \}/u);
+	assert.ok(source.indexOf("lean_inc(a0)") < source.indexOf("refined_text_refinement_0(a0)"));
+	assert.ok(source.indexOf("refined_text_refinement_0(a0)") < source.indexOf("refined_text_lean(a0, a1)"));
+});

@@ -184,8 +184,6 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     let base ← shapeTree request e.getAppArgs[0]!
     unless (base.getObjValAs? String "kind").toOption == some "primitive" do
       reject e "Subtype checked constructors currently require a primitive base"
-    if ((base.getObjVal? "abi" >>= fun value => value.getObjValAs? Bool "heap").toOption).getD true then
-      reject e "Subtype checked constructors currently require an unboxed primitive base"
     return obj [
       ("kind", str "refinement"), ("base", base),
       ("predicate", obj [("kind", str "subtype"), ("constructor", str constructor)]),

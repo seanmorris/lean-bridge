@@ -253,6 +253,10 @@ abbrev Small := { value : UInt32 // value < 10 }
 def checkedSmall (value : UInt32) : Option Small :=
   if bound : value < 10 then some ⟨value, bound⟩ else none
 def echoSmall (value : Small) : Small := value
+abbrev NonEmptyText := { value : String // value != "" }
+def checkedText (value : String) : Option NonEmptyText :=
+  if present : value != "" then some ⟨value, present⟩ else none
+def echoNonEmpty (value : NonEmptyText) : NonEmptyText := value
 end OnboardingSmall
 namespace LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 def OnboardingSmall.choose {α : Type u} [Inhabited α] (_useValue : Bool) (value : α) : α := value
@@ -269,11 +273,14 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 	];
 	const copy = { ownership: "copy", lifetime: null };
 	const contracts = { "OnboardingSmall.echoWord": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
+		, "OnboardingSmall.echoNonEmpty": { parameters: [{ ...copy, refinement: { constructor: "OnboardingSmall.checkedText" } }]
+			, result: { ...copy, refinement: { constructor: "OnboardingSmall.checkedText" } }
+			, effects: [] }
 		, "OnboardingSmall.echoSmall": { parameters: [{ ...copy, refinement: { constructor: "OnboardingSmall.checkedSmall" } }]
 			, result: { ...copy, refinement: { constructor: "OnboardingSmall.checkedSmall" } }
 			, effects: [] }
 		, "OnboardingSmall.plainWord": { parameters: [copy], result: copy, effects: [] } };
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.bounded", "OnboardingSmall.echoSmall", "OnboardingSmall.plainWord"], specializations, contracts }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.bounded", "OnboardingSmall.echoNonEmpty", "OnboardingSmall.echoSmall", "OnboardingSmall.plainWord"], specializations, contracts }));
 	const before = await lakeInputState(root), moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	const movedBefore = await lakeInputState(moved);
@@ -282,7 +289,7 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 		const outputRoot = join(directory, `build-${index}`);
 		await build(projectRoot, outputRoot).catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
 		const bundleRoot = join(outputRoot, "bundle"), ir = await json(join(bundleRoot, "binding/binding-ir.json"));
-		assert.deepEqual(ir.declarations.map(item => item.name), ["bounded", "chooseWord", "echoNat", "echoSmall", "echoText", "echoWord", "firstWord", "plainWord"]);
+		assert.deepEqual(ir.declarations.map(item => item.name), ["bounded", "chooseWord", "echoNat", "echoNonEmpty", "echoSmall", "echoText", "echoWord", "firstWord", "plainWord"]);
 		assert.deepEqual(ir.declarations.find(item => item.name === "bounded").source.extensions["lean-lang.org/refinements"], {
 			parameters: [{ kind: "fin", bound: "5" }]
 			, result: { kind: "fin", bound: "5" }
@@ -314,12 +321,14 @@ assert.equal(api.plainWord(71), 74);
 assert.equal(api.bounded(0n), 0n);
 assert.equal(api.bounded(4n), 4n);
 assert.equal(api.echoSmall(9), 9);
+assert.equal(api.echoNonEmpty("Lean λ 🙂"), "Lean λ 🙂");
 assert.equal(api.echo, undefined);
 assert.throws(() => api.echoWord(-1));
 assert.throws(() => api.echoText(7));
 assert.throws(() => api.bounded(5n));
 assert.throws(() => api.bounded(-1n));
 assert.throws(() => api.echoSmall(10));
+assert.throws(() => api.echoNonEmpty(""));
 console.log("finite exports passed");
 `);
 	const installed = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer })
@@ -335,6 +344,7 @@ console.log("finite exports passed");
 	assert.match(declarations, /plainWord\(arg0: number\): number/);
 	assert.match(declarations, /bounded\(arg0: bigint\): bigint/);
 	assert.match(declarations, /echoSmall\(arg0: number\): number/);
+	assert.match(declarations, /echoNonEmpty\(arg0: string\): string/);
 	assert.doesNotMatch(declarations, /<T>|\bany\b/);
 	await saveLakeFile(consumer, "index.mts", `import * as api from "onboarding-small";
 const word: number = api.echoWord(4294967295);
@@ -345,7 +355,8 @@ const first: number = api.firstWord(71, "ignored");
 const plain: number = api.plainWord(71);
 const bounded: bigint = api.bounded(4n);
 const small: number = api.echoSmall(9);
-if(word !== 4294967295 || text !== "Lean λ 🙂" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74 || bounded !== 4n || small !== 9)
+const nonempty: string = api.echoNonEmpty("Lean λ 🙂");
+if(word !== 4294967295 || text !== "Lean λ 🙂" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74 || bounded !== 4n || small !== 9 || nonempty !== "Lean λ 🙂")
   throw new Error("finite TypeScript specialization failed");
 `);
 	await processBuildRunner.capture({ command: process.execPath

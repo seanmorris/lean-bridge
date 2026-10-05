@@ -311,6 +311,7 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 	{
 		const source = exports.find(value => value.bindingId === item.bindingId);
 		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
+		const rejectionCleanup = item.parameters.flatMap((type, index) => object(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
 			, ...refinements.flatMap((refinement, index) => refinement?.kind === "subtype"
 				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
@@ -319,7 +320,10 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 		for(const [index, type] of item.parameters.entries()) lines.push(`  if ((status = ${identify(type)}_validate(&frame->args[${index}], &budget))) return status;`);
 		for(const [index, type] of item.parameters.entries()) lines.push(...decode(type, `&frame->args[${index}]`, `a${index}`));
 		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);
+		{
+			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  lean_object *boxed = ${box(item.result, "result")};`, "  if (budget < 16) { lean_dec(boxed); return 4; }", "  budget -= 16;"
 			, `  return ${identify(item.result)}_encode(&frame->result, boxed, &budget);`, "}", "");

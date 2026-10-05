@@ -30,6 +30,7 @@ export const generateComponentScalarAdapters = (abi, exports = []) => {
 		const types = item.parameters.map(type => type.name);
 		const result = item.result.name;
 		const arguments_ = types.map((type, index) => `a${index}`);
+		const rejectionCleanup = types.flatMap((type, index) => objectType(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(result)} ${item.symbol}_lean(${types.length ? types.map(cType).join(", ") : "lean_object *"});`);
 		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(${cType(types[index])});`);
@@ -46,7 +47,10 @@ export const generateComponentScalarAdapters = (abi, exports = []) => {
 			else lines.push(`  ${cType(type)} a${index} = (${cType(type)})${source}.bits;`);
 		}
 		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);
+		{
+			if(objectType(types[index])) lines.push(`  lean_inc(a${index});`);
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+		}
 		lines.push(`  ${cType(result)} result = ${item.symbol}_lean(${types.length ? arguments_.join(", ") : "lean_box(0)"});`);
 		if(objectType(result)) lines.push(`  return bridge_scalar_encode_object(&frame->result, ${componentScalarTypes.indexOf(result)}, result);`);
 		else
