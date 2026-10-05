@@ -1,0 +1,1891 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-subtype-constructors-v1",
+  "predecessorCommit": "6191d77a033e2641c7a8ee03621097a04247304b",
+  "implementationCommit": "2923d7a1cf57da6d917178e52ba92d97c1bb7997",
+  "addedPaths": [
+    "docs/evidence/npm-subtype-refinement-source-history-20261005.json",
+    "docs/evidence/npm-subtype-refinements-20261005.md",
+    "tests/helpers/subtype-refinement-source-history.mjs"
+  ],
+  "updates": [
+    {
+      "path": "docs/evidence/finite-specialization-20261005.md",
+      "currentSha256": "a16011a6b614fb3c5ed81d8da7934dcc3368a698738306e10ce1bd4079c62964",
+      "previousSha256": "44d639e65a06d5dfc9fe5163ec25329e6387ea924bfbedce7893ce51bd3ae6cf",
+      "edits": [
+        {
+          "start": 418,
+          "previous": "The npm fixture builds the same Lean project from two relocated roots, reproduces its archives, verifies the component-package receipt, installs the archives offline, and executes the resulting WebAssembly from Node. A strict TypeScript consumer then compiles against the installed declaration file with `skipLibCheck` disabled. Its concrete exports cover an alias, `String`, arbitrary-precision `Nat`, two leading type parameters, and a package-defined `Inhabited UInt32` instance. Invalid host values reject, and the unspecialized generic declaration is absent. The same run now also exercises `Fin 5`; that separately scoped claim is recorded in [npm `Fin n` refinement acceptance](npm-fin-refinements-20261005.md).\n",
+          "current": "The npm fixture builds the same Lean project from two relocated roots, reproduces its archives, verifies the component-package receipt, installs the archives offline, and executes the resulting WebAssembly from Node. A strict TypeScript consumer then compiles against the installed declaration file with `skipLibCheck` disabled. Its concrete exports cover an alias, `String`, arbitrary-precision `Nat`, two leading type parameters, and a package-defined `Inhabited UInt32` instance. Invalid host values reject, and the unspecialized generic declaration is absent. The same run also exercises `Fin 5` and a checked `Subtype`; those claims have separate acceptance records for [`Fin n`](npm-fin-refinements-20261005.md) and [checked `Subtype` constructors](npm-subtype-refinements-20261005.md).\n"
+        },
+        {
+          "start": 1623,
+          "previous": "This evidence promotes only the `generic`, `implicit`, and `instance` signature cells for ordinary-source Node JavaScript, strict Node TypeScript, and Perl. It does not claim reviewed-IR specialization, open generic host dispatch, dependent parameters, default arguments, general proof erasure, or `Subtype` support. The accompanying `Fin` export is governed by its separate refinement record.\n",
+          "current": "This evidence promotes only the `generic`, `implicit`, and `instance` signature cells for ordinary-source Node JavaScript, strict Node TypeScript, and Perl. It does not claim reviewed-IR specialization, open generic host dispatch, dependent parameters, default arguments, or general proof erasure. The accompanying `Fin` and `Subtype` exports are governed by their separate refinement records.\n"
+        },
+        {
+          "start": 2515,
+          "previous": "749d6b0a1d96feee043e4997298c49ed8c2269757fd40cb1b786673543843140\n",
+          "current": "a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/npm-fin-refinements-20261005.md",
+      "currentSha256": "1101e774a2dc7ef6376a5388958325f7851a538b3472c7fb609591db093dbda7",
+      "previousSha256": "8c0712e5340cd41e0fa6eb8dde02259b3564a0d00925d838ba46afd0e270eb48",
+      "edits": [
+        {
+          "start": 1301,
+          "previous": "This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for `Fin n`. It does not claim browser execution, reviewed-IR admission, native profiles, nested refinements, callbacks containing `Fin`, nonliteral bounds, dependent refinements, or general `Subtype` support.\n",
+          "current": "This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for `Fin n`. It does not claim browser execution, reviewed-IR admission, native profiles, nested refinements, callbacks containing `Fin`, nonliteral bounds, or dependent refinements. Checked `Subtype` constructors have a [separate, narrower acceptance boundary](npm-subtype-refinements-20261005.md).\n"
+        },
+        {
+          "start": 2072,
+          "previous": "749d6b0a1d96feee043e4997298c49ed8c2269757fd40cb1b786673543843140\n",
+          "current": "a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "356667778e6442c25473a0f90302a680a8ea9278fcea38c63f6a450ec27352c1",
+      "previousSha256": "77c567cf9079bee4c307de75ea8e677c301bb67e10d9708005bd9dd3eb8090f2",
+      "edits": [
+        {
+          "start": 33663,
+          "previous": "| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | Node JavaScript / TypeScript: `host type of the declared unboxed primitive, checked by the compiled Lean constructor before dispatch` (input); `host type of the declared unboxed primitive, projected from a proof-backed Lean result` (result); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed (input, result); Not audited (field, callback input, callback result); Browser / React / Worker: Not audited. Reviewed IR: Not audited | Node JavaScript / TypeScript: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/diagnostics.md",
+      "currentSha256": "c4e3c7596d6e5e7e4e8e19279c9acf895dbc6971a7b3af146b6fa2b28040d450",
+      "previousSha256": "23a3a3e3d2f2bd3b710c5ec4e22bf471e37aa8a14de172a37c03dadfb24a2ffa",
+      "edits": [
+        {
+          "start": 4365,
+          "previous": "",
+          "current": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Use the current [checked `Subtype` boundary](existing-package.md#export-a-checked-subtype): top-level parameters/results over unboxed primitive bases in scalar or finite record npm packages. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2",
+      "previousSha256": "93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340",
+      "edits": [
+        {
+          "start": 20873,
+          "previous": "`refinement: \"reject\"` keeps unsupported refined types rejected; it does not erase a `Fin` bound or a `Subtype` predicate. C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.\n",
+          "current": "`refinement: \"reject\"` explicitly refuses a refined value; it never erases a `Fin` bound or `Subtype` predicate. A supported top-level `Fin n` needs no constructor setting because Lean Bridge generates and checks the bound from the elaborated type.\n\n### Export a checked Subtype\n\nFor a top-level `Subtype` parameter or result, provide a total Lean function that checks a host value and returns the exact subtype:\n\n```lean\nnamespace Library\n\nabbrev Small := { value : UInt32 // value < 10 }\n\ndef checkedSmall (value : UInt32) : Option Small :=\n  if bound : value < 10 then some ⟨value, bound⟩ else none\n\ndef echoSmall (value : Small) : Small := value\n\nend Library\n```\n\nName that constructor at every refined boundary site:\n\n```json\n{\n  \"schemaVersion\": 1,\n  \"modules\": [\"Library\"],\n  \"exports\": [\"Library.echoSmall\"],\n  \"contracts\": {\n    \"Library.echoSmall\": {\n      \"parameters\": [{\n        \"ownership\": \"copy\",\n        \"lifetime\": null,\n        \"refinement\": { \"constructor\": \"Library.checkedSmall\" }\n      }],\n      \"result\": {\n        \"ownership\": \"copy\",\n        \"lifetime\": null,\n        \"refinement\": { \"constructor\": \"Library.checkedSmall\" }\n      },\n      \"effects\": []\n    }\n  }\n}\n```\n\nLean Bridge verifies the fully qualified constructor instead of trusting its name. It must belong to a selected module, take one explicit value of the subtype's exact base type, and return `Option` of the exact subtype. Its selected-module dependencies cannot be unsafe, partial, foreign, or replaced with `implemented_by` code.\n\nThe current npm slice accepts top-level parameters and results over unboxed primitive bases in scalar or finite record component packages. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Nested positions, callbacks, heap-backed bases, reviewed IR, browser packages, and native targets remain unsupported.\n\nC, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "currentSha256": "e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2",
+      "previousSha256": "e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6",
+      "edits": [
+        {
+          "start": 2885,
+          "previous": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Checked-constructor lowering, retained host callbacks and async adapters remain unfinished.\n",
+          "current": "Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over unboxed primitive bases. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "c75a35cc35c46566ba6c782302622417dc76a64b3f33ed7c88565fc5caff10e6",
+      "previousSha256": "0a7ecf85d5b272a1615b3144d5ec6b6e4e1b54d0a4ce3c4da9f76dc1e4913f3b",
+      "edits": [
+        {
+          "start": 27989,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 34417,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 34582,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 56975,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 57140,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 74178,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 74343,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 90471,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 90636,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 104091,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 104256,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 114230,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 114883,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 115224,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 115385,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 116063,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 146350,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 159316,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 174215,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 187148,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 200367,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 208905,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 217336,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 226350,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 235016,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 244591,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 253692,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 263541,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 275680,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 285714,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 294266,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 303560,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 316249,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 325500,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 334787,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 343910,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 352773,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 360158,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 368092,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 378742,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 385627,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 392836,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 399932,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 410791,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 417907,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 424285,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 430448,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 436559,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 437207,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 437372,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 438343,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 443250,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 444049,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 444376,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 444537,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 444877,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 445374,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 450891,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 451056,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 460195,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 460360,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 471429,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 471594,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 481118,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 481283,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 490711,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 490876,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 502241,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 502406,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 510804,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 510969,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 521818,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 521983,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 530150,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 530315,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 537880,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 538045,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 545427,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 545592,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 553542,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 554353,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 554671,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 555324,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 555642,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 555811,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 560344,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 560509,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 570607,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 570772,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 579920,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 580085,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 591468,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 591633,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 599989,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 600154,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 610945,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 611110,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 619194,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 619359,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 626658,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 626823,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 634056,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 634221,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 642647,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 642822,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 643621,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 643786,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 644439,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 644600,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 644940,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 645434,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 651862,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 652037,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 652676,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 652841,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 653007,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 653168,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 653508,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 653675,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 659386,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 659561,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 660361,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 660526,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 660692,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 660853,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 661360,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 667976,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 668143,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 668303,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 668468,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 669968,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 670143,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 684813,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 698844,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 710219,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 724439,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 735893,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 747964,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 759252,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 767835,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 774293,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 782679,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 788051,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 790656,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 803581,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 804907,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 807890,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 808059,
+          "previous": "          \"sha256\": \"0ed59bc5fb742d4de586a45329d79332753b30a63aa123399bd0fcd54f7c0864\"\n",
+          "current": "          \"sha256\": \"5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3\"\n"
+        },
+        {
+          "start": 813586,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 833379,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 833708,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 834185,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 834354,
+          "previous": "          \"sha256\": \"0ed59bc5fb742d4de586a45329d79332753b30a63aa123399bd0fcd54f7c0864\"\n",
+          "current": "          \"sha256\": \"5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3\"\n"
+        },
+        {
+          "start": 834683,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 877762,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 877927,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 953482,
+          "previous": "          \"sha256\": \"a7bb9d18660c30bccd691b5083a4c334746bdc3a01cc025f70e6cdf3a5e55f55\"\n",
+          "current": "          \"sha256\": \"25d1165ea4e4daa6b74965f63949f567101b7795afa037ebfd04ee7934f8b2dd\"\n"
+        },
+        {
+          "start": 954835,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 955319,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 955494,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 967271,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 967599,
+          "previous": "          \"sha256\": \"0ed59bc5fb742d4de586a45329d79332753b30a63aa123399bd0fcd54f7c0864\"\n",
+          "current": "          \"sha256\": \"5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3\"\n"
+        },
+        {
+          "start": 978323,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 993337,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 993669,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 993835,
+          "previous": "          \"sha256\": \"a7bb9d18660c30bccd691b5083a4c334746bdc3a01cc025f70e6cdf3a5e55f55\"\n",
+          "current": "          \"sha256\": \"25d1165ea4e4daa6b74965f63949f567101b7795afa037ebfd04ee7934f8b2dd\"\n"
+        },
+        {
+          "start": 1001627,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 1020851,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 1021519,
+          "previous": "          \"sha256\": \"40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c\"\n",
+          "current": "          \"sha256\": \"bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36\"\n"
+        },
+        {
+          "start": 1022028,
+          "previous": "          \"sha256\": \"0ed59bc5fb742d4de586a45329d79332753b30a63aa123399bd0fcd54f7c0864\"\n",
+          "current": "          \"sha256\": \"5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3\"\n"
+        },
+        {
+          "start": 1044251,
+          "previous": "          \"sha256\": \"27b07d65d33c556e00059bc30d706312520fcbe11546593a724edb0a0968b1e5\"\n",
+          "current": "          \"sha256\": \"14b9ea2fb44b1a471de3bd4723f2ee8e2ea398be2d31d1d5a05eefddfb9163dd\"\n"
+        },
+        {
+          "start": 1047585,
+          "previous": "          \"sha256\": \"9920c94f6d8557386962a07add9bb48c3c0e8294fc0c94aee0400fd06cf47d7c\"\n",
+          "current": "          \"sha256\": \"a8bad97b3275ba6bef6f862a0b000686cb8fdc790553e7c957ef397939ece22f\"\n"
+        },
+        {
+          "start": 1049753,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1049912,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1055179,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1057342,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1057501,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1061877,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1063943,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1064102,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1068880,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1071051,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1071210,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1076386,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1078545,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1078704,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1083340,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1085601,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1085760,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1090974,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1093202,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1093361,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1103483,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1103642,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1109339,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1115816,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1115975,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1116607,
+          "previous": "          \"sha256\": \"f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7\"\n",
+          "current": "          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n"
+        },
+        {
+          "start": 1116782,
+          "previous": "          \"sha256\": \"f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8\"\n",
+          "current": "          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n"
+        },
+        {
+          "start": 1117434,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1117599,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1117760,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 1118812,
+          "previous": "          \"sha256\": \"4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63\"\n",
+          "current": "          \"sha256\": \"49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5\"\n"
+        },
+        {
+          "start": 1124274,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1127063,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1132321,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1134949,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1141293,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1145373,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1150684,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1155491,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1163707,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1169275,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1169434,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1170994,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1171159,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1196819,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1201818,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1201977,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1203538,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1203703,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1227063,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1232097,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1232256,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1233820,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1233985,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1259999,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1265064,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1265223,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1266783,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1266948,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1299302,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1306474,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1306633,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1325843,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1332322,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1332481,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1348223,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1355002,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1355161,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1368115,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1374694,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1374853,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1389568,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1395179,
+          "previous": "          \"sha256\": \"93d68697ddb236ef6747cfdb26dba8db806e3f8848f29e4329ea6b6278da4340\"\n",
+          "current": "          \"sha256\": \"c6712332c904352b971d37e594195a28d6ebd0021cd4bf88291fb5804869dad2\"\n"
+        },
+        {
+          "start": 1395338,
+          "previous": "          \"sha256\": \"e21a24e6044abd1e9cb1f0bc9885227f46a0ed53e4ad14e6668f1674af8be5e6\"\n",
+          "current": "          \"sha256\": \"e337be7bb72d74383ef171687d96f99e41b18ba800c9389f766d6bde5ac5d4b2\"\n"
+        },
+        {
+          "start": 1402587,
+          "previous": "          \"sha256\": \"56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad\"\n",
+          "current": "          \"sha256\": \"1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6\"\n"
+        },
+        {
+          "start": 1407971,
+          "previous": "      \"revision\": \"935d067a5a3f13bc003d95e39777c3b520d8cc5c\",\n",
+          "current": "      \"revision\": \"2923d7a1cf57da6d917178e52ba92d97c1bb7997\",\n"
+        },
+        {
+          "start": 1408699,
+          "previous": "          \"sha256\": \"44d639e65a06d5dfc9fe5163ec25329e6387ea924bfbedce7893ce51bd3ae6cf\"\n",
+          "current": "          \"sha256\": \"a16011a6b614fb3c5ed81d8da7934dcc3368a698738306e10ce1bd4079c62964\"\n"
+        },
+        {
+          "start": 1409023,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1409186,
+          "previous": "          \"sha256\": \"b4f2fc8701dc311ca9252fa29facab79a8ee1365760f007691712ac7c634318c\"\n",
+          "current": "          \"sha256\": \"88d25e43a3f186eed0509c10ab346261b251aebc80cd7500f7ee7b8605f86abf\"\n"
+        },
+        {
+          "start": 1409400,
+          "previous": "          \"sha256\": \"749d6b0a1d96feee043e4997298c49ed8c2269757fd40cb1b786673543843140\"\n",
+          "current": "          \"sha256\": \"a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87\"\n"
+        },
+        {
+          "start": 1409590,
+          "previous": "      \"revision\": \"935d067a5a3f13bc003d95e39777c3b520d8cc5c\",\n",
+          "current": "      \"revision\": \"2923d7a1cf57da6d917178e52ba92d97c1bb7997\",\n"
+        },
+        {
+          "start": 1410434,
+          "previous": "          \"sha256\": \"8c0712e5340cd41e0fa6eb8dde02259b3564a0d00925d838ba46afd0e270eb48\"\n",
+          "current": "          \"sha256\": \"1101e774a2dc7ef6376a5388958325f7851a538b3472c7fb609591db093dbda7\"\n"
+        },
+        {
+          "start": 1410594,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 1410759,
+          "previous": "          \"sha256\": \"3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653\"\n",
+          "current": "          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n"
+        },
+        {
+          "start": 1411085,
+          "previous": "          \"sha256\": \"e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b\"\n",
+          "current": "          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n"
+        },
+        {
+          "start": 1411246,
+          "previous": "          \"sha256\": \"c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989\"\n",
+          "current": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n"
+        },
+        {
+          "start": 1411411,
+          "previous": "          \"sha256\": \"66dd871f949f6316aac0b4ad63574a8fbb142db3fcafec66aaec1af7799e915c\"\n",
+          "current": "          \"sha256\": \"c23d2c24a388db5131be96c01beffd5eb986521af9e16452d3f417d3333198a0\"\n"
+        },
+        {
+          "start": 1411575,
+          "previous": "          \"sha256\": \"43f06098d430307df6c11e31d05bf125eac1da08fb81bc5537d30e201a0c4065\"\n",
+          "current": "          \"sha256\": \"7c64e71e38202386e346e88783e89e6c906859e547007c758eb32a3a211a8d7b\"\n"
+        },
+        {
+          "start": 1411738,
+          "previous": "          \"sha256\": \"b4f2fc8701dc311ca9252fa29facab79a8ee1365760f007691712ac7c634318c\"\n",
+          "current": "          \"sha256\": \"88d25e43a3f186eed0509c10ab346261b251aebc80cd7500f7ee7b8605f86abf\"\n"
+        },
+        {
+          "start": 1411952,
+          "previous": "          \"sha256\": \"749d6b0a1d96feee043e4997298c49ed8c2269757fd40cb1b786673543843140\"\n",
+          "current": "          \"sha256\": \"a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87\"\n        }\n      ]\n    },\n    {\n      \"id\": \"npm-subtype-refinements-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"2923d7a1cf57da6d917178e52ba92d97c1bb7997\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='checked constructors admit' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds compiler-check an exact Subtype constructor, preserve its identity in Binding IR, validate UInt32 input through compiled Lean before source dispatch, project a proof-backed result, reproduce after relocation, verify their receipt, install offline, execute from Node and compile a strict TypeScript consumer. Unconfigured subtypes reject.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/npm-subtype-refinements-20261005.md\",\n          \"sha256\": \"7ca9f88ac2527af9f4dcdf7543e3f1430f774ece2ce6efb856144b6f87d15370\"\n        },\n        {\n          \"path\": \"schema/compiler-adapter-plan.schema.json\",\n          \"sha256\": \"1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1\"\n        },\n        {\n          \"path\": \"schema/elaborated-export-metadata.schema.json\",\n          \"sha256\": \"01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7\"\n        },\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n        },\n        {\n          \"path\": \"src/analyze/elaborated-metadata.mjs\",\n          \"sha256\": \"b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2\"\n        },\n        {\n          \"path\": \"src/analyze/export-configuration.mjs\",\n          \"sha256\": \"25d1165ea4e4daa6b74965f63949f567101b7795afa037ebfd04ee7934f8b2dd\"\n        },\n        {\n          \"path\": \"src/backends/javascript/generate.mjs\",\n          \"sha256\": \"efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6\"\n        },\n        {\n          \"path\": \"src/build/compiler-adapters.mjs\",\n          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n        },\n        {\n          \"path\": \"src/build/component-refinements.mjs\",\n          \"sha256\": \"c23d2c24a388db5131be96c01beffd5eb986521af9e16452d3f417d3333198a0\"\n        },\n        {\n          \"path\": \"src/build/component-scalar-adapters.mjs\",\n          \"sha256\": \"5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3\"\n        },\n        {\n          \"path\": \"tests/elaborated-metadata.test.mjs\",\n          \"sha256\": \"7c64e71e38202386e346e88783e89e6c906859e547007c758eb32a3a211a8d7b\"\n        },\n        {\n          \"path\": \"tests/unlocked-component.test.mjs\",\n          \"sha256\": \"88d25e43a3f186eed0509c10ab346261b251aebc80cd7500f7ee7b8605f86abf\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"npm/ordinary-source/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87\"\n"
+        },
+        {
+          "start": 1416155,
+          "previous": "          \"sha256\": \"ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221\"\n",
+          "current": "          \"sha256\": \"6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9\"\n"
+        },
+        {
+          "start": 3588487,
+          "previous": "        \"This is Fin support, not a general proof-erasure or Subtype constructor mechanism.\"\n",
+          "current": "        \"Fin retains its compiler-derived literal bound and does not use an author-supplied checked constructor.\"\n"
+        },
+        {
+          "start": 3588862,
+          "previous": "",
+          "current": "    {\n      \"id\": \"npm-subtype-refinements-ordinary-source\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source npm builds accept configured top-level Subtype parameters and results over unboxed primitives in scalar or finite record packages. Installed execution concretely covers UInt32 with an exact Lean checked constructor; unconfigured subtypes reject.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"host type of the declared unboxed primitive, checked by the compiled Lean constructor before dispatch\",\n          \"result\": \"host type of the declared unboxed primitive, projected from a proof-backed Lean result\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-subtype-refinements-installed\"\n          ],\n          \"note\": \"Lean verifies the exact base -> Option Subtype constructor type, selected-module ownership and safe implementation graph; unconfigured subtypes reject.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-subtype-refinements-installed\"\n          ],\n          \"note\": \"Binding IR erases the proof field to the base primitive while retaining the checked constructor identity in compiler-owned refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-subtype-refinements-installed\"\n          ],\n          \"note\": \"Generated Wasm validation calls the Lean constructor before source dispatch; the source call receives the exact subtype and results project .val only after Lean returns.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-subtype-refinements-installed\"\n          ],\n          \"note\": \"Relocated builds reproduce the npm archives and verify the component-package receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"npm-subtype-refinements-installed\"\n          ],\n          \"note\": \"The installed Node package accepts UInt32 value 9, rejects 10 before source dispatch, and exposes number in strict TypeScript.\"\n        }\n      },\n      \"limitations\": [\n        \"Top-level parameters and results only; nested copied values and callback positions reject.\",\n        \"Installed execution covers a UInt32 base. The current implementation requires an unboxed primitive base and a scalar or finite record component ABI.\",\n        \"Ordinary-source Node JavaScript and Node TypeScript only; browsers, reviewed IR and native profiles are not covered.\",\n        \"The author supplies an exact base -> Option Subtype constructor. Lean Bridge does not synthesize decisions for arbitrary predicates, and rejects unsafe, partial, foreign or implemented-by constructor bodies in selected modules.\"\n      ],\n      \"conversionNotes\": {\n        \"subtype\": \"The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns.\"\n      }\n    },\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "currentSha256": "1e5326141ab2978defb2380a637e35a225ac8a5663935090b1db5ae2703e00b1",
+      "previousSha256": "f68868315de712ff3e9338fe7e0642477543d1ba1dfac4e63bb77658c97c3ab7",
+      "edits": [
+        {
+          "start": 2357,
+          "previous": "    \"finRefinement\": {\n",
+          "current": "    \"refinement\": {\n"
+        },
+        {
+          "start": 2674,
+          "previous": "",
+          "current": "        },\n        {\n          \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"constructor\"],\n          \"properties\": {\n            \"kind\": { \"const\": \"subtype\" },\n            \"constructor\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*(\\\\.[A-Za-z][A-Za-z0-9_]*)*$\" }\n          }\n"
+        },
+        {
+          "start": 3147,
+          "previous": "        \"parameters\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/$defs/finRefinement\" } },\n        \"result\": { \"$ref\": \"#/$defs/finRefinement\" }\n",
+          "current": "        \"parameters\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/$defs/refinement\" } },\n        \"result\": { \"$ref\": \"#/$defs/refinement\" }\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/elaborated-export-metadata.schema.json",
+      "currentSha256": "01ac2bbb31dc64057efe8f2b04b0b0f5266b026fd75627bc2a7ff9ee315c18c7",
+      "previousSha256": "f8565778550a99196646b6a3c3cfd64afffe39f590ae47c25d731db16afd81a8",
+      "edits": [
+        {
+          "start": 10281,
+          "previous": "            \"predicate\": {\n              \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"bound\"],\n              \"properties\": {\n                \"kind\": { \"const\": \"fin\" },\n                \"bound\": { \"type\": \"string\", \"pattern\": \"^(0|[1-9][0-9]*)$\" }\n",
+          "current": "            \"predicate\": { \"oneOf\": [\n              {\n                \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"bound\"],\n                \"properties\": {\n                  \"kind\": { \"const\": \"fin\" },\n                  \"bound\": { \"type\": \"string\", \"pattern\": \"^(0|[1-9][0-9]*)$\" }\n                }\n              },\n              {\n                \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"constructor\"],\n                \"properties\": {\n                  \"kind\": { \"const\": \"subtype\" },\n                  \"constructor\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*(\\\\.[A-Za-z][A-Za-z0-9_]*)*$\" }\n                }\n"
+        },
+        {
+          "start": 10977,
+          "previous": "            }\n",
+          "current": "            ] }\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "currentSha256": "6ce3ed307e769d3a54393d51514c5beda845d3f514cf6c6f072b593f534154c9",
+      "previousSha256": "ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221",
+      "edits": [
+        {
+          "start": 3218,
+          "previous": "",
+          "current": "partial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) : MetaM NameSet := do\n  if seen.contains name then return seen\n  let mut seen := seen.insert name\n  let env ← getEnv\n  let some index := env.getModuleIdxFor? name | return seen\n  if !request.modules.contains env.header.moduleNames[index.toNat]!.toString then return seen\n  let info ← getConstInfo name\n  let partialImplementation := (env.find? (Compiler.mkUnsafeRecName name)).any (·.isPartial)\n  if info.isUnsafe || info.isPartial || partialImplementation || isExtern env name || (Compiler.getImplementedBy? env name).isSome then\n    throwError \"{name} needs a reviewed unsafe, partial or foreign implementation contract\"\n  if let some value := info.value? then\n    for dependency in value.getUsedConstants do\n      seen ← checkBody request dependency seen\n  return seen\n\n"
+        },
+        {
+          "start": 6282,
+          "previous": "    (depth : Nat := 0) (copied : Bool := false) : ShapeM Json := do\n",
+          "current": "    (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none) : ShapeM Json := do\n"
+        },
+        {
+          "start": 7474,
+          "previous": "",
+          "current": "  if e.isAppOfArity ``Subtype 2 then\n    if depth != 0 || copied then\n      reject e \"Subtype refinements currently require a top-level parameter or result\"\n    if request.profile.getD \"component-scalars-v1\" != \"component-scalars-v1\" then\n      reject e \"Subtype refinements are not implemented by the native-library profile\"\n    let some constructor := checked\n      | reject e \"Subtype refinements require a configured checked constructor\"\n    let constructorName := constructor.toName\n    let env ← getEnv\n    let some moduleIndex := env.getModuleIdxFor? constructorName\n      | reject e \"Subtype checked constructor module is unavailable\"\n    unless request.modules.contains env.header.moduleNames[moduleIndex.toNat]!.toString do\n      reject e \"Subtype checked constructor must belong to a selected module\"\n    let constructorValue ← mkConstWithFreshMVarLevels constructorName\n    let constructorType ← inferType constructorValue\n    discard <| forallTelescopeReducing constructorType fun arguments result => do\n      unless arguments.size == 1 do\n        reject e \"Subtype checked constructor must take exactly one explicit value\"\n      let argument ← arguments[0]!.fvarId!.getDecl\n      unless argument.binderInfo == .default && (← isDefEq argument.type e.getAppArgs[0]!) do\n        reject e \"Subtype checked constructor input must equal the subtype base\"\n      unless result.isAppOfArity ``Option 1 && (← isDefEq result.appArg! e) do\n        reject e \"Subtype checked constructor must return Option of the exact subtype\"\n    discard <| checkBody request constructorName\n    let base ← shapeTree request e.getAppArgs[0]!\n    unless (base.getObjValAs? String \"kind\").toOption == some \"primitive\" do\n      reject e \"Subtype checked constructors currently require a primitive base\"\n    if ((base.getObjVal? \"abi\" >>= fun value => value.getObjValAs? Bool \"heap\").toOption).getD true then\n      reject e \"Subtype checked constructors currently require an unboxed primitive base\"\n    return obj [\n      (\"kind\", str \"refinement\"), (\"base\", base),\n      (\"predicate\", obj [(\"kind\", str \"subtype\"), (\"constructor\", str constructor)]),\n      (\"abi\", ← abi e)]\n"
+        },
+        {
+          "start": 10721,
+          "previous": "              let target ← shapeTree request definition.value (name :: seen) 0 copied\n",
+          "current": "              let target ← shapeTree request definition.value (name :: seen) 0 copied checked\n"
+        },
+        {
+          "start": 18906,
+          "previous": "  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied\n",
+          "current": "  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked\n"
+        },
+        {
+          "start": 23966,
+          "previous": "def shape (request : Request) (e : Expr) : MetaM Json := do\n",
+          "current": "def shape (request : Request) (e : Expr) (checked : Option String := none) : MetaM Json := do\n"
+        },
+        {
+          "start": 24343,
+          "previous": "  let (value, state) ← (shapeTree request e).run {}\n",
+          "current": "  let (value, state) ← (shapeTree request e (checked := checked)).run {}\n"
+        },
+        {
+          "start": 24546,
+          "previous": "",
+          "current": "    (checkedParameters : Array (Option String) := #[]) (checkedResult : Option String := none)\n"
+        },
+        {
+          "start": 24906,
+          "previous": "      let parameter ← shape request argument\n      let (rest, result) ← signature request result limit (index + 1)\n",
+          "current": "      let parameter ← shape request argument (checkedParameters[index]?.join)\n      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1)\n"
+        },
+        {
+          "start": 25176,
+          "previous": "  return (#[], ← shape request e)\n\npartial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) : MetaM NameSet := do\n  if seen.contains name then return seen\n  let mut seen := seen.insert name\n  let env ← getEnv\n  let some index := env.getModuleIdxFor? name | return seen\n  if !request.modules.contains env.header.moduleNames[index.toNat]!.toString then return seen\n  let info ← getConstInfo name\n  let partialImplementation := (env.find? (Compiler.mkUnsafeRecName name)).any (·.isPartial)\n  if info.isUnsafe || info.isPartial || partialImplementation || isExtern env name || (Compiler.getImplementedBy? env name).isSome then\n    throwError \"{name} needs a reviewed unsafe, partial or foreign implementation contract\"\n  if let some value := info.value? then\n    for dependency in value.getUsedConstants do\n      seen ← checkBody request dependency seen\n  return seen\n",
+          "current": "  return (#[], ← shape request e checkedResult)\n"
+        },
+        {
+          "start": 32219,
+          "previous": "      return some s!\"{label}: checked refinement constructors are not implemented by this profile\"\n",
+          "current": "      let predicate := (type.getObjVal? \"predicate\").toOption.getD Json.null\n      let configured := (refinement.getObjValAs? String \"constructor\").toOption\n      if (type.getObjValAs? String \"kind\").toOption != some \"refinement\" ||\n          (predicate.getObjValAs? String \"kind\").toOption != some \"subtype\" ||\n          configured != (predicate.getObjValAs? String \"constructor\").toOption then\n        return some s!\"{label}: checked refinement constructor does not match the compiler-checked Subtype\"\n"
+        },
+        {
+          "start": 40421,
+          "previous": "",
+          "current": "def checkedConstructor (site : Json) : Option String := do\n  let refinement ← (site.getObjVal? \"refinement\").toOption\n  (refinement.getObjValAs? String \"constructor\").toOption\n\n"
+        },
+        {
+          "start": 41198,
+          "previous": "",
+          "current": "  let contract := request.contracts.bind fun contracts => (contracts.getObjVal? name).toOption\n  let checkedParameters := contract.bind (fun value => (value.getObjValAs? (Array Json) \"parameters\").toOption)\n    |>.getD #[] |>.map checkedConstructor\n  let checkedResult := contract.bind (fun value => (value.getObjVal? \"result\").toOption) |>.bind checkedConstructor\n"
+        },
+        {
+          "start": 41569,
+          "previous": "    let (nativeParameters, result) ← signature request type arity\n",
+          "current": "    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult\n"
+        },
+        {
+          "start": 42635,
+          "previous": "      if (scalarProjection.getObjValAs? String \"status\").toOption == some \"supported\" then\n",
+          "current": "      if (scalarProjection.getObjValAs? String \"status\").toOption == some \"supported\" ||\n          checkedParameters.any Option.isSome || checkedResult.isSome then\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "currentSha256": "b52657fd677b8d09a1ca22dfc3b5ec9e72204947a7be65c9f8afae1a9fb760b2",
+      "previousSha256": "3fec4ae8aaf94c90a224307ceac2757fa9ee865b2a592df8d95334f21ff1c653",
+      "edits": [
+        {
+          "start": 11658,
+          "previous": "\t\t\t\t\t\tclosed(type.predicate, [\"kind\", \"bound\"]);\n\t\t\t\t\t\tif(type.base.name !== \"nat\" || type.predicate.kind !== \"fin\"\n\t\t\t\t\t\t\t|| typeof type.predicate.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))\n\t\t\t\t\t\t\tfail(\"Invalid Fin refinement\");\n",
+          "current": "\t\t\t\t\t\tif(type.predicate?.kind === \"fin\")\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tclosed(type.predicate, [\"kind\", \"bound\"]);\n\t\t\t\t\t\t\tif(type.base.name !== \"nat\" || typeof type.predicate.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))\n\t\t\t\t\t\t\t\tfail(\"Invalid Fin refinement\");\n\t\t\t\t\t\t}\n\t\t\t\t\t\telse\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tclosed(type.predicate, [\"kind\", \"constructor\"]);\n\t\t\t\t\t\t\tif(type.predicate?.kind !== \"subtype\" || typeof type.predicate.constructor !== \"string\"\n\t\t\t\t\t\t\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.predicate.constructor))\n\t\t\t\t\t\t\t\tfail(\"Invalid Subtype refinement\");\n\t\t\t\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/export-configuration.mjs",
+      "currentSha256": "25d1165ea4e4daa6b74965f63949f567101b7795afa037ebfd04ee7934f8b2dd",
+      "previousSha256": "a7bb9d18660c30bccd691b5083a4c334746bdc3a01cc025f70e6cdf3a5e55f55",
+      "edits": [
+        {
+          "start": 17329,
+          "previous": "\t\tif(site.refinement !== undefined && site.refinement !== \"reject\") return `${label}: checked refinement constructors are not implemented by this profile`;\n",
+          "current": "\t\tif(site.refinement !== undefined && site.refinement !== \"reject\"\n\t\t\t&& (type.kind !== \"refinement\" || type.predicate.kind !== \"subtype\" || type.predicate.constructor !== site.refinement.constructor))\n\t\t\treturn `${label}: checked refinement constructor does not match the compiler-checked Subtype`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/generate.mjs",
+      "currentSha256": "efecd4c388d8aa1e8fbad1dc148d497e6504aa52e278c4746d25624ea36a4ba6",
+      "previousSha256": "e7f8477ff42f6725aa22ed906e30fe3a46ae44dd0c58dbb4d8c25e4b2d8c2c0b",
+      "edits": [
+        {
+          "start": 1714,
+          "previous": "\t\tif(refinement === undefined || typeof refinement !== \"object\" || Array.isArray(refinement)\n\t\t\t|| JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify([\"bound\", \"kind\"])\n\t\t\t|| refinement.kind !== \"fin\" || typeof refinement.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))\n",
+          "current": "\t\tif(refinement === undefined || typeof refinement !== \"object\" || Array.isArray(refinement))\n"
+        },
+        {
+          "start": 1890,
+          "previous": "",
+          "current": "\t\tif(refinement.kind === \"fin\")\n\t\t{\n\t\t\tif(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify([\"bound\", \"kind\"])\n\t\t\t\t|| typeof refinement.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))\n\t\t\t\tfail(\"invalid-refinement\", `${declaration.id} has an unsupported Fin refinement`);\n\t\t}\n\t\telse if(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify([\"constructor\", \"kind\"])\n\t\t\t|| refinement.kind !== \"subtype\" || typeof refinement.constructor !== \"string\"\n\t\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor))\n\t\t\tfail(\"invalid-refinement\", `${declaration.id} has an unsupported Subtype refinement`);\n"
+        },
+        {
+          "start": 2618,
+          "previous": "\t\tif(refinement !== null && (declaration.parameters[index].type.kind !== \"primitive\" || declaration.parameters[index].type.name !== \"nat\"))\n",
+          "current": "\t\tif(refinement !== null && declaration.parameters[index].type.kind !== \"primitive\")\n\t\t\tfail(\"invalid-refinement\", `${declaration.id} has a refinement that does not erase to a primitive`);\n\t\tif(refinement?.kind === \"fin\" && declaration.parameters[index].type.name !== \"nat\")\n"
+        },
+        {
+          "start": 2997,
+          "previous": "\tif(value.result !== null && (declaration.result.type.kind !== \"primitive\" || declaration.result.type.name !== \"nat\"))\n",
+          "current": "\tif(value.result !== null && declaration.result.type.kind !== \"primitive\")\n\t\tfail(\"invalid-refinement\", `${declaration.id} has a refinement result that does not erase to a primitive`);\n\tif(value.result?.kind === \"fin\" && declaration.result.type.name !== \"nat\")\n"
+        },
+        {
+          "start": 3445,
+          "previous": "\tif(refinement !== null) output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);\n",
+          "current": "\tif(refinement?.kind === \"fin\") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "currentSha256": "b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2",
+      "previousSha256": "c14c7c5627cb674080c46b048e8ccdbc9607fefb22f96d528f4f9965cc6d9989",
+      "edits": [
+        {
+          "start": 5153,
+          "previous": "const validateFinRefinement = (value, path) => {\n",
+          "current": "const validateRefinement = (value, path, leanType) => {\n"
+        },
+        {
+          "start": 5237,
+          "previous": "\texactKeys(value, [\"kind\", \"bound\"], path);\n\tif(value.kind !== \"fin\" || typeof value.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound))\n\t\tfail(\"invalid-compiler-adapter-plan\", `${path} must be a canonical Fin bound`);\n",
+          "current": "\tif(value.kind === \"fin\")\n\t{\n\t\texactKeys(value, [\"kind\", \"bound\"], path);\n\t\tif(typeof value.bound !== \"string\" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound) || leanType !== \"_root_.Nat\")\n\t\t\tfail(\"invalid-compiler-adapter-plan\", `${path} must be a canonical Fin bound over Nat`);\n\t\treturn;\n\t}\n\texactKeys(value, [\"kind\", \"constructor\"], path);\n\tif(value.kind !== \"subtype\" || typeof value.constructor !== \"string\"\n\t\t|| !/^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))\n\t\tfail(\"invalid-compiler-adapter-plan\", `${path} must name a checked Subtype constructor`);\n"
+        },
+        {
+          "start": 6196,
+          "previous": "\t\tvalidateFinRefinement(refinement, `parameter ${index} refinement`);\n\t\tif(refinement !== null && item.parameters[index].leanType !== \"_root_.Nat\")\n\t\t\tfail(\"invalid-compiler-adapter-plan\", \"Fin parameters must erase to Nat\");\n",
+          "current": "\t\tvalidateRefinement(refinement, `parameter ${index} refinement`, item.parameters[index].leanType);\n"
+        },
+        {
+          "start": 6301,
+          "previous": "\tvalidateFinRefinement(value.result, \"result refinement\");\n\tif(value.result !== null && item.leanResultType !== \"_root_.Nat\")\n\t\tfail(\"invalid-compiler-adapter-plan\", \"Fin results must erase to Nat\");\n",
+          "current": "\tvalidateRefinement(value.result, \"result refinement\", item.leanResultType);\n"
+        },
+        {
+          "start": 12709,
+          "previous": "",
+          "current": "\t\tfor(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === \"subtype\")\n\t\t{\n\t\t\tlines.push(`@[export ${item.symbol}_refinement_${index}]`);\n\t\t\tlines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);\n\t\t\tlines.push(`  match _root_.${refinement.constructor} value with`);\n\t\t\tlines.push(\"  | .some _ => 1\", \"  | .none => 0\", \"\");\n\t\t}\n"
+        },
+        {
+          "start": 13242,
+          "previous": "\t\tconst body = componentRefinementGuards(refined.guards, refined.call, `panic! \"Lean Bridge rejected an invalid Fin value\"`);\n",
+          "current": "\t\tconst body = componentRefinementGuards(refined.guards, refined.call, `panic! \"Lean Bridge rejected an invalid refined value\"`);\n"
+        },
+        {
+          "start": 15024,
+          "previous": "",
+          "current": "\tconst subtypeRefinements = document.declarations.flatMap(declaration => {\n\t\tconst value = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\treturn value === undefined ? [] : [...value.parameters, value.result].filter(refinement => refinement?.kind === \"subtype\");\n\t});\n\tif(subtypeRefinements.length && ![2, componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(privateAbi.version))\n\t\tfail(\"unsupported-subtype-refinement\", `Checked Subtype constructors currently require a scalar or finite record component package (private ABI ${privateAbi.version})`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-record-adapters.mjs",
+      "currentSha256": "bcbba23d0b0b09c3909936599d78bc7b7c84bf01af463f799191d86c7f60dd36",
+      "previousSha256": "40c42acc03c0fe60eb7e3e840af529b2aa7524584ad956fa755039f0711e661c",
+      "edits": [
+        {
+          "start": 10260,
+          "previous": "",
+          "current": "\t\tfor(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === \"subtype\")\n\t\t{\n\t\t\tlines.push(`@[export ${item.symbol}_refinement_${index}]`);\n\t\t\tlines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);\n\t\t\tlines.push(`  match _root_.${refinement.constructor} value with`);\n\t\t\tlines.push(\"  | .some _ => 1\", \"  | .none => 0\", \"\");\n\t\t}\n"
+        },
+        {
+          "start": 10968,
+          "previous": "\t\t\t, `panic! \"Lean Bridge rejected an invalid Fin value\"`);\n",
+          "current": "\t\t\t, `panic! \"Lean Bridge rejected an invalid refined value\"`);\n"
+        },
+        {
+          "start": 11485,
+          "previous": "",
+          "current": " * @param exports - Compiler-owned source exports carrying checked refinement metadata.\n"
+        },
+        {
+          "start": 11577,
+          "previous": "export const generateComponentRecordAdapters = abi => {\n",
+          "current": "export const generateComponentRecordAdapters = (abi, exports = []) => {\n"
+        },
+        {
+          "start": 22852,
+          "previous": "",
+          "current": "\t\tconst source = exports.find(value => value.bindingId === item.bindingId);\n\t\tconst refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);\n"
+        },
+        {
+          "start": 23168,
+          "previous": "",
+          "current": "\t\t\t, ...refinements.flatMap((refinement, index) => refinement?.kind === \"subtype\"\n\t\t\t\t? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])\n"
+        },
+        {
+          "start": 23928,
+          "previous": "",
+          "current": "\t\tfor(const [index, refinement] of refinements.entries()) if(refinement?.kind === \"subtype\")\n\t\t\tlines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "currentSha256": "c23d2c24a388db5131be96c01beffd5eb986521af9e16452d3f417d3333198a0",
+      "previousSha256": "66dd871f949f6316aac0b4ad63574a8fbb142db3fcafec66aaec1af7799e915c",
+      "edits": [
+        {
+          "start": 814,
+          "previous": "\tconst parameters = arguments_.map((argument, index) => selected.parameters[index] === null\n\t\t? argument : `⟨${argument}, _bridgeFin${index}⟩`);\n",
+          "current": "\tconst parameters = arguments_.map((argument, index) => {\n\t\tconst refinement = selected.parameters[index];\n\t\tif(refinement === null) return argument;\n\t\treturn refinement.kind === \"fin\" ? `⟨${argument}, _bridgeFin${index}⟩` : `_bridgeSubtype${index}`;\n\t});\n"
+        },
+        {
+          "start": 1352,
+          "previous": "\t\t, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? [] : [{\n\t\t\tbound: refinement.bound\n\t\t\t, proof: `_bridgeFin${index}`\n\t\t\t, value: arguments_[index]\n\t\t}])\n",
+          "current": "\t\t, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? []\n\t\t\t: refinement.kind === \"fin\" ? [{ kind: \"fin\", bound: refinement.bound\n\t\t\t\t, proof: `_bridgeFin${index}`, value: arguments_[index] }]\n\t\t\t\t: [{ kind: \"subtype\", binding: `_bridgeSubtype${index}`\n\t\t\t\t\t, constructor: refinement.constructor, value: arguments_[index] }])\n"
+        },
+        {
+          "start": 2216,
+          "previous": "\t\tbody = `if ${guard.proof} : (${guard.value}) < ${guard.bound} then\\n  ${body.replaceAll(\"\\n\", \"\\n  \")}\\nelse\\n  ${rejected}`;\n",
+          "current": "\t\tbody = guard.kind === \"fin\"\n\t\t\t? `if ${guard.proof} : (${guard.value}) < ${guard.bound} then\\n  ${body.replaceAll(\"\\n\", \"\\n  \")}\\nelse\\n  ${rejected}`\n\t\t\t: `match _root_.${guard.constructor} ${guard.value} with\\n| .some ${guard.binding} =>\\n  ${body.replaceAll(\"\\n\", \"\\n  \")}\\n| .none =>\\n  ${rejected}`;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-scalar-adapters.mjs",
+      "currentSha256": "5a98a622014bf42305880cb98958b38dff4dcebdbcca3bb66b03bef462ec10d3",
+      "previousSha256": "0ed59bc5fb742d4de586a45329d79332753b30a63aa123399bd0fcd54f7c0864",
+      "edits": [
+        {
+          "start": 758,
+          "previous": "",
+          "current": " * @param exports - Compiler-owned source exports carrying checked refinement metadata.\n"
+        },
+        {
+          "start": 850,
+          "previous": "export const generateComponentScalarAdapters = abi => {\n",
+          "current": "export const generateComponentScalarAdapters = (abi, exports = []) => {\n"
+        },
+        {
+          "start": 1148,
+          "previous": "",
+          "current": "\t\tconst source = exports.find(value => value.bindingId === item.bindingId);\n\t\tconst refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);\n"
+        },
+        {
+          "start": 1594,
+          "previous": "",
+          "current": "\t\tfor(const [index, refinement] of refinements.entries()) if(refinement?.kind === \"subtype\")\n\t\t\tlines.push(`extern uint8_t ${item.symbol}_refinement_${index}(${cType(types[index])});`);\n"
+        },
+        {
+          "start": 2822,
+          "previous": "",
+          "current": "\t\tfor(const [index, refinement] of refinements.entries()) if(refinement?.kind === \"subtype\")\n\t\t\tlines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/lean-component-compiler.mjs",
+      "currentSha256": "49a07ff6381b7762a307432857c930f6b076dcc369762801b8aeb2fc2d3ac2c5",
+      "previousSha256": "4ce7d914633bc3d1cea5b85259ca0695a5815fe725bce1808dd71fb34f6fab63",
+      "edits": [
+        {
+          "start": 11963,
+          "previous": "\t\t\tif(generated) await writeFile(paths.c, `${await readFile(paths.c, \"utf8\")}\\n${(adapterPlan.privateAbi.version === 9 ? generateComponentStructuredCallableAdapters : adapterPlan.privateAbi.version === 8 ? generateComponentRecursiveAdapters : [5, 6, 7].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi)}`);\n",
+          "current": "\t\t\tif(generated) await writeFile(paths.c, `${await readFile(paths.c, \"utf8\")}\\n${(adapterPlan.privateAbi.version === 9 ? generateComponentStructuredCallableAdapters : adapterPlan.privateAbi.version === 8 ? generateComponentRecursiveAdapters : [5, 6, 7].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi, adapterPlan.exports)}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "currentSha256": "7c64e71e38202386e346e88783e89e6c906859e547007c758eb32a3a211a8d7b",
+      "previousSha256": "43f06098d430307df6c11e31d05bf125eac1da08fb81bc5537d30e201a0c4065",
+      "edits": [
+        {
+          "start": 13029,
+          "previous": "",
+          "current": "test(\"checked constructors admit exact scalar Subtype parameters and results\", { skip: !enabled }, async t => {\n\tconst context = await lakeWorkspaceFixture(t);\n\tawait saveLakeFile(context.root, \"Shop.lean\", `namespace Shop\nabbrev Small := { value : UInt32 // value < 10 }\ndef checkedSmall (value : UInt32) : Option Small :=\n  if bound : value < 10 then some ⟨value, bound⟩ else none\ndef echoSmall (value : Small) : Small := value\ndef unchecked (value : { value : UInt32 // value != 0 }) : UInt32 := value.val\nend Shop\n`);\n\tconst copy = { ownership: \"copy\", lifetime: null };\n\tawait saveLakeFile(context.root, \"lean-bridge.exports.json\", canonicalJson({\n\t\tschemaVersion: 1\n\t\t, modules: [\"Shop\"]\n\t\t, exports: [\"Shop.echoSmall\", \"Shop.unchecked\"]\n\t\t, contracts: { \"Shop.echoSmall\": {\n\t\t\tparameters: [{ ...copy, refinement: { constructor: \"Shop.checkedSmall\" } }]\n\t\t\t, result: { ...copy, refinement: { constructor: \"Shop.checkedSmall\" } }\n\t\t\t, effects: []\n\t\t} }\n\t}));\n\tconst before = await lakeInputState(context.workspace), analysis = await inspect(context);\n\tawait assertJsonSchema(\"lake-entry-elaboration\", analysis.elaboration);\n\tawait assertJsonSchema(\"elaborated-export-metadata\", analysis.elaboration.metadata);\n\tconst declarations = analysis.elaboration.metadata.modules.flatMap(module => module.declarations);\n\tconst checked = declarations.find(item => item.identity === \"Shop.echoSmall\");\n\tconst unchecked = declarations.find(item => item.identity === \"Shop.unchecked\");\n\tassert.equal(checked.projection.status, \"supported\", JSON.stringify(checked.projection));\n\tconst subtype = { kind: \"refinement\"\n\t\t, base: { kind: \"primitive\", name: \"uint32\" }\n\t\t, predicate: { kind: \"subtype\", constructor: \"Shop.checkedSmall\" } };\n\tassert.deepEqual(checked.projection.parameters[0].type, subtype);\n\tassert.deepEqual(checked.projection.result, subtype);\n\tassert.equal(unchecked.projection.status, \"unsupported\");\n\tassert.equal(unchecked.projection.reason, \"unsupported-parameter-type\");\n\tconst declaration = analysis.bindingIr.document.declarations.find(item => item.name === \"echoSmall\");\n\tassert.deepEqual(declaration.parameters[0].type, { kind: \"primitive\", name: \"uint32\" });\n\tassert.deepEqual(declaration.result.type, { kind: \"primitive\", name: \"uint32\" });\n\tassert.deepEqual(declaration.source.extensions[\"lean-lang.org/refinements\"], {\n\t\tparameters: [{ kind: \"subtype\", constructor: \"Shop.checkedSmall\" }]\n\t\t, result: { kind: \"subtype\", constructor: \"Shop.checkedSmall\" }\n\t});\n\tassert.deepEqual(await lakeInputState(context.workspace), before);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "697cce07cb2a324d90d641847949718ead460f86ce1dd78600707bf10279214b",
+      "previousSha256": "522d8bf0191c34bd907343fa88d2b1cbdf8c2f658de6f76cef7091ef188dab74",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeSubtypeRefinementSource } from \"./subtype-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 32215,
+          "previous": "",
+          "current": "\tsource = beforeSubtypeRefinementSource(path, source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-host-evidence.mjs",
+      "currentSha256": "14b9ea2fb44b1a471de3bd4723f2ee8e2ea398be2d31d1d5a05eefddfb9163dd",
+      "previousSha256": "27b07d65d33c556e00059bc30d706312520fcbe11546593a724edb0a0968b1e5",
+      "edits": [
+        {
+          "start": 610,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1232,
+          "previous": "const priorSource = async (path, expected) => beforeWitCompositionIntegration(path, await readFile(path, \"utf8\"), expected);\n",
+          "current": "const priorSource = async (path, expected) => beforeWitCompositionIntegration(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\")), expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "1857f67816202fb7b672aff12bb9efa300a7094c933e128a8706bf6edf9a63c6",
+      "previousSha256": "56304f51849284ed6f4bb680d3f97e15e16086cff577067ab2e36cf7b5acafad",
+      "edits": [
+        {
+          "start": 28804,
+          "previous": "",
+          "current": "test(\"checked Subtype evidence promotes only Node parameters and results\", () => {\n\tconst cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === \"subtype\");\n\tconst installed = cells.filter(cell => cell.stages.installedExecution.state === \"passed\");\n\tassert.equal(installed.length, 4);\n\tassert.deepEqual([...new Set(installed.map(cell => cell.profile))], [\"node-javascript\", \"node-typescript\"]);\n\tassert.deepEqual([...new Set(installed.map(cell => cell.position))], [\"parameter\", \"result\"]);\n\tfor(const cell of installed)\n\t{\n\t\tassert.equal(cell.path, \"ordinary-source\");\n\t\tassert.deepEqual(cell.stages.installedExecution.evidence, [\"npm-subtype-refinements-installed\"]);\n\t\tassert.match(cell.hostType, /declared unboxed primitive/u);\n\t}\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/unlocked-component.test.mjs",
+      "currentSha256": "88d25e43a3f186eed0509c10ab346261b251aebc80cd7500f7ee7b8605f86abf",
+      "previousSha256": "b4f2fc8701dc311ca9252fa29facab79a8ee1365760f007691712ac7c634318c",
+      "edits": [
+        {
+          "start": 15913,
+          "previous": "",
+          "current": "abbrev Small := { value : UInt32 // value < 10 }\ndef checkedSmall (value : UInt32) : Option Small :=\n  if bound : value < 10 then some ⟨value, bound⟩ else none\ndef echoSmall (value : Small) : Small := value\n"
+        },
+        {
+          "start": 17207,
+          "previous": "",
+          "current": "\t\t, \"OnboardingSmall.echoSmall\": { parameters: [{ ...copy, refinement: { constructor: \"OnboardingSmall.checkedSmall\" } }]\n\t\t\t, result: { ...copy, refinement: { constructor: \"OnboardingSmall.checkedSmall\" } }\n\t\t\t, effects: [] }\n"
+        },
+        {
+          "start": 17520,
+          "previous": "\tawait saveLakeFile(root, \"lean-bridge.exports.json\", canonicalJson({ schemaVersion: 1, modules: [\"OnboardingSmall\"], exports: [...specializations.map(item => item.name), \"OnboardingSmall.bounded\", \"OnboardingSmall.plainWord\"], specializations, contracts }));\n",
+          "current": "\tawait saveLakeFile(root, \"lean-bridge.exports.json\", canonicalJson({ schemaVersion: 1, modules: [\"OnboardingSmall\"], exports: [...specializations.map(item => item.name), \"OnboardingSmall.bounded\", \"OnboardingSmall.echoSmall\", \"OnboardingSmall.plainWord\"], specializations, contracts }));\n"
+        },
+        {
+          "start": 18354,
+          "previous": "\t\tassert.deepEqual(ir.declarations.map(item => item.name), [\"bounded\", \"chooseWord\", \"echoNat\", \"echoText\", \"echoWord\", \"firstWord\", \"plainWord\"]);\n",
+          "current": "\t\tassert.deepEqual(ir.declarations.map(item => item.name), [\"bounded\", \"chooseWord\", \"echoNat\", \"echoSmall\", \"echoText\", \"echoWord\", \"firstWord\", \"plainWord\"]);\n"
+        },
+        {
+          "start": 20547,
+          "previous": "",
+          "current": "assert.equal(api.echoSmall(9), 9);\n"
+        },
+        {
+          "start": 20771,
+          "previous": "",
+          "current": "assert.throws(() => api.echoSmall(10));\n"
+        },
+        {
+          "start": 21775,
+          "previous": "",
+          "current": "\tassert.match(declarations, /echoSmall\\(arg0: number\\): number/);\n"
+        },
+        {
+          "start": 22304,
+          "previous": "if(word !== 4294967295 || text !== \"Lean λ 🙂\" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74 || bounded !== 4n)\n",
+          "current": "const small: number = api.echoSmall(9);\nif(word !== 4294967295 || text !== \"Lean λ 🙂\" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74 || bounded !== 4n || small !== 9)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wit-host-isolation-evidence.test.mjs",
+      "currentSha256": "a8bad97b3275ba6bef6f862a0b000686cb8fdc790553e7c957ef397939ece22f",
+      "previousSha256": "9920c94f6d8557386962a07add9bb48c3c0e8294fc0c94aee0400fd06cf47d7c",
+      "edits": [
+        {
+          "start": 675,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 3617,
+          "previous": "\t\tconst source = beforeWitCompositionIntegration(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "current": "\t\tconst source = beforeWitCompositionIntegration(update.path, beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\")), update.currentSha256);\n"
+        },
+        {
+          "start": 4250,
+          "previous": "\tconst inventory = beforeWitCompositionIntegration(record.inventory.path, await readFile(record.inventory.path, \"utf8\"), record.inventory.currentSha256);\n",
+          "current": "\tconst inventory = beforeWitCompositionIntegration(record.inventory.path, beforeFinRefinementSource(record.inventory.path, await readFile(record.inventory.path, \"utf8\")), record.inventory.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

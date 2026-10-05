@@ -175,7 +175,55 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 `effects` must match the adapter's boundary effects: `[]` for the current scalar and native APIs without callback arguments, or `["host-call", "fails"]` when an argument is a callback. Order does not matter. These labels describe the host-call protocol, not memory allocation inside Lean or a proof that arbitrary function bodies are pure. Returned `IO`, `EIO`, `Task` and other unsupported actions still fail signature checking.
 
-`refinement: "reject"` keeps unsupported refined types rejected; it does not erase a `Fin` bound or a `Subtype` predicate. C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.
+`refinement: "reject"` explicitly refuses a refined value; it never erases a `Fin` bound or `Subtype` predicate. A supported top-level `Fin n` needs no constructor setting because Lean Bridge generates and checks the bound from the elaborated type.
+
+### Export a checked Subtype
+
+For a top-level `Subtype` parameter or result, provide a total Lean function that checks a host value and returns the exact subtype:
+
+```lean
+namespace Library
+
+abbrev Small := { value : UInt32 // value < 10 }
+
+def checkedSmall (value : UInt32) : Option Small :=
+  if bound : value < 10 then some ⟨value, bound⟩ else none
+
+def echoSmall (value : Small) : Small := value
+
+end Library
+```
+
+Name that constructor at every refined boundary site:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Library"],
+  "exports": ["Library.echoSmall"],
+  "contracts": {
+    "Library.echoSmall": {
+      "parameters": [{
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": { "constructor": "Library.checkedSmall" }
+      }],
+      "result": {
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": { "constructor": "Library.checkedSmall" }
+      },
+      "effects": []
+    }
+  }
+}
+```
+
+Lean Bridge verifies the fully qualified constructor instead of trusting its name. It must belong to a selected module, take one explicit value of the subtype's exact base type, and return `Option` of the exact subtype. Its selected-module dependencies cannot be unsafe, partial, foreign, or replaced with `implemented_by` code.
+
+The current npm slice accepts top-level parameters and results over unboxed primitive bases in scalar or finite record component packages. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Nested positions, callbacks, heap-backed bases, reviewed IR, browser packages, and native targets remain unsupported.
+
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input.
 

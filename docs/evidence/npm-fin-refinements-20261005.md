@@ -8,7 +8,7 @@ Compiler-backed ordinary-source npm builds accept top-level parameters and resul
 
 The npm fixture builds the same mixed scalar-and-alias package from two relocated roots, reproduces both archives, verifies the component-package receipt, installs the archives offline, and executes the resulting Wasm from Node. It accepts `0` and `4` for `Fin 5`, rejects `-1` and `5`, and compiles a strict TypeScript caller against the installed `bigint` signature with `skipLibCheck` disabled. A separate real-Lean extractor test covers `Fin 0`, a transparent `Fin 7` alias, exact metadata/IR bounds, and rejection of nested `Array (Fin 5)`.
 
-This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for `Fin n`. It does not claim browser execution, reviewed-IR admission, native profiles, nested refinements, callbacks containing `Fin`, nonliteral bounds, dependent refinements, or general `Subtype` support.
+This evidence promotes only ordinary-source Node JavaScript and Node TypeScript parameter/result cells for `Fin n`. It does not claim browser execution, reviewed-IR admission, native profiles, nested refinements, callbacks containing `Fin`, nonliteral bounds, or dependent refinements. Checked `Subtype` constructors have a [separate, narrower acceptance boundary](npm-subtype-refinements-20261005.md).
 
 ## Commands
 
@@ -21,5 +21,5 @@ LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializat
 The reproducible installed component archive SHA-256 is:
 
 ```text
-749d6b0a1d96feee043e4997298c49ed8c2269757fd40cb1b786673543843140
+a73efa043f47e2a814caca3adfeaba79714094ccf96c702139b9f900ddbcbe87
 ```

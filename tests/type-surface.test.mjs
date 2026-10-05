@@ -417,6 +417,20 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
+test("checked Subtype evidence promotes only Node parameters and results", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
+	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(installed.length, 4);
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))], ["node-javascript", "node-typescript"]);
+	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
+	for(const cell of installed)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-subtype-refinements-installed"]);
+		assert.match(cell.hostType, /declared unboxed primitive/u);
+	}
+});
+
 test("unknown fields, versions, evidence states and unsafe paths fail closed", () => {
 	for(const change of [
 		value => { value.schemaVersion = 2; }

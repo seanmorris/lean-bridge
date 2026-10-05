@@ -10,6 +10,7 @@ import { witHostLibraryHash } from "../../src/backends/wit/host-library-hash.mjs
 import { assertWitPackageReports } from "./wit-package-evidence.mjs";
 import { witHostChangedPaths, reverseWitHostUpdate, reverseWitHostInventory } from "./wit-host-source-history.mjs";
 import { beforeWitCompositionIntegration } from "./wit-composition-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 
 export const witHostExecutionPath = "docs/evidence/wit-host-isolation-20260924.json";
 export const witHostAddedPaths = [
@@ -22,7 +23,7 @@ export const witHostAddedPaths = [
 	, "tests/wit-host-packages.test.mjs"
 ].sort();
 const digest = value => sha256(canonicalJson(value));
-const priorSource = async (path, expected) => beforeWitCompositionIntegration(path, await readFile(path, "utf8"), expected);
+const priorSource = async (path, expected) => beforeWitCompositionIntegration(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), expected);
 const passing = (log, passes, skipped = 0) => {
 	assert.equal(sha256(log.text), log.sha256);
 	assert.match(log.text, new RegExp(`# pass ${passes}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n`));
