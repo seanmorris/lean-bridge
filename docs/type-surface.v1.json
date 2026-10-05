@@ -29444,7 +29444,7 @@
     {
       "id": "npm-finite-specializations-installed",
       "kind": "installed",
-      "revision": "b0c3398566eba66d6dac53c891bedeb28ef12061",
+      "revision": "8b2d3b9e7d965973130f20f0d9e89830515927bb",
       "command": "source scripts/env.sh && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs",
       "scope": "Relocated ordinary-source Lean builds reproduce and install concrete npm exports for finite generic specializations. Node executes the installed WebAssembly, strict TypeScript compiles against the installed declarations with skipLibCheck disabled, Lean resolves leading implicit type arguments and following instance dictionaries, and the unspecialized declaration stays absent.",
       "files": [
@@ -29475,7 +29475,7 @@
     {
       "id": "npm-fin-refinements-installed",
       "kind": "installed",
-      "revision": "b0c3398566eba66d6dac53c891bedeb28ef12061",
+      "revision": "8b2d3b9e7d965973130f20f0d9e89830515927bb",
       "command": "source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds|nested refinement metadata' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile|nested Fin containers' tests/unlocked-component.test.mjs",
       "scope": "Ordinary-source npm builds preserve closed literal Fin bounds in top-level and structural-container parameters/results through compiler-owned refinement trees. Installed Node JavaScript and strict TypeScript checks cover relocated reproducible packages, invalid-input recovery through compiled Lean even without JS refinement validation, Fin 0 empty containers and bounds above 64 bits. Nominal fields, aliases wrapping refined containers and callback-internal positions reject.",
       "files": [
@@ -29517,7 +29517,7 @@
         },
         {
           "path": "docs/evidence/npm-nested-fin-20261005.md",
-          "sha256": "6b997a22870db6ec210ac146c2593aa1dfd01fde281fbd8a2304c9db29b0cb43"
+          "sha256": "43b87b31aa45df7f7eaeee9e7518d1348b3f0a110d43f975557d21bd3a2ac95b"
         },
         {
           "path": "src/abi/refinements.mjs",

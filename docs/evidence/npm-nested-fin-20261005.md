@@ -2,6 +2,8 @@
 
 VO: **1220** — generic specializations and checked refinement mappings.
 
+Implementation: `8b2d3b9e7d965973130f20f0d9e89830515927bb`.
+
 Ordinary-source npm exports preserve closed literal `Fin` bounds inside arrays, lists, options, pairs, and `Except`. The public representation uses `bigint` at every constrained leaf. Binding IR retains the structural refinement tree, including success/error ordering and unconstrained siblings. JavaScript validates each bound; compiled Lean independently checks inputs before constructing proof-carrying values or dispatching the source function. Result conversion evaluates the source call once.
 
 `tests/helpers/nested-fin-packages.mjs` builds each package twice under relocated roots, reproduces its archive, verifies the receipt, moves the author sources away, and installs only the npm archives offline. Every profile runs strict TypeScript with `skipLibCheck: false`.

@@ -99,7 +99,7 @@
     },
     {
       "path": "docs/type-surface.v1.json",
-      "currentSha256": "205cce1c0e0ebf048c51736e69b4095a6aee8e0398a2153172c577cf097cd414",
+      "currentSha256": "bfe2fdfc78641ebe60a1f08cf0d9df6c7b0f5a91643744e5c7d8d384daa62e0a",
       "previousSha256": "75c848ca4b27800fcff6b83c3c5aa5bdbfa3b55e09cd00d99ff8401c9f5bc9fb",
       "edits": [
         {
@@ -1718,6 +1718,11 @@
           "current": "          \"sha256\": \"b1c529c64951e47b9eefc1ff0563e3be5e4bf8d662cb3c405ea511f7281fb498\"\n"
         },
         {
+          "start": 1407971,
+          "previous": "      \"revision\": \"b0c3398566eba66d6dac53c891bedeb28ef12061\",\n",
+          "current": "      \"revision\": \"8b2d3b9e7d965973130f20f0d9e89830515927bb\",\n"
+        },
+        {
           "start": 1408699,
           "previous": "          \"sha256\": \"c979fcc341ab7ffa2f8d58cfb10e852efa844e4e8ebb13c5f8422c99d4c1fe56\"\n",
           "current": "          \"sha256\": \"8cc41b8709568b769ed53b2863b3308fad24b92758a9b007b7f479b91b98502a\"\n"
@@ -1738,9 +1743,9 @@
           "current": "          \"sha256\": \"096e1322686b9995683aa44a13fc30073b55fa42478ddbfbe574bdcc91ab0ef5\"\n"
         },
         {
-          "start": 1409652,
-          "previous": "      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds preserve closed literal Fin bounds through elaborated metadata and Binding IR, generate checked Lean constructors, reject invalid host inputs, reproduce after relocation, verify their receipt, install offline, execute from Node and compile a strict TypeScript consumer. Fin 0 and transparent aliases are analyzed; nested Fin values reject.\",\n",
-          "current": "      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds|nested refinement metadata' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile|nested Fin containers' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds preserve closed literal Fin bounds in top-level and structural-container parameters/results through compiler-owned refinement trees. Installed Node JavaScript and strict TypeScript checks cover relocated reproducible packages, invalid-input recovery through compiled Lean even without JS refinement validation, Fin 0 empty containers and bounds above 64 bits. Nominal fields, aliases wrapping refined containers and callback-internal positions reject.\",\n"
+          "start": 1409590,
+          "previous": "      \"revision\": \"b0c3398566eba66d6dac53c891bedeb28ef12061\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds preserve closed literal Fin bounds through elaborated metadata and Binding IR, generate checked Lean constructors, reject invalid host inputs, reproduce after relocation, verify their receipt, install offline, execute from Node and compile a strict TypeScript consumer. Fin 0 and transparent aliases are analyzed; nested Fin values reject.\",\n",
+          "current": "      \"revision\": \"8b2d3b9e7d965973130f20f0d9e89830515927bb\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='literal Fin bounds|nested refinement metadata' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile|nested Fin containers' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds preserve closed literal Fin bounds in top-level and structural-container parameters/results through compiler-owned refinement trees. Installed Node JavaScript and strict TypeScript checks cover relocated reproducible packages, invalid-input recovery through compiled Lean even without JS refinement validation, Fin 0 empty containers and bounds above 64 bits. Nominal fields, aliases wrapping refined containers and callback-internal positions reject.\",\n"
         },
         {
           "start": 1410595,
@@ -1785,7 +1790,7 @@
         {
           "start": 1411899,
           "previous": "          \"sha256\": \"8a44eb019034c65ec6df2c5d34cb6219d1ec95318a4e817127d6be95c43b59b2\"\n",
-          "current": "          \"sha256\": \"e769daff9aaee6bc5fa1075ac374aba30227a16356faa5a63ef9befee95823c4\"\n        },\n        {\n          \"path\": \"docs/evidence/npm-nested-fin-20261005.md\",\n          \"sha256\": \"6b997a22870db6ec210ac146c2593aa1dfd01fde281fbd8a2304c9db29b0cb43\"\n        },\n        {\n          \"path\": \"src/abi/refinements.mjs\",\n          \"sha256\": \"42d48fe83bb1a2a4d6dd06b04239b6084cf046f34d5cad8c3617890e04aea050\"\n        },\n        {\n          \"path\": \"src/analyze/export-configuration.mjs\",\n          \"sha256\": \"c6f3cf52742dc11e373f9ae7a75b4871dcc5893baddd5d85c6a9d46a9e26d4f7\"\n        },\n        {\n          \"path\": \"src/build/component-copied-adapters.mjs\",\n          \"sha256\": \"80a7f9625b34c5612365f17835c5b82acbcd8108756e0f6b7ade55ae85b5b0e6\"\n        },\n        {\n          \"path\": \"src/build/component-record-adapters.mjs\",\n          \"sha256\": \"5408b26378e526b3536591f0792c4f054067a107a552568527550a0da5c3ff9b\"\n        },\n        {\n          \"path\": \"src/build/component-recursive-adapters.mjs\",\n          \"sha256\": \"679ef3d3e600a75baa49c715efcee08b58b05a42a3a97dc7f62f6999ab4b54e7\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-adapters.mjs\",\n          \"sha256\": \"fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016\"\n        },\n        {\n          \"path\": \"tests/helpers/nested-fin-packages.mjs\",\n          \"sha256\": \"0bec680821198e3f0d5a80de586f2d2b35e7a778917e0be3d400c0b9392663e6\"\n        },\n        {\n          \"path\": \"tests/component-array-contract.test.mjs\",\n          \"sha256\": \"a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c\"\n"
+          "current": "          \"sha256\": \"e769daff9aaee6bc5fa1075ac374aba30227a16356faa5a63ef9befee95823c4\"\n        },\n        {\n          \"path\": \"docs/evidence/npm-nested-fin-20261005.md\",\n          \"sha256\": \"43b87b31aa45df7f7eaeee9e7518d1348b3f0a110d43f975557d21bd3a2ac95b\"\n        },\n        {\n          \"path\": \"src/abi/refinements.mjs\",\n          \"sha256\": \"42d48fe83bb1a2a4d6dd06b04239b6084cf046f34d5cad8c3617890e04aea050\"\n        },\n        {\n          \"path\": \"src/analyze/export-configuration.mjs\",\n          \"sha256\": \"c6f3cf52742dc11e373f9ae7a75b4871dcc5893baddd5d85c6a9d46a9e26d4f7\"\n        },\n        {\n          \"path\": \"src/build/component-copied-adapters.mjs\",\n          \"sha256\": \"80a7f9625b34c5612365f17835c5b82acbcd8108756e0f6b7ade55ae85b5b0e6\"\n        },\n        {\n          \"path\": \"src/build/component-record-adapters.mjs\",\n          \"sha256\": \"5408b26378e526b3536591f0792c4f054067a107a552568527550a0da5c3ff9b\"\n        },\n        {\n          \"path\": \"src/build/component-recursive-adapters.mjs\",\n          \"sha256\": \"679ef3d3e600a75baa49c715efcee08b58b05a42a3a97dc7f62f6999ab4b54e7\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-adapters.mjs\",\n          \"sha256\": \"fb4348ce9910492e871fa66ddcfb80a29376d65b897293e147c786b04f516016\"\n        },\n        {\n          \"path\": \"tests/helpers/nested-fin-packages.mjs\",\n          \"sha256\": \"0bec680821198e3f0d5a80de586f2d2b35e7a778917e0be3d400c0b9392663e6\"\n        },\n        {\n          \"path\": \"tests/component-array-contract.test.mjs\",\n          \"sha256\": \"a4f73221aedef772f7058230ccd735eee6f92a50c82b5e32d263de256cbfae1c\"\n"
         },
         {
           "start": 1413630,
