@@ -10,6 +10,7 @@ import ts from "typescript";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertOwnedPerlCallbackVariantMatrix, assertOwnedPerlCallbackVariantLog
 	, assertOwnedPerlCallbackVariantTap
 	, ownedPerlCallbackVariantReports } from "./owned-perl-callback-result-variant-evidence.mjs";
@@ -74,7 +75,7 @@ export const perlVariantSourcePaths = async () => {
 		, "docs/evidence/post-perl-callback-staging-source-history-20261003.json"
 		, "docs/evidence/wit-callback-runtime-staging-source-history-20261003.json"
 		, "tests/fixtures/structured-types/owned-perl-callback-results-variants-installed.pl"
-		, ...JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files]);
+		, ...JSON.parse(beforeFinRefinementSource("config/cli-package.v1.json", await readFile("config/cli-package.v1.json", "utf8"))).files]);
 	const pending = [...perlVariantClosureRoots], visited = new Set();
 	while(pending.length)
 	{
@@ -82,7 +83,7 @@ export const perlVariantSourcePaths = async () => {
 		if(visited.has(path)) continue;
 		visited.add(path); paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, await readFile(path, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
@@ -172,8 +173,8 @@ export const assertPerlVariantAcceptance = async record => {
 	const expected = new Map(reports[ownedPerlCallbackVariantReports[0]].cli.files.map(value => [value.path, value.sha256]));
 	const readSource = async path => {
 		assert.ok(Object.hasOwn(record.sources, path), path);
-		const bytes = await readFile(path), digest = expected.get(path);
-		return digest ? beforePostPerlCallbackStaging(path, bytes, digest) : bytes;
+		const bytes = await readFile(path), digest = expected.get(path) ?? record.sources[path];
+		return beforePostPerlCallbackStaging(path, bytes, digest);
 	};
 	assert.deepEqual(await assertOwnedPerlCallbackVariantMatrix(reports, readSource), perlVariantCounts);
 };

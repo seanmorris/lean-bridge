@@ -24,6 +24,7 @@ import { lakeGit, lakeInputState, saveLakeFile } from "./helpers/lake-workspace.
 import { generatedLakeEntryFixture } from "./helpers/lake-generator.mjs";
 import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { checkSubtypeComponentPackages } from "./helpers/subtype-component-packages.mjs";
+import { checkNestedFinPackages } from "./helpers/nested-fin-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -57,6 +58,10 @@ const build = (root, outputRoot, runner = transport()) => buildCanonicalProject(
 
 test("checked Subtype inputs compose with copied and callable npm packages", { skip: !enabled }, async t => {
 	await checkSubtypeComponentPackages(t, { fixture, build, runtimeRoot, engineRoot });
+});
+
+test("nested Fin containers compile, reproduce and reject safely in installed npm packages", { skip: !enabled }, async t => {
+	await checkNestedFinPackages(t, { fixture, build, runtimeRoot, engineRoot });
 });
 
 test("unlocked build intent is source-only, relocatable, and records lockfile absence", async t => {

@@ -35,7 +35,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	const frame = (signature, name, target, closure = false) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const refinements = closure ? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];
-		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
 			lines.push(`extern uint8_t ${name}_refinement_${index}(lean_object *);`);
 		lines.push(closure ? `static uint32_t ${name}(lean_object *closure, bridge_scalar_frame *frame) {`
 			: `LEAN_EXPORT uint32_t ${name}(bridge_scalar_frame *frame) {`
@@ -57,7 +57,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 			lines.push(`  lean_object *a${index} = ${identity(type)
 				? `${prefix(callbacks.get(type.id))}_wrap((size_t)frame->args[${index}].bits)`
 				: `${walker(type)}_decode(&frame->args[${index}])`};`);
-		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
 			lines.push(`  lean_inc(a${index});`
 				, `  if (!${name}_refinement_${index}(a${index})) { ${names.map(name => `lean_dec(${name});`).join(" ")} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${target}(${[...(closure ? ["closure"] : []), ...names].join(", ") || "lean_box(0)"});`);

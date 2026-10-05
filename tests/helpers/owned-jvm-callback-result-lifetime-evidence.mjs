@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -65,7 +66,7 @@ const inputs = async (item, combined) => {
 		, ...combined ? { transferredInputs: true, anchoredResults: true, receiverExports: true } : {} });
 	assert.deepEqual(component, { id: "owned-aggregates@1.0.0", name: "owned-aggregates", version: "1.0.0" });
 	assert.equal(Boolean(identity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(identity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), identity.extractorSha256)));
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(identity.modules.find(value => value.module === "Owned").source.sha256,
 		sha256(lean + (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource)));

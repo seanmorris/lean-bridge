@@ -23,5 +23,5 @@ LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializat
 The reproducible installed component archive SHA-256 is:
 
 ```text
-9da2785eca60bf8b7acebbea266c8467206f319bb1b277a7b132f953f60152dd
+096e1322686b9995683aa44a13fc30073b55fa42478ddbfbe574bdcc91ab0ef5
 ```

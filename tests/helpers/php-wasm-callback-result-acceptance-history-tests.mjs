@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertPhpWasmCallbackResultHistory, beforePhpWasmCallbackResultAcceptance
 	, phpWasmCallbackResultIntroducedPaths, phpWasmCallbackResultModifiedPaths
 	, phpWasmCallbackResultReaderPaths, readPhpWasmCallbackResultHistory
@@ -35,7 +36,7 @@ test("PHP-Wasm callback-result history reconstructs integration and prior source
 	}
 	for(const update of record.readerUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const previous = reversePhpWasmCallbackResultUpdate(current, update, "readerUpdates");
 		assert.equal(sha256(previous), update.previousSha256, update.path);
 	}

@@ -137,15 +137,16 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   return ← nominalReference e name
 
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
-    (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none) : ShapeM Json := do
+    (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
+    (containerFin : Bool := true) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
   if e.hasFVar || e.hasLooseBVars || e.hasMVar then
     reject e "dependent or unresolved native type"
   if e.isAppOfArity ``Fin 1 then
-    if depth != 0 || copied then
-      reject e "Fin refinements currently require a top-level parameter or result"
+    if (depth != 0 || copied) && !containerFin then
+      reject e "Fin refinements require a top-level or structural-container parameter or result"
     if request.profile.getD "component-scalars-v1" != "component-scalars-v1" then
       reject e "Fin refinements are not implemented by the native-library profile"
     let bound ← whnf e.appArg!
@@ -204,7 +205,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
                 return ← nominalReference e name
-              let target ← shapeTree request definition.value (name :: seen) 0 copied checked
+              -- A direct Fin alias erases like Fin. Aliases around containers
+              -- still need a nominal codec; do not admit those by accident.
+              let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked (containerFin && directFin)
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
@@ -244,7 +248,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true)])
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true none false)])
       return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
     if let .inductInfo induct ← getConstInfo name then
@@ -284,7 +288,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shapeTree request fieldType (name :: seen) 0 true)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true none false)])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
@@ -292,15 +296,15 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       return ← rememberShape e name <| obj [("kind", str "variant"), ("name", str name.toString),
         ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
-    let first ← shapeTree request args[0]! seen (depth + 1) true
-    let second ← shapeTree request args[1]! seen (depth + 1) true
+    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin
+    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     let result := e.isAppOfArity ``Except 2
     return obj [("kind", str (if result then "result" else "tuple")),
@@ -315,13 +319,13 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← shapeTree request argument seen (depth + 1))
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none false)
         result := rest
       | _ => break
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1)), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1) false none false), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has
@@ -548,11 +552,22 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
       ("result", runtimeResult)])
 
 /- Contracts constrain the adapter; they never supply a type or authorize erasure. -/
+partial def containsRefinement (type : Json) : Bool :=
+  let kind := (type.getObjValAs? String "kind").toOption.getD ""
+  if kind == "refinement" then true
+  else if kind == "graph" then
+    containsRefinement ((type.getObjVal? "root").toOption.getD Json.null)
+  else if ["array", "list", "option"].contains kind then
+    containsRefinement ((type.getObjVal? "element").toOption.getD Json.null)
+  else if ["tuple", "result"].contains kind then
+    ((type.getObjValAs? (Array Json) "arguments").toOption.getD #[]).any containsRefinement
+  else false
+
 def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     (owned : Bool := false) : Option String := Id.run do
   if let .ok refinement := site.getObjVal? "refinement" then
     if refinement == str "reject" then
-      if (type.getObjValAs? String "kind").toOption == some "refinement" then
+      if containsRefinement type then
         return some s!"{label}: the contract rejects compiler-checked refined values"
     else
       let predicate := (type.getObjVal? "predicate").toOption.getD Json.null

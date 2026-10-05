@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -68,7 +69,7 @@ export const assertOwnedJvmCallbackPackageInputs = async (item, targets = { mave
 		assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(ir));
 		assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, hash(ir));
 	}
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256,
 		sha256(lean + (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource)));
@@ -338,7 +339,7 @@ const assertCli = async (item, readSource) => {
 	{
 		const file = item.cli.files.find(value => value.path === path);
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;
-		assert.deepEqual(file, { path, mode, ...identity(await readSource(path)) }, path);
+		assert.deepEqual(file, { path, mode, ...identity(beforeFinRefinementSource(path, await readSource(path), file.sha256)) }, path);
 	}
 };
 

@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { basename, isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -99,7 +100,7 @@ const assertSources = async (mode, item, readSource) => {
 	assert.equal(identity.leanVersion, "4.32.2");
 	assert.equal(identity.leanCommit, "f3b06c705e6c85f5314019d5d3baab0fec5b580c");
 	assert.equal(identity.leanCompilerSha256, "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550");
-	assert.equal(identity.extractorSha256, sha256(await readSource("src/analyze/NativeExports.lean")));
+	assert.equal(identity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), identity.extractorSha256)));
 	const configuration = mode === "ordinary" ? await ownedDotnetCallbackResultCombinedConfiguration() : { schemaVersion: 1, modules: ["Owned"] };
 	configuration.targets = { cpan: { module: "LeanBridge::OwnedProbe", version: "0.010" } };
 	assert.equal(identity.exportConfigurationSource, canonicalJson(configuration));
@@ -467,7 +468,8 @@ export const assertOwnedPerlCallbackPackageIdentity = async (item, model, readSo
 		keys(file, ["path", "bytes", "sha256", "mode"]); digest(file.sha256);
 		assert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);
 		assert.equal(file.mode, ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(file.path) ? 0o755 : 0o644);
-		const source = Object.hasOwn(generated, file.path) ? generated[file.path] : await readSource(file.path);
+		const source = Object.hasOwn(generated, file.path) ? generated[file.path]
+			: beforeFinRefinementSource(file.path, await readSource(file.path), file.sha256);
 		assert.equal(file.sha256, sha256(source), file.path); assert.equal(file.bytes, Buffer.byteLength(source), file.path);
 	}
 	validatePackageSetReceipt(item.packageSetReceipt);

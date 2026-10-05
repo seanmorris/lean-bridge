@@ -9,6 +9,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
+import { assertRefinement } from "../abi/refinements.mjs";
 import { assertComponentCallableAbi } from "../abi/component-callables.mjs";
 import { assertComponentCopiedAbi, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { componentCallableLeanPrelude, createComponentPrivateAbi } from "./component-callable-adapters.mjs";
@@ -18,7 +19,7 @@ import { assertComponentRecursiveAbi, componentRecursiveAbi } from "../abi/compo
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
-import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -104,12 +105,21 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
-const validateRefinement = (value, path, leanType) => {
+const validateRefinement = (value, path, leanType, depth = 0) => {
 	if(value === null) return;
+	if(!value || typeof value !== "object" || depth > 32) fail("invalid-compiler-adapter-plan", `${path} has an invalid refinement tree`);
+	if(["array", "list", "option", "tuple", "result"].includes(value.kind))
+	{
+		exactKeys(value, ["kind", "arguments"], path);
+		if(!Array.isArray(value.arguments) || value.arguments.length !== (["tuple", "result"].includes(value.kind) ? 2 : 1))
+			fail("invalid-compiler-adapter-plan", `${path} has invalid refinement arguments`);
+		value.arguments.forEach(child => validateRefinement(child, path, undefined, depth + 1));
+		return;
+	}
 	if(value.kind === "fin")
 	{
 		exactKeys(value, ["kind", "bound"], path);
-		if(typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound) || leanType !== "_root_.Nat")
+		if(typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound) || (leanType !== undefined && leanType !== "_root_.Nat"))
 			fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound over Nat`);
 		return;
 	}
@@ -177,6 +187,17 @@ export const validateCompilerAdapterPlan = plan => {
 			fail("invalid-compiler-adapter-plan", "private ABI export order and identities must match generated exports");
 		}
 		if(!Array.isArray(item.parameters) || item.result === null || typeof item.result !== "object") fail("invalid-compiler-adapter-plan", "private ABI type shapes are incomplete");
+		const refinements = plan.exports[index].refinements;
+		if(refinements)
+		{
+			try
+			{
+				refinements.parameters.forEach((refinement, i) => assertRefinement(refinement, item.parameters[i]));
+				assertRefinement(refinements.result, item.result);
+			}
+			catch(error)
+			{ fail("invalid-compiler-adapter-plan", error.message); }
+		}
 		if(!callable && !copied) assertComponentSignature(item);
 	}
 	return true;
@@ -206,11 +227,11 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
 		const callback = privateAbi.callbacks?.find(type => type.id === signature.result.id);
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
-		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === "subtype")
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement && refinement.kind !== "fin")
 		{
 			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
 			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);
-			lines.push(`  match _root_.${refinement.constructor} value with`);
+			lines.push(`  match ${componentRefinementConversion(refinement, "value")} with`);
 			lines.push("  | .some _ => 1", "  | .none => 0", "");
 		}
 		const refined = componentRefinedCall(item, item.parameters.map(parameter => parameter.name));

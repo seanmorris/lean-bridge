@@ -18,6 +18,50 @@ import { arrayReviewedIr } from "./helpers/array-fixture.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from "./helpers/subtype-component-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { assertRefinement } from "../src/abi/refinements.mjs";
+import { componentRefinedCall } from "../src/build/component-refinements.mjs";
+import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
+import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
+
+test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
+	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);
+	const tree = { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "10" }] }] };
+	ir.declarations[0].source.extensions["lean-lang.org/refinements"] = { parameters: [tree], result: tree };
+	const generated = generateCompilerAdapters({ analysis: {
+		bindingIr: { origin: "lean-elaborated", document: ir, semanticSha256: "1".repeat(64) }
+		, exportCandidates: [{ declaration: "Refinements.echo", sourceModule: "Refinements", status: "exportable" }]
+	}
+	, componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
+	await assertJsonSchema("compiler-adapter-plan", generated.plan);
+	const lean = generated.files["LeanBridgeGenerated.lean"];
+	assert.match(lean, /if proof : .* < 10 then _root_\.Option.some/);
+	assert.match(lean, /: _root_\.Fin 10/);
+	assert.match(lean, /mapM/); assert.match(lean, /\.map /);
+	assert.doesNotMatch(lean, /sorry|unsafeCast|axiom/);
+	const c = generateComponentCopiedAdapters(generated.plan.privateAbi, generated.plan.exports);
+	const symbol = generated.plan.exports[0].symbol;
+	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n  if \\(!${symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); return 5; \\}`));
+	const files = generateJavaScriptPackage(ir);
+	const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+	validators.assertNestedFin([[0n, 9n], []], tree, "rows");
+	assert.throws(() => validators.assertNestedFin([[10n]], tree, "rows"), /rows\[0\]\[0\] must be bigint below 10/);
+	for(const bad of [
+		{ kind: "array", arguments: [null] }, { kind: "array", arguments: [] }
+		, { kind: "array", arguments: [{ kind: "fin", bound: "10" }] }
+		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "01" }] }] }
+		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked" }] }] }
+	]) assert.throws(() => assertRefinement(bad, ir.declarations[0].parameters[0].type));
+	const forged = structuredClone(generated.plan);
+	forged.exports[0].refinements.parameters[0] = { kind: "fin", bound: "10" };
+	assert.throws(() => validateCompilerAdapterPlan(forged), /Fin bound over Nat|transport type/);
+});
+
+test("refined product results evaluate the source application exactly once", () => {
+	const result = { kind: "tuple", arguments: [{ kind: "fin", bound: "3" }, { kind: "fin", bound: "7" }] };
+	const call = componentRefinedCall({ sourceDeclaration: "Refinements.once", refinements: { parameters: [], result } }, []).call;
+	assert.equal(call.split("_root_.Refinements.once").length - 1, 1);
+	assert.match(call, /let _bridgeResult :=/);
+});
 
 test("array compiler plans agree with schemas and preserve parenthesized nested types", async () => {
 	const ir = arrayReviewedIr();
@@ -64,7 +108,7 @@ test("Subtype component history preserves predecessors and rejects altered sourc
 	assert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNestedFinSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);
@@ -76,6 +120,22 @@ test("Subtype component history preserves predecessors and rejects altered sourc
 	}
 	const unknown = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeFinRefinementSource("unknown.bin", unknown), unknown);
+});
+
+test("nested Fin history authenticates complete source transitions and stopping points", async () => {
+	const history = JSON.parse(await readFile(nestedFinHistoryPath, "utf8"));
+	assert.equal(history.predecessorCommit, "4b07413e43a6a3cd72cf738659f8e78ee5a00028");
+	assert.deepEqual(history.updates.map(item => item.path), nestedFinChangedPaths);
+	for(const update of history.updates)
+	{
+		const source = await readFile(update.path, "utf8");
+		assert.equal(sha256(reverseNestedFinUpdate(source, update)), update.previousSha256);
+		assert.equal(sha256(beforeNestedFinSource(update.path, source)), update.previousSha256);
+		const bytes = Buffer.from(source);
+		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
+		assert.throws(() => reverseNestedFinUpdate(source + "\nunreviewed\n", update));
+		assert.throws(() => reverseNestedFinUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
 });
 
 test("array admission rejects changed types, ownership, effects and unsupported compounds", () => {

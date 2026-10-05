@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -51,7 +52,7 @@ export const assertOwnedDotnetCallbackPackageInputs = async (item, targets = { n
 		assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(ir));
 		assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, hash(ir));
 	}
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256,
 		sha256(lean + (combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource)));

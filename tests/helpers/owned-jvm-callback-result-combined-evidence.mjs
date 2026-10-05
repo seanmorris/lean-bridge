@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { javascriptWasmOwnedPins, javascriptWasmTargetHeaders } from "../../src/build/javascript-wasm-owned-artifacts.mjs";
@@ -38,7 +39,8 @@ const cli = async (report, readSource) => {
 	for(const path of config.files)
 	{
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;
-		assert.deepEqual(report.files.find(file => file.path === path), { path, mode, ...identity(await readSource(path)) }, path);
+		const file = report.files.find(file => file.path === path);
+		assert.deepEqual(file, { path, mode, ...identity(beforeFinRefinementSource(path, await readSource(path), file.sha256)) }, path);
 	}
 	for(const file of report.files)
 	{ digest(file.sha256); assert.ok(Number.isSafeInteger(file.bytes) && file.bytes >= 0); }

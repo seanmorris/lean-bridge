@@ -175,7 +175,32 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 `effects` must match the adapter's boundary effects: `[]` for the current scalar and native APIs without callback arguments, or `["host-call", "fails"]` when an argument is a callback. Order does not matter. These labels describe the host-call protocol, not memory allocation inside Lean or a proof that arbitrary function bodies are pure. Returned `IO`, `EIO`, `Task` and other unsupported actions still fail signature checking.
 
-`refinement: "reject"` explicitly refuses a refined value; it never erases a `Fin` bound or `Subtype` predicate. A supported top-level `Fin n` needs no constructor setting because Lean Bridge generates and checks the bound from the elaborated type.
+`refinement: "reject"` refuses refined values, including refinements nested inside containers. It never erases a `Fin` bound or `Subtype` predicate.
+
+### Export bounded integers
+
+Ordinary-source npm packages support `Fin n` as a parameter or result, including inside `Array`, `List`, `Option`, pairs, and `Except`. The bound must reduce to a closed natural-number literal. No constructor setting is needed: Lean Bridge reads the bound from Lean and generates the checks.
+
+```lean
+namespace Library
+
+def reverseDigits (values : Array (Fin 10)) : Array (Fin 10) := values.reverse
+
+end Library
+```
+
+The installed JavaScript package accepts `bigint` values:
+
+```js
+import { reverseDigits } from "my-library";
+
+console.log(reverseDigits([0n, 9n])); // [9n, 0n]
+reverseDigits([10n]); // Throws: each value must be below 10.
+```
+
+Generated JavaScript checks every constrained element. Compiled Lean checks again before constructing proof-carrying values or calling the source function; invalid input leaves the runtime usable. Empty arrays and lists of `Fin 0`, and `Option.none`, are valid even though no individual `Fin 0` value exists. Bounds larger than a machine word remain exact.
+
+Aliases directly naming `Fin n` work too. Refinements in record or variant fields, aliases wrapping refined containers, callback signatures, and native packages are not supported yet; analysis rejects those positions.
 
 ### Export a checked Subtype
 

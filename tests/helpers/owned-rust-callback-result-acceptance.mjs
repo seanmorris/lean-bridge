@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -83,7 +84,7 @@ const nativeOptions = (hostCallbacks, combined) => ({
 });
 const source = async (input, mode, combined) => {
 	assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
-	assert.equal(input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), input.sourceIdentity.extractorSha256)));
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(input.sourceIdentity.modules.find(item => item.module === "Owned").source.sha256
 		, sha256(lean + (combined ? ownedCallbackResultCombinedSource : ownedCallbackResultSource)));

@@ -1,5 +1,5 @@
 /**
- * Render compiler-owned top-level refinements around a generated Lean source call.
+ * Render compiler-owned refinements around a generated Lean source call.
  * Runtime ABIs carry Fin values as Nat; only this checked adapter constructs Fin.
  *
  * @file
@@ -8,6 +8,34 @@
 const refinements = (item, count) => item.refinements ?? {
 	parameters: Array.from({ length: count }, () => null)
 	, result: null
+};
+
+/**
+ * Convert an erased value to proof-carrying Lean data through Option, or project
+ * a result back to transport data. Every Fin proof comes from a decidable check.
+ *
+ * @param refinement - Validated scalar or structural refinement tree.
+ * @param value - Lean value expression.
+ * @param checked - Construct checked input when true; erase result when false.
+ * @param depth - Fresh binder suffix for nested conversions.
+ */
+export const componentRefinementConversion = (refinement, value, checked = true, depth = 0) => {
+	const input = `(${value})`, name = `_bridgeValue${depth}`;
+	if(refinement === null) return checked ? `(_root_.Option.some ${input})` : input;
+	if(refinement.kind === "fin") return checked
+		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
+		: `${input}.val`;
+	if(refinement.kind === "subtype") return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);
+	if(["array", "list"].includes(refinement.kind)) return `(${input}.${checked ? "mapM" : "map"} (fun ${name} => ${child(0, name)}))`;
+	if(refinement.kind === "option") return checked
+		? `(match ${input} with | .none => _root_.Option.some _root_.Option.none | .some ${name} => (${child(0, name)}).map _root_.Option.some)`
+		: `(${input}.map (fun ${name} => ${child(0, name)}))`;
+	if(refinement.kind === "tuple") return checked
+		? `(do let ${name}a ← ${child(0, `${input}.fst`)}; let ${name}b ← ${child(1, `${input}.snd`)}; pure (${name}a, ${name}b))`
+		: `(${child(0, `${input}.fst`)}, ${child(1, `${input}.snd`)})`;
+	return `(match ${input} with | .ok ${name} => ${checked ? `(${child(0, name)}).map _root_.Except.ok` : `.ok ${child(0, name)}`}`
+		+ ` | .error ${name} => ${checked ? `(${child(1, name)}).map _root_.Except.error` : `.error ${child(1, name)}`})`;
 };
 
 /**
@@ -26,12 +54,14 @@ export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = fals
 	});
 	const application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${parameters.length ? ` ${parameters.join(" ")}` : emptyArgumentSpace ? " " : ""}`;
 	return {
-		call: selected.result === null ? application : `(${application}).val`
+		call: selected.result === null ? application : ["fin", "subtype"].includes(selected.result.kind)
+			? componentRefinementConversion(selected.result, application, false)
+			: `(let _bridgeResult := ${application}; ${componentRefinementConversion(selected.result, "_bridgeResult", false)})`
 		, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? []
 			: refinement.kind === "fin" ? [{ kind: "fin", bound: refinement.bound
 				, proof: `_bridgeFin${index}`, value: arguments_[index] }]
-				: [{ kind: "subtype", binding: `_bridgeSubtype${index}`
-					, constructor: refinement.constructor, value: arguments_[index] }])
+				: [{ kind: "checked", binding: `_bridgeSubtype${index}`
+					, conversion: componentRefinementConversion(refinement, arguments_[index]) }])
 	};
 };
 
@@ -49,7 +79,7 @@ export const componentRefinementGuards = (guards, success, rejected) => {
 		const guard = guards[index];
 		body = guard.kind === "fin"
 			? `if ${guard.proof} : (${guard.value}) < ${guard.bound} then\n  ${body.replaceAll("\n", "\n  ")}\nelse\n  ${rejected}`
-			: `match _root_.${guard.constructor} ${guard.value} with\n| .some ${guard.binding} =>\n  ${body.replaceAll("\n", "\n  ")}\n| .none =>\n  ${rejected}`;
+			: `match ${guard.conversion} with\n| .some ${guard.binding} =>\n  ${body.replaceAll("\n", "\n  ")}\n| .none =>\n  ${rejected}`;
 	}
 	return body;
 };
@@ -60,12 +90,12 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  *
  * @param item - Compiler-owned source export with primitive refinement bases.
  */
-export const componentCarrierRefinementValidators = item => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement?.kind === "subtype" ? [
+export const componentCarrierRefinementValidators = item => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement && refinement.kind !== "fin" ? [
 	`@[export ${item.symbol}_refinement_${index}]`
 	, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
 	, "  match carrierValue carrier with"
 	, "  | .none => 0"
 	, "  | .some value =>"
-	, `    match _root_.${refinement.constructor} value with`
+	, `    match ${componentRefinementConversion(refinement, "value")} with`
 	, "    | .some _ => 1", "    | .none => 0", ""
 ] : []);

@@ -155,7 +155,14 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		return { kind: "named", id };
 	};
-	const refinement = type => type.kind === "refinement" ? structuredClone(type.predicate) : null;
+	const refinement = type => {
+		if(type.kind === "graph") return refinement(type.root);
+		if(type.kind === "refinement") return structuredClone(type.predicate);
+		const children = ["array", "list", "option"].includes(type.kind) ? [type.element]
+			: ["tuple", "result"].includes(type.kind) ? type.arguments : [];
+		const arguments_ = children.map(refinement);
+		return arguments_.some(value => value !== null) ? { kind: type.kind, arguments: arguments_ } : null;
+	};
 	const declarations = included.map(item => {
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);

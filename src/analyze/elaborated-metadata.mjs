@@ -146,13 +146,13 @@ export const validateElaboratedMetadata = (report, request) => {
 					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
-				const copied = (type, depth = 0, references) => {
+				const copied = (type, depth = 0, references, refinements = true) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
-					const recurse = child => copied(child, depth + 1, references);
+					const recurse = child => copied(child, depth + 1, references, refinements);
 					if(type?.kind === "graph")
 					{
 						if(references) fail("Nested component copied graph");
-						validateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table)); return;
+						validateCopiedMetadataGraph(type, (value, table) => copied(value, 0, table, refinements)); return;
 					}
 					if(type?.kind === "reference")
 					{
@@ -164,10 +164,11 @@ export const validateElaboratedMetadata = (report, request) => {
 					{
 						closed(type, ["kind", "name", "target"]);
 						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)) fail("Invalid component alias");
-						recurse(type.target); return;
+						copied(type.target, depth + 1, references, false); return;
 					}
 					if(type?.kind === "refinement")
 					{
+						if(!refinements || (depth !== 0 && type.predicate?.kind !== "fin")) fail("Unsupported nested refinement position");
 						closed(type, ["kind", "base", "predicate"]);
 						scalar(type.base);
 						if(type.predicate?.kind === "fin")
@@ -203,7 +204,7 @@ export const validateElaboratedMetadata = (report, request) => {
 								closed(field, ["name", "type"]);
 								if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || fields.has(field.name)
 									|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("Invalid variant field");
-								fields.add(field.name); recurse(field.type);
+								fields.add(field.name); copied(field.type, depth + 1, references, false);
 							}
 						}
 						return;
@@ -225,7 +226,7 @@ export const validateElaboratedMetadata = (report, request) => {
 						{
 							closed(field, ["name", "type"]);
 							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
-							names.add(field.name); recurse(field.type);
+							names.add(field.name); copied(field.type, depth + 1, references, false);
 						}
 						return;
 					}
@@ -237,8 +238,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind !== "callback") return copied(type);
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
-					for(const parameter of type.parameters) copied(parameter);
-					copied(type.result);
+					for(const parameter of type.parameters) copied(parameter, 0, undefined, false);
+					copied(type.result, 0, undefined, false);
 				};
 				const nativeType = type => {
 					if(request.ownedAggregates === undefined) validateNativeType(type);

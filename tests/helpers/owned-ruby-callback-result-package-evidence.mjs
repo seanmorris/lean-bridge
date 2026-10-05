@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -40,7 +41,7 @@ export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null)
 	assert.equal(model.schemaVersion, 11); assert.equal(model.ownedGraph.schemaVersion, 6);
 	assert.equal(model.ownedGraph.callbackResultAnchors.signatures.length, 4);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), mode === "reviewed");
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
 	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
 		, sha256(source + (fixture?.source ?? (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource))));

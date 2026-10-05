@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -54,7 +55,7 @@ export const assertOwnedPythonCallbackRuntime = async item => {
 	for(const key of ["resultAnchors", "inputTransfers", "receiverExports"])
 		assert.equal(Boolean(model.ownedGraph[key]), combined, key);
 	assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
-	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), item.input.sourceIdentity.extractorSha256)));
 	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(item.input.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
 		, sha256(source + (combined ? ownedPythonCallbackResultCombinedSource : ownedPythonCallbackResultSource)));

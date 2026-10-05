@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNestedFinSource } from "./nested-fin-source-history.mjs";
 
 export const subtypeComponentHistoryPath = "docs/evidence/npm-subtype-component-source-history-20261005.json";
 export const subtypeComponentChangedPaths = [
@@ -78,6 +79,7 @@ export const reverseSubtypeComponentUpdate = (source, update) => {
  * @param expected - Optional digest at which to stop reconstruction.
  */
 export const beforeSubtypeComponentSource = (path, source, expected) => {
+	source = beforeNestedFinSource(path, source, expected);
 	if(typeof source !== "string" || !subtypeComponentChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

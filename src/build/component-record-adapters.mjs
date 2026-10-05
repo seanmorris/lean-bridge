@@ -7,7 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes, scalarCopyLimit, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { assertComponentRecordAbi, componentCompoundAbi, componentNominalAbi } from "../abi/component-records.mjs";
-import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
@@ -140,11 +140,11 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 	{
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		const parameters = signature.parameters.map((type, index) => `(${item.parameters[index].name} : ${transportType(type)})`).join(" ");
-		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === "subtype")
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement && refinement.kind !== "fin")
 		{
 			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
-			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);
-			lines.push(`  match _root_.${refinement.constructor} value with`);
+			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${transportType(signature.parameters[index])}) : _root_.UInt8 :=`);
+			lines.push(`  match ${componentRefinementConversion(refinement, convert(signature.parameters[index], "value", true))} with`);
 			lines.push("  | .some _ => 1", "  | .none => 0", "");
 		}
 		const args = signature.parameters.map((type, index) => convert(type, item.parameters[index].name, true));
@@ -313,13 +313,13 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
 		const rejectionCleanup = item.parameters.flatMap((type, index) => object(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
-			, ...refinements.flatMap((refinement, index) => refinement?.kind === "subtype"
+			, ...refinements.flatMap((refinement, index) => refinement && refinement.kind !== "fin"
 				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`, `  uint32_t status = bridge_${mode}_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", `  if (bridge_${mode}_abi() != 1) return 6;`, "  uint32_t budget = 16u * 1024u * 1024u;");
 		for(const [index, type] of item.parameters.entries()) lines.push(`  if ((status = ${identify(type)}_validate(&frame->args[${index}], &budget))) return status;`);
 		for(const [index, type] of item.parameters.entries()) lines.push(...decode(type, `&frame->args[${index}]`, `a${index}`));
-		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
 		{
 			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
 			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);

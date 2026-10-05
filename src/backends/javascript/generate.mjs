@@ -11,6 +11,7 @@ import {
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
+import { assertRefinement } from "../../abi/refinements.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -32,37 +33,19 @@ const declarationRefinements = declaration => {
 		|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(["parameters", "result"])
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length)
 		fail("invalid-refinement", `${declaration.id} has malformed refinement metadata`);
-	for(const refinement of [...value.parameters, value.result])
+	try
 	{
-		if(refinement === null) continue;
-		if(refinement === undefined || typeof refinement !== "object" || Array.isArray(refinement))
-			fail("invalid-refinement", `${declaration.id} has an unsupported refinement`);
-		if(refinement.kind === "fin")
-		{
-			if(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["bound", "kind"])
-				|| typeof refinement.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))
-				fail("invalid-refinement", `${declaration.id} has an unsupported Fin refinement`);
-		}
-		else if(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["constructor", "kind"])
-			|| refinement.kind !== "subtype" || typeof refinement.constructor !== "string"
-			|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor))
-			fail("invalid-refinement", `${declaration.id} has an unsupported Subtype refinement`);
+		value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type));
+		assertRefinement(value.result, declaration.result.type);
 	}
-	value.parameters.forEach((refinement, index) => {
-		if(refinement !== null && declaration.parameters[index].type.kind !== "primitive")
-			fail("invalid-refinement", `${declaration.id} has a refinement that does not erase to a primitive`);
-		if(refinement?.kind === "fin" && declaration.parameters[index].type.name !== "nat")
-			fail("invalid-refinement", `${declaration.id} has a Fin parameter that does not erase to Nat`);
-	});
-	if(value.result !== null && declaration.result.type.kind !== "primitive")
-		fail("invalid-refinement", `${declaration.id} has a refinement result that does not erase to a primitive`);
-	if(value.result?.kind === "fin" && declaration.result.type.name !== "nat")
-		fail("invalid-refinement", `${declaration.id} has a Fin result that does not erase to Nat`);
+	catch(error)
+	{ fail("invalid-refinement", `${declaration.id}: ${error.message}`); }
 	return value;
 };
 
 const emitFinCheck = (output, refinement, expression, path, indent) => {
 	if(refinement?.kind === "fin") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
+	else if(refinement && refinement.kind !== "subtype") output.push(`${indent}validate.assertNestedFin(${expression}, ${quote(refinement)}, ${quote(path)});`);
 };
 
 const typeScriptType = (typeRef, typeMap) => {
@@ -646,6 +629,20 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt = assertBigInt;"
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
+		, ...ir.declarations.some(item => {
+			const value = declarationRefinements(item);
+			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype"].includes(refinement.kind));
+		}) ? [
+				"export const assertNestedFin = (value, refinement, path) => {"
+				, "  if (refinement === null) return;"
+				, "  if (refinement.kind === 'fin') { assertFin(value, refinement.bound, path); return; }"
+				, "  const child = (index, value, suffix) => assertNestedFin(value, refinement.arguments[index], path + suffix);"
+				, "  if (refinement.kind === 'array' || refinement.kind === 'list') { value.forEach((item, index) => child(0, item, '[' + index + ']')); return; }"
+				, "  if (refinement.kind === 'option') { if (value.tag === 'some') child(0, value.value, '.value'); return; }"
+				, "  if (refinement.kind === 'tuple') { child(0, value[0], '[0]'); child(1, value[1], '[1]'); return; }"
+				, "  if (Object.hasOwn(value, 'ok')) child(0, value.ok, '.ok'); else child(1, value.error, '.error');"
+				, "};"
+		] : []
 		, "const assertNumber = (value, path) => { if (typeof value !== \"number\") invalid(path, \"number\"); return value; };"
 		, "export const assertFloat32 = assertNumber;"
 		, "export const assertFloat64 = assertNumber;"

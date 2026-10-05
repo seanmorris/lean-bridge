@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { basename, isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -69,7 +70,7 @@ const sources = async (mode, variant, item, readSource) => {
 	assert.deepEqual(item.sourceInputs, { configuration, lean, reviewedIr });
 	assert.equal(source.exportConfigurationSource, canonicalJson(configuration));
 	assert.equal(source.exportConfigurationSha256, hash(configuration));
-	assert.equal(source.extractorSha256, sha256(await readSource("src/analyze/NativeExports.lean")));
+	assert.equal(source.extractorSha256, sha256(beforeFinRefinementSource("src/analyze/NativeExports.lean", await readSource("src/analyze/NativeExports.lean"), source.extractorSha256)));
 	assert.deepEqual(source.modules[0].source, { path: "Owned.lean", ...identity(lean) });
 	assert.equal(source.modules.length, 1);
 	if(reviewedIr) assert.equal(source.reviewedBindingIr.source, canonicalJson(reviewedIr));
