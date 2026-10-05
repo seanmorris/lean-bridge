@@ -153,7 +153,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 	}
 	for(const item of exports)
 	{
-		lines.push(...componentCarrierRefinementValidators(item));
+		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		if(!signature) throw new TypeError("Missing recursive export signature");
 		const names = signature.parameters.map((_, index) => `a${index}`);

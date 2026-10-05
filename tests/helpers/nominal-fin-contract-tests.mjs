@@ -12,6 +12,7 @@ import { generateComponentRecursiveAdapters } from "../../src/build/component-re
 import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
+import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
 const fixture = () => {
@@ -73,4 +74,41 @@ test("nominal Fin JS validators check fields after validating owned data shapes"
 	assert.throws(() => validators.assertPacket({ ...good, digits: sparse }, "packet"), /dense data array/);
 	assert.throws(() => nominalRefinement(ir.types[0], { kind: "record", fields: Array(3) }));
 	assert.throws(() => nominalRefinement(ir.types[0], { kind: "record", fields: [fin("10"), null, null], extra: true }));
+});
+
+test("nominal Fin components also reject invalid scalar refinements before dispatch", () => {
+	const ir = fixture(), declaration = ir.declarations[0];
+	declaration.parameters.push({ ...declaration.parameters[0], name: "digit", type: { kind: "primitive", name: "nat" } });
+	declaration.source.extensions["lean-lang.org/refinements"] = { parameters: [null, null, fin("3")], result: null };
+	const generated = compile(ir), plan = generated.plan, symbol = plan.exports[0].symbol;
+	assert.match(generated.files["LeanBridgeGenerated.lean"], new RegExp(`@\\[export ${symbol}_refinement_2\\]`));
+	const c = generateComponentRecursiveAdapters(plan.privateAbi, plan);
+	assert.match(c, new RegExp(`if \\(!${symbol}_refinement_2\\(a2\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); lean_dec\\(a2\\); bridge_recursive_frame_clear\\(frame\\); frame->status = 5; return 5;`));
+	assert.ok(c.indexOf(`${symbol}_refinement_2(a2)`) < c.indexOf(`${symbol}_lean(a0, a1, a2)`));
+});
+
+test("nominal Fin constraints authenticate alias targets and exact variant branches", () => {
+	const alias = { kind: "alias", target: { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "nat" }] } };
+	assert.deepEqual(nominalRefinement(alias, { kind: "alias", target: { kind: "array", arguments: [fin("0")] } }),
+		{ kind: "alias", target: { kind: "array", arguments: [fin("0")] } });
+	for(const target of [null, fin("7"), { kind: "array", arguments: [null] }, { kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked" }] }])
+		assert.throws(() => nominalRefinement(alias, { kind: "alias", target }));
+	const variant = { kind: "variant", cases: [{ fields: [] }, { fields: [{ type: { kind: "primitive", name: "nat" } }] }] };
+	assert.deepEqual(nominalRefinement(variant, { kind: "variant", cases: [[], [fin("0")]] }), { kind: "variant", cases: [[], [fin("0")]] });
+	for(const cases of [[], [[fin("0")], []], [[], []], [[], [null]], Array(2)])
+		assert.throws(() => nominalRefinement(variant, { kind: "variant", cases }));
+});
+
+test("nominal Fin installed evidence promotes only the two ordinary Node field cells", async () => {
+	const { document, irSchema, consumers } = await readTypeSurface();
+	const cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin");
+	const fields = cells.filter(cell => cell.position === "field" && cell.stages.installedExecution.state === "passed");
+	assert.deepEqual(fields.map(cell => cell.profile).sort(), ["node-javascript", "node-typescript"]);
+	for(const cell of fields)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		for(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, ["npm-nominal-fin-installed"]);
+	}
+	for(const cell of cells.filter(cell => cell.position.startsWith("callback-") || cell.path === "reviewed-ir"))
+		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });

@@ -89,8 +89,9 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  * an ordinary call failure rather than an invalid result carrier.
  *
  * @param item - Compiler-owned source export with primitive refinement bases.
+ * @param includeFin - Check scalar Fin when nominal construction selects graph transport.
  */
-export const componentCarrierRefinementValidators = item => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement && refinement.kind !== "fin" ? [
+export const componentCarrierRefinementValidators = (item, includeFin = false) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => refinement && (includeFin || refinement.kind !== "fin") ? [
 	`@[export ${item.symbol}_refinement_${index}]`
 	, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
 	, "  match carrierValue carrier with"

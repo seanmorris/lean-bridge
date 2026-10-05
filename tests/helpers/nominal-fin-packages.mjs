@@ -37,6 +37,8 @@ def choice (value : Choice) : Choice := value
 def tree (value : Tree) : Tree := value
 def impossible (value : Option Impossible) : Option Impossible := value
 def arrays (value : Array (Fin 0)) : Array (Fin 0) := value
+def scalar (value : Fin 3) : Fin 3 := value
+def scalarEmpty (value : Fin 0) : Nat := value.val
 def both (first : Packet) (second : Packet) : Packet := if first.digit.val < second.digit.val then first else second
 end OnboardingSmall
 `;
@@ -54,7 +56,7 @@ end OnboardingSmall
 export const checkNominalFinPackage = async (t, { fixture, build, runtimeRoot, engineRoot }) => {
 	const { directory, root } = await fixture(t);
 	await saveLakeFile(root, "OnboardingSmall.lean", source);
-	const names = ["packet", "digits", "choice", "tree", "impossible", "arrays", "both"];
+	const names = ["packet", "digits", "choice", "tree", "impossible", "arrays", "scalar", "scalarEmpty", "both"];
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: names.map(name => `OnboardingSmall.${name}`) }));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
@@ -102,7 +104,8 @@ const cases = [
   ]],
   ["tree", branch([leaf(4n), branch([])]), branch([leaf(4n), branch([])]), [branch([leaf(5n)])]],
   ["impossible", none, none, [some({ value: 0n })]],
-  ["arrays", [], [], [[0n]]]
+  ["arrays", [], [], [[0n]]],
+  ["scalar", 2n, 2n, [3n]]
 ];
 for (const [name, value, expected, invalid] of cases) {
   assert.deepEqual(api[name](value), expected);
@@ -115,6 +118,9 @@ for (const [name, value, expected, invalid] of cases) {
   }
 }
 for (let round = 0; round < 32; round++) {
+  assert.throws(() => api.scalarEmpty(0n), /below/);
+  assert.throws(() => runtime.call("lean:OnboardingSmall.scalarEmpty", [0n]), /failed \\(5\\)/);
+  assert.equal(api.scalar(2n), 2n);
   const bad = { ...good, digit: 10n };
   for (const args of [[bad, good], [good, bad], [bad, bad]])
     assert.throws(() => runtime.call("lean:OnboardingSmall.both", args), /failed \\(5\\)/);

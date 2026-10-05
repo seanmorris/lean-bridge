@@ -213,7 +213,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 	{
 		const refinements = exports.find(value => value.bindingId === item.bindingId)?.refinements?.parameters ?? [];
 		const cleanup = item.parameters.map((_, index) => `lean_dec(a${index});`).join(" ");
-		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
+		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(lean_object *);`);
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, item.parameters.length)).fill("lean_object *").join(", ")});`
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
@@ -226,7 +226,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
 		if(nominalRefinements.length) item.parameters.forEach((_, index) => lines.push(
 			`  if (!lean_is_array(a${index}) || lean_array_size(a${index}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
-		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
+		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`  lean_inc(a${index});`
 				, `  if (!${item.symbol}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
