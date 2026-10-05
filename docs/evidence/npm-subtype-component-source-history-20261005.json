@@ -101,7 +101,7 @@
     },
     {
       "path": "docs/type-surface.v1.json",
-      "currentSha256": "115a0df797a226daebe21febde2d88498db20f032652a3952647f3d14cc90218",
+      "currentSha256": "75c848ca4b27800fcff6b83c3c5aa5bdbfa3b55e09cd00d99ff8401c9f5bc9fb",
       "previousSha256": "3bddbdbdacb10286c43e2e13beaedcf889dd552e3dd05f702b06974a7b427156",
       "edits": [
         {
@@ -392,7 +392,7 @@
         {
           "start": 662358,
           "previous": "          \"sha256\": \"63731b13656b8812414282a0b941acee8b8458eeca0eb3fa466b4fc90c6d1bb3\"\n",
-          "current": "          \"sha256\": \"bae589e9e396f161b260651912f1fcf4cef81ed8a1bec63e349182b5332ab496\"\n"
+          "current": "          \"sha256\": \"26438deaf96e2dfb535fc01c2159c53c8d78d4b6674ee1a7b0087e36faa33c3a\"\n"
         },
         {
           "start": 667145,
@@ -1025,34 +1025,54 @@
           "current": "          \"sha256\": \"9da2785eca60bf8b7acebbea266c8467206f319bb1b277a7b132f953f60152dd\"\n"
         },
         {
-          "start": 1413132,
+          "start": 1412146,
+          "previous": "      \"revision\": \"b0c3398566eba66d6dac53c891bedeb28ef12061\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='checked constructors admit' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds compiler-check exact Subtype constructors, preserve their identities in Binding IR, validate primitive inputs through compiled Lean before source dispatch, project proof-backed results, reproduce after relocation, verify their receipt, install offline, execute from Node and compile a strict TypeScript consumer. Installed execution covers UInt32 and heap-backed String; generated C checks retained-object validation and rejection cleanup. Unconfigured subtypes reject.\",\n",
+          "current": "      \"revision\": \"5dc0fd342550be4742646723ebd0944716849504\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='checked constructors admit' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile|checked Subtype inputs compose' tests/unlocked-component.test.mjs\",\n      \"scope\": \"Ordinary-source npm builds compiler-check exact Subtype constructors, validate primitive inputs through compiled Lean before source dispatch, and project proof-backed results. Eight component profiles compose top-level UInt32 and String refinements with scalars, arrays, records, options, aliases, recursive values, callbacks and returned closures. Each profile reproduces archives after relocation, verifies receipts, installs offline, executes from Node and compiles strict TypeScript. Repeated invalid inputs release decoded objects, skip host callbacks and leave the runtime usable. Unconfigured subtypes reject.\",\n"
+        },
+        {
+          "start": 1413283,
           "previous": "          \"sha256\": \"7d8e0c5da31e4531e0da9c85bf63e0e2907c8787be9bf6779628ef3568f89b11\"\n",
           "current": "          \"sha256\": \"0ee0295bad18d9d4fbe827a5f666e07513ac3235574116b6de6f505a46c1ff8f\"\n"
         },
         {
-          "start": 1414295,
+          "start": 1414446,
           "previous": "          \"sha256\": \"b0bff3836e91d2e903d11564d0513a5558895bfacaa61811b03adfcdcc2ef3f2\"\n",
           "current": "          \"sha256\": \"3c55c0dab6725a618e28b020861739070a4522be3a234744c6e15bb3b2319afd\"\n"
         },
         {
-          "start": 1414464,
+          "start": 1414615,
           "previous": "          \"sha256\": \"32c15a2374a1e75c5fe547b93e419204abf528a7efc99481eb5295e093c5ae97\"\n",
           "current": "          \"sha256\": \"8010122314b4f8fda048bad2a066487b880d03759d9d9bdf3e64038908f39fc4\"\n"
         },
         {
-          "start": 1414629,
+          "start": 1414780,
           "previous": "          \"sha256\": \"c23d2c24a388db5131be96c01beffd5eb986521af9e16452d3f417d3333198a0\"\n",
           "current": "          \"sha256\": \"9b80a2aca9ad855b004c823cd2d0b75c634966710136af417beaba94ce9ad325\"\n"
         },
         {
-          "start": 1415125,
+          "start": 1415276,
           "previous": "          \"sha256\": \"652368bb830ad479cc4c9f4ce9a8b09dca696afed840ea0adc661f2dd9f4c8a3\"\n",
           "current": "          \"sha256\": \"8a44eb019034c65ec6df2c5d34cb6219d1ec95318a4e817127d6be95c43b59b2\"\n"
         },
         {
-          "start": 1415497,
+          "start": 1415521,
+          "previous": "",
+          "current": "        },\n        {\n          \"path\": \"docs/evidence/npm-subtype-components-20261005.md\",\n          \"sha256\": \"5b273bc0c62d05514d2a6218f5f11b293ab523125bc769c48f6bcb3e46b7c902\"\n        },\n        {\n          \"path\": \"tests/helpers/subtype-component-packages.mjs\",\n          \"sha256\": \"e7d0e8c4719d4ce4270cb2e5ed1df77f27e5ebc20975322143587a37ad314720\"\n        },\n        {\n          \"path\": \"src/build/component-callable-adapters.mjs\",\n          \"sha256\": \"4afb13cd0cc4a84f4c1d6b3c4e307d60581a772660efa14be72e7393633b38f3\"\n        },\n        {\n          \"path\": \"src/build/component-copied-adapters.mjs\",\n          \"sha256\": \"905d720d30f910109d2d0c270f4970c02f0c41d31c1f316f9eea5ec6d8a9604d\"\n        },\n        {\n          \"path\": \"src/build/component-recursive-adapters.mjs\",\n          \"sha256\": \"315752cbcee69e44ef8a5df0262b377e4aa25cacd2e7eebcb538f6c359ad4074\"\n        },\n        {\n          \"path\": \"src/build/component-recursive-lean.mjs\",\n          \"sha256\": \"740fabe97a9c0cdab39a6c5ebe05efab94d2ab9e230956a56f88326556d26e24\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-adapters.mjs\",\n          \"sha256\": \"c4806d69e88f7555ef03eeeb9f92099179cdcd1c0df0abd653fced969b4d91f1\"\n        },\n        {\n          \"path\": \"src/build/component-structured-callable-lean.mjs\",\n          \"sha256\": \"d44041e58434e1d00497391469879b8d34a86c454655991ab55cfc645d9f2c33\"\n        },\n        {\n          \"path\": \"src/build/lean-component-compiler.mjs\",\n          \"sha256\": \"52f5d0cf563707eb11a5bbddd1012ad9f1a9fdc8c066a3adf7b416e0a0950c0d\"\n        },\n        {\n          \"path\": \"tests/component-array-contract.test.mjs\",\n          \"sha256\": \"26438deaf96e2dfb535fc01c2159c53c8d78d4b6674ee1a7b0087e36faa33c3a\"\n        },\n        {\n          \"path\": \"tests/component-callable-contract.test.mjs\",\n          \"sha256\": \"4114762207f3cf64572fbc690eff5e8ea85dc6966bf6b047a7378d52f7be3133\"\n        },\n        {\n          \"path\": \"tests/component-record-contract.test.mjs\",\n          \"sha256\": \"64bd6a5dd455c7851da1badcbb560d15876561ca4e1de80c3c9beb19b6f907bc\"\n        },\n        {\n          \"path\": \"tests/component-structured-callable-contract.test.mjs\",\n          \"sha256\": \"efca4b65d78529641ece6ca4a41ae5c6cee5ec6b59741be33066a154eda2f21f\"\n"
+        },
+        {
+          "start": 1417901,
           "previous": "          \"sha256\": \"c469c95e0fd787450ea6288c8d03f73dca9b5b8c78e860d08fb7807759d5ada5\"\n",
-          "current": "          \"sha256\": \"9da2785eca60bf8b7acebbea266c8467206f319bb1b277a7b132f953f60152dd\"\n"
+          "current": "          \"sha256\": \"9da2785eca60bf8b7acebbea266c8467206f319bb1b277a7b132f953f60152dd\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-2/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"4385d43cfd8b8e7d1983694c939dc0a39442406726735e3233a254976eb73ad3\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-3/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"5dc14d5773188b4f0e6b8479f675fb5953f043963c88bdcb8c8eaa4184f0dc04\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-4/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"b096991a28d121402bb71e9b3f9f76e508f0478323287f4a4cfcf1fa66dd6b3f\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-5/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"a5bd768d43bb71db2c1c36854585e9d4106db4f48273b8ebe2e43aa1c19178e2\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-6/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"d3b03da980a4ec66097068538bd02107903df45624d1910f34dd980d32499bfd\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-7/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"5eaed7a677a0eff421d920877cb4f96744022476fa605f0a1fef19678ee5929a\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-8/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"83d2ee688bdf8daa8e734151ba687f8a5480ab9c1360cdcd27a9e975bd7b3cbe\"\n        },\n        {\n          \"path\": \"npm/ordinary-source/subtype-abi-9/archives/onboarding-small-1.0.0.tgz\",\n          \"sha256\": \"e77fcab0f29df95de7f0c7f88f7ae8b6a04b8c84f5000f9d97b401a533ecac1e\"\n"
+        },
+        {
+          "start": 3593606,
+          "previous": "      \"scope\": \"Ordinary-source npm builds accept configured top-level Subtype parameters and results over primitive bases in scalar or finite record packages. Installed execution covers UInt32 and heap-backed String with exact Lean checked constructors; generated C checks owned-object retention and cleanup. Unconfigured subtypes reject.\",\n",
+          "current": "      \"scope\": \"Ordinary-source npm builds accept configured top-level Subtype parameters and results over primitive bases alongside copied arrays, records, options, aliases, recursive values, callbacks and returned closures. Eight installed component profiles cover UInt32 and heap-backed String with exact Lean checked constructors, rejection cleanup and recovery. Unconfigured subtypes reject.\",\n"
+        },
+        {
+          "start": 3595677,
+          "previous": "          \"note\": \"The installed Node package accepts UInt32 value 9, rejects 10 before source dispatch, and exposes number in strict TypeScript.\"\n",
+          "current": "          \"note\": \"Eight installed component profiles accept UInt32 value 9 and nonempty Unicode strings, reject 10 and empty text before source dispatch, and recover after 64 rejection cycles. Callback fixtures check that invalid inputs do not invoke the host; closure fixtures invoke and dispose returned functions. Strict TypeScript checks the installed number and string mappings.\"\n"
         }
       ]
     },
@@ -1316,18 +1336,18 @@
     },
     {
       "path": "tests/component-array-contract.test.mjs",
-      "currentSha256": "bae589e9e396f161b260651912f1fcf4cef81ed8a1bec63e349182b5332ab496",
+      "currentSha256": "26438deaf96e2dfb535fc01c2159c53c8d78d4b6674ee1a7b0087e36faa33c3a",
       "previousSha256": "63731b13656b8812414282a0b941acee8b8458eeca0eb3fa466b4fc90c6d1bb3",
       "edits": [
         {
           "start": 1007,
           "previous": "",
-          "current": "import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from \"./helpers/subtype-component-source-history.mjs\";\n"
+          "current": "import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from \"./helpers/subtype-component-source-history.mjs\";\nimport { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
         },
         {
-          "start": 2329,
+          "start": 2418,
           "previous": "",
-          "current": "test(\"copied-array packages retain and clean checked scalar refinements before dispatch\", () => {\n\tconst ir = arrayReviewedIr();\n\tconst declaration = ir.declarations.find(item => item.id === \"lean:Arrays.add\");\n\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [{ kind: \"subtype\", constructor: \"Arrays.checkedInt\" }, null]\n\t\t, result: null\n\t};\n\tconst generated = generateCompilerAdapters({ analysis: {\n\t\tbindingIr: { origin: \"lean-elaborated\", document: ir, semanticSha256: \"1\".repeat(64) }\n\t\t, exportCandidates: ir.declarations.map(item => ({ declaration: item.source.declaration, sourceModule: \"Arrays\", status: \"exportable\" }))\n\t}\n\t, componentPlan: { sha256: \"2\".repeat(64), document: { bindingIr: { semanticSha256: \"1\".repeat(64) } } } });\n\tassert.equal(generated.plan.privateAbi.version, 4);\n\tconst source = generated.plan.exports.find(item => item.bindingId === declaration.id);\n\tconst c = generateComponentCopiedAdapters(generated.plan.privateAbi, generated.plan.exports);\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], new RegExp(`@\\\\[export ${source.symbol}_refinement_0\\\\]`));\n\tassert.match(c, new RegExp(`extern uint8_t ${source.symbol}_refinement_0\\\\(lean_object \\\\*\\\\);`));\n\tassert.match(c, new RegExp(`lean_inc\\\\(a0\\\\);\\\\n {2}if \\\\(!${source.symbol}_refinement_0\\\\(a0\\\\)\\\\) \\\\{ lean_dec\\\\(a0\\\\); lean_dec\\\\(a1\\\\); return 5; \\\\}`));\n\tassert.ok(c.indexOf(`${source.symbol}_refinement_0(a0)`) < c.indexOf(`${source.symbol}_lean(a0, a1)`));\n});\n\ntest(\"Subtype component history preserves predecessors and rejects altered source spans\", async () => {\n\tconst history = JSON.parse(await readFile(subtypeComponentHistoryPath, \"utf8\"));\n\tassert.equal(history.schemaVersion, 1);\n\tassert.equal(history.predecessorCommit, \"8daefcd2ececf2e7d2aefc70245848305c2bf33a\");\n\tassert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);\n\tfor(const update of history.updates)\n\t{\n\t\tconst source = await readFile(update.path, \"utf8\");\n\t\tassert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);\n\t\tassert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);\n\t\tassert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source + \"\\nunreviewed\\n\", update));\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, edits: [] }));\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, previousSha256: \"0\".repeat(64) }));\n\t}\n});\n\n"
+          "current": "test(\"copied-array packages retain and clean checked scalar refinements before dispatch\", () => {\n\tconst ir = arrayReviewedIr();\n\tconst declaration = ir.declarations.find(item => item.id === \"lean:Arrays.add\");\n\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [{ kind: \"subtype\", constructor: \"Arrays.checkedInt\" }, null]\n\t\t, result: null\n\t};\n\tconst generated = generateCompilerAdapters({ analysis: {\n\t\tbindingIr: { origin: \"lean-elaborated\", document: ir, semanticSha256: \"1\".repeat(64) }\n\t\t, exportCandidates: ir.declarations.map(item => ({ declaration: item.source.declaration, sourceModule: \"Arrays\", status: \"exportable\" }))\n\t}\n\t, componentPlan: { sha256: \"2\".repeat(64), document: { bindingIr: { semanticSha256: \"1\".repeat(64) } } } });\n\tassert.equal(generated.plan.privateAbi.version, 4);\n\tconst source = generated.plan.exports.find(item => item.bindingId === declaration.id);\n\tconst c = generateComponentCopiedAdapters(generated.plan.privateAbi, generated.plan.exports);\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], new RegExp(`@\\\\[export ${source.symbol}_refinement_0\\\\]`));\n\tassert.match(c, new RegExp(`extern uint8_t ${source.symbol}_refinement_0\\\\(lean_object \\\\*\\\\);`));\n\tassert.match(c, new RegExp(`lean_inc\\\\(a0\\\\);\\\\n {2}if \\\\(!${source.symbol}_refinement_0\\\\(a0\\\\)\\\\) \\\\{ lean_dec\\\\(a0\\\\); lean_dec\\\\(a1\\\\); return 5; \\\\}`));\n\tassert.ok(c.indexOf(`${source.symbol}_refinement_0(a0)`) < c.indexOf(`${source.symbol}_lean(a0, a1)`));\n});\n\ntest(\"Subtype component history preserves predecessors and rejects altered source spans\", async () => {\n\tconst history = JSON.parse(await readFile(subtypeComponentHistoryPath, \"utf8\"));\n\tassert.equal(history.schemaVersion, 1);\n\tassert.equal(history.predecessorCommit, \"8daefcd2ececf2e7d2aefc70245848305c2bf33a\");\n\tassert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);\n\tfor(const update of history.updates)\n\t{\n\t\tconst source = await readFile(update.path, \"utf8\");\n\t\tassert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);\n\t\tassert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);\n\t\tassert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);\n\t\tconst bytes = Buffer.from(source);\n\t\tassert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source + \"\\nunreviewed\\n\", update));\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, edits: [] }));\n\t\tassert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, previousSha256: \"0\".repeat(64) }));\n\t}\n\tconst unknown = Buffer.from([0, 255, 128, 192]);\n\tassert.equal(beforeFinRefinementSource(\"unknown.bin\", unknown), unknown);\n});\n\n"
         }
       ]
     },
@@ -1386,38 +1406,48 @@
     },
     {
       "path": "tests/helpers/fin-refinement-source-history.mjs",
-      "currentSha256": "421793540b6ced058cdac5b93703a3250464b2ae376261d9cc365e44a43ed9ad",
+      "currentSha256": "aa2fe492e4f29011f405facb30e6653bdac807ba8204bd65919327e48bb4ba16",
       "previousSha256": "697cce07cb2a324d90d641847949718ead460f86ce1dd78600707bf10279214b",
       "edits": [
         {
-          "start": 32150,
+          "start": 350,
+          "previous": "import { beforeSubtypeRefinementSource } from \"./subtype-refinement-source-history.mjs\";\n",
+          "current": "import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from \"./subtype-refinement-source-history.mjs\";\nimport { subtypeHeapChangedPaths } from \"./subtype-heap-source-history.mjs\";\nimport { subtypeComponentChangedPaths } from \"./subtype-component-source-history.mjs\";\n"
+        },
+        {
+          "start": 32345,
           "previous": "",
           "current": " * @param expected - Optional exact stopping SHA-256.\n"
         },
         {
-          "start": 32208,
+          "start": 32403,
           "previous": "export const beforeFinRefinementSource = (path, source) => {\n\tsource = beforeSubtypeRefinementSource(path, source);\n",
-          "current": "export const beforeFinRefinementSource = (path, source, expected) => {\n\tconst original = source;\n\tsource = beforeSubtypeRefinementSource(path, source.toString(), expected);\n\tif(sha256(source) === expected) return source;\n"
+          "current": "const normalizeFinRefinementSource = (path, source, expected) => {\n\tsource = beforeSubtypeRefinementSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
         },
         {
-          "start": 32952,
-          "previous": "\tif(!transition || sha256(source) !== transition.current) return source;\n",
-          "current": "\tif(!transition || sha256(source) !== transition.current) return source === original.toString() ? original : source;\n"
+          "start": 33585,
+          "previous": "",
+          "current": "\nexport const finRefinementNormalizationPaths = Object.freeze([...new Set([\n\textractorPath, typeSurfacePath, ...Object.keys(transitions)\n\t, ...Object.keys(verifierEdits), ...subtypeRefinementChangedPaths\n\t, ...subtypeHeapChangedPaths, ...subtypeComponentChangedPaths\n])].sort());\n\n/**\n * Preserve the original buffer when no authenticated transition changes its bytes.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete source text or bytes.\n * @param expected - Optional exact stopping SHA-256.\n */\nexport const beforeFinRefinementSource = (path, source, expected) => {\n\tif(!finRefinementNormalizationPaths.includes(path)) return source;\n\tconst text = source.toString(), previous = normalizeFinRefinementSource(path, text, expected);\n\treturn previous === text ? source : previous;\n};\n"
         }
       ]
     },
     {
       "path": "tests/helpers/php-wasm-callback-result-acceptance-history.mjs",
-      "currentSha256": "9a74d38323122e24719704dd494c202679dd79049e971ba22bb73b3d0fff996b",
+      "currentSha256": "fbd086527d5e3f0d898ebe7055fd04d321fc61ec547ae42b58e0d32e9d3d4422",
       "previousSha256": "1b17c64b51f238d3fae8a976c7298d4015ebb6723e2570be50fd4bab31b69ff4",
       "edits": [
         {
           "start": 249,
           "previous": "",
-          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+          "current": "import { beforeFinRefinementSource, finRefinementNormalizationPaths } from \"./fin-refinement-source-history.mjs\";\n"
         },
         {
-          "start": 16963,
+          "start": 5811,
+          "previous": "",
+          "current": "\t, ...finRefinementNormalizationPaths\n"
+        },
+        {
+          "start": 17034,
           "previous": "",
           "current": "\tsource = beforeFinRefinementSource(path, source, expected);\n"
         }

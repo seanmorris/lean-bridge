@@ -17,6 +17,7 @@ import { createComponentRuntime } from "../src/release/component-runtime.mjs";
 import { arrayReviewedIr } from "./helpers/array-fixture.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from "./helpers/subtype-component-source-history.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 
 test("array compiler plans agree with schemas and preserve parenthesized nested types", async () => {
 	const ir = arrayReviewedIr();
@@ -67,10 +68,14 @@ test("Subtype component history preserves predecessors and rejects altered sourc
 		assert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);
+		const bytes = Buffer.from(source);
+		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
 		assert.throws(() => reverseSubtypeComponentUpdate(source + "\nunreviewed\n", update));
 		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, edits: [] }));
 		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
 	}
+	const unknown = Buffer.from([0, 255, 128, 192]);
+	assert.equal(beforeFinRefinementSource("unknown.bin", unknown), unknown);
 });
 
 test("array admission rejects changed types, ownership, effects and unsupported compounds", () => {

@@ -14829,7 +14829,7 @@
         },
         {
           "path": "tests/component-array-contract.test.mjs",
-          "sha256": "bae589e9e396f161b260651912f1fcf4cef81ed8a1bec63e349182b5332ab496"
+          "sha256": "26438deaf96e2dfb535fc01c2159c53c8d78d4b6674ee1a7b0087e36faa33c3a"
         },
         {
           "path": "tests/component-arrays.test.mjs",
@@ -29526,9 +29526,9 @@
     {
       "id": "npm-subtype-refinements-installed",
       "kind": "installed",
-      "revision": "b0c3398566eba66d6dac53c891bedeb28ef12061",
-      "command": "source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='checked constructors admit' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs",
-      "scope": "Ordinary-source npm builds compiler-check exact Subtype constructors, preserve their identities in Binding IR, validate primitive inputs through compiled Lean before source dispatch, project proof-backed results, reproduce after relocation, verify their receipt, install offline, execute from Node and compile a strict TypeScript consumer. Installed execution covers UInt32 and heap-backed String; generated C checks retained-object validation and rejection cleanup. Unconfigured subtypes reject.",
+      "revision": "5dc0fd342550be4742646723ebd0944716849504",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-name-pattern='checked constructors admit' tests/elaborated-metadata.test.mjs && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile|checked Subtype inputs compose' tests/unlocked-component.test.mjs",
+      "scope": "Ordinary-source npm builds compiler-check exact Subtype constructors, validate primitive inputs through compiled Lean before source dispatch, and project proof-backed results. Eight component profiles compose top-level UInt32 and String refinements with scalars, arrays, records, options, aliases, recursive values, callbacks and returned closures. Each profile reproduces archives after relocation, verifies receipts, installs offline, executes from Node and compiles strict TypeScript. Repeated invalid inputs release decoded objects, skip host callbacks and leave the runtime usable. Unconfigured subtypes reject.",
       "files": [
         {
           "path": "docs/evidence/npm-subtype-refinements-20261005.md",
@@ -29585,12 +29585,96 @@
         {
           "path": "tests/word-contract.test.mjs",
           "sha256": "7311759cbaf06383885df941bf123e3cd3aad50151a8b18aff4d13c09597a984"
+        },
+        {
+          "path": "docs/evidence/npm-subtype-components-20261005.md",
+          "sha256": "5b273bc0c62d05514d2a6218f5f11b293ab523125bc769c48f6bcb3e46b7c902"
+        },
+        {
+          "path": "tests/helpers/subtype-component-packages.mjs",
+          "sha256": "e7d0e8c4719d4ce4270cb2e5ed1df77f27e5ebc20975322143587a37ad314720"
+        },
+        {
+          "path": "src/build/component-callable-adapters.mjs",
+          "sha256": "4afb13cd0cc4a84f4c1d6b3c4e307d60581a772660efa14be72e7393633b38f3"
+        },
+        {
+          "path": "src/build/component-copied-adapters.mjs",
+          "sha256": "905d720d30f910109d2d0c270f4970c02f0c41d31c1f316f9eea5ec6d8a9604d"
+        },
+        {
+          "path": "src/build/component-recursive-adapters.mjs",
+          "sha256": "315752cbcee69e44ef8a5df0262b377e4aa25cacd2e7eebcb538f6c359ad4074"
+        },
+        {
+          "path": "src/build/component-recursive-lean.mjs",
+          "sha256": "740fabe97a9c0cdab39a6c5ebe05efab94d2ab9e230956a56f88326556d26e24"
+        },
+        {
+          "path": "src/build/component-structured-callable-adapters.mjs",
+          "sha256": "c4806d69e88f7555ef03eeeb9f92099179cdcd1c0df0abd653fced969b4d91f1"
+        },
+        {
+          "path": "src/build/component-structured-callable-lean.mjs",
+          "sha256": "d44041e58434e1d00497391469879b8d34a86c454655991ab55cfc645d9f2c33"
+        },
+        {
+          "path": "src/build/lean-component-compiler.mjs",
+          "sha256": "52f5d0cf563707eb11a5bbddd1012ad9f1a9fdc8c066a3adf7b416e0a0950c0d"
+        },
+        {
+          "path": "tests/component-array-contract.test.mjs",
+          "sha256": "26438deaf96e2dfb535fc01c2159c53c8d78d4b6674ee1a7b0087e36faa33c3a"
+        },
+        {
+          "path": "tests/component-callable-contract.test.mjs",
+          "sha256": "4114762207f3cf64572fbc690eff5e8ea85dc6966bf6b047a7378d52f7be3133"
+        },
+        {
+          "path": "tests/component-record-contract.test.mjs",
+          "sha256": "64bd6a5dd455c7851da1badcbb560d15876561ca4e1de80c3c9beb19b6f907bc"
+        },
+        {
+          "path": "tests/component-structured-callable-contract.test.mjs",
+          "sha256": "efca4b65d78529641ece6ca4a41ae5c6cee5ec6b59741be33066a154eda2f21f"
         }
       ],
       "artifacts": [
         {
           "path": "npm/ordinary-source/archives/onboarding-small-1.0.0.tgz",
           "sha256": "9da2785eca60bf8b7acebbea266c8467206f319bb1b277a7b132f953f60152dd"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-2/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "4385d43cfd8b8e7d1983694c939dc0a39442406726735e3233a254976eb73ad3"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-3/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "5dc14d5773188b4f0e6b8479f675fb5953f043963c88bdcb8c8eaa4184f0dc04"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-4/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "b096991a28d121402bb71e9b3f9f76e508f0478323287f4a4cfcf1fa66dd6b3f"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-5/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "a5bd768d43bb71db2c1c36854585e9d4106db4f48273b8ebe2e43aa1c19178e2"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-6/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "d3b03da980a4ec66097068538bd02107903df45624d1910f34dd980d32499bfd"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-7/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "5eaed7a677a0eff421d920877cb4f96744022476fa605f0a1fef19678ee5929a"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-8/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "83d2ee688bdf8daa8e734151ba687f8a5480ab9c1360cdcd27a9e975bd7b3cbe"
+        },
+        {
+          "path": "npm/ordinary-source/subtype-abi-9/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "e77fcab0f29df95de7f0c7f88f7ae8b6a04b8c84f5000f9d97b401a533ecac1e"
         }
       ]
     },
@@ -63791,7 +63875,7 @@
         "result"
       ],
       "path": "ordinary-source",
-      "scope": "Ordinary-source npm builds accept configured top-level Subtype parameters and results over primitive bases in scalar or finite record packages. Installed execution covers UInt32 and heap-backed String with exact Lean checked constructors; generated C checks owned-object retention and cleanup. Unconfigured subtypes reject.",
+      "scope": "Ordinary-source npm builds accept configured top-level Subtype parameters and results over primitive bases alongside copied arrays, records, options, aliases, recursive values, callbacks and returned closures. Eight installed component profiles cover UInt32 and heap-backed String with exact Lean checked constructors, rejection cleanup and recovery. Unconfigured subtypes reject.",
       "hostTypes": {
         "subtype": {
           "parameter": "host type of the declared primitive, checked by the compiled Lean constructor before dispatch",
@@ -63832,7 +63916,7 @@
           "evidence": [
             "npm-subtype-refinements-installed"
           ],
-          "note": "The installed Node package accepts UInt32 value 9, rejects 10 before source dispatch, and exposes number in strict TypeScript."
+          "note": "Eight installed component profiles accept UInt32 value 9 and nonempty Unicode strings, reject 10 and empty text before source dispatch, and recover after 64 rejection cycles. Callback fixtures check that invalid inputs do not invoke the host; closure fixtures invoke and dispose returned functions. Strict TypeScript checks the installed number and string mappings."
         }
       },
       "limitations": [

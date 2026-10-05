@@ -7,7 +7,9 @@
  */
 import assert from "node:assert/strict";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeSubtypeRefinementSource } from "./subtype-refinement-source-history.mjs";
+import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
+import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
+import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -456,9 +458,8 @@ const beforeFinTypeSurface = source => {
  * @param source - Complete current source.
  * @param expected - Optional exact stopping SHA-256.
  */
-export const beforeFinRefinementSource = (path, source, expected) => {
-	const original = source;
-	source = beforeSubtypeRefinementSource(path, source.toString(), expected);
+const normalizeFinRefinementSource = (path, source, expected) => {
+	source = beforeSubtypeRefinementSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	if(path === typeSurfacePath) return beforeFinTypeSurface(source);
 	const verification = verifierEdits[path];
@@ -471,7 +472,7 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return previous;
 	}
 	const transition = transitions[path];
-	if(!transition || sha256(source) !== transition.current) return source === original.toString() ? original : source;
+	if(!transition || sha256(source) !== transition.current) return source;
 	for(const [start, end] of transition.removeRanges ?? [])
 	{
 		const first = source.indexOf(start), last = source.indexOf(end);
@@ -481,4 +482,23 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const previous = reverse(source, transition.edits, `Fin ${path}`);
 	assert.equal(sha256(previous), transition.previous);
 	return previous;
+};
+
+export const finRefinementNormalizationPaths = Object.freeze([...new Set([
+	extractorPath, typeSurfacePath, ...Object.keys(transitions)
+	, ...Object.keys(verifierEdits), ...subtypeRefinementChangedPaths
+	, ...subtypeHeapChangedPaths, ...subtypeComponentChangedPaths
+])].sort());
+
+/**
+ * Preserve the original buffer when no authenticated transition changes its bytes.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete source text or bytes.
+ * @param expected - Optional exact stopping SHA-256.
+ */
+export const beforeFinRefinementSource = (path, source, expected) => {
+	if(!finRefinementNormalizationPaths.includes(path)) return source;
+	const text = source.toString(), previous = normalizeFinRefinementSource(path, text, expected);
+	return previous === text ? source : previous;
 };

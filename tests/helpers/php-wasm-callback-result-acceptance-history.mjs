@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinRefinementSource, finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
@@ -116,6 +116,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 ].sort());
 export const phpWasmCallbackResultNormalizationPaths = Object.freeze([...new Set([
 	...phpWasmCallbackResultModifiedPaths, ...phpWasmCallbackResultReaderPaths
+	, ...finRefinementNormalizationPaths
 ])].sort());
 const categories = Object.freeze({
 	".github/workflows/consumer-matrix.yml": "administrative"
