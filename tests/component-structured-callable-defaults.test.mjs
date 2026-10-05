@@ -80,3 +80,18 @@ test("invalid descriptors fail before recovery declarations can be emitted", () 
   assert.throws(() => componentStructuredCallableDefaults([{ kind: "record", id: "lean:Example.A", fields: fields(named("Example.Unknown")) }]), /unknown nominal/);
   assert.throws(() => componentStructuredCallableDefaults([{ kind: "resource", id: "lean:Example.Resource", fields: [] }]), /identity/);
 });
+
+test("Fin recovery constructs checked values and never invents an inhabitant of Fin zero", () => {
+  const nat = { kind: "primitive", name: "nat" }, fin = bound => ({ kind: "fin", bound });
+  const defaults = componentStructuredCallableDefaults([]);
+  assert.equal(defaults.expression(nat, fin("5")), "(⟨0, by decide⟩ : _root_.Fin 5)");
+  assert.throws(() => defaults.expression(nat, fin("0")), /no finite recovery value/);
+  for(const constructor of ["array", "list", "option"])
+    assert.ok(defaults.expression(apply(constructor, nat), { kind: constructor, arguments: [fin("0")] }));
+  assert.equal(defaults.expression(apply("result", nat, nat), { kind: "result", arguments: [fin("0"), fin("2")] }), "(_root_.Except.error ((⟨0, by decide⟩ : _root_.Fin 2)))");
+  assert.throws(() => defaults.expression(apply("tuple", nat, nat), { kind: "tuple", arguments: [fin("0"), null] }), /no finite recovery value/);
+  const record = { kind: "record", id: "lean:Example.Impossible", fields: fields(nat) };
+  const nominal = componentStructuredCallableDefaults([record], [{ id: record.id, refinement: { kind: "record", fields: [fin("0")] } }]);
+  assert.equal(nominal.declarations.length, 0);
+  assert.throws(() => nominal.expression(named("Example.Impossible")), /no finite recovery value/);
+});

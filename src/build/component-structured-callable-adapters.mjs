@@ -23,19 +23,22 @@ const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join
 export const generateComponentStructuredCallableAdapters = (abi, exports = []) => {
 	assertComponentStructuredCallableAbi(abi);
 	const copied = componentStructuredCopiedView(abi);
-	const walker = type => componentRecursiveWalker(copied, type);
+	const nominalRefinements = abi.nominalRefinements ?? [];
+	const constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);
+	const walker = type => componentRecursiveWalker(copied, type, nominalRefinements);
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 	const identity = type => type.kind === "named" && callbacks.has(type.id);
 	const prefix = signature => componentStructuredCallablePrefix(abi, signature);
-	const lines = [generateComponentRecursiveAdapters(copied, { exportFrames: false })];
+	const lines = [generateComponentRecursiveAdapters(copied, { exportFrames: false, nominalRefinements })];
 	for(const signature of abi.callbacks)
 		lines.push(`extern lean_object *${prefix(signature)}_wrap(size_t);`
 			, `extern lean_object *${prefix(signature)}_apply(lean_object *, ${parameters(signature.parameters.length)});`
 			, `static uint32_t ${prefix(signature)}_frame(lean_object *, bridge_scalar_frame *);`);
 	const frame = (signature, name, target, closure = false) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
-		const refinements = closure ? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];
-		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
+		const refinements = closure ? signature.refinements?.parameters ?? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];
+		const cleanup = [...(closure ? ["lean_dec(closure);"] : []), ...names.map(name => `lean_dec(${name});`)].join(" ");
+		for(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${name}_refinement_${index}(lean_object *);`);
 		lines.push(closure ? `static uint32_t ${name}(lean_object *closure, bridge_scalar_frame *frame) {`
 			: `LEAN_EXPORT uint32_t ${name}(bridge_scalar_frame *frame) {`
@@ -57,9 +60,10 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 			lines.push(`  lean_object *a${index} = ${identity(type)
 				? `${prefix(callbacks.get(type.id))}_wrap((size_t)frame->args[${index}].bits)`
 				: `${walker(type)}_decode(&frame->args[${index}])`};`);
-		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
+		if(constrained) for(const name of names) lines.push(`  if (!lean_is_array(${name}) || lean_array_size(${name}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
+		for(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== "fin"))
 			lines.push(`  lean_inc(a${index});`
-				, `  if (!${name}_refinement_${index}(a${index})) { ${names.map(name => `lean_dec(${name});`).join(" ")} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
+				, `  if (!${name}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${target}(${[...(closure ? ["closure"] : []), ...names].join(", ") || "lean_box(0)"});`);
 		if(identity(signature.result))
 		{
@@ -76,6 +80,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	{
 		const symbol = prefix(signature);
 		frame(signature, `${symbol}_frame`, `${symbol}_apply`, true);
+		if(signature.refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);
 		lines.push(`lean_object *${symbol}_invoke(size_t token, ${signature.parameters.map((_, index) => `lean_object *a${index}`).join(", ")}) {`
 			, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`
 			, "  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;"
@@ -94,8 +99,17 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 			, "      /* Report invalid replies without invoking the host callback again. */"
 			, "      frame->status = status;"
 			, `      bridge_callable_dispatch((uint32_t)token, "${signature.key}", frame);`, "    }", "  }"
-			, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`
-			, "  bridge_recursive_frame_clear(frame);", "  return result;", "}", "");
+			, `  lean_object *result = status ? lean_alloc_array(0, 0) : ${walker(signature.result)}_decode(&frame->result);`);
+		if(constrained)
+		{
+			lines.push("  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) status = 5;");
+			if(signature.refinements?.result) lines.push("  if (!status) {", "    lean_inc(result);"
+				, `    if (!${symbol}_result_refinement_0(result)) status = 5;`, "  }");
+			lines.push("  if (status == 5) {", "    lean_dec(result); result = lean_alloc_array(0, 0);"
+				, "    frame->status = 5;"
+				, `    bridge_callable_dispatch((uint32_t)token, "${signature.key}", frame);`, "  }");
+		}
+		lines.push("  bridge_recursive_frame_clear(frame);", "  return result;", "}", "");
 	}
 	for(const item of abi.exports)
 	{

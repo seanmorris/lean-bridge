@@ -180,7 +180,7 @@ export const validateCompilerAdapterPlan = plan => {
 	}
 	if(plan.nominalRefinements !== undefined)
 	{
-		if(plan.privateAbi.version !== componentRecursiveAbi || !Array.isArray(plan.nominalRefinements) || !plan.nominalRefinements.length)
+		if(![componentRecursiveAbi, componentStructuredCallableAbi].includes(plan.privateAbi.version) || !Array.isArray(plan.nominalRefinements) || !plan.nominalRefinements.length)
 			fail("invalid-compiler-adapter-plan", "Nominal refinements require copied graph carriers");
 		let previous = "";
 		for(const entry of plan.nominalRefinements)
@@ -195,6 +195,8 @@ export const validateCompilerAdapterPlan = plan => {
 			previous = entry.id;
 		}
 	}
+	if(plan.privateAbi.version === componentStructuredCallableAbi && canonicalJson(plan.nominalRefinements ?? []) !== canonicalJson(plan.privateAbi.nominalRefinements ?? []))
+		fail("invalid-compiler-adapter-plan", "Callable nominal refinements must match their private descriptor");
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{

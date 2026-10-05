@@ -26,6 +26,7 @@ import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { checkSubtypeComponentPackages } from "./helpers/subtype-component-packages.mjs";
 import { checkNestedFinPackages } from "./helpers/nested-fin-packages.mjs";
 import { checkNominalFinPackage } from "./helpers/nominal-fin-packages.mjs";
+import { checkCallbackFinPackages } from "./helpers/callback-fin-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -56,6 +57,10 @@ const transport = ({ execute, after, compiler } = {}) => ({ capture: async comma
 	return { stdout: "", stderr: "", code: 0 };
 } });
 const build = (root, outputRoot, runner = transport()) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner });
+
+test("checked Fin callbacks and closures compile, reproduce and recover in installed npm packages", { skip: !enabled }, async t => {
+	await checkCallbackFinPackages(t, { fixture, build, runtimeRoot, engineRoot });
+});
 
 test("nominal Fin fields and aliases compile and reject safely in installed npm packages", { skip: !enabled }, async t => {
 	await checkNominalFinPackage(t, { fixture, build, runtimeRoot, engineRoot });

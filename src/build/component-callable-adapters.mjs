@@ -8,7 +8,7 @@ import { componentScalarTypes, assertComponentSignature } from "../abi/component
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
-import { nominalRefinementEntries } from "../abi/refinements.mjs";
+import { nominalRefinementEntries, callbackDefinitionRefinement } from "../abi/refinements.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
@@ -26,14 +26,16 @@ export const createComponentPrivateAbi = document => {
 		|| document.types.some(type => type.fields.some(field => compound(field.type)));
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
-	const constrained = nominalRefinementEntries(document.types).length > 0;
-	if(constrained && callbackTypes.length) throw new TypeError("Nominal Fin refinements do not yet support callable components");
-	const structured = callbackTypes.length > 0 && (records || nominal || copied
+	const nominalRefinements = nominalRefinementEntries(document.types), constrained = nominalRefinements.length > 0;
+	const structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(callbackDefinitionRefinement)
 		|| callbackTypes.some(type => [...type.callable.parameters.map(item => item.type), type.callable.result.type].some(type => type.kind !== "primitive")));
 	const definitions = structured ? componentRecordDefinitions({ types: document.types.filter(type => type.kind !== "callback") }, true) : null;
 	const callbacks = callbackTypes.map(type => {
-		const signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };
-		const key = structured ? componentStructuredCallableSignatureText(signature, definitions) : componentCallableSignatureText(signature);
+		const refinements = callbackDefinitionRefinement(type);
+		const signature = { parameters: type.callable.parameters.map(parameter => parameter.type)
+			, result: type.callable.result.type
+			, ...(refinements ? { refinements } : {}) };
+		const key = structured ? componentStructuredCallableSignatureText(signature, definitions, nominalRefinements) : componentCallableSignatureText(signature);
 		return { id: type.id, key: sha256(key).slice(0, 40), ...signature };
 	});
 	const abi = {
@@ -41,6 +43,7 @@ export const createComponentPrivateAbi = document => {
 		, dispatch: structured ? componentStructuredCallableDispatch : callbacks.length ? "scalar-callable-frame-v1" : nominal ? componentNominalDispatch : compounds ? componentCompoundDispatch : records ? componentRecordDispatch : copied ? componentCopiedDispatch : "scalar-frame-v2"
 		, ...(callbacks.length ? { callbacks } : {})
 		, ...(structured ? { types: definitions } : {})
+		, ...(structured && constrained ? { nominalRefinements } : {})
 		, ...(!callbacks.length && nominal ? { types: componentRecordDefinitions(document, true) } : (records || compounds) && !callbacks.length ? { records: componentRecordDefinitions(document) } : {})
 		, exports: document.declarations.map(declaration => ({
 			bindingId: declaration.id
@@ -49,7 +52,7 @@ export const createComponentPrivateAbi = document => {
 			, result: declaration.result.type
 			, resultMode: declaration.resultMode }))
 	};
-	if(constrained)
+	if(constrained && !callbacks.length)
 	{
 		const graph = { version: componentRecursiveAbi
 			, dispatch: componentRecursiveDispatch

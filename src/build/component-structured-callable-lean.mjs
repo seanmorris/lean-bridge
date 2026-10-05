@@ -8,7 +8,7 @@ import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
-import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -23,16 +23,19 @@ const primitive = { unit: "Unit", bool: "Bool", char: "Char"
  *
  * @param type - Concrete source type reference.
  * @param callbacks - Authenticated callable signatures for identity roots.
+ * @param refinement - Optional scalar or structural Fin constraints.
  */
-export const componentStructuredLeanType = (type, callbacks = new Map()) => {
+export const componentStructuredLeanType = (type, callbacks = new Map(), refinement = null) => {
+	if(refinement?.kind === "fin") return `(_root_.Fin ${refinement.bound})`;
 	if(type.kind === "primitive") return `_root_.${primitive[type.name]}`;
 	if(type.kind === "named")
 	{
 		const signature = callbacks.get(type.id);
-		return signature ? `(${[...signature.parameters, signature.result].map(type => componentStructuredLeanType(type)).join(" → ")})`
+		return signature ? `(${[...signature.parameters, signature.result].map((type, index) => componentStructuredLeanType(type, new Map(),
+			index < signature.parameters.length ? signature.refinements?.parameters[index] : signature.refinements?.result)).join(" → ")})`
 			: `_root_.${type.id.slice(5)}`;
 	}
-	const children = type.arguments.map(type => componentStructuredLeanType(type));
+	const children = type.arguments.map((type, index) => componentStructuredLeanType(type, new Map(), refinement?.arguments[index]));
 	if(type.constructor === "tuple") return `(${children.join(" × ")})`;
 	if(type.constructor === "result") return `(_root_.Except ${children[1]} ${children[0]})`;
 	return `(_root_.${{ array: "Array", list: "List", option: "Option" }[type.constructor]} ${children[0]})`;
@@ -77,8 +80,10 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	assertComponentStructuredCallableAbi(abi);
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const carrier = type => `(_root_.Array ${componentStructuredLeanType(type, callbacks)})`;
-	const defaults = componentStructuredCallableDefaults(abi.types);
-	const lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType), ...defaults.declarations];
+	const nominalRefinements = abi.nominalRefinements ?? [];
+	const constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);
+	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
+	const lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType, nominalRefinements), ...defaults.declarations];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), `  pure (${body})`, ")"];
 	for(const signature of abi.callbacks)
 	{
@@ -86,23 +91,48 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const closure = carrier({ kind: "named", id: signature.id });
-		const fallback = defaults.expression(signature.result);
+		const refinements = signature.refinements;
+		const fallback = defaults.expression(signature.result, refinements?.result);
+		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
+			symbol
+			, wrapper: `checked_${key}_${symbol.endsWith("result") ? "result" : "frame"}`
+			, parameters: parameters.map(type => ({ leanType: componentStructuredLeanType(type) }))
+			, refinements: { parameters: selected, result: null }
+		}, true);
+		if(refinements)
+		{
+			lines.push(...validators(`${prefix}_frame`, signature.parameters, refinements.parameters));
+			if(refinements.result) lines.push(...validators(`${prefix}_result`, [signature.result], [refinements.result]));
+		}
+		const invokeArguments = names.map((name, index) => `#[${refinements?.parameters[index] ? `wire_${name}` : name}]`).join(" ");
+		const projections = names.flatMap((name, index) => refinements?.parameters[index]
+			? [`    let wire_${name} := ${componentRefinementConversion(refinements.parameters[index], name, false)}`] : []);
+		const lambdaParameters = names.map((name, index) => refinements ? `(${name} : ${componentStructuredLeanType(signature.parameters[index], new Map(), refinements.parameters[index])})` : name);
+		const invocation = `carrierValue (invoke_${key} token ${invokeArguments})`;
+		const result = refinements?.result ? `(show _root_.Option ${componentStructuredLeanType(signature.result, new Map(), refinements.result)} from do let value : ${componentStructuredLeanType(signature.result)} ← ${invocation}; ${componentRefinementConversion(refinements.result, "value")})` : invocation;
+		const application = refinements ? ["carrierResult (do"
+			, ...["closure", ...names].map(name => `  let ${name} ← carrierValue ${name}`)
+			, ...refinements.parameters.flatMap((refinement, index) => refinement ? [`  let ${names[index]} ← ${componentRefinementConversion(refinement, names[index])}`] : [])
+			, `  let result := closure ${names.join(" ")}`
+			, `  pure (${componentRefinementConversion(refinements.result, "result", false)})`
+			, ")"] : checked(["closure", ...names], `closure ${names.join(" ")}`);
 		lines.push(`@[extern "${prefix}_invoke"]`
 			, `opaque invoke_${key} (token : _root_.USize) ${parameters} : ${carrier(signature.result)} := #[]`, ""
 			, `@[export ${prefix}_wrap]`
 			, `def wrap_${key} (token : _root_.USize) : ${closure} :=`
-			, `  #[fun ${names.join(" ")} =>`
-			, `    match carrierValue (invoke_${key} token ${names.map(name => `#[${name}]`).join(" ")}) with`
+			, `  #[fun ${lambdaParameters.join(" ")} =>`
+			, ...projections
+			, `    match ${result} with`
 			, `    | .none => ${fallback}`, "    | .some value => value]", ""
 			, `@[export ${prefix}_apply]`
 			, `def apply_${key} (closure : ${closure}) ${parameters} : ${carrier(signature.result)} :=`
-			, ...checked(["closure", ...names], `closure ${names.join(" ")}`).map(line => `  ${line}`), "");
+			, ...application.map(line => `  ${line}`), "");
 	}
 	if(sourceExports.length !== abi.exports.length) throw new TypeError("Structured source export count mismatch");
 	const seen = new Set();
 	for(const item of sourceExports)
 	{
-		lines.push(...componentCarrierRefinementValidators(item));
+		lines.push(...componentCarrierRefinementValidators(item, constrained));
 		const signature = abi.exports.find(signature => signature.bindingId === item.bindingId);
 		if(!signature || seen.has(item.bindingId) || item.symbol !== signature.symbol) throw new TypeError("Structured source export identity mismatch");
 		seen.add(item.bindingId);

@@ -5,8 +5,9 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { sha256 } from "../src/capsule/node.mjs";
-import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../src/abi/component-structured-callables.mjs";
+import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { generateComponentStructuredCallableAdapters } from "../src/build/component-structured-callable-adapters.mjs";
 import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
@@ -23,6 +24,83 @@ const plan = ir => generateCompilerAdapters({ analysis: {
 	, exportCandidates: ir.declarations.map(item => ({ declaration: item.source.declaration, sourceModule: "Structured", status: "exportable" }))
 }
 , componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
+
+const fin = bound => ({ kind: "fin", bound });
+const finCallback = (bound = "3") => {
+	const ir = callableReviewedIr([{ name: "Structured.call", parameters: [{ callback: { parameters: ["nat"], result: "nat" } }], result: "nat" }]);
+	ir.types[0].source.extensions["lean-lang.org/refinements"] = { parameters: [fin(bound)], result: fin(bound) };
+	return ir;
+};
+
+test("Fin callback keys retain bounds and authenticate compiler and public metadata", async () => {
+	const ir = finCallback(), generated = plan(ir), abi = generated.plan.privateAbi;
+	assert.equal(abi.version, 9);
+	assert.deepEqual(abi.types, []);
+	assertComponentStructuredCallableBindings(abi, ir);
+	assertComponentStructuredCallableBindings(JSON.parse(canonicalJson(abi)), ir);
+	assert.equal(componentStructuredCallableSignatureText(abi.callbacks[0], []), componentStructuredCallableSignatureText(JSON.parse(canonicalJson(abi.callbacks[0])), []));
+	await assertJsonSchema("compiler-adapter-plan", generated.plan);
+	const other = plan(finCallback("5")).plan.privateAbi;
+	assert.notEqual(abi.callbacks[0].key, other.callbacks[0].key);
+	assert.notEqual(componentStructuredCallableSignatureText(abi.callbacks[0], []), componentStructuredCallableSignatureText(other.callbacks[0], []));
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /Fin 3.*→.*Fin 3/);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /⟨0, by decide⟩ : _root_\.Fin 3/);
+	assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"], /sorry|unsafeCast|axiom|panic!/);
+	const c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);
+	assert.match(c, /refinement_0\(a0\)\) \{ lean_dec\(closure\); lean_dec\(a0\);/);
+	assert.match(c, /result_refinement_0\(result\)\) status = 5/);
+	for(const mutate of [
+		value => { value.privateAbi.callbacks[0].refinements.parameters = []; }
+		, value => { value.privateAbi.callbacks[0].refinements.parameters[0].bound = "03"; }
+		, value => { value.privateAbi.callbacks[0].refinements.result = { kind: "subtype", constructor: "Structured.checked" }; }
+		, value => { value.privateAbi.callbacks[0].refinements = { parameters: [null], result: null }; }
+		, value => { value.privateAbi.callbacks[0].refinements.extra = true; }
+		, value => { value.privateAbi.nominalRefinements = []; }
+	]) {
+		const forged = structuredClone(generated.plan); mutate(forged);
+		assert.throws(() => validateCompilerAdapterPlan(forged));
+	}
+	const mismatched = structuredClone(abi); mismatched.callbacks[0].refinements.result.bound = "5";
+	assert.throws(() => assertComponentStructuredCallableBindings(mismatched, ir), /refinement mismatch/);
+});
+
+test("Fin callback JS wrappers validate both directions and preserve closure disposal", async () => {
+	const ir = finCallback(), files = generateJavaScriptPackage(ir);
+	const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+	const wrap = validators[`wrap${ir.types[0].name}`];
+	let calls = 0, disposed = false;
+	const closure = value => { calls++; return value; };
+	Object.defineProperties(closure, { dispose: { value: () => { disposed = true; } }, disposed: { get: () => disposed } });
+	Object.freeze(closure);
+	const checked = wrap(closure, "callback");
+	assert.throws(() => checked(3n), /below/); assert.equal(calls, 0);
+	assert.throws(() => checked(1), /bigint/);
+	assert.throws(() => checked(), /expects 1 arguments/);
+	assert.throws(() => checked(1n, 2n), /expects 1 arguments/);
+	assert.equal(checked(2n), 2n);
+	assert.throws(() => wrap(() => 3n, "callback")(1n), /below/);
+	assert.equal(checked.dispose, closure.dispose); checked.dispose(); assert.equal(checked.disposed, true);
+});
+
+test("nominal Fin callback metadata binds field constraints and rejects missing recovery values", async () => {
+	const ir = structuredCallableReviewedIr({ recursive: true });
+	const tree = ir.types.find(type => type.name === "Tree");
+	tree.source.extensions["lean-lang.org/nominal-refinements"] = { kind: "variant", cases: [[fin("0")], [null]] };
+	const generated = plan(ir), abi = generated.plan.privateAbi;
+	assert.deepEqual(generated.plan.nominalRefinements, abi.nominalRefinements);
+	assertComponentStructuredCallableBindings(abi, ir);
+	await assertJsonSchema("compiler-adapter-plan", generated.plan);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /Tree\.«branch» \(#\[\]\)/);
+	for(const mutate of [
+		value => { delete value.nominalRefinements; }
+		, value => { value.privateAbi.nominalRefinements = structuredClone(value.privateAbi.nominalRefinements); value.privateAbi.nominalRefinements[0].refinement.cases[0][0].bound = "1"; }
+		, value => { value.privateAbi.nominalRefinements.push(value.privateAbi.nominalRefinements[0]); }
+	]) {
+		const forged = structuredClone(generated.plan); mutate(forged);
+		assert.throws(() => validateCompilerAdapterPlan(forged));
+	}
+	assert.throws(() => plan(finCallback("0")), /no finite recovery value/);
+});
 
 test("structured compiler admission matches independent acyclic, recursive and mixed primitive contracts", async () => {
 	for(const ir of [structuredCallableReviewedIr(), structuredCallableReviewedIr({ recursive: true }), npmStructuredCallableReviewedIr()])

@@ -163,8 +163,8 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("nested refinement metadata cannot erase callback or nested Subtype constraints", () => {
-	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound: "5" } };
+test("callback and nested Subtype constraints are rejected rather than erased", () => {
+	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
 	for(const type of [
 		{ kind: "callback", parameters: [fin], result: { kind: "primitive", name: "nat" } }
 		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: fin } }
@@ -187,6 +187,7 @@ def impossible (value : Fin 0) : Nat := value.val
 def nested (values : Array (Fin 5)) : Nat := values.size
 def refused (values : Array (Fin 5)) : Nat := values.size
 def callback (_f : Slot → Nat) : Nat := 0
+def refusedCallback (_f : Slot → Nat) : Nat := 0
 structure Bad where
   value : Array Slot
 def record (value : Bad) : Bad := value
@@ -202,8 +203,8 @@ end Shop
 `);
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: ["Shop"]
-		, exports: ["aliased", "bounded", "impossible", "nested", "refused", "callback", "record", "aliasContainer", "refusedRecord", "refusedAlias", "refusedTree"].map(name => `Shop.${name}`)
-		, contracts: Object.fromEntries(["refused", "refusedRecord", "refusedAlias", "refusedTree"].map(name => [`Shop.${name}`, { parameters: [{ ownership: "copy", lifetime: null, refinement: "reject" }] }])) }));
+		, exports: ["aliased", "bounded", "impossible", "nested", "refused", "callback", "record", "aliasContainer", "refusedRecord", "refusedAlias", "refusedTree", "refusedCallback"].map(name => `Shop.${name}`)
+		, contracts: Object.fromEntries(["refused", "refusedRecord", "refusedAlias", "refusedTree", "refusedCallback"].map(name => [`Shop.${name}`, { parameters: [name === "refusedCallback" ? { ownership: "borrow", lifetime: { scope: "call", anchor: null }, refinement: "reject" } : { ownership: "copy", lifetime: null, refinement: "reject" }] }])) }));
 	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
 	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
 	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
@@ -212,11 +213,9 @@ end Shop
 	const bounded = declarations.find(item => item.identity === "Shop.bounded");
 	const impossible = declarations.find(item => item.identity === "Shop.impossible");
 	const nested = declarations.find(item => item.identity === "Shop.nested");
-	for(const name of ["callback"])
-		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.status, "unsupported", name);
-	for(const name of ["record", "aliasContainer"])
+	for(const name of ["callback", "record", "aliasContainer"])
 		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.status, "supported", name);
-	for(const name of ["refused", "refusedRecord", "refusedAlias", "refusedTree"])
+	for(const name of ["refused", "refusedRecord", "refusedAlias", "refusedTree", "refusedCallback"])
 		assert.equal(declarations.find(item => item.identity === `Shop.${name}`).projection.reason, "export-contract-mismatch", name);
 	const fin = bound => ({ kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound } });
 	assert.deepEqual(aliased.projection.parameters[0].type, fin("7"));
@@ -233,7 +232,9 @@ end Shop
 		assert.deepEqual(type.source.extensions["lean-lang.org/nominal-refinements"], name === "Bad"
 			? { kind: "record", fields: [refinement] } : { kind: "alias", target: refinement });
 	}
-	const ir = analysis.bindingIr.document.declarations.filter(item => !["lean:Shop.record", "lean:Shop.aliasContainer"].includes(item.id));
+	const callback = types.find(type => type.kind === "callback");
+	assert.deepEqual(callback.source.extensions["lean-lang.org/refinements"], { parameters: [{ kind: "fin", bound: "7" }], result: null });
+	const ir = analysis.bindingIr.document.declarations.filter(item => !["lean:Shop.callback", "lean:Shop.record", "lean:Shop.aliasContainer"].includes(item.id));
 	assert.deepEqual(ir.map(item => item.id), ["lean:Shop.aliased", "lean:Shop.bounded", "lean:Shop.impossible", "lean:Shop.nested"]);
 	assert.deepEqual(ir[1].parameters[0].type, { kind: "primitive", name: "nat" });
 	assert.deepEqual(ir[1].result.type, { kind: "primitive", name: "nat" });

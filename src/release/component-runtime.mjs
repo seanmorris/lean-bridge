@@ -203,7 +203,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 					|| ["frame_validate", "frame_clear", "receipt_count", "receipt_data"].some(name => typeof module[`_bridge_recursive_${name}`] !== "function"))) throw new Error("Shared runtime lacks the component recursive callable ABI; rebuild it");
 				for(const signature of descriptor.privateAbi.callbacks)
 				{
-					const signatureText = structured ? componentStructuredCallableSignatureText(signature, descriptor.privateAbi.types) : componentCallableSignatureText(signature);
+					const signatureText = structured ? componentStructuredCallableSignatureText(signature, descriptor.privateAbi.types, descriptor.privateAbi.nominalRefinements) : componentCallableSignatureText(signature);
 					if((await digest(encoder.encode(signatureText))).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
 				}
 			}

@@ -5,7 +5,7 @@
  */
 import { componentScalarTypes } from "../../abi/component-scalars.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
-import { nominalRefinementEntries } from "../../abi/refinements.mjs";
+import { nominalRefinementEntries, callbackDefinitionRefinement } from "../../abi/refinements.mjs";
 
 /**
  * Emit named validators sharing an explicit traversal stack and cycle checks.
@@ -61,6 +61,20 @@ export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 		reference(declaration.result.type);
 	}
 	const scalars = componentScalarTypes.map(name => validatorName({ kind: "primitive", name }, typeMap));
+	const wrappers = ir.types.filter(type => type.kind === "callback" && (constraints.size || callbackDefinitionRefinement(type))).map(type => {
+		const refinement = callbackDefinitionRefinement(type), call = type.callable;
+		const checks = call.parameters.flatMap((parameter, index) => [
+			`    ${reference(parameter.type)}(args[${index}], path + ".arg${index}");`
+			, ...refinement?.parameters[index] ? [`    assertNestedFin(args[${index}], ${JSON.stringify(refinement.parameters[index])}, path + ".arg${index}");`] : []
+		]);
+		return [`export const wrap${type.name} = (value, path) => new Proxy(value, {`
+			, "  apply(target, receiver, args) {"
+			, `    if (args.length !== ${call.parameters.length}) throw new TypeError(path + " expects ${call.parameters.length} arguments");`
+			, ...checks, "    const result = Reflect.apply(target, receiver, args);"
+			, `    ${reference(call.result.type)}(result, path + ".result");`
+			, ...refinement?.result ? [`    assertNestedFin(result, ${JSON.stringify(refinement.result)}, path + ".result");`] : []
+			, "    return result;", "  }", "});"].join("\n");
+	});
 	const check = constraints.size ? "for (const refinement of frame.checks ?? []) assertNestedFin(frame.value, refinement, frame.path); " : "";
 	return `const copiedTypes = ${JSON.stringify(Object.fromEntries(table))};
 const scalarValidators = { ${scalars.join(", ")} };
@@ -128,5 +142,6 @@ const copiedValue = (root, input, path) => {
 };
 ${[...table.keys()].map(name => `export const ${name} = (value, path) => copiedValue(${JSON.stringify(name)}, value, path);`).join("\n")}
 ${ir.types.filter(type => type.kind === "callback").map(type => `export const assert${type.name} = (value, path) => { if (typeof value !== "function") invalid(path, "function"); return value; };`).join("\n")}
+${wrappers.length ? wrappers.join("\n") + "\n" : ""}\
 `;
 };

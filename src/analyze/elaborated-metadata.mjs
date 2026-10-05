@@ -168,7 +168,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					}
 					if(type?.kind === "refinement")
 					{
-						if(!refinements || (depth !== 0 && type.predicate?.kind !== "fin")) fail("Unsupported nested refinement position");
+						if(!refinements || ((depth !== 0 || refinements === "fin-only") && type.predicate?.kind !== "fin")) fail("Unsupported nested refinement position");
 						closed(type, ["kind", "base", "predicate"]);
 						scalar(type.base);
 						if(type.predicate?.kind === "fin")
@@ -238,8 +238,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind !== "callback") return copied(type);
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
-					for(const parameter of type.parameters) copied(parameter, 0, undefined, false);
-					copied(type.result, 0, undefined, false);
+					for(const parameter of type.parameters) copied(parameter, 0, undefined, "fin-only");
+					copied(type.result, 0, undefined, "fin-only");
 				};
 				const nativeType = type => {
 					if(request.ownedAggregates === undefined) validateNativeType(type);

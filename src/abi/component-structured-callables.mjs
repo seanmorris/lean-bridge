@@ -7,6 +7,7 @@
 import { snapshotComponentCopiedGraph } from "./component-recursive.mjs";
 import { componentRecordDefinitions } from "./component-records.mjs";
 import { componentCallableCapacity } from "./component-callables.mjs";
+import { callbackRefinement, callbackDefinitionRefinement, nominalRefinement, nominalRefinementEntries } from "./refinements.mjs";
 
 export const componentStructuredCallableAbi = 9;
 export const componentStructuredCallableDispatch = "copied-callable-frame-v1";
@@ -27,6 +28,8 @@ const dense = (values, limit) => {
 };
 const text = value => typeof value === "string" && value.length > 0 && value.length <= 1024;
 const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+const ordered = value => Array.isArray(value) ? value.map(ordered)
+	: value && typeof value === "object" ? Object.fromEntries(Object.keys(value).sort().map(key => [key, ordered(value[key])])) : value;
 const graph = (root, types) => {
 	try
 	{ return snapshotComponentCopiedGraph({ schemaVersion: 1, root, types }); }
@@ -45,15 +48,19 @@ const data = (value, key) => {
  *
  * @param signature - Concrete callback parameters and result.
  * @param types - Finite copied nominal definitions, excluding callback identities.
+ * @param nominalRefinements - Optional checked nominal field constraints.
  */
-export const componentStructuredCallableSignatureText = (signature, types) => {
+export const componentStructuredCallableSignatureText = (signature, types, nominalRefinements = []) => {
 	const parameters = data(signature, "parameters"), result = data(signature, "result");
 	dense(parameters, 16);
 	if(!parameters.length) fail("callback arity must be 1 through 16");
 	const checked = graph(result, types);
+	const refinements = callbackRefinement(signature, signature.refinements);
 	return JSON.stringify(["copied-callable-v1"
 		, parameters.map(root => graph(root, checked.types).root)
-		, checked.root, checked.types]);
+		, checked.root
+		, checked.types
+		, ...(refinements || nominalRefinements.length ? [ordered({ refinements, nominalRefinements })] : [])]);
 };
 
 /**
@@ -63,19 +70,32 @@ export const componentStructuredCallableSignatureText = (signature, types) => {
  * @param abi - Closed descriptor, not evidence of installed support.
  */
 export const assertComponentStructuredCallableAbi = abi => {
-	closed(abi, ["version", "dispatch", "types", "callbacks", "exports"]);
+	closed(abi, ["version", "dispatch", "types", "callbacks", "exports", ...(abi.nominalRefinements === undefined ? [] : ["nominalRefinements"])]);
 	if(abi.version !== componentStructuredCallableAbi || abi.dispatch !== componentStructuredCallableDispatch) fail("unsupported version or dispatch");
 	const copied = graph({ kind: "primitive", name: "unit" }, abi.types);
+	if(abi.nominalRefinements !== undefined)
+	{
+		dense(abi.nominalRefinements, 1024);
+		if(!abi.nominalRefinements.length) fail("empty nominal refinements");
+		let previous = "";
+		for(const entry of abi.nominalRefinements)
+		{
+			closed(entry, ["id", "refinement"]);
+			const definition = copied.types.find(type => type.id === entry.id);
+			if(!definition || entry.id <= previous || nominalRefinement(definition, entry.refinement) === null) fail("invalid nominal refinements");
+			previous = entry.id;
+		}
+	}
 	dense(abi.callbacks, componentCallableCapacity);
 	if(!abi.callbacks.length) fail("callbacks must be nonempty");
 	const identities = new Set(), keys = new Set();
 	for(const callback of abi.callbacks)
 	{
-		closed(callback, ["id", "key", "parameters", "result"]);
+		closed(callback, ["id", "key", "parameters", "result", ...(callback.refinements === undefined ? [] : ["refinements"])]);
 		if(!text(callback.id) || identities.has(callback.id) || copied.types.some(type => type.id === callback.id)
 			|| typeof callback.key !== "string" || !/^[a-f0-9]{40}$/.test(callback.key) || keys.has(callback.key)) fail("callback identities must be unique");
 		identities.add(callback.id); keys.add(callback.key);
-		componentStructuredCallableSignatureText(callback, copied.types);
+		componentStructuredCallableSignatureText(callback, copied.types, abi.nominalRefinements);
 	}
 	const used = new Set(), bindings = new Set(), symbols = new Set();
 	const value = type => {
@@ -115,6 +135,7 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 	const copied = graph({ kind: "primitive", name: "unit" }, abi.types);
 	if(ir.types.length !== callbacks.size + copied.types.length || new Set(ir.types.map(type => type.id)).size !== ir.types.length) fail("binding type table mismatch");
 	const definitions = componentRecordDefinitions({ types: ir.types.filter(type => type.kind !== "callback") }, true);
+	if(!same(ordered(abi.nominalRefinements ?? []), ordered(nominalRefinementEntries(ir.types)))) fail("nominal refinement mismatch");
 	if(!same(copied.types, graph(copied.root, definitions).types)) fail("nominal definitions differ from public types");
 	const site = (value, expected, result = false) => {
 		const identity = expected.kind === "named" && callbacks.has(expected.id);
@@ -145,6 +166,7 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 		const expected = callbacks.get(type.id), call = type.callable;
 		if(!expected || type.representation !== "identity" || type.mutability !== "immutable" || type.typeParameters.length
 			|| type.fields.length || type.cases.length || type.target !== null || type.resource !== null || type.host !== null) fail("unsupported callable type");
+		if(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type)))) fail("callback refinement mismatch");
 		if(call.resultMode !== "value" || call.invocation !== "many" || call.reentry !== "same-agent" || call.selfDisposal !== "defer"
 			|| !same(call.effects.toSorted(), ["fails", "host-call"])) fail("unsupported callable semantics");
 		parameters(call.parameters, expected.parameters); site(call.result, expected.result, true); failure(call.failure, true);

@@ -14,11 +14,13 @@ import { componentRecursiveHelper, componentRecursiveTypes } from "./component-r
  *
  * @param abi - Authenticated copied-value descriptor.
  * @param type - Concrete payload root from this descriptor.
+ * @param nominalRefinements - Constraints requiring preserved alias constructors.
  */
-export const componentRecursiveWalker = (abi, type) => {
+export const componentRecursiveWalker = (abi, type, nominalRefinements = []) => {
 	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
-	const value = resolve(type);
-	const reference = value.kind === "record" || value.kind === "variant" ? { kind: "named", id: value.id } : value;
+	const definition = type.kind === "named" && nominalRefinements.length ? abi.types.find(value => value.id === type.id) : null;
+	const value = definition?.kind === "alias" ? definition : resolve(type);
+	const reference = ["alias", "record", "variant"].includes(value.kind) ? { kind: "named", id: value.id } : value;
 	return `recursive_${sha256(canonicalJson(reference)).slice(0, 20)}`;
 };
 

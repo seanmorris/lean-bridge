@@ -127,7 +127,9 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			parameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))
 			, result: site(type.result, true, decision?.result)
 		} : null;
-		const signature = callable && callbackSemanticSignature(callable);
+		const callbackRefinements = callable && { parameters: type.parameters.map(refinement), result: refinement(type.result) };
+		const constrainedCallback = callbackRefinements && [...callbackRefinements.parameters, callbackRefinements.result].some(value => value !== null);
+		const signature = callable && { ...callbackSemanticSignature(callable), ...(constrainedCallback ? { refinements: callbackRefinements } : {}) };
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 		const id = callbackName ? `bridge:${callbackName}` : `lean:${type.name}`;
 		if(!definitions.has(id))
@@ -158,6 +160,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
 				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
 			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
+			if(constrainedCallback) definition.source.extensions["lean-lang.org/refinements"] = callbackRefinements;
 		}
 		return { kind: "named", id };
 	};

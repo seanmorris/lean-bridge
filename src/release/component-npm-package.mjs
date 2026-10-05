@@ -128,6 +128,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
 		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-structured-callables.mjs", await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url))]
+		, ["internal/refinements.mjs", await readFile(new URL("../abi/refinements.mjs", import.meta.url))]
 		, ["internal/component-structured-callable-runtime.mjs", relocate(await readFile(new URL("./component-structured-callable-runtime.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
 		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
@@ -199,7 +200,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		(abi.version === 9 ? assertComponentStructuredCallableBindings : assertComponentCallableBindings)(abi, ir);
 		for(const signature of abi.callbacks)
 		{
-			const signatureText = abi.version === 9 ? componentStructuredCallableSignatureText(signature, abi.types) : componentCallableSignatureText(signature);
+			const signatureText = abi.version === 9 ? componentStructuredCallableSignatureText(signature, abi.types, abi.nominalRefinements) : componentCallableSignatureText(signature);
 			if(sha256(signatureText).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
 		}
 	}

@@ -318,11 +318,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none false)
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin)
         result := rest
       | _ => break
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1) false none false), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1) false none containerFin), ("abi", ← abi e)]
   let reduced ← whnf e
   if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin
   reject e "unsupported native export type"
@@ -566,6 +566,9 @@ partial def containsRefinement (type : Json) : Bool :=
     ((type.getObjValAs? (Array Json) "cases").toOption.getD #[]).any fun branch =>
       ((branch.getObjValAs? (Array Json) "fields").toOption.getD #[]).any fun field =>
         containsRefinement ((field.getObjVal? "type").toOption.getD Json.null)
+  else if kind == "callback" then
+    ((type.getObjValAs? (Array Json) "parameters").toOption.getD #[]).any containsRefinement ||
+      containsRefinement ((type.getObjVal? "result").toOption.getD Json.null)
   else if ["array", "list", "option"].contains kind then
     containsRefinement ((type.getObjVal? "element").toOption.getD Json.null)
   else if ["tuple", "result"].contains kind then

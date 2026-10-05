@@ -80,3 +80,31 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
 	const refinement = nominalRefinement(definition);
 	return refinement === null ? [] : [{ id: definition.id, refinement }];
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
+/**
+ * Validate Fin-only callback constraints against an erased callable signature.
+ *
+ * @param signature - Erased parameter and result type references.
+ * @param value - Optional compiler-owned parameter/result refinement trees.
+ */
+export const callbackRefinement = (signature, value) => {
+	if(value === undefined) return null;
+	if(!value || typeof value !== "object" || Array.isArray(value)
+		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
+		|| !Array.isArray(value.parameters) || value.parameters.length !== signature.parameters.length)
+		throw new TypeError("Invalid callback refinement metadata");
+	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1);
+	assertRefinement(value.result, signature.result, 1);
+	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
+	return value;
+};
+
+/**
+ * Read optional constraints from a public callback definition.
+ *
+ * @param definition - Public Binding IR callback definition.
+ */
+export const callbackDefinitionRefinement = definition => callbackRefinement({
+	parameters: definition.callable.parameters.map(parameter => parameter.type)
+	, result: definition.callable.result.type
+}, definition.source?.extensions?.["lean-lang.org/refinements"]);

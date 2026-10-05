@@ -11,7 +11,7 @@ import {
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
-import { assertRefinement, nominalRefinementEntries } from "../../abi/refinements.mjs";
+import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement } from "../../abi/refinements.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -563,12 +563,17 @@ const emitDeclarations = (ir, typeMap) => {
 			emitFinCheck(output, refinements.parameters[index], parameter.name, `${declaration.name}.${parameter.name}`, "  ");
 		});
 		const operation = declaration.resultMode === "iterator" ? "iterate" : declaration.resultMode === "async-iterator" ? "iterateAsync" : "call";
+		const callbackWrapper = (type, value, path) => {
+			const definition = typeMap.get(type.id);
+			return definition?.kind === "callback" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition))
+				? `validate.wrap${definition.name}(${value}, ${quote(path)})` : value;
+		};
 		const awaitPrefix = declaration.resultMode === "promise" ? "await " : "";
 		const mappedErrors = declarationErrors(ir, declaration);
 		const indent = mappedErrors.length > 0 ? "    " : "  ";
 		if(mappedErrors.length > 0) output.push("  try {");
 		output.push(
-			`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => parameter.name).join(", ")}]);`,
+			`${indent}const result = ${awaitPrefix}runtime.${operation}(${quote(declaration.id)}, [${declaration.parameters.map(parameter => callbackWrapper(parameter.type, parameter.name, `${declaration.name}.${parameter.name}`)).join(", ")}]);`,
 		);
 		if(new Set(["value", "promise"]).has(declaration.resultMode))
 		{
@@ -577,7 +582,7 @@ const emitDeclarations = (ir, typeMap) => {
 			);
 			emitFinCheck(output, refinements.result, "result", `${declaration.name}.result`, indent);
 		}
-		output.push(`${indent}return result;`);
+		output.push(`${indent}return ${callbackWrapper(declaration.result.type, "result", `${declaration.name}.result`)};`);
 		if(mappedErrors.length > 0)
 		{
 			output.push(
@@ -629,7 +634,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt = assertBigInt;"
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
-		, ...(nominalRefinementEntries(ir.types).length || ir.declarations.some(item => {
+		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {
 			const value = declarationRefinements(item);
 			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype"].includes(refinement.kind));
 		})) ? [
