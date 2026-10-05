@@ -206,6 +206,51 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
+test("checked constructors admit exact scalar Subtype parameters and results", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+abbrev Small := { value : UInt32 // value < 10 }
+def checkedSmall (value : UInt32) : Option Small :=
+  if bound : value < 10 then some ⟨value, bound⟩ else none
+def echoSmall (value : Small) : Small := value
+def unchecked (value : { value : UInt32 // value != 0 }) : UInt32 := value.val
+end Shop
+`);
+	const copy = { ownership: "copy", lifetime: null };
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({
+		schemaVersion: 1
+		, modules: ["Shop"]
+		, exports: ["Shop.echoSmall", "Shop.unchecked"]
+		, contracts: { "Shop.echoSmall": {
+			parameters: [{ ...copy, refinement: { constructor: "Shop.checkedSmall" } }]
+			, result: { ...copy, refinement: { constructor: "Shop.checkedSmall" } }
+			, effects: []
+		} }
+	}));
+	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
+	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
+	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
+	const declarations = analysis.elaboration.metadata.modules.flatMap(module => module.declarations);
+	const checked = declarations.find(item => item.identity === "Shop.echoSmall");
+	const unchecked = declarations.find(item => item.identity === "Shop.unchecked");
+	assert.equal(checked.projection.status, "supported", JSON.stringify(checked.projection));
+	const subtype = { kind: "refinement"
+		, base: { kind: "primitive", name: "uint32" }
+		, predicate: { kind: "subtype", constructor: "Shop.checkedSmall" } };
+	assert.deepEqual(checked.projection.parameters[0].type, subtype);
+	assert.deepEqual(checked.projection.result, subtype);
+	assert.equal(unchecked.projection.status, "unsupported");
+	assert.equal(unchecked.projection.reason, "unsupported-parameter-type");
+	const declaration = analysis.bindingIr.document.declarations.find(item => item.name === "echoSmall");
+	assert.deepEqual(declaration.parameters[0].type, { kind: "primitive", name: "uint32" });
+	assert.deepEqual(declaration.result.type, { kind: "primitive", name: "uint32" });
+	assert.deepEqual(declaration.source.extensions["lean-lang.org/refinements"], {
+		parameters: [{ kind: "subtype", constructor: "Shop.checkedSmall" }]
+		, result: { kind: "subtype", constructor: "Shop.checkedSmall" }
+	});
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
+
 test("fresh metadata preserves aliases, documentation, UTF-16 ranges and actual theorem relationships after relocation", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, "Shop.lean", `import Catalog

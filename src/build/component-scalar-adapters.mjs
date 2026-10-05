@@ -18,16 +18,21 @@ const cType = type => objectType(type) ? "lean_object *"
  * Generates direct typed calls to Lean's exported, owned-argument wrappers.
  *
  * @param abi - Validated private scalar ABI containing one typed export per declaration.
+ * @param exports - Compiler-owned source exports carrying checked refinement metadata.
  */
-export const generateComponentScalarAdapters = abi => {
+export const generateComponentScalarAdapters = (abi, exports = []) => {
 	const lines = ['#include "component_scalar.h"', "#include <string.h>", '_Static_assert(sizeof(size_t) == 4, "scalar-frame-v2 requires wasm32 Lean");', ""];
 	for(const item of abi.exports)
 	{
 		assertComponentSignature(item);
+		const source = exports.find(value => value.bindingId === item.bindingId);
+		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
 		const types = item.parameters.map(type => type.name);
 		const result = item.result.name;
 		const arguments_ = types.map((type, index) => `a${index}`);
 		lines.push(`extern ${cType(result)} ${item.symbol}_lean(${types.length ? types.map(cType).join(", ") : "lean_object *"});`);
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(${cType(types[index])});`);
 		lines.push(`LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`);
 		lines.push(`  uint32_t status = bridge_scalar_frame_validate(frame, ${types.length});`, "  if (status) return status;");
 		// This import also makes packaging reject prepared runtimes predating word slots.
@@ -40,6 +45,8 @@ export const generateComponentScalarAdapters = abi => {
 			else if(type.startsWith("float")) lines.push(`  ${cType(type)} a${index}; memcpy(&a${index}, &${source}.bits, sizeof(a${index}));`);
 			else lines.push(`  ${cType(type)} a${index} = (${cType(type)})${source}.bits;`);
 		}
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);
 		lines.push(`  ${cType(result)} result = ${item.symbol}_lean(${types.length ? arguments_.join(", ") : "lean_box(0)"});`);
 		if(objectType(result)) lines.push(`  return bridge_scalar_encode_object(&frame->result, ${componentScalarTypes.indexOf(result)}, result);`);
 		else

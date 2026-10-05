@@ -48,7 +48,7 @@
         "leanEffect": { "type": ["string", "null"], "enum": ["IO", "Task", null] }
       }
     },
-    "finRefinement": {
+    "refinement": {
       "oneOf": [
         { "type": "null" },
         {
@@ -57,14 +57,21 @@
             "kind": { "const": "fin" },
             "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
           }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+          "properties": {
+            "kind": { "const": "subtype" },
+            "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+          }
         }
       ]
     },
     "refinements": {
       "type": "object", "additionalProperties": false, "required": ["parameters", "result"],
       "properties": {
-        "parameters": { "type": "array", "items": { "$ref": "#/$defs/finRefinement" } },
-        "result": { "$ref": "#/$defs/finRefinement" }
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/refinement" } },
+        "result": { "$ref": "#/$defs/refinement" }
       }
     },
     "privateExport": {

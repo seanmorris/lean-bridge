@@ -104,11 +104,19 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
-const validateFinRefinement = (value, path) => {
+const validateRefinement = (value, path, leanType) => {
 	if(value === null) return;
-	exactKeys(value, ["kind", "bound"], path);
-	if(value.kind !== "fin" || typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound))
-		fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound`);
+	if(value.kind === "fin")
+	{
+		exactKeys(value, ["kind", "bound"], path);
+		if(typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(value.bound) || leanType !== "_root_.Nat")
+			fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound over Nat`);
+		return;
+	}
+	exactKeys(value, ["kind", "constructor"], path);
+	if(value.kind !== "subtype" || typeof value.constructor !== "string"
+		|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))
+		fail("invalid-compiler-adapter-plan", `${path} must name a checked Subtype constructor`);
 };
 
 const validateRefinements = (value, item) => {
@@ -116,13 +124,9 @@ const validateRefinements = (value, item) => {
 	if(!Array.isArray(value.parameters) || value.parameters.length !== item.parameters.length)
 		fail("invalid-compiler-adapter-plan", "Compiler refinements must cover the exact runtime signature");
 	value.parameters.forEach((refinement, index) => {
-		validateFinRefinement(refinement, `parameter ${index} refinement`);
-		if(refinement !== null && item.parameters[index].leanType !== "_root_.Nat")
-			fail("invalid-compiler-adapter-plan", "Fin parameters must erase to Nat");
+		validateRefinement(refinement, `parameter ${index} refinement`, item.parameters[index].leanType);
 	});
-	validateFinRefinement(value.result, "result refinement");
-	if(value.result !== null && item.leanResultType !== "_root_.Nat")
-		fail("invalid-compiler-adapter-plan", "Fin results must erase to Nat");
+	validateRefinement(value.result, "result refinement", item.leanResultType);
 };
 
 /**
@@ -202,8 +206,15 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
 		const callback = privateAbi.callbacks?.find(type => type.id === signature.result.id);
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === "subtype")
+		{
+			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
+			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);
+			lines.push(`  match _root_.${refinement.constructor} value with`);
+			lines.push("  | .some _ => 1", "  | .none => 0", "");
+		}
 		const refined = componentRefinedCall(item, item.parameters.map(parameter => parameter.name));
-		const body = componentRefinementGuards(refined.guards, refined.call, `panic! "Lean Bridge rejected an invalid Fin value"`);
+		const body = componentRefinementGuards(refined.guards, refined.call, `panic! "Lean Bridge rejected an invalid refined value"`);
 		lines.push(`@[export ${item.symbol}_lean]`);
 		lines.push(`def ${item.wrapper} ${parameters === "" ? "(_bridgeUnit : _root_.Unit)" : parameters} : ${callback ? `ClosureCarry${callback.key}` : item.leanEffect === null ? item.leanResultType : `_root_.${item.leanEffect} ${item.leanResultType}`} :=`);
 		lines.push(`  ${callback ? "⟨" : ""}${body}${callback ? "⟩" : ""}`);
@@ -226,6 +237,12 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
 	const document = analysis.bindingIr.document;
 	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
+	const subtypeRefinements = document.declarations.flatMap(declaration => {
+		const value = declaration.source.extensions["lean-lang.org/refinements"];
+		return value === undefined ? [] : [...value.parameters, value.result].filter(refinement => refinement?.kind === "subtype");
+	});
+	if(subtypeRefinements.length && ![2, componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(privateAbi.version))
+		fail("unsupported-subtype-refinement", `Checked Subtype constructors currently require a scalar or finite record component package (private ABI ${privateAbi.version})`);
 	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");
 	if([componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(privateAbi.version) && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Copied adapters require freshly elaborated Binding IR");
 	const callbackTypes = new Map(callbacks.map(type => [type.id, type]));

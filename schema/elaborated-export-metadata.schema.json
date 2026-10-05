@@ -317,13 +317,22 @@
           "properties": {
             "kind": { "const": "refinement" },
             "base": { "$ref": "#/$defs/scalarType" },
-            "predicate": {
-              "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
-              "properties": {
-                "kind": { "const": "fin" },
-                "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
+            "predicate": { "oneOf": [
+              {
+                "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
+                "properties": {
+                  "kind": { "const": "fin" },
+                  "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
+                }
+              },
+              {
+                "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+                "properties": {
+                  "kind": { "const": "subtype" },
+                  "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+                }
               }
-            }
+            ] }
           }
         },
         {

@@ -19,16 +19,19 @@ const refinements = (item, count) => item.refinements ?? {
  */
 export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = false) => {
 	const selected = refinements(item, arguments_.length);
-	const parameters = arguments_.map((argument, index) => selected.parameters[index] === null
-		? argument : `⟨${argument}, _bridgeFin${index}⟩`);
+	const parameters = arguments_.map((argument, index) => {
+		const refinement = selected.parameters[index];
+		if(refinement === null) return argument;
+		return refinement.kind === "fin" ? `⟨${argument}, _bridgeFin${index}⟩` : `_bridgeSubtype${index}`;
+	});
 	const application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${parameters.length ? ` ${parameters.join(" ")}` : emptyArgumentSpace ? " " : ""}`;
 	return {
 		call: selected.result === null ? application : `(${application}).val`
-		, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? [] : [{
-			bound: refinement.bound
-			, proof: `_bridgeFin${index}`
-			, value: arguments_[index]
-		}])
+		, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? []
+			: refinement.kind === "fin" ? [{ kind: "fin", bound: refinement.bound
+				, proof: `_bridgeFin${index}`, value: arguments_[index] }]
+				: [{ kind: "subtype", binding: `_bridgeSubtype${index}`
+					, constructor: refinement.constructor, value: arguments_[index] }])
 	};
 };
 
@@ -44,7 +47,9 @@ export const componentRefinementGuards = (guards, success, rejected) => {
 	for(let index = guards.length - 1; index >= 0; --index)
 	{
 		const guard = guards[index];
-		body = `if ${guard.proof} : (${guard.value}) < ${guard.bound} then\n  ${body.replaceAll("\n", "\n  ")}\nelse\n  ${rejected}`;
+		body = guard.kind === "fin"
+			? `if ${guard.proof} : (${guard.value}) < ${guard.bound} then\n  ${body.replaceAll("\n", "\n  ")}\nelse\n  ${rejected}`
+			: `match _root_.${guard.constructor} ${guard.value} with\n| .some ${guard.binding} =>\n  ${body.replaceAll("\n", "\n  ")}\n| .none =>\n  ${rejected}`;
 	}
 	return body;
 };

@@ -35,22 +35,34 @@ const declarationRefinements = declaration => {
 	for(const refinement of [...value.parameters, value.result])
 	{
 		if(refinement === null) continue;
-		if(refinement === undefined || typeof refinement !== "object" || Array.isArray(refinement)
-			|| JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["bound", "kind"])
-			|| refinement.kind !== "fin" || typeof refinement.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))
+		if(refinement === undefined || typeof refinement !== "object" || Array.isArray(refinement))
 			fail("invalid-refinement", `${declaration.id} has an unsupported refinement`);
+		if(refinement.kind === "fin")
+		{
+			if(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["bound", "kind"])
+				|| typeof refinement.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(refinement.bound))
+				fail("invalid-refinement", `${declaration.id} has an unsupported Fin refinement`);
+		}
+		else if(JSON.stringify(Object.keys(refinement).sort()) !== JSON.stringify(["constructor", "kind"])
+			|| refinement.kind !== "subtype" || typeof refinement.constructor !== "string"
+			|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor))
+			fail("invalid-refinement", `${declaration.id} has an unsupported Subtype refinement`);
 	}
 	value.parameters.forEach((refinement, index) => {
-		if(refinement !== null && (declaration.parameters[index].type.kind !== "primitive" || declaration.parameters[index].type.name !== "nat"))
+		if(refinement !== null && declaration.parameters[index].type.kind !== "primitive")
+			fail("invalid-refinement", `${declaration.id} has a refinement that does not erase to a primitive`);
+		if(refinement?.kind === "fin" && declaration.parameters[index].type.name !== "nat")
 			fail("invalid-refinement", `${declaration.id} has a Fin parameter that does not erase to Nat`);
 	});
-	if(value.result !== null && (declaration.result.type.kind !== "primitive" || declaration.result.type.name !== "nat"))
+	if(value.result !== null && declaration.result.type.kind !== "primitive")
+		fail("invalid-refinement", `${declaration.id} has a refinement result that does not erase to a primitive`);
+	if(value.result?.kind === "fin" && declaration.result.type.name !== "nat")
 		fail("invalid-refinement", `${declaration.id} has a Fin result that does not erase to Nat`);
 	return value;
 };
 
 const emitFinCheck = (output, refinement, expression, path, indent) => {
-	if(refinement !== null) output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
+	if(refinement?.kind === "fin") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
 };
 
 const typeScriptType = (typeRef, typeMap) => {

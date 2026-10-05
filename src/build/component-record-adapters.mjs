@@ -140,10 +140,17 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 	{
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		const parameters = signature.parameters.map((type, index) => `(${item.parameters[index].name} : ${transportType(type)})`).join(" ");
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement?.kind === "subtype")
+		{
+			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
+			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);
+			lines.push(`  match _root_.${refinement.constructor} value with`);
+			lines.push("  | .some _ => 1", "  | .none => 0", "");
+		}
 		const args = signature.parameters.map((type, index) => convert(type, item.parameters[index].name, true));
 		const refined = componentRefinedCall(item, args);
 		const body = componentRefinementGuards(refined.guards, convert(signature.result, `(${refined.call})`, false)
-			, `panic! "Lean Bridge rejected an invalid Fin value"`);
+			, `panic! "Lean Bridge rejected an invalid refined value"`);
 		lines.push(`@[export ${item.symbol}_lean]`, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${transportType(signature.result)} :=`
 			, `  ${body.replaceAll("\n", "\n  ")}`, "");
 	}
@@ -155,8 +162,9 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
  * Every encoder consumes its owned Lean input on success or ordinary failure.
  *
  * @param abi - Closed private record or compound descriptor.
+ * @param exports - Compiler-owned source exports carrying checked refinement metadata.
  */
-export const generateComponentRecordAdapters = abi => {
+export const generateComponentRecordAdapters = (abi, exports = []) => {
 	assertComponentRecordAbi(abi);
 	const records = new Map(definitions(abi).map(record => [record.id, record]));
 	const identify = type => `copied_${key(JSON.stringify(type))}`;
@@ -301,11 +309,17 @@ export const generateComponentRecordAdapters = abi => {
 	}
 	for(const item of abi.exports)
 	{
+		const source = exports.find(value => value.bindingId === item.bindingId);
+		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
+			, ...refinements.flatMap((refinement, index) => refinement?.kind === "subtype"
+				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`, `  uint32_t status = bridge_${mode}_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", `  if (bridge_${mode}_abi() != 1) return 6;`, "  uint32_t budget = 16u * 1024u * 1024u;");
 		for(const [index, type] of item.parameters.entries()) lines.push(`  if ((status = ${identify(type)}_validate(&frame->args[${index}], &budget))) return status;`);
 		for(const [index, type] of item.parameters.entries()) lines.push(...decode(type, `&frame->args[${index}]`, `a${index}`));
+		for(const [index, refinement] of refinements.entries()) if(refinement?.kind === "subtype")
+			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) return 6;`);
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  lean_object *boxed = ${box(item.result, "result")};`, "  if (budget < 16) { lean_dec(boxed); return 4; }", "  budget -= 16;"
 			, `  return ${identify(item.result)}_encode(&frame->result, boxed, &budget);`, "}", "");

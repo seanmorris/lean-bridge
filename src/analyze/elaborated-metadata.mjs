@@ -170,10 +170,19 @@ export const validateElaboratedMetadata = (report, request) => {
 					{
 						closed(type, ["kind", "base", "predicate"]);
 						scalar(type.base);
-						closed(type.predicate, ["kind", "bound"]);
-						if(type.base.name !== "nat" || type.predicate.kind !== "fin"
-							|| typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))
-							fail("Invalid Fin refinement");
+						if(type.predicate?.kind === "fin")
+						{
+							closed(type.predicate, ["kind", "bound"]);
+							if(type.base.name !== "nat" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))
+								fail("Invalid Fin refinement");
+						}
+						else
+						{
+							closed(type.predicate, ["kind", "constructor"]);
+							if(type.predicate?.kind !== "subtype" || typeof type.predicate.constructor !== "string"
+								|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.predicate.constructor))
+								fail("Invalid Subtype refinement");
+						}
 						return;
 					}
 					if(type?.kind === "variant")

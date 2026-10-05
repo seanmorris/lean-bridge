@@ -79,6 +79,21 @@ def nativeIdentifier (name : String) : Bool :=
     !part.isEmpty && part.toList.head!.isAlpha && part.toList.head!.toNat < 128 &&
       part.toList.all (fun c => c.toNat < 128 && (c.isAlphanum || c == '_'))
 
+partial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) : MetaM NameSet := do
+  if seen.contains name then return seen
+  let mut seen := seen.insert name
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? name | return seen
+  if !request.modules.contains env.header.moduleNames[index.toNat]!.toString then return seen
+  let info ← getConstInfo name
+  let partialImplementation := (env.find? (Compiler.mkUnsafeRecName name)).any (·.isPartial)
+  if info.isUnsafe || info.isPartial || partialImplementation || isExtern env name || (Compiler.getImplementedBy? env name).isSome then
+    throwError "{name} needs a reviewed unsafe, partial or foreign implementation contract"
+  if let some value := info.value? then
+    for dependency in value.getUsedConstants do
+      seen ← checkBody request dependency seen
+  return seen
+
 -- Callable signatures use the checked value representation. Traverse aliases
 -- only after the finite table has been checked and acyclic types expanded.
 def callableTarget (value : Json) : MetaM Json := do
@@ -122,7 +137,7 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   return ← nominalReference e name
 
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
-    (depth : Nat := 0) (copied : Bool := false) : ShapeM Json := do
+    (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -142,6 +157,39 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         ("lean", str "Nat"), ("abi", ← abi (mkConst ``Nat))]),
       ("predicate", obj [("kind", str "fin"), ("bound", str (toString bound))]),
       ("abi", ← abi e)]
+  if e.isAppOfArity ``Subtype 2 then
+    if depth != 0 || copied then
+      reject e "Subtype refinements currently require a top-level parameter or result"
+    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" then
+      reject e "Subtype refinements are not implemented by the native-library profile"
+    let some constructor := checked
+      | reject e "Subtype refinements require a configured checked constructor"
+    let constructorName := constructor.toName
+    let env ← getEnv
+    let some moduleIndex := env.getModuleIdxFor? constructorName
+      | reject e "Subtype checked constructor module is unavailable"
+    unless request.modules.contains env.header.moduleNames[moduleIndex.toNat]!.toString do
+      reject e "Subtype checked constructor must belong to a selected module"
+    let constructorValue ← mkConstWithFreshMVarLevels constructorName
+    let constructorType ← inferType constructorValue
+    discard <| forallTelescopeReducing constructorType fun arguments result => do
+      unless arguments.size == 1 do
+        reject e "Subtype checked constructor must take exactly one explicit value"
+      let argument ← arguments[0]!.fvarId!.getDecl
+      unless argument.binderInfo == .default && (← isDefEq argument.type e.getAppArgs[0]!) do
+        reject e "Subtype checked constructor input must equal the subtype base"
+      unless result.isAppOfArity ``Option 1 && (← isDefEq result.appArg! e) do
+        reject e "Subtype checked constructor must return Option of the exact subtype"
+    discard <| checkBody request constructorName
+    let base ← shapeTree request e.getAppArgs[0]!
+    unless (base.getObjValAs? String "kind").toOption == some "primitive" do
+      reject e "Subtype checked constructors currently require a primitive base"
+    if ((base.getObjVal? "abi" >>= fun value => value.getObjValAs? Bool "heap").toOption).getD true then
+      reject e "Subtype checked constructors currently require an unboxed primitive base"
+    return obj [
+      ("kind", str "refinement"), ("base", base),
+      ("predicate", obj [("kind", str "subtype"), ("constructor", str constructor)]),
+      ("abi", ← abi e)]
   if let .const name levels := e then
     if !(primitives.any (·.1 == name)) && !request.resources.contains name.toString then
       if (← get).types.any (fun type => (type.getObjValAs? String "name").toOption == some name.toString) then
@@ -158,7 +206,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
                 return ← nominalReference e name
-              let target ← shapeTree request definition.value (name :: seen) 0 copied
+              let target ← shapeTree request definition.value (name :: seen) 0 copied checked
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
@@ -275,7 +323,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
       ("result", ← shapeTree request result seen (depth + 1)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has
@@ -366,39 +414,25 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
       (a.getObjValAs? String "name").toOption.getD "" < (b.getObjValAs? String "name").toOption.getD "")),
     ("abi", ← ofExcept <| value.getObjVal? "abi")]
 
-def shape (request : Request) (e : Expr) : MetaM Json := do
+def shape (request : Request) (e : Expr) (checked : Option String := none) : MetaM Json := do
   if let some policy := request.ownedAggregates then
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
-  let (value, state) ← (shapeTree request e).run {}
+  let (value, state) ← (shapeTree request e (checked := checked)).run {}
   finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
+    (checkedParameters : Array (Option String) := #[]) (checkedResult : Option String := none)
     (index : Nat := 0) : MetaM (Array Json × Json) := do
   let reduced ← whnf e
   if index < limit then
     if let .forallE _ argument result binder := reduced then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
-      let parameter ← shape request argument
-      let (rest, result) ← signature request result limit (index + 1)
+      let parameter ← shape request argument (checkedParameters[index]?.join)
+      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1)
       return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
-  return (#[], ← shape request e)
-
-partial def checkBody (request : Request) (name : Name) (seen : NameSet := {}) : MetaM NameSet := do
-  if seen.contains name then return seen
-  let mut seen := seen.insert name
-  let env ← getEnv
-  let some index := env.getModuleIdxFor? name | return seen
-  if !request.modules.contains env.header.moduleNames[index.toNat]!.toString then return seen
-  let info ← getConstInfo name
-  let partialImplementation := (env.find? (Compiler.mkUnsafeRecName name)).any (·.isPartial)
-  if info.isUnsafe || info.isPartial || partialImplementation || isExtern env name || (Compiler.getImplementedBy? env name).isSome then
-    throwError "{name} needs a reviewed unsafe, partial or foreign implementation contract"
-  if let some value := info.value? then
-    for dependency in value.getUsedConstants do
-      seen ← checkBody request dependency seen
-  return seen
+  return (#[], ← shape request e checkedResult)
 
 def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
@@ -523,7 +557,12 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
       if (type.getObjValAs? String "kind").toOption == some "refinement" then
         return some s!"{label}: the contract rejects compiler-checked refined values"
     else
-      return some s!"{label}: checked refinement constructors are not implemented by this profile"
+      let predicate := (type.getObjVal? "predicate").toOption.getD Json.null
+      let configured := (refinement.getObjValAs? String "constructor").toOption
+      if (type.getObjValAs? String "kind").toOption != some "refinement" ||
+          (predicate.getObjValAs? String "kind").toOption != some "subtype" ||
+          configured != (predicate.getObjValAs? String "constructor").toOption then
+        return some s!"{label}: checked refinement constructor does not match the compiler-checked Subtype"
   let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
   let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
   if owned && !result && identity &&
@@ -633,6 +672,10 @@ def constrainProjection (request : Request) (name : String) (projection : Json) 
         return unsupported "export-contract-mismatch" problem
   return projection
 
+def checkedConstructor (site : Json) : Option String := do
+  let refinement ← (site.getObjVal? "refinement").toOption
+  (refinement.getObjValAs? String "constructor").toOption
+
 def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do
   let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
   let native := request.profile.getD "component-scalars-v1" == "native-library-v1"
@@ -640,8 +683,12 @@ def describeSignature (request : Request) (name : String) (type : Expr) : MetaM 
   if !native && selectedArity.isNone && (scalarProjection.getObjValAs? String "reason").toOption == some "arity-limit" then
     return (parameters, resultText, scalarProjection)
   let arity := selectedArity.getD (if native then 1024 else 32)
+  let contract := request.contracts.bind fun contracts => (contracts.getObjVal? name).toOption
+  let checkedParameters := contract.bind (fun value => (value.getObjValAs? (Array Json) "parameters").toOption)
+    |>.getD #[] |>.map checkedConstructor
+  let checkedResult := contract.bind (fun value => (value.getObjVal? "result").toOption) |>.bind checkedConstructor
   try
-    let (nativeParameters, result) ← signature request type arity
+    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
@@ -654,7 +701,8 @@ def describeSignature (request : Request) (name : String) (type : Expr) : MetaM 
       ("bindingShape", str (if native then "native-function" else "pure-function")), ("parameters", toJson nativeParameters), ("result", result)])
   catch error =>
     if !native then
-      if (scalarProjection.getObjValAs? String "status").toOption == some "supported" then
+      if (scalarProjection.getObjValAs? String "status").toOption == some "supported" ||
+          checkedParameters.any Option.isSome || checkedResult.isSome then
         return (parameters, resultText, unsupported "unsupported-native-type" (← error.toMessageData.toString))
       return (parameters, resultText, scalarProjection)
     let reason := (scalarProjection.getObjValAs? String "reason").toOption.getD "unsupported-native-type"

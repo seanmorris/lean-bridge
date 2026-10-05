@@ -208,7 +208,7 @@ export const compileLeanComponentSources = async ({
 			{
 				fail("lean-component-compile-failed", `Lean failed to compile ${module}`, { module, cause: error.message, compilerDetails: error.details ?? null });
 			}
-			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${(adapterPlan.privateAbi.version === 9 ? generateComponentStructuredCallableAdapters : adapterPlan.privateAbi.version === 8 ? generateComponentRecursiveAdapters : [5, 6, 7].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi)}`);
+			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${(adapterPlan.privateAbi.version === 9 ? generateComponentStructuredCallableAdapters : adapterPlan.privateAbi.version === 8 ? generateComponentRecursiveAdapters : [5, 6, 7].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi, adapterPlan.exports)}`);
 			const [cBytes, oleanBytes] = await Promise.all([readFile(paths.c), readFile(paths.olean)]);
 			records.push(Object.freeze({
 				module
