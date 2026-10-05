@@ -5656,7 +5656,7 @@
         },
         {
           "path": "docs/consume/perl.md",
-          "sha256": "b497b18adc826c368ed80a828a2ff9038cc2ae3da94a34e59c5e1764b419cbcf"
+          "sha256": "8471ffe12646a951af6bdba20f1d7a05bbc866346ddeaaab579dc7a469780944"
         },
         {
           "path": "docs/evidence/perl-collections-20260921.json",
@@ -29438,6 +29438,64 @@
         {
           "path": "build/owned-php-wasm-callback-results/combined-packages.json",
           "sha256": "9dbc223f340fbd20730c514d22b02e8fc5b9cce6ecd01fcfa1673ad58e4cb55b"
+        }
+      ]
+    },
+    {
+      "id": "npm-finite-specializations-installed",
+      "kind": "installed",
+      "revision": "b51046e11532bb08bee62bae83a11da792513bee",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern='finite specializations compile' tests/unlocked-component.test.mjs",
+      "scope": "Relocated ordinary-source Lean builds reproduce and install concrete npm exports for finite generic specializations. Node executes the installed WebAssembly, strict TypeScript compiles against the installed declarations with skipLibCheck disabled, Lean resolves leading implicit type arguments and following instance dictionaries, and the unspecialized declaration stays absent.",
+      "files": [
+        {
+          "path": "docs/evidence/finite-specialization-20261005.md",
+          "sha256": "70ab9b781ad09c5bfac5dcdbff5492ab91a1fdfa5ede2d49e48c58c105367e97"
+        },
+        {
+          "path": "src/abi/generic-specialization.mjs",
+          "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764"
+        },
+        {
+          "path": "tests/unlocked-component.test.mjs",
+          "sha256": "ddb9a9e934605f8b16161639b15ff92ed3334b470ac0c638cad04d09c8c3fe51"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "npm/ordinary-source/archives/onboarding-small-1.0.0.tgz",
+          "sha256": "497449ba5f86fd7b69ffdee7114589828919d26eb802c5a46c54b0678eaef372"
+        }
+      ]
+    },
+    {
+      "id": "perl-finite-specializations-installed",
+      "kind": "installed",
+      "revision": "4529b73261990a3c23220c663a4d3b2b4b5fe8c1",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_PERL_NATIVE_TEST=1 node --test --test-name-pattern='native finite specializations reproduce' tests/perl-native.test.mjs",
+      "scope": "Relocated ordinary-source Lean builds reproduce and install concrete CPAN exports for finite generic specializations through prebuilt and compiled-XS paths. Installed Perl consumers exercise leading implicit type arguments, following instance dictionaries, aliases, multiple type arguments, copied values and identities without access to the source tree; the unspecialized declaration stays absent.",
+      "files": [
+        {
+          "path": "docs/evidence/native-finite-specialization-20260914.md",
+          "sha256": "4db87733ac2ab38d89c5bc0d5393ccaa003463f8f029a418561a79de4beec7ab"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764"
+        },
+        {
+          "path": "tests/perl-native.test.mjs",
+          "sha256": "074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "cpan/ordinary-source/archives/LeanBridge-Concrete-0.002.tar.gz",
+          "sha256": "d40090b351d5b6084db43f36dae4888132c031b0f379c7ddc1175a92d2cb5181"
         }
       ]
     }
@@ -63528,6 +63586,155 @@
       ],
       "conversionNotes": {
         "resource": "A borrowed callback result expires with its authenticated argument owner. retain creates an independent owner; copyArg and copyResult validate public positions and generated types. A host callback may return a generated payload or whole Value; whole replies remain pinned until Lean accepts them."
+      }
+    },
+    {
+      "id": "npm-finite-specializations-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript"
+      ],
+      "shapes": [
+        "generic",
+        "implicit",
+        "instance"
+      ],
+      "positions": [
+        "signature"
+      ],
+      "path": "ordinary-source",
+      "scope": "Relocated ordinary-source Lean builds reproduce and install concrete npm exports for finite generic specializations. Node executes the installed WebAssembly, strict TypeScript compiles against the installed declarations with skipLibCheck disabled, Lean resolves leading implicit type arguments and following instance dictionaries, and the unspecialized declaration stays absent.",
+      "hostTypes": {
+        "generic": {
+          "signature": "Concrete named function for each configured specialization"
+        },
+        "implicit": {
+          "signature": "Concrete host signature with no runtime type argument"
+        },
+        "instance": {
+          "signature": "Concrete host signature with the Lean-selected instance dictionary erased"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-finite-specializations-installed"
+          ],
+          "note": "Lean elaborates each configured type application and resolves the immediately following instance dictionaries."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-finite-specializations-installed"
+          ],
+          "note": "Binding IR and generated JavaScript expose only the configured concrete functions."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-finite-specializations-installed"
+          ],
+          "note": "The concrete Lean applications compile to WebAssembly and strict TypeScript accepts the installed declarations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-finite-specializations-installed"
+          ],
+          "note": "Relocated builds reproduce the npm archives and verify the component-package receipt."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-finite-specializations-installed"
+          ],
+          "note": "An offline Node consumer executes concrete Wasm exports and a strict TypeScript consumer compiles against the installed package."
+        }
+      },
+      "limitations": [
+        "Finite configured specializations only; open generic host dispatch is not generated.",
+        "The configuration binds one to eight leading type parameters and resolves only the immediately following instance dictionaries.",
+        "Ordinary-source Node consumers only; browser contexts and reviewed IR are not covered by this evidence."
+      ],
+      "conversionNotes": {
+        "generic": "Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package.",
+        "implicit": "Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any.",
+        "instance": "Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary."
+      }
+    },
+    {
+      "id": "perl-finite-specializations-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "generic",
+        "implicit",
+        "instance"
+      ],
+      "positions": [
+        "signature"
+      ],
+      "path": "ordinary-source",
+      "scope": "Relocated ordinary-source Lean builds reproduce and install concrete CPAN exports for finite generic specializations through prebuilt and compiled-XS paths. Installed Perl consumers exercise leading implicit type arguments, following instance dictionaries, aliases, multiple type arguments, copied values and identities without access to the source tree; the unspecialized declaration stays absent.",
+      "hostTypes": {
+        "generic": {
+          "signature": "Concrete named Perl subroutine for each configured specialization"
+        },
+        "implicit": {
+          "signature": "Concrete Perl signature with no runtime type argument"
+        },
+        "instance": {
+          "signature": "Concrete Perl signature with the Lean-selected instance dictionary erased"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-finite-specializations-installed"
+          ],
+          "note": "Lean elaborates each configured type application and resolves the immediately following instance dictionaries."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-finite-specializations-installed"
+          ],
+          "note": "The native model and generated XS expose only the configured concrete functions."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-finite-specializations-installed"
+          ],
+          "note": "Concrete applications compile through both retained prebuilt libraries and generated XS."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-finite-specializations-installed"
+          ],
+          "note": "Relocated builds reproduce the CPAN archives and retain compiler-checked application metadata."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-finite-specializations-installed"
+          ],
+          "note": "Source-free Perl consumers execute the concrete APIs through prebuilt-only and compiled-XS installation."
+        }
+      },
+      "limitations": [
+        "Finite configured specializations only; open generic host dispatch is not generated.",
+        "The configuration binds one to eight leading type parameters and resolves only the immediately following instance dictionaries.",
+        "Ordinary-source native Perl only; reviewed IR and other native consumers are not covered by this evidence."
+      ],
+      "conversionNotes": {
+        "generic": "Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent.",
+        "implicit": "Lean elaboration supplies configured type arguments before native compilation; Perl passes no placeholder value.",
+        "instance": "Lean synthesizes the selected dictionary before native compilation. Perl cannot provide or replace it."
       }
     }
   ]
