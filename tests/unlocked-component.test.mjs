@@ -316,6 +316,20 @@ console.log("finite exports passed");
 	assert.match(declarations, /firstWord\(arg0: number, arg1: string\): number/);
 	assert.match(declarations, /plainWord\(arg0: number\): number/);
 	assert.doesNotMatch(declarations, /<T>|\bany\b/);
+	await saveLakeFile(consumer, "index.mts", `import * as api from "onboarding-small";
+const word: number = api.echoWord(4294967295);
+const text: string = api.echoText("Lean λ 🙂");
+const natural: bigint = api.echoNat(2n ** 100n);
+const chosen: number = api.chooseWord(false, 9);
+const first: number = api.firstWord(71, "ignored");
+const plain: number = api.plainWord(71);
+if(word !== 4294967295 || text !== "Lean λ 🙂" || natural !== 2n ** 100n || chosen !== 37 || first !== 71 || plain !== 74)
+  throw new Error("finite TypeScript specialization failed");
+`);
+	await processBuildRunner.capture({ command: process.execPath
+		, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false"
+			, "--target", "ES2022", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]
+		, cwd: consumer }).catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
 	await lakeGit(root, "init", "--quiet");
 	await lakeGit(root, "add", ".");
 	await lakeGit(root, "commit", "--quiet", "-m", "Finite specialization source");
