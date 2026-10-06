@@ -63,11 +63,13 @@ test("native validation admits Fin only at a top-level Nat site", () => {
 	assert.throws(() => validateNativeType({ ...fin("5"), abi: { ...nat.abi, heap: true } }), /representation differs/);
 });
 
-test("checked Fin consumers are exactly the C and C++ projections", () => {
+test("checked Fin consumers are exactly the C, C++ and Python projections", () => {
 	assert.equal(supportsNativeRefinementTargets(["c"]), true);
 	assert.equal(supportsNativeRefinementTargets(["cpp"]), true);
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp"]), true);
-	for(const target of ["cpan", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
+	assert.equal(supportsNativeRefinementTargets(["pypi"]), true);
+	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi"]), true);
+	for(const target of ["cpan", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
 	{
 		assert.equal(supportsNativeRefinementTargets([target]), false, target);
 		assert.equal(supportsNativeRefinementTargets(["c", target]), false, target);
@@ -103,7 +105,7 @@ const component = async ({ root, projectRoot }, nativeRefinements) => {
 test("real Lean extraction keeps exact Fin bounds and checks them in the exported adapter", { skip: !enabled, timeout: 900_000 }, async t => {
 	const fixture = await project(t);
 	await assert.rejects(() => component(fixture, false), error => error.code === "native-refinements-unsupported"
-		&& /checked Fin refinements are implemented only for ordinary C and C\+\+ native packages/.test(error.message));
+		&& /checked Fin refinements are implemented only for ordinary C, C\+\+ and Python native packages/.test(error.message));
 	const { outputRoot, runtimeRoot } = await component(fixture, true);
 	const model = JSON.parse(await readFile(join(outputRoot, "model.json"), "utf8"));
 	assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
@@ -138,10 +140,10 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 		&& /not yet supported with reviewed Binding IR/.test(error.message));
 });
 
-test("native builds reject Fin for every non-C-family target and every nested position", { skip: !enabled, timeout: 900_000 }, async t => {
+test("native builds reject Fin for every unchecked target and every nested position", { skip: !enabled, timeout: 900_000 }, async t => {
 	const fixture = await project(t);
 	const environment = nativeFixtureEnvironment(["c"]);
-	for(const targets of [["pypi"], ["c", "cargo"], ["cpp", "rubygems"]])
+	for(const targets of [["pypi", "cargo"], ["c", "cargo"], ["cpp", "rubygems"]])
 	{
 		await saveLakeFile(fixture.projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]

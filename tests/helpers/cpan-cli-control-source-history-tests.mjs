@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePythonFinSource, pythonFinChangedPaths } from "./python-fin-source-history.mjs";
 import { beforeCpanCliControlSource, cpanCliControlChangedPaths
 	, cpanCliControlHistoryPath, reverseCpanCliControlUpdate } from "./cpan-cli-control-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("CPAN CLI control history authenticates exact predecessors and rejects unkn
 	assert.deepEqual(record.updates.map(item => item.path), cpanCliControlChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePythonFinSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCpanCliControlUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCpanCliControlSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCpanCliControlSource(update.path, source, update.currentSha256), source);
@@ -43,7 +44,7 @@ test("CPAN CLI control repair changes only evidence source pins, not support or 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeCpanCliControlSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

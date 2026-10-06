@@ -2449,6 +2449,8 @@ jobs:
           build/python-alias-typecheck/bin/python -m pip install --no-cache-dir mypy==1.17.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1
           LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs
           test -s build/aliases/python.json
+          LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs
+          test -s build/native-fin/python.json
           LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs
           test -s build/variants/python.json
           LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs
@@ -2521,6 +2523,7 @@ jobs:
             build/compounds/python.json
             build/lists/python.json
             build/aliases/python.json
+            build/native-fin/python.json
             build/variants/python.json
             build/collections/python.json
             build/collections/python-docs.json
@@ -2714,6 +2717,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"

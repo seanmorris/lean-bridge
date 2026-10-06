@@ -22,7 +22,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
  */
 export const ordinaryPythonEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true });
 	const projection = model.copiedGraph
 		? (model.copiedGraph.callbacks ? compileCallablePythonGraphPackageModel : compileCopiedPythonGraphPackageModel)(model.bindingIr)
 		: compileCopiedPythonModel(model.bindingIr);

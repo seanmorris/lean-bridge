@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { runtimeReceiptChangedPaths } from "./runtime-receipt-source-history.mjs";
 import { cpanCliControlChangedPaths } from "./cpan-cli-control-source-history.mjs";
+import { pythonFinChangedPaths } from "./python-fin-source-history.mjs";
 import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsChangedPaths } from "./npm-fin-diagnostics-source-history.mjs";
 import { diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 import { combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
@@ -64,7 +65,7 @@ test("native Fin inventory changes only source pins and the four evidenced C-fam
 			if(now.files[index].sha256 === file.sha256) continue;
 			// Only branch-changed sources move, and only to their exact authenticated successor.
 			// Later layers may also refresh pins; each still reconstructs its exact predecessor.
-			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			if(!predecessors.has(file.path))
 				predecessors.set(file.path, sha256(beforeNativeFinSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(file.sha256, predecessors.get(file.path), `${entry.id}: ${file.path} predecessor`);

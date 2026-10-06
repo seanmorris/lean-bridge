@@ -775,6 +775,7 @@ const profileManifest = Object.freeze({
 		, "native-collections"
 		, "native-aliases"
 		, "native-fin"
+		, "python-fin"
 		, "cpp-variants"
 		, "c-variants"
 		, "perl-callables"

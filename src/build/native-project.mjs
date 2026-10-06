@@ -53,7 +53,7 @@ export const supportsNativeCallbackResultTargets = targets => targets.every(targ
  *
  * @param targets - Validated native package target names.
  */
-export const supportsNativeRefinementTargets = targets => targets.every(target => ["c", "cpp"].includes(target));
+export const supportsNativeRefinementTargets = targets => targets.every(target => ["c", "cpp", "pypi"].includes(target));
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
