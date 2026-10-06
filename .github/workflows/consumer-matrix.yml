@@ -2219,6 +2219,8 @@ jobs:
           test -s build/collections/native.json
           LEAN_BRIDGE_NATIVE_ALIAS_TEST=1 node --test tests/native-aliases.test.mjs
           test -s build/aliases/native.json
+          npm run test:native-fin
+          test -s build/native-fin/native.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
           test -s build/variants/cpp.json
           LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests/c-variants.test.mjs
@@ -2387,6 +2389,7 @@ jobs:
             build/lists/native.json
             build/collections/native.json
             build/aliases/native.json
+            build/native-fin/native.json
             build/variants/cpp.json
             build/variants/c.json
             build/recursive/c-family.json
@@ -2672,6 +2675,7 @@ jobs:
             if [ "$consumer" = c ] || [ "$consumer" = cpp ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
+              consumer_command="$consumer_command && npm run test:native-fin"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs"

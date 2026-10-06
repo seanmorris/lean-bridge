@@ -17,7 +17,7 @@ import { readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFil
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { nativeFinConsumer, nativeFinDispatchColumns, nativeFinDispatchInterposer, nativeFinDispatchProbe } from "./helpers/native-fin-consumers.mjs";
+import { nativeFinConsumer, nativeFinDispatchColumns, nativeFinDispatchInterposer, nativeFinDispatchProbe, nativeFinRuntimeProbe } from "./helpers/native-fin-consumers.mjs";
 import { buildNativeProject, supportsNativeRefinementTargets } from "../src/build/native-project.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
@@ -172,6 +172,7 @@ const dispatchExpected = [
 	, ["raw-invalid-mirror", 1, [1, 0, 1, 2, 0, 1]]
 	, ["raw-invalid-impossible", 1, [1, 0, 1, 2, 1, 1]]
 	, ["raw-valid-mirror", 1, [2, 0, 1, 3, 1, 1]]
+	, ["raw-invalid-mirror-large", 1, [2, 0, 1, 4, 1, 1]]
 ];
 
 /**
@@ -179,25 +180,37 @@ const dispatchExpected = [
  *
  * @param consumer - Consumer root containing the installed C package.
  * @param packages - Installed C packages.
+ * @param leanPrefix - Pinned Lean installation providing lean.h for raw adapter ownership.
  */
-const observeDispatch = async (consumer, packages) => {
+const observeDispatch = async (consumer, packages, leanPrefix) => {
 	const root = join(consumer, "c"), pkg = packages.find(item => item.role === "component");
-	const installed = join(root, `${pkg.name}-${pkg.version}-c`);
+	const installed = join(root, `${pkg.name}-${pkg.version}-c`), lib = join(installed, "lib");
 	const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
-	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
+	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(lib, "pkgconfig"), PKG_CONFIG_PATH: "" };
+	const strict = ["-std=c11", "-Wall", "-Wextra", "-Werror"];
 	await saveLakeFile(root, "interposer.c", nativeFinDispatchInterposer());
 	await saveLakeFile(root, "probe.c", nativeFinDispatchProbe());
-	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root, compile);
+	await saveLakeFile(root, "runtime.c", nativeFinRuntimeProbe());
+	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root, compile);
 	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], root, compile)).stdout.trim().split(/\s+/);
-	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "probe.c", ...flags, "-o", "probe"], root, compile);
-	const run = await runCopied(join(root, "probe"), [], root, { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") });
+	// Raw adapter results are released through the pinned Lean object API.
+	await runCopied("/usr/bin/cc", [...strict, "-isystem", join(leanPrefix, "include"), "probe.c", ...flags, "-lleanshared", "-o", "probe"], root, compile);
+	await runCopied("/usr/bin/cc", [...strict, "-I", join(consumer, "probe-headers"), "runtime.c", `-L${lib}`, `-Wl,-rpath,${lib}`, "-lnative_fin", "-o", "runtime"], root, compile);
+	const preload = { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") };
+	const run = await runCopied(join(root, "probe"), [], root, preload);
 	assert.equal(run.stderr, "");
 	const observed = run.stdout.trim().split("\n").map(line => {
 		const [step, status, ...counts] = line.split(" ");
 		return [step, Number(status), counts.map(Number)];
 	});
 	assert.deepEqual(observed, dispatchExpected);
-	return { columns: nativeFinDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl: "valid public and raw calls increment source and adapter counts" };
+	const runtime = await runCopied(join(root, "runtime"), [], root, preload);
+	assert.equal(runtime.stderr, "");
+	const [, runtimeChecks] = /^runtime-ok:(\d+)\n$/u.exec(runtime.stdout) ?? [];
+	assert.ok(Number(runtimeChecks) > 1000, runtime.stdout);
+	return { columns: nativeFinDispatchColumns, observed, interposer: "LD_PRELOAD"
+		, positiveControl: "valid public and raw calls increment source and adapter counts"
+		, runtimeTableChecks: Number(runtimeChecks) };
 };
 
 const relocate = async (profile, consumer, packages, observation) => {
@@ -242,6 +255,9 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		// Test-only raw-ABI probe headers; installed consumers never receive them.
+		await saveLakeFile(join(consumer, "probe-headers"), "native_fin.h", await readFile(join(outputRoot, "native/c-binding/include/native_fin.h")));
+		await saveLakeFile(join(consumer, "probe-headers"), "native_fin_runtime.h", await readFile(join(outputRoot, "native/c-binding/internal/native_fin_runtime.h")));
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		await rm(author, { recursive: true, force: true });
@@ -256,7 +272,7 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 				, packages
 				, environment
 				, fixture: { source: nativeFinConsumer, success: "fin-ok" } });
-			const dispatch = profile === "c" ? await observeDispatch(consumer, packages) : null;
+			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;
 			const relocation = await relocate(profile, consumer, packages, observation);
 			reports.push({ profile
 				, path: "ordinary-source"

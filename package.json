@@ -896,6 +896,7 @@
     "test:owned-wit-callback-packages": "LEAN_BRIDGE_WIT_OWNED_CALLBACK_RESULT_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/wit-owned-callback-result-packaging.test.mjs",
     "test:owned-wit-callback-evidence": "node --test --test-concurrency=1 tests/helpers/wit-callback-acceptance-history-tests.mjs tests/helpers/wit-callback-runtime-staging-history-tests.mjs tests/wit-owned-callback-result-acceptance.test.mjs tests/wit-owned-callback-result-installed-acceptance.test.mjs",
     "test:type-corpus": "node --test tests/type-corpus.test.mjs",
+    "test:native-fin": "LEAN_BRIDGE_NATIVE_FIN_TEST=1 LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST=1 node --test --test-concurrency=1 tests/native-fin.test.mjs",
     "test:type-corpus:reviewed": "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs",
     "test:type-corpus:reviewed-native": "LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust,wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs",
     "test:type-corpus:reviewed-wasm": "LEAN_BRIDGE_REVIEWED_WASM_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker,php-wasm node --test tests/type-corpus-reviewed-wasm.test.mjs",

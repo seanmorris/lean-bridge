@@ -9,10 +9,12 @@ import { sha256 } from "../../src/capsule/node.mjs";
 
 export const nativeFinHistoryPath = "docs/evidence/native-fin-source-history-20261005.json";
 export const nativeFinChangedPaths = [
-	"docs/consume/c.md"
+	".github/workflows/consumer-matrix.yml"
+	, "docs/consume/c.md"
 	, "docs/consume/cpp.md"
 	, "docs/lean/existing-package.md"
 	, "docs/type-surface.v1.json"
+	, "package.json"
 	, "src/analyze/NativeExports.lean"
 	, "src/analyze/native-metadata.mjs"
 	, "src/analyze/native-types.mjs"
@@ -26,6 +28,7 @@ export const nativeFinChangedPaths = [
 	, "src/build/native-project.mjs"
 	, "src/release/native-c-family.mjs"
 	, "tests/component-array-contract.test.mjs"
+	, "tests/documentation.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/perl-evidence-repair-source-history-tests.mjs"
 	, "tests/helpers/perl-evidence-repair-source-history.mjs"
