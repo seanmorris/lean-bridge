@@ -27,7 +27,7 @@ import {
 	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 import { readVerifiedCanonicalBundle } from "../src/release/canonical-bundle-input.mjs";
-import { collectModuleClosure } from "./helpers/module-closure.mjs";
+import { collectModuleClosure, moduleSpecifiers } from "./helpers/module-closure.mjs";
 
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -88,14 +88,18 @@ test("module closure follows real dependencies and ignores specifiers in generat
     const write = (name, source) => writeFile(join(scratch, name), source);
     await write("entry.mjs", 'import { a } from "./direct.mjs";\nexport { b } from "./reexported";\nexport const load = () => import("./dynamic.mjs");\nexport const text = a + b;\n');
     await write("direct.mjs", 'export const a = `import { runtime } from "./phantom.mjs";`;\n');
-    await write("reexported.mjs", '// import { c } from "./comment.mjs"\n/* from "./block.mjs" */\nexport const b = \'from "./quoted.mjs"\';\n');
-    await write("dynamic.mjs", "export const d = 1;\n");
+    await write("reexported.mjs", '// import { c } from "./comment.mjs"\n/* from "./block.mjs" */\nexport const b = \'from "./quoted.mjs"\';\nexport const pattern = /import\\("\\.\\/phantom.mjs"\\)/;\n');
+    // A dynamic import inside a template interpolation is a real dependency.
+    await write("dynamic.mjs", 'export const d = 1;\nexport const nested = () => `${import("./interpolated.mjs")}`;\n');
+    await write("interpolated.mjs", "export const e = 1;\n");
     // Dependencies come from import, re-export and dynamic import syntax, with extension inference.
     assert.deepEqual(await collectModuleClosure(join(scratch, "entry.mjs"))
-      , ["direct.mjs", "dynamic.mjs", "entry.mjs", "reexported.mjs"].map(name => join(scratch, name)).sort());
-    // Generated-code templates, comments and plain strings never create a dependency.
-    await write("template.mjs", 'export const lines = [\n  `import { runtime } from "./internal/runtime.mjs";`\n  , \'import "./missing.mjs";\'\n];\n');
+      , ["direct.mjs", "dynamic.mjs", "entry.mjs", "interpolated.mjs", "reexported.mjs"].map(name => join(scratch, name)).sort());
+    // Generated-code templates, comments, plain strings and regular expressions never create a dependency.
+    await write("template.mjs", 'export const lines = [\n  `import { runtime } from "./internal/runtime.mjs";`\n  , \'import "./missing.mjs";\'\n  , String(/import\\("\\.\\/missing.mjs"\\)/)\n];\n');
     assert.deepEqual(await collectModuleClosure(join(scratch, "template.mjs")), [join(scratch, "template.mjs")]);
+    assert.deepEqual(moduleSpecifiers('import("./a.mjs"); import(`./${name}.mjs`); import(x); export * from "./b"; export { y } from "node:fs"; import z from "./c.json" with { type: "json" };')
+      , ["./a.mjs", "./b", "./c.json"]);
   } finally
   {
     await rm(scratch, { recursive: true, force: true });
