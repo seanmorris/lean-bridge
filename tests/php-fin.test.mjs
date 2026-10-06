@@ -91,7 +91,7 @@ echo "php-fin-ok:$checks\\n";
 test("native PHP packages are checked Fin consumers beside the other C-adapter hosts", () => {
 	for(const targets of [["php-native"], ["c", "php-native"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "wit-wasi"])
+	for(const target of ["cpan"])
 		assert.equal(supportsNativeRefinementTargets(["php-native", target]), false, target);
 });
 

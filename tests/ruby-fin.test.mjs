@@ -90,7 +90,7 @@ puts "ruby-fin-ok:#{$checks}"
 test("Ruby gems are checked Fin consumers beside C, C++, Python and Rust", () => {
 	for(const targets of [["rubygems"], ["c", "rubygems"], ["c", "cpp", "pypi", "cargo", "rubygems"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "wit-wasi"])
+	for(const target of ["cpan"])
 		assert.equal(supportsNativeRefinementTargets(["rubygems", target]), false, target);
 });
 

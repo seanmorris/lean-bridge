@@ -1,23 +1,22 @@
 /**
- * Preserve exact source predecessors of the PHP scalar Fin (#1425).
+ * Preserve exact source predecessors of the WIT scalar Fin (#1425).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeWitFinSource } from "./wit-fin-source-history.mjs";
 
-export const phpFinHistoryPath = "docs/evidence/php-fin-source-history-20261006.json";
-export const phpFinChangedPaths = [
+export const witFinHistoryPath = "docs/evidence/wit-fin-source-history-20261006.json";
+export const witFinChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
 	, "docs/type-surface.v1.json"
 	, "src/adoption/test-profiles.mjs"
 	, "src/analyze/native-metadata.mjs"
-	, "src/backends/php/copied-values.mjs"
 	, "src/build/native-c-projection.mjs"
-	, "src/build/native-php-artifacts.mjs"
 	, "src/build/native-project.mjs"
+	, "src/build/native-wit-artifacts.mjs"
+	, "src/release/native-wasi.mjs"
 	, "tests/component-array-contract.test.mjs"
 	, "tests/documentation.test.mjs"
 	, "tests/dotnet-fin.test.mjs"
@@ -27,9 +26,10 @@ export const phpFinChangedPaths = [
 	, "tests/helpers/dotnet-fin-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/jvm-fin-source-history-tests.mjs"
-	, "tests/helpers/jvm-fin-source-history.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
+	, "tests/helpers/php-fin-source-history-tests.mjs"
+	, "tests/helpers/php-fin-source-history.mjs"
 	, "tests/helpers/python-fin-source-history-tests.mjs"
 	, "tests/helpers/ruby-fin-source-history-tests.mjs"
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
@@ -37,6 +37,7 @@ export const phpFinChangedPaths = [
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/jvm-fin.test.mjs"
 	, "tests/native-fin.test.mjs"
+	, "tests/php-fin.test.mjs"
 	, "tests/python-fin.test.mjs"
 	, "tests/ruby-fin.test.mjs"
 	, "tests/rust-fin.test.mjs"
@@ -49,8 +50,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePhpFinUpdate = (source, update) => {
-	assert.ok(phpFinChangedPaths.includes(update.path));
+export const reverseWitFinUpdate = (source, update) => {
+	assert.ok(witFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -76,12 +77,11 @@ export const reversePhpFinUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpFinSource = (path, source, expected) => {
-	source = beforeWitFinSource(path, source, expected);
-	if(typeof source !== "string" || !phpFinChangedPaths.includes(path)) return source;
+export const beforeWitFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !witFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpFinHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(witFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpFinUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseWitFinUpdate(source, update) : source;
 };

@@ -781,6 +781,7 @@ const profileManifest = Object.freeze({
 		, "dotnet-fin"
 		, "jvm-fin"
 		, "php-fin"
+		, "wit-fin"
 		, "cpp-variants"
 		, "c-variants"
 		, "perl-callables"

@@ -20,6 +20,7 @@ import { witCallableGraphPackageReadme } from "../backends/wit/callable-graph-pa
 import { witAliasReadme } from "../backends/wit/copied-aliases.mjs";
 import { witVariantReadme } from "../backends/wit/copied-variants.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
+import { witFinReadme } from "../backends/wit/fin-refinements.mjs";
 
 /**
  * Revalidate the compiled projection and copy its immutable payload.
@@ -53,7 +54,7 @@ export const packageOrdinaryWasi = async options => {
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => save(path, await readFile(from));
 	const graphReadme = model.copiedGraph?.callbacks ? witCallableGraphPackageReadme : witGraphPackageReadme;
-	const saveReadme = bytes => save("README.md", (graph ? graphReadme(projection, glibcMinimumVersion) : (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection)) + hostReceiptReadme);
+	const saveReadme = bytes => save("README.md", (graph ? graphReadme(projection, glibcMinimumVersion) : (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection) + witFinReadme(projection)) + hostReceiptReadme);
 	for(const path of await nativeArtifactPaths(witRoot))
 		await copy(join(witRoot, path), path === "wasmtime/LICENSE" ? "share/lean-bridge/licenses/Wasmtime-LICENSE" : path.startsWith("wasmtime/") ? path.slice(9) : path);
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);

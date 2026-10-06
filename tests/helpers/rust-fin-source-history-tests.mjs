@@ -12,6 +12,7 @@ import { beforeRubyFinSource, rubyFinChangedPaths } from "./ruby-fin-source-hist
 import { dotnetFinChangedPaths } from "./dotnet-fin-source-history.mjs";
 import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
+import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { beforeRustFinSource, rustFinChangedPaths
 	, rustFinHistoryPath, reverseRustFinUpdate } from "./rust-fin-source-history.mjs";
 
@@ -47,7 +48,7 @@ test("Rust scalar Fin changes only evidence source pins, not support or archives
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRustFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

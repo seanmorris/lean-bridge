@@ -89,7 +89,7 @@ public final class Consumer {
 test("JVM packages are checked Fin consumers beside C, C++, Python, Rust, Ruby and .NET", () => {
 	for(const targets of [["maven"], ["c", "maven"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "wit-wasi"])
+	for(const target of ["cpan"])
 		assert.equal(supportsNativeRefinementTargets(["maven", target]), false, target);
 });
 
