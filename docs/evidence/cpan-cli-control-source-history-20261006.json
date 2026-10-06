@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "milestone": "cpan-cli-control-v1",
+  "predecessorCommit": "abc7c6e2bc7f6fee24df9d14bb7cbc7005b10249",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "51e7173b5ae127d5d93d4972a81a7448a6b9d168c93a422f9efcded3aa4e7348",
+      "previousSha256": "80ebd829bc83fea6eb57cbb26b0df01ccc592d70333011b857f7e6d1b22b2a53",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n",
+          "current": "          \"sha256\": \"632fb7190c330de46103eba6c604122f717e450014a2fc88fa018e94fa62ce41\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n",
+          "current": "          \"sha256\": \"632fb7190c330de46103eba6c604122f717e450014a2fc88fa018e94fa62ce41\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n",
+          "current": "          \"sha256\": \"632fb7190c330de46103eba6c604122f717e450014a2fc88fa018e94fa62ce41\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "632fb7190c330de46103eba6c604122f717e450014a2fc88fa018e94fa62ce41",
+      "previousSha256": "6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e",
+      "edits": [
+        {
+          "start": 2534,
+          "previous": "",
+          "current": "import \"./helpers/cpan-cli-control-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-package-config-history-tests.mjs",
+      "currentSha256": "f30e95d41bff569f984ed7d5a027dc1ec3d4317a964bb5e363184cd73d832989",
+      "previousSha256": "805ed8c7befe18e5c4166b60a2823cc23691e45f18020b0a02f69d21689e1321",
+      "edits": [
+        {
+          "start": 279,
+          "previous": "import { authenticatedCliPackageConfigs, cliPackageConfigPath, selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n",
+          "current": "import { authenticatedCliPackageConfigs, cliPackageConfigPath, retargetCliInventory, selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 2147,
+          "previous": "",
+          "current": "\ntest(\"retargeted CLI inventories select every other recorded configuration\", async () => {\n\tconst candidates = await authenticatedCliPackageConfigs();\n\tconst fixture = async path => Buffer.from(`fixture ${path}`);\n\tconst paths = cli => cli.files.map(file => file.path).sort();\n\tfor(const { config: built } of candidates)\n\t{\n\t\tconst recorded = inventory(built);\n\t\t// Retargeting to the configuration that built a report changes nothing,\n\t\t// so a negative control must always choose a different one.\n\t\tassert.deepEqual(paths(await retargetCliInventory(recorded, built, fixture)), paths(recorded));\n\t\tconst others = candidates.filter(({ config }) => JSON.stringify(config.files) !== JSON.stringify(built.files));\n\t\tassert.ok(others.length > 0);\n\t\tfor(const { config } of others)\n\t\t{\n\t\t\tconst changed = await retargetCliInventory(recorded, config, fixture);\n\t\t\tassert.notDeepEqual(paths(changed), paths(recorded));\n\t\t\tassert.deepEqual(await selectCliPackageConfig(changed), config);\n\t\t\tfor(const file of changed.files.filter(file => recorded.files.some(item => item.path === file.path)))\n\t\t\t\tassert.deepEqual(file, recorded.files.find(item => item.path === file.path));\n\t\t}\n\t}\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-package-config-history.mjs",
+      "currentSha256": "d78591120c02238aba06df53a5b7106ab461bc59f66e06f213febac9a3bff4df",
+      "previousSha256": "f146bfed4b5da9ed6e0b6d639b718228701b83c4f935d184a775c140c2002e33",
+      "edits": [
+        {
+          "start": 3900,
+          "previous": "",
+          "current": "\n/**\n * Rewrite a recorded CLI inventory to another authenticated configuration's closure.\n * Recorded entries stay as recorded, files only the target ships are added at\n * current bytes, and the rest are dropped, so selection moves only between recorded configurations.\n *\n * @param cli - Recorded CLI inventory.\n * @param config - Authenticated configuration whose closure the result must select.\n * @param readSource - Reader for target files the recorded inventory lacks.\n * @param root0 - Trusted bundle profile fixed by the calling validator.\n * @param root0.extras - Exact generated or bundled paths beyond the configured sources.\n */\nexport const retargetCliInventory = async (cli, config, readSource = readFile, { extras = cliPackageExtras } = {}) => {\n\tconst wanted = new Set([...config.files, ...extras]);\n\tconst files = cli.files.filter(file => wanted.has(file.path));\n\tfor(const path of config.files.filter(path => !files.some(file => file.path === path)))\n\t{\n\t\tconst bytes = await readSource(path);\n\t\tfiles.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });\n\t}\n\treturn { ...cli, files: files.sort((left, right) => left.path.localeCompare(right.path)) };\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "070f5e7379d0e6643a4ba43f6aec71ebfb8f7ec1956a7ac9b2762563cc60da68",
+      "previousSha256": "6ad342ff8dcc936be71a89f75e523f00463539588a302dabb453b68615eeac1e",
+      "edits": [
+        {
+          "start": 445,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 3010,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "cc751fd899f9cb016a8f005d03605338baeb529fcd01f8e6f67bd094bc0ea48d",
+      "previousSha256": "be6b30dd8441e5394e37ade9edec78e17fdba998eb72d39ff66bde69c45ec3df",
+      "edits": [
+        {
+          "start": 444,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 3115,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "eafd18c1d649cddd1964941cbc0de43553950d9d9583d3cc7176dfbd0b64bf29",
+      "previousSha256": "d5913228401e89983e4555841eba9d4c3c89a3f9a10615bca3542d001166639c",
+      "edits": [
+        {
+          "start": 1506,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 35135,
+          "previous": "\t, ...runtimeReceiptChangedPaths\n",
+          "current": "\t, ...runtimeReceiptChangedPaths, ...cpanCliControlChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "8b983c62e198cda358bc9f92041a9f2b2aa46cb45bab806a45303cf58bf6ccc6",
+      "previousSha256": "412c91cbc8a9cde8940edf7ff56118cd3aa5808d0ed6b0f75a18ef6a80b8ebcf",
+      "edits": [
+        {
+          "start": 446,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 4278,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "8e316693b35e42703ed7dfb552b7ecc2f6ca4792e1b32edafd9f272b8bb1891b",
+      "previousSha256": "a2f02ca67f287277e98bad96ded63e1f1d56b1dd6fb5934d92b5ed8040ffe5ce",
+      "edits": [
+        {
+          "start": 443,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 3194,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs",
+      "currentSha256": "a105036482f4022957eba2c74da7b991c8da3855dc3ec9f43f2173dcd9e5fd3f",
+      "previousSha256": "2261674ee6ea7f7babb649b6ccea85407ae25487caf1fa5eb72304eacdf324b4",
+      "edits": [
+        {
+          "start": 142,
+          "previous": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n",
+          "current": "import { authenticatedCliPackageConfigs, retargetCliInventory, selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 2116,
+          "previous": "test(\"Perl callback package evidence reconstructs four producers and 32 installed public runs\", { skip: !enabled }, async () => {\n",
+          "current": "test(\"Perl callback package evidence reconstructs four producers and 32 installed public runs\", { skip: !enabled }, async t => {\n"
+        },
+        {
+          "start": 2342,
+          "previous": "\tawait assertCliInventorySelection();\n",
+          "current": "\tt.diagnostic(`${await assertCliInventorySelection()} CLI inventories retargeted to other recorded configurations rejected`);\n"
+        },
+        {
+          "start": 19756,
+          "previous": "\tconst current = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "current": "\tconst configs = await authenticatedCliPackageConfigs();\n\tlet retargeted = 0;\n"
+        },
+        {
+          "start": 20924,
+          "previous": "\t\t// Pasting the current inventory selects the current configuration, but the\n\t\t// recorded installation, archive and receipts still bind the original build.\n\t\tconst pasted = structuredClone(original);\n\t\tfor(const path of current.files.filter(path => !pasted.cli.files.some(file => file.path === path)))\n",
+          "current": "\t\t// Retarget to every other recorded configuration, whichever one built the report.\n\t\t// Each retarget selects exactly that configuration, but the recorded installation,\n\t\t// archive and receipts still bind the original build.\n\t\tconst alternatives = configs.filter(({ config }) => config.name === original.cli.package.name\n\t\t\t&& config.version === original.cli.package.version && config.sourceDateEpoch === original.cli.sourceDateEpoch\n\t\t\t&& JSON.stringify(config.files) !== JSON.stringify(selected.files));\n\t\tassert.ok(alternatives.length > 0, `${name} has no other recorded configuration`);\n\t\tfor(const { config } of alternatives)\n"
+        },
+        {
+          "start": 21562,
+          "previous": "\t\t\tconst bytes = await readFile(path);\n\t\t\tpasted.cli.files.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });\n",
+          "current": "\t\t\tconst changed = structuredClone(original);\n\t\t\tchanged.cli = await retargetCliInventory(original.cli, config); rehash(changed);\n\t\t\tconst chosen = await selectCliPackageConfig(changed.cli);\n\t\t\tassert.deepEqual(chosen.files, config.files, name);\n\t\t\tassert.notDeepEqual(chosen.files, selected.files, name);\n\t\t\tawait assert.rejects(() => assertOwnedPerlCallbackPackage(name, changed), name);\n\t\t\tretargeted++;\n"
+        },
+        {
+          "start": 21973,
+          "previous": "\t\tpasted.cli.files.sort((left, right) => left.path.localeCompare(right.path)); rehash(pasted);\n\t\tassert.deepEqual((await selectCliPackageConfig(pasted.cli)).files, current.files);\n\t\tawait assert.rejects(() => assertOwnedPerlCallbackPackage(name, pasted), name);\n",
+          "current": ""
+        },
+        {
+          "start": 21976,
+          "previous": "",
+          "current": "\treturn retargeted;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "31f3b906ccd6a0c7ee831397fd66f622d55c498c06b4073b892882ac5b6a4ee6",
+      "previousSha256": "aee6d17b59feb3f0f17d578cc21a0ece789b639b542bcff865219a3fff132f88",
+      "edits": [
+        {
+          "start": 355,
+          "previous": "",
+          "current": "import { beforeCpanCliControlSource, cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 1032,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCpanCliControlSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2729,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history.mjs",
+      "currentSha256": "c78031843bb90dc87fadf30a65583b0051952bb5bc2ed400493eb9b429c00ff2",
+      "previousSha256": "93bf331624bee4ea4920dbeacb58d48d234f8ab975506f8901e5e25c83e9669f",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforeCpanCliControlSource } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 2545,
+          "previous": "",
+          "current": "\tsource = beforeCpanCliControlSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "79381efa1828b4522f6ba9ad4e5247635fa337040def6b90338690d6e19fa983",
+      "previousSha256": "f12ac1362cd80a4ab9201555859352b5f27ee5fc39387070ca90eef59c05ad32",
+      "edits": [
+        {
+          "start": 468,
+          "previous": "",
+          "current": "import { cpanCliControlChangedPaths } from \"./cpan-cli-control-source-history.mjs\";\n"
+        },
+        {
+          "start": 3305,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    }
+  ]
+}

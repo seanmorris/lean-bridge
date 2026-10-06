@@ -73,3 +73,25 @@ export const selectCliPackageConfig = async (cli, readSource = readFile, { extra
 	assert.equal(matching.length, 1, "recorded CLI inventory must match exactly one authenticated configuration");
 	return matching[0].config;
 };
+
+/**
+ * Rewrite a recorded CLI inventory to another authenticated configuration's closure.
+ * Recorded entries stay as recorded, files only the target ships are added at
+ * current bytes, and the rest are dropped, so selection moves only between recorded configurations.
+ *
+ * @param cli - Recorded CLI inventory.
+ * @param config - Authenticated configuration whose closure the result must select.
+ * @param readSource - Reader for target files the recorded inventory lacks.
+ * @param root0 - Trusted bundle profile fixed by the calling validator.
+ * @param root0.extras - Exact generated or bundled paths beyond the configured sources.
+ */
+export const retargetCliInventory = async (cli, config, readSource = readFile, { extras = cliPackageExtras } = {}) => {
+	const wanted = new Set([...config.files, ...extras]);
+	const files = cli.files.filter(file => wanted.has(file.path));
+	for(const path of config.files.filter(path => !files.some(file => file.path === path)))
+	{
+		const bytes = await readSource(path);
+		files.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });
+	}
+	return { ...cli, files: files.sort((left, right) => left.path.localeCompare(right.path)) };
+};

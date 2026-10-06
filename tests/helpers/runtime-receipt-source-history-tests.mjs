@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCpanCliControlSource, cpanCliControlChangedPaths } from "./cpan-cli-control-source-history.mjs";
 import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths
 	, runtimeReceiptHistoryPath, reverseRuntimeReceiptUpdate } from "./runtime-receipt-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Runtime receipt history authenticates exact predecessors and rejects unkno
 	assert.deepEqual(record.updates.map(item => item.path), runtimeReceiptChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCpanCliControlSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseRuntimeReceiptUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRuntimeReceiptSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRuntimeReceiptSource(update.path, source, update.currentSha256), source);
@@ -43,7 +44,7 @@ test("Runtime receipt repair changes only evidence source pins, not support or a
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRuntimeReceiptSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

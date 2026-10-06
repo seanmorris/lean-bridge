@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { authenticatedCliPackageConfigs, cliPackageConfigPath, selectCliPackageConfig } from "./cli-package-config-history.mjs";
+import { authenticatedCliPackageConfigs, cliPackageConfigPath, retargetCliInventory, selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
 
 const inventory = config => {
@@ -33,4 +33,27 @@ test("CLI package configurations come only from the current source and its recor
 		, { ...base, sourceDateEpoch: base.sourceDateEpoch + 1 }
 	]) await assert.rejects(() => selectCliPackageConfig(inventory(forged)), /exactly one authenticated configuration/u);
 	await assert.rejects(() => selectCliPackageConfig(undefined), /exactly one authenticated configuration/u);
+});
+
+test("retargeted CLI inventories select every other recorded configuration", async () => {
+	const candidates = await authenticatedCliPackageConfigs();
+	const fixture = async path => Buffer.from(`fixture ${path}`);
+	const paths = cli => cli.files.map(file => file.path).sort();
+	for(const { config: built } of candidates)
+	{
+		const recorded = inventory(built);
+		// Retargeting to the configuration that built a report changes nothing,
+		// so a negative control must always choose a different one.
+		assert.deepEqual(paths(await retargetCliInventory(recorded, built, fixture)), paths(recorded));
+		const others = candidates.filter(({ config }) => JSON.stringify(config.files) !== JSON.stringify(built.files));
+		assert.ok(others.length > 0);
+		for(const { config } of others)
+		{
+			const changed = await retargetCliInventory(recorded, config, fixture);
+			assert.notDeepEqual(paths(changed), paths(recorded));
+			assert.deepEqual(await selectCliPackageConfig(changed), config);
+			for(const file of changed.files.filter(file => recorded.files.some(item => item.path === file.path)))
+				assert.deepEqual(file, recorded.files.find(item => item.path === file.path));
+		}
+	}
 });

@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
+import { authenticatedCliPackageConfigs, retargetCliInventory, selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
@@ -38,10 +38,10 @@ const cliFileMutation = (path, mutate) => item => {
 	item.cli.inventorySha256 = sha256(canonicalJson(inventory));
 };
 
-test("Perl callback package evidence reconstructs four producers and 32 installed public runs", { skip: !enabled }, async () => {
+test("Perl callback package evidence reconstructs four producers and 32 installed public runs", { skip: !enabled }, async t => {
 	await assertOwnedPerlCallbackPackageMatrix(await reports());
 	await assertPortableIdentities();
-	await assertCliInventorySelection();
+	t.diagnostic(`${await assertCliInventorySelection()} CLI inventories retargeted to other recorded configurations rejected`);
 });
 
 // Synthetic changes exercise validator portability, not additional execution.
@@ -290,7 +290,8 @@ test("Perl callback package evidence rejects coordinated producer, receipt and i
 // validator still rejects inventories that select a configuration they were not built from.
 // Kept inside the reconstruction test so the CI evidence step keeps its fixed test count.
 const assertCliInventorySelection = async () => {
-	const current = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configs = await authenticatedCliPackageConfigs();
+	let retargeted = 0;
 	const rehash = item => {
 		const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
 		void archive; void inventorySha256; void externalRegistryWrites;
@@ -309,16 +310,23 @@ const assertCliInventorySelection = async () => {
 			await assert.rejects(() => selectCliPackageConfig(forged.cli), /exactly one authenticated configuration/u, name);
 			await assert.rejects(() => assertOwnedPerlCallbackPackage(name, forged), name);
 		}
-		// Pasting the current inventory selects the current configuration, but the
-		// recorded installation, archive and receipts still bind the original build.
-		const pasted = structuredClone(original);
-		for(const path of current.files.filter(path => !pasted.cli.files.some(file => file.path === path)))
+		// Retarget to every other recorded configuration, whichever one built the report.
+		// Each retarget selects exactly that configuration, but the recorded installation,
+		// archive and receipts still bind the original build.
+		const alternatives = configs.filter(({ config }) => config.name === original.cli.package.name
+			&& config.version === original.cli.package.version && config.sourceDateEpoch === original.cli.sourceDateEpoch
+			&& JSON.stringify(config.files) !== JSON.stringify(selected.files));
+		assert.ok(alternatives.length > 0, `${name} has no other recorded configuration`);
+		for(const { config } of alternatives)
 		{
-			const bytes = await readFile(path);
-			pasted.cli.files.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });
+			const changed = structuredClone(original);
+			changed.cli = await retargetCliInventory(original.cli, config); rehash(changed);
+			const chosen = await selectCliPackageConfig(changed.cli);
+			assert.deepEqual(chosen.files, config.files, name);
+			assert.notDeepEqual(chosen.files, selected.files, name);
+			await assert.rejects(() => assertOwnedPerlCallbackPackage(name, changed), name);
+			retargeted++;
 		}
-		pasted.cli.files.sort((left, right) => left.path.localeCompare(right.path)); rehash(pasted);
-		assert.deepEqual((await selectCliPackageConfig(pasted.cli)).files, current.files);
-		await assert.rejects(() => assertOwnedPerlCallbackPackage(name, pasted), name);
 	}
+	return retargeted;
 };
