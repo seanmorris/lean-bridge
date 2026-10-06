@@ -86,6 +86,52 @@ final class Consumer {
 }
 `;
 
+/** The same public API cases from Kotlin, compiled against the same JAR. */
+const kotlinFinConsumer = () => `import org.leanbridge.native_fin.Api
+import java.math.BigInteger
+
+private var checks = 0
+private fun check(value: Boolean, label: String) { if (!value) throw AssertionError("failed: " + label); checks++ }
+private fun rejected(parameter: String, bound: String, action: () -> Any?): Boolean =
+    try { action(); false }
+    catch (error: IllegalArgumentException) { error.message == parameter + " is not below its Fin " + bound + " bound" }
+private fun illegal(action: () -> Any?): Boolean = try { action(); false } catch (error: IllegalArgumentException) { true }
+private fun n(value: Long): BigInteger = BigInteger.valueOf(value)
+
+fun main() {
+    val huge = BigInteger.ONE.shiftLeft(70)
+    val word = BigInteger.ONE.shiftLeft(32)
+    check(rejected("arg0", "0") { Api.impossible(n(0)) }, "Fin 0 rejects zero")
+    check(rejected("arg0", "0") { Api.impossible(n(1)) }, "Fin 0 rejects one")
+    check(Api.only(n(0)) == n(7), "Fin 1 accepts zero")
+    check(rejected("arg0", "1") { Api.only(n(1)) }, "Fin 1 rejects its bound")
+    check(Api.mirror(n(0)) == n(9) && Api.mirror(n(9)) == n(0), "Fin 10 endpoints")
+    for (value in listOf(n(10), n(11), word, huge))
+        check(rejected("arg0", "10") { Api.mirror(value) }, "Fin 10 rejects " + value)
+    check(illegal { Api.mirror(n(-1)) } && !rejected("arg0", "10") { Api.mirror(n(-1)) }, "negative is the Nat error")
+    check(Api.twice(n(299)) == n(598), "alias accepts its largest value")
+    check(rejected("arg0", "300") { Api.twice(n(300)) }, "alias rejects its bound")
+    check(rejected("arg0", "300") { Api.twice(n(301)) }, "alias rejects beyond its bound")
+    check(Api.succHuge(word) == word + BigInteger.ONE, "large Fin crosses a limb")
+    val last = huge - BigInteger.ONE
+    check(Api.succHuge(huge - n(2)) == last && Api.succHuge(last) == last, "large Fin endpoints")
+    for (value in listOf(huge, huge + BigInteger.ONE, BigInteger.ONE.shiftLeft(128)))
+        check(rejected("arg0", huge.toString()) { Api.succHuge(value) }, "large Fin rejects " + value)
+    check(Api.wrap(n(100)) == n(2) && Api.wrap(huge) == n(2) && Api.wrap(n(0)) == n(0), "result-only Fin values")
+    val start = n(5)
+    val name = "slot"
+    check(Api.label(start, n(3), name) == "slot:8", "mixed arguments")
+    check(rejected("arg1", "4") { Api.label(start, n(4), name) }, "mixed arguments reject the Fin site")
+    check(start == n(5) && name == "slot" && Api.label(start, n(0), name) == "slot:5", "caller data unchanged")
+    for (i in 0 until 1000) {
+        if (!rejected("arg0", "10") { Api.mirror(n(10L + i)) }) throw AssertionError("invalid call accepted at " + i)
+        if (Api.mirror(n(i % 10L)) != n(9L - i % 10)) throw AssertionError("valid call failed at " + i)
+    }
+    checks += 2000
+    println("kotlin-fin-ok:" + checks)
+}
+`;
+
 test("JVM packages are checked Fin consumers beside C, C++, Python, Rust, Ruby and .NET", () => {
 	for(const targets of [["maven"], ["c", "maven"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
@@ -108,8 +154,8 @@ test("generated JVM bound docs come only from checked refinement metadata", () =
 	assert.throws(() => renderCopiedJvmPackage(compileCopiedJvmModel(ir)), TypeError);
 });
 
-test("relocated source-free JVM packages check Fin bounds through the bundled C adapter", { skip: process.env.LEAN_BRIDGE_JVM_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
-	const environment = nativeFixtureEnvironment(["c", "java"]), reports = [], archives = [];
+test("relocated source-free JVM packages check Fin bounds from Java and Kotlin through the bundled C adapter", { skip: process.env.LEAN_BRIDGE_JVM_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
+	const environment = nativeFixtureEnvironment(["c", "java", "kotlin"]), reports = [], archives = [];
 	for(const attempt of [0, 1])
 	{
 		const author = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-fin-author-"));
@@ -152,24 +198,28 @@ test("relocated source-free JVM packages check Fin bounds through the bundled C 
 		for(const name of shared) assert.equal(packageLibraries[name], cLibraries[name], name);
 		const docs = (await Promise.all((await readdir(jar, { recursive: true })).filter(path => path.endsWith("Api.java")).map(path => readFile(join(jar, path), "utf8")))).join("\n");
 		assert.match(docs, /Checked Lean Fin bounds: arg0 &lt; 10; result &lt; 10\./);
-		t.diagnostic("offline Java compilation without producer files or Lean/C compilers");
-		const fixture = { source: javaFinConsumer, success: "java-fin-ok" };
-		const { command, ...observation } = await installCopiedConsumer({ profile: "java", consumer, handoff, packages, environment, fixture });
-		const root = join(consumer, "java"), relocated = join(consumer, "java-relocated");
-		await rename(root, relocated);
-		const repeated = await runCopied(command, ["--enable-native-access=ALL-UNNAMED", "-cp", `${join(relocated, "component.jar")}:${relocated}`, "Consumer"], relocated, copiedCleanEnvironment);
-		assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `java-fin-ok:${observation.checks}`);
-		reports.push({ profile: "java", path: "ordinary-source"
-			, ...observation
-			, packages
-			, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, packageLibraries[name]]))
-			, dispatch: { observed: false, reason: "the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead" }
-			, bindingIrSha256: built.bindingIrSha256
-			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
-			, modelSha256: sha256(canonicalJson(model))
-			, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
-			, sourceRemovedBeforeInstallation: true
-			, relocatedInstallation: true, repeatExecution: true });
+		// Java and Kotlin each compile against the one installed JAR, without producer files or Lean/C compilers.
+		for(const [profile, source, entry] of [["java", javaFinConsumer, relocated => `${join(relocated, "component.jar")}:${relocated}`], ["kotlin", kotlinFinConsumer, relocated => `${join(relocated, "component.jar")}:${join(relocated, "consumer.jar")}`]])
+		{
+			t.diagnostic(`offline ${profile} compilation and execution`);
+			const fixture = { source, success: `${profile}-fin-ok` };
+			const { command, ...observation } = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture });
+			const root = join(consumer, profile), relocated = join(consumer, `${profile}-relocated`);
+			await rename(root, relocated);
+			const repeated = await runCopied(command, ["--enable-native-access=ALL-UNNAMED", "-cp", entry(relocated), profile === "java" ? "Consumer" : "ConsumerKt"], relocated, copiedCleanEnvironment);
+			assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `${profile}-fin-ok:${observation.checks}`);
+			reports.push({ profile, path: "ordinary-source"
+				, ...observation
+				, packages
+				, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, packageLibraries[name]]))
+				, dispatch: { observed: false, reason: "the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead" }
+				, bindingIrSha256: built.bindingIrSha256
+				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
+				, modelSha256: sha256(canonicalJson(model))
+				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, sourceRemovedBeforeInstallation: true
+				, relocatedInstallation: true, repeatExecution: true });
+		}
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.deepEqual(archives[1], archives[0]);
