@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeWitFinSource, witFinChangedPaths } from "./wit-fin-source-history.mjs";
+import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { beforePhpFinSource, phpFinChangedPaths
 	, phpFinHistoryPath, reversePhpFinUpdate } from "./php-fin-source-history.mjs";
 
@@ -44,7 +45,7 @@ test("PHP scalar Fin changes only evidence source pins, not support or archives"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforePhpFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

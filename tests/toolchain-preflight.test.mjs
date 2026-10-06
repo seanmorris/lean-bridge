@@ -33,7 +33,9 @@ test("the filtered Nix and Docker component engine starts without checkout impor
 	await assert.rejects(promisify(execFile)(process.execPath, [join(scratch, "scripts/run-component-engine.mjs")], { cwd: scratch, env: { PATH: scratch }, timeout: 10000 }), error => {
 		assert.equal(error.code, 1);
 		assert.doesNotMatch(error.stderr, /ERR_MODULE_NOT_FOUND/);
-		assert.match(error.stderr, /Error: missing --request/);
+		// The entry point reports failures as one bounded line plus the structured engine line.
+		assert.equal(error.stderr, 'Component engine failed: missing --request\n'
+			+ 'lean-bridge-engine-error {"code":null,"details":null,"hint":null,"message":"missing --request","name":"Error"}\n');
 		return true;
 	});
 });

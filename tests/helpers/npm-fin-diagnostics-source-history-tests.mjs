@@ -17,6 +17,7 @@ import { dotnetFinChangedPaths } from "./dotnet-fin-source-history.mjs";
 import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
+import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { beforeDiagnosticFollowupSource, diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 import { combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
 import { testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
@@ -57,7 +58,7 @@ test("Fin diagnostic repair changes no inventory claim, receipt or archive", asy
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeNpmFinDiagnosticsSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
 			++refreshed;

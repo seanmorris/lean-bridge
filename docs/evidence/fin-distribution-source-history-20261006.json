@@ -1,0 +1,827 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-distribution-v1",
+  "predecessorCommit": "6b809dc6069da02b5430c1cbb24e7647bd69df17",
+  "updates": [
+    {
+      "path": "config/checked-javascript.json",
+      "currentSha256": "2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158",
+      "previousSha256": "8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff",
+      "edits": [
+        {
+          "start": 2793,
+          "previous": "",
+          "current": "\t\t{ \"path\": \"src/backends/native/fin-refinements.mjs\", \"classification\": \"strict-migration-backlog\" },\n"
+        },
+        {
+          "start": 31215,
+          "previous": "",
+          "current": "\t\t{ \"path\": \"src/backends/python/refinements.mjs\", \"classification\": \"strict-migration-backlog\" },\n"
+        },
+        {
+          "start": 34454,
+          "previous": "",
+          "current": "\t\t{ \"path\": \"src/backends/wit/fin-refinements.mjs\", \"classification\": \"strict-migration-backlog\" },\n"
+        }
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "currentSha256": "bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf",
+      "previousSha256": "c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78",
+      "edits": [
+        {
+          "start": 13485,
+          "previous": "",
+          "current": "    \"src/backends/native/fin-refinements.mjs\",\n"
+        },
+        {
+          "start": 19530,
+          "previous": "",
+          "current": "    \"src/backends/python/refinements.mjs\",\n"
+        },
+        {
+          "start": 22645,
+          "previous": "",
+          "current": "    \"src/backends/wit/fin-refinements.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "e032c0560b7cacd3f0cacb5721476ac5a287ad13d7cf0f7b89b9178341b92d48",
+      "previousSha256": "8eb6e45af6533d656d582abb61dca1c71987649f1339913d48dd84969d056bda",
+      "edits": [
+        {
+          "start": 32579,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 32735,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 33629,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 33771,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 55137,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 55293,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 56187,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 56329,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 72332,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 72488,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 73390,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 73532,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 88633,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 88789,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 89683,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 89825,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 112679,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 285394,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 409665,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 409821,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 410329,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 410471,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"3c0215186a25a5eff36e213bac5083cb90eaa716792a33ad4e19d7dd466f3b4a\"\n",
+          "current": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n"
+        },
+        {
+          "start": 989155,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 989311,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 990216,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 990358,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1114787,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1114943,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1116437,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1144347,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1144503,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1145693,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1145835,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1154461,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1154617,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1155953,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1156095,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1166222,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1166378,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1170046,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1170188,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1198783,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1198939,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1202590,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1202732,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1229062,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1229218,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1232872,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1233014,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1262213,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1262369,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1265835,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1265977,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1302014,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1302170,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1307387,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1307529,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1328584,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1328740,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1332939,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1333081,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1350962,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1351118,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1355476,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1355618,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1370629,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1370785,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1375168,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1375310,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1394017,
+          "previous": "          \"sha256\": \"8606d80fe5041aa33838aba61302fafcce5e667a112b88cb1cfd19e82671b8ff\"\n",
+          "current": "          \"sha256\": \"2ac3b7c1d4b4c2b90ae04ed54eaa17d69452721e48d425245ca3780afe89c158\"\n"
+        },
+        {
+          "start": 1394173,
+          "previous": "          \"sha256\": \"c809689d6dce83834e2efb3a363922cbc0c3de0ebfeab69ea1a461f5906d2f78\"\n",
+          "current": "          \"sha256\": \"bc068566fe5415ef554edaeb70d308a8a15d828dd5d126cb5f0514f550be1dbf\"\n"
+        },
+        {
+          "start": 1395658,
+          "previous": "          \"sha256\": \"99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1\"\n",
+          "current": "          \"sha256\": \"d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b\"\n"
+        },
+        {
+          "start": 1395800,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1406293,
+          "previous": "          \"sha256\": \"4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8\"\n",
+          "current": "          \"sha256\": \"687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"3c0215186a25a5eff36e213bac5083cb90eaa716792a33ad4e19d7dd466f3b4a\"\n",
+          "current": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"3c0215186a25a5eff36e213bac5083cb90eaa716792a33ad4e19d7dd466f3b4a\"\n",
+          "current": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n"
+        }
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "currentSha256": "d12cf487d6fb0ed3afef0abc004d8572073e2ae8ef1dfd6b5bd6ba2f7875926b",
+      "previousSha256": "99d129150b3144c586b92c13f12abfb6c6122ce5049bb81fb137cfd4b7a987f1",
+      "edits": [
+        {
+          "start": 6377,
+          "previous": "",
+          "current": "    \"src/backends/native/fin-refinements.mjs\",\n"
+        },
+        {
+          "start": 11718,
+          "previous": "",
+          "current": "    \"src/backends/python/refinements.mjs\",\n"
+        },
+        {
+          "start": 14833,
+          "previous": "",
+          "current": "    \"src/backends/wit/fin-refinements.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "currentSha256": "687318eb3e18f3f3e41e8eb18845ae136c47839f707d8706bea45792d7e76d5c",
+      "previousSha256": "4302e13e74260a646c98577b2989262c3e94d21b306972268747f11205741ed8",
+      "edits": [
+        {
+          "start": 13364,
+          "previous": "",
+          "current": "    \"src/backends/native/fin-refinements.mjs\",\n"
+        },
+        {
+          "start": 19409,
+          "previous": "",
+          "current": "    \"src/backends/python/refinements.mjs\",\n"
+        },
+        {
+          "start": 22524,
+          "previous": "",
+          "current": "    \"src/backends/wit/fin-refinements.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8",
+      "previousSha256": "3c0215186a25a5eff36e213bac5083cb90eaa716792a33ad4e19d7dd466f3b4a",
+      "edits": [
+        {
+          "start": 2975,
+          "previous": "",
+          "current": "import \"./helpers/fin-distribution-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-package-config-history-tests.mjs",
+      "currentSha256": "fd8b5f69e2c506cee0235c39feccc9db2dda434d1933ca6e9086a4f6d0f7f1a5",
+      "previousSha256": "f30e95d41bff569f984ed7d5a027dc1ec3d4317a964bb5e363184cd73d832989",
+      "edits": [
+        {
+          "start": 520,
+          "previous": "",
+          "current": "import { beforeFinDistributionSource } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 1219,
+          "previous": "",
+          "current": "\t// Registering the Fin documentation modules reconstructs its predecessor exactly.\n\tconst finModule = \"src/backends/native/fin-refinements.mjs\";\n\tassert.equal(candidates[1].sha256, sha256(beforeFinDistributionSource(cliPackageConfigPath, current)));\n\tassert.ok(candidates[0].config.files.includes(finModule));\n\tassert.ok(!candidates[1].config.files.includes(finModule));\n"
+        },
+        {
+          "start": 1661,
+          "previous": "\tassert.equal(candidates[1].sha256, sha256(beforeNpmFinDiagnosticsSource(cliPackageConfigPath, current)));\n\tassert.ok(candidates[0].config.files.includes(\"src/build/component-engine-failure.mjs\"));\n\tassert.ok(!candidates[1].config.files.includes(\"src/build/component-engine-failure.mjs\"));\n",
+          "current": "\tassert.equal(candidates[2].sha256, sha256(beforeNpmFinDiagnosticsSource(cliPackageConfigPath, current)));\n\tassert.ok(candidates[1].config.files.includes(\"src/build/component-engine-failure.mjs\"));\n\tassert.ok(!candidates[2].config.files.includes(\"src/build/component-engine-failure.mjs\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-package-config-history.mjs",
+      "currentSha256": "4381120fbd1dad9fd5f9fcaecbf6698baec0dc1f8ae31bbb54dcd46e3854ced8",
+      "previousSha256": "d78591120c02238aba06df53a5b7106ab461bc59f66e06f213febac9a3bff4df",
+      "edits": [
+        {
+          "start": 398,
+          "previous": "",
+          "current": "import { beforeFinDistributionSource } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 1552,
+          "previous": "\tbeforeCombinedLineageSource\n",
+          "current": "\tbeforeFinDistributionSource\n\t, beforeCombinedLineageSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "2f41d8162593c497aeed28857a8b17518de9382019e23a8072937fd9efd7cf95",
+      "previousSha256": "f79588642326f29651d442534f54cfe2dff1796587fc7ef14b57423030a9e367",
+      "edits": [
+        {
+          "start": 1014,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3580,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "8efbc2910f6ca428c99ce9a542a6a9c788eba3851d867791611356a13815fdd4",
+      "previousSha256": "8ba1969e63aa71c890ad45dbb47a4d5446a877f967f183f991fc0a30468ee9a6",
+      "edits": [
+        {
+          "start": 874,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3219,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "9beb8605a866cb3dfad557663d070314463b71da6ced04aaa3a88b44854ee073",
+      "previousSha256": "89bdc6803819315819502142c5c43dfddb5253f2dfe67d95e5e4aa61ebc66013",
+      "edits": [
+        {
+          "start": 1013,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3685,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "042077e97a6d5e8952425db51794e50dc664fe28354c3b59ce2a6206feb9d7aa",
+      "previousSha256": "ff86acfb9799e1d3e4cdd09e423703fb48045734b21f0d6d387e0aa929d3b029",
+      "edits": [
+        {
+          "start": 576,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 2838,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "a656494e051766143fbcfc935a3f090ea03f69459e29e819bde7fc7e995b6f84",
+      "previousSha256": "9cd228a6f2f4901574e174cf040a168c3422bd7e9264fad510cebb37f750cbef",
+      "edits": [
+        {
+          "start": 2075,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 35952,
+          "previous": "",
+          "current": "\t, ...finDistributionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "74a9e2a60dc38eb6a7f86a7b5c52cd37965b0a815ccbd8dceeb6c30e2f7dc288",
+      "previousSha256": "eafab33183cec83c2e5c88ff0444f9395bc41b8dc45d18491081d4d6fdefb92a",
+      "edits": [
+        {
+          "start": 508,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 2726,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "ba179beaeecacb4472e269bcf56d45b425819b3bf32aae8472c5725f1c224e39",
+      "previousSha256": "750a89856f2771cd67da33619c324de3a0894949bd74d49b759b872318444122",
+      "edits": [
+        {
+          "start": 1015,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 4848,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "05e8ecc5ab728203edc8223ef422f459601227d8a8877d4f19bd1dd295dfc6cb",
+      "previousSha256": "9408a299196c63ea68a3048035b54ff3677a67f84b098a4702f752ce832cb541",
+      "edits": [
+        {
+          "start": 1012,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3764,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "3e8a28e251d313cecd53fe5219daa77332d305a136e14cf0cb475f57c1cf7f85",
+      "previousSha256": "732d66b6710866e640e073f0672c8785b4f3d721da6949f6760ec94b42c64401",
+      "edits": [
+        {
+          "start": 441,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 2659,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "658ce401a90fd1bda8ec830d9df7fe90bc7a4f94623b915f42edadd01e113312",
+      "previousSha256": "7192e494472a7cd2ad8ec718f96e46fdf6def38987247c844dc7727c6f947ccd",
+      "edits": [
+        {
+          "start": 790,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3057,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "6240a48ffaa3c68ed951418afbc99fda9b79ae9c795b38266906f65cfb5bfa23",
+      "previousSha256": "f4181c78c01a001c68dfedf89023101478c18c8506905d51110f863f50b83009",
+      "edits": [
+        {
+          "start": 652,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 2889,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "20dadf717b869745adc4d98fa755a477443a6fc9f6420f972f05517dc9327dde",
+      "previousSha256": "7746dd0452c406ae27b9a888f07d543006382f42768b1d75f19afec92959c31e",
+      "edits": [
+        {
+          "start": 952,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3299,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "07c6f6a75cb94e4285a617040e723385b954336d7db5fba5873b3782e44d04fc",
+      "previousSha256": "3d0b5f7f8cea6b82032e73aca1ebb3491521a83da9daa706d05c1bc8641cf5b6",
+      "edits": [
+        {
+          "start": 719,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 2954,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "6268862f08fc43f39e68293687da4336e571ee988ce1e0913feede3d31e1e7bc",
+      "previousSha256": "4eb4aca9ede39f0ee69c9586f6fce76b35d434c850a6d695e9aa36f8f258d9a7",
+      "edits": [
+        {
+          "start": 1037,
+          "previous": "",
+          "current": "import { finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3875,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "f5fbf36a48506dcd8d64220f014d5f12c3982afa93a6e73ee7e659c6f17cb6c9",
+      "previousSha256": "2de41f73e0994cdacaaac44fc0f264888d1857e684ec3f1ad8a7a2f605dd1ed4",
+      "edits": [
+        {
+          "start": 354,
+          "previous": "",
+          "current": "import { beforeFinDistributionSource, finDistributionChangedPaths } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 976,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinDistributionSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2610,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history.mjs",
+      "currentSha256": "8ef9d3146d7e181cd9be50608d86961cfdcad341899f5ff734bc49c8eaa01965",
+      "previousSha256": "e36567a22195755ea1d8b7ddcd207a58fdef759083ff70fbd7eb44291c27f8e7",
+      "edits": [
+        {
+          "start": 223,
+          "previous": "",
+          "current": "import { beforeFinDistributionSource } from \"./fin-distribution-source-history.mjs\";\n"
+        },
+        {
+          "start": 3302,
+          "previous": "",
+          "current": "\tsource = beforeFinDistributionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/toolchain-preflight.test.mjs",
+      "currentSha256": "86985953f2b137c17a61425a13f710476efd16821c49fcd2beaf07d594cbe6eb",
+      "previousSha256": "85b3cbb2080e5e7749138ef10effb4ab7b43598e9917a9c89859860fc3c2a366",
+      "edits": [
+        {
+          "start": 1796,
+          "previous": "\t\tassert.match(error.stderr, /Error: missing --request/);\n",
+          "current": "\t\t// The entry point reports failures as one bounded line plus the structured engine line.\n\t\tassert.equal(error.stderr, 'Component engine failed: missing --request\\n'\n\t\t\t+ 'lean-bridge-engine-error {\"code\":null,\"details\":null,\"hint\":null,\"message\":\"missing --request\",\"name\":\"Error\"}\\n');\n"
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import { beforeDotnetFinSource, dotnetFinChangedPaths } from "./dotnet-fin-sourc
 import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
+import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { beforeRubyFinSource, rubyFinChangedPaths
 	, rubyFinHistoryPath, reverseRubyFinUpdate } from "./ruby-fin-source-history.mjs";
 
@@ -47,7 +48,7 @@ test("Ruby scalar Fin changes only evidence source pins, not support or archives
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRubyFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));
