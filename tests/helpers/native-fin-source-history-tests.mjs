@@ -15,6 +15,7 @@ import { rustFinChangedPaths } from "./rust-fin-source-history.mjs";
 import { rubyFinChangedPaths } from "./ruby-fin-source-history.mjs";
 import { dotnetFinChangedPaths } from "./dotnet-fin-source-history.mjs";
 import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
+import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsChangedPaths } from "./npm-fin-diagnostics-source-history.mjs";
 import { diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 import { combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
@@ -69,7 +70,7 @@ test("native Fin inventory changes only source pins and the four evidenced C-fam
 			if(now.files[index].sha256 === file.sha256) continue;
 			// Only branch-changed sources move, and only to their exact authenticated successor.
 			// Later layers may also refresh pins; each still reconstructs its exact predecessor.
-			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			if(!predecessors.has(file.path))
 				predecessors.set(file.path, sha256(beforeNativeFinSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(file.sha256, predecessors.get(file.path), `${entry.id}: ${file.path} predecessor`);

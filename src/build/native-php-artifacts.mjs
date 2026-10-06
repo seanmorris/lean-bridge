@@ -22,7 +22,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
  */
 export const ordinaryPhpEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true });
 	const projection = model.copiedGraph ? (model.copiedGraph.callbacks ? compileCallablePhpGraphPackageModel : compileCopiedPhpGraphPackageModel)(model.bindingIr) : compileCopiedPhpModel(model.bindingIr, { structuredCallables: true, lists: true, variants: true });
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;

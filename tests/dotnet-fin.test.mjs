@@ -95,7 +95,7 @@ static class Program
 test(".NET packages are checked Fin consumers beside C, C++, Python, Rust and Ruby", () => {
 	for(const targets of [["nuget"], ["c", "nuget"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "php-native", "wit-wasi"])
+	for(const target of ["cpan", "wit-wasi"])
 		assert.equal(supportsNativeRefinementTargets(["nuget", target]), false, target);
 });
 

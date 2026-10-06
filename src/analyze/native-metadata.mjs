@@ -56,7 +56,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs =
 			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, ...item.projection })) }
 	});
 	const refined = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection, "refinement"));
-	if(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary C, C++, Python, Rust, Ruby, .NET and JVM native packages`), {
+	if(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary C, C++, Python, Rust, Ruby, .NET, JVM and PHP native packages`), {
 		code: "native-refinements-unsupported"
 		, details: { declaration: refined.identity }
 	});
