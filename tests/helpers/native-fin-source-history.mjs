@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
 
 export const nativeFinHistoryPath = "docs/evidence/native-fin-source-history-20261005.json";
 export const nativeFinChangedPaths = [
@@ -69,6 +70,7 @@ export const reverseNativeFinUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeFinSource = (path, source, expected) => {
+	source = beforeNpmFinDiagnosticsSource(path, source, expected);
 	if(typeof source !== "string" || !nativeFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

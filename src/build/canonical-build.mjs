@@ -32,6 +32,7 @@ import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.m
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
+import { decodeComponentEngineFailure } from "./component-engine-failure.mjs";
 import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
@@ -276,6 +277,16 @@ const runNativeNix = async ({ root, staging, selection, runner, environment }) =
 };
 
 /**
+ * Run an engine command and keep its structured failure when the engine reports one.
+ *
+ * @param runner - Command transport.
+ * @param command - Engine command description.
+ */
+const captureComponentEngine = (runner, command) => runner.capture(command).catch(error => {
+	throw decodeComponentEngineFailure(error);
+});
+
+/**
  * Runs native component engine and returns a structured result suitable for the isolated component build pipeline.
  *
  * @param root0 - Named inputs and dependency overrides used to run native component engine.
@@ -303,7 +314,7 @@ export const runNativeComponentEngine = async ({
 		, ...(environment.LEAN_BRIDGE_NIX_REFRESH === "1" ? ["--refresh"] : [])
 		, ...(isolatedStore === null ? [] : ["--store", `local?root=${resolve(isolatedStore)}`])
 	];
-	await runner.capture({
+	await captureComponentEngine(runner, {
 		command: selection.command
 		, args: [
 			...common
@@ -414,7 +425,7 @@ export const runDockerComponentEngine = async ({
 	const paths = [engineRoot, inputRoot, dirname(requestPath), dirname(outputRoot), ...(closureCache === null ? [] : [closureCache.physicalStore])];
 	if(paths.some(path => path.includes(","))) fail("unsupported-docker-mount-path", "Docker build paths cannot contain commas");
 	await mkdir(dirname(outputRoot), { recursive: true });
-	await runner.capture({
+	await captureComponentEngine(runner, {
 		command: selection.command
 		, args: [
 			"run", "--rm", "--platform", builder.manifest.platform, "--network", "bridge"

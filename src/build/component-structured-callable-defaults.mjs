@@ -88,7 +88,8 @@ export const componentStructuredCallableDefaults = (types, nominalRefinements = 
 			assertRefinement(refinement, type, 1);
 			const root = snapshotComponentCopiedGraph({ schemaVersion: 1, root: type, types: graph.types }).root;
 			const value = expression(root, refinement);
-			if(value === null) throw new TypeError("Callback result has no finite recovery value");
+			// A stable code lets callers recognize this rejection across the engine process boundary.
+			if(value === null) throw Object.assign(new TypeError("Callback result has no finite recovery value"), { code: "uninhabited-callback-result" });
 			return value;
 		}
 	});

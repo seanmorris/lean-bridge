@@ -132,6 +132,15 @@ assert.equal(api.scalar(2n), 2n);
 `;
 
 /**
+ * Accept only the compiler's uninhabited callback-result rejection, in process or
+ * decoded from the engine boundary; any other child failure or message is rejected.
+ *
+ * @param error - Build failure.
+ */
+export const isUninhabitedCallbackResult = error => error?.code === "uninhabited-callback-result"
+	&& error.message === "Callback result has no finite recovery value";
+
+/**
  * Build in two roots, install offline without source, and exercise both facades.
  *
  * @param t - Node test context.
@@ -215,6 +224,6 @@ void digit;
 	await saveLakeFile(root, "OnboardingSmall.lean", "namespace OnboardingSmall\ndef impossible (_f : Nat → Fin 0) : Nat := 0\nend OnboardingSmall\n");
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.impossible"] }));
 	const before = await lakeInputState(root);
-	await assert.rejects(() => build(root, join(directory, "rejected")), /no finite recovery value/);
+	await assert.rejects(() => build(root, join(directory, "rejected")), isUninhabitedCallbackResult);
 	assert.deepEqual(await lakeInputState(root), before);
 };

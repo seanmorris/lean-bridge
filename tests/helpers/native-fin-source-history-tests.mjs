@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsChangedPaths } from "./npm-fin-diagnostics-source-history.mjs";
 import { beforeNativeFinSource, nativeFinChangedPaths
 	, nativeFinHistoryPath, reverseNativeFinUpdate } from "./native-fin-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("native Fin history authenticates predecessors and rejects unrelated edits"
 	assert.deepEqual(record.updates.map(item => item.path), nativeFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNpmFinDiagnosticsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
@@ -57,7 +58,8 @@ test("native Fin inventory changes only source pins and the four evidenced C-fam
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			// Only branch-changed sources move, and only to their exact authenticated successor.
-			assert.ok(nativeFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			// Later layers may also refresh pins; each still reconstructs its exact predecessor.
+			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			if(!predecessors.has(file.path))
 				predecessors.set(file.path, sha256(beforeNativeFinSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(file.sha256, predecessors.get(file.path), `${entry.id}: ${file.path} predecessor`);
