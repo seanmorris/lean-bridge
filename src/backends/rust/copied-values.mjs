@@ -10,7 +10,13 @@ import { compileCopiedRustModel, validateOrdinaryCargoSettings } from "./copied-
 import { copiedRustAssets } from "./copied-assets.mjs";
 import { copiedRustConversions, copiedRustHelpers, copiedRustTypes } from "./copied-conversions.mjs";
 import { rustSite, rustSignature, rustCallablePublic, rustCallableSymbols, rustNativeFunction, rustCallableNative } from "./callables.mjs";
+import { nativeFinSummary } from "../native/fin-refinements.mjs";
 
+const finBounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => parameter.name));
+const finDoc = fn => {
+	const bounds = finBounds(fn);
+	return bounds ? `///\n/// Checked Lean Fin bounds: ${bounds}.\n` : "";
+};
 const exported = model => ["Error", "BigInt", "BigUint", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.publicName), ...model.surface.aliases.map(alias => alias.definition.name), ...model.surface.functions.map(fn => fn.field)];
 const publicType = (model, ref, input = false) => {
 	const value = rustSite(model, ref), alias = ref.kind === "named" && model.surface.aliases.find(item => item.definition.id === ref.id);
@@ -73,7 +79,7 @@ ${copy.fields.map((field, index) => `    pub ${field.name}: ${publicType(model, 
 }
 `).join("\n")}${publicAliases(model)}
 ${model.surface.functions.map((fn, index) => `/// Lean export: ${fn.declaration.id}.
-pub fn ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> Result<${publicType(model, fn.declaration.result.type)}, Error> {
+${finDoc(fn)}pub fn ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> Result<${publicType(model, fn.declaration.result.type)}, Error> {
     __runtime::call${index}(${fn.parameters.map(parameter => parameter.name).join(", ")})
 }
 `).join("\n")}`;
@@ -134,6 +140,8 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 		, "Cargo.toml": `[package]\nname = "${name}"\nversion = "${version}"\nedition = "2021"\nrust-version = "1.90"\n${cargoPackageMetadata({ description: "Compiled Lean API with typed Rust copied values", ...validatePackageMetadata(settings.metadata ?? {}) })}\nreadme = "README.md"\ninclude = ["src/**", "native/**", "lean-bridge/**", "README.md", "Cargo.lock", "binding-manifest.json"]\n\n[dependencies]\nnum-bigint = "=0.4.6"\nsha2 = "=0.10.9"\n`
 		, "README.md": `# ${name}\n\nUse the prepared crate through Cargo. Public functions borrow strings, slices, records and big integers and return owned Result values. Rust widths enforce fixed-width integer ranges. Nat and Int use re-exported num-bigint BigUint and BigInt; Unit is (). Arrays use Vec, text uses String, bytes use Vec<u8>, and records are generated structs.\n\nThe crate embeds its compiled native libraries. Runtime loading is automatic and compatible crates share one Lean runtime. Executables work after the Cargo source tree is removed. Native extraction uses private directories removed after loading; small process registry files are removed at normal exit. Native libraries remain loaded until process exit. Requires Rust 1.90+, Linux x86-64, glibc matching the packaged platform record and writable /tmp. Forked reuse is rejected; embedding beside a runtime loaded outside this Rust loader is not accepted.\n\nPure acyclic copied types, at most 32 levels deep. Synchronous primitive callbacks accept FnMut functions returning Result and receive owned values. Returned LeanClosure values provide typed call, close and is_closed methods and automatic Drop cleanup. They are neither Send, Sync nor Clone. Callback errors return unchanged; unwinding panics resume in Rust after the native call returns. Abort cannot be caught. Host callbacks are borrowed only for the call; retained callback invocations fail. Compound callables, resources and async remain unsupported. Rust and native conversions each use a 16 MiB accounting budget; Rust array bookkeeping counts at least eight bytes per element. These limits do not bound Lean working memory or every Rust allocation. Native outputs use RAII even on errors or unwinding. Process abort and allocation failure that aborts Rust cannot run destructors.\n\n${model.surface.functions.map(fn => `- ${fn.field}: ${fn.declaration.id}`).join("\n")}\n`
 	};
+	const finFunctions = model.surface.functions.filter(fn => finBounds(fn));
+	if(finFunctions.length) files["README.md"] += `\nLean Fin n parameters and results use BigUint values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; an argument at or above its bound returns Err(Error::Native { code: 1, .. }) whose message names the parameter and bound. Negative values are unrepresentable in BigUint. Fin 0 has no values, so every call to a function taking one fails. Results are BigUint values below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in Rust crates.\n\n${finFunctions.map(fn => `- ${name.replaceAll("-", "_")}::${fn.field}: ${finBounds(fn)}`).join("\n")}\n`;
 	files["README.md"] += "\nLean Option uses Rust Option, Except E T uses Result<T, E>, and binary products use (A, B), preserving their nesting. None, Some(()) and Some(None) retain presence. Compound inputs are borrowed; returned contents are owned independent copies. An exported Except result has two Result layers: the outer Result reports bridge failures, while the inner Result preserves the Lean domain success or error. These copied types can nest with arrays and records; they cannot contain callbacks or resources.\n";
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs borrow Rust slices and return owned Vec values, including nested copied values and record fields. Empty Lists, order and duplicates are preserved. List and Array retain distinct contract identities. List callback payloads remain unsupported.\n";

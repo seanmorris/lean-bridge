@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths } from "./runtime-receipt-source-history.mjs";
 import { cpanCliControlChangedPaths } from "./cpan-cli-control-source-history.mjs";
 import { pythonFinChangedPaths } from "./python-fin-source-history.mjs";
+import { rustFinChangedPaths } from "./rust-fin-source-history.mjs";
 import { beforeTestProfileRegistrationSource, testProfileRegistrationChangedPaths
 	, testProfileRegistrationHistoryPath, reverseTestProfileRegistrationUpdate } from "./test-profile-registration-source-history.mjs";
 
@@ -51,7 +52,7 @@ test("Test-profile registration changes no inventory claim, receipt or archive",
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeTestProfileRegistrationSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
 			++refreshed;

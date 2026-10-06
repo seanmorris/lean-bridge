@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { runtimeReceiptChangedPaths } from "./runtime-receipt-source-history.mjs";
 import { cpanCliControlChangedPaths } from "./cpan-cli-control-source-history.mjs";
 import { pythonFinChangedPaths } from "./python-fin-source-history.mjs";
+import { rustFinChangedPaths } from "./rust-fin-source-history.mjs";
 import { beforeTestProfileRegistrationSource, testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
 import { beforeCombinedLineageSource, combinedLineageChangedPaths
 	, combinedLineageHistoryPath, reverseCombinedLineageUpdate } from "./combined-lineage-source-history.mjs";
@@ -49,7 +50,7 @@ test("Combined lineage follow-up changes no inventory claim, receipt or archive"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeCombinedLineageSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
 			++refreshed;

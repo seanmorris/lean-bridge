@@ -1,35 +1,37 @@
 /**
- * Preserve exact source predecessors of the Python scalar Fin (#1422).
+ * Preserve exact source predecessors of the Rust scalar Fin (#1423).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeRustFinSource } from "./rust-fin-source-history.mjs";
 
-export const pythonFinHistoryPath = "docs/evidence/python-fin-source-history-20261006.json";
-export const pythonFinChangedPaths = [
+export const rustFinHistoryPath = "docs/evidence/rust-fin-source-history-20261006.json";
+export const rustFinChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
 	, "docs/type-surface.v1.json"
 	, "src/adoption/test-profiles.mjs"
 	, "src/analyze/native-metadata.mjs"
-	, "src/backends/python/copied-values.mjs"
+	, "src/backends/python/refinements.mjs"
+	, "src/backends/rust/copied-values.mjs"
 	, "src/build/native-c-projection.mjs"
 	, "src/build/native-project.mjs"
-	, "src/build/native-python-artifacts.mjs"
+	, "src/build/native-rust-artifacts.mjs"
 	, "tests/component-array-contract.test.mjs"
 	, "tests/documentation.test.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
 	, "tests/helpers/cpan-cli-control-source-history-tests.mjs"
-	, "tests/helpers/cpan-cli-control-source-history.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
+	, "tests/helpers/python-fin-source-history-tests.mjs"
+	, "tests/helpers/python-fin-source-history.mjs"
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/native-fin.test.mjs"
+	, "tests/python-fin.test.mjs"
 ];
 let history;
 
@@ -39,8 +41,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePythonFinUpdate = (source, update) => {
-	assert.ok(pythonFinChangedPaths.includes(update.path));
+export const reverseRustFinUpdate = (source, update) => {
+	assert.ok(rustFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -60,18 +62,17 @@ export const reversePythonFinUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1422, stopping at an explicitly requested identity.
+ * Restore the source before #1423, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePythonFinSource = (path, source, expected) => {
-	source = beforeRustFinSource(path, source, expected);
-	if(typeof source !== "string" || !pythonFinChangedPaths.includes(path)) return source;
+export const beforeRustFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !rustFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(pythonFinHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(rustFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePythonFinUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseRustFinUpdate(source, update) : source;
 };

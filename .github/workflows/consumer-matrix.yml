@@ -2614,6 +2614,8 @@ jobs:
           test -s build/lists/rust.json
           LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs
           test -s build/aliases/rust.json
+          LEAN_BRIDGE_RUST_FIN_TEST=1 node --test tests/rust-fin.test.mjs
+          test -s build/native-fin/rust.json
           LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs
           test -s build/variants/rust.json
           LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
@@ -2656,6 +2658,7 @@ jobs:
             build/compounds/rust.json
             build/lists/rust.json
             build/aliases/rust.json
+            build/native-fin/rust.json
             build/variants/rust.json
             build/collections/rust-conversions.json
             build/recursive/rust-values.json
@@ -2747,6 +2750,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_FIN_TEST=1 node --test tests/rust-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 node --test tests/rust-copied-graph-values.test.mjs tests/rust-copied-graph-conversions.test.mjs"

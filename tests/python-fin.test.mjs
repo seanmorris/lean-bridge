@@ -49,7 +49,7 @@ const finIr = () => {
 test("Python wheels are checked Fin consumers beside C and C++", () => {
 	for(const targets of [["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "pypi"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
+	for(const target of ["cpan", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
 		assert.equal(supportsNativeRefinementTargets(["pypi", target]), false, target);
 });
 
