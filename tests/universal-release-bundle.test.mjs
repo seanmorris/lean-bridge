@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, extname, join, normalize } from "node:path";
+import { join } from "node:path";
 import test from "node:test";
 import { pathToFileURL } from "node:url";
 
@@ -27,32 +27,10 @@ import {
 	parseCanonicalPackageManifest,
 } from "../src/release/canonical-package-manifest.mjs";
 import { readVerifiedCanonicalBundle } from "../src/release/canonical-bundle-input.mjs";
+import { collectModuleClosure } from "./helpers/module-closure.mjs";
 
 const revision = "ee22db2b1a8ab6360c79d22f574b2bcc17bb909d";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
-
-const collectModuleClosure = async entry => {
-	const files = new Set();
-	const visit = async path => {
-		if(files.has(path)) return;
-		files.add(path);
-		const source = await readFile(path, "utf8");
-		const patterns = [
-			/\bfrom\s+["'](\.\.?\/[^"']+)["']/g
-			, /(?:^|\n)\s*import\s+["'](\.\.?\/[^"']+)["']/g
-		];
-		for(const pattern of patterns)
-		{
-			for(const match of source.matchAll(pattern))
-			{
-				const imported = normalize(join(dirname(path), extname(match[1]) === "" ? `${match[1]}.mjs` : match[1]));
-				await visit(imported);
-			}
-		}
-	};
-	await visit(entry);
-	return [...files].sort();
-};
 
 const withBundles = async operation => {
 	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-universal-bundle-"));
@@ -101,6 +79,27 @@ test("core source boundary includes compiler inputs and excludes packaging backe
 {
     assert.equal(included(path), true, `core source boundary omits ${path}`);
 }
+});
+
+test("module closure follows real dependencies and ignores specifiers in generated text", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-module-closure-"));
+  try
+  {
+    const write = (name, source) => writeFile(join(scratch, name), source);
+    await write("entry.mjs", 'import { a } from "./direct.mjs";\nexport { b } from "./reexported";\nexport const load = () => import("./dynamic.mjs");\nexport const text = a + b;\n');
+    await write("direct.mjs", 'export const a = `import { runtime } from "./phantom.mjs";`;\n');
+    await write("reexported.mjs", '// import { c } from "./comment.mjs"\n/* from "./block.mjs" */\nexport const b = \'from "./quoted.mjs"\';\n');
+    await write("dynamic.mjs", "export const d = 1;\n");
+    // Dependencies come from import, re-export and dynamic import syntax, with extension inference.
+    assert.deepEqual(await collectModuleClosure(join(scratch, "entry.mjs"))
+      , ["direct.mjs", "dynamic.mjs", "entry.mjs", "reexported.mjs"].map(name => join(scratch, name)).sort());
+    // Generated-code templates, comments and plain strings never create a dependency.
+    await write("template.mjs", 'export const lines = [\n  `import { runtime } from "./internal/runtime.mjs";`\n  , \'import "./missing.mjs";\'\n];\n');
+    assert.deepEqual(await collectModuleClosure(join(scratch, "template.mjs")), [join(scratch, "template.mjs")]);
+  } finally
+  {
+    await rm(scratch, { recursive: true, force: true });
+  }
 });
 
 test("universal bundle is byte-identical across clean assembly roots", async () => withBundles(async ({ first, second, firstResult, secondResult }) => {
