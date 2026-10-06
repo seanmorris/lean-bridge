@@ -190,7 +190,38 @@ const cli = async report => {
 		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
-const installedWasm = async (item, combined = false) => {
+/**
+ * Check installed runtime bytes against live source or authenticated receipt sources.
+ *
+ * @param inventory - Installed package file identities.
+ * @param sources - Optional source hashes from the enclosing acceptance record.
+ * @param readSource - Source reader, overridable for tamper-rejection tests.
+ */
+export const assertOwnedCallbackRuntimeInventory = async (inventory, sources, readSource = path => readFile(path, "utf8")) => {
+	if(sources !== undefined) assert.ok(sources && typeof sources === "object" && !Array.isArray(sources));
+	for(const name of ["component-runtime", "owned-wasm-calls", "owned-wasm-borrow-registry", "owned-wasm-callbacks"])
+	{
+		const path = `src/release/${name}.mjs`;
+		let text = await readSource(path);
+		if(sources !== undefined)
+		{
+			assert.ok(Object.hasOwn(sources, path), `Missing runtime source identity: ${path}`);
+			digest(sources[path]);
+			text = beforeCallbackInventoryRepair(path, text, sources[path]);
+			assert.equal(sha256(text), sources[path], path);
+		}
+		for(const module of ["component-scalars", "component-callables"
+			, "component-copied", "component-records", "component-recursive"
+			, "component-recursive-abi", "component-structured-callables"
+			, "component-owned-wasm", "owned-wasm-control"])
+			text = text.replaceAll(`../abi/${module}.mjs`, `./${module}.mjs`);
+		text = text.replaceAll("../binding-ir/", "./binding-ir/");
+		assert.deepEqual(inventory[`@lean-bridge/runtime/internal/${name}.mjs`]
+			, { bytes: Buffer.byteLength(text), sha256: sha256(text) }, name);
+	}
+};
+
+const installedWasm = async (item, combined = false, sources) => {
 	const model = createOwnedJavaScriptWasmModel({ ...item.input, ...options(true, combined) });
 	assert.deepEqual(item.model, model); graph(model, combined); assert.equal(model.pointerBits, 32);
 	const generated = generateCompiledJavaScriptWasmOwned(model, item.input.metadata, generateOwnedJavaScriptWasmLeanAdapters(model));
@@ -209,18 +240,7 @@ const installedWasm = async (item, combined = false) => {
 	assert.equal(item.inventory[name + "/internal/component.so.wasm"].sha256, item.receipt.wasmLibrary.sha256);
 	for(const path of ["index.mjs", "index.d.ts"])
 		assert.equal(item.inventory[name + "/" + path].sha256, sha256(publicFiles[path]));
-	for(const path of ["component-runtime", "owned-wasm-calls", "owned-wasm-borrow-registry", "owned-wasm-callbacks"])
-	{
-		let text = await readFile(`src/release/${path}.mjs`, "utf8");
-		for(const module of ["component-scalars", "component-callables"
-			, "component-copied", "component-records", "component-recursive"
-			, "component-recursive-abi", "component-structured-callables"
-			, "component-owned-wasm", "owned-wasm-control"])
-			text = text.replaceAll(`../abi/${module}.mjs`, `./${module}.mjs`);
-		text = text.replaceAll("../binding-ir/", "./binding-ir/");
-		assert.deepEqual(item.inventory[`@lean-bridge/runtime/internal/${path}.mjs`]
-			, { bytes: Buffer.byteLength(text), sha256: sha256(text) }, path);
-	}
+	await assertOwnedCallbackRuntimeInventory(item.inventory, sources);
 };
 
 const installedC = async (item, input, model, combined = false) => {
@@ -286,8 +306,9 @@ const wasmMutations = [
  * Rebuild checked models and generated sources for every recorded execution.
  *
  * @param reports - Expanded, complete installed and runtime reports.
+ * @param sources - Optional authenticated source hashes for historical runtime inventories.
  */
-export const assertOwnedCallbackReportData = async reports => {
+export const assertOwnedCallbackReportData = async (reports, sources) => {
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedCallbackResultReports].sort());
 	const get = path => reports["build/owned-callback-results/" + path];
 	const cProbe = await readFile("tests/fixtures/structured-types/owned-installed-callback-results.c", "utf8");
@@ -369,7 +390,7 @@ export const assertOwnedCallbackReportData = async reports => {
 		await installedC(combined, combined.nativeInput, combined.native.model, true);
 		await source(combined.wasmInput, mode, true);
 		const name = `@owned/${mode}-callback-combinations`;
-		await installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true);
+		await installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);
 		for(const key of ["callbackResultAnchors", "receiverExports", "resultAnchors", "inputTransfers"])
 			assert.deepEqual(combined.native.model.ownedGraph[key], combined.wasm.model.ownedGraph[key]);
 		assert.deepEqual(combined.observed, { checks: 40, receiverMethods: true
@@ -388,7 +409,7 @@ export const assertOwnedCallbackReportData = async reports => {
 	for(const item of npm.reports)
 	{
 		const mode = item.reviewed ? "reviewed" : "ordinary", name = `@owned/${mode}-callback-results`;
-		await source(item.input, mode); await installedWasm({ ...item, name });
+		await source(item.input, mode); await installedWasm({ ...item, name }, false, sources);
 		flags(item, ["sourceRemovedBeforeInstall", "compilerFreeConsumerEnvironment", "installedCli", "installedTypeScript", "deterministicReassembly", "independentRebuild"]);
 		assert.equal(item.rejected, 17); assert.equal(item.packages.length, 2);
 		assert.deepEqual(item.observed, { checks: 43, borrowedResults: true, transitiveExpiration: true, hostReplyHandoff: true });
@@ -423,6 +444,6 @@ export const assertOwnedCallbackResultAcceptance = async record => {
 	run(record.run, "npm run test:owned-callback-results", 33);
 	run(record.combinedRun, "LEAN_BRIDGE_OWNED_CALLBACK_RESULT_TEST=1 node --test tests/owned-callback-result-combined-packaging.test.mjs", 1);
 	const reports = unpackOwnedCallbackReports(record.archive);
-	await assertOwnedCallbackReportData(reports);
+	await assertOwnedCallbackReportData(reports, record.sources);
 	assertOwnedCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 };

@@ -1,36 +1,36 @@
 /**
- * Preserve the exact predecessors of the test-profile registration repair (#1420).
+ * Preserve exact source predecessors of the callback runtime receipt repair (#1421).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeRuntimeReceiptSource } from "./runtime-receipt-source-history.mjs";
 
-export const testProfileRegistrationHistoryPath = "docs/evidence/test-profile-registration-source-history-20261006.json";
-export const testProfileRegistrationChangedPaths = [
+export const runtimeReceiptHistoryPath = "docs/evidence/runtime-receipt-source-history-20261006.json";
+export const runtimeReceiptChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
 	, "tests/component-array-contract.test.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
-	, "tests/helpers/combined-lineage-source-history.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
-	, "tests/test-profiles.test.mjs"
+	, "tests/helpers/owned-callback-result-evidence.mjs"
+	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
+	, "tests/helpers/test-profile-registration-source-history.mjs"
+	, "tests/owned-callback-result-evidence.test.mjs"
 ];
 let history;
 
 /**
- * Reverse exact spans only when both complete source identities agree.
+ * Reverse registered spans only when both complete source hashes match.
  *
- * @param source - Complete current text.
- * @param update - Recorded transition.
+ * @param source - Complete current source text.
+ * @param update - Exact recorded transition.
  */
-export const reverseTestProfileRegistrationUpdate = (source, update) => {
-	assert.ok(testProfileRegistrationChangedPaths.includes(update.path));
+export const reverseRuntimeReceiptUpdate = (source, update) => {
+	assert.ok(runtimeReceiptChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -50,18 +50,17 @@ export const reverseTestProfileRegistrationUpdate = (source, update) => {
 };
 
 /**
- * Undo only the test-profile registration repair (#1420) before following older refinement transitions.
+ * Restore the source before #1421, stopping at an explicitly requested identity.
  *
- * @param path - Repository-relative path.
- * @param source - Complete current or historical text.
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeTestProfileRegistrationSource = (path, source, expected) => {
-	source = beforeRuntimeReceiptSource(path, source, expected);
-	if(typeof source !== "string" || !testProfileRegistrationChangedPaths.includes(path)) return source;
+export const beforeRuntimeReceiptSource = (path, source, expected) => {
+	if(typeof source !== "string" || !runtimeReceiptChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(testProfileRegistrationHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(runtimeReceiptHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseTestProfileRegistrationUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseRuntimeReceiptUpdate(source, update) : source;
 };

@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "milestone": "runtime-receipt-v1",
+  "predecessorCommit": "b51d6f6378ca9df40f528f2b2fe5bd0d8e97cc5f",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "80ebd829bc83fea6eb57cbb26b0df01ccc592d70333011b857f7e6d1b22b2a53",
+      "previousSha256": "86f6f1c0112668c5f610181e9da9ea70c23c07cb3f65156ffe6cf9fb6cc8534c",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"ddcf40e3050c3c70037483ad140a0da5059ac61f0c4443158089902af3bf12ad\"\n",
+          "current": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"ddcf40e3050c3c70037483ad140a0da5059ac61f0c4443158089902af3bf12ad\"\n",
+          "current": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"ddcf40e3050c3c70037483ad140a0da5059ac61f0c4443158089902af3bf12ad\"\n",
+          "current": "          \"sha256\": \"6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "6aa1c7ce88cc1c1eeb3c0e421391264a7bef4b2829896716d22e9ddbae98b47e",
+      "previousSha256": "ddcf40e3050c3c70037483ad140a0da5059ac61f0c4443158089902af3bf12ad",
+      "edits": [
+        {
+          "start": 2473,
+          "previous": "",
+          "current": "import \"./helpers/runtime-receipt-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "6ad342ff8dcc936be71a89f75e523f00463539588a302dabb453b68615eeac1e",
+      "previousSha256": "c4e14d68965ddef42b17ed6932f4fa6867f6bfdf6b9ac398185384e2ed656905",
+      "edits": [
+        {
+          "start": 362,
+          "previous": "",
+          "current": "import { runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 2926,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "be6b30dd8441e5394e37ade9edec78e17fdba998eb72d39ff66bde69c45ec3df",
+      "previousSha256": "bbcc6c34e05eb41d3b49aac7a6d6361dfbb079e50b0fe7d6b455f7ec2f27a463",
+      "edits": [
+        {
+          "start": 361,
+          "previous": "",
+          "current": "import { runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 3031,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "d5913228401e89983e4555841eba9d4c3c89a3f9a10615bca3542d001166639c",
+      "previousSha256": "fa8ab457e255ad5baceed77a6202e096c42b1ba80f8728324f3e83fb2ee365d4",
+      "edits": [
+        {
+          "start": 1423,
+          "previous": "",
+          "current": "import { runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 35051,
+          "previous": "",
+          "current": "\t, ...runtimeReceiptChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "412c91cbc8a9cde8940edf7ff56118cd3aa5808d0ed6b0f75a18ef6a80b8ebcf",
+      "previousSha256": "ac712ee5161e4e1f60efa585313678044c046dfec06dd7467d8d4cf434b4f59f",
+      "edits": [
+        {
+          "start": 363,
+          "previous": "",
+          "current": "import { runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 4194,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "a2f02ca67f287277e98bad96ded63e1f1d56b1dd6fb5934d92b5ed8040ffe5ce",
+      "previousSha256": "6a27a333aba17cad3a99dd061708d167cb8320157da0f3ad12d3138778ca39a9",
+      "edits": [
+        {
+          "start": 360,
+          "previous": "",
+          "current": "import { runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 3110,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-callback-result-evidence.mjs",
+      "currentSha256": "f024e801a03dd2ceaf687a176ad1e275da2c2ad9d2fe24b455f7542674174700",
+      "previousSha256": "bbddff0c4d423e20a5fa709badc53ae1b0830b1ec8da065da68b3eccc8f54ff8",
+      "edits": [
+        {
+          "start": 10987,
+          "previous": "const installedWasm = async (item, combined = false) => {\n",
+          "current": "/**\n * Check installed runtime bytes against live source or authenticated receipt sources.\n *\n * @param inventory - Installed package file identities.\n * @param sources - Optional source hashes from the enclosing acceptance record.\n * @param readSource - Source reader, overridable for tamper-rejection tests.\n */\nexport const assertOwnedCallbackRuntimeInventory = async (inventory, sources, readSource = path => readFile(path, \"utf8\")) => {\n\tif(sources !== undefined) assert.ok(sources && typeof sources === \"object\" && !Array.isArray(sources));\n\tfor(const name of [\"component-runtime\", \"owned-wasm-calls\", \"owned-wasm-borrow-registry\", \"owned-wasm-callbacks\"])\n\t{\n\t\tconst path = `src/release/${name}.mjs`;\n\t\tlet text = await readSource(path);\n\t\tif(sources !== undefined)\n\t\t{\n\t\t\tassert.ok(Object.hasOwn(sources, path), `Missing runtime source identity: ${path}`);\n\t\t\tdigest(sources[path]);\n\t\t\ttext = beforeCallbackInventoryRepair(path, text, sources[path]);\n\t\t\tassert.equal(sha256(text), sources[path], path);\n\t\t}\n\t\tfor(const module of [\"component-scalars\", \"component-callables\"\n\t\t\t, \"component-copied\", \"component-records\", \"component-recursive\"\n\t\t\t, \"component-recursive-abi\", \"component-structured-callables\"\n\t\t\t, \"component-owned-wasm\", \"owned-wasm-control\"])\n\t\t\ttext = text.replaceAll(`../abi/${module}.mjs`, `./${module}.mjs`);\n\t\ttext = text.replaceAll(\"../binding-ir/\", \"./binding-ir/\");\n\t\tassert.deepEqual(inventory[`@lean-bridge/runtime/internal/${name}.mjs`]\n\t\t\t, { bytes: Buffer.byteLength(text), sha256: sha256(text) }, name);\n\t}\n};\n\nconst installedWasm = async (item, combined = false, sources) => {\n"
+        },
+        {
+          "start": 14007,
+          "previous": "\tfor(const path of [\"component-runtime\", \"owned-wasm-calls\", \"owned-wasm-borrow-registry\", \"owned-wasm-callbacks\"])\n\t{\n\t\tlet text = await readFile(`src/release/${path}.mjs`, \"utf8\");\n\t\tfor(const module of [\"component-scalars\", \"component-callables\"\n\t\t\t, \"component-copied\", \"component-records\", \"component-recursive\"\n\t\t\t, \"component-recursive-abi\", \"component-structured-callables\"\n\t\t\t, \"component-owned-wasm\", \"owned-wasm-control\"])\n\t\t\ttext = text.replaceAll(`../abi/${module}.mjs`, `./${module}.mjs`);\n\t\ttext = text.replaceAll(\"../binding-ir/\", \"./binding-ir/\");\n\t\tassert.deepEqual(item.inventory[`@lean-bridge/runtime/internal/${path}.mjs`]\n\t\t\t, { bytes: Buffer.byteLength(text), sha256: sha256(text) }, path);\n\t}\n",
+          "current": "\tawait assertOwnedCallbackRuntimeInventory(item.inventory, sources);\n"
+        },
+        {
+          "start": 18492,
+          "previous": "",
+          "current": " * @param sources - Optional authenticated source hashes for historical runtime inventories.\n"
+        },
+        {
+          "start": 18589,
+          "previous": "export const assertOwnedCallbackReportData = async reports => {\n",
+          "current": "export const assertOwnedCallbackReportData = async (reports, sources) => {\n"
+        },
+        {
+          "start": 24540,
+          "previous": "\t\tawait installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true);\n",
+          "current": "\t\tawait installedWasm({ ...combined.wasm, input: combined.wasmInput, inventory: combined.inventory, name }, true, sources);\n"
+        },
+        {
+          "start": 25907,
+          "previous": "\t\tawait source(item.input, mode); await installedWasm({ ...item, name });\n",
+          "current": "\t\tawait source(item.input, mode); await installedWasm({ ...item, name }, false, sources);\n"
+        },
+        {
+          "start": 28277,
+          "previous": "\tawait assertOwnedCallbackReportData(reports);\n",
+          "current": "\tawait assertOwnedCallbackReportData(reports, record.sources);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "f12ac1362cd80a4ab9201555859352b5f27ee5fc39387070ca90eef59c05ad32",
+      "previousSha256": "b0104385bde8c216eee58d09d1dae7948b4a7a7902514f039a6f247e3aba9b34",
+      "edits": [
+        {
+          "start": 357,
+          "previous": "",
+          "current": "import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 1410,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRuntimeReceiptSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 3221,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history.mjs",
+      "currentSha256": "68552ed39808de706e2cdbb2b226ff6c2d7eec473c187a6e9c6489bea5884685",
+      "previousSha256": "1a0c60c0f9e9e3449c8f12b68190db962ae6281a34198a32dca729f348c00deb",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeRuntimeReceiptSource } from \"./runtime-receipt-source-history.mjs\";\n"
+        },
+        {
+          "start": 2478,
+          "previous": "",
+          "current": "\tsource = beforeRuntimeReceiptSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-callback-result-evidence.test.mjs",
+      "currentSha256": "3ac10450253d19f7c3e34956eea8a335326b56b36d1fc3c3ff01248654a21aff",
+      "previousSha256": "e6f7ed6242201cf4f91b8232e781579067218526a12fdd02b9eea3fb46cdb7aa",
+      "edits": [
+        {
+          "start": 356,
+          "previous": "",
+          "current": "import { assembleComponentNpmRuntime } from \"../src/release/component-npm-package.mjs\";\n"
+        },
+        {
+          "start": 522,
+          "previous": "\t, assertOwnedCallbackReportData, packOwnedCallbackReports\n",
+          "current": "\t, assertOwnedCallbackReportData, assertOwnedCallbackRuntimeInventory, packOwnedCallbackReports\n"
+        },
+        {
+          "start": 3579,
+          "previous": "\tconst reports = unpackOwnedCallbackReports((await read()).archive);\n",
+          "current": "\tconst record = await read(), reports = unpackOwnedCallbackReports(record.archive);\n\t// A passing baseline prevents an unrelated receipt failure from satisfying every negative case.\n\tawait assertOwnedCallbackReportData(reports, record.sources);\n"
+        },
+        {
+          "start": 6544,
+          "previous": "\tawait assert.rejects(() => assertOwnedCallbackReportData(missing));\n",
+          "current": "\tawait assert.rejects(() => assertOwnedCallbackReportData(missing, record.sources));\n"
+        },
+        {
+          "start": 6940,
+          "previous": "\t\tawait assert.rejects(() => assertOwnedCallbackReportData(unpacked), undefined, name + \": \" + mutate.toString());\n",
+          "current": "\t\tawait assert.rejects(() => assertOwnedCallbackReportData(unpacked, record.sources), undefined, name + \": \" + mutate.toString());\n"
+        },
+        {
+          "start": 7078,
+          "previous": "",
+          "current": "\ntest(\"callback runtime receipts select historical sources without normalizing fresh package bytes\", async () => {\n\tconst record = await read(), reports = unpackOwnedCallbackReports(record.archive);\n\tconst frozen = [reports[\"build/owned-callback-results/ordinary-combined-package.json\"].inventory\n\t\t, reports[\"build/owned-callback-results/reviewed-combined-package.json\"].inventory\n\t\t, ...reports[\"build/owned-callback-results/npm-package.json\"].reports.map(item => item.inventory)];\n\tfor(const inventory of frozen)\n\t{\n\t\tawait assertOwnedCallbackRuntimeInventory(inventory, record.sources);\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(inventory), /component-runtime/);\n\t}\n\t// Assemble source modules through the production packager. Stub runtime payloads\n\t// exercise source inventory validation only, not compiled/installed execution.\n\tconst runtime = await assembleComponentNpmRuntime({\n\t\tmainModule: \"// fixture\\n\", mainWasm: new Uint8Array()\n\t\t, runtimeRequirement: { profile: \"inventory-test\" } });\n\tconst fresh = Object.fromEntries([...runtime.files].map(([path, bytes]) =>\n\t\t[`@lean-bridge/runtime/${path}`, { bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) }]));\n\tconst names = [\"component-runtime\", \"owned-wasm-calls\", \"owned-wasm-borrow-registry\", \"owned-wasm-callbacks\"];\n\tconst liveSources = Object.fromEntries(await Promise.all(names.map(async name => {\n\t\tconst path = `src/release/${name}.mjs`; return [path, sha256(await readFile(path))];\n\t})));\n\tconst runtimePath = \"src/release/component-runtime.mjs\";\n\tassert.notEqual(liveSources[runtimePath], record.sources[runtimePath], \"Cross-version controls require distinct sources\");\n\tawait assertOwnedCallbackRuntimeInventory(fresh);\n\tawait assertOwnedCallbackRuntimeInventory(fresh, liveSources);\n\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, record.sources), /component-runtime/);\n\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], liveSources), /component-runtime/);\n\tfor(const name of names)\n\t{\n\t\tconst path = `src/release/${name}.mjs`, key = `@lean-bridge/runtime/internal/${name}.mjs`;\n\t\tconst readEdited = async candidate => await readFile(candidate, \"utf8\") + (candidate === path ? \"\\n// unrelated edit\\n\" : \"\");\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], record.sources, readEdited));\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, liveSources, readEdited));\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, undefined, readEdited));\n\t\tconst missing = { ...record.sources }; delete missing[path];\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], missing), /Missing runtime source identity/);\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], { ...record.sources, [path]: \"1\".repeat(64) }));\n\t\tconst wrongInventory = structuredClone(frozen[0]); wrongInventory[key].bytes++;\n\t\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(wrongInventory, record.sources));\n\t}\n\tawait assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, null));\n});\n"
+        }
+      ]
+    }
+  ]
+}

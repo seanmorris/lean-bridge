@@ -8,8 +8,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { assembleComponentNpmRuntime } from "../src/release/component-npm-package.mjs";
 import { ownedCallbackResultEvidencePath, assertOwnedCallbackResultAcceptance
-	, assertOwnedCallbackReportData, packOwnedCallbackReports
+	, assertOwnedCallbackReportData, assertOwnedCallbackRuntimeInventory, packOwnedCallbackReports
 	, unpackOwnedCallbackReports } from "./helpers/owned-callback-result-evidence.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedCallbackResultEvidencePath, "utf8"));
@@ -62,7 +63,9 @@ test("callback evidence rejects partial execution and expanded support claims", 
 });
 
 test("callback evidence rejects rehashed reports with missing lifetime or install checks", async () => {
-	const reports = unpackOwnedCallbackReports((await read()).archive);
+	const record = await read(), reports = unpackOwnedCallbackReports(record.archive);
+	// A passing baseline prevents an unrelated receipt failure from satisfying every negative case.
+	await assertOwnedCallbackReportData(reports, record.sources);
 	const changes = [
 		["metadata-ordinary", value => { value.models[0].ownedGraph.callbackResultAnchors.signatures[0].parameter++; }]
 		, ["runtime-reviewed-false", value => { value.result.identities++; }]
@@ -97,12 +100,55 @@ test("callback evidence rejects rehashed reports with missing lifetime or instal
 		, ["npm-package", value => { value.reports[0].receipt.ownedGraph.callbackResultAnchors.signatures.pop(); }]
 	];
 	const missing = structuredClone(reports); delete missing[Object.keys(missing)[0]];
-	await assert.rejects(() => assertOwnedCallbackReportData(missing));
+	await assert.rejects(() => assertOwnedCallbackReportData(missing, record.sources));
 	for(const [name, mutate] of changes)
 	{
 		const changed = structuredClone(reports); mutate(changed[`build/owned-callback-results/${name}.json`]);
 		// Rehash altered reports so rejection exercises semantics, not archive hashes.
 		const unpacked = unpackOwnedCallbackReports(packOwnedCallbackReports(changed));
-		await assert.rejects(() => assertOwnedCallbackReportData(unpacked), undefined, name + ": " + mutate.toString());
+		await assert.rejects(() => assertOwnedCallbackReportData(unpacked, record.sources), undefined, name + ": " + mutate.toString());
 	}
+});
+
+test("callback runtime receipts select historical sources without normalizing fresh package bytes", async () => {
+	const record = await read(), reports = unpackOwnedCallbackReports(record.archive);
+	const frozen = [reports["build/owned-callback-results/ordinary-combined-package.json"].inventory
+		, reports["build/owned-callback-results/reviewed-combined-package.json"].inventory
+		, ...reports["build/owned-callback-results/npm-package.json"].reports.map(item => item.inventory)];
+	for(const inventory of frozen)
+	{
+		await assertOwnedCallbackRuntimeInventory(inventory, record.sources);
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(inventory), /component-runtime/);
+	}
+	// Assemble source modules through the production packager. Stub runtime payloads
+	// exercise source inventory validation only, not compiled/installed execution.
+	const runtime = await assembleComponentNpmRuntime({
+		mainModule: "// fixture\n", mainWasm: new Uint8Array()
+		, runtimeRequirement: { profile: "inventory-test" } });
+	const fresh = Object.fromEntries([...runtime.files].map(([path, bytes]) =>
+		[`@lean-bridge/runtime/${path}`, { bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) }]));
+	const names = ["component-runtime", "owned-wasm-calls", "owned-wasm-borrow-registry", "owned-wasm-callbacks"];
+	const liveSources = Object.fromEntries(await Promise.all(names.map(async name => {
+		const path = `src/release/${name}.mjs`; return [path, sha256(await readFile(path))];
+	})));
+	const runtimePath = "src/release/component-runtime.mjs";
+	assert.notEqual(liveSources[runtimePath], record.sources[runtimePath], "Cross-version controls require distinct sources");
+	await assertOwnedCallbackRuntimeInventory(fresh);
+	await assertOwnedCallbackRuntimeInventory(fresh, liveSources);
+	await assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, record.sources), /component-runtime/);
+	await assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], liveSources), /component-runtime/);
+	for(const name of names)
+	{
+		const path = `src/release/${name}.mjs`, key = `@lean-bridge/runtime/internal/${name}.mjs`;
+		const readEdited = async candidate => await readFile(candidate, "utf8") + (candidate === path ? "\n// unrelated edit\n" : "");
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], record.sources, readEdited));
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, liveSources, readEdited));
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, undefined, readEdited));
+		const missing = { ...record.sources }; delete missing[path];
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], missing), /Missing runtime source identity/);
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(frozen[0], { ...record.sources, [path]: "1".repeat(64) }));
+		const wrongInventory = structuredClone(frozen[0]); wrongInventory[key].bytes++;
+		await assert.rejects(() => assertOwnedCallbackRuntimeInventory(wrongInventory, record.sources));
+	}
+	await assert.rejects(() => assertOwnedCallbackRuntimeInventory(fresh, null));
 });
