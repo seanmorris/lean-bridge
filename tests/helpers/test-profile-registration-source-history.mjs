@@ -1,30 +1,24 @@
 /**
- * Preserve the exact predecessors of the combined CLI bundle lineage follow-up (#1419).
+ * Preserve the exact predecessors of the test-profile registration repair (#1420).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeTestProfileRegistrationSource } from "./test-profile-registration-source-history.mjs";
 
-export const combinedLineageHistoryPath = "docs/evidence/combined-lineage-source-history-20261006.json";
-export const combinedLineageChangedPaths = [
-	"docs/evidence/npm-fin-diagnostics-20261006.md"
-	, "docs/type-surface.v1.json"
-	, "src/build/component-engine-failure.mjs"
+export const testProfileRegistrationHistoryPath = "docs/evidence/test-profile-registration-source-history-20261006.json";
+export const testProfileRegistrationChangedPaths = [
+	"docs/type-surface.v1.json"
+	, "src/adoption/test-profiles.mjs"
 	, "tests/component-array-contract.test.mjs"
-	, "tests/component-engine-failure.test.mjs"
-	, "tests/helpers/cli-package-config-history.mjs"
+	, "tests/helpers/combined-lineage-source-history-tests.mjs"
+	, "tests/helpers/combined-lineage-source-history.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
-	, "tests/helpers/diagnostic-followup-source-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
-	, "tests/helpers/owned-jvm-callback-result-combined-evidence.mjs"
-	, "tests/helpers/owned-perl-callback-result-combined-evidence-tests.mjs"
-	, "tests/helpers/owned-perl-callback-result-combined-evidence.mjs"
-	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs"
+	, "tests/test-profiles.test.mjs"
 ];
 let history;
 
@@ -34,8 +28,8 @@ let history;
  * @param source - Complete current text.
  * @param update - Recorded transition.
  */
-export const reverseCombinedLineageUpdate = (source, update) => {
-	assert.ok(combinedLineageChangedPaths.includes(update.path));
+export const reverseTestProfileRegistrationUpdate = (source, update) => {
+	assert.ok(testProfileRegistrationChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,18 +49,17 @@ export const reverseCombinedLineageUpdate = (source, update) => {
 };
 
 /**
- * Undo only the combined CLI bundle lineage follow-up (#1419) before following older refinement transitions.
+ * Undo only the test-profile registration repair (#1420) before following older refinement transitions.
  *
  * @param path - Repository-relative path.
  * @param source - Complete current or historical text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeCombinedLineageSource = (path, source, expected) => {
-	source = beforeTestProfileRegistrationSource(path, source, expected);
-	if(typeof source !== "string" || !combinedLineageChangedPaths.includes(path)) return source;
+export const beforeTestProfileRegistrationSource = (path, source, expected) => {
+	if(typeof source !== "string" || !testProfileRegistrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(combinedLineageHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(testProfileRegistrationHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseCombinedLineageUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseTestProfileRegistrationUpdate(source, update) : source;
 };

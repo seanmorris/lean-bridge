@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCombinedLineageSource, combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
+import { testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
 import { beforeDiagnosticFollowupSource, diagnosticFollowupChangedPaths
 	, diagnosticFollowupHistoryPath, reverseDiagnosticFollowupUpdate } from "./diagnostic-followup-source-history.mjs";
 
@@ -46,7 +47,7 @@ test("Diagnostic follow-up changes no inventory claim, receipt or archive", asyn
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeDiagnosticFollowupSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
 			++refreshed;

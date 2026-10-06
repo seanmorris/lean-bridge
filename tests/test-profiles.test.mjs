@@ -47,6 +47,9 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.component.includes("tests/release-rehearsal.test.mjs"));
 	assert.ok(grouped.component.includes("tests/internal/abi/js-pending-operations.test.mjs"));
 	assert.ok(grouped.consumer.includes("tests/consumer-node.test.mjs"));
+	// Ungated cases run with the component profile; installed native-fin cases stay gated for the c-family shard.
+	for(const name of ["native-fin", "component-engine-failure"])
+		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "component", name);
 });
 
 test("unclassified tests and non-tests are rejected", () => {
