@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeDotnetFinSource, dotnetFinChangedPaths } from "./dotnet-fin-source-history.mjs";
+import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { beforeRubyFinSource, rubyFinChangedPaths
 	, rubyFinHistoryPath, reverseRubyFinUpdate } from "./ruby-fin-source-history.mjs";
 
@@ -44,7 +45,7 @@ test("Ruby scalar Fin changes only evidence source pins, not support or archives
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRubyFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

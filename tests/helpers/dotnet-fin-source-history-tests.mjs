@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeJvmFinSource, jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { beforeDotnetFinSource, dotnetFinChangedPaths
 	, dotnetFinHistoryPath, reverseDotnetFinUpdate } from "./dotnet-fin-source-history.mjs";
 
@@ -17,7 +18,7 @@ test(".NET scalar Fin history authenticates exact predecessors and rejects unkno
 	assert.deepEqual(record.updates.map(item => item.path), dotnetFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeJvmFinSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseDotnetFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeDotnetFinSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeDotnetFinSource(update.path, source, update.currentSha256), source);
@@ -43,7 +44,7 @@ test(".NET scalar Fin changes only evidence source pins, not support or archives
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(dotnetFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeDotnetFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

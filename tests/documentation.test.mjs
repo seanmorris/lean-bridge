@@ -739,6 +739,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/lists\/jvm\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"));
   assert.match(workflow, /test -s build\/aliases\/jvm\.json/);
+  assert.match(workflow, /node --test tests\/jvm-aliases\.test\.mjs\n\s*test -s build\/aliases\/jvm\.json\n\s*LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs\n\s*test -s build\/native-fin\/jvm\.json\n/);
+  assert.match(workflow, /build\/aliases\/jvm\.json\n\s*build\/native-fin\/jvm\.json\n/);
+  assert.match(workflow, /consumer_command="\$consumer_command && LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests\/jvm-fin\.test\.mjs"/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"));
   assert.match(workflow, /test -s build\/variants\/jvm\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"));
@@ -761,7 +764,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , "build/owned-jvm-borrows.log"
     , "build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"
     , "build/owned-jvm-receiver-gc/", "build/owned-jvm-receiver-gc.log"
-    , ...["compounds", "lists", "aliases", "variants", "equality"].map(name => `build/${name}/jvm.json`)
+    , ...["compounds", "lists", "aliases"].map(name => `build/${name}/jvm.json`)
+    , "build/native-fin/jvm.json"
+    , ...["variants", "equality"].map(name => `build/${name}/jvm.json`)
     , ...["jvm-values", "jvm-conversions", "jvm-native", "kotlin-values", "jvm-package-cold", "jvm-packages", "jvm-reproducibility", "jvm-composition", "jvm-conflicts"].map(name => `build/recursive/${name}.json`)
     , "build/collections/jvm-conversions.json", "build/collections/jvm.json"
   ]);

@@ -3109,6 +3109,8 @@ jobs:
           test -s build/lists/jvm.json
           LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs
           test -s build/aliases/jvm.json
+          LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs
+          test -s build/native-fin/jvm.json
           LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
           test -s build/variants/jvm.json
           LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
@@ -3167,6 +3169,7 @@ jobs:
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
+            build/native-fin/jvm.json
             build/variants/jvm.json
             build/equality/jvm.json
             build/recursive/jvm-values.json
@@ -3372,6 +3375,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs"
