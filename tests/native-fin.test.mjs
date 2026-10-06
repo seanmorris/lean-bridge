@@ -63,7 +63,7 @@ test("native validation admits Fin only at a top-level Nat site", () => {
 	assert.throws(() => validateNativeType({ ...fin("5"), abi: { ...nat.abi, heap: true } }), /representation differs/);
 });
 
-test("checked Fin consumers are exactly the C, C++, Python, Rust and Ruby projections", () => {
+test("checked Fin consumers are exactly the C, C++, Python, Rust, Ruby and .NET projections", () => {
 	assert.equal(supportsNativeRefinementTargets(["c"]), true);
 	assert.equal(supportsNativeRefinementTargets(["cpp"]), true);
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp"]), true);
@@ -71,8 +71,8 @@ test("checked Fin consumers are exactly the C, C++, Python, Rust and Ruby projec
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi"]), true);
 	assert.equal(supportsNativeRefinementTargets(["cargo"]), true);
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi", "cargo"]), true);
-	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi", "cargo", "rubygems"]), true);
-	for(const target of ["cpan", "nuget", "maven", "php-native", "wit-wasi"])
+	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi", "cargo", "rubygems", "nuget"]), true);
+	for(const target of ["cpan", "maven", "php-native", "wit-wasi"])
 	{
 		assert.equal(supportsNativeRefinementTargets([target]), false, target);
 		assert.equal(supportsNativeRefinementTargets(["c", target]), false, target);
@@ -108,7 +108,7 @@ const component = async ({ root, projectRoot }, nativeRefinements) => {
 test("real Lean extraction keeps exact Fin bounds and checks them in the exported adapter", { skip: !enabled, timeout: 900_000 }, async t => {
 	const fixture = await project(t);
 	await assert.rejects(() => component(fixture, false), error => error.code === "native-refinements-unsupported"
-		&& /checked Fin refinements are implemented only for ordinary C, C\+\+, Python, Rust and Ruby native packages/.test(error.message));
+		&& /checked Fin refinements are implemented only for ordinary C, C\+\+, Python, Rust, Ruby and \.NET native packages/.test(error.message));
 	const { outputRoot, runtimeRoot } = await component(fixture, true);
 	const model = JSON.parse(await readFile(join(outputRoot, "model.json"), "utf8"));
 	assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
@@ -146,7 +146,7 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 test("native builds reject Fin for every unchecked target and every nested position", { skip: !enabled, timeout: 900_000 }, async t => {
 	const fixture = await project(t);
 	const environment = nativeFixtureEnvironment(["c"]);
-	for(const targets of [["pypi", "maven"], ["cargo", "nuget"], ["rubygems", "php-native"]])
+	for(const targets of [["pypi", "maven"], ["nuget", "wit-wasi"], ["rubygems", "php-native"]])
 	{
 		await saveLakeFile(fixture.projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]

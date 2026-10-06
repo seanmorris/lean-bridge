@@ -778,6 +778,7 @@ const profileManifest = Object.freeze({
 		, "python-fin"
 		, "rust-fin"
 		, "ruby-fin"
+		, "dotnet-fin"
 		, "cpp-variants"
 		, "c-variants"
 		, "perl-callables"

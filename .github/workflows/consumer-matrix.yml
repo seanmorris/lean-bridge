@@ -2896,6 +2896,8 @@ jobs:
           test -s build/lists/dotnet.json
           LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs
           test -s build/aliases/dotnet.json
+          LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs
+          test -s build/native-fin/dotnet.json
           LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs
           test -s build/variants/dotnet.json
           LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
@@ -2935,6 +2937,7 @@ jobs:
             build/compounds/dotnet.json
             build/lists/dotnet.json
             build/aliases/dotnet.json
+            build/native-fin/dotnet.json
             build/variants/dotnet.json
             build/collections/dotnet-conversions.json
             build/collections/dotnet.json
@@ -3337,6 +3340,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
