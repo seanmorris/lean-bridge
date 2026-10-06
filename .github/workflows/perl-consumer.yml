@@ -163,6 +163,8 @@ jobs:
           test -s build/collections/perl.json
           test -s build/aliases/perl.json
           test -s build/native-fin/perl.json
+          LEAN_BRIDGE_SPECIALIZATION_PROFILES=perl node --test tests/native-specializations.test.mjs
+          test -s build/native-specializations/perl.json
           test -s build/variants/perl.json
           test -s build/recursive/perl-values.json
           test -s build/recursive/perl-conversions.json
@@ -226,6 +228,7 @@ jobs:
             build/collections/perl.json
             build/aliases/perl.json
             build/native-fin/perl.json
+            build/native-specializations/perl.json
             build/variants/perl.json
             build/recursive/perl-values.json
             build/recursive/perl-conversions.json
