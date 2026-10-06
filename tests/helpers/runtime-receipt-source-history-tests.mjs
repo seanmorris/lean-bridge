@@ -18,6 +18,7 @@ import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
+import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
 import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths
 	, runtimeReceiptHistoryPath, reverseRuntimeReceiptUpdate } from "./runtime-receipt-source-history.mjs";
 
@@ -41,7 +42,7 @@ test("Runtime receipt history authenticates exact predecessors and rejects unkno
 
 test("Runtime receipt repair changes only evidence source pins, not support or archives", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeRuntimeReceiptSource(path, text));
+	const current = JSON.parse(beforeCpanCliControlSource(path, text)), previous = JSON.parse(beforeRuntimeReceiptSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -53,10 +54,10 @@ test("Runtime receipt repair changes only evidence source pins, not support or a
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRuntimeReceiptSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeCpanCliControlSource(file.path, source)));
 			++refreshed;
 		}
 	}

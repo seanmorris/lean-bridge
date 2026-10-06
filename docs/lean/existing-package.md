@@ -226,9 +226,9 @@ Callback recovery must have a valid Lean result while the call unwinds. Positive
 
 Native refinements and `Subtype` constraints inside callback signatures remain unsupported. This installed-package evidence covers Node JavaScript and TypeScript; browser profiles are not yet audited for refined callbacks.
 
-#### Bounded integers in C and C++ packages
+#### Bounded integers in native packages
 
-Ordinary-source C and C++ packages support `Fin n` as a top-level parameter or result, including through transparent aliases. The bound must reduce to a closed natural-number literal, and bounds wider than a machine word stay exact:
+Ordinary-source native packages support `Fin n` as a top-level parameter or result, including through transparent aliases. The bound must reduce to a closed natural-number literal, and bounds wider than a machine word stay exact:
 
 ```lean
 namespace Library
@@ -241,9 +241,24 @@ def twice (value : Slot) : Nat := value.val * 2
 end Library
 ```
 
-The C package passes these values as GMP `mpz_t` and the C++ package as `boost::multiprecision::cpp_int`, the same as `Nat`. An argument at or above its bound, or a negative value, returns the package's `INVALID_ARGUMENT` status in C, or throws its `Error` in C++. The check runs before any argument is converted or Lean is called, and outputs and caller data are left unchanged. The compiled Lean adapter checks each bound again before it constructs `Fin`, so code that calls the exported adapter symbol directly cannot skip the check. Every input to a `Fin 0` parameter is rejected, and later valid calls still work.
+Each target passes these values in the type it uses for `Nat`. An argument at or above its bound fails the call, and the error message names the parameter and bound, for example `arg0 is not below its Fin 10 bound`. Exported parameters are named `arg0`, `arg1` and so on.
 
-A build that requests any other native target for a declaration with `Fin` fails with a diagnostic, rather than treating the value as an unchecked `Nat`. `Fin` inside arrays, lists, options, products, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages.
+| Target | Value type | Argument at or above the bound |
+| --- | --- | --- |
+| `c` | GMP `mpz_t` | `INVALID_ARGUMENT` status |
+| `cpp` | `boost::multiprecision::cpp_int` | `Error` with the `INVALID_ARGUMENT` status |
+| `cargo` | `BigUint` | `Err(Error::Native { code: 1, .. })` |
+| `pypi` | `int` | `LeanBridgeError` with status 1 |
+| `rubygems` | `Integer` | `RangeError` |
+| `nuget` | `System.Numerics.BigInteger` | `ArgumentException` |
+| `maven` | `java.math.BigInteger` | `IllegalArgumentException` |
+| `php-native` | `Brick\Math\BigInteger` | `LeanBridgeError` with code 1 |
+| `wit-wasi` | `list<u32>` limbs | Wasmtime call error |
+| `cpan` | `Math::BigInt` | `die` with the message |
+
+Each package checks the bound before it calls Lean, and outputs and caller data are left unchanged. The compiled Lean adapter checks each bound again before it constructs `Fin`, so code that calls the exported adapter symbol directly cannot skip the check. Every input to a `Fin 0` parameter is rejected, and later valid calls still work. A negative value keeps the target's existing `Nat` error. Generated API documentation and package READMEs state each bound, except C and C++ headers.
+
+Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). Python wheels and CPAN packages have the same checks in their generated code, but their installed acceptance is not yet recorded. `Fin` inside arrays, lists, options, products, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages.
 
 ### Export a checked Subtype
 

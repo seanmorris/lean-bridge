@@ -1,0 +1,1107 @@
+{
+  "schemaVersion": 1,
+  "milestone": "host-fin-evidence-v1",
+  "predecessorCommit": "052aae796f73b0b328396cfe84298842267465cf",
+  "updates": [
+    {
+      "path": "docs/consume/dotnet.md",
+      "currentSha256": "bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397",
+      "previousSha256": "41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e",
+      "edits": [
+        {
+          "start": 34861,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter or result is a `System.Numerics.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Mirror(3)` returns `6`. `Mirror(10)` throws `ArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws `ArgumentOutOfRangeException`, as it does for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. XML documentation remarks on each method and the package README state the bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 51465,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/java.md",
+      "currentSha256": "b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a",
+      "previousSha256": "715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21",
+      "edits": [
+        {
+          "start": 41298,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger.valueOf(3))` returns 6. `mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. `null` throws `NullPointerException`, and a negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Javadoc on each method and the package README state the bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 58707,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "currentSha256": "6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841",
+      "previousSha256": "a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa",
+      "edits": [
+        {
+          "start": 33995,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Api.mirror(BigInteger.valueOf(3))` returns 6. `Api.mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README states each bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 51657,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "currentSha256": "3e775e3be87d1ea9dae697964efb5fb3629b6963dabed5539f55366195f43b63",
+      "previousSha256": "1a34fd2e8c00d35fc5a12f0874f5d7bebd075328178b41ae95a2cf99200025a2",
+      "edits": [
+        {
+          "start": 30999,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter or result is an `Integer`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(3)` returns `6`. `mirror(10)` raises `RangeError` with the message `arg0 is not below its Fin 10 bound`. A negative value raises the `RangeError` that `Nat` raises, and a non-Integer raises `TypeError`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. A comment on each generated method and the gem README state the bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 49864,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `Integer checked against the declared bound` (input); `Integer below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "currentSha256": "3cba022bc0fa34453b162eb944062440f963f1276cadf54b26178fd2ad959f44",
+      "previousSha256": "31f0e06a389b31f64760ea0ae52132646bc0382b37bb5d1aa70458a6602032fd",
+      "edits": [
+        {
+          "start": 32257,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter is a `&BigUint` and a `Fin n` result is a `BigUint`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(&BigUint::from(3u8))` returns `Ok` with 6. `mirror(&BigUint::from(10u8))` returns `Err(Error::Native { code: 1, message })` with the message `arg0 is not below its Fin 10 bound`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Rustdoc on each function and the crate README state the bound. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 49503,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "0fe22f5a0d2f42371acd93ce68454c9a6702e901b8fac6cf0c2a5c202f13a570",
+      "previousSha256": "6e19265090ad500908db5c5ac89cdcd7b4d97e612ba3015e3c2bfb1ea5fe61e4",
+      "edits": [
+        {
+          "start": 45409,
+          "previous": "",
+          "current": "### Bounded integers\n\nA Lean `Fin n` parameter or result uses the `Nat` representation: `list<u32>` little-endian limbs. The WIT text is the same with or without the bound. For `Library.mirror (value : Fin 10) : Fin 10`, calling `mirror` with `[3]` returns `[6]`. Calling it with `[10]` fails the Wasmtime call with an error whose message is `arg0 is not below its Fin 10 bound`, and the result slot is unchanged. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README lists each export's bounds. Only top-level parameters and results are supported; see the [installed checks](../evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 64747,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `list<u32> little-endian limbs checked against the declared bound` (input); `list<u32> limbs below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9",
+      "previousSha256": "16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250",
+      "edits": [
+        {
+          "start": 24157,
+          "previous": "#### Bounded integers in C and C++ packages\n",
+          "current": "#### Bounded integers in native packages\n"
+        },
+        {
+          "start": 24199,
+          "previous": "Ordinary-source C and C++ packages support `Fin n` as a top-level parameter or result, including through transparent aliases. The bound must reduce to a closed natural-number literal, and bounds wider than a machine word stay exact:\n",
+          "current": "Ordinary-source native packages support `Fin n` as a top-level parameter or result, including through transparent aliases. The bound must reduce to a closed natural-number literal, and bounds wider than a machine word stay exact:\n"
+        },
+        {
+          "start": 24613,
+          "previous": "The C package passes these values as GMP `mpz_t` and the C++ package as `boost::multiprecision::cpp_int`, the same as `Nat`. An argument at or above its bound, or a negative value, returns the package's `INVALID_ARGUMENT` status in C, or throws its `Error` in C++. The check runs before any argument is converted or Lean is called, and outputs and caller data are left unchanged. The compiled Lean adapter checks each bound again before it constructs `Fin`, so code that calls the exported adapter symbol directly cannot skip the check. Every input to a `Fin 0` parameter is rejected, and later valid calls still work.\n",
+          "current": "Each target passes these values in the type it uses for `Nat`. An argument at or above its bound fails the call, and the error message names the parameter and bound, for example `arg0 is not below its Fin 10 bound`. Exported parameters are named `arg0`, `arg1` and so on.\n"
+        },
+        {
+          "start": 24886,
+          "previous": "A build that requests any other native target for a declaration with `Fin` fails with a diagnostic, rather than treating the value as an unchecked `Nat`. `Fin` inside arrays, lists, options, products, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages.\n",
+          "current": "| Target | Value type | Argument at or above the bound |\n| --- | --- | --- |\n| `c` | GMP `mpz_t` | `INVALID_ARGUMENT` status |\n| `cpp` | `boost::multiprecision::cpp_int` | `Error` with the `INVALID_ARGUMENT` status |\n| `cargo` | `BigUint` | `Err(Error::Native { code: 1, .. })` |\n| `pypi` | `int` | `LeanBridgeError` with status 1 |\n| `rubygems` | `Integer` | `RangeError` |\n| `nuget` | `System.Numerics.BigInteger` | `ArgumentException` |\n| `maven` | `java.math.BigInteger` | `IllegalArgumentException` |\n| `php-native` | `Brick\\Math\\BigInteger` | `LeanBridgeError` with code 1 |\n| `wit-wasi` | `list<u32>` limbs | Wasmtime call error |\n| `cpan` | `Math::BigInt` | `die` with the message |\n\nEach package checks the bound before it calls Lean, and outputs and caller data are left unchanged. The compiled Lean adapter checks each bound again before it constructs `Fin`, so code that calls the exported adapter symbol directly cannot skip the check. Every input to a `Fin 0` parameter is rejected, and later valid calls still work. A negative value keeps the target's existing `Nat` error. Generated API documentation and package READMEs state each bound, except C and C++ headers.\n\nInstalled checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). Python wheels and CPAN packages have the same checks in their generated code, but their installed acceptance is not yet recorded. `Fin` inside arrays, lists, options, products, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882",
+      "previousSha256": "bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c",
+      "edits": [
+        {
+          "start": 41774,
+          "previous": "",
+          "current": "### Bounded integers\n\nIn native PHP packages, a Lean `Fin n` parameter or result is a `Brick\\Math\\BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger::of(3))` returns 6. `mirror(BigInteger::of(10))` throws `LeanBridgeError` with code 1 and the message `arg0 is not below its Fin 10 bound`. A negative value throws `ValueError` and a non-BigInteger argument throws `TypeError`, as they do for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. PHPDoc on each function and the package README state the bound. Only top-level parameters and results are supported; see the [installed checks](evidence/native-fin-hosts-20261006.md).\n\n"
+        },
+        {
+          "start": 92599,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Not audited | Native PHP: Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a708eb05aa1fdd68cc56009105b5d7f5d4780181b3a1a6743b7d2ea3ca4ed0fd",
+      "previousSha256": "dae1f596034a3e5e1d4ed6b97b377868ca5c38f904945c1595e2d4e709f274f7",
+      "edits": [
+        {
+          "start": 24316,
+          "previous": "          \"sha256\": \"41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e\"\n",
+          "current": "          \"sha256\": \"bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397\"\n"
+        },
+        {
+          "start": 24466,
+          "previous": "          \"sha256\": \"715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21\"\n",
+          "current": "          \"sha256\": \"b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a\"\n"
+        },
+        {
+          "start": 24618,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 26784,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 27989,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 122300,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 145686,
+          "previous": "          \"sha256\": \"6e19265090ad500908db5c5ac89cdcd7b4d97e612ba3015e3c2bfb1ea5fe61e4\"\n",
+          "current": "          \"sha256\": \"0fe22f5a0d2f42371acd93ce68454c9a6702e901b8fac6cf0c2a5c202f13a570\"\n"
+        },
+        {
+          "start": 158996,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 173895,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 186330,
+          "previous": "          \"sha256\": \"715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21\"\n",
+          "current": "          \"sha256\": \"b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a\"\n"
+        },
+        {
+          "start": 186482,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 199550,
+          "previous": "          \"sha256\": \"31f0e06a389b31f64760ea0ae52132646bc0382b37bb5d1aa70458a6602032fd\"\n",
+          "current": "          \"sha256\": \"3cba022bc0fa34453b162eb944062440f963f1276cadf54b26178fd2ad959f44\"\n"
+        },
+        {
+          "start": 216515,
+          "previous": "          \"sha256\": \"41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e\"\n",
+          "current": "          \"sha256\": \"bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397\"\n"
+        },
+        {
+          "start": 225530,
+          "previous": "          \"sha256\": \"1a34fd2e8c00d35fc5a12f0874f5d7bebd075328178b41ae95a2cf99200025a2\"\n",
+          "current": "          \"sha256\": \"3e775e3be87d1ea9dae697964efb5fb3629b6963dabed5539f55366195f43b63\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n",
+          "current": "          \"sha256\": \"d35a3a8a419a5db1c6ef29b804db3fb965ea31ac14da4d708e7adef26ccd15f5\"\n"
+        },
+        {
+          "start": 684813,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 698844,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 710219,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 724439,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 735893,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 747964,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 759252,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 767835,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 774293,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 782679,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 790656,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 813586,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1049753,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1055179,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1057342,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1061877,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1063943,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1068880,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1071051,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1076386,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1078545,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1083340,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1085601,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1090974,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1093202,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1103483,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1109339,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1115816,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1124274,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1132321,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1141293,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1150684,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1163707,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1169275,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1196819,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1201818,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1227063,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1232097,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1259999,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1265064,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1299302,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1302495,
+          "previous": "          \"sha256\": \"715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21\"\n",
+          "current": "          \"sha256\": \"b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a\"\n"
+        },
+        {
+          "start": 1302647,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 1306474,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1306774,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 1325843,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1329067,
+          "previous": "          \"sha256\": \"41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e\"\n",
+          "current": "          \"sha256\": \"bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397\"\n"
+        },
+        {
+          "start": 1332322,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1332622,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 1348223,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1351445,
+          "previous": "          \"sha256\": \"41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e\"\n",
+          "current": "          \"sha256\": \"bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397\"\n"
+        },
+        {
+          "start": 1351595,
+          "previous": "          \"sha256\": \"715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21\"\n",
+          "current": "          \"sha256\": \"b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a\"\n"
+        },
+        {
+          "start": 1351747,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 1355002,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1368115,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1371112,
+          "previous": "          \"sha256\": \"41c31e90e4d93c2713e08aaeeb5efb8f57faede3cc8e5424071cd6f2002f127e\"\n",
+          "current": "          \"sha256\": \"bb23d86ddd7e376565e4fcf123e855eb29366a265e91e5a137c895aeb0b26397\"\n"
+        },
+        {
+          "start": 1371262,
+          "previous": "          \"sha256\": \"715dc76a0104e45ea54a0e9442bab0ca7ca77fecc359a52fdc30430abf0e9a21\"\n",
+          "current": "          \"sha256\": \"b1d3ece3c3d3e33946581c35868e304110465fc7bcba027c5c4a7a1e2f8eb13a\"\n"
+        },
+        {
+          "start": 1371414,
+          "previous": "          \"sha256\": \"a97145667d63e572c11b307ffe7128a8893b5f9cf69aaf368291bd6e593ffdfa\"\n",
+          "current": "          \"sha256\": \"6e28195354259b3fc6741e17a0d57eaabb437c79c2326e18ffde57327f935841\"\n"
+        },
+        {
+          "start": 1374694,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1389568,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1394502,
+          "previous": "          \"sha256\": \"6e19265090ad500908db5c5ac89cdcd7b4d97e612ba3015e3c2bfb1ea5fe61e4\"\n",
+          "current": "          \"sha256\": \"0fe22f5a0d2f42371acd93ce68454c9a6702e901b8fac6cf0c2a5c202f13a570\"\n"
+        },
+        {
+          "start": 1395179,
+          "previous": "          \"sha256\": \"16a236ba4e42ebad33187271bde471ec576ff617eb815f078cd42dabc7c12250\"\n",
+          "current": "          \"sha256\": \"7354b41d4d9509b6e155abfce3dde56baee2ee3793e2194979f3870240e115e9\"\n"
+        },
+        {
+          "start": 1402587,
+          "previous": "          \"sha256\": \"a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f\"\n",
+          "current": "          \"sha256\": \"2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6\"\n"
+        },
+        {
+          "start": 1406002,
+          "previous": "          \"sha256\": \"bc8d5389849f334aacfb3872ae6b000de9dd86586b8f171a54c0b2f68690e17c\"\n",
+          "current": "          \"sha256\": \"f1f20579b2bbea83e79c238734dd847097783b2666f2246a744857ceab4ab882\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n",
+          "current": "          \"sha256\": \"d35a3a8a419a5db1c6ef29b804db3fb965ea31ac14da4d708e7adef26ccd15f5\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n",
+          "current": "          \"sha256\": \"d35a3a8a419a5db1c6ef29b804db3fb965ea31ac14da4d708e7adef26ccd15f5\"\n"
+        },
+        {
+          "start": 1437215,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"rust-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_RUST_FIN_TEST=1 node --test tests/rust-fin.test.mjs\",\n      \"scope\": \"An ordinary-source Rust Cargo crate preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the Rust and C archives. A source-free offline consumer passes 2021 checks: endpoints, at-bound and beyond-bound rejection as Err(Error::Native { code: 1, .. }) naming the parameter and bound, unchanged caller data and 1,000 rejection and recovery cycles, and repeats them after relocation. Signed and machine-word arguments are compile errors. An LD_PRELOAD probe in the consumer process counts dispatch: valid calls reach the adapter and source, rejected public calls reach neither, and a raw invalid adapter call reaches only the adapter. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-rust-artifacts.mjs\",\n          \"sha256\": \"da6b9fc6bbf1e97d2f279f0d1fc1b3059099131790a2db325cc863c13460ddee\"\n        },\n        {\n          \"path\": \"src/backends/rust/copied-values.mjs\",\n          \"sha256\": \"ac6a302c6772850b5c85230b9eca1c7d29ee45021978b07fe0fe691fee04c47c\"\n        },\n        {\n          \"path\": \"tests/rust-fin.test.mjs\",\n          \"sha256\": \"ffba9444d857f7a1ba2addc76bde9191e3c1704e483ad2c5affda84b9cfd91da\"\n        },\n        {\n          \"path\": \"tests/helpers/rust-fin-consumers.mjs\",\n          \"sha256\": \"092af81ba835c5e52ce4e2ad8b7681a8880903b08a18c42be3ea0f828ecfcbb0\"\n        },\n        {\n          \"path\": \"tests/helpers/native-fin-count-interposer.mjs\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"rust/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"b5f0b54cf628a3667e2071f01aed3b6084942a85e7ee47684fa68111011e2976\"\n        },\n        {\n          \"path\": \"rust/native-fin/archives/native-fin-1.0.0.crate\",\n          \"sha256\": \"f57d39367e1c5872d1d1c51952d6d1a05c1eee195194267d872f705e66f803ff\"\n        }\n      ]\n    },\n    {\n      \"id\": \"ruby-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs\",\n      \"scope\": \"An ordinary-source Ruby gem preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the Ruby and C archives. A source-free offline consumer passes 2029 checks: endpoints, at-bound and beyond-bound rejection as RangeError naming the parameter and bound, unchanged caller data and 1,000 rejection and recovery cycles, and repeats them after relocation. Non-Integer arguments raise TypeError and negative values raise the Nat RangeError. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-ruby-artifacts.mjs\",\n          \"sha256\": \"381e317e67c19ea1bf155edca6bd38275c32f168c377ecae2c7a4d04f680ebce\"\n        },\n        {\n          \"path\": \"src/backends/ruby/copied-values.mjs\",\n          \"sha256\": \"0ca2114f7cec5803098991482d3725d895b7b72b0645ddf81b4b08df9f168758\"\n        },\n        {\n          \"path\": \"tests/ruby-fin.test.mjs\",\n          \"sha256\": \"71b003a39cbab89235a66bdd591d07c74b002a423585f0160ea0e303f44c99b9\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"ruby/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"b847ad9250e92ef75bc4ecb58aae6985eb5d4485f67c6885b55c0c88e5cdcc8f\"\n        },\n        {\n          \"path\": \"ruby/native-fin/archives/native-fin-1.0.0-x86_64-linux.gem\",\n          \"sha256\": \"fbb9df51d0622037ef78cd46bb6300b8162baa50100542be6c5360cc46185666\"\n        }\n      ]\n    },\n    {\n      \"id\": \"dotnet-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs\",\n      \"scope\": \"An ordinary-source .NET NuGet package preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the .NET and C archives. A source-free offline consumer passes 2022 checks: endpoints, at-bound and beyond-bound rejection as ArgumentException naming the parameter and bound, unchanged caller data and 1,000 rejection and recovery cycles, and repeats them after relocation. Negative values throw the Nat ArgumentOutOfRangeException. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-dotnet-artifacts.mjs\",\n          \"sha256\": \"279eb251295503724c9799f6d07c5840837bea799e6114ec80082dd49fb7e1a8\"\n        },\n        {\n          \"path\": \"src/backends/dotnet/copied-values.mjs\",\n          \"sha256\": \"23c978a6a25fee9e565b33cdb80c1c1ff62034bb28ccb57bc015ee7ae9ef174d\"\n        },\n        {\n          \"path\": \"tests/dotnet-fin.test.mjs\",\n          \"sha256\": \"2ce08c70b02c0e2c79cc8a02bb6e0b8f66eb3b150849b7beea0c162bd110623a\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"dotnet/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"2811059e8384cce91eff92975cbdb44d095d7637497bbf7f7ad5b7b85e58590f\"\n        },\n        {\n          \"path\": \"dotnet/native-fin/archives/native-fin.1.0.0.nupkg\",\n          \"sha256\": \"3b94d488be015689bb2be70ca5cf5eb7c802e49e7da823a2eae549a0c2beba21\"\n        }\n      ]\n    },\n    {\n      \"id\": \"jvm-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs\",\n      \"scope\": \"An ordinary-source JVM Maven JAR preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the JVM and C archives. Source-free offline Java and Kotlin consumers pass 2023 and 2022 checks: endpoints, at-bound and beyond-bound rejection as IllegalArgumentException naming the parameter and bound, unchanged caller data and 1,000 rejection and recovery cycles, and repeat them after relocation. Negative values throw the Nat IllegalArgumentException, and the Java consumer also checks that null throws NullPointerException. Java and Kotlin compile separately against the one installed JAR. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-jvm-artifacts.mjs\",\n          \"sha256\": \"7b33f57a825a382df6d11ef8d27419fc6287c54e2bf9d6b687a7dff9fa01042e\"\n        },\n        {\n          \"path\": \"src/backends/jvm/copied-values.mjs\",\n          \"sha256\": \"b50f0a5ad541c4fd13534f703a45231b2ffb24da41b3561db63826b3bee90f64\"\n        },\n        {\n          \"path\": \"tests/jvm-fin.test.mjs\",\n          \"sha256\": \"bca7e3725fd7fd58edb66055f1ef15a4cdc61a31eccec6bd93e247b75f1ad502\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"java/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"36c57cdd178bcb005414b632966430aa9797a42793b2f266ccb9506500f6a485\"\n        },\n        {\n          \"path\": \"java/native-fin/archives/native-fin-1.0.0.jar\",\n          \"sha256\": \"aad78d19c04c2e25738096480bf0cd11c79a770c6a7cac6f99575683f0043deb\"\n        },\n        {\n          \"path\": \"java/native-fin/archives/native-fin-1.0.0.pom\",\n          \"sha256\": \"518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs\",\n      \"scope\": \"An ordinary-source native PHP Composer archive preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the native PHP and C archives. A source-free offline consumer passes 2028 checks: endpoints, at-bound and beyond-bound rejection as LeanBridgeError with code 1 naming the parameter and bound, unchanged caller data and 1,000 rejection and recovery cycles, and repeats them after relocation. Non-BigInteger arguments throw TypeError and negative values throw ValueError, in weak and strict typing modes. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-php-artifacts.mjs\",\n          \"sha256\": \"697c7f3d88764cf4722a2e40f5d8b72baf41e23cee26c8a3dd59009214d98d6a\"\n        },\n        {\n          \"path\": \"src/backends/php/copied-values.mjs\",\n          \"sha256\": \"cca66fb9fabfd9fa27c7e067b7b6f0c65ad3f773224972537190da9e44984f39\"\n        },\n        {\n          \"path\": \"tests/php-fin.test.mjs\",\n          \"sha256\": \"b3053437452c0e0319786d76f5fbb3ff03d4ddf12a8af74c7d4ee0980fe1ca4d\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-native/native-fin/archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip\",\n          \"sha256\": \"da86179501f71861c4c8786a4a4142d2f13c1aaac21682fa4729d4e7a63e938c\"\n        },\n        {\n          \"path\": \"php-native/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"ff0a3b96b0e3c32852b3fec130bc1ba855118452b7650c9b4605e4f8d95ac058\"\n        }\n      ]\n    },\n    {\n      \"id\": \"wit-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d6d6eb4b6cd1c6f2367899ea7954a279f75e2836\",\n      \"command\": \"LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs\",\n      \"scope\": \"An ordinary-source WIT/WASI Wasmtime host package preserves closed literal Fin bounds at top-level parameters and results, including a transparent alias, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the WIT/WASI and C archives. A source-free offline consumer passes 2027 checks: endpoints, at-bound and beyond-bound rejection as a Wasmtime call error naming the parameter and bound, with the result slot unchanged, unchanged caller data and 1,000 rejection and recovery cycles, and repeats them after relocation. The WIT text and component are identical with or without the constraint. Each rejection refreshes the store, and the consumer executes twice after relocation. The package's bundled native libraries are byte-identical to the C archive's from the same build.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"cae058ca68328e1886b3b0912c7728a4ab009b90d29c2d5c568850fefdfd53bc\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"3627e87ee18294c664cfe0babd96a4c595f505752e51940b348ab0c533215c82\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/native-fin-hosts-20261006.md\",\n          \"sha256\": \"a308e43e554c7fe28e7d326d6fc09a06678bd1a2aa0f146e67fc2eafcb79ec15\"\n        },\n        {\n          \"path\": \"src/build/native-wit-artifacts.mjs\",\n          \"sha256\": \"9d010c7ce8b8d396adee7e7db21cf1b2c7f2c6c2d7adc8ce33a4257e0efc704b\"\n        },\n        {\n          \"path\": \"src/backends/wit/fin-refinements.mjs\",\n          \"sha256\": \"c5d67a7e1158330706f4d2b960fe36a3b5129d2b8610d6c3fa82c86274c4578e\"\n        },\n        {\n          \"path\": \"src/release/native-wasi.mjs\",\n          \"sha256\": \"e92de6958b36809dd7a406a8c36e2da5d0324cf5186475fcec6ea2a545bf8610\"\n        },\n        {\n          \"path\": \"tests/wit-fin.test.mjs\",\n          \"sha256\": \"7a28617397f89a18fe03068d33fb6bc3de12d7f4046a9ee40d2c074021532383\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"wit-wasi/native-fin/archives/nativefin-1.0.0-c.tar.gz\",\n          \"sha256\": \"0ff1ce3032bb581eedc63a8e348e1657c6410c9d04cc703bfeba8a737e5a0358\"\n        },\n        {\n          \"path\": \"wit-wasi/native-fin/archives/nativefin-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"523363a1f299b8ab041235df11a68c3a276ba8d2df59a8682d5c989d36999286\"\n        }\n      ]\n"
+        },
+        {
+          "start": 3648696,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"native-fin-rust-ordinary-source\",\n      \"profiles\": [\n        \"rust\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Rust exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"&BigUint checked against the declared bound\",\n          \"result\": \"BigUint below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"rust-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"rust-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. Rustdoc and the crate README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"rust-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"rust-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the Rust and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"rust-fin-installed\"\n          ],\n          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is Err(Error::Native { code: 1, .. }) naming the parameter and bound. Signed and machine-word arguments are compile errors. An LD_PRELOAD probe in the consumer process counts dispatch: valid calls reach the adapter and source, rejected public calls reach neither, and a raw invalid adapter call reaches only the adapter.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source Rust top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n    },\n    {\n      \"id\": \"native-fin-ruby-ordinary-source\",\n      \"profiles\": [\n        \"ruby\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Ruby exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"Integer checked against the declared bound\",\n          \"result\": \"Integer below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"ruby-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"ruby-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. Method comments and the gem README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"ruby-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"ruby-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the Ruby and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"ruby-fin-installed\"\n          ],\n          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is RangeError naming the parameter and bound. Non-Integer arguments raise TypeError and negative values raise the Nat RangeError.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source Ruby top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n    },\n    {\n      \"id\": \"native-fin-dotnet-ordinary-source\",\n      \"profiles\": [\n        \"dotnet\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source .NET exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"System.Numerics.BigInteger checked against the declared bound\",\n          \"result\": \"BigInteger below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"dotnet-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"dotnet-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. XML documentation remarks and the package README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"dotnet-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"dotnet-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the .NET and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"dotnet-fin-installed\"\n          ],\n          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is ArgumentException naming the parameter and bound. Negative values throw the Nat ArgumentOutOfRangeException.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source .NET top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n    },\n    {\n      \"id\": \"native-fin-jvm-ordinary-source\",\n      \"profiles\": [\n        \"java\",\n        \"kotlin\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source JVM exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; source-free installed Java and Kotlin consumers check endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"java.math.BigInteger checked against the declared bound\",\n          \"result\": \"BigInteger below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"jvm-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"jvm-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. Javadoc and the package README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"jvm-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"jvm-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the JVM and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"jvm-fin-installed\"\n          ],\n          \"note\": \"Offline installed Java and Kotlin consumers pass exact per-bound checks and repeat them after relocation. A bound violation is IllegalArgumentException naming the parameter and bound. Negative values throw the Nat IllegalArgumentException, and the Java consumer also checks that null throws NullPointerException. Java and Kotlin compile separately against the one installed JAR.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source JVM top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n    },\n    {\n      \"id\": \"native-fin-php-ordinary-source\",\n      \"profiles\": [\n        \"php-native\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source native PHP exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"Brick\\\\Math\\\\BigInteger checked against the declared bound\",\n          \"result\": \"BigInteger below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. PHPDoc and the package README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the native PHP and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-fin-installed\"\n          ],\n          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is LeanBridgeError with code 1 naming the parameter and bound. Non-BigInteger arguments throw TypeError and negative values throw ValueError, in weak and strict typing modes.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source native PHP top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n    },\n    {\n      \"id\": \"native-fin-wit-ordinary-source\",\n      \"profiles\": [\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source WIT/WASI exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Container, nominal, callback and reviewed-IR positions are not promoted.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"list<u32> little-endian limbs checked against the declared bound\",\n          \"result\": \"list<u32> limbs below the declared bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"wit-fin-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero; nested native Fin is rejected.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"wit-fin-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat transport. The package README state each bound from the checked refinement metadata.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"wit-fin-installed\"\n          ],\n          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"wit-fin-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the WIT/WASI and C archives and verify the package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"wit-fin-installed\"\n          ],\n          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is a Wasmtime call error naming the parameter and bound, with the result slot unchanged. The WIT text and component are identical with or without the constraint. Each rejection refreshes the store, and the consumer executes twice after relocation.\"\n        }\n      },\n      \"limitations\": [\n        \"Ordinary-source WIT/WASI top-level parameters and results only; no container, nominal, callback or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Values cross as Nat. The bundled runtime and the exported Lean adapter each check the bound independently before Lean constructs Fin.\"\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "d35a3a8a419a5db1c6ef29b804db3fb965ea31ac14da4d708e7adef26ccd15f5",
+      "previousSha256": "f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a",
+      "edits": [
+        {
+          "start": 3091,
+          "previous": "",
+          "current": "import \"./helpers/host-fin-evidence-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "d2288f4e5d5993c1cf68e3884ab51dd214ab164077baa5812ad66a5314b64f5a",
+      "previousSha256": "474c86a53e1a1c8f8c43c9a06cd09f10118f9ecf6ccc60868bd0d1bdf9849a65",
+      "edits": [
+        {
+          "start": 1168,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2909,
+          "previous": "\tconst current = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "current": "\tconst current = JSON.parse(beforeTestProfileRegistrationSource(path, await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 3778,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4589,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(await readFile(file.path)));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeTestProfileRegistrationSource(file.path, await readFile(file.path, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "398bdc15717ead849bbc48d412ced83b605ff12a22f69231f137b233c2c47d41",
+      "previousSha256": "d4df6e9b38bafe04a0139bfb8ba6d7721b38feed2d9f95d1913e8b99d0147fa2",
+      "edits": [
+        {
+          "start": 1028,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2668,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeCpanCliControlSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePythonFinSource(path, text)), previous = JSON.parse(beforeCpanCliControlSource(path, text));\n"
+        },
+        {
+          "start": 3403,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4079,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePythonFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "2113b2cc4b71750cc0d36d03ee1c95caec1b192c52cfe05fb00b2a5bb28c8354",
+      "previousSha256": "ad669c01611d696dddf423335f06894c464ad11e7c800f33783a5b70a6beff71",
+      "edits": [
+        {
+          "start": 1167,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3011,
+          "previous": "\tconst current = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "current": "\tconst current = JSON.parse(beforeCombinedLineageSource(path, await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 3875,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4743,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(await readFile(file.path)));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeCombinedLineageSource(file.path, await readFile(file.path, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "1b8af1a35833d535ca2bc2efe7ceafc30a8ebf5f3c26471741ae7eae13e22485",
+      "previousSha256": "001d38b2b4980d5b5489b5d1877155787bbe93e91be26b302173402ba0d97bd8",
+      "edits": [
+        {
+          "start": 730,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2292,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeDotnetFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeJvmFinSource(path, text)), previous = JSON.parse(beforeDotnetFinSource(path, text));\n"
+        },
+        {
+          "start": 3019,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3509,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeJvmFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "62fe4a2999765398cf9791a427bf576e1aa8bd3968acdc28c6d74b5d20e3477c",
+      "previousSha256": "36716380f0a591a97a5506a57be322e5159840c14bf9dd209442c8eef60f6610",
+      "edits": [
+        {
+          "start": 453,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2110,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeFinDistributionSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePerlFinSource(path, text)), previous = JSON.parse(beforeFinDistributionSource(path, text));\n"
+        },
+        {
+          "start": 2844,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3169,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePerlFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "ebbc496801ecaa8c5ffd934dff18b104990951b4f2004579085cc68f4873f6d7",
+      "previousSha256": "67a5f329066a925fcca59632605828b7ad3f2688e46eda5af6898dc479b16500",
+      "edits": [
+        {
+          "start": 2229,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 36167,
+          "previous": "",
+          "current": "\t, ...hostFinEvidenceChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "1059e778b6984700a86d48eaea7ff81f616a49feb71f82c0feb9d9012209162d",
+      "previousSha256": "52e9365bdd9bf42aea29251affac4026009ca005dfa152ee7d9490341bbb2ad2",
+      "edits": [
+        {
+          "start": 662,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2183,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeJvmFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePhpFinSource(path, text)), previous = JSON.parse(beforeJvmFinSource(path, text));\n"
+        },
+        {
+          "start": 2907,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3349,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePhpFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "2ed01a716250b3fbc5fba16a3a8645ee3de1d46d67ce8dcc69599cf7ca00b65e",
+      "previousSha256": "d72679a785a16962ae877ae1853a836686514c2a881a377b530870752a2d39c1",
+      "edits": [
+        {
+          "start": 1169,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3234,
+          "previous": "\tconst current = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "current": "\tconst current = JSON.parse(beforeNpmFinDiagnosticsSource(path, await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 5040,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 6136,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(await readFile(file.path)), `${entry.id}: ${file.path} current`);\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeNpmFinDiagnosticsSource(file.path, await readFile(file.path, \"utf8\"))), `${entry.id}: ${file.path} current`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "56f0a9f9d61ff1526225c385d8903d110785ceddf085fcc452428e33b3f9daa5",
+      "previousSha256": "4f5513840d6d0a85da5d6a125b0b65926da6b8c6ce893c1f6671bc1e32f0fa68",
+      "edits": [
+        {
+          "start": 1166,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3091,
+          "previous": "\tconst current = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "current": "\tconst current = JSON.parse(beforeDiagnosticFollowupSource(path, await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 3957,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4877,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(await readFile(file.path)));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeDiagnosticFollowupSource(file.path, await readFile(file.path, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "a7fbd44b1e58e8db7dcce8a231920232b9873d2d33f5bd25d4269996857909ce",
+      "previousSha256": "fc0b816cef47ab6cbec5f1923d291fb81176552748288356a0cb6ddcb7bd5152",
+      "edits": [
+        {
+          "start": 355,
+          "previous": "",
+          "current": "import { beforeHostFinEvidenceSource, hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 986,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeHostFinEvidenceSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1929,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforePerlFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeHostFinEvidenceSource(path, text)), previous = JSON.parse(beforePerlFinSource(path, text));\n"
+        },
+        {
+          "start": 2663,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 2929,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeHostFinEvidenceSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history.mjs",
+      "currentSha256": "44da0e4dee1cf33a3ef6fdb901dc262f11562b56992c18abdab280b75273ead1",
+      "previousSha256": "1b3ea4054ede2d67a40a43af23b8b4cc3f44bdd2b0f0f1a0320ec152a3cba266",
+      "edits": [
+        {
+          "start": 224,
+          "previous": "",
+          "current": "import { beforeHostFinEvidenceSource } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3502,
+          "previous": "",
+          "current": "\tsource = beforeHostFinEvidenceSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "b219fe42d824c4454e57deeae5999fc9389c1173fa63110b7f4588b5c8cf28eb",
+      "previousSha256": "627ecd1c452e95cdc4810e42bf76e1b6e71728ffd9c5a63a7a65ef8e99d09dbd",
+      "edits": [
+        {
+          "start": 595,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2116,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforePhpFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeWitFinSource(path, text)), previous = JSON.parse(beforePhpFinSource(path, text));\n"
+        },
+        {
+          "start": 2840,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3240,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeWitFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "5a5643b3370beef3b39cee813c93a3943b71045ab95161e60443bc6f9d52e048",
+      "previousSha256": "3482042941d255944905adc0df5c401d4767a2ac60e675428da19490758cf02c",
+      "edits": [
+        {
+          "start": 944,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2511,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforePythonFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeRustFinSource(path, text)), previous = JSON.parse(beforePythonFinSource(path, text));\n"
+        },
+        {
+          "start": 3239,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3860,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeRustFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "f061a8a1958191f060cfa2845cb9f2e4ee00a19226eaa2a374edcaaaa6a560dc",
+      "previousSha256": "fd16863ad44ee5ee1537c0005692c254ef63dd617d317d8bf87ce910d98c46c5",
+      "edits": [
+        {
+          "start": 806,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2345,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeRubyFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeDotnetFinSource(path, text)), previous = JSON.parse(beforeRubyFinSource(path, text));\n"
+        },
+        {
+          "start": 3073,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3604,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeDotnetFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "ed57ff52b76c54f98292d088cf1018f730e9b7de8102c1da0f8a8f3682997ec9",
+      "previousSha256": "4a6e3eb2847d81a0d3b76957fc00e6be30dac43f7654bf05c65263c5158497ba",
+      "edits": [
+        {
+          "start": 1106,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2748,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeRuntimeReceiptSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeCpanCliControlSource(path, text)), previous = JSON.parse(beforeRuntimeReceiptSource(path, text));\n"
+        },
+        {
+          "start": 3488,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4214,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeCpanCliControlSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "23843e6d7d3bd335825190489677cad11eaef130cefaece3af0efe6da65f745a",
+      "previousSha256": "d42776c82807088412d5cc6c135ecc60b5db96f691149d5389db82864898e300",
+      "edits": [
+        {
+          "start": 873,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2410,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeRustFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeRubyFinSource(path, text)), previous = JSON.parse(beforeRustFinSource(path, text));\n"
+        },
+        {
+          "start": 3136,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3710,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeRubyFinSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "4d3debae2286762c929713413d15c1a1b345ab00088f23f367368e26067ffbf7",
+      "previousSha256": "535c6ce2f97e9ce945ca14b29c048cf38dc3984d11aaef197372873ba1a673f9",
+      "edits": [
+        {
+          "start": 1191,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3196,
+          "previous": "\tconst current = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "current": "\tconst current = JSON.parse(beforeRuntimeReceiptSource(path, await readFile(path, \"utf8\")));\n"
+        },
+        {
+          "start": 4064,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4832,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(await readFile(file.path)));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeRuntimeReceiptSource(file.path, await readFile(file.path, \"utf8\"))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "ebaf485717b80dc824e05d6fe76acb66da933b7351ae671da6914888eadbe9b3",
+      "previousSha256": "364dd405f997f1fa4df25f491a3a6f1cdc2f18a6bacd6aec65efc55b9e70f410",
+      "edits": [
+        {
+          "start": 537,
+          "previous": "",
+          "current": "import { hostFinEvidenceChangedPaths } from \"./host-fin-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2067,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeWitFinSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeFinDistributionSource(path, text)), previous = JSON.parse(beforeWitFinSource(path, text));\n"
+        },
+        {
+          "start": 2800,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3158,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeFinDistributionSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-fin.test.mjs",
+      "currentSha256": "bca7e3725fd7fd58edb66055f1ef15a4cdc61a31eccec6bd93e247b75f1ad502",
+      "previousSha256": "e1675610f9459dba57a9d9f74f056a204a52e48d8a0cf4a88e68f5100f15d0ec",
+      "edits": [
+        {
+          "start": 5533,
+          "previous": "",
+          "current": "/** The same public API cases from Kotlin, compiled against the same JAR. */\nconst kotlinFinConsumer = () => `import org.leanbridge.native_fin.Api\nimport java.math.BigInteger\n\nprivate var checks = 0\nprivate fun check(value: Boolean, label: String) { if (!value) throw AssertionError(\"failed: \" + label); checks++ }\nprivate fun rejected(parameter: String, bound: String, action: () -> Any?): Boolean =\n    try { action(); false }\n    catch (error: IllegalArgumentException) { error.message == parameter + \" is not below its Fin \" + bound + \" bound\" }\nprivate fun illegal(action: () -> Any?): Boolean = try { action(); false } catch (error: IllegalArgumentException) { true }\nprivate fun n(value: Long): BigInteger = BigInteger.valueOf(value)\n\nfun main() {\n    val huge = BigInteger.ONE.shiftLeft(70)\n    val word = BigInteger.ONE.shiftLeft(32)\n    check(rejected(\"arg0\", \"0\") { Api.impossible(n(0)) }, \"Fin 0 rejects zero\")\n    check(rejected(\"arg0\", \"0\") { Api.impossible(n(1)) }, \"Fin 0 rejects one\")\n    check(Api.only(n(0)) == n(7), \"Fin 1 accepts zero\")\n    check(rejected(\"arg0\", \"1\") { Api.only(n(1)) }, \"Fin 1 rejects its bound\")\n    check(Api.mirror(n(0)) == n(9) && Api.mirror(n(9)) == n(0), \"Fin 10 endpoints\")\n    for (value in listOf(n(10), n(11), word, huge))\n        check(rejected(\"arg0\", \"10\") { Api.mirror(value) }, \"Fin 10 rejects \" + value)\n    check(illegal { Api.mirror(n(-1)) } && !rejected(\"arg0\", \"10\") { Api.mirror(n(-1)) }, \"negative is the Nat error\")\n    check(Api.twice(n(299)) == n(598), \"alias accepts its largest value\")\n    check(rejected(\"arg0\", \"300\") { Api.twice(n(300)) }, \"alias rejects its bound\")\n    check(rejected(\"arg0\", \"300\") { Api.twice(n(301)) }, \"alias rejects beyond its bound\")\n    check(Api.succHuge(word) == word + BigInteger.ONE, \"large Fin crosses a limb\")\n    val last = huge - BigInteger.ONE\n    check(Api.succHuge(huge - n(2)) == last && Api.succHuge(last) == last, \"large Fin endpoints\")\n    for (value in listOf(huge, huge + BigInteger.ONE, BigInteger.ONE.shiftLeft(128)))\n        check(rejected(\"arg0\", huge.toString()) { Api.succHuge(value) }, \"large Fin rejects \" + value)\n    check(Api.wrap(n(100)) == n(2) && Api.wrap(huge) == n(2) && Api.wrap(n(0)) == n(0), \"result-only Fin values\")\n    val start = n(5)\n    val name = \"slot\"\n    check(Api.label(start, n(3), name) == \"slot:8\", \"mixed arguments\")\n    check(rejected(\"arg1\", \"4\") { Api.label(start, n(4), name) }, \"mixed arguments reject the Fin site\")\n    check(start == n(5) && name == \"slot\" && Api.label(start, n(0), name) == \"slot:5\", \"caller data unchanged\")\n    for (i in 0 until 1000) {\n        if (!rejected(\"arg0\", \"10\") { Api.mirror(n(10L + i)) }) throw AssertionError(\"invalid call accepted at \" + i)\n        if (Api.mirror(n(i % 10L)) != n(9L - i % 10)) throw AssertionError(\"valid call failed at \" + i)\n    }\n    checks += 2000\n    println(\"kotlin-fin-ok:\" + checks)\n}\n`;\n\n"
+        },
+        {
+          "start": 10081,
+          "previous": "test(\"relocated source-free JVM packages check Fin bounds through the bundled C adapter\", { skip: process.env.LEAN_BRIDGE_JVM_FIN_TEST !== \"1\", timeout: 2_400_000 }, async t => {\n\tconst environment = nativeFixtureEnvironment([\"c\", \"java\"]), reports = [], archives = [];\n",
+          "current": "test(\"relocated source-free JVM packages check Fin bounds from Java and Kotlin through the bundled C adapter\", { skip: process.env.LEAN_BRIDGE_JVM_FIN_TEST !== \"1\", timeout: 2_400_000 }, async t => {\n\tconst environment = nativeFixtureEnvironment([\"c\", \"java\", \"kotlin\"]), reports = [], archives = [];\n"
+        },
+        {
+          "start": 13931,
+          "previous": "\t\tt.diagnostic(\"offline Java compilation without producer files or Lean/C compilers\");\n\t\tconst fixture = { source: javaFinConsumer, success: \"java-fin-ok\" };\n\t\tconst { command, ...observation } = await installCopiedConsumer({ profile: \"java\", consumer, handoff, packages, environment, fixture });\n\t\tconst root = join(consumer, \"java\"), relocated = join(consumer, \"java-relocated\");\n\t\tawait rename(root, relocated);\n\t\tconst repeated = await runCopied(command, [\"--enable-native-access=ALL-UNNAMED\", \"-cp\", `${join(relocated, \"component.jar\")}:${relocated}`, \"Consumer\"], relocated, copiedCleanEnvironment);\n\t\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout.trim(), `java-fin-ok:${observation.checks}`);\n\t\treports.push({ profile: \"java\", path: \"ordinary-source\"\n\t\t\t, ...observation\n\t\t\t, packages\n\t\t\t, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, packageLibraries[name]]))\n\t\t\t, dispatch: { observed: false, reason: \"the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead\" }\n\t\t\t, bindingIrSha256: built.bindingIrSha256\n\t\t\t, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256\n\t\t\t, modelSha256: sha256(canonicalJson(model))\n\t\t\t, receiptSha256: sha256(await readFile(join(handoff, \"package-set-receipt.json\")))\n\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t, relocatedInstallation: true, repeatExecution: true });\n",
+          "current": "\t\t// Java and Kotlin each compile against the one installed JAR, without producer files or Lean/C compilers.\n\t\tfor(const [profile, source, entry] of [[\"java\", javaFinConsumer, relocated => `${join(relocated, \"component.jar\")}:${relocated}`], [\"kotlin\", kotlinFinConsumer, relocated => `${join(relocated, \"component.jar\")}:${join(relocated, \"consumer.jar\")}`]])\n\t\t{\n\t\t\tt.diagnostic(`offline ${profile} compilation and execution`);\n\t\t\tconst fixture = { source, success: `${profile}-fin-ok` };\n\t\t\tconst { command, ...observation } = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture });\n\t\t\tconst root = join(consumer, profile), relocated = join(consumer, `${profile}-relocated`);\n\t\t\tawait rename(root, relocated);\n\t\t\tconst repeated = await runCopied(command, [\"--enable-native-access=ALL-UNNAMED\", \"-cp\", entry(relocated), profile === \"java\" ? \"Consumer\" : \"ConsumerKt\"], relocated, copiedCleanEnvironment);\n\t\t\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout.trim(), `${profile}-fin-ok:${observation.checks}`);\n\t\t\treports.push({ profile, path: \"ordinary-source\"\n\t\t\t\t, ...observation\n\t\t\t\t, packages\n\t\t\t\t, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, packageLibraries[name]]))\n\t\t\t\t, dispatch: { observed: false, reason: \"the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead\" }\n\t\t\t\t, bindingIrSha256: built.bindingIrSha256\n\t\t\t\t, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256\n\t\t\t\t, modelSha256: sha256(canonicalJson(model))\n\t\t\t\t, receiptSha256: sha256(await readFile(join(handoff, \"package-set-receipt.json\")))\n\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t\t, relocatedInstallation: true, repeatExecution: true });\n\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "2e37f43266d486427815fd0d6d0173e542350ec7e7d9419e12ed87b317ac11f6",
+      "previousSha256": "a908dfa0468c559c54a66253b8371a06b45aa64619a76b2bfc4802cd4ae8510f",
+      "edits": [
+        {
+          "start": 23726,
+          "previous": "\tassert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length));\n\tassert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, \"array\", \"record\", ...compounds, ...lists, ...aliases, ...variants, ...recursive].sort());\n",
+          "current": "\t// Checked Fin is promoted per host by its own receipt, at top-level parameters and results only.\n\tconst finEvidence = { rust: \"rust-fin-installed\", ruby: \"ruby-fin-installed\", dotnet: \"dotnet-fin-installed\", java: \"jvm-fin-installed\", kotlin: \"jvm-fin-installed\", \"php-native\": \"php-fin-installed\", \"wit-wasi\": \"wit-fin-installed\" }[profile];\n\tconst fins = finEvidence ? [\"fin\"] : [];\n\tassert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length);\n\tassert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, \"array\", \"record\", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins].sort());\n"
+        },
+        {
+          "start": 24570,
+          "previous": "",
+          "current": "\t\tif(cell.shape === \"fin\") assert.notEqual(cell.position, \"field\");\n"
+        },
+        {
+          "start": 24731,
+          "previous": "\t\t\tassert.deepEqual(stage.evidence, [recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? [\"java\", \"kotlin\"].includes(profile) ? \"jvm-lists-installed\" : profile === \"php-native\" ? \"php-native-lists-ffi-installed\" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === \"char\" ? \"native-installed-char\" : [\"usize\", \"isize\"].includes(cell.shape) ? \"platform-words-installed\" : evidence]);\n",
+          "current": "\t\t\tassert.deepEqual(stage.evidence, [cell.shape === \"fin\" ? finEvidence : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? [\"java\", \"kotlin\"].includes(profile) ? \"jvm-lists-installed\" : profile === \"php-native\" ? \"php-native-lists-ffi-installed\" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === \"char\" ? \"native-installed-char\" : [\"usize\", \"isize\"].includes(cell.shape) ? \"platform-words-installed\" : evidence]);\n"
+        }
+      ]
+    }
+  ]
+}

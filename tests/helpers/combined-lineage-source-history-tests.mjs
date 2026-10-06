@@ -19,6 +19,7 @@ import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
+import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
 import { beforeTestProfileRegistrationSource, testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
 import { beforeCombinedLineageSource, combinedLineageChangedPaths
 	, combinedLineageHistoryPath, reverseCombinedLineageUpdate } from "./combined-lineage-source-history.mjs";
@@ -43,7 +44,7 @@ test("Combined lineage history authenticates predecessors and rejects unrelated 
 // The repair adds no support claim: only source pins of this layer's files move.
 test("Combined lineage follow-up changes no inventory claim, receipt or archive", async () => {
 	const path = "docs/type-surface.v1.json";
-	const current = JSON.parse(await readFile(path, "utf8"));
+	const current = JSON.parse(beforeTestProfileRegistrationSource(path, await readFile(path, "utf8")));
 	const previous = JSON.parse(beforeCombinedLineageSource(path, await readFile(path, "utf8")));
 	assert.deepEqual(current.observations, previous.observations);
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
@@ -57,9 +58,9 @@ test("Combined lineage follow-up changes no inventory claim, receipt or archive"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeCombinedLineageSource(file.path, await readFile(file.path, "utf8"))));
-			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
+			assert.equal(now.files[index].sha256, sha256(beforeTestProfileRegistrationSource(file.path, await readFile(file.path, "utf8"))));
 			++refreshed;
 		}
 	}

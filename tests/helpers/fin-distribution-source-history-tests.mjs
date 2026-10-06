@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlFinSource, perlFinChangedPaths } from "./perl-fin-source-history.mjs";
+import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
 import { beforeFinDistributionSource, finDistributionChangedPaths
 	, finDistributionHistoryPath, reverseFinDistributionUpdate } from "./fin-distribution-source-history.mjs";
 
@@ -32,7 +33,7 @@ test("Fin module distribution history authenticates exact predecessors and rejec
 
 test("Fin module distribution changes only evidence source pins, not support or archives", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeFinDistributionSource(path, text));
+	const current = JSON.parse(beforePerlFinSource(path, text)), previous = JSON.parse(beforeFinDistributionSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -44,10 +45,10 @@ test("Fin module distribution changes only evidence source pins, not support or 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeFinDistributionSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforePerlFinSource(file.path, source)));
 			++refreshed;
 		}
 	}
