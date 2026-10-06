@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCombinedLineageSource } from "./combined-lineage-source-history.mjs";
 import { beforeDiagnosticFollowupSource } from "./diagnostic-followup-source-history.mjs";
 import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
 import { beforeNativeFinSource } from "./native-fin-source-history.mjs";
@@ -18,9 +19,12 @@ import { beforeRefinementClosureSource } from "./refinement-closure-source-histo
 import { beforeNestedFinSource } from "./nested-fin-source-history.mjs";
 
 export const cliPackageConfigPath = "config/cli-package.v1.json";
+// The ordinary CLI bundle adds only its generated README and manifest.
+export const cliPackageExtras = Object.freeze(["README.md", "package.json"]);
 // Newest first. Each step reverses only a transition whose current digest was recorded.
 const lineage = [
-	beforeDiagnosticFollowupSource
+	beforeCombinedLineageSource
+	, beforeDiagnosticFollowupSource
 	, beforeNpmFinDiagnosticsSource
 	, beforeNativeFinSource
 	, beforePerlEvidenceRepairSource
@@ -54,13 +58,18 @@ export const authenticatedCliPackageConfigs = async (readSource = readFile) => {
  *
  * @param cli - Recorded CLI inventory.
  * @param readSource - Current or authenticated historical source reader.
+ * @param root0 - Trusted bundle profile fixed by the calling validator.
+ * @param root0.extras - Exact generated or bundled paths beyond the configured sources.
  */
-export const selectCliPackageConfig = async (cli, readSource = readFile) => {
+export const selectCliPackageConfig = async (cli, readSource = readFile, { extras = cliPackageExtras } = {}) => {
 	const recorded = [...(cli?.files ?? []).map(file => file.path)].sort();
-	const matching = (await authenticatedCliPackageConfigs(readSource)).filter(({ config }) =>
+	const candidates = await authenticatedCliPackageConfigs(readSource);
+	const matching = candidates.filter(({ config }) =>
 		cli?.package?.name === config.name && cli?.package?.version === config.version
 		&& cli?.sourceDateEpoch === config.sourceDateEpoch
-		&& JSON.stringify(recorded) === JSON.stringify([...config.files, "README.md", "package.json"].sort()));
+		&& JSON.stringify(recorded) === JSON.stringify([...config.files, ...extras].sort()));
+	// With no match, report the recorded list against the current closure as before.
+	if(matching.length === 0) assert.deepEqual(recorded, [...candidates[0].config.files, ...extras].sort(), "recorded CLI inventory must match exactly one authenticated configuration");
 	assert.equal(matching.length, 1, "recorded CLI inventory must match exactly one authenticated configuration");
 	return matching[0].config;
 };

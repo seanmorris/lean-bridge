@@ -1,0 +1,55 @@
+/**
+ * Authenticate the combined CLI bundle lineage follow-up without changing frozen evidence.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCombinedLineageSource, combinedLineageChangedPaths
+	, combinedLineageHistoryPath, reverseCombinedLineageUpdate } from "./combined-lineage-source-history.mjs";
+
+test("Combined lineage history authenticates predecessors and rejects unrelated edits", async () => {
+	const record = JSON.parse(await readFile(combinedLineageHistoryPath, "utf8"));
+	assert.equal(record.predecessorCommit, "87949a34dcb66f3de787fb4f8b2074af91eda4c7");
+	assert.deepEqual(record.updates.map(item => item.path), combinedLineageChangedPaths);
+	for(const update of record.updates)
+	{
+		const source = await readFile(update.path, "utf8");
+		assert.equal(sha256(reverseCombinedLineageUpdate(source, update)), update.previousSha256);
+		assert.equal(sha256(beforeCombinedLineageSource(update.path, source)), update.previousSha256);
+		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
+		const changed = source + "\n// unrelated edit\n";
+		assert.equal(beforeCombinedLineageSource(update.path, changed), changed);
+		assert.throws(() => reverseCombinedLineageUpdate(changed, update));
+		assert.throws(() => reverseCombinedLineageUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
+});
+
+// The repair adds no support claim: only source pins of this layer's files move.
+test("Combined lineage follow-up changes no inventory claim, receipt or archive", async () => {
+	const path = "docs/type-surface.v1.json";
+	const current = JSON.parse(await readFile(path, "utf8"));
+	const previous = JSON.parse(beforeCombinedLineageSource(path, await readFile(path, "utf8")));
+	assert.deepEqual(current.observations, previous.observations);
+	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
+	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
+	let refreshed = 0;
+	for(const [position, entry] of previous.evidence.entries())
+	{
+		const now = current.evidence[position];
+		const strip = value => ({ ...value, files: value.files.map(file => file.path) });
+		assert.deepEqual(strip(now), strip(entry), entry.id);
+		for(const [index, file] of entry.files.entries())
+		{
+			if(now.files[index].sha256 === file.sha256) continue;
+			assert.ok(combinedLineageChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.equal(file.sha256, sha256(beforeCombinedLineageSource(file.path, await readFile(file.path, "utf8"))));
+			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
+			++refreshed;
+		}
+	}
+	process.stdout.write(`# combined-lineage refreshed inventory pins: ${refreshed}\n`);
+});

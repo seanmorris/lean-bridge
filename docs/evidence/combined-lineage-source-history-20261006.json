@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "milestone": "combined-lineage-v1",
+  "predecessorCommit": "87949a34dcb66f3de787fb4f8b2074af91eda4c7",
+  "updates": [
+    {
+      "path": "docs/evidence/npm-fin-diagnostics-20261006.md",
+      "currentSha256": "d25b09e7a0e558b70242e6e681007150d05b0983adbe40c1f23b65d66fefbfb9",
+      "previousSha256": "ae5ebbe3b6e6f90e40c0b3070b2a9e2d71bda64dfa71b39fdc073bc0db6cafca",
+      "edits": [
+        {
+          "start": 1402,
+          "previous": "## Repair\n",
+          "current": "## Initial repair (superseded)\n\nThis section describes the first repair at `be1a8f6`. Its four-field line, with only declaration and source details, was replaced by the five-field line described under [Review follow-up](#review-follow-up). The current line adds a top-level `hint` and bounded compiler diagnostics, hints and records.\n"
+        },
+        {
+          "start": 6617,
+          "previous": "",
+          "current": "\nCombined callback releases bundle more than the ordinary CLI package: they also contain the runtime under `runtime/wasm` and the JavaScript-Wasm compiler inputs with their manifest. The shared JVM and Perl combined readers pass that exact list, `combinedCliBundleExtras`, as a fixed profile, so a report can never choose its own extras. Every existing archive, file and compiler-input check still applies. On the genuine ordinary and reviewed combined reports, both releases reconstruct, the default eight-target checks still reject, and coordinated forgeries with an extra bundled file or a missing bundled compiler input are rejected.\n\nFree-text hints and diagnostic or projection record fields over 512 bytes now keep a bounded prefix instead of disappearing. Declaration names and source paths are identifiers, so they are kept exactly or omitted.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a9912e7cfe44b0007fdfc32ab1f063d0a6b8924239cfa9d4959fd04747d03328",
+      "previousSha256": "87009dec26a20078d58bca9e35ceb93081205e5eb2a50ef42ff63766452964dc",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n",
+          "current": "          \"sha256\": \"db802ec34c05bb45b19e49c8bfa2d22c2f5945749b0684b979be798d8b3188c0\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n",
+          "current": "          \"sha256\": \"db802ec34c05bb45b19e49c8bfa2d22c2f5945749b0684b979be798d8b3188c0\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n",
+          "current": "          \"sha256\": \"db802ec34c05bb45b19e49c8bfa2d22c2f5945749b0684b979be798d8b3188c0\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-engine-failure.mjs",
+      "currentSha256": "85789b70f96e0b319c409c86e0bb2897efe7f2f1512c5398fe9153d88dd14ea9",
+      "previousSha256": "5a1e458152a2fa2c5648b43dc2d7d8e51c09b3f9f96d42574370f80718126da3",
+      "edits": [
+        {
+          "start": 3163,
+          "previous": "",
+          "current": "// Free-text fields keep a bounded prefix; identifiers such as declarations stay exact or are omitted.\nconst clipped = value => typeof value === \"string\" && value.length > 0 ? truncate(sanitizeComponentEngineText(value), textLimit) || undefined : undefined;\n"
+        },
+        {
+          "start": 3492,
+          "previous": "\tconst kept = Object.fromEntries(keys.map(key => [key, bounded(read(value, key)) && truncate(sanitizeComponentEngineText(read(value, key)), textLimit)]).filter(([, text]) => text));\n",
+          "current": "\tconst kept = Object.fromEntries(keys.map(key => [key, clipped(read(value, key))]).filter(([, text]) => text));\n"
+        },
+        {
+          "start": 5104,
+          "previous": "\tconst hints = Array.isArray(read(details, \"hints\")) ? read(details, \"hints\").slice(0, listLimit)\n\t\t.map(item => bounded(item) && truncate(sanitizeComponentEngineText(item), textLimit)).filter(Boolean) : [];\n",
+          "current": "\tconst hints = Array.isArray(read(details, \"hints\")) ? read(details, \"hints\").slice(0, listLimit).map(clipped).filter(Boolean) : [];\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "db802ec34c05bb45b19e49c8bfa2d22c2f5945749b0684b979be798d8b3188c0",
+      "previousSha256": "3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f",
+      "edits": [
+        {
+          "start": 2340,
+          "previous": "",
+          "current": "import \"./helpers/combined-lineage-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-engine-failure.test.mjs",
+      "currentSha256": "1d217d05485006a2ae573e186d8ce6883a3a66f22521941f3747de8f62950884",
+      "previousSha256": "ec1c24ce189ad9fa8e6f737b43248b9bb3d781d1f784470c93d16a9f4373245d",
+      "edits": [
+        {
+          "start": 14518,
+          "previous": "",
+          "current": "\ntest(\"oversized hints and record text keep a bounded prefix instead of disappearing\", () => {\n\tconst hint = `hint:${\"A\".repeat(520)}:unsupported-effect`;\n\tconst plan = Object.assign(new Error(\"Build requires a complete Binding IR\"), { code: \"component-binding-ir-required\", details: { hints: [hint] } });\n\tconst kept = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(plan))).details.engine.details;\n\tassert.equal(kept.hints.length, 1);\n\tassert.equal(bytes(kept.hints[0]), 512); assert.ok(hint.startsWith(kept.hints[0]));\n\tconst record = { message: \"é\".repeat(400), code: \"c\" };\n\tconst rejected = Object.assign(new Error(\"rejected\"), { code: \"native-elaboration-unsupported\", details: { diagnostics: [record] } });\n\tconst message = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(rejected))).details.engine.details.diagnostics[0].message;\n\tassert.equal(bytes(message), 512); assert.equal(message, \"é\".repeat(256));\n\t// Identifiers are never shortened into a different name.\n\tconst located = Object.assign(new Error(\"x\"), { details: { declaration: `lean:${\"d\".repeat(600)}` } });\n\tassert.equal(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(located))).details.engine.details, null);\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cli-package-config-history.mjs",
+      "currentSha256": "f146bfed4b5da9ed6e0b6d639b718228701b83c4f935d184a775c140c2002e33",
+      "previousSha256": "9af63e96de91e5b537de5945592b0308ac9d36315ee147373c56ec50dde1c90c",
+      "edits": [
+        {
+          "start": 398,
+          "previous": "",
+          "current": "import { beforeCombinedLineageSource } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 1210,
+          "previous": "",
+          "current": "// The ordinary CLI bundle adds only its generated README and manifest.\nexport const cliPackageExtras = Object.freeze([\"README.md\", \"package.json\"]);\n"
+        },
+        {
+          "start": 1467,
+          "previous": "\tbeforeDiagnosticFollowupSource\n",
+          "current": "\tbeforeCombinedLineageSource\n\t, beforeDiagnosticFollowupSource\n"
+        },
+        {
+          "start": 2794,
+          "previous": "",
+          "current": " * @param root0 - Trusted bundle profile fixed by the calling validator.\n * @param root0.extras - Exact generated or bundled paths beyond the configured sources.\n"
+        },
+        {
+          "start": 2960,
+          "previous": "export const selectCliPackageConfig = async (cli, readSource = readFile) => {\n",
+          "current": "export const selectCliPackageConfig = async (cli, readSource = readFile, { extras = cliPackageExtras } = {}) => {\n"
+        },
+        {
+          "start": 3147,
+          "previous": "\tconst matching = (await authenticatedCliPackageConfigs(readSource)).filter(({ config }) =>\n",
+          "current": "\tconst candidates = await authenticatedCliPackageConfigs(readSource);\n\tconst matching = candidates.filter(({ config }) =>\n"
+        },
+        {
+          "start": 3403,
+          "previous": "\t\t&& JSON.stringify(recorded) === JSON.stringify([...config.files, \"README.md\", \"package.json\"].sort()));\n",
+          "current": "\t\t&& JSON.stringify(recorded) === JSON.stringify([...config.files, ...extras].sort()));\n\t// With no match, report the recorded list against the current closure as before.\n\tif(matching.length === 0) assert.deepEqual(recorded, [...candidates[0].config.files, ...extras].sort(), \"recorded CLI inventory must match exactly one authenticated configuration\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "8bd3ec7ea67d676c726114b9e46495f5d088b5f4bab26834043dc99916603c5f",
+      "previousSha256": "6962cb4d31a2dba3da87fded03a37bc0b9eabca1fa0de1825fb1cad17fa3b6c7",
+      "edits": [
+        {
+          "start": 361,
+          "previous": "",
+          "current": "import { beforeCombinedLineageSource, combinedLineageChangedPaths } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 1069,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCombinedLineageSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2846,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history.mjs",
+      "currentSha256": "f9136c7ee27ec9a746df8b967e32245d95f11bd95faab0c92ae3d18d48394ed4",
+      "previousSha256": "26d5e2144f59d7c7ed0c6c960d367b071984249264d6707c4e6eb578487a25c2",
+      "edits": [
+        {
+          "start": 256,
+          "previous": "",
+          "current": "import { beforeCombinedLineageSource } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 2753,
+          "previous": "",
+          "current": "\tsource = beforeCombinedLineageSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c4552fac123263c6d4e31a6076e7928b2574f947e8898fad979503eee7c39292",
+      "previousSha256": "d046e6734883d77131415c06165a476e567830ccc9b9832ef1f224b77e56ddb6",
+      "edits": [
+        {
+          "start": 1236,
+          "previous": "",
+          "current": "import { combinedLineageChangedPaths } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 34792,
+          "previous": "",
+          "current": "\t, ...combinedLineageChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "823836f7ba87b62c18708d4f99e908e3fe922778684300ebe917311d902c3640",
+      "previousSha256": "c0e8f49c5af1c3dda3449e4c89f9d75bbf1b64ad3ba1aa892cc15cad312efd89",
+      "edits": [
+        {
+          "start": 575,
+          "previous": "",
+          "current": "import { combinedLineageChangedPaths } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 4009,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "a29a12e11081cf08ef56f246fe7e9deb9de20864d8e3afdd13a4ed220c475df4",
+      "previousSha256": "dcd874c21fbed073e421586ed2a1472a8c0831ed1bdc274a24de3995ba8f2876",
+      "edits": [
+        {
+          "start": 483,
+          "previous": "",
+          "current": "import { combinedLineageChangedPaths } from \"./combined-lineage-source-history.mjs\";\n"
+        },
+        {
+          "start": 2925,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-callback-result-combined-evidence.mjs",
+      "currentSha256": "36c744be9c347f084f477d145bc568f915818d94d38fb089d5ef2be8515de3a4",
+      "previousSha256": "8588e3bcfa4e4c4bd6651089632f3d673e1a504f6b722bfaaa0c5ac1434a13db",
+      "edits": [
+        {
+          "start": 223,
+          "previous": "",
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 1542,
+          "previous": "",
+          "current": "const inputPaths = [\"source/.lean-wasm-patched\", \"source/LICENSE\"\n\t, ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];\nconst manifestName = \"javascript-wasm-compiler-inputs.json\";\n/** Exact runtime and compiler-input paths every combined CLI bundle adds; fixed here, never taken from a report. */\nconst bundledInputs = [...inputPaths, manifestName, manifestName + \".sha256\"].map(path => `runtime/javascript-wasm/${path}`);\nexport const combinedCliBundleExtras = Object.freeze([\n\t\"README.md\"\n\t, \"package.json\"\n\t, \"runtime/wasm/main.mjs\"\n\t, \"runtime/wasm/main.wasm\"\n\t, ...bundledInputs\n]);\n"
+        },
+        {
+          "start": 2728,
+          "previous": "\tconst config = JSON.parse((await readSource(\"config/cli-package.v1.json\")).toString());\n",
+          "current": "\tconst config = await selectCliPackageConfig(report, readSource, { extras: combinedCliBundleExtras });\n"
+        },
+        {
+          "start": 2977,
+          "previous": "\tconst inputPaths = [\"source/.lean-wasm-patched\", \"source/LICENSE\"\n\t\t, ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];\n\tconst manifestName = \"javascript-wasm-compiler-inputs.json\";\n\tconst extras = [\"README.md\", \"package.json\", \"runtime/wasm/main.mjs\"\n\t\t, \"runtime/wasm/main.wasm\"\n\t\t, ...[...inputPaths, manifestName, manifestName + \".sha256\"].map(path => `runtime/javascript-wasm/${path}`)];\n\tassert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...extras].sort());\n",
+          "current": "\tassert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...combinedCliBundleExtras].sort());\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-combined-evidence-tests.mjs",
+      "currentSha256": "a94d6a651c752ed7b05d6e4288caa05a6919a6253a8f44b18146c70f0321a661",
+      "previousSha256": "13342420756858c9ed2950871b186eb1fcc7580580c8b9a91f70cab7f66a722c",
+      "edits": [
+        {
+          "start": 1274,
+          "previous": "",
+          "current": "// The bundle profile is fixed by the validator, so coordinated extra or missing bundled files fail.\nconst cliBundle = mutate => item => {\n\tmutate(item.cli.files);\n\tconst inventory = Object.fromEntries(Object.entries(item.cli)\n\t\t.filter(([name]) => ![\"archive\", \"inventorySha256\", \"externalRegistryWrites\"].includes(name)));\n\titem.cli.inventorySha256 = sha256(canonicalJson(inventory));\n};\nconst extraBundled = files => files.push({ path: \"runtime/wasm/extra.wasm\", bytes: 1, sha256: \"1\".repeat(64), mode: 0o644 });\nconst missingBundled = files => files.splice(files.findIndex(file => file.path === \"runtime/javascript-wasm/source/LICENSE\"), 1);\n"
+        },
+        {
+          "start": 2768,
+          "previous": "",
+          "current": "\t, [\"coordinated extra bundled CLI file\", cliBundle(extraBundled)]\n\t, [\"coordinated missing bundled compiler input\", cliBundle(missingBundled)]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-combined-evidence.mjs",
+      "currentSha256": "678eed0b1d198dbcb603ec5c540f4e6429e305f05ff0d6cf4b6237994c1cbf74",
+      "previousSha256": "35dc316367ad9e82a3c2f848262eaf2f071c96f332ca7616defdf114366792e4",
+      "edits": [
+        {
+          "start": 392,
+          "previous": "import { assertOwnedJvmCallbackCombinedRelease } from \"./owned-jvm-callback-result-combined-evidence.mjs\";\n",
+          "current": "import { assertOwnedJvmCallbackCombinedRelease, combinedCliBundleExtras } from \"./owned-jvm-callback-result-combined-evidence.mjs\";\n"
+        },
+        {
+          "start": 13481,
+          "previous": "\tconst config = await selectCliPackageConfig(item.cli, readSource);\n",
+          "current": "\tconst config = await selectCliPackageConfig(item.cli, readSource, { extras: combinedCliBundleExtras });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs",
+      "currentSha256": "2261674ee6ea7f7babb649b6ccea85407ae25487caf1fa5eb72304eacdf324b4",
+      "previousSha256": "7654612cdb28416721db92e17a6ebafa917a3b4dfccbc57df6da0e107ea521ea",
+      "edits": [
+        {
+          "start": 2289,
+          "previous": "",
+          "current": "\tawait assertCliInventorySelection();\n"
+        },
+        {
+          "start": 19474,
+          "previous": "test(\"Perl callback package CLI inventories select exact recorded configurations\", { skip: !enabled }, async () => {\n",
+          "current": "// Kept inside the reconstruction test so the CI evidence step keeps its fixed test count.\nconst assertCliInventorySelection = async () => {\n"
+        },
+        {
+          "start": 21497,
+          "previous": "});\n",
+          "current": "};\n"
+        }
+      ]
+    }
+  ]
+}

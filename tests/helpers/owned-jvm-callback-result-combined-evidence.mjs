@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { javascriptWasmOwnedPins, javascriptWasmTargetHeaders } from "../../src/build/javascript-wasm-owned-artifacts.mjs";
@@ -19,6 +20,18 @@ import { assertOwnedJvmCallbackPackageInputs, assertOwnedJvmCallbackInstalledExe
 const hash = value => sha256(canonicalJson(value));
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 const digest = value => { assert.match(value, /^[a-f0-9]{64}$/u); assert.notEqual(value, "0".repeat(64)); };
+const inputPaths = ["source/.lean-wasm-patched", "source/LICENSE"
+	, ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];
+const manifestName = "javascript-wasm-compiler-inputs.json";
+/** Exact runtime and compiler-input paths every combined CLI bundle adds; fixed here, never taken from a report. */
+const bundledInputs = [...inputPaths, manifestName, manifestName + ".sha256"].map(path => `runtime/javascript-wasm/${path}`);
+export const combinedCliBundleExtras = Object.freeze([
+	"README.md"
+	, "package.json"
+	, "runtime/wasm/main.mjs"
+	, "runtime/wasm/main.wasm"
+	, ...bundledInputs
+]);
 const cli = async (report, readSource) => {
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = report;
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
@@ -26,16 +39,10 @@ const cli = async (report, readSource) => {
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
 	assert.equal(report.runtimeIncluded, true); assert.equal(report.javascriptWasmInputsIncluded, true);
 	assert.equal(report.phpWasmInputsIncluded, false);
-	const config = JSON.parse((await readSource("config/cli-package.v1.json")).toString());
+	const config = await selectCliPackageConfig(report, readSource, { extras: combinedCliBundleExtras });
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(report.sourceDateEpoch, config.sourceDateEpoch);
-	const inputPaths = ["source/.lean-wasm-patched", "source/LICENSE"
-		, ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];
-	const manifestName = "javascript-wasm-compiler-inputs.json";
-	const extras = ["README.md", "package.json", "runtime/wasm/main.mjs"
-		, "runtime/wasm/main.wasm"
-		, ...[...inputPaths, manifestName, manifestName + ".sha256"].map(path => `runtime/javascript-wasm/${path}`)];
-	assert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...extras].sort());
+	assert.deepEqual(report.files.map(file => file.path).sort(), [...config.files, ...combinedCliBundleExtras].sort());
 	for(const path of config.files)
 	{
 		const mode = ["scripts/lean-bridge.mjs", "scripts/create-publication-signer-policy.mjs"].includes(path) ? 0o755 : 0o644;

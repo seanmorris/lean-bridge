@@ -197,3 +197,18 @@ test("known compiler failure shapes keep their reason, hints and records within 
 	} finally
 	{ delete process.env.LEAN_BRIDGE_TEST_API_TOKEN; }
 });
+
+test("oversized hints and record text keep a bounded prefix instead of disappearing", () => {
+	const hint = `hint:${"A".repeat(520)}:unsupported-effect`;
+	const plan = Object.assign(new Error("Build requires a complete Binding IR"), { code: "component-binding-ir-required", details: { hints: [hint] } });
+	const kept = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(plan))).details.engine.details;
+	assert.equal(kept.hints.length, 1);
+	assert.equal(bytes(kept.hints[0]), 512); assert.ok(hint.startsWith(kept.hints[0]));
+	const record = { message: "é".repeat(400), code: "c" };
+	const rejected = Object.assign(new Error("rejected"), { code: "native-elaboration-unsupported", details: { diagnostics: [record] } });
+	const message = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(rejected))).details.engine.details.diagnostics[0].message;
+	assert.equal(bytes(message), 512); assert.equal(message, "é".repeat(256));
+	// Identifiers are never shortened into a different name.
+	const located = Object.assign(new Error("x"), { details: { declaration: `lean:${"d".repeat(600)}` } });
+	assert.equal(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(located))).details.engine.details, null);
+});

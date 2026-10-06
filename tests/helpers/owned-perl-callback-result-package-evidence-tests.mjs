@@ -41,6 +41,7 @@ const cliFileMutation = (path, mutate) => item => {
 test("Perl callback package evidence reconstructs four producers and 32 installed public runs", { skip: !enabled }, async () => {
 	await assertOwnedPerlCallbackPackageMatrix(await reports());
 	await assertPortableIdentities();
+	await assertCliInventorySelection();
 });
 
 // Synthetic changes exercise validator portability, not additional execution.
@@ -287,7 +288,8 @@ test("Perl callback package evidence rejects coordinated producer, receipt and i
 
 // A recorded inventory selects only among authenticated configurations; the full
 // validator still rejects inventories that select a configuration they were not built from.
-test("Perl callback package CLI inventories select exact recorded configurations", { skip: !enabled }, async () => {
+// Kept inside the reconstruction test so the CI evidence step keeps its fixed test count.
+const assertCliInventorySelection = async () => {
 	const current = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
 	const rehash = item => {
 		const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
@@ -319,4 +321,4 @@ test("Perl callback package CLI inventories select exact recorded configurations
 		assert.deepEqual((await selectCliPackageConfig(pasted.cli)).files, current.files);
 		await assert.rejects(() => assertOwnedPerlCallbackPackage(name, pasted), name);
 	}
-});
+};

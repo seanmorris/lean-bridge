@@ -70,9 +70,11 @@ export const sanitizeComponentEngineText = text => {
 	return result;
 };
 
+// Free-text fields keep a bounded prefix; identifiers such as declarations stay exact or are omitted.
+const clipped = value => typeof value === "string" && value.length > 0 ? truncate(sanitizeComponentEngineText(value), textLimit) || undefined : undefined;
 const record = (value, keys) => {
 	if(!plain(value)) return undefined;
-	const kept = Object.fromEntries(keys.map(key => [key, bounded(read(value, key)) && truncate(sanitizeComponentEngineText(read(value, key)), textLimit)]).filter(([, text]) => text));
+	const kept = Object.fromEntries(keys.map(key => [key, clipped(read(value, key))]).filter(([, text]) => text));
 	return Object.keys(kept).length ? kept : undefined;
 };
 const records = (value, keys) => {
@@ -109,8 +111,7 @@ const allowlisted = error => {
 		["path", bounded(read(source, "path"))]
 		, ...sourceFields.slice(1).map(key => [key, integer(read(source, key))])
 	].filter(([, value]) => value !== undefined)) : null;
-	const hints = Array.isArray(read(details, "hints")) ? read(details, "hints").slice(0, listLimit)
-		.map(item => bounded(item) && truncate(sanitizeComponentEngineText(item), textLimit)).filter(Boolean) : [];
+	const hints = Array.isArray(read(details, "hints")) ? read(details, "hints").slice(0, listLimit).map(clipped).filter(Boolean) : [];
 	const value = {
 		declaration: bounded(read(details, "declaration"))
 		, diagnostic: compilerText(error, details)

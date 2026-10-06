@@ -15,7 +15,9 @@ VO1419 under VO1220, 2026-10-06.
 
 The rejection itself was the expected one; its diagnostic was lost at the process boundary. This reproduces the JavaScript boundary. It is not an execution of the real Nix locked engine, which still needs CI to confirm it.
 
-## Repair
+## Initial repair (superseded)
+
+This section describes the first repair at `be1a8f6`. Its four-field line, with only declaration and source details, was replaced by the five-field line described under [Review follow-up](#review-follow-up). The current line adds a top-level `hint` and bounded compiler diagnostics, hints and records.
 
 - **A stable code.** The recovery planner keeps its message and now sets `code: "uninhabited-callback-result"`.
 - **One final diagnostic line.** On failure, `scripts/run-component-engine.mjs` writes a bounded human-readable line, then a final line, `lean-bridge-engine-error <JSON>`, and exits with status 1.
@@ -68,3 +70,7 @@ On the genuine run-37317108353 reports:
 - positive package and variant reconstruction passes again, and the existing forgery suites still reject;
 - a recorded list with an extra or missing file selects no configuration;
 - pasting the current list into an old report selects the current configuration, and the full validator then rejects it because the installation, archive and receipts still bind the original build.
+
+Combined callback releases bundle more than the ordinary CLI package: they also contain the runtime under `runtime/wasm` and the JavaScript-Wasm compiler inputs with their manifest. The shared JVM and Perl combined readers pass that exact list, `combinedCliBundleExtras`, as a fixed profile, so a report can never choose its own extras. Every existing archive, file and compiler-input check still applies. On the genuine ordinary and reviewed combined reports, both releases reconstruct, the default eight-target checks still reject, and coordinated forgeries with an extra bundled file or a missing bundled compiler input are rejected.
+
+Free-text hints and diagnostic or projection record fields over 512 bytes now keep a bounded prefix instead of disappearing. Declaration names and source paths are identifiers, so they are kept exactly or omitted.

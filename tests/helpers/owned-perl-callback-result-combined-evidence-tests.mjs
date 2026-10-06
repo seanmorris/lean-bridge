@@ -24,6 +24,15 @@ const cliGenerated = path => item => {
 		.filter(([name]) => !["archive", "inventorySha256", "externalRegistryWrites"].includes(name)));
 	item.cli.inventorySha256 = sha256(canonicalJson(inventory));
 };
+// The bundle profile is fixed by the validator, so coordinated extra or missing bundled files fail.
+const cliBundle = mutate => item => {
+	mutate(item.cli.files);
+	const inventory = Object.fromEntries(Object.entries(item.cli)
+		.filter(([name]) => !["archive", "inventorySha256", "externalRegistryWrites"].includes(name)));
+	item.cli.inventorySha256 = sha256(canonicalJson(inventory));
+};
+const extraBundled = files => files.push({ path: "runtime/wasm/extra.wasm", bytes: 1, sha256: "1".repeat(64), mode: 0o644 });
+const missingBundled = files => files.splice(files.findIndex(file => file.path === "runtime/javascript-wasm/source/LICENSE"), 1);
 const changes = [
 	["extra acceptance", item => { item.acceptance = true; }]
 	, ["report schema", item => { item.schemaVersion++; }]
@@ -35,6 +44,8 @@ const changes = [
 	, ["source configuration", item => { item.nativeInput.sourceIdentity.exportConfigurationSource = "{}"; }]
 	, ["coordinated generated CLI README", cliGenerated("README.md")]
 	, ["coordinated generated CLI manifest", cliGenerated("package.json")]
+	, ["coordinated extra bundled CLI file", cliBundle(extraBundled)]
+	, ["coordinated missing bundled compiler input", cliBundle(missingBundled)]
 	, ["different Perl model", item => { item.installedPerl.model.schemaVersion++; }]
 	, ["missing callback policy", item => { delete item.installedPerl.manifest.ownedValues.callbackResultAnchors; }]
 	, ["callback-local parameter", item => { item.installedPerl.manifest.ownedValues.callbackResultAnchors.signatures[0].parameter++; }]
