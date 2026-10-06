@@ -12,6 +12,7 @@ import { beforeWitFinSource, witFinChangedPaths } from "./wit-fin-source-history
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
+import { nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
 import { beforePhpFinSource, phpFinChangedPaths
 	, phpFinHistoryPath, reversePhpFinUpdate } from "./php-fin-source-history.mjs";
 
@@ -47,7 +48,7 @@ test("PHP scalar Fin changes only evidence source pins, not support or archives"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforePhpFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeWitFinSource(file.path, source)));

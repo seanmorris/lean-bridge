@@ -358,16 +358,19 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	// Checked Fin is promoted per host by its own receipt, at top-level parameters and results only.
 	const finEvidence = { rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
 	const fins = finEvidence ? ["fin"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins].sort());
+	// Finite specializations are signature-only cells, one receipt per build group.
+	const specializationEvidence = { rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
+	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + specialized.length);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...specialized].sort());
 	for(const cell of observed)
 	{
-		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
 		if(cell.shape === "fin") assert.notEqual(cell.position, "field");
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [cell.shape === "fin" ? finEvidence : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : cell.shape === "fin" ? finEvidence : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeSpecializationsSource, nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
 import { beforeHostFinEvidenceSource, hostFinEvidenceChangedPaths
 	, hostFinEvidenceHistoryPath, reverseHostFinEvidenceUpdate } from "./host-fin-evidence-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Host Fin evidence history authenticates exact predecessors and rejects unk
 	assert.deepEqual(record.updates.map(item => item.path), hostFinEvidenceChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeSpecializationsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseHostFinEvidenceUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeHostFinEvidenceSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeHostFinEvidenceSource(update.path, source, update.currentSha256), source);
@@ -37,7 +38,7 @@ const acceptedRevision = "d6d6eb4b6cd1c6f2367899ea7954a279f75e2836";
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Host Fin evidence adds six installed receipts and six top-level Fin cells, and changes no other claim", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeHostFinEvidenceSource(path, text));
+	const current = JSON.parse(beforeNativeSpecializationsSource(path, text)), previous = JSON.parse(beforeHostFinEvidenceSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), hosts.map(([key]) => `${key}-fin-installed`));
 	const cells = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -71,10 +72,10 @@ test("Host Fin evidence adds six installed receipts and six top-level Fin cells,
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeHostFinEvidenceSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeNativeSpecializationsSource(file.path, source)));
 			++refreshed;
 		}
 	}

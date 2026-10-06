@@ -100,7 +100,7 @@ Add a shared `package` object for the library's description, authors, homepage a
 
 ### Export concrete specializations
 
-For npm, CPAN, C or C++, select concrete versions of a generic function without adding wrappers to the Lean library. Given this definition in `Library.lean`:
+For npm and every native target, select concrete versions of a generic function without adding wrappers to the Lean library. Given this definition in `Library.lean`:
 
 ```lean
 universe u
@@ -131,6 +131,8 @@ export declare function echoText(arg0: string): string;
 Use the usual `analyze`, `build --target npm`, and `publish --target npm --dry-run` commands. Consumers call the named functions from the installed package; they supply no Lean type arguments. The runtime remains an automatic npm dependency.
 
 For Perl, use `build --target cpan`. The generated functions are `echo_nat` and `echo_text` in your configured `targets.cpan.module`. Consumers pass the usual [Perl values](../consume/perl.md#type-conversions), including `Math::BigInt` for `Nat`; they supply no type arguments. See the [CPAN specialization example](../publish/cpan.md#export-a-specialized-closure).
+
+The other native targets name the concrete functions in their usual style: `library_echo_nat` in C, `lean_bridge::library::echo_nat` in C++, `echo_nat` in Python, Rust and Ruby, `Api.EchoNat` in C#, `Api.echoNat` in Java and Kotlin, `LeanLibrary\echo_nat` in native PHP and `echo-nat` in WIT. Each package exposes only the concrete names; the open declaration is absent. The [installed checks](../evidence/native-specializations-20261006.md) cover implicit type arguments, explicit type arguments, Lean-selected instance dictionaries, and alias type arguments including an alias of `Array UInt32`, for these targets. A type argument that instantiates a generic structure or variant, such as `Pair UInt32 String`, is rejected for native targets with the `unsupported-native-type` diagnostic naming the specialization; define a concrete structure instead.
 
 Each entry needs a new fully qualified `name`, an existing public `declaration` in the selected modules, and one to eight `types`. Types are closed Lean constant names, including aliases, in leading parameter order. Expressions such as `Array UInt32` are not configuration syntax; define a named Lean alias for a constructed type. Lean resolves universe levels and any instance binders immediately following that type prefix. Remaining arguments and results must fit the selected profile: [supported copied types for npm](export-decisions.md#start-with-the-runnable-npm-shapes), or the existing [native Perl types](../consume/perl.md#type-conversions) for CPAN. Native `resources` still identifies source types. Native `arities` uses the new specialization name and counts runtime arguments after type and instance arguments have been resolved.
 

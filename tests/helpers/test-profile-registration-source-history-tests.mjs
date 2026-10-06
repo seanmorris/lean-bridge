@@ -20,6 +20,7 @@ import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
+import { nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
 import { beforeTestProfileRegistrationSource, testProfileRegistrationChangedPaths
 	, testProfileRegistrationHistoryPath, reverseTestProfileRegistrationUpdate } from "./test-profile-registration-source-history.mjs";
 
@@ -60,7 +61,7 @@ test("Test-profile registration changes no inventory claim, receipt or archive",
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeTestProfileRegistrationSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(beforeRuntimeReceiptSource(file.path, await readFile(file.path, "utf8"))));
 			++refreshed;
