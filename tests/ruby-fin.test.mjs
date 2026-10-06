@@ -58,29 +58,29 @@ rescue StandardError
 end
 huge = 1 << 70
 word = 1 << 32
-check(rejected("value", "0") { API.impossible(0) }, "Fin 0 rejects zero")
-check(rejected("value", "0") { API.impossible(1) }, "Fin 0 rejects one")
+check(rejected("arg0", "0") { API.impossible(0) }, "Fin 0 rejects zero")
+check(rejected("arg0", "0") { API.impossible(1) }, "Fin 0 rejects one")
 check(API.only(0) == 7, "Fin 1 accepts zero")
-check(rejected("value", "1") { API.only(1) }, "Fin 1 rejects its bound")
+check(rejected("arg0", "1") { API.only(1) }, "Fin 1 rejects its bound")
 check(API.mirror(0) == 9 && API.mirror(9) == 0, "Fin 10 endpoints")
 check(API.mirror(4).instance_of?(Integer) && API.mirror(4) == 5, "exact Integer results")
-[10, 11, word, huge].each { |value| check(rejected("value", "10") { API.mirror(value) }, "Fin 10 rejects #{value}") }
-check(raises(RangeError) { API.mirror(-1) } && !rejected("value", "10") { API.mirror(-1) }, "negative is the Nat RangeError")
+[10, 11, word, huge].each { |value| check(rejected("arg0", "10") { API.mirror(value) }, "Fin 10 rejects #{value}") }
+check(raises(RangeError) { API.mirror(-1) } && !rejected("arg0", "10") { API.mirror(-1) }, "negative is the Nat RangeError")
 [true, false, 1.0, "1", nil].each { |value| check(raises(TypeError) { API.mirror(value) }, "non-Integer is TypeError: #{value.inspect}") }
 check(API.twice(299) == 598, "alias accepts its largest value")
-check(rejected("value", "300") { API.twice(300) }, "alias rejects its bound")
-check(rejected("value", "300") { API.twice(301) }, "alias rejects beyond its bound")
+check(rejected("arg0", "300") { API.twice(300) }, "alias rejects its bound")
+check(rejected("arg0", "300") { API.twice(301) }, "alias rejects beyond its bound")
 check(API.succ_huge(word) == word + 1, "large Fin crosses a limb")
 check(API.succ_huge(huge - 2) == huge - 1 && API.succ_huge(huge - 1) == huge - 1, "large Fin endpoints")
-[huge, huge + 1, 1 << 128].each { |value| check(rejected("value", huge.to_s) { API.succ_huge(value) }, "large Fin rejects #{value}") }
+[huge, huge + 1, 1 << 128].each { |value| check(rejected("arg0", huge.to_s) { API.succ_huge(value) }, "large Fin rejects #{value}") }
 check(API.wrap(100) == 2 && API.wrap(huge) == 2 && API.wrap(0) == 0, "result-only Fin values")
 base, name = 5, "slot".dup.freeze
 check(API.label(base, 3, name) == "slot:8", "mixed arguments")
-check(rejected("offset", "4") { API.label(base, 4, name) }, "mixed arguments reject the Fin site")
+check(rejected("arg1", "4") { API.label(base, 4, name) }, "mixed arguments reject the Fin site")
 check(raises(TypeError) { API.label(base, true, name) }, "mixed arguments reject true")
 check(base == 5 && name == "slot" && API.label(base, 0, name) == "slot:5", "caller data unchanged")
 1000.times do |i|
-  raise "invalid call accepted at #{i}" unless rejected("value", "10") { API.mirror(10 + i) }
+  raise "invalid call accepted at #{i}" unless rejected("arg0", "10") { API.mirror(10 + i) }
   raise "valid call failed at #{i}" unless API.mirror(i % 10) == 9 - i % 10
 end
 $checks += 2000
@@ -90,8 +90,7 @@ puts "ruby-fin-ok:#{$checks}"
 test("Ruby gems are checked Fin consumers beside C, C++, Python and Rust", () => {
 	for(const targets of [["rubygems"], ["c", "rubygems"], ["c", "cpp", "pypi", "cargo", "rubygems"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan"])
-		assert.equal(supportsNativeRefinementTargets(["rubygems", target]), false, target);
+	assert.equal(supportsNativeRefinementTargets(["rubygems", "cpan"]), true);
 });
 
 test("generated Ruby bound docs come only from checked refinement metadata", () => {

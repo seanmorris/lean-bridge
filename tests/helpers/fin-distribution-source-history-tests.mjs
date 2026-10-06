@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePerlFinSource, perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { beforeFinDistributionSource, finDistributionChangedPaths
 	, finDistributionHistoryPath, reverseFinDistributionUpdate } from "./fin-distribution-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Fin module distribution history authenticates exact predecessors and rejec
 	assert.deepEqual(record.updates.map(item => item.path), finDistributionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePerlFinSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinDistributionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinDistributionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinDistributionSource(update.path, source, update.currentSha256), source);
@@ -43,7 +44,7 @@ test("Fin module distribution changes only evidence source pins, not support or 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeFinDistributionSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

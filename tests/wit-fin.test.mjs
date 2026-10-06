@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import test from "node:test";
@@ -38,7 +38,7 @@ const exportsInOrder = ["impossible", "label", "mirror", "only", "succ-huge", "t
 
 /** Public Wasmtime values cross the real component; Nat and Fin are canonical u32 limb lists. */
 const witFinConsumer = () => `#define _GNU_SOURCE
-#include "native_fin_wasmtime.h"
+#include "nativefin_wasmtime.h"
 #include <link.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -47,7 +47,7 @@ const witFinConsumer = () => `#define _GNU_SOURCE
 #include <string.h>
 typedef wasmtime_component_val_t value;
 static size_t checks, rejections;
-static native_fin_wasmtime *session;
+static nativefin_wasmtime *session;
 #define CHECK(test) do { if (!(test)) { fprintf(stderr, "failed at line %d: %s\\n", __LINE__, #test); exit(1); } checks++; } while (0)
 static void clear(value *v) { wasmtime_component_val_delete(v); *v = (value){0}; }
 static value nat(const uint32_t *limbs, size_t count) {
@@ -71,7 +71,7 @@ static bool is_nat(const value *v, const uint32_t *limbs, size_t count) {
 static bool is_small(const value *v, uint32_t number) { return is_nat(v, &number, number ? 1 : 0); }
 static value call(const char *name, const value *args, size_t count) {
   value result = {0};
-  wasmtime_error_t *error = native_fin_wasmtime_call(session, name, args, count, &result);
+  wasmtime_error_t *error = nativefin_wasmtime_call(session, name, args, count, &result);
   if (error) {
     wasm_name_t message; wasmtime_error_message(error, &message);
     fprintf(stderr, "%s: %.*s\\n", name, (int)message.size, message.data); exit(1);
@@ -81,7 +81,7 @@ static value call(const char *name, const value *args, size_t count) {
 /* A rejected call names the parameter and bound and leaves the result slot unchanged. */
 static bool rejected(const char *name, const value *args, size_t count, const char *needle) {
   value output = {.kind = WASMTIME_COMPONENT_U32, .of.u32 = 991};
-  wasmtime_error_t *error = native_fin_wasmtime_call(session, name, args, count, &output);
+  wasmtime_error_t *error = nativefin_wasmtime_call(session, name, args, count, &output);
   if (!error) return false;
   wasm_name_t message; wasmtime_error_message(error, &message);
   char *copy = calloc(message.size + 1, 1);
@@ -112,7 +112,7 @@ static int loaded(struct dl_phdr_info *info, size_t size, void *data) {
   printf("\\"%s\\"", info->dlpi_name); *comma = true; return 0;
 }
 int main(void) {
-  wasmtime_error_t *opened = native_fin_wasmtime_open(&session);
+  wasmtime_error_t *opened = nativefin_wasmtime_open(&session);
   if (opened) { fprintf(stderr, "cannot open session\\n"); return 1; }
   const uint32_t word[] = {0, 1}, word_next[] = {1, 1};
   const uint32_t huge[] = {0, 0, 64}, huge_next[] = {1, 0, 64}, wide[] = {0, 0, 0, 0, 1};
@@ -120,29 +120,29 @@ int main(void) {
   const uint32_t seven[] = {7}, nine[] = {9}, two[] = {2}, large[] = {598};
 
   /* Fin 0 is uninhabited: every input is rejected by the native bound check. */
-  CHECK(unary_rejected("impossible", small(0), "value is not below its Fin 0 bound"));
-  CHECK(unary_rejected("impossible", small(1), "value is not below its Fin 0 bound"));
+  CHECK(unary_rejected("impossible", small(0), "arg0 is not below its Fin 0 bound"));
+  CHECK(unary_rejected("impossible", small(1), "arg0 is not below its Fin 0 bound"));
   /* Fin 1 admits only zero. */
   CHECK(unary("only", small(0), seven, 1));
-  CHECK(unary_rejected("only", small(1), "value is not below its Fin 1 bound"));
+  CHECK(unary_rejected("only", small(1), "arg0 is not below its Fin 1 bound"));
   /* Fin 10 with a Fin result: endpoints and beyond-bound inputs. */
   CHECK(unary("mirror", small(0), nine, 1));
   CHECK(unary("mirror", small(9), NULL, 0));
-  CHECK(unary_rejected("mirror", small(10), "value is not below its Fin 10 bound"));
-  CHECK(unary_rejected("mirror", small(11), "value is not below its Fin 10 bound"));
-  CHECK(unary_rejected("mirror", nat(word, 2), "value is not below its Fin 10 bound"));
-  CHECK(unary_rejected("mirror", nat(huge, 3), "value is not below its Fin 10 bound"));
+  CHECK(unary_rejected("mirror", small(10), "arg0 is not below its Fin 10 bound"));
+  CHECK(unary_rejected("mirror", small(11), "arg0 is not below its Fin 10 bound"));
+  CHECK(unary_rejected("mirror", nat(word, 2), "arg0 is not below its Fin 10 bound"));
+  CHECK(unary_rejected("mirror", nat(huge, 3), "arg0 is not below its Fin 10 bound"));
   /* A transparent alias keeps its exact bound. */
   CHECK(unary("twice", small(299), large, 1));
-  CHECK(unary_rejected("twice", small(300), "value is not below its Fin 300 bound"));
-  CHECK(unary_rejected("twice", small(301), "value is not below its Fin 300 bound"));
+  CHECK(unary_rejected("twice", small(300), "arg0 is not below its Fin 300 bound"));
+  CHECK(unary_rejected("twice", small(301), "arg0 is not below its Fin 300 bound"));
   /* 2^70 exceeds every machine word. */
   CHECK(unary("succ-huge", nat(word, 2), word_next, 2));
   CHECK(unary("succ-huge", nat(below, 3), last, 3));
   CHECK(unary("succ-huge", nat(last, 3), last, 3));
-  CHECK(unary_rejected("succ-huge", nat(huge, 3), "value is not below its Fin ${huge} bound"));
-  CHECK(unary_rejected("succ-huge", nat(huge_next, 3), "value is not below its Fin ${huge} bound"));
-  CHECK(unary_rejected("succ-huge", nat(wide, 5), "value is not below its Fin ${huge} bound"));
+  CHECK(unary_rejected("succ-huge", nat(huge, 3), "arg0 is not below its Fin ${huge} bound"));
+  CHECK(unary_rejected("succ-huge", nat(huge_next, 3), "arg0 is not below its Fin ${huge} bound"));
+  CHECK(unary_rejected("succ-huge", nat(wide, 5), "arg0 is not below its Fin ${huge} bound"));
   /* A result-only refinement returns limbs below its bound. */
   CHECK(unary("wrap", small(100), two, 1));
   CHECK(unary("wrap", nat(huge, 3), two, 1));
@@ -152,7 +152,7 @@ int main(void) {
   value labelled = call("label", arguments, 3);
   CHECK(labelled.kind == WASMTIME_COMPONENT_STRING && labelled.of.string.size == 6 && memcmp(labelled.of.string.data, "slot:8", 6) == 0);
   clear(&labelled); clear(&arguments[1]); arguments[1] = small(4);
-  CHECK(rejected("label", arguments, 3, "offset is not below its Fin 4 bound"));
+  CHECK(rejected("label", arguments, 3, "arg1 is not below its Fin 4 bound"));
   CHECK(is_small(&arguments[0], 5) && is_small(&arguments[1], 4));
   CHECK(arguments[2].kind == WASMTIME_COMPONENT_STRING && arguments[2].of.string.size == 4 && memcmp(arguments[2].of.string.data, "slot", 4) == 0);
   clear(&arguments[1]); arguments[1] = small(0);
@@ -161,12 +161,12 @@ int main(void) {
   clear(&labelled); for (size_t i = 0; i < 3; ++i) clear(&arguments[i]);
   /* Repeated invalid and valid calls recover; each rejection refreshes the store. */
   for (uint32_t i = 0; i < 1000; ++i) {
-    if (!unary_rejected("mirror", small(10 + i), "value is not below its Fin 10 bound")) { fprintf(stderr, "invalid call %u accepted\\n", i); return 1; }
+    if (!unary_rejected("mirror", small(10 + i), "arg0 is not below its Fin 10 bound")) { fprintf(stderr, "invalid call %u accepted\\n", i); return 1; }
     const uint32_t expected = 9 - i % 10;
     if (!unary("mirror", small(i % 10), &expected, expected ? 1 : 0)) { fprintf(stderr, "valid call %u failed\\n", i); return 1; }
   }
   checks += 2000;
-  native_fin_wasmtime_close(session); session = NULL;
+  nativefin_wasmtime_close(session); session = NULL;
   printf("{\\"hostVersion\\":\\"%s\\",\\"checks\\":%zu,\\"rejections\\":%zu,\\"results\\":[],\\"loadedLibraries\\":[", WASMTIME_VERSION, checks, rejections);
   bool comma = false; dl_iterate_phdr(loaded, &comma); puts("]}");
   return 0;
@@ -185,7 +185,7 @@ const finIr = () => {
 test("WIT/WASI host packages are checked Fin consumers beside the other C-adapter hosts", () => {
 	for(const targets of [["wit-wasi"], ["c", "wit-wasi"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	assert.equal(supportsNativeRefinementTargets(["wit-wasi", "cpan"]), false);
+	assert.equal(supportsNativeRefinementTargets(["wit-wasi", "cpan"]), true);
 });
 
 test("WIT bound docs come only from checked refinement metadata and leave the WIT text unchanged", () => {
@@ -215,9 +215,12 @@ test("relocated source-free WIT/WASI hosts check Fin bounds through the bundled 
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		// The installed WIT harness uses one name for the component and its C prefix, so use a package name without a hyphen.
+		await writeFile(join(projectRoot, "lakefile.toml"), 'name = "nativefin"\nversion = "1.0.0"\n[[lean_lib]]\nname = "NativeFin"\n');
+		await writeFile(join(projectRoot, "package.json"), '{"name":"nativefin","version":"1.0.0","license":"MIT"}\n');
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
-			, targets: { c: { name: "native-fin", version: "1.0.0" }, "wit-wasi": { name: "native-fin", version: "1.0.0" } } }));
+			, targets: { c: { name: "nativefin", version: "1.0.0" }, "wit-wasi": { name: "nativefin", version: "1.0.0" } } }));
 		t.diagnostic(`build ${attempt}: compiling the shared C library and WIT/WASI host package`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: ["c", "wit-wasi"], environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
@@ -248,7 +251,7 @@ test("relocated source-free WIT/WASI hosts check Fin bounds through the bundled 
 			}
 			return exportsInOrder;
 		};
-		const installed = await installedWitCorpus({ library: { cModule: "native_fin" }
+		const installed = await installedWitCorpus({ library: { cModule: "nativefin" }
 			, consumer, handoff, pkg, environment, clean: copiedCleanEnvironment
 			, fixture: { source: witFinConsumer(), validateSignatures } })
 			.catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
@@ -257,7 +260,7 @@ test("relocated source-free WIT/WASI hosts check Fin bounds through the bundled 
 		// The host package bundles the exact checked adapter that the C, Python and Rust probes instrument.
 		const witLibraries = sharedLibraries(installed.wit.packageReceipt.files);
 		const shared = Object.keys(witLibraries).filter(name => Object.hasOwn(cLibraries, name)).sort();
-		assert.ok(shared.includes("libnative_fin.so"), JSON.stringify({ wit: witLibraries, c: cLibraries }));
+		assert.ok(shared.includes("libnativefin.so"), JSON.stringify({ wit: witLibraries, c: cLibraries }));
 		for(const name of shared) assert.equal(witLibraries[name], cLibraries[name], name);
 		reports.push({ profile: "wit-wasi", path: "ordinary-source"
 			, ...installed

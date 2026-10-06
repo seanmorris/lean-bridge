@@ -149,6 +149,7 @@ jobs:
           LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs
           LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs
           LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs tests/perl-alias-contract.test.mjs
+          LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests/perl-fin.test.mjs
           LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs
           LEAN_BRIDGE_PERL_GRAPH_TEST=1 node --test tests/perl-copied-graph-values.test.mjs
           LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs
@@ -161,6 +162,7 @@ jobs:
           test -s build/lists/perl.json
           test -s build/collections/perl.json
           test -s build/aliases/perl.json
+          test -s build/native-fin/perl.json
           test -s build/variants/perl.json
           test -s build/recursive/perl-values.json
           test -s build/recursive/perl-conversions.json
@@ -223,6 +225,7 @@ jobs:
             build/lists/perl.json
             build/collections/perl.json
             build/aliases/perl.json
+            build/native-fin/perl.json
             build/variants/perl.json
             build/recursive/perl-values.json
             build/recursive/perl-conversions.json

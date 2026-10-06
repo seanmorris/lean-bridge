@@ -227,9 +227,29 @@ const conversion = (model, type) => {
 	return `static ${nativeCType(type)} ${read(type)}(pTHX_ lbp_scope *scope, SV *value) {\n${from}\n}\nstatic SV *${write(type)}(pTHX_ lbp_scope *scope, ${nativeCType(type)} value) {\n${to}\n}\n`;
 };
 
+// Bounds come from the compiler-checked native model, never from the erased Nat type.
+const perlFinBounds = item => {
+	if(!item.refinements) return null;
+	const parts = item.refinements.parameters.flatMap((refinement, index) => refinement ? [`${item.parameters[index].name} < ${refinement.bound}`] : []);
+	if(item.refinements.result) parts.push(`result < ${item.refinements.result.bound}`);
+	return parts.length ? parts.join("; ") : null;
+};
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
-const publicXsub = (name, symbol, parameters, result) => {
-	if([...parameters, result].every(scalarFastType)) return `
+// Compare a Lean Nat argument with its exact Fin bound before any Lean function runs.
+// The surrounding scope still owns every argument, so croak releases them all.
+const finGuard = ({ index, bound, name }) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(a${index}, bound); lean_dec(bound);
+      if (!below) croak("%s", ${q(`${name} is not below its Fin ${bound} bound`)}); }`;
+const publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {
+	const guards = (refinements?.parameters ?? []).flatMap((refinement, index) => refinement ? [{ index, bound: refinement.bound, name: names[index] }] : []);
+	const invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})`;
+	// A guarded adapter returns Option: none is a rejected bound, some holds the boxed result.
+	const call = guards.length ? `lean_object *checked = ${invoke};
+    if (lean_is_scalar(checked)) croak("Lean rejected an argument outside its Fin bound");
+    lean_object *boxed = lean_ctor_get(checked, 0);
+    ${nativeObjectType(result) ? "lean_inc(boxed);" : ""}
+    ${nativeCType(result)} result = ${nativeObjectType(result) ? "boxed" : `(${nativeCType(result)})${result.abi.unbox}(boxed)`};
+    lean_dec(checked);` : `${nativeCType(result)} result = ${invoke};`;
+	if(!guards.length && [...parameters, result].every(scalarFastType)) return `
 void
 ${name}(...)
   PPCODE:
@@ -250,9 +270,9 @@ ${name}(...)
     lbp_check_interpreter(aTHX);
     lbp_component_ready(aTHX);
     LBP_ENTER();
-    ${parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`).join("\n    ")}
+    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards.map(finGuard)].join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
-    ${nativeCType(result)} result = ${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"});
+    ${call}
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}
     lbp_finish(aTHX_ scope);
     lbp_component_ready(aTHX);
@@ -336,7 +356,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
     }`);
 	}
 	lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${model.moduleName}`, "PROTOTYPES: DISABLE", "");
-	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result));
+	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map(p => p.name)));
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
 		lines.push(`
@@ -413,6 +433,8 @@ _callback_${type.key}(...)
 	for(const item of model.exports)
 	{
 		pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
+		const bounds = perlFinBounds(item);
+		if(bounds) pm.push(`Checked Lean Fin bounds: ${bounds}.`, "");
 		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
 	}
 	if(aliases.length) pm.push(...perlAliasPod(model, aliases, structuredCallables));
@@ -429,6 +451,8 @@ _callback_${type.key}(...)
 		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
 		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
 		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
+	if(model.exports.some(perlFinBounds)) pm.push("=head1 BOUNDED INTEGERS", ""
+		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before any Lean function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

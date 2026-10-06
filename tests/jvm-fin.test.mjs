@@ -38,7 +38,7 @@ const sharedLibraries = files => Object.fromEntries(Object.entries(files)
 const javaFinConsumer = () => `import org.leanbridge.native_fin.Api;
 import java.math.BigInteger;
 
-public final class Consumer {
+final class Consumer {
     private Consumer() { }
     private static int checks;
     static void check(boolean value, String label) { if (!value) throw new AssertionError("failed: " + label); checks++; }
@@ -54,30 +54,30 @@ public final class Consumer {
     static BigInteger n(long value) { return BigInteger.valueOf(value); }
     public static void main(String[] args) {
         BigInteger huge = BigInteger.ONE.shiftLeft(70), word = BigInteger.ONE.shiftLeft(32);
-        check(rejected(() -> Api.impossible(n(0)), "value", "0"), "Fin 0 rejects zero");
-        check(rejected(() -> Api.impossible(n(1)), "value", "0"), "Fin 0 rejects one");
+        check(rejected(() -> Api.impossible(n(0)), "arg0", "0"), "Fin 0 rejects zero");
+        check(rejected(() -> Api.impossible(n(1)), "arg0", "0"), "Fin 0 rejects one");
         check(Api.only(n(0)).equals(n(7)), "Fin 1 accepts zero");
-        check(rejected(() -> Api.only(n(1)), "value", "1"), "Fin 1 rejects its bound");
+        check(rejected(() -> Api.only(n(1)), "arg0", "1"), "Fin 1 rejects its bound");
         check(Api.mirror(n(0)).equals(n(9)) && Api.mirror(n(9)).equals(n(0)), "Fin 10 endpoints");
         for (BigInteger value : new BigInteger[] { n(10), n(11), word, huge })
-            check(rejected(() -> Api.mirror(value), "value", "10"), "Fin 10 rejects " + value);
-        check(throwsType(IllegalArgumentException.class, () -> Api.mirror(n(-1))) && !rejected(() -> Api.mirror(n(-1)), "value", "10"), "negative is the Nat error");
+            check(rejected(() -> Api.mirror(value), "arg0", "10"), "Fin 10 rejects " + value);
+        check(throwsType(IllegalArgumentException.class, () -> Api.mirror(n(-1))) && !rejected(() -> Api.mirror(n(-1)), "arg0", "10"), "negative is the Nat error");
         check(throwsType(NullPointerException.class, () -> Api.mirror(null)), "null is rejected");
         check(Api.twice(n(299)).equals(n(598)), "alias accepts its largest value");
-        check(rejected(() -> Api.twice(n(300)), "value", "300"), "alias rejects its bound");
-        check(rejected(() -> Api.twice(n(301)), "value", "300"), "alias rejects beyond its bound");
+        check(rejected(() -> Api.twice(n(300)), "arg0", "300"), "alias rejects its bound");
+        check(rejected(() -> Api.twice(n(301)), "arg0", "300"), "alias rejects beyond its bound");
         check(Api.succHuge(word).equals(word.add(BigInteger.ONE)), "large Fin crosses a limb");
         check(Api.succHuge(huge.subtract(n(2))).equals(huge.subtract(BigInteger.ONE)) && Api.succHuge(huge.subtract(BigInteger.ONE)).equals(huge.subtract(BigInteger.ONE)), "large Fin endpoints");
         for (BigInteger value : new BigInteger[] { huge, huge.add(BigInteger.ONE), BigInteger.ONE.shiftLeft(128) })
-            check(rejected(() -> Api.succHuge(value), "value", huge.toString()), "large Fin rejects " + value);
+            check(rejected(() -> Api.succHuge(value), "arg0", huge.toString()), "large Fin rejects " + value);
         check(Api.wrap(n(100)).equals(n(2)) && Api.wrap(huge).equals(n(2)) && Api.wrap(n(0)).equals(n(0)), "result-only Fin values");
         BigInteger start = n(5); String name = "slot";
         check(Api.label(start, n(3), name).equals("slot:8"), "mixed arguments");
-        check(rejected(() -> Api.label(start, n(4), name), "offset", "4"), "mixed arguments reject the Fin site");
+        check(rejected(() -> Api.label(start, n(4), name), "arg1", "4"), "mixed arguments reject the Fin site");
         check(start.equals(n(5)) && name.equals("slot") && Api.label(start, n(0), name).equals("slot:5"), "caller data unchanged");
         for (int i = 0; i < 1000; i++) {
             final int k = i;
-            if (!rejected(() -> Api.mirror(n(10 + k)), "value", "10")) throw new AssertionError("invalid call accepted at " + i);
+            if (!rejected(() -> Api.mirror(n(10 + k)), "arg0", "10")) throw new AssertionError("invalid call accepted at " + i);
             if (!Api.mirror(n(i % 10)).equals(n(9 - i % 10))) throw new AssertionError("valid call failed at " + i);
         }
         checks += 2000;
@@ -89,8 +89,7 @@ public final class Consumer {
 test("JVM packages are checked Fin consumers beside C, C++, Python, Rust, Ruby and .NET", () => {
 	for(const targets of [["maven"], ["c", "maven"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan"])
-		assert.equal(supportsNativeRefinementTargets(["maven", target]), false, target);
+	assert.equal(supportsNativeRefinementTargets(["maven", "cpan"]), true);
 });
 
 test("generated JVM bound docs come only from checked refinement metadata", () => {

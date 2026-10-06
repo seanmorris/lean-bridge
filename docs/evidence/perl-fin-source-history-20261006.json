@@ -1,0 +1,2219 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-fin-v1",
+  "predecessorCommit": "df2063443d48f2cd38ab6494126521e103bf0f07",
+  "updates": [
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "currentSha256": "2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee",
+      "previousSha256": "9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b",
+      "edits": [
+        {
+          "start": 7689,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests/perl-fin.test.mjs\n"
+        },
+        {
+          "start": 8692,
+          "previous": "",
+          "current": "          test -s build/native-fin/perl.json\n"
+        },
+        {
+          "start": 12221,
+          "previous": "",
+          "current": "            build/native-fin/perl.json\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "dae1f596034a3e5e1d4ed6b97b377868ca5c38f904945c1595e2d4e709f274f7",
+      "previousSha256": "e032c0560b7cacd3f0cacb5721476ac5a287ad13d7cf0f7b89b9178341b92d48",
+      "edits": [
+        {
+          "start": 32419,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 34257,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 39698,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 45341,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 46162,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 56815,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 66249,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 74018,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 82099,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 90311,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 97536,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 107364,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 122961,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 125403,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 146190,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 159156,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 174055,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 177153,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 186988,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 189593,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 200207,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 208745,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 217176,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 226190,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 234856,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 243625,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 244431,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 245070,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 253532,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 255815,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 263381,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 275520,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 278444,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 284888,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 285554,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 286684,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 287155,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 287471,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 294106,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 296546,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 303400,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 306164,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 316089,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 318874,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 325340,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 327779,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 334627,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 337239,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 343750,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 345992,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 352613,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 354552,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 359998,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 367932,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 378582,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 384969,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 385467,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 386430,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 387059,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 392676,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 399772,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 410631,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 417747,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 424125,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 430288,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 436048,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 437047,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 443889,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 450731,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 451217,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 453651,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 460035,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 460521,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 471269,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 471755,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 474999,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 480958,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 481444,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 484688,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 489888,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 490551,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 491037,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 492148,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 493096,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 493563,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 502081,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 502567,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 505494,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 510644,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 511130,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 514380,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 521658,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 522144,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 525251,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 530476,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 533075,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 538206,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 541145,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 545753,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 547697,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 548334,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 554188,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 560184,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 560670,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 570447,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 570933,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 573854,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 579089,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 579760,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 580246,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 581357,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 582305,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 582772,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 591308,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 591794,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 594721,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 599829,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 600315,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 603565,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 610785,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 611271,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 614378,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 619520,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 622119,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 626984,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 629923,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 634382,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 636326,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 636963,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 660201,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n",
+          "current": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n"
+        },
+        {
+          "start": 670303,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 676351,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 677163,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 685135,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 696889,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 699166,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 707603,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 710379,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 721954,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 724599,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 732606,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 736053,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 744639,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 748124,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 756073,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 759412,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 765330,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 767995,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 771778,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 774453,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 780529,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 782839,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 789015,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 790814,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 790974,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 791139,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 800761,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 802946,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 805399,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 809189,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 821757,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 822084,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 823570,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 843841,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 854350,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 864821,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 873837,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 877602,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 878088,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 880522,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 890726,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 899706,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 909191,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 920213,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 930691,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 939393,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 954996,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 956461,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 956940,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 957886,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 993177,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 994323,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 1006507,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 1026597,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1031359,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 1035396,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1050379,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1051677,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1052513,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1058123,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1058929,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1060287,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1064573,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1065384,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1065719,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1071833,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1072487,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1072820,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1079178,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1079828,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1079986,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1086231,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1086885,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1087043,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1093832,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1094969,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1095295,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1102768,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 1104112,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1104438,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 1104758,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1117274,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1121769,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1127532,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1128503,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1128844,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1135418,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1136741,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1146155,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1147306,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1147621,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1156415,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1159783,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1170834,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1180989,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1183309,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1203378,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1212666,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1214664,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1233660,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1244993,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1247464,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1262053,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 1266623,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1273965,
+          "previous": "          \"sha256\": \"4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84\"\n",
+          "current": "          \"sha256\": \"f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c\"\n"
+        },
+        {
+          "start": 1279773,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1280594,
+          "previous": "          \"sha256\": \"dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48\"\n",
+          "current": "          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n"
+        },
+        {
+          "start": 1282564,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1301854,
+          "previous": "          \"sha256\": \"9de3d0555aa27405905e44cb389ac359cf8e77544f70d66f40616320cea8363b\"\n",
+          "current": "          \"sha256\": \"2c30795b473cf693abf5cd551af6162ca85dfdfe50cde787c447bd0e3d4d77ee\"\n"
+        },
+        {
+          "start": 1307849,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1312075,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1313410,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1333401,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1336223,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1336707,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1355938,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1357928,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1358598,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1375630,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1378671,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1396273,
+          "previous": "          \"sha256\": \"78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d\"\n",
+          "current": "          \"sha256\": \"314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d\"\n"
+        },
+        {
+          "start": 1398451,
+          "previous": "          \"sha256\": \"ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46\"\n",
+          "current": "          \"sha256\": \"f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n",
+          "current": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8\"\n",
+          "current": "          \"sha256\": \"f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a\"\n"
+        },
+        {
+          "start": 1435078,
+          "previous": "          \"sha256\": \"e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0\"\n",
+          "current": "          \"sha256\": \"5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75\"\n"
+        },
+        {
+          "start": 1435714,
+          "previous": "          \"sha256\": \"fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc\"\n",
+          "current": "          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n"
+        },
+        {
+          "start": 1436362,
+          "previous": "          \"sha256\": \"cdfe322214e96dfd1e8bf79b995f887d6f65a18e911f246758efc986c6bafb32\"\n",
+          "current": "          \"sha256\": \"99978f04df0180137084c12c2c410c8e421248c09aac5c9bce0926930197b8d6\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "314d7e29f586010a313bfbb4e6cdfe95f780c4c9aac80fe96fa295c5d644447d",
+      "previousSha256": "78ef26a6a721a4d610789ff09defe57dfcc2f6e7b11056d593e726ece020008d",
+      "edits": [
+        {
+          "start": 27161,
+          "previous": "",
+          "current": "\t\t, \"perl-fin\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/native-metadata.mjs",
+      "currentSha256": "5e5e34e49d42e8688f73496966fcd295724ca29b13f9037ac8bb143eb8d0eb75",
+      "previousSha256": "e4326a07ae1864e65c85abe8f9fbe392ce4203a2740e9b1d78ba1aab902714a0",
+      "edits": [
+        {
+          "start": 5289,
+          "previous": "\tif(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary C, C++, Python, Rust, Ruby, .NET, JVM, PHP and WIT native packages`), {\n",
+          "current": "\tif(refined && !refinements) throw Object.assign(new Error(`${refined.identity}: checked Fin refinements are implemented only for ordinary native packages with bound-checking adapters`), {\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/perl/generate.mjs",
+      "currentSha256": "f7e365d642d667f1edb7ca3826b1cf8692e0384724efaf22275753f8d740bb0c",
+      "previousSha256": "4ea65d2c8d8c9d0c4e1ba34be76918b7fad4327eef0ea9e0ae75d56208996d84",
+      "edits": [
+        {
+          "start": 14776,
+          "previous": "",
+          "current": "// Bounds come from the compiler-checked native model, never from the erased Nat type.\nconst perlFinBounds = item => {\n\tif(!item.refinements) return null;\n\tconst parts = item.refinements.parameters.flatMap((refinement, index) => refinement ? [`${item.parameters[index].name} < ${refinement.bound}`] : []);\n\tif(item.refinements.result) parts.push(`result < ${item.refinements.result.bound}`);\n\treturn parts.length ? parts.join(\"; \") : null;\n};\n"
+        },
+        {
+          "start": 15335,
+          "previous": "const publicXsub = (name, symbol, parameters, result) => {\n\tif([...parameters, result].every(scalarFastType)) return `\n",
+          "current": "// Compare a Lean Nat argument with its exact Fin bound before any Lean function runs.\n// The surrounding scope still owns every argument, so croak releases them all.\nconst finGuard = ({ index, bound, name }) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(a${index}, bound); lean_dec(bound);\n      if (!below) croak(\"%s\", ${q(`${name} is not below its Fin ${bound} bound`)}); }`;\nconst publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {\n\tconst guards = (refinements?.parameters ?? []).flatMap((refinement, index) => refinement ? [{ index, bound: refinement.bound, name: names[index] }] : []);\n\tconst invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(\", \") || \"lean_box(0)\"})`;\n\t// A guarded adapter returns Option: none is a rejected bound, some holds the boxed result.\n\tconst call = guards.length ? `lean_object *checked = ${invoke};\n    if (lean_is_scalar(checked)) croak(\"Lean rejected an argument outside its Fin bound\");\n    lean_object *boxed = lean_ctor_get(checked, 0);\n    ${nativeObjectType(result) ? \"lean_inc(boxed);\" : \"\"}\n    ${nativeCType(result)} result = ${nativeObjectType(result) ? \"boxed\" : `(${nativeCType(result)})${result.abi.unbox}(boxed)`};\n    lean_dec(checked);` : `${nativeCType(result)} result = ${invoke};`;\n\tif(!guards.length && [...parameters, result].every(scalarFastType)) return `\n"
+        },
+        {
+          "start": 17467,
+          "previous": "    ${parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`).join(\"\\n    \")}\n",
+          "current": "    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards.map(finGuard)].join(\"\\n    \")}\n"
+        },
+        {
+          "start": 17685,
+          "previous": "    ${nativeCType(result)} result = ${symbol}(${parameters.map((_, i) => `a${i}`).join(\", \") || \"lean_box(0)\"});\n",
+          "current": "    ${call}\n"
+        },
+        {
+          "start": 22284,
+          "previous": "\tfor(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result));\n",
+          "current": "\tfor(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map(p => p.name)));\n"
+        },
+        {
+          "start": 26405,
+          "previous": "",
+          "current": "\t\tconst bounds = perlFinBounds(item);\n\t\tif(bounds) pm.push(`Checked Lean Fin bounds: ${bounds}.`, \"\");\n"
+        },
+        {
+          "start": 30416,
+          "previous": "",
+          "current": "\tif(model.exports.some(perlFinBounds)) pm.push(\"=head1 BOUNDED INTEGERS\", \"\"\n\t\t, \"Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before any Lean function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.\", \"\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "currentSha256": "581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575",
+      "previousSha256": "fe2e98f7139169eaf9bec797096a4dbfada4322d520ba99a61e7f139c31fdecc",
+      "edits": [
+        {
+          "start": 3536,
+          "previous": "export const supportsNativeRefinementTargets = targets => targets.every(target => [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target));\n",
+          "current": "export const supportsNativeRefinementTargets = targets => targets.every(target => [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\", \"cpan\"].includes(target));\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/cpan-package.mjs",
+      "currentSha256": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9",
+      "previousSha256": "dc1090d621c118e3440452103f6c44f2ad3a5ca6e0a090ca9b00d950dc5d6b48",
+      "edits": [
+        {
+          "start": 11023,
+          "previous": "\t\t\t, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned });\n",
+          "current": "\t\t\t, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "f9d3b5df35a65ad69237f193e03d1c5927cbee831135bfca2c47c037057d688a",
+      "previousSha256": "cb44596464ce307e1ae07d51ab987a2f4f917b6f8f1fa870c7886678a76af9a8",
+      "edits": [
+        {
+          "start": 3037,
+          "previous": "",
+          "current": "import \"./helpers/perl-fin-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "f2e7dfa77c4484b2861af94cfd731e1b643051bde67f873e53c65d886fd7067a",
+      "previousSha256": "ad1a8fc34e48ab9daf9e0911de74c1f7ed8621892ebac3d602de3d61c8d37c46",
+      "edits": [
+        {
+          "start": 39298,
+          "previous": "",
+          "current": "  assert.match(perlWorkflow, /tests\\/perl-alias-contract\\.test\\.mjs\\n\\s*LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests\\/perl-fin\\.test\\.mjs\\n/);\n  assert.match(perlWorkflow, /test -s build\\/aliases\\/perl\\.json\\n\\s*test -s build\\/native-fin\\/perl\\.json\\n/);\n"
+        },
+        {
+          "start": 91327,
+          "previous": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/native-fin\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/dotnet-fin.test.mjs",
+      "currentSha256": "2ce08c70b02c0e2c79cc8a02bb6e0b8f66eb3b150849b7beea0c162bd110623a",
+      "previousSha256": "d778090bbbd359b8422dad9771111ae33641db635906e0fda844881194a49592",
+      "edits": [
+        {
+          "start": 2846,
+          "previous": "        Check(Rejected(() => Api.Impossible(0), \"value\", \"0\"), \"Fin 0 rejects zero\");\n        Check(Rejected(() => Api.Impossible(1), \"value\", \"0\"), \"Fin 0 rejects one\");\n",
+          "current": "        Check(Rejected(() => Api.Impossible(0), \"arg0\", \"0\"), \"Fin 0 rejects zero\");\n        Check(Rejected(() => Api.Impossible(1), \"arg0\", \"0\"), \"Fin 0 rejects one\");\n"
+        },
+        {
+          "start": 3070,
+          "previous": "        Check(Rejected(() => Api.Only(1), \"value\", \"1\"), \"Fin 1 rejects its bound\");\n",
+          "current": "        Check(Rejected(() => Api.Only(1), \"arg0\", \"1\"), \"Fin 1 rejects its bound\");\n"
+        },
+        {
+          "start": 3323,
+          "previous": "            Check(Rejected(() => Api.Mirror(value), \"value\", \"10\"), \"Fin 10 rejects \" + value);\n",
+          "current": "            Check(Rejected(() => Api.Mirror(value), \"arg0\", \"10\"), \"Fin 10 rejects \" + value);\n"
+        },
+        {
+          "start": 3616,
+          "previous": "        Check(Rejected(() => Api.Twice(300), \"value\", \"300\"), \"alias rejects its bound\");\n        Check(Rejected(() => Api.Twice(301), \"value\", \"300\"), \"alias rejects beyond its bound\");\n",
+          "current": "        Check(Rejected(() => Api.Twice(300), \"arg0\", \"300\"), \"alias rejects its bound\");\n        Check(Rejected(() => Api.Twice(301), \"arg0\", \"300\"), \"alias rejects beyond its bound\");\n"
+        },
+        {
+          "start": 4067,
+          "previous": "            Check(Rejected(() => Api.SuccHuge(value), \"value\", huge.ToString()), \"large Fin rejects \" + value);\n",
+          "current": "            Check(Rejected(() => Api.SuccHuge(value), \"arg0\", huge.ToString()), \"large Fin rejects \" + value);\n"
+        },
+        {
+          "start": 4407,
+          "previous": "        Check(Rejected(() => Api.Label(start, 4, name), \"offset\", \"4\"), \"mixed arguments reject the Fin site\");\n",
+          "current": "        Check(Rejected(() => Api.Label(start, 4, name), \"arg1\", \"4\"), \"mixed arguments reject the Fin site\");\n"
+        },
+        {
+          "start": 4677,
+          "previous": "            if (!Rejected(() => Api.Mirror(10 + i), \"value\", \"10\")) throw new Exception(\"invalid call accepted at \" + i);\n",
+          "current": "            if (!Rejected(() => Api.Mirror(10 + i), \"arg0\", \"10\")) throw new Exception(\"invalid call accepted at \" + i);\n"
+        },
+        {
+          "start": 5295,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"nuget\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"nuget\", \"cpan\"]), true);\n"
+        },
+        {
+          "start": 10445,
+          "previous": "\t\tassert.match(docs, /Checked Lean Fin bounds: value &lt; 10; result &lt; 10\\./);\n",
+          "current": "\t\tassert.match(docs, /Checked Lean Fin bounds: arg0 &lt; 10; result &lt; 10\\./);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "474c86a53e1a1c8f8c43c9a06cd09f10118f9ecf6ccc60868bd0d1bdf9849a65",
+      "previousSha256": "2f41d8162593c497aeed28857a8b17518de9382019e23a8072937fd9efd7cf95",
+      "edits": [
+        {
+          "start": 1099,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3649,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "d4df6e9b38bafe04a0139bfb8ba6d7721b38feed2d9f95d1913e8b99d0147fa2",
+      "previousSha256": "8efbc2910f6ca428c99ce9a542a6a9c788eba3851d867791611356a13815fdd4",
+      "edits": [
+        {
+          "start": 959,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3288,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "ad669c01611d696dddf423335f06894c464ad11e7c800f33783a5b70a6beff71",
+      "previousSha256": "9beb8605a866cb3dfad557663d070314463b71da6ced04aaa3a88b44854ee073",
+      "edits": [
+        {
+          "start": 1098,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3754,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "001d38b2b4980d5b5489b5d1877155787bbe93e91be26b302173402ba0d97bd8",
+      "previousSha256": "042077e97a6d5e8952425db51794e50dc664fe28354c3b59ce2a6206feb9d7aa",
+      "edits": [
+        {
+          "start": 661,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2907,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "36716380f0a591a97a5506a57be322e5159840c14bf9dd209442c8eef60f6610",
+      "previousSha256": "fb7a268cc2fa4c23460223d62dc6e88e93e8eb1293d738fbee3a18f45528ab56",
+      "edits": [
+        {
+          "start": 363,
+          "previous": "",
+          "current": "import { beforePerlFinSource, perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 1033,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePerlFinSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2731,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history.mjs",
+      "currentSha256": "d506a44758c1ddb3742573c14fea934b8a2106c72866f6478a2a6a2e97c03df7",
+      "previousSha256": "772af6e6cce5872513445144e65c5e7075427f79c31c1508dc65fe347123b628",
+      "edits": [
+        {
+          "start": 232,
+          "previous": "",
+          "current": "import { beforePerlFinSource } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3172,
+          "previous": "",
+          "current": "\tsource = beforePerlFinSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "67a5f329066a925fcca59632605828b7ad3f2688e46eda5af6898dc479b16500",
+      "previousSha256": "a656494e051766143fbcfc935a3f090ea03f69459e29e819bde7fc7e995b6f84",
+      "edits": [
+        {
+          "start": 2160,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 36055,
+          "previous": "",
+          "current": "\t, ...perlFinChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "52e9365bdd9bf42aea29251affac4026009ca005dfa152ee7d9490341bbb2ad2",
+      "previousSha256": "74a9e2a60dc38eb6a7f86a7b5c52cd37965b0a815ccbd8dceeb6c30e2f7dc288",
+      "edits": [
+        {
+          "start": 593,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2795,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "d72679a785a16962ae877ae1853a836686514c2a881a377b530870752a2d39c1",
+      "previousSha256": "ba179beaeecacb4472e269bcf56d45b425819b3bf32aae8472c5725f1c224e39",
+      "edits": [
+        {
+          "start": 1100,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 4917,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "4f5513840d6d0a85da5d6a125b0b65926da6b8c6ce893c1f6671bc1e32f0fa68",
+      "previousSha256": "05e8ecc5ab728203edc8223ef422f459601227d8a8877d4f19bd1dd295dfc6cb",
+      "edits": [
+        {
+          "start": 1097,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3833,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "627ecd1c452e95cdc4810e42bf76e1b6e71728ffd9c5a63a7a65ef8e99d09dbd",
+      "previousSha256": "3e8a28e251d313cecd53fe5219daa77332d305a136e14cf0cb475f57c1cf7f85",
+      "edits": [
+        {
+          "start": 526,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2728,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-consumers.mjs",
+      "currentSha256": "f4c682f45cab7168dd6fa3ee8f0ffcc84dced0d994fcc0c2af3e9d7b4202e5da",
+      "previousSha256": "fe771fa6c1d6c8e780c4775d43912da457cad6bf061ee88c50b47bbd4f9f71cd",
+      "edits": [
+        {
+          "start": 924,
+          "previous": "require(rejected(lambda: api.impossible(0), \"value\", \"0\"), \"Fin 0 rejects zero\")\nrequire(rejected(lambda: api.impossible(1), \"value\", \"0\"), \"Fin 0 rejects one\")\n",
+          "current": "require(rejected(lambda: api.impossible(0), \"arg0\", \"0\"), \"Fin 0 rejects zero\")\nrequire(rejected(lambda: api.impossible(1), \"arg0\", \"0\"), \"Fin 0 rejects one\")\n"
+        },
+        {
+          "start": 1158,
+          "previous": "require(rejected(lambda: api.only(1), \"value\", \"1\"), \"Fin 1 rejects its bound\")\n",
+          "current": "require(rejected(lambda: api.only(1), \"arg0\", \"1\"), \"Fin 1 rejects its bound\")\n"
+        },
+        {
+          "start": 1514,
+          "previous": "    require(rejected(lambda: api.mirror(value), \"value\", \"10\"), \"Fin 10 rejects \" + str(value))\n",
+          "current": "    require(rejected(lambda: api.mirror(value), \"arg0\", \"10\"), \"Fin 10 rejects \" + str(value))\n"
+        },
+        {
+          "start": 2022,
+          "previous": "require(rejected(lambda: api.twice(300), \"value\", \"300\"), \"alias rejects its bound\")\nrequire(rejected(lambda: api.twice(301), \"value\", \"300\"), \"alias rejects beyond its bound\")\n",
+          "current": "require(rejected(lambda: api.twice(300), \"arg0\", \"300\"), \"alias rejects its bound\")\nrequire(rejected(lambda: api.twice(301), \"arg0\", \"300\"), \"alias rejects beyond its bound\")\n"
+        },
+        {
+          "start": 2451,
+          "previous": "    require(rejected(lambda: api.succ_huge(value), \"value\", str(HUGE)), \"large Fin rejects \" + str(value))\n",
+          "current": "    require(rejected(lambda: api.succ_huge(value), \"arg0\", str(HUGE)), \"large Fin rejects \" + str(value))\n"
+        },
+        {
+          "start": 2952,
+          "previous": "require(rejected(lambda: api.label(base, 4, name), \"offset\", \"4\"), \"mixed arguments reject the Fin site\")\n",
+          "current": "require(rejected(lambda: api.label(base, 4, name), \"arg1\", \"4\"), \"mixed arguments reject the Fin site\")\n"
+        },
+        {
+          "start": 3450,
+          "previous": "    if not rejected(lambda: api.mirror(10 + i), \"value\", \"10\"):\n",
+          "current": "    if not rejected(lambda: api.mirror(10 + i), \"arg0\", \"10\"):\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "3482042941d255944905adc0df5c401d4767a2ac60e675428da19490758cf02c",
+      "previousSha256": "658ce401a90fd1bda8ec830d9df7fe90bc7a4f94623b915f42edadd01e113312",
+      "edits": [
+        {
+          "start": 875,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3126,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "fd16863ad44ee5ee1537c0005692c254ef63dd617d317d8bf87ce910d98c46c5",
+      "previousSha256": "6240a48ffaa3c68ed951418afbc99fda9b79ae9c795b38266906f65cfb5bfa23",
+      "edits": [
+        {
+          "start": 737,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2958,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "4a6e3eb2847d81a0d3b76957fc00e6be30dac43f7654bf05c65263c5158497ba",
+      "previousSha256": "20dadf717b869745adc4d98fa755a477443a6fc9f6420f972f05517dc9327dde",
+      "edits": [
+        {
+          "start": 1037,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3368,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-consumers.mjs",
+      "currentSha256": "092af81ba835c5e52ce4e2ad8b7681a8880903b08a18c42be3ea0f828ecfcbb0",
+      "previousSha256": "cede9a7a8c62268205b57377eb8441b3d5b5d3ef8a2b6531bfd9370f6e852a5e",
+      "edits": [
+        {
+          "start": 1096,
+          "previous": "    require!(rejected(api::impossible(&n(0)), \"value\", \"0\"));\n    require!(rejected(api::impossible(&n(1)), \"value\", \"0\"));\n",
+          "current": "    require!(rejected(api::impossible(&n(0)), \"arg0\", \"0\"));\n    require!(rejected(api::impossible(&n(1)), \"arg0\", \"0\"));\n"
+        },
+        {
+          "start": 1299,
+          "previous": "    require!(rejected(api::only(&n(1)), \"value\", \"1\"));\n",
+          "current": "    require!(rejected(api::only(&n(1)), \"arg0\", \"1\"));\n"
+        },
+        {
+          "start": 1575,
+          "previous": "        require!(rejected(api::mirror(&value), \"value\", \"10\"));\n",
+          "current": "        require!(rejected(api::mirror(&value), \"arg0\", \"10\"));\n"
+        },
+        {
+          "start": 1749,
+          "previous": "    require!(rejected(api::twice(&n(300)), \"value\", \"300\"));\n    require!(rejected(api::twice(&n(301)), \"value\", \"300\"));\n",
+          "current": "    require!(rejected(api::twice(&n(300)), \"arg0\", \"300\"));\n    require!(rejected(api::twice(&n(301)), \"arg0\", \"300\"));\n"
+        },
+        {
+          "start": 2238,
+          "previous": "        require!(rejected(api::succ_huge(&value), \"value\", &bound));\n",
+          "current": "        require!(rejected(api::succ_huge(&value), \"arg0\", &bound));\n"
+        },
+        {
+          "start": 2720,
+          "previous": "    require!(rejected(api::label(&base, &n(4), &name), \"offset\", \"4\"));\n",
+          "current": "    require!(rejected(api::label(&base, &n(4), &name), \"arg1\", \"4\"));\n"
+        },
+        {
+          "start": 2997,
+          "previous": "        if !rejected(api::mirror(&n(10 + i)), \"value\", \"10\") {\n",
+          "current": "        if !rejected(api::mirror(&n(10 + i)), \"arg0\", \"10\") {\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "d42776c82807088412d5cc6c135ecc60b5db96f691149d5389db82864898e300",
+      "previousSha256": "07c6f6a75cb94e4285a617040e723385b954336d7db5fba5873b3782e44d04fc",
+      "edits": [
+        {
+          "start": 804,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3023,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "535c6ce2f97e9ce945ca14b29c048cf38dc3984d11aaef197372873ba1a673f9",
+      "previousSha256": "6268862f08fc43f39e68293687da4336e571ee988ce1e0913feede3d31e1e7bc",
+      "edits": [
+        {
+          "start": 1122,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 3944,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "364dd405f997f1fa4df25f491a3a6f1cdc2f18a6bacd6aec65efc55b9e70f410",
+      "previousSha256": "f5fbf36a48506dcd8d64220f014d5f12c3982afa93a6e73ee7e659c6f17cb6c9",
+      "edits": [
+        {
+          "start": 468,
+          "previous": "",
+          "current": "import { perlFinChangedPaths } from \"./perl-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2679,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-fin.test.mjs",
+      "currentSha256": "e1675610f9459dba57a9d9f74f056a204a52e48d8a0cf4a88e68f5100f15d0ec",
+      "previousSha256": "cfeee6f5b7ea39a1842417397d1ef19bece68603116d93d985e7e916251cd626",
+      "edits": [
+        {
+          "start": 2048,
+          "previous": "public final class Consumer {\n",
+          "current": "final class Consumer {\n"
+        },
+        {
+          "start": 2944,
+          "previous": "        check(rejected(() -> Api.impossible(n(0)), \"value\", \"0\"), \"Fin 0 rejects zero\");\n        check(rejected(() -> Api.impossible(n(1)), \"value\", \"0\"), \"Fin 0 rejects one\");\n",
+          "current": "        check(rejected(() -> Api.impossible(n(0)), \"arg0\", \"0\"), \"Fin 0 rejects zero\");\n        check(rejected(() -> Api.impossible(n(1)), \"arg0\", \"0\"), \"Fin 0 rejects one\");\n"
+        },
+        {
+          "start": 3185,
+          "previous": "        check(rejected(() -> Api.only(n(1)), \"value\", \"1\"), \"Fin 1 rejects its bound\");\n",
+          "current": "        check(rejected(() -> Api.only(n(1)), \"arg0\", \"1\"), \"Fin 1 rejects its bound\");\n"
+        },
+        {
+          "start": 3450,
+          "previous": "            check(rejected(() -> Api.mirror(value), \"value\", \"10\"), \"Fin 10 rejects \" + value);\n        check(throwsType(IllegalArgumentException.class, () -> Api.mirror(n(-1))) && !rejected(() -> Api.mirror(n(-1)), \"value\", \"10\"), \"negative is the Nat error\");\n",
+          "current": "            check(rejected(() -> Api.mirror(value), \"arg0\", \"10\"), \"Fin 10 rejects \" + value);\n        check(throwsType(IllegalArgumentException.class, () -> Api.mirror(n(-1))) && !rejected(() -> Api.mirror(n(-1)), \"arg0\", \"10\"), \"negative is the Nat error\");\n"
+        },
+        {
+          "start": 3893,
+          "previous": "        check(rejected(() -> Api.twice(n(300)), \"value\", \"300\"), \"alias rejects its bound\");\n        check(rejected(() -> Api.twice(n(301)), \"value\", \"300\"), \"alias rejects beyond its bound\");\n",
+          "current": "        check(rejected(() -> Api.twice(n(300)), \"arg0\", \"300\"), \"alias rejects its bound\");\n        check(rejected(() -> Api.twice(n(301)), \"arg0\", \"300\"), \"alias rejects beyond its bound\");\n"
+        },
+        {
+          "start": 4492,
+          "previous": "            check(rejected(() -> Api.succHuge(value), \"value\", huge.toString()), \"large Fin rejects \" + value);\n",
+          "current": "            check(rejected(() -> Api.succHuge(value), \"arg0\", huge.toString()), \"large Fin rejects \" + value);\n"
+        },
+        {
+          "start": 4873,
+          "previous": "        check(rejected(() -> Api.label(start, n(4), name), \"offset\", \"4\"), \"mixed arguments reject the Fin site\");\n",
+          "current": "        check(rejected(() -> Api.label(start, n(4), name), \"arg1\", \"4\"), \"mixed arguments reject the Fin site\");\n"
+        },
+        {
+          "start": 5188,
+          "previous": "            if (!rejected(() -> Api.mirror(n(10 + k)), \"value\", \"10\")) throw new AssertionError(\"invalid call accepted at \" + i);\n",
+          "current": "            if (!rejected(() -> Api.mirror(n(10 + k)), \"arg0\", \"10\")) throw new AssertionError(\"invalid call accepted at \" + i);\n"
+        },
+        {
+          "start": 5826,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"maven\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"maven\", \"cpan\"]), true);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin.test.mjs",
+      "currentSha256": "99978f04df0180137084c12c2c410c8e421248c09aac5c9bce0926930197b8d6",
+      "previousSha256": "cdfe322214e96dfd1e8bf79b995f887d6f65a18e911f246758efc986c6bafb32",
+      "edits": [
+        {
+          "start": 1233,
+          "previous": "import { buildNativeProject, supportsNativeRefinementTargets } from \"../src/build/native-project.mjs\";\n",
+          "current": "import { supportsNativeRefinementTargets } from \"../src/build/native-project.mjs\";\n"
+        },
+        {
+          "start": 4467,
+          "previous": "test(\"checked Fin consumers are exactly the C, C++, Python, Rust, Ruby, .NET, JVM, PHP and WIT projections\", () => {\n",
+          "current": "test(\"every ordinary native projection is a checked Fin consumer\", () => {\n"
+        },
+        {
+          "start": 5024,
+          "previous": "\tassert.equal(supportsNativeRefinementTargets([\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"]), true);\n\tfor(const target of [\"cpan\"])\n",
+          "current": "\tconst all = [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\", \"cpan\"];\n\tassert.equal(supportsNativeRefinementTargets(all), true);\n\tfor(const target of all)\n"
+        },
+        {
+          "start": 5220,
+          "previous": "\t\tassert.equal(supportsNativeRefinementTargets([target]), false, target);\n\t\tassert.equal(supportsNativeRefinementTargets([\"c\", target]), false, target);\n",
+          "current": "\t\tassert.equal(supportsNativeRefinementTargets([target]), true, target);\n\t\tassert.equal(supportsNativeRefinementTargets([\"c\", target].filter((item, index, list) => list.indexOf(item) === index)), true, target);\n"
+        },
+        {
+          "start": 6999,
+          "previous": "\t\t&& /checked Fin refinements are implemented only for ordinary C, C\\+\\+, Python, Rust, Ruby, \\.NET, JVM, PHP and WIT native packages/.test(error.message));\n",
+          "current": "\t\t&& /checked Fin refinements are implemented only for ordinary native packages with bound-checking adapters/.test(error.message));\n"
+        },
+        {
+          "start": 9887,
+          "previous": "test(\"native builds reject Fin for every unchecked target and every nested position\", { skip: !enabled, timeout: 900_000 }, async t => {\n\tconst fixture = await project(t);\n\tconst environment = nativeFixtureEnvironment([\"c\"]);\n\tfor(const targets of [[\"pypi\", \"cpan\"], [\"wit-wasi\", \"cpan\"], [\"php-native\", \"cpan\"]])\n\t{\n\t\tawait saveLakeFile(fixture.projectRoot, \"lean-bridge.exports.json\", canonicalJson({ schemaVersion: 1\n\t\t\t, modules: [\"NativeFin\"]\n\t\t\t, targets: Object.fromEntries(targets.map(target => [target, target === \"cpan\" ? { module: \"NativeFin\", version: \"1.0.0\" } : { name: \"native-fin\", version: \"1.0.0\" }])) }));\n\t\tawait assert.rejects(() => buildNativeProject({ projectRoot: fixture.projectRoot, outputRoot: join(fixture.root, `out-${targets.join(\"-\")}`), environment, targets })\n\t\t\t, error => error.code === \"native-refinements-unsupported\", targets.join(\",\"));\n\t}\n",
+          "current": "test(\"native builds reject Fin in every nested position\", { skip: !enabled, timeout: 900_000 }, async t => {\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-fin.test.mjs",
+      "currentSha256": "b3053437452c0e0319786d76f5fbb3ff03d4ddf12a8af74c7d4ee0980fe1ca4d",
+      "previousSha256": "b3aacc20350576da2463bb18aa6910c36ff1c264270b68140488ca610c913d1b",
+      "edits": [
+        {
+          "start": 2853,
+          "previous": "check(rejected(fn() => LeanNativeFin\\\\impossible(n(0)), 'value', '0'), 'Fin 0 rejects zero');\ncheck(rejected(fn() => LeanNativeFin\\\\impossible(n(1)), 'value', '0'), 'Fin 0 rejects one');\n",
+          "current": "check(rejected(fn() => LeanNativeFin\\\\impossible(n(0)), 'arg0', '0'), 'Fin 0 rejects zero');\ncheck(rejected(fn() => LeanNativeFin\\\\impossible(n(1)), 'arg0', '0'), 'Fin 0 rejects one');\n"
+        },
+        {
+          "start": 3108,
+          "previous": "check(rejected(fn() => LeanNativeFin\\\\only(n(1)), 'value', '1'), 'Fin 1 rejects its bound');\n",
+          "current": "check(rejected(fn() => LeanNativeFin\\\\only(n(1)), 'arg0', '1'), 'Fin 1 rejects its bound');\n"
+        },
+        {
+          "start": 3450,
+          "previous": "    check(rejected(fn() => LeanNativeFin\\\\mirror($value), 'value', '10'), 'Fin 10 rejects ' . $value);\n",
+          "current": "    check(rejected(fn() => LeanNativeFin\\\\mirror($value), 'arg0', '10'), 'Fin 10 rejects ' . $value);\n"
+        },
+        {
+          "start": 3934,
+          "previous": "check(rejected(fn() => LeanNativeFin\\\\twice(n(300)), 'value', '300'), 'alias rejects its bound');\ncheck(rejected(fn() => LeanNativeFin\\\\twice(n(301)), 'value', '300'), 'alias rejects beyond its bound');\n",
+          "current": "check(rejected(fn() => LeanNativeFin\\\\twice(n(300)), 'arg0', '300'), 'alias rejects its bound');\ncheck(rejected(fn() => LeanNativeFin\\\\twice(n(301)), 'arg0', '300'), 'alias rejects beyond its bound');\n"
+        },
+        {
+          "start": 4479,
+          "previous": "    check(rejected(fn() => LeanNativeFin\\\\succ_huge($value), 'value', (string) $huge), 'large Fin rejects ' . $value);\n",
+          "current": "    check(rejected(fn() => LeanNativeFin\\\\succ_huge($value), 'arg0', (string) $huge), 'large Fin rejects ' . $value);\n"
+        },
+        {
+          "start": 4871,
+          "previous": "check(rejected(fn() => LeanNativeFin\\\\label($base, n(4), $name), 'offset', '4'), 'mixed arguments reject the Fin site');\n",
+          "current": "check(rejected(fn() => LeanNativeFin\\\\label($base, n(4), $name), 'arg1', '4'), 'mixed arguments reject the Fin site');\n"
+        },
+        {
+          "start": 5152,
+          "previous": "    if (!rejected(fn() => LeanNativeFin\\\\mirror(n(10 + $i)), 'value', '10')) throw new RuntimeException(\"invalid call accepted at $i\");\n",
+          "current": "    if (!rejected(fn() => LeanNativeFin\\\\mirror(n(10 + $i)), 'arg0', '10')) throw new RuntimeException(\"invalid call accepted at $i\");\n"
+        },
+        {
+          "start": 5777,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"php-native\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"php-native\", \"cpan\"]), true);\n"
+        },
+        {
+          "start": 10861,
+          "previous": "\t\tassert.match(docs, /Checked Lean Fin bounds: \\$value < 10; result < 10\\./);\n",
+          "current": "\t\tassert.match(docs, /Checked Lean Fin bounds: \\$arg0 < 10; result < 10\\./);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/python-fin.test.mjs",
+      "currentSha256": "ed68952beeae97f481405e9210869049c9f14b057af9dafcb47184755e349c9b",
+      "previousSha256": "10644fcf201aa869ca14ff928c945b76c52e72e26d405210fb3332024d2fb788",
+      "edits": [
+        {
+          "start": 1172,
+          "previous": "import { nativeFinDispatchColumns, nativeFinDispatchInterposer } from \"./helpers/native-fin-consumers.mjs\";\n",
+          "current": "import { nativeFinDispatchColumns } from \"./helpers/native-fin-consumers.mjs\";\nimport { nativeFinCountInterposer } from \"./helpers/native-fin-count-interposer.mjs\";\n"
+        },
+        {
+          "start": 3037,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"pypi\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"pypi\", \"cpan\"]), true);\n"
+        },
+        {
+          "start": 5807,
+          "previous": "\tawait saveLakeFile(root, \"interposer.c\", nativeFinDispatchInterposer());\n",
+          "current": "\tawait saveLakeFile(root, \"interposer.c\", nativeFinCountInterposer());\n"
+        },
+        {
+          "start": 11505,
+          "previous": "\t\t\tassert.match(docs, /def mirror\\(value: int\\) -> int:\\n {4}\"\"\"Checked Lean Fin bounds: value < 10; result < 10\\.\"\"\"/);\n\t\t\tassert.match(docs, new RegExp(`def succ_huge\\\\(value: int\\\\) -> int:\\\\n {4}\"\"\"Checked Lean Fin bounds: value < ${huge}; result < ${huge}\\\\.\"\"\"`));\n\t\t\tassert.match(docs, /def label\\(base: int, offset: int, name: str\\) -> str:\\n {4}\"\"\"Checked Lean Fin bounds: offset < 4\\.\"\"\"/);\n",
+          "current": "\t\t\tassert.match(docs, /def mirror\\(arg0: int\\) -> int:\\n {4}\"\"\"Checked Lean Fin bounds: arg0 < 10; result < 10\\.\"\"\"/);\n\t\t\tassert.match(docs, new RegExp(`def succ_huge\\\\(arg0: int\\\\) -> int:\\\\n {4}\"\"\"Checked Lean Fin bounds: arg0 < ${huge}; result < ${huge}\\\\.\"\"\"`));\n\t\t\tassert.match(docs, /def label\\(arg0: int, arg1: int, arg2: str\\) -> str:\\n {4}\"\"\"Checked Lean Fin bounds: arg1 < 4\\.\"\"\"/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/ruby-fin.test.mjs",
+      "currentSha256": "71b003a39cbab89235a66bdd591d07c74b002a423585f0160ea0e303f44c99b9",
+      "previousSha256": "9c4e6661657c4db8cdfc9ec3c80aa70de051cbdb7548e634d4002e9bbd1b63d4",
+      "edits": [
+        {
+          "start": 2405,
+          "previous": "check(rejected(\"value\", \"0\") { API.impossible(0) }, \"Fin 0 rejects zero\")\ncheck(rejected(\"value\", \"0\") { API.impossible(1) }, \"Fin 0 rejects one\")\n",
+          "current": "check(rejected(\"arg0\", \"0\") { API.impossible(0) }, \"Fin 0 rejects zero\")\ncheck(rejected(\"arg0\", \"0\") { API.impossible(1) }, \"Fin 0 rejects one\")\n"
+        },
+        {
+          "start": 2596,
+          "previous": "check(rejected(\"value\", \"1\") { API.only(1) }, \"Fin 1 rejects its bound\")\n",
+          "current": "check(rejected(\"arg0\", \"1\") { API.only(1) }, \"Fin 1 rejects its bound\")\n"
+        },
+        {
+          "start": 2826,
+          "previous": "[10, 11, word, huge].each { |value| check(rejected(\"value\", \"10\") { API.mirror(value) }, \"Fin 10 rejects #{value}\") }\ncheck(raises(RangeError) { API.mirror(-1) } && !rejected(\"value\", \"10\") { API.mirror(-1) }, \"negative is the Nat RangeError\")\n",
+          "current": "[10, 11, word, huge].each { |value| check(rejected(\"arg0\", \"10\") { API.mirror(value) }, \"Fin 10 rejects #{value}\") }\ncheck(raises(RangeError) { API.mirror(-1) } && !rejected(\"arg0\", \"10\") { API.mirror(-1) }, \"negative is the Nat RangeError\")\n"
+        },
+        {
+          "start": 3271,
+          "previous": "check(rejected(\"value\", \"300\") { API.twice(300) }, \"alias rejects its bound\")\ncheck(rejected(\"value\", \"300\") { API.twice(301) }, \"alias rejects beyond its bound\")\n",
+          "current": "check(rejected(\"arg0\", \"300\") { API.twice(300) }, \"alias rejects its bound\")\ncheck(rejected(\"arg0\", \"300\") { API.twice(301) }, \"alias rejects beyond its bound\")\n"
+        },
+        {
+          "start": 3604,
+          "previous": "[huge, huge + 1, 1 << 128].each { |value| check(rejected(\"value\", huge.to_s) { API.succ_huge(value) }, \"large Fin rejects #{value}\") }\n",
+          "current": "[huge, huge + 1, 1 << 128].each { |value| check(rejected(\"arg0\", huge.to_s) { API.succ_huge(value) }, \"large Fin rejects #{value}\") }\n"
+        },
+        {
+          "start": 3930,
+          "previous": "check(rejected(\"offset\", \"4\") { API.label(base, 4, name) }, \"mixed arguments reject the Fin site\")\n",
+          "current": "check(rejected(\"arg1\", \"4\") { API.label(base, 4, name) }, \"mixed arguments reject the Fin site\")\n"
+        },
+        {
+          "start": 4233,
+          "previous": "  raise \"invalid call accepted at #{i}\" unless rejected(\"value\", \"10\") { API.mirror(10 + i) }\n",
+          "current": "  raise \"invalid call accepted at #{i}\" unless rejected(\"arg0\", \"10\") { API.mirror(10 + i) }\n"
+        },
+        {
+          "start": 4722,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"rubygems\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"rubygems\", \"cpan\"]), true);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/rust-fin.test.mjs",
+      "currentSha256": "ffba9444d857f7a1ba2addc76bde9191e3c1704e483ad2c5affda84b9cfd91da",
+      "previousSha256": "1f58f79075a23e51a4fcb6aef60edd8a9a4769e55d69062e0c18a8ab714c233a",
+      "edits": [
+        {
+          "start": 1179,
+          "previous": "import { nativeFinDispatchColumns, nativeFinDispatchInterposer, nativeFinSymbol } from \"./helpers/native-fin-consumers.mjs\";\n",
+          "current": "import { nativeFinDispatchColumns, nativeFinSymbol } from \"./helpers/native-fin-consumers.mjs\";\nimport { nativeFinCountInterposer } from \"./helpers/native-fin-count-interposer.mjs\";\n"
+        },
+        {
+          "start": 2765,
+          "previous": "\tfor(const target of [\"cpan\"])\n\t\tassert.equal(supportsNativeRefinementTargets([\"cargo\", target]), false, target);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"cargo\", \"cpan\"]), true);\n"
+        },
+        {
+          "start": 7064,
+          "previous": "\tassert.match(lib, /\\/\\/\\/ Checked Lean Fin bounds: value < 10; result < 10\\.\\npub fn mirror\\(value: &BigUint\\) -> Result<BigUint, Error>/);\n\tassert.match(lib, /\\/\\/\\/ Checked Lean Fin bounds: offset < 4\\.\\npub fn label\\(base: &BigUint, offset: &BigUint, name: &str\\) -> Result<String, Error>/);\n",
+          "current": "\tassert.match(lib, /\\/\\/\\/ Checked Lean Fin bounds: arg0 < 10; result < 10\\.\\npub fn mirror\\(arg0: &BigUint\\) -> Result<BigUint, Error>/);\n\tassert.match(lib, /\\/\\/\\/ Checked Lean Fin bounds: arg1 < 4\\.\\npub fn label\\(arg0: &BigUint, arg1: &BigUint, arg2: &str\\) -> Result<String, Error>/);\n"
+        },
+        {
+          "start": 10136,
+          "previous": "\tawait saveLakeFile(root, \"interposer.c\", nativeFinDispatchInterposer());\n",
+          "current": "\tawait saveLakeFile(root, \"interposer.c\", nativeFinCountInterposer());\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wit-fin.test.mjs",
+      "currentSha256": "7a28617397f89a18fe03068d33fb6bc3de12d7f4046a9ee40d2c074021532383",
+      "previousSha256": "7b987dbd33f963700e8dbcdd87a6ca48348b3121e1ab6512db80c045b7811de1",
+      "edits": [
+        {
+          "start": 140,
+          "previous": "import { cp, mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "current": "import { cp, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 2148,
+          "previous": "#include \"native_fin_wasmtime.h\"\n",
+          "current": "#include \"nativefin_wasmtime.h\"\n"
+        },
+        {
+          "start": 2372,
+          "previous": "static native_fin_wasmtime *session;\n",
+          "current": "static nativefin_wasmtime *session;\n"
+        },
+        {
+          "start": 3708,
+          "previous": "  wasmtime_error_t *error = native_fin_wasmtime_call(session, name, args, count, &result);\n",
+          "current": "  wasmtime_error_t *error = nativefin_wasmtime_call(session, name, args, count, &result);\n"
+        },
+        {
+          "start": 4236,
+          "previous": "  wasmtime_error_t *error = native_fin_wasmtime_call(session, name, args, count, &output);\n",
+          "current": "  wasmtime_error_t *error = nativefin_wasmtime_call(session, name, args, count, &output);\n"
+        },
+        {
+          "start": 5543,
+          "previous": "  wasmtime_error_t *opened = native_fin_wasmtime_open(&session);\n",
+          "current": "  wasmtime_error_t *opened = nativefin_wasmtime_open(&session);\n"
+        },
+        {
+          "start": 6082,
+          "previous": "  CHECK(unary_rejected(\"impossible\", small(0), \"value is not below its Fin 0 bound\"));\n  CHECK(unary_rejected(\"impossible\", small(1), \"value is not below its Fin 0 bound\"));\n",
+          "current": "  CHECK(unary_rejected(\"impossible\", small(0), \"arg0 is not below its Fin 0 bound\"));\n  CHECK(unary_rejected(\"impossible\", small(1), \"arg0 is not below its Fin 0 bound\"));\n"
+        },
+        {
+          "start": 6330,
+          "previous": "  CHECK(unary_rejected(\"only\", small(1), \"value is not below its Fin 1 bound\"));\n",
+          "current": "  CHECK(unary_rejected(\"only\", small(1), \"arg0 is not below its Fin 1 bound\"));\n"
+        },
+        {
+          "start": 6569,
+          "previous": "  CHECK(unary_rejected(\"mirror\", small(10), \"value is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", small(11), \"value is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", nat(word, 2), \"value is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", nat(huge, 3), \"value is not below its Fin 10 bound\"));\n",
+          "current": "  CHECK(unary_rejected(\"mirror\", small(10), \"arg0 is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", small(11), \"arg0 is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", nat(word, 2), \"arg0 is not below its Fin 10 bound\"));\n  CHECK(unary_rejected(\"mirror\", nat(huge, 3), \"arg0 is not below its Fin 10 bound\"));\n"
+        },
+        {
+          "start": 7009,
+          "previous": "  CHECK(unary_rejected(\"twice\", small(300), \"value is not below its Fin 300 bound\"));\n  CHECK(unary_rejected(\"twice\", small(301), \"value is not below its Fin 300 bound\"));\n",
+          "current": "  CHECK(unary_rejected(\"twice\", small(300), \"arg0 is not below its Fin 300 bound\"));\n  CHECK(unary_rejected(\"twice\", small(301), \"arg0 is not below its Fin 300 bound\"));\n"
+        },
+        {
+          "start": 7382,
+          "previous": "  CHECK(unary_rejected(\"succ-huge\", nat(huge, 3), \"value is not below its Fin ${huge} bound\"));\n  CHECK(unary_rejected(\"succ-huge\", nat(huge_next, 3), \"value is not below its Fin ${huge} bound\"));\n  CHECK(unary_rejected(\"succ-huge\", nat(wide, 5), \"value is not below its Fin ${huge} bound\"));\n",
+          "current": "  CHECK(unary_rejected(\"succ-huge\", nat(huge, 3), \"arg0 is not below its Fin ${huge} bound\"));\n  CHECK(unary_rejected(\"succ-huge\", nat(huge_next, 3), \"arg0 is not below its Fin ${huge} bound\"));\n  CHECK(unary_rejected(\"succ-huge\", nat(wide, 5), \"arg0 is not below its Fin ${huge} bound\"));\n"
+        },
+        {
+          "start": 8268,
+          "previous": "  CHECK(rejected(\"label\", arguments, 3, \"offset is not below its Fin 4 bound\"));\n",
+          "current": "  CHECK(rejected(\"label\", arguments, 3, \"arg1 is not below its Fin 4 bound\"));\n"
+        },
+        {
+          "start": 8944,
+          "previous": "    if (!unary_rejected(\"mirror\", small(10 + i), \"value is not below its Fin 10 bound\")) { fprintf(stderr, \"invalid call %u accepted\\\\n\", i); return 1; }\n",
+          "current": "    if (!unary_rejected(\"mirror\", small(10 + i), \"arg0 is not below its Fin 10 bound\")) { fprintf(stderr, \"invalid call %u accepted\\\\n\", i); return 1; }\n"
+        },
+        {
+          "start": 9292,
+          "previous": "  native_fin_wasmtime_close(session); session = NULL;\n",
+          "current": "  nativefin_wasmtime_close(session); session = NULL;\n"
+        },
+        {
+          "start": 10361,
+          "previous": "\tassert.equal(supportsNativeRefinementTargets([\"wit-wasi\", \"cpan\"]), false);\n",
+          "current": "\tassert.equal(supportsNativeRefinementTargets([\"wit-wasi\", \"cpan\"]), true);\n"
+        },
+        {
+          "start": 12403,
+          "previous": "",
+          "current": "\t\t// The installed WIT harness uses one name for the component and its C prefix, so use a package name without a hyphen.\n\t\tawait writeFile(join(projectRoot, \"lakefile.toml\"), 'name = \"nativefin\"\\nversion = \"1.0.0\"\\n[[lean_lib]]\\nname = \"NativeFin\"\\n');\n\t\tawait writeFile(join(projectRoot, \"package.json\"), '{\"name\":\"nativefin\",\"version\":\"1.0.0\",\"license\":\"MIT\"}\\n');\n"
+        },
+        {
+          "start": 12893,
+          "previous": "\t\t\t, targets: { c: { name: \"native-fin\", version: \"1.0.0\" }, \"wit-wasi\": { name: \"native-fin\", version: \"1.0.0\" } } }));\n",
+          "current": "\t\t\t, targets: { c: { name: \"nativefin\", version: \"1.0.0\" }, \"wit-wasi\": { name: \"nativefin\", version: \"1.0.0\" } } }));\n"
+        },
+        {
+          "start": 15113,
+          "previous": "\t\tconst installed = await installedWitCorpus({ library: { cModule: \"native_fin\" }\n",
+          "current": "\t\tconst installed = await installedWitCorpus({ library: { cModule: \"nativefin\" }\n"
+        },
+        {
+          "start": 15809,
+          "previous": "\t\tassert.ok(shared.includes(\"libnative_fin.so\"), JSON.stringify({ wit: witLibraries, c: cLibraries }));\n",
+          "current": "\t\tassert.ok(shared.includes(\"libnativefin.so\"), JSON.stringify({ wit: witLibraries, c: cLibraries }));\n"
+        }
+      ]
+    }
+  ]
+}

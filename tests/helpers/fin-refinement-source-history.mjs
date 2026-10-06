@@ -29,6 +29,7 @@ import { jvmFinChangedPaths } from "./jvm-fin-source-history.mjs";
 import { phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
+import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -521,6 +522,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpFinChangedPaths
 	, ...witFinChangedPaths
 	, ...finDistributionChangedPaths
+	, ...perlFinChangedPaths
 ])].sort());
 
 /**

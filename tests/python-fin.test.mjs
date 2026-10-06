@@ -19,7 +19,8 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
-import { nativeFinDispatchColumns, nativeFinDispatchInterposer } from "./helpers/native-fin-consumers.mjs";
+import { nativeFinDispatchColumns } from "./helpers/native-fin-consumers.mjs";
+import { nativeFinCountInterposer } from "./helpers/native-fin-count-interposer.mjs";
 import { pythonFinConsumer, pythonFinDispatchExpected, pythonFinDispatchProbe } from "./helpers/python-fin-consumers.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -49,8 +50,7 @@ const finIr = () => {
 test("Python wheels are checked Fin consumers beside C and C++", () => {
 	for(const targets of [["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "pypi"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan"])
-		assert.equal(supportsNativeRefinementTargets(["pypi", target]), false, target);
+	assert.equal(supportsNativeRefinementTargets(["pypi", "cpan"]), true);
 });
 
 test("generated Python bound docs come only from checked refinement metadata", () => {
@@ -100,7 +100,7 @@ test("generated Python bound docs come only from checked refinement metadata", (
  * @param python - Venv interpreter.
  */
 const observeDispatch = async (root, python) => {
-	await saveLakeFile(root, "interposer.c", nativeFinDispatchInterposer());
+	await saveLakeFile(root, "interposer.c", nativeFinCountInterposer());
 	await saveLakeFile(root, "probe.py", pythonFinDispatchProbe());
 	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root
 		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
@@ -176,9 +176,9 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 			assert.ok(shared.includes("libnative_fin.so"), JSON.stringify({ wheel: wheelLibraries, c: cLibraries }));
 			for(const name of shared) assert.equal(wheelLibraries[name], cLibraries[name], name);
 			const docs = await readFile(join(site, "lean_native_fin/__init__.pyi"), "utf8");
-			assert.match(docs, /def mirror\(value: int\) -> int:\n {4}"""Checked Lean Fin bounds: value < 10; result < 10\."""/);
-			assert.match(docs, new RegExp(`def succ_huge\\(value: int\\) -> int:\\n {4}"""Checked Lean Fin bounds: value < ${huge}; result < ${huge}\\."""`));
-			assert.match(docs, /def label\(base: int, offset: int, name: str\) -> str:\n {4}"""Checked Lean Fin bounds: offset < 4\."""/);
+			assert.match(docs, /def mirror\(arg0: int\) -> int:\n {4}"""Checked Lean Fin bounds: arg0 < 10; result < 10\."""/);
+			assert.match(docs, new RegExp(`def succ_huge\\(arg0: int\\) -> int:\\n {4}"""Checked Lean Fin bounds: arg0 < ${huge}; result < ${huge}\\."""`));
+			assert.match(docs, /def label\(arg0: int, arg1: int, arg2: str\) -> str:\n {4}"""Checked Lean Fin bounds: arg1 < 4\."""/);
 			const dispatch = await observeDispatch(root, command);
 			const relocated = join(installRoot, "python-relocated");
 			await rename(root, relocated);

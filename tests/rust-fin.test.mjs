@@ -19,7 +19,8 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { captureRustCompiler, prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
-import { nativeFinDispatchColumns, nativeFinDispatchInterposer, nativeFinSymbol } from "./helpers/native-fin-consumers.mjs";
+import { nativeFinDispatchColumns, nativeFinSymbol } from "./helpers/native-fin-consumers.mjs";
+import { nativeFinCountInterposer } from "./helpers/native-fin-count-interposer.mjs";
 import { rustFinConsumer, rustFinDispatchExpected, rustFinDispatchProbe, rustFinInvalid } from "./helpers/rust-fin-consumers.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -47,8 +48,7 @@ const sharedLibraries = files => Object.fromEntries(Object.entries(files)
 test("Rust crates are checked Fin consumers beside C, C++ and Python", () => {
 	for(const targets of [["cargo"], ["c", "cargo"], ["pypi", "cargo"], ["c", "cpp", "pypi", "cargo"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan"])
-		assert.equal(supportsNativeRefinementTargets(["cargo", target]), false, target);
+	assert.equal(supportsNativeRefinementTargets(["cargo", "cpan"]), true);
 });
 
 test("generated Rust bound docs come only from checked refinement metadata", () => {
@@ -106,8 +106,8 @@ const installRustFin = async ({ consumer, handoff, packages, dependencies, envir
 	const receipt = JSON.parse(await readFile(join(installed, "lean-bridge/package-receipt.json"), "utf8"));
 	await verifyNativeFiles(installed, receipt.files);
 	const lib = await readFile(join(installed, "src/lib.rs"), "utf8");
-	assert.match(lib, /\/\/\/ Checked Lean Fin bounds: value < 10; result < 10\.\npub fn mirror\(value: &BigUint\) -> Result<BigUint, Error>/);
-	assert.match(lib, /\/\/\/ Checked Lean Fin bounds: offset < 4\.\npub fn label\(base: &BigUint, offset: &BigUint, name: &str\) -> Result<String, Error>/);
+	assert.match(lib, /\/\/\/ Checked Lean Fin bounds: arg0 < 10; result < 10\.\npub fn mirror\(arg0: &BigUint\) -> Result<BigUint, Error>/);
+	assert.match(lib, /\/\/\/ Checked Lean Fin bounds: arg1 < 4\.\npub fn label\(arg0: &BigUint, arg1: &BigUint, arg2: &str\) -> Result<String, Error>/);
 	await saveLakeFile(root, ".cargo/config.toml", '[source.crates-io]\nreplace-with = "prepared"\n[source.prepared]\ndirectory = "dependencies"\n');
 	await saveLakeFile(root, "Cargo.toml", `[package]\nname="fin-consumer"\nversion="0.0.0"\nedition="2021"\n[dependencies]\n${pkg.name}={path="${pkg.name}-${pkg.version}"}\n[[bin]]\nname="consumer"\npath="src/main.rs"\n[profile.dev]\ndebug=0\nincremental=false\n`);
 	await saveLakeFile(root, "src/main.rs", rustFinConsumer());
@@ -143,7 +143,7 @@ const installRustFin = async ({ consumer, handoff, packages, dependencies, envir
 		if(symbols.includes(nativeFinSymbol("NativeFin.mirror"))) exported.push(name);
 	}
 	assert.equal(exported.length, 1);
-	await saveLakeFile(root, "interposer.c", nativeFinDispatchInterposer());
+	await saveLakeFile(root, "interposer.c", nativeFinCountInterposer());
 	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root
 		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
 	const probe = await runCopied(join(root, "target/debug/probe"), [], root, { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") });

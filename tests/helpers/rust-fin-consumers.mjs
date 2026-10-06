@@ -32,23 +32,23 @@ fn main() {
     let word = BigUint::from(1u8) << 32usize;
 
     // Fin 0 is uninhabited: every input is rejected by the native bound check.
-    require!(rejected(api::impossible(&n(0)), "value", "0"));
-    require!(rejected(api::impossible(&n(1)), "value", "0"));
+    require!(rejected(api::impossible(&n(0)), "arg0", "0"));
+    require!(rejected(api::impossible(&n(1)), "arg0", "0"));
 
     // Fin 1 admits only zero.
     require!(api::only(&n(0)).unwrap() == n(7));
-    require!(rejected(api::only(&n(1)), "value", "1"));
+    require!(rejected(api::only(&n(1)), "arg0", "1"));
 
     // Fin 10 with a Fin result: endpoints and beyond-bound inputs.
     require!(api::mirror(&n(0)).unwrap() == n(9) && api::mirror(&n(9)).unwrap() == n(0));
     for value in [n(10), n(11), word.clone(), huge.clone()] {
-        require!(rejected(api::mirror(&value), "value", "10"));
+        require!(rejected(api::mirror(&value), "arg0", "10"));
     }
 
     // A transparent alias keeps its exact bound.
     require!(api::twice(&n(299)).unwrap() == n(598));
-    require!(rejected(api::twice(&n(300)), "value", "300"));
-    require!(rejected(api::twice(&n(301)), "value", "300"));
+    require!(rejected(api::twice(&n(300)), "arg0", "300"));
+    require!(rejected(api::twice(&n(301)), "arg0", "300"));
 
     // 2^70 exceeds every machine word.
     require!(api::succ_huge(&word).unwrap() == &word + 1u8);
@@ -57,7 +57,7 @@ fn main() {
     require!(api::succ_huge(&below).unwrap() == last && api::succ_huge(&last).unwrap() == last);
     let bound = huge.to_string();
     for value in [huge.clone(), &huge + 1u8, BigUint::from(1u8) << 128usize] {
-        require!(rejected(api::succ_huge(&value), "value", &bound));
+        require!(rejected(api::succ_huge(&value), "arg0", &bound));
     }
 
     // A result-only refinement returns a BigUint below its bound.
@@ -67,12 +67,12 @@ fn main() {
     let base = n(5);
     let name = String::from("slot");
     require!(api::label(&base, &n(3), &name).unwrap() == "slot:8");
-    require!(rejected(api::label(&base, &n(4), &name), "offset", "4"));
+    require!(rejected(api::label(&base, &n(4), &name), "arg1", "4"));
     require!(base == n(5) && name == "slot" && api::label(&base, &n(0), &name).unwrap() == "slot:5");
 
     // Repeated invalid and valid calls recover without retiring the runtime.
     for i in 0..1000u64 {
-        if !rejected(api::mirror(&n(10 + i)), "value", "10") {
+        if !rejected(api::mirror(&n(10 + i)), "arg0", "10") {
             eprintln!("invalid call accepted at {i}");
             std::process::exit(1);
         }

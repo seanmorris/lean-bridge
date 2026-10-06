@@ -184,7 +184,7 @@ export const stageCpanPackage = async ({ outputRoot
 	{
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
-			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned });
+			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");

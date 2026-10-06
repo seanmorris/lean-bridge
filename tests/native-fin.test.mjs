@@ -18,7 +18,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { nativeFinConsumer, nativeFinDispatchColumns, nativeFinDispatchInterposer, nativeFinDispatchProbe, nativeFinRuntimeProbe } from "./helpers/native-fin-consumers.mjs";
-import { buildNativeProject, supportsNativeRefinementTargets } from "../src/build/native-project.mjs";
+import { supportsNativeRefinementTargets } from "../src/build/native-project.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -63,7 +63,7 @@ test("native validation admits Fin only at a top-level Nat site", () => {
 	assert.throws(() => validateNativeType({ ...fin("5"), abi: { ...nat.abi, heap: true } }), /representation differs/);
 });
 
-test("checked Fin consumers are exactly the C, C++, Python, Rust, Ruby, .NET, JVM, PHP and WIT projections", () => {
+test("every ordinary native projection is a checked Fin consumer", () => {
 	assert.equal(supportsNativeRefinementTargets(["c"]), true);
 	assert.equal(supportsNativeRefinementTargets(["cpp"]), true);
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp"]), true);
@@ -71,11 +71,12 @@ test("checked Fin consumers are exactly the C, C++, Python, Rust, Ruby, .NET, JV
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi"]), true);
 	assert.equal(supportsNativeRefinementTargets(["cargo"]), true);
 	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi", "cargo"]), true);
-	assert.equal(supportsNativeRefinementTargets(["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"]), true);
-	for(const target of ["cpan"])
+	const all = ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi", "cpan"];
+	assert.equal(supportsNativeRefinementTargets(all), true);
+	for(const target of all)
 	{
-		assert.equal(supportsNativeRefinementTargets([target]), false, target);
-		assert.equal(supportsNativeRefinementTargets(["c", target]), false, target);
+		assert.equal(supportsNativeRefinementTargets([target]), true, target);
+		assert.equal(supportsNativeRefinementTargets(["c", target].filter((item, index, list) => list.indexOf(item) === index)), true, target);
 	}
 });
 
@@ -108,7 +109,7 @@ const component = async ({ root, projectRoot }, nativeRefinements) => {
 test("real Lean extraction keeps exact Fin bounds and checks them in the exported adapter", { skip: !enabled, timeout: 900_000 }, async t => {
 	const fixture = await project(t);
 	await assert.rejects(() => component(fixture, false), error => error.code === "native-refinements-unsupported"
-		&& /checked Fin refinements are implemented only for ordinary C, C\+\+, Python, Rust, Ruby, \.NET, JVM, PHP and WIT native packages/.test(error.message));
+		&& /checked Fin refinements are implemented only for ordinary native packages with bound-checking adapters/.test(error.message));
 	const { outputRoot, runtimeRoot } = await component(fixture, true);
 	const model = JSON.parse(await readFile(join(outputRoot, "model.json"), "utf8"));
 	assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
@@ -143,17 +144,7 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 		&& /not yet supported with reviewed Binding IR/.test(error.message));
 });
 
-test("native builds reject Fin for every unchecked target and every nested position", { skip: !enabled, timeout: 900_000 }, async t => {
-	const fixture = await project(t);
-	const environment = nativeFixtureEnvironment(["c"]);
-	for(const targets of [["pypi", "cpan"], ["wit-wasi", "cpan"], ["php-native", "cpan"]])
-	{
-		await saveLakeFile(fixture.projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
-			, modules: ["NativeFin"]
-			, targets: Object.fromEntries(targets.map(target => [target, target === "cpan" ? { module: "NativeFin", version: "1.0.0" } : { name: "native-fin", version: "1.0.0" }])) }));
-		await assert.rejects(() => buildNativeProject({ projectRoot: fixture.projectRoot, outputRoot: join(fixture.root, `out-${targets.join("-")}`), environment, targets })
-			, error => error.code === "native-refinements-unsupported", targets.join(","));
-	}
+test("native builds reject Fin in every nested position", { skip: !enabled, timeout: 900_000 }, async t => {
 	const sites = [["array", "(value : Array (Fin 5)) : Nat := value.size"]
 		, ["option", "(value : Option (Fin 5)) : Nat := 0"]
 		, ["result", "(value : Nat) : Option (Fin 5) := none"]

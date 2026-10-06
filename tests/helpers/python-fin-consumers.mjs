@@ -36,18 +36,18 @@ HUGE = 1 << 70
 WORD = 1 << 32
 
 # Fin 0 is uninhabited: every input is rejected by the native bound check.
-require(rejected(lambda: api.impossible(0), "value", "0"), "Fin 0 rejects zero")
-require(rejected(lambda: api.impossible(1), "value", "0"), "Fin 0 rejects one")
+require(rejected(lambda: api.impossible(0), "arg0", "0"), "Fin 0 rejects zero")
+require(rejected(lambda: api.impossible(1), "arg0", "0"), "Fin 0 rejects one")
 
 # Fin 1 admits only zero.
 require(api.only(0) == 7, "Fin 1 accepts zero")
-require(rejected(lambda: api.only(1), "value", "1"), "Fin 1 rejects its bound")
+require(rejected(lambda: api.only(1), "arg0", "1"), "Fin 1 rejects its bound")
 
 # Fin 10 with a Fin result: endpoints, exact int results and beyond-bound inputs.
 require(api.mirror(0) == 9 and api.mirror(9) == 0, "Fin 10 endpoints")
 require(type(api.mirror(4)) is int and api.mirror(4) == 5, "Fin results are exact int")
 for value in (10, 11, WORD, HUGE):
-    require(rejected(lambda: api.mirror(value), "value", "10"), "Fin 10 rejects " + str(value))
+    require(rejected(lambda: api.mirror(value), "arg0", "10"), "Fin 10 rejects " + str(value))
 
 # Host checks keep the Nat error distinctions before any native call.
 require(raises(ValueError, lambda: api.mirror(-1)), "negative input is ValueError")
@@ -56,14 +56,14 @@ for value in (True, False, 1.0, "1", None, 3j):
 
 # A transparent alias keeps its exact bound.
 require(api.twice(299) == 598, "alias accepts its largest value")
-require(rejected(lambda: api.twice(300), "value", "300"), "alias rejects its bound")
-require(rejected(lambda: api.twice(301), "value", "300"), "alias rejects beyond its bound")
+require(rejected(lambda: api.twice(300), "arg0", "300"), "alias rejects its bound")
+require(rejected(lambda: api.twice(301), "arg0", "300"), "alias rejects beyond its bound")
 
 # 2^70 exceeds every machine word.
 require(api.succ_huge(WORD) == WORD + 1, "large Fin crosses a limb")
 require(api.succ_huge(HUGE - 2) == HUGE - 1 and api.succ_huge(HUGE - 1) == HUGE - 1, "large Fin endpoints")
 for value in (HUGE, HUGE + 1, 1 << 128):
-    require(rejected(lambda: api.succ_huge(value), "value", str(HUGE)), "large Fin rejects " + str(value))
+    require(rejected(lambda: api.succ_huge(value), "arg0", str(HUGE)), "large Fin rejects " + str(value))
 
 # A result-only refinement returns an exact int below its bound.
 require(api.wrap(100) == 2 and api.wrap(HUGE) == 2 and api.wrap(0) == 0, "result-only Fin values")
@@ -72,14 +72,14 @@ require(type(api.wrap(100)) is int, "result-only Fin is int")
 # Multiargument calls reject the Fin argument and leave caller data unchanged.
 base, name = 5, "slot"
 require(api.label(base, 3, name) == "slot:8", "mixed arguments")
-require(rejected(lambda: api.label(base, 4, name), "offset", "4"), "mixed arguments reject the Fin site")
+require(rejected(lambda: api.label(base, 4, name), "arg1", "4"), "mixed arguments reject the Fin site")
 require(raises(TypeError, lambda: api.label(base, True, name)), "mixed arguments reject bool")
 require(raises(ValueError, lambda: api.label(base, -1, name)), "mixed arguments reject negatives")
 require(base == 5 and name == "slot" and api.label(base, 0, name) == "slot:5", "caller data unchanged")
 
 # Repeated invalid and valid calls recover without retiring the runtime.
 for i in range(1000):
-    if not rejected(lambda: api.mirror(10 + i), "value", "10"):
+    if not rejected(lambda: api.mirror(10 + i), "arg0", "10"):
         raise SystemExit("invalid call accepted at " + str(i))
     if api.mirror(i % 10) != 9 - i % 10:
         raise SystemExit("valid call failed at " + str(i))

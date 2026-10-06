@@ -60,29 +60,29 @@ static class Program
     static int Main()
     {
         BigInteger huge = BigInteger.One << 70, word = BigInteger.One << 32;
-        Check(Rejected(() => Api.Impossible(0), "value", "0"), "Fin 0 rejects zero");
-        Check(Rejected(() => Api.Impossible(1), "value", "0"), "Fin 0 rejects one");
+        Check(Rejected(() => Api.Impossible(0), "arg0", "0"), "Fin 0 rejects zero");
+        Check(Rejected(() => Api.Impossible(1), "arg0", "0"), "Fin 0 rejects one");
         Check(Api.Only(0) == 7, "Fin 1 accepts zero");
-        Check(Rejected(() => Api.Only(1), "value", "1"), "Fin 1 rejects its bound");
+        Check(Rejected(() => Api.Only(1), "arg0", "1"), "Fin 1 rejects its bound");
         Check(Api.Mirror(0) == 9 && Api.Mirror(9) == 0, "Fin 10 endpoints");
         foreach (var value in new[] { new BigInteger(10), new BigInteger(11), word, huge })
-            Check(Rejected(() => Api.Mirror(value), "value", "10"), "Fin 10 rejects " + value);
+            Check(Rejected(() => Api.Mirror(value), "arg0", "10"), "Fin 10 rejects " + value);
         Check(Throws<ArgumentOutOfRangeException>(() => Api.Mirror(-1)), "negative is the Nat ArgumentOutOfRangeException");
         Check(Api.Twice(299) == 598, "alias accepts its largest value");
-        Check(Rejected(() => Api.Twice(300), "value", "300"), "alias rejects its bound");
-        Check(Rejected(() => Api.Twice(301), "value", "300"), "alias rejects beyond its bound");
+        Check(Rejected(() => Api.Twice(300), "arg0", "300"), "alias rejects its bound");
+        Check(Rejected(() => Api.Twice(301), "arg0", "300"), "alias rejects beyond its bound");
         Check(Api.SuccHuge(word) == word + 1, "large Fin crosses a limb");
         Check(Api.SuccHuge(huge - 2) == huge - 1 && Api.SuccHuge(huge - 1) == huge - 1, "large Fin endpoints");
         foreach (var value in new[] { huge, huge + 1, BigInteger.One << 128 })
-            Check(Rejected(() => Api.SuccHuge(value), "value", huge.ToString()), "large Fin rejects " + value);
+            Check(Rejected(() => Api.SuccHuge(value), "arg0", huge.ToString()), "large Fin rejects " + value);
         Check(Api.Wrap(100) == 2 && Api.Wrap(huge) == 2 && Api.Wrap(0) == 0, "result-only Fin values");
         BigInteger start = 5; string name = "slot";
         Check(Api.Label(start, 3, name) == "slot:8", "mixed arguments");
-        Check(Rejected(() => Api.Label(start, 4, name), "offset", "4"), "mixed arguments reject the Fin site");
+        Check(Rejected(() => Api.Label(start, 4, name), "arg1", "4"), "mixed arguments reject the Fin site");
         Check(start == 5 && name == "slot" && Api.Label(start, 0, name) == "slot:5", "caller data unchanged");
         for (int i = 0; i < 1000; i++)
         {
-            if (!Rejected(() => Api.Mirror(10 + i), "value", "10")) throw new Exception("invalid call accepted at " + i);
+            if (!Rejected(() => Api.Mirror(10 + i), "arg0", "10")) throw new Exception("invalid call accepted at " + i);
             if (Api.Mirror(i % 10) != 9 - i % 10) throw new Exception("valid call failed at " + i);
         }
         checks += 2000;
@@ -95,8 +95,7 @@ static class Program
 test(".NET packages are checked Fin consumers beside C, C++, Python, Rust and Ruby", () => {
 	for(const targets of [["nuget"], ["c", "nuget"], ["c", "cpp", "pypi", "cargo", "rubygems", "nuget"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan"])
-		assert.equal(supportsNativeRefinementTargets(["nuget", target]), false, target);
+	assert.equal(supportsNativeRefinementTargets(["nuget", "cpan"]), true);
 });
 
 test("generated .NET bound docs come only from checked refinement metadata", () => {
@@ -158,7 +157,7 @@ test("relocated source-free .NET packages check Fin bounds through the bundled C
 		assert.ok(shared.includes("libnative_fin.so"), JSON.stringify({ nuget: packageLibraries, c: cLibraries }));
 		for(const name of shared) assert.equal(packageLibraries[name], cLibraries[name], name);
 		const docs = (await Promise.all((await readdir(nupkg, { recursive: true })).filter(path => path.endsWith(".xml")).map(path => readFile(join(nupkg, path), "utf8")))).join("\n");
-		assert.match(docs, /Checked Lean Fin bounds: value &lt; 10; result &lt; 10\./);
+		assert.match(docs, /Checked Lean Fin bounds: arg0 &lt; 10; result &lt; 10\./);
 		t.diagnostic("offline NuGet restore and build without producer files or Lean/C compilers");
 		const fixture = { source: dotnetFinConsumer, success: "dotnet-fin-ok" };
 		const { command, ...observation } = await installCopiedConsumer({ profile: "dotnet", consumer, handoff, packages, environment, fixture });

@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpFinSource, phpFinChangedPaths } from "./php-fin-source-history.mjs";
 import { witFinChangedPaths } from "./wit-fin-source-history.mjs";
 import { finDistributionChangedPaths } from "./fin-distribution-source-history.mjs";
+import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { beforeJvmFinSource, jvmFinChangedPaths
 	, jvmFinHistoryPath, reverseJvmFinUpdate } from "./jvm-fin-source-history.mjs";
 
@@ -46,7 +47,7 @@ test("JVM scalar Fin changes only evidence source pins, not support or archives"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeJvmFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));
