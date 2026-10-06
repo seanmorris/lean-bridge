@@ -16,6 +16,7 @@ import { callbackFinChangedPaths } from "./callback-fin-source-history.mjs";
 import { perlEvidenceRepairChangedPaths } from "./perl-evidence-repair-source-history.mjs";
 import { nativeFinChangedPaths } from "./native-fin-source-history.mjs";
 import { npmFinDiagnosticsChangedPaths } from "./npm-fin-diagnostics-source-history.mjs";
+import { diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -497,7 +498,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedFinChangedPaths, ...refinementClosureChangedPaths
 	, ...nominalFinChangedPaths, ...callbackFinChangedPaths
 	, ...perlEvidenceRepairChangedPaths, ...nativeFinChangedPaths
-	, ...npmFinDiagnosticsChangedPaths
+	, ...npmFinDiagnosticsChangedPaths, ...diagnosticFollowupChangedPaths
 ])].sort());
 
 /**

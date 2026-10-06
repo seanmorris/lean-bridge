@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "milestone": "diagnostic-followup-v1",
+  "predecessorCommit": "be1a8f6ff4e9a2991a116f58a8fe137ec126257c",
+  "updates": [
+    {
+      "path": "docs/evidence/npm-fin-diagnostics-20261006.md",
+      "currentSha256": "ae5ebbe3b6e6f90e40c0b3070b2a9e2d71bda64dfa71b39fdc073bc0db6cafca",
+      "previousSha256": "546057ce2f87bcc7a54baf58462bf0ada61e664d32a25d6b461da9c7e0cf740e",
+      "edits": [
+        {
+          "start": 3934,
+          "previous": "",
+          "current": "\n## Review follow-up\n\nThe integration review found two problems with the first repair.\n\n### Lost compiler diagnostics\n\nThe first two-field allowlist applied to every engine failure, so it discarded diagnostics that other failures need. A Lean source error reached the parent only as `…/lean exited with status 1`, and plan hints were dropped. The line now carries the known diagnostic shapes, each with its own budget:\n\n- the error's `hint`;\n- the head of the compiler text from a failed subprocess or from the extractor's `compilerDetails` (Lean reports its first error first);\n- the plan `hints` strings;\n- `diagnostics` and `projections` records, with fixed fields only;\n- the declaration and source position.\n\nAbsolute paths keep only their final component, so relative `file:line:column` text is preserved. Values of sensitive environment variables are redacted. Lean expressions that resemble `KEY=value` are left alone; redaction is best effort, not a guarantee. If the line still exceeds 6000 bytes, a fixed reduction sequence runs that always terminates. When compiler text is present, the decoded message gains its first line.\n\n`tests/unlocked-component.test.mjs` now pushes a Lean type error, an unsupported `IO` export and the `Fin 0` rejection through a real engine process. CI uses the locked engine; locally the test spawns the same entry script. The test checks the reason, location, hints and unchanged inputs.\n\n### Historical CLI inventories\n\nAdding the module changed the current CLI configuration, and the Perl callback evidence readers compared historical archives with that current file list. Those readers now choose among the current configuration and its exact predecessors, rebuilt through the recorded source history. A recorded inventory selects one of these; it can never introduce a configuration. The selected configuration must also match the package name, version, source date epoch and complete file set.\n\nOn the genuine run-37317108353 reports:\n\n- positive package and variant reconstruction passes again, and the existing forgery suites still reject;\n- a recorded list with an extra or missing file selects no configuration;\n- pasting the current list into an old report selects the current configuration, and the full validator then rejects it because the installation, archive and receipts still bind the original build.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "87009dec26a20078d58bca9e35ceb93081205e5eb2a50ef42ff63766452964dc",
+      "previousSha256": "74b7f537fc54e5877b2becc73798237a8bdf3ff8c424c2556751cf7b8c22c936",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"4f64bcd3790301633356bed374c36dbf63c2fb77430865b30b7a2785f0390343\"\n",
+          "current": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n"
+        },
+        {
+          "start": 1409186,
+          "previous": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n",
+          "current": "          \"sha256\": \"d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96\"\n"
+        },
+        {
+          "start": 1413183,
+          "previous": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n",
+          "current": "          \"sha256\": \"d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96\"\n"
+        },
+        {
+          "start": 1416409,
+          "previous": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n",
+          "current": "          \"sha256\": \"d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"4f64bcd3790301633356bed374c36dbf63c2fb77430865b30b7a2785f0390343\"\n",
+          "current": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n"
+        },
+        {
+          "start": 1422574,
+          "previous": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n",
+          "current": "          \"sha256\": \"d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"4f64bcd3790301633356bed374c36dbf63c2fb77430865b30b7a2785f0390343\"\n",
+          "current": "          \"sha256\": \"3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f\"\n"
+        },
+        {
+          "start": 1432818,
+          "previous": "          \"sha256\": \"c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de\"\n",
+          "current": "          \"sha256\": \"d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-engine-failure.mjs",
+      "currentSha256": "5a1e458152a2fa2c5648b43dc2d7d8e51c09b3f9f96d42574370f80718126da3",
+      "previousSha256": "a73ed8ae99bcbece74a07ce9cea910fb64ed21e2f0075166b96ac0ce421380e4",
+      "edits": [
+        {
+          "start": 201,
+          "previous": "",
+          "current": "import { basename } from \"node:path\";\n"
+        },
+        {
+          "start": 549,
+          "previous": "",
+          "current": "const diagnosticLimit = 2048;\n"
+        },
+        {
+          "start": 602,
+          "previous": "",
+          "current": "const listLimit = 16;\n"
+        },
+        {
+          "start": 710,
+          "previous": "const fallback = Object.freeze({ code: null, details: null, message: \"Component engine failed\", name: \"Error\" });\n",
+          "current": "const fallback = Object.freeze({ code: null, details: null, hint: null, message: \"Component engine failed\", name: \"Error\" });\nconst fields = \"code,details,hint,message,name\";\nconst detailFields = [\"declaration\", \"diagnostic\", \"diagnostics\", \"hints\", \"projections\", \"source\"];\nconst recordFields = { diagnostics: [\"category\", \"code\", \"declaration\", \"message\", \"module\", \"path\", \"severity\"]\n\t, projections: [\"declaration\", \"message\", \"reason\", \"status\"] };\nconst sourceFields = [\"path\", \"startLine\", \"startColumn\", \"endLine\", \"endColumn\"];\n"
+        },
+        {
+          "start": 1537,
+          "previous": " * Truncate at a code-point boundary to at most the given UTF-8 byte count.\n",
+          "current": " * Keep at most the given UTF-8 byte count, cutting only at code-point boundaries.\n"
+        },
+        {
+          "start": 2106,
+          "previous": "const bounded = value => typeof value === \"string\" && value.length > 0 && Buffer.byteLength(value) <= textLimit ? value : undefined;\n",
+          "current": "const bounded = (value, limit = textLimit) => typeof value === \"string\" && value.length > 0 && Buffer.byteLength(value) <= limit ? value : undefined;\n\n// Values of sensitive environment variables are removed; other text, including\n// Lean expressions that resemble KEY=value, is left intact.\nconst secrets = () => Object.entries(process.env)\n\t.filter(([key, value]) => /token|secret|password|credential|private|auth|key/iu.test(key) && typeof value === \"string\" && value.length >= 8)\n\t.map(([, value]) => value).sort((left, right) => right.length - left.length);\n\n/**\n * Best-effort sanitization: absolute paths keep only their final component and\n * known secret values are redacted. Relative file:line:column text is unchanged.\n *\n * @param text - Compiler or error text.\n */\nexport const sanitizeComponentEngineText = text => {\n\tlet result = String(text).replace(/(^|[\\s'\"`(=])(\\/[^\\s'\"`():]+)/gu, (_, lead, path) => `${lead}<abs>/${basename(path)}`);\n\tfor(const secret of secrets()) result = result.split(secret).join(\"[redacted]\");\n\treturn result;\n};\n\nconst record = (value, keys) => {\n\tif(!plain(value)) return undefined;\n\tconst kept = Object.fromEntries(keys.map(key => [key, bounded(read(value, key)) && truncate(sanitizeComponentEngineText(read(value, key)), textLimit)]).filter(([, text]) => text));\n\treturn Object.keys(kept).length ? kept : undefined;\n};\nconst records = (value, keys) => {\n\tif(!Array.isArray(value)) return undefined;\n\tconst kept = value.slice(0, listLimit).map(item => record(item, keys)).filter(Boolean);\n\treturn kept.length ? kept : undefined;\n};\n"
+        },
+        {
+          "start": 3689,
+          "previous": " * Keep only declaration context that callers already expose in compiler diagnostics.\n",
+          "current": " * Compiler text from the known subprocess and extractor failure shapes, head first,\n * because Lean reports the first error at the top of its output.\n"
+        },
+        {
+          "start": 3843,
+          "previous": " * @param details - Arbitrary error details from the engine.\n",
+          "current": " * @param error - Engine failure.\n * @param details - Its details object.\n"
+        },
+        {
+          "start": 3921,
+          "previous": "const allowlisted = details => {\n",
+          "current": "const compilerText = (error, details) => {\n\tconst nested = plain(read(details, \"compilerDetails\")) ? read(details, \"compilerDetails\") : null;\n\tconst sources = nested ?? (read(error, \"code\") === \"build-command-failed\" ? details : null);\n\tif(!sources) return undefined;\n\tconst text = [\"stderr\", \"stdout\"].map(key => read(sources, key)).filter(value => typeof value === \"string\" && value.trim()).join(\"\\n\").trim();\n\treturn text ? truncate(sanitizeComponentEngineText(text), diagnosticLimit) : undefined;\n};\n\n/**\n * Keep only the diagnostic shapes engine failures are known to carry.\n *\n * @param error - Engine failure.\n */\nconst allowlisted = error => {\n\tconst details = read(error, \"details\");\n"
+        },
+        {
+          "start": 4648,
+          "previous": "\tconst declaration = bounded(read(details, \"declaration\"));\n",
+          "current": ""
+        },
+        {
+          "start": 4786,
+          "previous": "\t\t, ...[\"startLine\", \"startColumn\", \"endLine\", \"endColumn\"].map(key => [key, integer(read(source, key))])\n",
+          "current": "\t\t, ...sourceFields.slice(1).map(key => [key, integer(read(source, key))])\n"
+        },
+        {
+          "start": 4916,
+          "previous": "\tconst value = { ...(declaration ? { declaration } : {}), ...(position?.path ? { source: position } : {}) };\n\treturn Object.keys(value).length ? value : null;\n",
+          "current": "\tconst hints = Array.isArray(read(details, \"hints\")) ? read(details, \"hints\").slice(0, listLimit)\n\t\t.map(item => bounded(item) && truncate(sanitizeComponentEngineText(item), textLimit)).filter(Boolean) : [];\n\tconst value = {\n\t\tdeclaration: bounded(read(details, \"declaration\"))\n\t\t, diagnostic: compilerText(error, details)\n\t\t, diagnostics: records(read(details, \"diagnostics\"), recordFields.diagnostics)\n\t\t, hints: hints.length ? hints : undefined\n\t\t, projections: records(read(details, \"projections\"), recordFields.projections)\n\t\t, source: position?.path ? position : undefined\n\t};\n\tconst kept = Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined));\n\treturn Object.keys(kept).length ? kept : null;\n"
+        },
+        {
+          "start": 5649,
+          "previous": "",
+          "current": "// Each step removes or shrinks something, so the sequence always terminates.\nconst reductions = [\n\tvalue => { if(value.details?.projections) delete value.details.projections; }\n\t, value => { if(value.details?.diagnostics?.length > 4) value.details.diagnostics.length = 4; }\n\t, value => { if(value.details?.hints?.length > 4) value.details.hints.length = 4; }\n\t, value => { if(value.details?.diagnostics) delete value.details.diagnostics; }\n\t, value => { if(value.details?.diagnostic) value.details.diagnostic = truncate(value.details.diagnostic, 1024); }\n\t, value => { if(value.details?.diagnostic) value.details.diagnostic = truncate(value.details.diagnostic, 256); }\n\t, value => { if(value.details?.hints) delete value.details.hints; }\n\t, value => { value.message = truncate(value.message, 1024) || fallback.message; }\n\t, value => { value.message = truncate(value.message, 256) || fallback.message; }\n\t, value => { value.hint = null; }\n\t, value => { value.details = null; }\n];\n\n"
+        },
+        {
+          "start": 6634,
+          "previous": " * Render one bounded stderr line. It never throws and never includes stacks, causes,\n * raw output, request data or the environment.\n",
+          "current": " * Render one bounded stderr line. It never throws and never includes stacks,\n * causes, request documents or the environment.\n"
+        },
+        {
+          "start": 6893,
+          "previous": "\t\tconst errorName = read(error, \"name\"), errorCode = read(error, \"code\");\n",
+          "current": "\t\tconst errorName = read(error, \"name\"), errorCode = read(error, \"code\"), hint = read(error, \"hint\");\n"
+        },
+        {
+          "start": 7233,
+          "previous": "\t\t\t, details: allowlisted(read(error, \"details\"))\n\t\t\t, message: truncate(message, messageLimit) || fallback.message\n",
+          "current": "\t\t\t, details: allowlisted(error)\n\t\t\t, hint: typeof hint === \"string\" && hint ? truncate(sanitizeComponentEngineText(hint), textLimit) : null\n\t\t\t, message: truncate(sanitizeComponentEngineText(message), messageLimit) || fallback.message\n"
+        },
+        {
+          "start": 7561,
+          "previous": "\t\t// Deterministic reduction: drop details, then halve the message until the line fits.\n\t\tif(size(value) > componentEngineFailureLimit) value.details = null;\n\t\twhile(size(value) > componentEngineFailureLimit && value.message.length > 1)\n\t\t\tvalue.message = truncate(value.message, Math.floor(Buffer.byteLength(value.message) / 2)) || fallback.message;\n",
+          "current": "\t\tfor(const reduce of reductions)\n\t\t{\n\t\t\tif(size(value) <= componentEngineFailureLimit) break;\n\t\t\treduce(value);\n\t\t\tif(value.details && !Object.keys(value.details).length) value.details = null;\n\t\t}\n"
+        },
+        {
+          "start": 8224,
+          "previous": "",
+          "current": "const text = (value, limit = textLimit) => typeof value === \"string\" && value.length > 0 && Buffer.byteLength(value) <= limit;\nconst validDetails = details => {\n\tif(details === null) return true;\n\tif(!plain(details) || !Object.keys(details).length || Object.keys(details).some(key => !detailFields.includes(key))) return false;\n\tif(\"declaration\" in details && !text(details.declaration)) return false;\n\tif(\"diagnostic\" in details && !text(details.diagnostic, diagnosticLimit)) return false;\n\tif(\"hints\" in details && (!Array.isArray(details.hints) || !details.hints.length || details.hints.length > listLimit || !details.hints.every(item => text(item)))) return false;\n\tfor(const key of [\"diagnostics\", \"projections\"])\n\t\tif(key in details && (!Array.isArray(details[key]) || !details[key].length || details[key].length > listLimit\n\t\t\t|| !details[key].every(item => plain(item) && Object.keys(item).length && Object.entries(item).every(([field, value]) => recordFields[key].includes(field) && text(value))))) return false;\n\tif(\"source\" in details && (!plain(details.source) || !text(details.source.path)\n\t\t|| Object.entries(details.source).some(([field, value]) => !sourceFields.includes(field) || (field !== \"path\" && integer(value) === undefined)))) return false;\n\treturn true;\n};\n\n"
+        },
+        {
+          "start": 9900,
+          "previous": "\tif(!plain(value) || Object.keys(value).sort().join(\",\") !== \"code,details,message,name\") return null;\n",
+          "current": "\tif(!plain(value) || Object.keys(value).sort().join(\",\") !== fields) return null;\n"
+        },
+        {
+          "start": 10157,
+          "previous": "\tif(typeof value.message !== \"string\" || value.message.length === 0 || Buffer.byteLength(value.message) > messageLimit) return null;\n\t// Details must already be in their allowlisted form; anything else is not a valid line.\n\tif(value.details !== null && JSON.stringify(allowlisted(value.details)) !== JSON.stringify(value.details)) return null;\n\treturn value;\n",
+          "current": "\tif(!text(value.message, messageLimit) || (value.hint !== null && !text(value.hint))) return null;\n\treturn validDetails(value.details) ? value : null;\n"
+        },
+        {
+          "start": 10745,
+          "previous": "\treturn new CanonicalBuildError(engine.code ?? \"component-engine-failed\", engine.message, {\n\t\thint: error.hint ?? null\n",
+          "current": "\t// An inner command failure is only actionable with its compiler reason.\n\tconst reason = engine.details?.diagnostic?.split(\"\\n\").find(item => item.trim());\n\treturn new CanonicalBuildError(engine.code ?? \"component-engine-failed\", reason ? `${engine.message}: ${reason}` : engine.message, {\n\t\thint: engine.hint ?? error.hint ?? null\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "3f187a02f8aa1df183061fd33a0fab9b295335caffe490c61425ee10c1316d9f",
+      "previousSha256": "4f64bcd3790301633356bed374c36dbf63c2fb77430865b30b7a2785f0390343",
+      "edits": [
+        {
+          "start": 2218,
+          "previous": "",
+          "current": "import \"./helpers/cli-package-config-history-tests.mjs\";\nimport \"./helpers/diagnostic-followup-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-engine-failure.test.mjs",
+      "currentSha256": "ec1c24ce189ad9fa8e6f737b43248b9bb3d781d1f784470c93d16a9f4373245d",
+      "previousSha256": "eb95f522ae6cbaf61a765d53d25a9d130e03d4f1ffee4c1d450aac94acd600bb",
+      "edits": [
+        {
+          "start": 9645,
+          "previous": "",
+          "current": "\ntest(\"known compiler failure shapes keep their reason, hints and records within the budget\", () => {\n\tprocess.env.LEAN_BRIDGE_TEST_API_TOKEN = \"s3cr3t-token-value\";\n\ttry\n\t{\n\t\t// The pinned Lean runner reports source errors on stdout under build-command-failed.\n\t\tconst lean = \"OnboardingSmall.lean:2:37: error(lean.synthInstanceFailed): failed to synthesize instance of type class\\n  HAdd Nat Nat String\\n\";\n\t\tconst workspace = \"/tmp/lean-bridge-lake-workspace-x/source\";\n\t\tconst stdout = `${lean}uses x = y and a=b with s3cr3t-token-value\\n${workspace}/Other.lean:1:2: note`;\n\t\tconst runner = { command: \"/opt/toolchains/lean\", args: [\"-R\", workspace], stderr: \"\", stdout };\n\t\tconst hint = \"Fix the Lean source and rebuild\";\n\t\tconst compile = new CanonicalBuildError(\"build-command-failed\", \"/opt/toolchains/lean exited with status 1\", { hint, details: runner });\n\t\tconst decoded = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(compile)));\n\t\tassert.equal(decoded.code, \"build-command-failed\");\n\t\tassert.equal(decoded.hint, hint);\n\t\tassert.equal(decoded.message, \"<abs>/lean exited with status 1: OnboardingSmall.lean:2:37: error(lean.synthInstanceFailed): failed to synthesize instance of type class\");\n\t\tconst diagnostic = decoded.details.engine.details.diagnostic;\n\t\tassert.match(diagnostic, /HAdd Nat Nat String/u);\n\t\tassert.match(diagnostic, /x = y and a=b with \\[redacted\\]/u, \"Lean expressions stay readable; only secret values are removed\");\n\t\tassert.match(diagnostic, /<abs>\\/Other\\.lean:1:2: note/u);\n\t\tassert.doesNotMatch(JSON.stringify(decoded), /s3cr3t|\\/tmp\\/lean-bridge|\\/opt\\/toolchains|\"args\"/u);\n\t\t// The extractor nests the subprocess details under compilerDetails.\n\t\tconst compilerDetails = { command: \"lean\", args: [], stderr: \"uncaught exception: bad request\\n\", stdout: \"\" };\n\t\tconst extractorDetails = { category: \"extractor-failure\", cause: \"lean exited with status 1\", compilerDetails };\n\t\tconst extractor = Object.assign(new Error(\"Lean metadata extraction failed\"), { code: \"lean-metadata-extractor-failed\", details: extractorDetails });\n\t\tassert.equal(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(extractor))).details.engine.details.diagnostic, \"uncaught exception: bad request\");\n\t\t// Plan and metadata rejections keep their existing record shapes.\n\t\tconst hints = [\"hint:OnboardingSmall.effect:unsupported-effect\"];\n\t\tconst plan = Object.assign(new Error(\"Build requires a complete Binding IR\"), { name: \"ComponentBuildPlanError\" });\n\t\tObject.assign(plan, { code: \"component-binding-ir-required\", details: { hints } });\n\t\tassert.deepEqual(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(plan))).details.engine.details, { hints });\n\t\tconst record = { category: \"export\", code: \"unsupported-native-type\", severity: \"error\" };\n\t\tObject.assign(record, { message: \"unsupported\", module: \"Library\", declaration: \"Library.f\" });\n\t\tconst projection = { declaration: \"Library.f\", status: \"unsupported\" };\n\t\tObject.assign(projection, { reason: \"unsupported-native-type\", message: \"Fin inside Array\" });\n\t\tconst details = { diagnostics: [{ ...record, extra: { env: 1 } }], projections: [{ ...projection, parameters: [] }] };\n\t\tconst rejected = Object.assign(new Error(\"Native export metadata rejected: unsupported\"), { code: \"native-elaboration-unsupported\", details });\n\t\tconst kept = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(rejected))).details.engine.details;\n\t\tassert.deepEqual(kept, { diagnostics: [record], projections: [projection] });\n\t\t// Extreme input always reduces to a valid line that still carries the leading reason.\n\t\tconst floodDetails = { stdout: `${lean}${\"😀\\\"\\\\\\u0000\".repeat(5000)}`, hints: Array(40).fill(\"x\".repeat(512)) };\n\t\tfloodDetails.diagnostics = Array(40).fill({ message: \"m\".repeat(512), code: \"c\" });\n\t\tfloodDetails.projections = Array(40).fill({ reason: \"r\".repeat(512) });\n\t\tconst flood = new CanonicalBuildError(\"build-command-failed\", \"é😀\\\"\\\\\".repeat(4000), { hint: \"h\".repeat(600), details: floodDetails });\n\t\tconst bounded = encodeComponentEngineFailure(flood);\n\t\tassert.ok(bytes(bounded) <= componentEngineFailureLimit, `${bytes(bounded)} bytes`);\n\t\tassert.match(decodeComponentEngineFailure(exited(bounded)).details.engine.details.diagnostic, /^OnboardingSmall\\.lean:2:37/u);\n\t\t// Unknown detail fields and record fields are never accepted by the parser.\n\t\tconst envelope = details => exited(`${componentEngineFailurePrefix}${JSON.stringify({ code: null, details, hint: null, message: \"m\", name: \"Error\" })}\\n`);\n\t\tfor(const details of [{ env: {} }, { hints: [] }, { diagnostics: [{ stack: \"x\" }] }, { source: { path: \"A.lean\", startLine: -1 } }, { diagnostic: \"\" }])\n\t\t\tassert.equal(decodeComponentEngineFailure(envelope(details)).code, \"build-command-failed\");\n\t} finally\n\t{ delete process.env.LEAN_BRIDGE_TEST_API_TOKEN; }\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "d046e6734883d77131415c06165a476e567830ccc9b9832ef1f224b77e56ddb6",
+      "previousSha256": "d18b6bac4387d5c9e2dcb3faa96dce86f0e8fda8850c118aa84044b042fe5fe9",
+      "edits": [
+        {
+          "start": 1145,
+          "previous": "",
+          "current": "import { diagnosticFollowupChangedPaths } from \"./diagnostic-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 34636,
+          "previous": "\t, ...npmFinDiagnosticsChangedPaths\n",
+          "current": "\t, ...npmFinDiagnosticsChangedPaths, ...diagnosticFollowupChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "c0e8f49c5af1c3dda3449e4c89f9d75bbf1b64ad3ba1aa892cc15cad312efd89",
+      "previousSha256": "dd7ecec0d28bdd1f2e540fc415f3dfc9179e7ab4e02db77380faf32fcebe64a2",
+      "edits": [
+        {
+          "start": 484,
+          "previous": "",
+          "current": "import { diagnosticFollowupChangedPaths } from \"./diagnostic-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 3924,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "dcd874c21fbed073e421586ed2a1472a8c0831ed1bdc274a24de3995ba8f2876",
+      "previousSha256": "fcce64a79e310d1d4be2a3e57fe9d67b49655f5ab76119af792e276f3cb067f7",
+      "edits": [
+        {
+          "start": 360,
+          "previous": "",
+          "current": "import { beforeDiagnosticFollowupSource, diagnosticFollowupChangedPaths } from \"./diagnostic-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 1065,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeDiagnosticFollowupSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2840,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history.mjs",
+      "currentSha256": "0d5ac05752b674d4ab32896e40f879329aff9b7aca1a93f048960a2ec93dee45",
+      "previousSha256": "b1e579b429aad2f10aee1733dbf61b25ebbdb3f31d13422e51de916fcade85a0",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeDiagnosticFollowupSource } from \"./diagnostic-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 2500,
+          "previous": "",
+          "current": "\tsource = beforeDiagnosticFollowupSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-combined-evidence.mjs",
+      "currentSha256": "35dc316367ad9e82a3c2f848262eaf2f071c96f332ca7616defdf114366792e4",
+      "previousSha256": "7fb25652cfdb8234115073c1c2b0023f441c698b65fafa20c5dc9d9535a83ca0",
+      "edits": [
+        {
+          "start": 139,
+          "previous": "",
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 13456,
+          "previous": "\tconst config = JSON.parse((await readSource(\"config/cli-package.v1.json\")).toString());\n",
+          "current": "\tconst config = await selectCliPackageConfig(item.cli, readSource);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs",
+      "currentSha256": "7654612cdb28416721db92e17a6ebafa917a3b4dfccbc57df6da0e107ea521ea",
+      "previousSha256": "fe340beac45d2dfcb75290f2109f4c42e1d2399a84a76b14a7d23288f65a1b0d",
+      "edits": [
+        {
+          "start": 142,
+          "previous": "",
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 5093,
+          "previous": "\t\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "current": "\t\tconst config = await selectCliPackageConfig(original.cli);\n"
+        },
+        {
+          "start": 19260,
+          "previous": "",
+          "current": "\n// A recorded inventory selects only among authenticated configurations; the full\n// validator still rejects inventories that select a configuration they were not built from.\ntest(\"Perl callback package CLI inventories select exact recorded configurations\", { skip: !enabled }, async () => {\n\tconst current = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n\tconst rehash = item => {\n\t\tconst { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;\n\t\tvoid archive; void inventorySha256; void externalRegistryWrites;\n\t\titem.cli.inventorySha256 = sha256(canonicalJson(inventory));\n\t};\n\tfor(const [name, original] of Object.entries(await reports()))\n\t{\n\t\tconst selected = await selectCliPackageConfig(original.cli);\n\t\tassert.deepEqual([...selected.files, \"README.md\", \"package.json\"].sort(), original.cli.files.map(file => file.path).sort(), name);\n\t\tconst added = structuredClone(original);\n\t\tadded.cli.files.push({ path: \"src/build/unrecorded.mjs\", bytes: 1, sha256: \"0\".repeat(64), mode: 0o644 }); rehash(added);\n\t\tconst removed = structuredClone(original);\n\t\tremoved.cli.files = removed.cli.files.filter(file => file.path !== \"src/build/canonical-build.mjs\"); rehash(removed);\n\t\tfor(const forged of [added, removed])\n\t\t{\n\t\t\tawait assert.rejects(() => selectCliPackageConfig(forged.cli), /exactly one authenticated configuration/u, name);\n\t\t\tawait assert.rejects(() => assertOwnedPerlCallbackPackage(name, forged), name);\n\t\t}\n\t\t// Pasting the current inventory selects the current configuration, but the\n\t\t// recorded installation, archive and receipts still bind the original build.\n\t\tconst pasted = structuredClone(original);\n\t\tfor(const path of current.files.filter(path => !pasted.cli.files.some(file => file.path === path)))\n\t\t{\n\t\t\tconst bytes = await readFile(path);\n\t\t\tpasted.cli.files.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });\n\t\t}\n\t\tpasted.cli.files.sort((left, right) => left.path.localeCompare(right.path)); rehash(pasted);\n\t\tassert.deepEqual((await selectCliPackageConfig(pasted.cli)).files, current.files);\n\t\tawait assert.rejects(() => assertOwnedPerlCallbackPackage(name, pasted), name);\n\t}\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence.mjs",
+      "currentSha256": "a141067c01b947e35e660d46fe2ff39f1551d576e947af272062261050b55b0b",
+      "previousSha256": "01a485ac34d5b95a500ca15ee1989c482d8297581862497bc0622958b171d393",
+      "edits": [
+        {
+          "start": 221,
+          "previous": "",
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 25513,
+          "previous": "\tconst config = JSON.parse((await readSource(\"config/cli-package.v1.json\")).toString());\n",
+          "current": "\tconst config = await selectCliPackageConfig(item.cli, readSource);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-variant-evidence-tests.mjs",
+      "currentSha256": "7f65b490288a14232df6bfda16f42de453d49f7b2848ff951c784bcd9629c2e1",
+      "previousSha256": "4687c0bf1f613db1aca1bda514fd2d89f3a3838434c5f667754ed893ccc60e26",
+      "edits": [
+        {
+          "start": 226,
+          "previous": "",
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n"
+        },
+        {
+          "start": 3398,
+          "previous": "\t\tfor(const path of JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\")).files) assert.ok(read.has(path), path);\n",
+          "current": "\t\tfor(const path of (await selectCliPackageConfig(report.cli)).files) assert.ok(read.has(path), path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/unlocked-component.test.mjs",
+      "currentSha256": "d733762634ec194c758482e30929ceb9cd7a958b040dbb38694207f751fcfe96",
+      "previousSha256": "c8617845ff786834a28659a4be5298b494e5c05bfefcb4681e38fa52c928e1de",
+      "edits": [
+        {
+          "start": 1864,
+          "previous": "import { checkCallbackFinPackages } from \"./helpers/callback-fin-packages.mjs\";\n",
+          "current": "import { checkCallbackFinPackages, isUninhabitedCallbackResult } from \"./helpers/callback-fin-packages.mjs\";\n"
+        },
+        {
+          "start": 4170,
+          "previous": "",
+          "current": "// Always cross a real process boundary: the CI locked engine when selected,\n// otherwise the same entry script that the locked engine wraps.\nconst engineProcess = () => transport({ execute: ({ requestPath, inputRoot, outputRoot }) => processBuildRunner.capture({\n\tcommand: externalEngine ? resolve(externalEngine) : process.execPath\n\t, args: [...externalEngine ? [] : [\"scripts/run-component-engine.mjs\"], \"--request\", requestPath, \"--component\", inputRoot, \"--output\", outputRoot, \"--backend\", \"native-nix\"]\n\t, timeoutMs: 180000 }) });\n\ntest(\"engine failures keep compiler reasons, hints and locations across the process boundary\", { skip: !enabled }, async t => {\n\tconst typeError = error => {\n\t\tassert.equal(error.code, \"build-command-failed\");\n\t\tassert.match(error.message, /OnboardingSmall\\.lean:2:37: error\\(lean\\.synthInstanceFailed\\): failed to synthesize instance/u);\n\t\tassert.match(error.details.engine.details.diagnostic, /HAdd Nat Nat String/u);\n\t\tassert.doesNotMatch(JSON.stringify(error), /lean-bridge-(?:lake-workspace|entry-elaboration|component-work)-/u);\n\t};\n\tconst unsupported = error => {\n\t\tassert.equal(error.code, \"component-binding-ir-required\");\n\t\tassert.deepEqual(error.details.engine.details, { hints: [\"hint:OnboardingSmall.effect:unsupported-effect\"] });\n\t};\n\tconst uninhabited = error => assert.equal(isUninhabitedCallbackResult(error), true);\n\tconst cases = [\n\t\t[\"typeError\", \"def broken (value : Nat) : String := value + 1\", \"OnboardingSmall.broken\", typeError]\n\t\t, [\"unsupported\", \"def effect (value : Nat) : IO Nat := pure value\", \"OnboardingSmall.effect\", unsupported]\n\t\t, [\"fin0\", \"def impossible (_f : Nat → Fin 0) : Nat := 0\", \"OnboardingSmall.impossible\", uninhabited]\n\t];\n\tfor(const [label, declaration, name, check] of cases)\n\t{\n\t\tconst { directory, root } = await fixture(t);\n\t\tawait saveLakeFile(root, \"OnboardingSmall.lean\", `namespace OnboardingSmall\\n${declaration}\\nend OnboardingSmall\\n`);\n\t\tawait saveLakeFile(root, \"lean-bridge.exports.json\", canonicalJson({ schemaVersion: 1, modules: [\"OnboardingSmall\"], exports: [name] }));\n\t\tconst before = await lakeInputState(root);\n\t\tconst error = await build(root, join(directory, \"rejected\"), engineProcess()).then(() => null, value => value);\n\t\tassert.ok(error, label);\n\t\tassert.ok(error.details?.engine, `${label}: decoded from the engine process`);\n\t\tcheck(error);\n\t\tassert.deepEqual(await lakeInputState(root), before, label);\n\t}\n});\n\n"
+        }
+      ]
+    }
+  ]
+}

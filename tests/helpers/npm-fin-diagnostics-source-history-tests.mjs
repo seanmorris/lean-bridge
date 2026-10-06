@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeDiagnosticFollowupSource, diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsChangedPaths
 	, npmFinDiagnosticsHistoryPath, reverseNpmFinDiagnosticsUpdate } from "./npm-fin-diagnostics-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Fin diagnostic history authenticates predecessors and rejects unrelated ed
 	assert.deepEqual(record.updates.map(item => item.path), npmFinDiagnosticsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeDiagnosticFollowupSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNpmFinDiagnosticsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNpmFinDiagnosticsSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
@@ -45,7 +46,7 @@ test("Fin diagnostic repair changes no inventory claim, receipt or archive", asy
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(npmFinDiagnosticsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeNpmFinDiagnosticsSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(await readFile(file.path)));
 			++refreshed;

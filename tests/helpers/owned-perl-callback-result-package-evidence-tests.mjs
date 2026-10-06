@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
@@ -87,7 +88,7 @@ const assertPortableIdentities = async () => {
 		});
 		assert.ok(read.has("src/release/deterministic-archive.mjs"));
 		assert.ok(read.has("tests/fixtures/structured-types/owned-perl-callback-results-installed.pl"));
-		const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+		const config = await selectCliPackageConfig(original.cli);
 		for(const path of config.files) assert.ok(read.has(path), path);
 		// Generated CLI README/manifest are not the checkout's top-level files.
 		assert.equal(read.has("README.md"), false); assert.equal(read.has("package.json"), false);
@@ -282,4 +283,40 @@ test("Perl callback package evidence rejects coordinated producer, receipt and i
 	}
 	assert.deepEqual(await reports(), originals, "validation never rewrites original reports");
 	t.diagnostic(`${rejected} altered CPAN reports rejected, including coordinated raw stdout changes`);
+});
+
+// A recorded inventory selects only among authenticated configurations; the full
+// validator still rejects inventories that select a configuration they were not built from.
+test("Perl callback package CLI inventories select exact recorded configurations", { skip: !enabled }, async () => {
+	const current = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const rehash = item => {
+		const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
+		void archive; void inventorySha256; void externalRegistryWrites;
+		item.cli.inventorySha256 = sha256(canonicalJson(inventory));
+	};
+	for(const [name, original] of Object.entries(await reports()))
+	{
+		const selected = await selectCliPackageConfig(original.cli);
+		assert.deepEqual([...selected.files, "README.md", "package.json"].sort(), original.cli.files.map(file => file.path).sort(), name);
+		const added = structuredClone(original);
+		added.cli.files.push({ path: "src/build/unrecorded.mjs", bytes: 1, sha256: "0".repeat(64), mode: 0o644 }); rehash(added);
+		const removed = structuredClone(original);
+		removed.cli.files = removed.cli.files.filter(file => file.path !== "src/build/canonical-build.mjs"); rehash(removed);
+		for(const forged of [added, removed])
+		{
+			await assert.rejects(() => selectCliPackageConfig(forged.cli), /exactly one authenticated configuration/u, name);
+			await assert.rejects(() => assertOwnedPerlCallbackPackage(name, forged), name);
+		}
+		// Pasting the current inventory selects the current configuration, but the
+		// recorded installation, archive and receipts still bind the original build.
+		const pasted = structuredClone(original);
+		for(const path of current.files.filter(path => !pasted.cli.files.some(file => file.path === path)))
+		{
+			const bytes = await readFile(path);
+			pasted.cli.files.push({ path, bytes: bytes.length, sha256: sha256(bytes), mode: 0o644 });
+		}
+		pasted.cli.files.sort((left, right) => left.path.localeCompare(right.path)); rehash(pasted);
+		assert.deepEqual((await selectCliPackageConfig(pasted.cli)).files, current.files);
+		await assert.rejects(() => assertOwnedPerlCallbackPackage(name, pasted), name);
+	}
 });

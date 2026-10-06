@@ -143,3 +143,57 @@ test("the real engine entry point reports its failure as a final structured stde
 		.then(() => null, error => decodeComponentEngineFailure(error));
 	assert.match(usage.message, /unknown, duplicate, or incomplete argument --bogus/u);
 });
+
+test("known compiler failure shapes keep their reason, hints and records within the budget", () => {
+	process.env.LEAN_BRIDGE_TEST_API_TOKEN = "s3cr3t-token-value";
+	try
+	{
+		// The pinned Lean runner reports source errors on stdout under build-command-failed.
+		const lean = "OnboardingSmall.lean:2:37: error(lean.synthInstanceFailed): failed to synthesize instance of type class\n  HAdd Nat Nat String\n";
+		const workspace = "/tmp/lean-bridge-lake-workspace-x/source";
+		const stdout = `${lean}uses x = y and a=b with s3cr3t-token-value\n${workspace}/Other.lean:1:2: note`;
+		const runner = { command: "/opt/toolchains/lean", args: ["-R", workspace], stderr: "", stdout };
+		const hint = "Fix the Lean source and rebuild";
+		const compile = new CanonicalBuildError("build-command-failed", "/opt/toolchains/lean exited with status 1", { hint, details: runner });
+		const decoded = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(compile)));
+		assert.equal(decoded.code, "build-command-failed");
+		assert.equal(decoded.hint, hint);
+		assert.equal(decoded.message, "<abs>/lean exited with status 1: OnboardingSmall.lean:2:37: error(lean.synthInstanceFailed): failed to synthesize instance of type class");
+		const diagnostic = decoded.details.engine.details.diagnostic;
+		assert.match(diagnostic, /HAdd Nat Nat String/u);
+		assert.match(diagnostic, /x = y and a=b with \[redacted\]/u, "Lean expressions stay readable; only secret values are removed");
+		assert.match(diagnostic, /<abs>\/Other\.lean:1:2: note/u);
+		assert.doesNotMatch(JSON.stringify(decoded), /s3cr3t|\/tmp\/lean-bridge|\/opt\/toolchains|"args"/u);
+		// The extractor nests the subprocess details under compilerDetails.
+		const compilerDetails = { command: "lean", args: [], stderr: "uncaught exception: bad request\n", stdout: "" };
+		const extractorDetails = { category: "extractor-failure", cause: "lean exited with status 1", compilerDetails };
+		const extractor = Object.assign(new Error("Lean metadata extraction failed"), { code: "lean-metadata-extractor-failed", details: extractorDetails });
+		assert.equal(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(extractor))).details.engine.details.diagnostic, "uncaught exception: bad request");
+		// Plan and metadata rejections keep their existing record shapes.
+		const hints = ["hint:OnboardingSmall.effect:unsupported-effect"];
+		const plan = Object.assign(new Error("Build requires a complete Binding IR"), { name: "ComponentBuildPlanError" });
+		Object.assign(plan, { code: "component-binding-ir-required", details: { hints } });
+		assert.deepEqual(decodeComponentEngineFailure(exited(encodeComponentEngineFailure(plan))).details.engine.details, { hints });
+		const record = { category: "export", code: "unsupported-native-type", severity: "error" };
+		Object.assign(record, { message: "unsupported", module: "Library", declaration: "Library.f" });
+		const projection = { declaration: "Library.f", status: "unsupported" };
+		Object.assign(projection, { reason: "unsupported-native-type", message: "Fin inside Array" });
+		const details = { diagnostics: [{ ...record, extra: { env: 1 } }], projections: [{ ...projection, parameters: [] }] };
+		const rejected = Object.assign(new Error("Native export metadata rejected: unsupported"), { code: "native-elaboration-unsupported", details });
+		const kept = decodeComponentEngineFailure(exited(encodeComponentEngineFailure(rejected))).details.engine.details;
+		assert.deepEqual(kept, { diagnostics: [record], projections: [projection] });
+		// Extreme input always reduces to a valid line that still carries the leading reason.
+		const floodDetails = { stdout: `${lean}${"😀\"\\\u0000".repeat(5000)}`, hints: Array(40).fill("x".repeat(512)) };
+		floodDetails.diagnostics = Array(40).fill({ message: "m".repeat(512), code: "c" });
+		floodDetails.projections = Array(40).fill({ reason: "r".repeat(512) });
+		const flood = new CanonicalBuildError("build-command-failed", "é😀\"\\".repeat(4000), { hint: "h".repeat(600), details: floodDetails });
+		const bounded = encodeComponentEngineFailure(flood);
+		assert.ok(bytes(bounded) <= componentEngineFailureLimit, `${bytes(bounded)} bytes`);
+		assert.match(decodeComponentEngineFailure(exited(bounded)).details.engine.details.diagnostic, /^OnboardingSmall\.lean:2:37/u);
+		// Unknown detail fields and record fields are never accepted by the parser.
+		const envelope = details => exited(`${componentEngineFailurePrefix}${JSON.stringify({ code: null, details, hint: null, message: "m", name: "Error" })}\n`);
+		for(const details of [{ env: {} }, { hints: [] }, { diagnostics: [{ stack: "x" }] }, { source: { path: "A.lean", startLine: -1 } }, { diagnostic: "" }])
+			assert.equal(decodeComponentEngineFailure(envelope(details)).code, "build-command-failed");
+	} finally
+	{ delete process.env.LEAN_BRIDGE_TEST_API_TOKEN; }
+});

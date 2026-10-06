@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { readFile } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -227,7 +228,7 @@ export const assertOwnedPerlCallbackCombinedRelease = async (name, item, readSou
 	keys(item, top);
 	assert.equal(name, `${item.mode}-combined-release.json`);
 	const { model } = await assertOwnedJvmCallbackCombinedRelease(item, readSource, { cpan: true, independentRebuild: false });
-	const config = JSON.parse((await readSource("config/cli-package.v1.json")).toString());
+	const config = await selectCliPackageConfig(item.cli, readSource);
 	const generated = cliGeneratedFiles(config, item.cli.files.map(file => file.path).filter(path => path !== "package.json"));
 	for(const [path, bytes] of Object.entries(generated))
 		assert.deepEqual(item.cli.files.find(file => file.path === path), {

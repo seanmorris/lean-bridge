@@ -40,3 +40,31 @@ The rejection itself was the expected one; its diagnostic was lost at the proces
 - `LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test --test-name-pattern="checked Fin callbacks|nominal Fin fields" tests/unlocked-component.test.mjs` passes in process, and with `LEAN_BRIDGE_LAKE_ENGINE` set to the subprocess wrapper.
 
 No supported-type claim, receipt or archive changes. Running the real locked engine in CI is still pending.
+
+## Review follow-up
+
+The integration review found two problems with the first repair.
+
+### Lost compiler diagnostics
+
+The first two-field allowlist applied to every engine failure, so it discarded diagnostics that other failures need. A Lean source error reached the parent only as `…/lean exited with status 1`, and plan hints were dropped. The line now carries the known diagnostic shapes, each with its own budget:
+
+- the error's `hint`;
+- the head of the compiler text from a failed subprocess or from the extractor's `compilerDetails` (Lean reports its first error first);
+- the plan `hints` strings;
+- `diagnostics` and `projections` records, with fixed fields only;
+- the declaration and source position.
+
+Absolute paths keep only their final component, so relative `file:line:column` text is preserved. Values of sensitive environment variables are redacted. Lean expressions that resemble `KEY=value` are left alone; redaction is best effort, not a guarantee. If the line still exceeds 6000 bytes, a fixed reduction sequence runs that always terminates. When compiler text is present, the decoded message gains its first line.
+
+`tests/unlocked-component.test.mjs` now pushes a Lean type error, an unsupported `IO` export and the `Fin 0` rejection through a real engine process. CI uses the locked engine; locally the test spawns the same entry script. The test checks the reason, location, hints and unchanged inputs.
+
+### Historical CLI inventories
+
+Adding the module changed the current CLI configuration, and the Perl callback evidence readers compared historical archives with that current file list. Those readers now choose among the current configuration and its exact predecessors, rebuilt through the recorded source history. A recorded inventory selects one of these; it can never introduce a configuration. The selected configuration must also match the package name, version, source date epoch and complete file set.
+
+On the genuine run-37317108353 reports:
+
+- positive package and variant reconstruction passes again, and the existing forgery suites still reject;
+- a recorded list with an extra or missing file selects no configuration;
+- pasting the current list into an old report selects the current configuration, and the full validator then rejects it because the installation, archive and receipts still bind the original build.

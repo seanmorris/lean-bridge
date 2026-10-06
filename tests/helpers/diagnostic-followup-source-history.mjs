@@ -1,28 +1,28 @@
 /**
- * Preserve the exact predecessors of the locked-engine Fin diagnostic repair (#1419).
+ * Preserve the exact predecessors of the locked-engine diagnostic and CLI lineage follow-up (#1419).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeDiagnosticFollowupSource } from "./diagnostic-followup-source-history.mjs";
 
-export const npmFinDiagnosticsHistoryPath = "docs/evidence/npm-fin-diagnostics-source-history-20261006.json";
-export const npmFinDiagnosticsChangedPaths = [
-	"config/checked-javascript.json"
-	, "config/cli-package.v1.json"
+export const diagnosticFollowupHistoryPath = "docs/evidence/diagnostic-followup-source-history-20261006.json";
+export const diagnosticFollowupChangedPaths = [
+	"docs/evidence/npm-fin-diagnostics-20261006.md"
 	, "docs/type-surface.v1.json"
-	, "nix/component-engine-source-boundary.json"
-	, "package.json"
-	, "scripts/run-component-engine.mjs"
-	, "src/build/canonical-build.mjs"
-	, "src/build/component-structured-callable-defaults.mjs"
+	, "src/build/component-engine-failure.mjs"
 	, "tests/component-array-contract.test.mjs"
-	, "tests/helpers/callback-fin-packages.mjs"
+	, "tests/component-engine-failure.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
-	, "tests/helpers/native-fin-source-history.mjs"
+	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
+	, "tests/helpers/npm-fin-diagnostics-source-history.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-variant-evidence-tests.mjs"
+	, "tests/unlocked-component.test.mjs"
 ];
 let history;
 
@@ -32,8 +32,8 @@ let history;
  * @param source - Complete current text.
  * @param update - Recorded transition.
  */
-export const reverseNpmFinDiagnosticsUpdate = (source, update) => {
-	assert.ok(npmFinDiagnosticsChangedPaths.includes(update.path));
+export const reverseDiagnosticFollowupUpdate = (source, update) => {
+	assert.ok(diagnosticFollowupChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,18 +53,17 @@ export const reverseNpmFinDiagnosticsUpdate = (source, update) => {
 };
 
 /**
- * Undo only the locked-engine Fin diagnostic repair (#1419) before following older refinement transitions.
+ * Undo only the locked-engine diagnostic and CLI lineage follow-up (#1419) before following older refinement transitions.
  *
  * @param path - Repository-relative path.
  * @param source - Complete current or historical text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNpmFinDiagnosticsSource = (path, source, expected) => {
-	source = beforeDiagnosticFollowupSource(path, source, expected);
-	if(typeof source !== "string" || !npmFinDiagnosticsChangedPaths.includes(path)) return source;
+export const beforeDiagnosticFollowupSource = (path, source, expected) => {
+	if(typeof source !== "string" || !diagnosticFollowupChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(npmFinDiagnosticsHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(diagnosticFollowupHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNpmFinDiagnosticsUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseDiagnosticFollowupUpdate(source, update) : source;
 };

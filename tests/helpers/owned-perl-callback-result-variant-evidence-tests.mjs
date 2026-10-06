@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { gzipSync, gunzipSync } from "node:zlib";
@@ -56,7 +57,7 @@ test("Perl optional CPAN evidence reconstructs eight producers, exact archives a
 		await assertOwnedPerlCallbackVariant(name, relocated, source);
 		const read = new Set();
 		await assertOwnedPerlCallbackVariant(name, report, async path => { read.add(path); return source(path); });
-		for(const path of JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files) assert.ok(read.has(path), path);
+		for(const path of (await selectCliPackageConfig(report.cli)).files) assert.ok(read.has(path), path);
 		for(const path of ["tests/fixtures/structured-types/owned-perl-callback-results-variants-installed.pl"
 			, "tests/fixtures/structured-types/owned-perl-installed-assets.pl"
 			, "src/release/deterministic-archive.mjs"])

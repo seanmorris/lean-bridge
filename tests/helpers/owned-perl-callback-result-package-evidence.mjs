@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { selectCliPackageConfig } from "./cli-package-config-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { callbackCompilerInputAtBaseline } from "./callback-compiler-identity.mjs";
 import { readFile } from "node:fs/promises";
@@ -451,7 +452,7 @@ export const assertOwnedPerlCallbackPackageIdentity = async (item, model, readSo
 		, "productionApproved"
 		, "files"
 		, "archive", "inventorySha256", "externalRegistryWrites"]);
-	const config = JSON.parse((await readSource("config/cli-package.v1.json")).toString());
+	const config = await selectCliPackageConfig(item.cli, readSource);
 	assert.equal(item.cli.schemaVersion, 1); assert.equal(item.cli.kind, "lean-bridge-cli-package");
 	assert.deepEqual(item.cli.package, { name: config.name, version: config.version });
 	assert.equal(item.cli.sourceDateEpoch, config.sourceDateEpoch);

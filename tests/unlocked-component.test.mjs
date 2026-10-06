@@ -26,7 +26,7 @@ import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { checkSubtypeComponentPackages } from "./helpers/subtype-component-packages.mjs";
 import { checkNestedFinPackages } from "./helpers/nested-fin-packages.mjs";
 import { checkNominalFinPackage } from "./helpers/nominal-fin-packages.mjs";
-import { checkCallbackFinPackages } from "./helpers/callback-fin-packages.mjs";
+import { checkCallbackFinPackages, isUninhabitedCallbackResult } from "./helpers/callback-fin-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -57,6 +57,44 @@ const transport = ({ execute, after, compiler } = {}) => ({ capture: async comma
 	return { stdout: "", stderr: "", code: 0 };
 } });
 const build = (root, outputRoot, runner = transport()) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner });
+
+// Always cross a real process boundary: the CI locked engine when selected,
+// otherwise the same entry script that the locked engine wraps.
+const engineProcess = () => transport({ execute: ({ requestPath, inputRoot, outputRoot }) => processBuildRunner.capture({
+	command: externalEngine ? resolve(externalEngine) : process.execPath
+	, args: [...externalEngine ? [] : ["scripts/run-component-engine.mjs"], "--request", requestPath, "--component", inputRoot, "--output", outputRoot, "--backend", "native-nix"]
+	, timeoutMs: 180000 }) });
+
+test("engine failures keep compiler reasons, hints and locations across the process boundary", { skip: !enabled }, async t => {
+	const typeError = error => {
+		assert.equal(error.code, "build-command-failed");
+		assert.match(error.message, /OnboardingSmall\.lean:2:37: error\(lean\.synthInstanceFailed\): failed to synthesize instance/u);
+		assert.match(error.details.engine.details.diagnostic, /HAdd Nat Nat String/u);
+		assert.doesNotMatch(JSON.stringify(error), /lean-bridge-(?:lake-workspace|entry-elaboration|component-work)-/u);
+	};
+	const unsupported = error => {
+		assert.equal(error.code, "component-binding-ir-required");
+		assert.deepEqual(error.details.engine.details, { hints: ["hint:OnboardingSmall.effect:unsupported-effect"] });
+	};
+	const uninhabited = error => assert.equal(isUninhabitedCallbackResult(error), true);
+	const cases = [
+		["typeError", "def broken (value : Nat) : String := value + 1", "OnboardingSmall.broken", typeError]
+		, ["unsupported", "def effect (value : Nat) : IO Nat := pure value", "OnboardingSmall.effect", unsupported]
+		, ["fin0", "def impossible (_f : Nat → Fin 0) : Nat := 0", "OnboardingSmall.impossible", uninhabited]
+	];
+	for(const [label, declaration, name, check] of cases)
+	{
+		const { directory, root } = await fixture(t);
+		await saveLakeFile(root, "OnboardingSmall.lean", `namespace OnboardingSmall\n${declaration}\nend OnboardingSmall\n`);
+		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [name] }));
+		const before = await lakeInputState(root);
+		const error = await build(root, join(directory, "rejected"), engineProcess()).then(() => null, value => value);
+		assert.ok(error, label);
+		assert.ok(error.details?.engine, `${label}: decoded from the engine process`);
+		check(error);
+		assert.deepEqual(await lakeInputState(root), before, label);
+	}
+});
 
 test("checked Fin callbacks and closures compile, reproduce and recover in installed npm packages", { skip: !enabled }, async t => {
 	await checkCallbackFinPackages(t, { fixture, build, runtimeRoot, engineRoot });
