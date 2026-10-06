@@ -22,7 +22,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
  */
 export const ordinaryRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true });
 	const projection = model.copiedGraph
 		? (model.copiedGraph.callbacks ? compileCallableRubyGraphPackageModel : compileCopiedRubyGraphPackageModel)(model.bindingIr)
 		: compileCopiedRubyModel(model.bindingIr);

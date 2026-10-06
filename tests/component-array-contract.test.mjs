@@ -39,6 +39,7 @@ import "./helpers/runtime-receipt-source-history-tests.mjs";
 import "./helpers/cpan-cli-control-source-history-tests.mjs";
 import "./helpers/python-fin-source-history-tests.mjs";
 import "./helpers/rust-fin-source-history-tests.mjs";
+import "./helpers/ruby-fin-source-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);

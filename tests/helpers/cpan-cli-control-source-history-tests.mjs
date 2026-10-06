@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePythonFinSource, pythonFinChangedPaths } from "./python-fin-source-history.mjs";
 import { rustFinChangedPaths } from "./rust-fin-source-history.mjs";
+import { rubyFinChangedPaths } from "./ruby-fin-source-history.mjs";
 import { beforeCpanCliControlSource, cpanCliControlChangedPaths
 	, cpanCliControlHistoryPath, reverseCpanCliControlUpdate } from "./cpan-cli-control-source-history.mjs";
 
@@ -45,7 +46,7 @@ test("CPAN CLI control repair changes only evidence source pins, not support or 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeCpanCliControlSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

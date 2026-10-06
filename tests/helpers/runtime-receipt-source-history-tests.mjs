@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCpanCliControlSource, cpanCliControlChangedPaths } from "./cpan-cli-control-source-history.mjs";
 import { pythonFinChangedPaths } from "./python-fin-source-history.mjs";
 import { rustFinChangedPaths } from "./rust-fin-source-history.mjs";
+import { rubyFinChangedPaths } from "./ruby-fin-source-history.mjs";
 import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths
 	, runtimeReceiptHistoryPath, reverseRuntimeReceiptUpdate } from "./runtime-receipt-source-history.mjs";
 
@@ -46,7 +47,7 @@ test("Runtime receipt repair changes only evidence source pins, not support or a
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRuntimeReceiptSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

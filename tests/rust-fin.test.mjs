@@ -47,7 +47,7 @@ const sharedLibraries = files => Object.fromEntries(Object.entries(files)
 test("Rust crates are checked Fin consumers beside C, C++ and Python", () => {
 	for(const targets of [["cargo"], ["c", "cargo"], ["pypi", "cargo"], ["c", "cpp", "pypi", "cargo"]])
 		assert.equal(supportsNativeRefinementTargets(targets), true, targets.join(","));
-	for(const target of ["cpan", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
+	for(const target of ["cpan", "nuget", "maven", "php-native", "wit-wasi"])
 		assert.equal(supportsNativeRefinementTargets(["cargo", target]), false, target);
 });
 
