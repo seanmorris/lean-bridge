@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-fin-archive-v1",
+  "predecessorCommit": "5721f357176f3d6c964ed084c0b4f205fdb59de1",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f7940ffbb8b0490d3857a0bb77a65e4a3a5fd9c2c37aa9d21f5922f96e013c65",
+      "previousSha256": "d7d71bf3dd729db91369f905a3bd83a84f929109fbe196468e73d9ae5d0f0ec0",
+      "edits": [
+        {
+          "start": 28846,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 39826,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1518415,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1522426,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1525932,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1529808,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1533287,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1536771,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        },
+        {
+          "start": 1540259,
+          "previous": "          \"sha256\": \"909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a\"\n",
+          "current": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "43f345fdf9db0c85f4ff7ea756bcfd58efe094a7f2fd004943f0b325617f6957",
+      "previousSha256": "c24d2e6d59b7f372ffa8dd8485d71728338f27f785f7b8f8ba0602e31078c1de",
+      "edits": [
+        {
+          "start": 4256,
+          "previous": "",
+          "current": "import { perlFinArchiveChangedPaths } from \"./perl-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 39099,
+          "previous": "",
+          "current": "\t, ...perlFinArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-core-followup-source-history-tests.mjs",
+      "currentSha256": "17f2359e6f8b1af771352dc0eebaf69b88b5b5e41ec0d58f6fc0e146d4c4c3ce",
+      "previousSha256": "3c144f2b097e248676f984b4b3c3d8da5003d4b47de695dd5814273bcc8ff29c",
+      "edits": [
+        {
+          "start": 346,
+          "previous": "",
+          "current": "import { beforePerlFinArchiveSource } from \"./perl-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1041,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePerlFinArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2016,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePerlFinArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2912,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforePerlFinArchiveSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-core-followup-source-history.mjs",
+      "currentSha256": "863aee93804cdf5f78e3cb5a4a3bd378348bee4980a6e53d141a50fdbb27d668",
+      "previousSha256": "8897ee5883f19bd623314e905c82eef66a18e855a2385c0f81b035b9a1cb41a9",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforePerlFinArchiveSource } from \"./perl-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2463,
+          "previous": "",
+          "current": "\tsource = beforePerlFinArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "currentSha256": "96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba",
+      "previousSha256": "909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a",
+      "edits": [
+        {
+          "start": 1884,
+          "previous": "",
+          "current": "import \"./helpers/perl-fin-archive-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2661,
+          "previous": "",
+          "current": "/**\n * Inspect the XS without making compilers or PATH-resolved decompressors available.\n *\n * @param archive - Prepared CPAN archive.\n * @param root - Consumer working directory.\n */\nconst perlArchiveXs = async (archive, root) => (await runCopied(\"/usr/bin/tar\"\n\t, [\"--use-compress-program=/usr/bin/gzip\", \"-xOf\", archive, \"--wildcards\", \"*/Component.xs\"], root, copiedCleanEnvironment)).stdout;\n\ntest(\"Perl Fin archive inspection works with the compiler-free consumer PATH\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-perl-fin-archive-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst source = \"/* Archive inspection fixture, not a compiled package. */\\n\";\n\tawait saveLakeFile(root, \"package/Component.xs\", source);\n\tconst archive = join(root, \"package.tar.gz\");\n\tawait runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-cf\", archive, \"package\"], root, copiedCleanEnvironment);\n\tassert.equal(await perlArchiveXs(archive, root), source);\n\tassert.equal(copiedCleanEnvironment.PATH, \"/unavailable\");\n\tawait assert.rejects(() => runCopied(\"/usr/bin/tar\", [\"-xOzf\", archive, \"--wildcards\", \"*/Component.xs\"], root, copiedCleanEnvironment)\n\t\t, error => error.code === \"build-command-failed\" && /gzip/.test(error.details.stderr));\n});\n\n"
+        },
+        {
+          "start": 16865,
+          "previous": "\t\t\tconst xs = (await runCopied(\"/usr/bin/tar\", [\"-xOzf\", join(handoff, archive), \"--wildcards\", \"*/Component.xs\"], consumer, copiedCleanEnvironment)).stdout;\n",
+          "current": "\t\t\tconst xs = await perlArchiveXs(join(handoff, archive), consumer);\n"
+        }
+      ]
+    }
+  ]
+}

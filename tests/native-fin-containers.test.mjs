@@ -25,6 +25,7 @@ import { observeFinContainerHostDispatch } from "./helpers/fin-container-host-di
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import "./helpers/fin-container-host-dispatch-tests.mjs";
 import "./helpers/container-host-dispatch-source-history-tests.mjs";
+import "./helpers/perl-fin-archive-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
@@ -35,6 +36,28 @@ for(const selection of [profiles, reviewedProfiles])
 }
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 const fixture = "tests/fixtures/onboarding/native-fin-containers";
+/**
+ * Inspect the XS without making compilers or PATH-resolved decompressors available.
+ *
+ * @param archive - Prepared CPAN archive.
+ * @param root - Consumer working directory.
+ */
+const perlArchiveXs = async (archive, root) => (await runCopied("/usr/bin/tar"
+	, ["--use-compress-program=/usr/bin/gzip", "-xOf", archive, "--wildcards", "*/Component.xs"], root, copiedCleanEnvironment)).stdout;
+
+test("Perl Fin archive inspection works with the compiler-free consumer PATH", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-fin-archive-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const source = "/* Archive inspection fixture, not a compiled package. */\n";
+	await saveLakeFile(root, "package/Component.xs", source);
+	const archive = join(root, "package.tar.gz");
+	await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-cf", archive, "package"], root, copiedCleanEnvironment);
+	assert.equal(await perlArchiveXs(archive, root), source);
+	assert.equal(copiedCleanEnvironment.PATH, "/unavailable");
+	await assert.rejects(() => runCopied("/usr/bin/tar", ["-xOzf", archive, "--wildcards", "*/Component.xs"], root, copiedCleanEnvironment)
+		, error => error.code === "build-command-failed" && /gzip/.test(error.details.stderr));
+});
+
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false } };
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refined = { kind: "refinement", base: nat, predicate: { kind: "fin", bound: "10" }, abi: nat.abi };
@@ -203,7 +226,7 @@ const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 		{
 			// The archived XS carries one walker per refined parameter, each naming the parameter and the leaf bound.
 			const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
-			const xs = (await runCopied("/usr/bin/tar", ["-xOzf", join(handoff, archive), "--wildcards", "*/Component.xs"], consumer, copiedCleanEnvironment)).stdout;
+			const xs = await perlArchiveXs(join(handoff, archive), consumer);
 			assert.equal((xs.match(/is not below its Fin \d+ bound/g) ?? []).length, 7);
 			assert.match(xs, /"arg1 is not below its Fin 4 bound"/);
 			assert.match(xs, /lean_cstr_to_nat\("1180591620717411303424"\); int below = lean_nat_lt\(e0, bound\)/);
