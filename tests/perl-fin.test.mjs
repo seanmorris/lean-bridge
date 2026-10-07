@@ -136,13 +136,13 @@ test("generated XS checks each exact bound before dispatch and unwraps the check
 	const xs = files["Component.xs"], section = name => xs.slice(xs.indexOf(`\n${name}(...)`), xs.indexOf("XSRETURN(1);", xs.indexOf(`\n${name}(...)`)));
 	// The bound is compared on the scope-owned argument before any retain or Lean call.
 	const mirror = section("mirror");
-	assert.match(mirror, new RegExp(`lean_cstr_to_nat\\("${huge}"\\); int below = lean_nat_lt\\(a0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\("%s", "value is not below its Fin ${huge} bound"\\);`));
+	assert.match(mirror, new RegExp(`lean_cstr_to_nat\\("${huge}"\\); int below = lean_nat_lt\\(a0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\("%s", "arg0 is not below its Fin ${huge} bound"\\);`));
 	assert.ok(mirror.indexOf("lean_nat_lt(a0, bound)") < mirror.indexOf("lean_inc(a0)"));
 	assert.ok(mirror.indexOf("lean_inc(a0)") < mirror.indexOf("lean_object *checked = lb_mirror(a0);"));
 	assert.match(mirror, /if \(lean_is_scalar\(checked\)\) croak\("Lean rejected an argument outside its Fin bound"\);\s+lean_object \*boxed = lean_ctor_get\(checked, 0\);\s+lean_inc\(boxed\);\s+lean_object \* result = boxed;\s+lean_dec\(checked\);/);
 	const label = section("label");
 	assert.match(label, /lean_cstr_to_nat\("4"\); int below = lean_nat_lt\(a1, bound\);/);
-	assert.match(label, /"offset is not below its Fin 4 bound"/);
+	assert.match(label, /"arg1 is not below its Fin 4 bound"/);
 	assert.doesNotMatch(label, /lean_nat_lt\(a0|lean_nat_lt\(a2/);
 	// Result-only and unrefined exports keep the direct call.
 	for(const name of ["wrap", "plain"])
@@ -153,8 +153,8 @@ test("generated XS checks each exact bound before dispatch and unwraps the check
 		assert.match(section(name), /LBP_ENTER\(\);\n {4}lean_object \* a0 = \w+\(aTHX_ scope, ST\(0\)\);\n {4}lean_inc\(a0\);\n {4}lean_object \* result = /, name);
 	}
 	const pod = files["lib/LeanBridge/Sample.pm"];
-	assert.match(pod, new RegExp(`=head2 mirror\\n\\nCalls C<Sample\\.mirror> in the compiled Lean component\\.\\n\\nChecked Lean Fin bounds: value < ${huge}; result < ${huge}\\.\\n`));
-	assert.match(pod, /=head2 label\n\n[^\n]+\n\nChecked Lean Fin bounds: offset < 4\.\n/);
+	assert.match(pod, new RegExp(`=head2 mirror\\n\\nCalls C<Sample\\.mirror> in the compiled Lean component\\.\\n\\nChecked Lean Fin bounds: arg0 < ${huge}; result < ${huge}\\.\\n`));
+	assert.match(pod, /=head2 label\n\n[^\n]+\n\nChecked Lean Fin bounds: arg1 < 4\.\n/);
 	assert.match(pod, /=head2 wrap\n\n[^\n]+\n\nChecked Lean Fin bounds: result < 7\.\n/);
 	assert.doesNotMatch(pod, /=head2 plain\n\n[^\n]+\n\nChecked/);
 	assert.match(pod, /=head1 BOUNDED INTEGERS/);

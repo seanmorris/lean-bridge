@@ -231,7 +231,8 @@ const conversion = (model, type) => {
 // Bounds come from the compiler-checked native model, never from the erased Nat type.
 const perlFinBounds = item => {
 	if(!item.refinements) return null;
-	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, item.parameters[index].name));
+	// Messages and documentation name parameters by position, as every other native host does.
+	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, `arg${index}`));
 	parts.push(...nativeFinBoundPaths(item.refinements.result, "result"));
 	return parts.length ? parts.join("; ") : null;
 };
@@ -393,7 +394,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
     }`);
 	}
 	lines.push(`MODULE = ${model.moduleName}    PACKAGE = ${model.moduleName}`, "PROTOTYPES: DISABLE", "");
-	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map(p => p.name)));
+	for(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map((_, index) => `arg${index}`)));
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
 		lines.push(`
