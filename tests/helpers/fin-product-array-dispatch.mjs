@@ -40,11 +40,14 @@ ${finProductArrayDispatchColumns.map(wrapper).join("\n")}
 export const finProductArrayDispatchExpected = Object.freeze([
 	["start", 0, [0, 0]]
 	, ["public-valid", 0, [1, 1]]
-	, ["public-invalid-component", 1, [1, 1]]
+	, ["public-invalid-first", 1, [1, 1]]
+	, ["public-invalid-middle", 1, [1, 1]]
+	, ["public-invalid-last", 1, [1, 1]]
 	, ["public-invalid-error", 1, [1, 1]]
-	, ["raw-invalid-component", 1, [1, 2]]
-	, ["raw-invalid-error", 1, [1, 3]]
-	, ["raw-valid", 1, [2, 4]]]);
+	, ["public-recovery", 0, [2, 2]]
+	, ["raw-invalid-component", 1, [2, 3]]
+	, ["raw-invalid-error", 1, [2, 4]]
+	, ["raw-valid-unbounded-ok", 1, [3, 5]]]);
 
 /** Probe public and exported-adapter dispatch; raw values use the pinned Lean object API. */
 export const finProductArrayDispatchProbe = () => `#define _GNU_SOURCE
@@ -90,23 +93,31 @@ int main(void) {
   *(void **)&count = dlsym(RTLD_DEFAULT, "fin_product_array_dispatch_count");
   if (!count) { fprintf(stderr, "interposer is not loaded\\n"); return 1; }
   finproductarrays_error error = {0};
-  row items[2];
-  for (int i = 0; i < 2; ++i) finproductarrays_tuple_nat_result_nat_nat_value_init(&items[i]);
-  items[0].snd.is_ok = 1; mpz_set_ui(items[0].snd.ok, 7);
-  mpz_set_ui(items[1].fst, 3); items[1].snd.is_ok = 0; mpz_set_ui(items[1].snd.error, 5);
-  finproductarrays_array_tuple_nat_result_nat_nat_span span = {items, 2, NULL, NULL};
+  /* (0, ok 2^70), (2, error 5), (3, ok 6): the ok branch carries values no bound applies to. */
+  row items[3];
+  for (int i = 0; i < 3; ++i) finproductarrays_tuple_nat_result_nat_nat_value_init(&items[i]);
+  items[0].snd.is_ok = 1; mpz_setbit(items[0].snd.ok, 70);
+  mpz_set_ui(items[1].fst, 2); items[1].snd.is_ok = 0; mpz_set_ui(items[1].snd.error, 5);
+  mpz_set_ui(items[2].fst, 3); items[2].snd.is_ok = 1; mpz_set_ui(items[2].snd.ok, 6);
+  finproductarrays_array_tuple_nat_result_nat_nat_span span = {items, 3, NULL, NULL};
   mpz_t result; mpz_init(result);
   report("start", 0);
   report("public-valid", finproductarrays_rows(&span, result, &error));
-  mpz_set_ui(items[1].fst, 4); report("public-invalid-component", finproductarrays_rows(&span, result, &error));
-  mpz_set_ui(items[1].fst, 3); mpz_set_ui(items[1].snd.error, 6); report("public-invalid-error", finproductarrays_rows(&span, result, &error));
+  /* A component at its bound in the first, middle and last element never reaches Lean. */
+  const char *steps[3] = {"public-invalid-first", "public-invalid-middle", "public-invalid-last"};
+  for (int k = 0; k < 3; ++k) {
+    unsigned long kept = mpz_get_ui(items[k].fst);
+    mpz_set_ui(items[k].fst, 4); report(steps[k], finproductarrays_rows(&span, result, &error)); mpz_set_ui(items[k].fst, kept);
+  }
+  mpz_set_ui(items[1].snd.error, 6); report("public-invalid-error", finproductarrays_rows(&span, result, &error));
+  mpz_set_ui(items[1].snd.error, 5); report("public-recovery", finproductarrays_rows(&span, result, &error));
   raw_unary rows = (raw_unary)dlsym(RTLD_DEFAULT, "${finProductArraySymbol("FinProductArrays.rows")}");
   if (!rows) { fprintf(stderr, "exported adapter is not visible\\n"); return 1; }
   /* Direct adapter calls skip the C precheck; Lean's typed construction still rejects them without reaching the source. */
   report("raw-invalid-component", rejected(rows, rows_of(4, 0, 5)));
   report("raw-invalid-error", rejected(rows, rows_of(3, 0, 6)));
-  report("raw-valid", accepted(rows, rows_of(3, 0, 5)));
-  for (int i = 0; i < 2; ++i) finproductarrays_tuple_nat_result_nat_nat_value_clear(&items[i]);
+  report("raw-valid-unbounded-ok", accepted(rows, rows_of(3, 1, 1000)));
+  for (int i = 0; i < 3; ++i) finproductarrays_tuple_nat_result_nat_nat_value_clear(&items[i]);
   mpz_clear(result);
   return 0;
 }
