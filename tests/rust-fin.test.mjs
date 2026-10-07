@@ -18,6 +18,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
+import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { captureRustCompiler, prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { nativeFinDispatchColumns, nativeFinSymbol } from "./helpers/native-fin-consumers.mjs";
 import { nativeFinCountInterposer } from "./helpers/native-fin-count-interposer.mjs";
@@ -179,7 +180,7 @@ const installRustFin = async ({ consumer, handoff, packages, dependencies, envir
 		, rejected, dependencies, executableSha256: await digest(moved) };
 };
 
-test("relocated source-free Rust crates check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_RUST_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
+const checkInstalledRustFin = async (t, reviewed = false) => {
 	const environment = nativeFixtureEnvironment(["c", "rust"]), reports = [], archives = [];
 	for(const attempt of [0, 1])
 	{
@@ -188,6 +189,8 @@ test("relocated source-free Rust crates check Fin bounds through public and raw 
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { c: { name: "native-fin", version: "1.0.0" }, cargo: { name: "native-fin", version: "1.0.0" } } }));
@@ -197,6 +200,11 @@ test("relocated source-free Rust crates check Fin bounds through public and raw 
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, bounds(item.refinements)])), expectedBounds);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -220,7 +228,8 @@ test("relocated source-free Rust crates check Fin bounds through public and raw 
 		const shared = Object.keys(observation.nativeLibraries).filter(name => Object.hasOwn(cLibraries, name)).sort();
 		assert.ok(shared.includes("libnative_fin.so"), JSON.stringify({ crate: observation.nativeLibraries, c: cLibraries }));
 		for(const name of shared) assert.equal(observation.nativeLibraries[name], cLibraries[name], name);
-		reports.push({ profile: "rust", path: "ordinary-source"
+		reports.push({ profile: "rust"
+			, path: reviewed ? "reviewed-ir" : "ordinary-source"
 			, ...observation
 			, packages
 			, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, cLibraries[name]]))
@@ -228,10 +237,15 @@ test("relocated source-free Rust crates check Fin bounds through public and raw 
 			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 			, modelSha256: sha256(canonicalJson(model))
 			, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+			, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 			, sourceRemovedBeforeInstallation: true });
 		await rm(consumer, { recursive: true, force: true });
 	}
 	// Two clean authoring roots must produce byte-identical C and Cargo archives.
 	assert.deepEqual(archives[1], archives[0]);
-	await saveLakeFile("build/native-fin", "rust.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+	await saveLakeFile("build/native-fin", reviewed ? "rust-reviewed.json" : "rust.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free Rust crates check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_RUST_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledRustFin(t));
+
+test("independently reviewed Rust crates check scalar Fin through installed public and raw adapters", { skip: process.env.LEAN_BRIDGE_RUST_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledRustFin(t, true));

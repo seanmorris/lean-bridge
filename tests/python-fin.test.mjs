@@ -19,6 +19,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
+import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { nativeFinDispatchColumns } from "./helpers/native-fin-consumers.mjs";
 import { nativeFinCountInterposer } from "./helpers/native-fin-count-interposer.mjs";
 import { pythonFinConsumer, pythonFinDispatchExpected, pythonFinDispatchProbe } from "./helpers/python-fin-consumers.mjs";
@@ -122,7 +123,7 @@ const observeDispatch = async (root, python) => {
 const sharedLibraries = files => Object.fromEntries(Object.entries(files)
 	.filter(([path]) => /\.so(?:\.|$)/.test(path)).map(([path, file]) => [basename(path), file.sha256 ?? file]));
 
-test("relocated source-free Python wheels check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_PYTHON_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
+const checkInstalledPythonFin = async (t, reviewed = false) => {
 	const interpreters = JSON.parse(process.env.LEAN_BRIDGE_COLLECTION_PYTHONS
 		?? JSON.stringify([resolve(".toolchains/python311/bin/python3.11"), resolve(".toolchains/python312/bin/python3.12")]));
 	assert.equal(interpreters.length, 2);
@@ -135,6 +136,8 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { c: { name: "native-fin", version: "1.0.0" }, pypi: { name: "native-fin", version: "1.0.0" } } }));
@@ -144,6 +147,11 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, bounds(item.refinements)])), expectedBounds);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -189,7 +197,8 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 			const repeated = await runCopied(movedPython, ["-I", "consumer.py"], relocated);
 			assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `python-fin-ok:${observation.checks}`);
 			await verifyNativeFiles(join(relocated, relative(root, site)), installed.files);
-			reports.push({ profile: "python", python: version, path: "ordinary-source"
+			reports.push({ profile: "python", python: version
+				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
 				, dispatch
 				, packages
@@ -198,6 +207,7 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 				, sourceRemovedBeforeInstallation: true
 				, relocatedInstallation: true, repeatExecution: true
 				, installedFilesUnchanged: true
@@ -208,5 +218,9 @@ test("relocated source-free Python wheels check Fin bounds through public and ra
 	// Two clean authoring roots must produce byte-identical C and Python archives.
 	assert.deepEqual(archives[1], archives[0]);
 	assert.ok(Object.keys(archives[0]).some(path => path.endsWith(".whl")));
-	await saveLakeFile("build/native-fin", "python.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+	await saveLakeFile("build/native-fin", reviewed ? "python-reviewed.json" : "python.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free Python wheels check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_PYTHON_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPythonFin(t));
+
+test("independently reviewed Python wheels check scalar Fin through installed public and raw adapters", { skip: process.env.LEAN_BRIDGE_PYTHON_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPythonFin(t, true));

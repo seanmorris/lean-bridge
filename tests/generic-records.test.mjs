@@ -26,6 +26,10 @@ import "./helpers/generic-record-hosts-source-history-tests.mjs";
 import "./helpers/generic-record-specialization-source-history-tests.mjs";
 import "./helpers/generic-record-host-evidence-tests.mjs";
 import "./helpers/refinement-core-followup-source-history-tests.mjs";
+import "./helpers/reviewed-scalar-hosts-source-history-tests.mjs";
+import "./helpers/reviewed-scalar-hosts-tests.mjs";
+import "./helpers/reviewed-fin-host-evidence-tests.mjs";
+import "./helpers/generic-specialization-evidence-tests.mjs";
 import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
