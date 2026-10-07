@@ -1,20 +1,23 @@
 /**
- * Preserve exact source predecessors of the Generic records engine change (#1441).
+ * Preserve exact source predecessors of the Fin product arrays change (#1441).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinProductArraysSource } from "./fin-product-arrays-source-history.mjs";
 
-export const genericRecordsEngineHistoryPath = "docs/evidence/generic-records-engine-source-history-20261007.json";
-export const genericRecordsEngineChangedPaths = [
-	"docs/type-surface.v1.json"
-	, "tests/generic-records.test.mjs"
-	, "tests/helpers/fin-products-floors-source-history-tests.mjs"
-	, "tests/helpers/fin-products-floors-source-history.mjs"
+export const finProductArraysHistoryPath = "docs/evidence/fin-product-arrays-source-history-20261007.json";
+export const finProductArraysChangedPaths = [
+	".github/workflows/consumer-matrix.yml"
+	, ".github/workflows/perl-consumer.yml"
+	, "docs/type-surface.v1.json"
+	, "src/adoption/test-profiles.mjs"
+	, "tests/documentation.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
+	, "tests/helpers/generic-records-engine-source-history-tests.mjs"
+	, "tests/helpers/generic-records-engine-source-history.mjs"
+	, "tests/native-fin-products.test.mjs"
 ];
 let history;
 
@@ -24,8 +27,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseGenericRecordsEngineUpdate = (source, update) => {
-	assert.ok(genericRecordsEngineChangedPaths.includes(update.path));
+export const reverseFinProductArraysUpdate = (source, update) => {
+	assert.ok(finProductArraysChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,13 +54,12 @@ export const reverseGenericRecordsEngineUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeGenericRecordsEngineSource = (path, source, expected) => {
-	source = beforeFinProductArraysSource(path, source, expected);
-	if(typeof source !== "string" || !genericRecordsEngineChangedPaths.includes(path)) return source;
+export const beforeFinProductArraysSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finProductArraysChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(genericRecordsEngineHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finProductArraysHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseGenericRecordsEngineUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinProductArraysUpdate(source, update) : source;
 };
 

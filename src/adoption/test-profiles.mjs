@@ -791,6 +791,7 @@ const profileManifest = Object.freeze({
 		, "native-specializations"
 		, "native-fin-containers"
 		, "native-fin-products"
+		, "native-fin-product-arrays"
 		, "native-subtype"
 		, "native-refinement-boundaries"
 		, "cpp-variants"
