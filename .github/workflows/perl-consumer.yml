@@ -178,6 +178,9 @@ jobs:
           LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=perl node --test tests/native-fin-product-arrays.test.mjs
           test -s build/native-fin-product-arrays/perl.json
           test -s build/native-fin-product-arrays/reviewed-perl.json
+          LEAN_BRIDGE_FIN_RECORD_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=perl node --test tests/native-fin-records.test.mjs
+          test -s build/native-fin-records/perl.json
+          test -s build/native-fin-records/reviewed-perl.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=perl node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/perl.json
           LEAN_BRIDGE_PERL_REFINEMENT_TEST=1 node --test tests/perl-refinements.test.mjs
@@ -255,6 +258,8 @@ jobs:
             build/native-fin-products/reviewed-perl.json
             build/native-fin-product-arrays/perl.json
             build/native-fin-product-arrays/reviewed-perl.json
+            build/native-fin-records/perl.json
+            build/native-fin-records/reviewed-perl.json
             build/native-subtype/perl.json
             build/perl-refinements/perl.json
             build/variants/perl.json
