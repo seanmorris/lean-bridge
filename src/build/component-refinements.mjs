@@ -26,6 +26,9 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
 		: `${input}.val`;
 	if(refinement.kind === "subtype") return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+	// Native packages pass records and variants with checked fields as erased mirrors whose
+	// check and erase functions the native adapter module defines.
+	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? "check" : "erase"} ${input})`;
 	const child = (index, expression) => componentRefinementConversion(refinement.arguments[index], expression, checked, depth + 1);
 	if(["array", "list"].includes(refinement.kind)) return `(${input}.${checked ? "mapM" : "map"} (fun ${name} => ${child(0, name)}))`;
 	if(refinement.kind === "option") return checked

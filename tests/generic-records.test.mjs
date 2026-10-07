@@ -212,7 +212,7 @@ test("generic structure instantiations are rejected at the Lean source unless an
 		, ["a field that depends on the value", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  ok : items.length < 10\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /generic record field ok depends on the record value/]
 		, ["a callback argument", ["applied"], "abbrev FnBox := Box (Nat → Nat)\ndef applied (value : FnBox) : Nat := value.value value.count", /callbacks inside copied values require a retention policy/]
 		// The native profile checks Fin only at structural positions, so the argument's bound is refused before the argument rule.
-		, ["a refined phantom argument", ["digitTagged"], refinedPhantom, /Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists, options, products and Except values/]];
+		, ["a refined phantom argument", ["digitTagged"], refinedPhantom, /Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations/]];
 	for(const [label, names, extra, pattern] of cases) await t.test(label, async t => {
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-records-reject-"));
 		t.after(() => rm(directory, { recursive: true, force: true }));

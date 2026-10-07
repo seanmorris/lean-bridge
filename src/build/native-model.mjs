@@ -10,7 +10,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
-import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards } from "./component-refinements.mjs";
 
 export { validateNativeType };
 
@@ -33,15 +33,19 @@ export const nativeLeanType = type => {
 	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(nativeLeanType).join(" → ")})`;
 	return type.lean;
 };
-const absoluteLeanType = type => {
-	if(type.kind === "array") return `(_root_.Array ${absoluteLeanType(type.element)})`;
-	if(type.kind === "list") return `(_root_.List ${absoluteLeanType(type.element)})`;
-	if(type.kind === "option") return `(_root_.Option ${absoluteLeanType(type.element)})`;
-	if(type.kind === "result") return `(_root_.Except ${absoluteLeanType(type.arguments[1])} ${absoluteLeanType(type.arguments[0])})`;
-	if(type.kind === "tuple") return `(_root_.Prod ${type.arguments.map(absoluteLeanType).join(" ")})`;
-	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(absoluteLeanType).join(" → ")})`;
+// A record or variant with checked Fin fields crosses as its erased mirror (see nativeErasedMirrors).
+const absoluteLeanType = (type, mirrors = new Set()) => {
+	const inner = child => absoluteLeanType(child, mirrors);
+	if(type.kind === "array") return `(_root_.Array ${inner(type.element)})`;
+	if(type.kind === "list") return `(_root_.List ${inner(type.element)})`;
+	if(type.kind === "option") return `(_root_.Option ${inner(type.element)})`;
+	if(type.kind === "result") return `(_root_.Except ${inner(type.arguments[1])} ${inner(type.arguments[0])})`;
+	if(type.kind === "tuple") return `(_root_.Prod ${type.arguments.map(inner).join(" ")})`;
+	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(inner).join(" → ")})`;
+	if(["record", "variant"].includes(type.kind) && mirrors.has(type.lean)) return erasedMirror(type.lean);
 	return `_root_.${type.lean}`;
 };
+const erasedMirror = lean => `LbErased.${lean}`;
 /**
 	Hash the checked representation and semantic type, excluding its cached key.
 
@@ -94,14 +98,15 @@ export const nativeCallbackDefault = type => {
 	return nativeObjectType(type) ? "lean_box(0)" : "0";
 };
 
-const callbackLeanDefault = type => {
+const callbackLeanDefault = (type, mirrors = new Set()) => {
+	const inner = child => callbackLeanDefault(child, mirrors);
 	if(type.kind === "array") return "#[]";
 	if(type.kind === "list") return "[]";
 	if(type.kind === "option") return "_root_.Option.none";
-	if(type.kind === "result") return `(_root_.Except.ok ${callbackLeanDefault(type.arguments[0])})`;
-	if(type.kind === "tuple") return `(_root_.Prod.mk ${type.arguments.map(callbackLeanDefault).join(" ")})`;
-	if(type.kind === "record") return `(_root_.${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
-	if(type.kind === "variant") return `(_root_.${type.cases[0].constructor} ${type.cases[0].fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
+	if(type.kind === "result") return `(_root_.Except.ok ${inner(type.arguments[0])})`;
+	if(type.kind === "tuple") return `(_root_.Prod.mk ${type.arguments.map(inner).join(" ")})`;
+	if(type.kind === "record") return `(${mirrors.has(type.lean) ? `${erasedMirror(type.lean)}.mk` : `_root_.${type.constructor}`} ${type.fields.map(f => inner(f.type)).join(" ")})`;
+	if(type.kind === "variant") return `(${mirrors.has(type.lean) ? `${erasedMirror(type.lean)}.«${type.cases[0].name}»` : `_root_.${type.cases[0].constructor}`} ${type.cases[0].fields.map(f => inner(f.type)).join(" ")})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values");
 	return { unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
 };
@@ -154,6 +159,19 @@ const nativeRefinements = declaration => {
 		{
 			const children = type.arguments.map(child => tree(child, false));
 			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
+		}
+		// A plain record or variant names its definition and carries every field's tree in
+		// declaration order; a variant checks only its active case. Definitions are acyclic here.
+		if(type.kind === "record" && !Object.hasOwn(type, "provenance") && !containsGraph(type, "callback"))
+		{
+			const fields = type.fields.map(field => tree(field.type, false));
+			return fields.every(child => child === null) ? null
+				: { kind: "record", definition: type.lean, fields: type.fields.map(field => field.name), arguments: fields };
+		}
+		if(type.kind === "variant" && !containsGraph(type, "callback"))
+		{
+			const cases = type.cases.map(branch => ({ name: branch.name, fields: branch.fields.map(field => field.name), arguments: branch.fields.map(field => tree(field.type, false)) }));
+			return cases.flatMap(branch => branch.arguments).every(child => child === null) ? null : { kind: "variant", definition: type.lean, cases };
 		}
 		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.
 		if(containsGraph(type, "refinement")) throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements inside ${type.kind} values are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
@@ -294,6 +312,64 @@ export const nativeRefinedResult = result => ({ kind: "option", element: result
 	, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } });
 
 /**
+ * Collect the Lean names of records and variants whose fields carry checked Fin bounds,
+ * from every export's refinement trees.
+ *
+ * @param model - Compiler-checked native model.
+ */
+const nativeErasedMirrors = model => {
+	const names = new Set();
+	const walk = tree => {
+		if(!tree || typeof tree !== "object") return;
+		if(["record", "variant"].includes(tree.kind)) names.add(tree.definition);
+		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+	};
+	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
+	return names;
+};
+
+/**
+ * Define each erased mirror and its check and erase functions, children before parents.
+ *
+ * @param model - Compiler-checked native model; its types are already Nat-erased.
+ * @param mirrors - Lean names of the mirrored definitions.
+ */
+const renderErasedMirrors = (model, mirrors) => {
+	const trees = new Map();
+	const walk = tree => {
+		if(!tree || typeof tree !== "object") return;
+		if(["record", "variant"].includes(tree.kind) && !trees.has(tree.definition)) trees.set(tree.definition, tree);
+		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+	};
+	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
+	const lines = [], done = new Set();
+	for(const type of model.types)
+	{
+		if(!["record", "variant"].includes(type.kind) || !mirrors.has(type.lean) || done.has(type.lean)) continue;
+		done.add(type.lean);
+		const mirror = erasedMirror(type.lean), tree = trees.get(type.lean), source = `_root_.${type.lean}`;
+		const convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked);
+		if(type.kind === "record")
+		{
+			lines.push(`structure ${mirror} where`, ...type.fields.map(field => `  «${field.name}» : ${absoluteLeanType(field.type, mirrors)}`), "");
+			lines.push(`def ${mirror}.check (value : ${mirror}) : _root_.Option ${source} := do`
+				, ...type.fields.map((field, i) => `  let a${i} ← ${convert(tree.arguments[i], `value.«${field.name}»`, true)}`)
+				, `  pure (_root_.${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")})`, "");
+			lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`
+				, `  ${mirror}.mk ${type.fields.map((field, i) => convert(tree.arguments[i], `value.«${field.name}»`, false)).join(" ")}`, "");
+			continue;
+		}
+		lines.push(`inductive ${mirror} where`, ...type.cases.map(branch => `  | «${branch.name}» ${branch.fields.map((field, j) => `(a${j} : ${absoluteLeanType(field.type, mirrors)})`).join(" ")} : ${mirror}`), "");
+		const pattern = branch => `.«${branch.name}» ${branch.fields.map((_, j) => `a${j}`).join(" ")}`;
+		lines.push(`def ${mirror}.check (value : ${mirror}) : _root_.Option ${source} :=`, "  match value with"
+			, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => do ${branch.fields.map((_, j) => `let b${j} ← ${convert(tree.cases[i].arguments[j], `a${j}`, true)}; `).join("")}pure (_root_.${branch.constructor} ${branch.fields.map((_, j) => `b${j}`).join(" ")})`), "");
+		lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`, "  match value with"
+			, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => ${mirror}.«${branch.name}» ${branch.fields.map((_, j) => convert(tree.cases[i].arguments[j], `a${j}`, false)).join(" ")}`), "");
+	}
+	return lines;
+};
+
+/**
  * Per-type constructor/projection functions keep Lean object layout private.
  *
  * @param model - Compiler-checked native model and Binding IR.
@@ -301,16 +377,21 @@ export const nativeRefinedResult = result => ({ kind: "option", element: result
 export const generateNativeLeanAdapters = model => {
 	const module = `LeanBridgeNative${sha256(model.component.id).slice(0, 16)}`;
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`)), "", `namespace ${module}`, ""];
+	// Records and variants with checked Fin fields cross as erased mirrors: the same fields with
+	// every bound erased to Nat. Only check builds the source value, through Option, and only
+	// erase projects one back; no Fin is ever constructed without its decidable proof.
+	const mirrors = nativeErasedMirrors(model);
+	lines.push(...renderErasedMirrors(model, mirrors));
 	// A named one-field carrier prevents Lean's eta expansion from adding a
 	// returned closure's arguments to the exported C function. Trivial-structure
 	// elimination preserves the closure object's representation without copying.
 	for(const type of model.types.filter(type => type.kind === "callback"))
-	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${absoluteLeanType(type)}`, "");
+	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${absoluteLeanType(type, mirrors)}`, "");
 	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>", `LEAN_CASSERT(sizeof(size_t) * 8 == ${model.pointerBits});`];
 	const emit = (symbol, parameters, result, body) => {
 		const ps = parameters.length ? parameters : [{ name: "unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
 		const callback = result.kind === "callback";
-		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${absoluteLeanType(p.type)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : absoluteLeanType(result)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
+		lines.push(`@[export ${symbol}]`, `def f_${symbol} ${ps.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ")} : ${callback ? `ClosureCarry${nativeTypeKey(result)}` : absoluteLeanType(result, mirrors)} :=`, `  ${callback ? `⟨${body}⟩` : body}`, "");
 		prototypes.push(`${nativeCType(result)} ${symbol}(${ps.map(p => `${nativeCType(p.type)} ${p.name}`).join(", ")});`);
 	};
 	for(const item of model.exports)
@@ -346,7 +427,7 @@ export const generateNativeLeanAdapters = model => {
 			// One excess pointer makes any truncated result exceed the copy budget.
 			// The tail-recursive walker avoids allocating an intermediate List.
 			emit(`lb_t${type.key}_to_array`, [{ name: "value", type }], array,
-				`let rec loop : _root_.Nat → ${absoluteLeanType(type)} → ${absoluteLeanType(array)} → ${absoluteLeanType(array)}\n`
+				`let rec loop : _root_.Nat → ${absoluteLeanType(type, mirrors)} → ${absoluteLeanType(array, mirrors)} → ${absoluteLeanType(array, mirrors)}\n`
 				+ "    | 0, _, acc => acc\n    | _, [], acc => acc\n    | fuel + 1, head :: tail, acc => loop fuel tail (acc.push head)\n"
 				+ `  loop ${nativeCopyLimit / (model.pointerBits / 8) + 1} value #[]`);
 		}
@@ -355,7 +436,7 @@ export const generateNativeLeanAdapters = model => {
 			emit(`lb_t${type.key}_none`, [], type, "_root_.Option.none");
 			emit(`lb_t${type.key}_some`, [{ name: "value", type: type.element }], type, "_root_.Option.some value");
 			emit(`lb_t${type.key}_has`, [{ name: "value", type }], bool, "match value with | .none => false | .some _ => true");
-			emit(`lb_t${type.key}_get0`, [{ name: "value", type }], type.element, `match value with | .none => ${callbackLeanDefault(type.element)} | .some item => item`);
+			emit(`lb_t${type.key}_get0`, [{ name: "value", type }], type.element, `match value with | .none => ${callbackLeanDefault(type.element, mirrors)} | .some item => item`);
 		}
 		if(type.kind === "result")
 		{
@@ -363,7 +444,7 @@ export const generateNativeLeanAdapters = model => {
 			for(const [i, branch] of ["ok", "error"].entries())
 			{
 				emit(`lb_t${type.key}_${branch}`, [{ name: "value", type: type.arguments[i] }], type, `_root_.Except.${branch} value`);
-				emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], type.arguments[i], `match value with | .${branch} item => item | _ => ${callbackLeanDefault(type.arguments[i])}`);
+				emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], type.arguments[i], `match value with | .${branch} item => item | _ => ${callbackLeanDefault(type.arguments[i], mirrors)}`);
 			}
 		}
 		if(type.kind === "tuple")
@@ -373,8 +454,9 @@ export const generateNativeLeanAdapters = model => {
 		}
 		if(type.kind === "record")
 		{
-			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `_root_.${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
-			type.fields.forEach((field, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], field.type, `_root_.${field.projection} value`));
+			const mirrored = mirrors.has(type.lean);
+			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `${mirrored ? `${erasedMirror(type.lean)}.mk` : `_root_.${type.constructor}`} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
+			type.fields.forEach((field, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], field.type, mirrored ? `value.«${field.name}»` : `_root_.${field.projection} value`));
 		}
 		if(type.kind === "variant")
 		{
@@ -382,9 +464,9 @@ export const generateNativeLeanAdapters = model => {
 				`match value with ${type.cases.map((branch, i) => `| .${branch.name} ${branch.fields.map(() => "_").join(" ")} => ${i}`).join(" ")}`);
 			type.cases.forEach((branch, i) => {
 				emit(`lb_t${type.key}_make${i}`, branch.fields.map((f, j) => ({ name: `a${j}`, type: f.type })), type,
-					`_root_.${branch.constructor} ${branch.fields.map((_, j) => `a${j}`).join(" ")}`);
+					`${mirrors.has(type.lean) ? `${erasedMirror(type.lean)}.«${branch.name}»` : `_root_.${branch.constructor}`} ${branch.fields.map((_, j) => `a${j}`).join(" ")}`);
 				branch.fields.forEach((field, j) => emit(`lb_t${type.key}_get${i}_${j}`, [{ name: "value", type }], field.type,
-					`match value with | .${branch.name} ${branch.fields.map((_, k) => k === j ? "item" : "_").join(" ")} => item${type.cases.length > 1 ? ` | _ => ${callbackLeanDefault(field.type)}` : ""}`));
+					`match value with | .${branch.name} ${branch.fields.map((_, k) => k === j ? "item" : "_").join(" ")} => item${type.cases.length > 1 ? ` | _ => ${callbackLeanDefault(field.type, mirrors)}` : ""}`));
 			});
 		}
 		if(type.kind === "callback")
@@ -394,7 +476,7 @@ export const generateNativeLeanAdapters = model => {
 			emit(`lb_t${type.key}_call`, [{ name: "closure", type }, ...parameters], type.result, `closure ${arguments_}`);
 			// No Perl symbol or Perl interpreter pointer enters the compiled component.
 			// A synchronous callback uses a private C trampoline installed by XS.
-			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : _root_.USize) ${parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type)})`).join(" ")} : ${absoluteLeanType(type.result)} := ${callbackLeanDefault(type.result)}`, "");
+			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : _root_.USize) ${parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ")} : ${absoluteLeanType(type.result, mirrors)} := ${callbackLeanDefault(type.result, mirrors)}`, "");
 			lines.push(`@[export lb_t${type.key}_wrap]`, `def wrap_${type.key} (token : _root_.USize) : ClosureCarry${type.key} := ⟨fun ${arguments_} => invoke_${type.key} token ${arguments_}⟩`, "");
 			prototypes.push(`lean_object * lb_t${type.key}_wrap(size_t token);`);
 		}

@@ -52,7 +52,7 @@ ${phpValueMethods}
 require_once __DIR__ . '/Internal/Native.php';
 
 ${model.surface.functions.map((fn, index) => `/**
-${finDoc(fn)}${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}${model.surface.aliases.length ? `\n * @lean-bridge-param ${phpAliasContract(model, fn.declaration.parameters[i].type)} $${parameter.name}` : ""}`).join("\n")}
+${finDoc(fn, model.ir.types)}${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}${model.surface.aliases.length ? `\n * @lean-bridge-param ${phpAliasContract(model, fn.declaration.parameters[i].type)} $${parameter.name}` : ""}`).join("\n")}
  * @return ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).docType}${model.surface.aliases.length ? `\n * @lean-bridge-return ${phpAliasContract(model, fn.declaration.result.type)}` : ""}
  */
 function ${fn.field}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(", ")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).publicType} {
@@ -60,9 +60,9 @@ function ${fn.field}(${fn.parameters.map(parameter => `mixed $${parameter.name}`
 }`).join("\n\n")}
 `;
 
-const finBounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`));
-const finDoc = fn => {
-	const bounds = finBounds(fn);
+const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);
+const finDoc = (fn, types) => {
+	const bounds = finBounds(fn, types);
 	return bounds ? ` * Checked Lean Fin bounds: ${bounds}.\n *\n` : "";
 };
 const nativeSource = (model, evidence) => `<?php
@@ -117,8 +117,8 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
-	const finFunctions = model.surface.functions.filter(fn => finBounds(fn));
-	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages")}`, "native PHP packages")}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.field}: ${finBounds(fn)}`).join("\n")}\n`;
+	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
+	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages", model.ir.types)}`, "native PHP packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.field}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
 	const structuredCallbacks = [...model.surface.callbacks.values()].some(({ type }) =>
 		[...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
 	if(structuredCallbacks)
