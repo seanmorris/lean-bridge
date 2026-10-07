@@ -1,6 +1,6 @@
 namespace GenericRecords
 
-/-- The same closed application in two namespaces keeps two public identities. -/
+-- The same closed application in two namespaces keeps two public identities.
 namespace Left
 abbrev LeftBox := Box Nat
 end Left
