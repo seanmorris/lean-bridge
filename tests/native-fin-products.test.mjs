@@ -20,6 +20,7 @@ import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-inst
 import { finProductReviewedIr } from "./helpers/reviewed-fin-product-fixture.mjs";
 import { validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
+import "./helpers/fin-products-source-history-tests.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
