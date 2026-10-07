@@ -92,6 +92,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
 		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
 		if(type.kind === "record") value.fields = type.fields.map(field => ({ ...field, type: remember(field.type) }));
+		// An instantiated generic record keeps the structure and the resolved type arguments it came from.
+		if(type.kind === "record" && type.provenance) value.provenance = { structure: type.provenance.structure, arguments: type.provenance.arguments.map(remember) };
 		if(type.kind === "variant") value.cases = type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: remember(field.type) })) }));
 		if(type.kind === "callback")
 		{ value.parameters = type.parameters.map(remember); value.result = remember(type.result); }
@@ -160,6 +162,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
 				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
 			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
+			if(type.kind === "record" && type.provenance)
+				definition.source.extensions["lean-lang.org/instantiation"] = { structure: type.provenance.structure, arguments: type.provenance.arguments.map(argument => reference(argument)) };
 			if(constrainedCallback) definition.source.extensions["lean-lang.org/refinements"] = callbackRefinements;
 		}
 		return { kind: "named", id };

@@ -218,9 +218,41 @@ export const validateElaboratedMetadata = (report, request) => {
 					}
 					if(type?.kind === "record")
 					{
-						closed(type, ["kind", "name", "fields"]);
+						closed(type, Object.hasOwn(type, "provenance") ? ["kind", "name", "provenance", "fields"] : ["kind", "name", "fields"]);
 						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
 							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
+						// An instantiated generic record names its structure and the resolved type arguments.
+						if(Object.hasOwn(type, "provenance"))
+						{
+							closed(type.provenance, ["structure", "arguments"]);
+							if(!text(type.provenance.structure) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.provenance.structure)
+								|| type.provenance.structure === type.name || !Array.isArray(type.provenance.arguments)
+								|| !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("Invalid component record provenance");
+							// Arguments are descriptors: primitives and their containers inline, nominal types by name.
+							const descriptor = (argument, level) => {
+								if(level > 32 || !argument || typeof argument !== "object") fail("Invalid component record provenance argument");
+								if(argument.kind === "reference")
+								{
+									closed(argument, ["kind", "name"]);
+									if(!text(argument.name)) fail("Invalid component record provenance reference");
+									return;
+								}
+								if(argument.kind === "primitive") return scalar(argument);
+								if(["array", "list", "option"].includes(argument.kind))
+								{
+									closed(argument, ["kind", "element"]);
+									return descriptor(argument.element, level + 1);
+								}
+								if(["result", "tuple"].includes(argument.kind))
+								{
+									closed(argument, ["kind", "arguments"]);
+									if(!Array.isArray(argument.arguments) || argument.arguments.length !== 2) fail("Invalid component record provenance container");
+									return argument.arguments.forEach(child => descriptor(child, level + 1));
+								}
+								fail("Component record provenance arguments must be primitives, their containers or nominal references");
+							};
+							type.provenance.arguments.forEach(argument => descriptor(argument, 0));
+						}
 						const names = new Set();
 						for(const field of type.fields)
 						{
@@ -265,6 +297,37 @@ export const validateElaboratedMetadata = (report, request) => {
 					validateType(parameter.type);
 				});
 				validateType(projection.result);
+				// Every record provenance reference must name a nominal definition this declaration carries:
+				// an inline definition, or an entry of its copied graph table. A phantom argument has none.
+				const defined = new Set(), provenance = [];
+				const survey = value => {
+					if(!value || typeof value !== "object") return;
+					if(["graph", "owned-graph"].includes(value.kind))
+					{
+						value.types.forEach(survey);
+						return survey(value.root);
+					}
+					if(["alias", "record", "variant"].includes(value.kind) && typeof value.name === "string") defined.add(value.name);
+					if(value.kind === "record" && value.provenance) provenance.push(...value.provenance.arguments);
+					if(value.kind === "alias") survey(value.target);
+					if(value.kind === "refinement") survey(value.base);
+					if(["array", "list", "option"].includes(value.kind)) survey(value.element);
+					if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(survey);
+					if(value.kind === "record") value.fields.forEach(field => survey(field.type));
+					if(value.kind === "variant") value.cases.forEach(item => item.fields.forEach(field => survey(field.type)));
+					if(value.kind === "callback")
+					{
+						value.parameters.forEach(survey);
+						survey(value.result);
+					}
+				};
+				[...projection.parameters.map(parameter => parameter.type), projection.result].forEach(survey);
+				const resolve = argument => {
+					if(argument.kind === "reference" && !defined.has(argument.name)) fail(`Record provenance references an undefined nominal type: ${argument.name}`);
+					if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element);
+					if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(resolve);
+				};
+				provenance.forEach(resolve);
 				if(declaration.selected && exportContractProblem(exportContractFor(request.contracts, declaration.identity), projection, request.ownedAggregates !== undefined))
 					fail("Supported projection violates its configured export contract");
 			}

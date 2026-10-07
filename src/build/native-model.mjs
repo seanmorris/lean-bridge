@@ -193,6 +193,22 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
 	};
+	// A record's provenance may reference only nominal definitions the model carries; the
+	// reference's representation must agree with that definition. Phantom arguments have none.
+	const resolveProvenance = () => {
+		const named = new Map([...allTypes.values()].filter(type => ["alias", "record", "variant"].includes(type.kind)).map(type => [type.name, type]));
+		const resolve = (argument, owner) => {
+			if(argument.kind === "reference")
+			{
+				const definition = named.get(argument.name);
+				if(!definition) fail(`${owner}: record provenance references an undefined nominal type ${argument.name}`);
+				if(canonicalJson(definition.abi) !== canonicalJson(argument.abi)) fail(`${owner}: record provenance reference disagrees with its definition's representation`);
+			}
+			if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element, owner);
+			if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(child => resolve(child, owner));
+		};
+		for(const type of allTypes.values()) if(type.kind === "record" && type.provenance) type.provenance.arguments.forEach(argument => resolve(argument, type.name));
+	};
 	const checked = elaborated.declarations.map(source => {
 		const refinements = nativeRefinements(source);
 		const parameters = source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) }));
@@ -203,6 +219,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
 	if(!checked.length) fail("empty export set");
+	resolveProvenance();
 	// Reviewed Binding IR has no audited Fin reconciliation yet; never erase the bound silently.
 	const refined = checked.find(item => item.refinements);
 	if(refined && sourceIdentity.reviewedBindingIr !== undefined)

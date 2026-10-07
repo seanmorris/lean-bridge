@@ -16,6 +16,32 @@ const closed = (value, fields, label) => {
 		|| fields.some(key => !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key) ?? {}, "value"))) fail(`invalid ${label} fields`);
 };
 
+// A provenance argument is a descriptor, not a transport: primitives and their structural
+// containers inline, and every nominal type as a reference by name. The record's own fields
+// carry the transport shapes, so no definition table is needed here.
+const provenanceArgument = (value, depth) => {
+	if(depth > 32 || !value || typeof value !== "object") fail("invalid record provenance argument");
+	if(value.kind === "reference")
+	{
+		closed(value, ["kind", "name", "lean", "abi"], "provenance reference");
+		if(!identifier.test(value.name) || value.name !== value.lean) fail("invalid record provenance reference");
+		return;
+	}
+	if(value.kind === "primitive") return validate(value, depth + 1, true);
+	if(["array", "list", "option"].includes(value.kind))
+	{
+		closed(value, ["kind", "element", "abi"], "provenance container");
+		return provenanceArgument(value.element, depth + 1);
+	}
+	if(["result", "tuple"].includes(value.kind))
+	{
+		closed(value, ["kind", "arguments", "abi"], "provenance container");
+		if(!Array.isArray(value.arguments) || value.arguments.length !== 2) fail("invalid record provenance container");
+		return value.arguments.forEach(child => provenanceArgument(child, depth + 1));
+	}
+	fail("record provenance arguments must be primitives, their containers or nominal references");
+};
+
 /**
  * Reject shapes before rendering either Lean or C source.
  *
@@ -56,7 +82,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		, option: ["kind", "element", "abi"]
 		, result: ["kind", "arguments", "abi"]
 		, tuple: ["kind", "arguments", "abi"]
-		, record: ["kind", "name", "lean", "constructor", "fields", "abi"]
+		, record: Object.hasOwn(type, "provenance") ? ["kind", "name", "lean", "constructor", "provenance", "fields", "abi"] : ["kind", "name", "lean", "constructor", "fields", "abi"]
 		, variant: ["kind", "name", "lean", "cases", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
 		, callback: ["kind", "parameters", "result", "abi"]
@@ -123,6 +149,16 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(!identifier.test(type.name) || type.name !== type.lean || !identifier.test(type.constructor)) fail("invalid record identity");
 		if(!Array.isArray(type.fields) || new Set(type.fields.map(field => field.name)).size !== type.fields.length) fail("invalid record fields");
+		// An instantiated generic structure keeps its origin: the structure and the closed type arguments
+		// the compiler resolved, each a copied shape or a nominal reference. The alias stays the identity.
+		if(Object.hasOwn(type, "provenance"))
+		{
+			closed(type.provenance, ["structure", "arguments"], "record provenance");
+			if(!identifier.test(type.provenance.structure) || type.provenance.structure === type.name
+				|| !type.constructor.startsWith(`${type.provenance.structure}.`)) fail("invalid record provenance");
+			if(!Array.isArray(type.provenance.arguments) || !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("invalid record provenance arguments");
+			type.provenance.arguments.forEach(child => provenanceArgument(child, 0));
+		}
 		for(const field of type.fields)
 		{
 			closed(field, ["name", "projection", "type"], "record field");

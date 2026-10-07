@@ -1188,6 +1188,8 @@ jobs:
           node --test tests/unlocked-component.test.mjs
           node --test tests/scalar-fin-rejection.test.mjs
           test -s build/scalar-fin-rejection/report.json
+          node --test tests/generic-records.test.mjs
+          test -s build/generic-records/npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
       - name: Build and install owned npm exports through real Nix
         shell: bash
@@ -1261,6 +1263,7 @@ jobs:
             build/type-corpus/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
             build/browser-refinements/report.json
             build/scalar-fin-rejection/report.json
+            build/generic-records/npm.json
             build/char-npm/
             build/word-npm/
             build/callables/npm/
@@ -2245,6 +2248,8 @@ jobs:
           test -s build/native-fin-containers/c-cpp.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/c-cpp.json
+          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
+          test -s build/generic-records/c-cpp.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
           test -s build/variants/cpp.json
           LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests/c-variants.test.mjs
@@ -2417,6 +2422,7 @@ jobs:
             build/native-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
             build/native-subtype/c-cpp.json
+            build/generic-records/c-cpp.json
             build/variants/cpp.json
             build/variants/c.json
             build/recursive/c-family.json

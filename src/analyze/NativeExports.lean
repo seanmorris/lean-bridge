@@ -140,7 +140,7 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
 position from its top-level parameter or result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
-    (containerFin : Bool := true) (structural : Bool := true) : ShapeM Json := do
+    (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -210,13 +210,78 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                 return ← nominalReference e name
               -- Alias spelling does not change the permitted refinement position.
               let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural
+              -- A closed application of a generic structure becomes a record named by this alias.
+              let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
+                (getStructureInfo? (← getEnv) definition.value.getAppFn.constName!).isSome
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none)
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
+                return target
+              if (target.getObjValAs? String "kind").toOption == some "reference" &&
+                  (target.getObjValAs? String "name").toOption == some name.toString then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
                 ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
+  if e.isApp then
+    if let .const structureName levels := e.getAppFn then
+      if let some info := getStructureInfo? (← getEnv) structureName then
+        -- A closed instantiation is admitted only through the alias that names it: the alias is the
+        -- record's identity and Lean spelling, and the application is recorded as its provenance.
+        let some aliasName := alias
+          | reject e "name this instantiation of a generic structure with an abbrev"
+        let .inductInfo induct ← getConstInfo structureName | reject e "invalid record"
+        let args := e.getAppArgs
+        if !nativeIdentifier structureName.toString || !nativeIdentifier induct.ctors.head!.toString then
+          reject e "unsupported native record identifier"
+        if induct.numParams != args.size || induct.numIndices != 0 || !info.parentInfo.isEmpty then
+          reject e "indexed, partially applied and inherited generic records require a reviewed projection"
+        if levels.length != induct.levelParams.length then reject e "generic record universe instantiation is incomplete"
+        -- Every type argument is a closed runtime type: a Sort-typed, non-proposition, copied shape.
+        let mut arguments := #[]
+        for argument in args do
+          unless (← whnf (← inferType argument)).isSort do reject e "generic record arguments must be types"
+          if ← isProp argument then reject e "generic record arguments cannot be propositions"
+          let shape ← shapeTree request argument (aliasName :: seen) 0 true none containerFin false
+          let kind := (shape.getObjValAs? String "kind").toOption.getD ""
+          if ["resource", "callback", "refinement"].contains kind then
+            reject e s!"generic record arguments cannot be {kind} types"
+          arguments := arguments.push shape
+        -- Field types come from Lean's own inference on a typed receiver, with the structure's
+        -- universes and arguments instantiated; a field that depends on the receiver is rejected.
+        let mut fields := #[]
+        for field in info.fieldNames do
+          let some projection := info.getProjFn? fields.size | reject e "missing record projection"
+          if !nativeIdentifier field.toString || (field.toString.splitOn ".").length != 1 ||
+              ["new", "DESTROY", "CLONE", "CLONE_SKIP"].contains field.toString ||
+              !nativeIdentifier projection.toString then reject e "invalid or reserved native record field"
+          let fieldType ← withLocalDecl `value .default e fun receiver => do
+            let application := mkAppN (mkConst projection levels) (args.push receiver)
+            let fieldType ← instantiateMVars (← inferType application)
+            if fieldType.containsFVar receiver.fvarId! then reject e s!"generic record field {field} depends on the record value"
+            if ← isProp fieldType then reject e s!"generic record field {field} is a proof"
+            return fieldType
+          fields := fields.push (obj [("name", str field.toString),
+            ("projection", str projection.toString),
+            ("type", ← shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false)])
+        -- The constructor at the same universes, applied to the arguments, must take exactly the
+        -- projected field types in order and build the closed alias; the probe is Lean-typed.
+        let constructorType ← inferType (mkAppN (mkConst induct.ctors.head! levels) args)
+        forallTelescopeReducing constructorType fun binders result => do
+          unless binders.size == fields.size do reject e "generic record constructor arity disagrees with its projections"
+          unless ← isDefEq result e do reject e "generic record constructor does not build the instantiated record"
+          for binder in binders, index in [0:fields.size] do
+            let declared ← inferType binder
+            let projected ← withLocalDecl `value .default e fun receiver => do
+              instantiateMVars (← inferType (mkAppN (mkConst (info.getProjFn? index).get! levels) (args.push receiver)))
+            unless ← isDefEq declared projected do reject e "generic record constructor and projection types disagree"
+        let aliasType ← inferType (mkConst aliasName)
+        unless (← whnf aliasType).isSort do reject e "generic record alias must denote a type"
+        unless ← isDefEq (mkConst aliasName) e do reject e "generic record alias does not unfold to the instantiation"
+        return ← rememberShape e aliasName <| obj [("kind", str "record"), ("name", str aliasName.toString),
+          ("lean", str aliasName.toString), ("constructor", str induct.ctors.head!.toString),
+          ("provenance", obj [("structure", str structureName.toString), ("arguments", toJson arguments)]),
+          ("fields", toJson fields), ("abi", ← abi e)]
   if let .const name _ := e then
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
@@ -502,7 +567,13 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
     let fields ← fields.mapM fun (field : Json) => do
       pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
         ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
-    return obj [("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name"), ("fields", toJson fields)]
+    let provenance ← match value.getObjVal? "provenance" with
+      | .ok provenance => do
+        let args ← ofExcept <| provenance.getObjValAs? (Array Json) "arguments"
+        pure [("provenance", obj [("structure", ← ofExcept <| provenance.getObjVal? "structure"),
+          ("arguments", toJson (← args.mapM componentCopiedType))])]
+      | .error _ => pure []
+    return obj ([("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name")] ++ provenance ++ [("fields", toJson fields)])
   if kind == "variant" then
     let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
     let cases ← cases.mapM fun (item : Json) => do

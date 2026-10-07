@@ -140,6 +140,22 @@ The file accepts at most 128 specializations. Names cannot duplicate each other,
 
 Missing instances, unresolved types, dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.
 
+### Name instantiations of generic structures
+
+A generic structure such as `structure Pair (α β : Type)` or a universe-polymorphic `structure Box (α : Type u)` can appear in an export only through a transparent alias that fixes every argument:
+
+```lean
+abbrev NatBox := Box Nat
+abbrev WordPair := Pair String Nat
+abbrev Boxes := List NatBox
+
+def bump (value : NatBox) : NatBox := ⟨value.value + 1, value.count + 1⟩
+```
+
+The alias is the record's name in every host: npm declares `interface NatBox`, C declares `library_nat_box`, C++ declares `struct NatBox`. Lean instantiates each field's type and the constructor at the alias's arguments and universes, so `Box Nat` and `Box String` under two aliases are two unrelated host types, and two aliases of the same application, such as `NatBox` and `NatBoxAgain`, are two host types with the same layout. The Binding IR records where each one came from as the `lean-lang.org/instantiation` extension: the structure and its resolved arguments, with nominal arguments as references to definitions the package carries. An application that is not named by an alias, in a signature or as an argument of another instantiation (`Box (Box Nat)` needs an alias for the inner box), stops the build with `name this instantiation of a generic structure with an abbrev`. Inherited structures, fields whose type depends on the value or is a proof, arguments that are resources, callbacks or propositions, and arguments that no field carries are rejected at the source. Generic variants still require a [specialization](#export-concrete-specializations), and refined fields inside an instantiated record follow the [refinement matrix](#refinement-support-by-target).
+
+Installed checks cover [npm and C/C++](../evidence/generic-records-20261007.md); the other native hosts generate the same records from the same Binding IR but their installed acceptance is not yet recorded.
+
 ### Declare export contracts
 
 Use `contracts` to require specific ownership, lifetimes, refinement policies or boundary effects. Each key names an exact exported declaration or configured specialization. Lean checks the decisions against the compiled signature and the selected adapter. A mismatch stops the build before linking.
