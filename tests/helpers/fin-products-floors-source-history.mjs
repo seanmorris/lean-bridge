@@ -1,22 +1,21 @@
 /**
- * Preserve exact source predecessors of the Fin products CI change (#1441).
+ * Preserve exact source predecessors of the Fin products floors change (#1441).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinProductsFloorsSource } from "./fin-products-floors-source-history.mjs";
 
-export const finProductsCiHistoryPath = "docs/evidence/fin-products-ci-source-history-20261007.json";
-export const finProductsCiChangedPaths = [
+export const finProductsFloorsHistoryPath = "docs/evidence/fin-products-floors-source-history-20261007.json";
+export const finProductsFloorsChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
-	, ".github/workflows/perl-consumer.yml"
 	, "docs/type-surface.v1.json"
 	, "tests/documentation.test.mjs"
+	, "tests/helpers/fin-product-install.mjs"
+	, "tests/helpers/fin-products-ci-source-history-tests.mjs"
+	, "tests/helpers/fin-products-ci-source-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-scalar-rollout-source-history-tests.mjs"
-	, "tests/helpers/reviewed-scalar-rollout-source-history.mjs"
 	, "tests/native-fin-products.test.mjs"
 ];
 let history;
@@ -27,8 +26,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinProductsCiUpdate = (source, update) => {
-	assert.ok(finProductsCiChangedPaths.includes(update.path));
+export const reverseFinProductsFloorsUpdate = (source, update) => {
+	assert.ok(finProductsFloorsChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -54,13 +53,12 @@ export const reverseFinProductsCiUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinProductsCiSource = (path, source, expected) => {
-	source = beforeFinProductsFloorsSource(path, source, expected);
-	if(typeof source !== "string" || !finProductsCiChangedPaths.includes(path)) return source;
+export const beforeFinProductsFloorsSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finProductsFloorsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finProductsCiHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finProductsFloorsHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinProductsCiUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinProductsFloorsUpdate(source, update) : source;
 };
 

@@ -2526,6 +2526,9 @@ jobs:
           LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs
           test -s build/native-fin-products/python.json
           test -s build/native-fin-products/reviewed-python.json
+          LEAN_BRIDGE_PYTHON="${{ steps.collection_python312.outputs.python-path }}" LEAN_BRIDGE_FIN_PRODUCT_REPORT=build/native-fin-products/python312.json LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_REPORT=build/native-fin-products/reviewed-python312.json LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs
+          test -s build/native-fin-products/python312.json
+          test -s build/native-fin-products/reviewed-python312.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/python.json
           LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs
@@ -2611,6 +2614,8 @@ jobs:
             build/native-fin-containers/reviewed-python.json
             build/native-fin-products/python.json
             build/native-fin-products/reviewed-python.json
+            build/native-fin-products/python312.json
+            build/native-fin-products/reviewed-python312.json
             build/native-subtype/python.json
             build/variants/python.json
             build/collections/python.json
@@ -2840,6 +2845,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_FIN_PRODUCT_REPORT=build/native-fin-products/python312.json LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_REPORT=build/native-fin-products/reviewed-python312.json LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
