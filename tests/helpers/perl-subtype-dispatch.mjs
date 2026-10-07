@@ -6,15 +6,16 @@
 
 /** Columns: the exported validator, the adapter and the source of mix, then the source of half. */
 export const perlSubtypeDispatchColumns = Object.freeze(["validator:Subtypes.mix", "adapter:Subtypes.mix", "l_Subtypes_mix", "l_Subtypes_half"]);
-const wrapper = (symbol, index, arity) => `void *${symbol}(${Array.from({ length: arity }, (_, i) => `void *a${i}`).join(", ")}) {
-  static void *(*next)(${Array(arity).fill("void *").join(", ")});
+// Each wrapper repeats the exact exported prototype: validators return uint8_t, adapters and sources return a Lean object.
+const wrapper = (symbol, index, arity, result = "void *") => `${result}${result.endsWith("*") ? "" : " "}${symbol}(${Array.from({ length: arity }, (_, i) => `void *a${i}`).join(", ")}) {
+  static ${result}${result.endsWith("*") ? "" : " "}(*next)(${Array(arity).fill("void *").join(", ")});
   if (!next) { *(void **)&next = dlsym(RTLD_NEXT, "${symbol}"); if (!next) abort(); }
   ++counts[${index}];
   return next(${Array.from({ length: arity }, (_, i) => `a${i}`).join(", ")});
 }`;
 
 const symbolWrapper = (column, index, adapters) => {
-	if(column.startsWith("validator:")) return wrapper(`${adapters[column.slice(10)]}_refinement_0`, index, 1);
+	if(column.startsWith("validator:")) return wrapper(`${adapters[column.slice(10)]}_refinement_0`, index, 1, "uint8_t");
 	if(column.startsWith("adapter:")) return wrapper(adapters[column.slice(8)], index, 2);
 	return wrapper(column, index, column.endsWith("_mix") ? 2 : 1);
 };
@@ -26,6 +27,7 @@ const symbolWrapper = (column, index, adapters) => {
  */
 export const perlSubtypeInterposer = adapters => `#define _GNU_SOURCE
 #include <dlfcn.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 static unsigned long counts[4];

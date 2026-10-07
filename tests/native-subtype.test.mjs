@@ -69,7 +69,7 @@ test("every native profile has a Subtype consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/subtype-consumers/${profile}.${extension}`);
 });
 
-test("native builds reject Subtype outside top-level sites, without a constructor, and with cpan", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+test("native builds reject Subtype outside top-level sites and without a constructor", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
 	const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 	const plain = { ownership: "copy", lifetime: null, refinement: "reject" };
 	const cases = [

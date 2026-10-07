@@ -8,6 +8,8 @@ import test from "node:test";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeTypeKey } from "../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import { perlSubtypeInterposer } from "./helpers/perl-subtype-dispatch.mjs";
+import { perlContainerInterposer } from "./helpers/perl-fin-container-dispatch.mjs";
 
 const huge = "1180591620717411303424";
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -45,7 +47,7 @@ const generate = () => {
 	return { files, xs, section: name => xs.slice(xs.indexOf(`\n${name}(...)`), xs.indexOf("XSRETURN(1);", xs.indexOf(`\n${name}(...)`))) };
 };
 
-test("generated XS walks every container element against its exact bound before any Lean call", () => {
+test("generated XS walks every container element against its exact bound before the guarded adapter runs", () => {
 	const { files, section } = generate();
 	// Arrays are read in place; the element is compared, never consumed, and the message names the parameter and leaf bound.
 	const mirror = section("mirrorAll");
@@ -108,4 +110,17 @@ test("a checked constructor beside container bounds runs after every bound, thro
 	// A constructor inside a container has no accessor in the XS walker; the native model rejects it first, and the generator never erases it.
 	const odd = { ...mix, name: "Sample.odd", publicName: "odd", symbol: "lb_odd", refinements: { parameters: [null, inside("array", { kind: "subtype", constructor: "Sample.checkedNat" })], result: null } };
 	assert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /values: checked subtype refinements are not implemented for cpan packages/);
+});
+
+test("the Perl dispatch interposers repeat the exported prototypes they wrap", () => {
+	const subtype = perlSubtypeInterposer({ "Subtypes.mix": "lb_mixsym" });
+	assert.match(subtype, /#include <stdint\.h>/);
+	assert.match(subtype, /\nuint8_t lb_mixsym_refinement_0\(void \*a0\) \{\n {2}static uint8_t \(\*next\)\(void \*\);/);
+	assert.match(subtype, /\nvoid \*lb_mixsym\(void \*a0, void \*a1\) \{\n {2}static void \*\(\*next\)\(void \*, void \*\);/);
+	assert.match(subtype, /\nvoid \*l_Subtypes_mix\(void \*a0, void \*a1\) \{/);
+	assert.match(subtype, /\nvoid \*l_Subtypes_half\(void \*a0\) \{\n {2}static void \*\(\*next\)\(void \*\);/);
+	assert.doesNotMatch(subtype, /void \*lb_mixsym_refinement_0/);
+	const container = perlContainerInterposer({ "FinContainers.mirrorAll": "lb_mirrorsym", "FinContainers.countNone": "lb_countsym" });
+	for(const symbol of ["l_FinContainers_mirrorAll", "l_FinContainers_countNone", "lb_mirrorsym", "lb_countsym"])
+		assert.match(container, new RegExp(`\\nvoid \\*${symbol}\\(void \\*a0\\) \\{\\n {2}static void \\*\\(\\*next\\)\\(void \\*\\);`));
 });

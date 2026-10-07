@@ -74,7 +74,7 @@ test("every native profile has a Fin container consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/fin-container-consumers/${profile}.${extension}`);
 });
 
-test("native builds still reject Fin in fields, callbacks, products and results, and cpan with container bounds", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+test("native builds still reject Fin in fields, callbacks, products and results", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
 	const pattern = /outside top-level parameters, results and their arrays, lists and options/;
 	const cases = [
 		["field", "structure Box where\n  digit : Fin 5\ndef fieldSite (value : Box) : Nat := value.digit.val"]
