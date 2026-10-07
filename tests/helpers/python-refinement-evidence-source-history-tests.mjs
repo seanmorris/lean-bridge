@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeContainerHostDispatchSource } from "./container-host-dispatch-source-history.mjs";
 import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths
 	, pythonRefinementEvidenceHistoryPath, reversePythonRefinementEvidenceUpdate } from "./python-refinement-evidence-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Python refinement evidence history authenticates exact predecessors and re
 	assert.deepEqual(record.updates.map(item => item.path), pythonRefinementEvidenceChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeContainerHostDispatchSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePythonRefinementEvidenceUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePythonRefinementEvidenceSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePythonRefinementEvidenceSource(update.path, source, update.currentSha256), source);
@@ -30,7 +31,7 @@ test("Python refinement evidence history authenticates exact predecessors and re
 });
 
 test("Python evidence adds only ordinary-source parameter/result and specialization cells", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeContainerHostDispatchSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforePythonRefinementEvidenceSource(path, source));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	const ids = ["python-fin-installed", "native-specializations-python-installed", "native-fin-containers-python-installed", "native-subtype-python-installed"];
@@ -73,7 +74,7 @@ test("Python evidence adds only ordinary-source parameter/result and specializat
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(pythonRefinementEvidenceChangedPaths.includes(file.path));
-			const source = await readFile(file.path, "utf8");
+			const source = beforeContainerHostDispatchSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(file.sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));
 		}

@@ -21,6 +21,9 @@ import { finContainerDispatchColumns, finContainerDispatchExpected, finContainer
 import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainerInterposer, perlContainerPrelude } from "./helpers/perl-fin-container-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
+import { observeFinContainerHostDispatch } from "./helpers/fin-container-host-dispatch.mjs";
+import "./helpers/fin-container-host-dispatch-tests.mjs";
+import "./helpers/container-host-dispatch-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin container profile");
@@ -207,7 +210,8 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 			// The interpreter path is machine-specific; the report keeps portable facts only.
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX)
 				: profile === "perl" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
-					: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
+					: ["python", "rust"].includes(profile) ? await observeFinContainerHostDispatch({ profile, consumer, command, packages, environment })
+						: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
 			reports.push({ profile, path: "ordinary-source"
 				, ...observation
 				, dispatch

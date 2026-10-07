@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "milestone": "container-host-dispatch-v1",
+  "predecessorCommit": "aaadc43140c991a407ed8bd215e57ad0f8bcbf42",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "84902081916e848a319b958f1e203bdef731ab00c5ebacb0e95dbb60a00d2db0",
+      "previousSha256": "d8891ed35ffeb77392d4c189b9f56bd5087e0c6e7f202fec51fc164a8bee69e9",
+      "edits": [
+        {
+          "start": 32926,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1503441,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1507452,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1510958,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1514834,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1518313,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1521797,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        },
+        {
+          "start": 1525285,
+          "previous": "          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n",
+          "current": "          \"sha256\": \"433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c3e9abd265674fadae7bb736155d288d0ad0eab04960edc69b55141d8495b49f",
+      "previousSha256": "1eda33ecab82fe713fcd01708236b733c305afa0ac19c4773ab7c6a16321622f",
+      "edits": [
+        {
+          "start": 3314,
+          "previous": "",
+          "current": "import { containerHostDispatchChangedPaths } from \"./container-host-dispatch-source-history.mjs\";\n"
+        },
+        {
+          "start": 37701,
+          "previous": "",
+          "current": "\t, ...containerHostDispatchChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-refinement-evidence-source-history-tests.mjs",
+      "currentSha256": "df0bd760488021e48f0f930249fe50924b93bb9ffe6282e00a083347a4b0c082",
+      "previousSha256": "dba3cbe77cbb2ce8522730d86b594c4a99eee82e8bcd793b588eca1f93c452e0",
+      "edits": [
+        {
+          "start": 366,
+          "previous": "",
+          "current": "import { beforeContainerHostDispatchSource } from \"./container-host-dispatch-source-history.mjs\";\n"
+        },
+        {
+          "start": 1111,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeContainerHostDispatchSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2091,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeContainerHostDispatchSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 4973,
+          "previous": "\t\t\tconst source = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst source = beforeContainerHostDispatchSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-refinement-evidence-source-history.mjs",
+      "currentSha256": "5d2f1f923d9dd52f3b6c0e278f2b1e8b26348e59bdb890e4e9dd97f0ec64020d",
+      "previousSha256": "e6b3c1a0e0ea147fd3a9b43853efb08ab6b5e5052ee92f160869ac66e72f5c30",
+      "edits": [
+        {
+          "start": 235,
+          "previous": "",
+          "current": "import { beforeContainerHostDispatchSource } from \"./container-host-dispatch-source-history.mjs\";\n"
+        },
+        {
+          "start": 3905,
+          "previous": "",
+          "current": "\tsource = beforeContainerHostDispatchSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "currentSha256": "433ecf7b69fda166e816db6ab59897184845af9c4786fe93a36310bde10c228e",
+      "previousSha256": "b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb",
+      "edits": [
+        {
+          "start": 1577,
+          "previous": "",
+          "current": "import { observeFinContainerHostDispatch } from \"./helpers/fin-container-host-dispatch.mjs\";\nimport \"./helpers/fin-container-host-dispatch-tests.mjs\";\nimport \"./helpers/container-host-dispatch-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 16475,
+          "previous": "\t\t\t\t\t: { observed: false, reason: \"counted in the C package, whose adapter this host's bundled library shares\" };\n",
+          "current": "\t\t\t\t\t: [\"python\", \"rust\"].includes(profile) ? await observeFinContainerHostDispatch({ profile, consumer, command, packages, environment })\n\t\t\t\t\t\t: { observed: false, reason: \"counted in the C package, whose adapter this host's bundled library shares\" };\n"
+        }
+      ]
+    }
+  ]
+}

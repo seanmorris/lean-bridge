@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeContainerHostDispatchSource } from "./container-host-dispatch-source-history.mjs";
 
 export const pythonRefinementEvidenceHistoryPath = "docs/evidence/python-refinement-evidence-source-history-20261007.json";
 export const pythonRefinementEvidenceChangedPaths = [
@@ -80,6 +81,7 @@ export const reversePythonRefinementEvidenceUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePythonRefinementEvidenceSource = (path, source, expected) => {
+	source = beforeContainerHostDispatchSource(path, source, expected);
 	if(typeof source !== "string" || !pythonRefinementEvidenceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
