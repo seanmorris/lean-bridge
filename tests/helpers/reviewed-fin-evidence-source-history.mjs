@@ -1,19 +1,22 @@
 /**
- * Preserve exact source predecessors of the Refinement history cache change (#1440).
+ * Preserve exact source predecessors of the Reviewed Fin installed evidence change (#1438).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeReviewedFinEvidenceSource } from "./reviewed-fin-evidence-source-history.mjs";
 
-export const refinementHistoryCacheHistoryPath = "docs/evidence/refinement-history-cache-source-history-20261007.json";
-export const refinementHistoryCacheChangedPaths = [
-	"tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-fin-source-history-tests.mjs"
-	, "tests/helpers/reviewed-fin-source-history.mjs"
-	, "tests/source-history-memo.test.mjs"
+export const reviewedFinEvidenceHistoryPath = "docs/evidence/reviewed-fin-evidence-source-history-20261007.json";
+export const reviewedFinEvidenceChangedPaths = [
+	"docs/consume/c.md"
+	, "docs/consume/cpp.md"
+	, "docs/lean/existing-package.md"
+	, "docs/type-surface.v1.json"
+	, "tests/helpers/fin-refinement-source-history.mjs"
+	, "tests/helpers/refinement-history-cache-source-history.mjs"
+	, "tests/helpers/refinement-history-cache-tests.mjs"
+	, "tests/reviewed-source.test.mjs"
 ];
 let history;
 
@@ -23,8 +26,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseRefinementHistoryCacheUpdate = (source, update) => {
-	assert.ok(refinementHistoryCacheChangedPaths.includes(update.path));
+export const reverseReviewedFinEvidenceUpdate = (source, update) => {
+	assert.ok(reviewedFinEvidenceChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -44,18 +47,17 @@ export const reverseRefinementHistoryCacheUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1440, stopping at an explicitly requested identity.
+ * Restore the source before #1438, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeRefinementHistoryCacheSource = (path, source, expected) => {
-	source = beforeReviewedFinEvidenceSource(path, source, expected);
-	if(typeof source !== "string" || !refinementHistoryCacheChangedPaths.includes(path)) return source;
+export const beforeReviewedFinEvidenceSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedFinEvidenceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(refinementHistoryCacheHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedFinEvidenceHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseRefinementHistoryCacheUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedFinEvidenceUpdate(source, update) : source;
 };

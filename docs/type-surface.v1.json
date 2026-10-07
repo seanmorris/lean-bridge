@@ -789,6 +789,152 @@
   ],
   "evidence": [
     {
+      "id": "reviewed-native-fin-c-cpp-installed",
+      "kind": "installed",
+      "revision": "e332ce1a1e440a728adf6f0ba2626a3c809b8f3c",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed C and C\\+\\+ Fin packages' tests/native-fin.test.mjs",
+      "scope": "Independently authored scalar Fin bounds match fresh Lean metadata. Local glibc 2.36 C/C++ packages reproduce from two roots and pass 2029/2020 source-free offline checks, repeat after relocation and retain unchanged installed files. C records public/raw adapter/source dispatch controls and 1544 runtime-table checks.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "c14cf2fe33a760e6cf40225cdc71955f98d0e0c33bdbf60aba2e163e8b874507"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "12f21264ad3dc94faa6c85c2677faa7450acb7cef2458a51a16a50dcd8a633dd"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "16b70c893e3e40d7b0ea04aafc5aceea659fd2c1186be33d5b93d71e60c1e844"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "512082f0f02d92167259821dbe821f46337264ee568ee81e61eec979423678bd"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-tests.mjs",
+          "sha256": "ad44a17f4fc3b53bfb98f40be982252d343d732eb48647c74db8e915b570e363"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-evidence-tests.mjs",
+          "sha256": "43f53115f3d576f213a9c1e99903dd5f2428ac0c99edf98f7b7207dd84a65a44"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-20261007/receipt.json",
+          "sha256": "c84088a281f3a1283d48e8ff1fa45ec6f0cd4605fef013280095a9c5a40814c9"
+        },
+        {
+          "path": "tests/native-fin.test.mjs",
+          "sha256": "9d1cdb1560580d62f9ed6f12090ca5ab2ca621ed092a9d07a0479051f2b470ce"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-fixture.mjs",
+          "sha256": "92f3a2cbc3230bf54b591af49cfa4f1b07defd70073f648a0fd622b5c4aaebc1"
+        },
+        {
+          "path": "tests/helpers/native-fin-consumers.mjs",
+          "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-20261007/scalar.json",
+          "sha256": "85419c0f332780561984e68751b6e499eaabf296c76f129ba291275d615c366b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin/scalar/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "6f32707a1874d8270e572fccc7c2860ceb0616c5469c2f525055fd2b63a451fc"
+        },
+        {
+          "path": "reviewed-fin/scalar/archives/native-fin-1.0.0-cpp.tar.gz",
+          "sha256": "6cf4e2fdcbb053e1c69618441dfbf142f81414911de3d9bcedc2032fe7a22730"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-native-fin-containers-c-cpp-installed",
+      "kind": "installed",
+      "revision": "a82e4c55bbf94585e0edf733ffe561b055c360bb",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check container and alias Fin bounds' tests/native-fin-containers.test.mjs",
+      "scope": "Independently authored alias and Array/List/Option Fin bounds match fresh Lean metadata. Local glibc 2.36 C/C++ packages reproduce from two roots and pass 2041/2039 source-free offline checks. C records public/raw adapter and source dispatch controls; C++ records value/error execution, not independent dispatch counters.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "c14cf2fe33a760e6cf40225cdc71955f98d0e0c33bdbf60aba2e163e8b874507"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "12f21264ad3dc94faa6c85c2677faa7450acb7cef2458a51a16a50dcd8a633dd"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "16b70c893e3e40d7b0ea04aafc5aceea659fd2c1186be33d5b93d71e60c1e844"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "512082f0f02d92167259821dbe821f46337264ee568ee81e61eec979423678bd"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-tests.mjs",
+          "sha256": "ad44a17f4fc3b53bfb98f40be982252d343d732eb48647c74db8e915b570e363"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-evidence-tests.mjs",
+          "sha256": "43f53115f3d576f213a9c1e99903dd5f2428ac0c99edf98f7b7207dd84a65a44"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-20261007/receipt.json",
+          "sha256": "c84088a281f3a1283d48e8ff1fa45ec6f0cd4605fef013280095a9c5a40814c9"
+        },
+        {
+          "path": "tests/native-fin-containers.test.mjs",
+          "sha256": "909e70a4b7b5ebdf1d0617e061b6f059a466054e88c982a3a581584216472e8a"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/fixtures/fin-container-consumers/c.c",
+          "sha256": "5e75156d9b1ab58fc1d981f8b6ab2ab8eb72be9e2e1d023508faa4dfb5dcf2b4"
+        },
+        {
+          "path": "tests/fixtures/fin-container-consumers/cpp.cpp",
+          "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-20261007/containers.json",
+          "sha256": "fddb0bd654ad4db463eff22425560f6bf179b26b4b39dd321a099020b97d8cd2"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin/containers/archives/fincontainers-1.0.0-c.tar.gz",
+          "sha256": "617e0aeceadb8f5555dce80f7c0d16df773c3a2033721335b1e5a67d4a05d45d"
+        },
+        {
+          "path": "reviewed-fin/containers/archives/fincontainers-1.0.0-cpp.tar.gz",
+          "sha256": "5a5c760732b22ba2124b8ca54d46c1ad6930473caeea6a8f65101727466f80b7"
+        }
+      ]
+    },
+    {
       "id": "python-fin-installed",
       "kind": "installed",
       "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
@@ -5753,11 +5899,11 @@
         },
         {
           "path": "docs/consume/c.md",
-          "sha256": "e6dd9197e3b91ca73f59ff74363132ff829541bfaa5874a6b3e3b0fb9ffb3ab3"
+          "sha256": "25579945464ac2d36abf4e08add3f2e774b2e46de581e85d67a2f7cc8c49fca7"
         },
         {
           "path": "docs/consume/cpp.md",
-          "sha256": "523340581f5ede2d28b0ccff5ba95365054fdab76109ef1a254237b9a72de7f5"
+          "sha256": "6b1519a16a3e464ba4677f5c24b97ced06011c6736186905f0ec926394b9b639"
         },
         {
           "path": "docs/evidence/native-collections-20260921.json",
@@ -21849,7 +21995,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22020,7 +22166,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22167,7 +22313,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22322,7 +22468,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22485,7 +22631,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22636,7 +22782,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22799,7 +22945,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -23026,7 +23172,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -23273,7 +23419,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -24424,7 +24570,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -25163,7 +25309,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -25854,7 +26000,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -26605,7 +26751,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -27548,7 +27694,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -28115,7 +28261,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -28610,7 +28756,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -29037,7 +29183,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -29472,7 +29618,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "fae1cff9a1cfee1835f48bd5d0748b42b7b2b91de57997ed21656e22aeb20669"
+          "sha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -32325,6 +32471,78 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-fin-c-family-reviewed-ir",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently authored reviewed C/C++ signatures retain closed Fin bounds at top-level parameters and results, transparent aliases, and nested Array/List/Option sites. Actual local glibc 2.36 installed consumers validate exact errors, successful calls, source-free installation and two-root reproducibility.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound",
+          "result": "GMP mpz_ptr (C) or cpp_int (C++) below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-native-fin-c-cpp-installed",
+            "reviewed-native-fin-containers-c-cpp-installed"
+          ],
+          "note": "Exact authored constraint trees reconcile with freshly extracted Lean bounds; omitted, invented and changed decisions fail closed."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-native-fin-c-cpp-installed",
+            "reviewed-native-fin-containers-c-cpp-installed"
+          ],
+          "note": "The model preserves alias and structural constraints beside their Nat transport, including exact bounds larger than 64 bits."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-native-fin-c-cpp-installed",
+            "reviewed-native-fin-containers-c-cpp-installed"
+          ],
+          "note": "Compiled Lean constructs refined values only after bound checks; invalid public inputs do not dispatch the source."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-native-fin-c-cpp-installed",
+            "reviewed-native-fin-containers-c-cpp-installed"
+          ],
+          "note": "Two clean roots reproduce original C and C++ archives and verify their package-set receipts."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-native-fin-c-cpp-installed",
+            "reviewed-native-fin-containers-c-cpp-installed"
+          ],
+          "note": "Source-free offline scalar and container consumers pass exact values, invalid-input recovery and counted C source/adapter controls. Scalar installations also repeat after relocation."
+        }
+      },
+      "limitations": [
+        "Only reviewed C/C++ parameters and results, alone or inside Array/List/Option and their transparent aliases. No nominal-field, callback, product, Except, Subtype or other-host installed claim.",
+        "Local acceptance uses a glibc 2.36 floor; CI release-floor acceptance is tracked separately.",
+        "Dispatch counters are observed in the C package only; the C++ report retains its explicit unobserved dispatch status."
+      ],
+      "conversionNotes": {
+        "fin": "Nat values and containers keep exact Fin bounds from fresh Lean extraction. The review cannot supply a different bound or proof, and author argument names are retained in host diagnostics."
+      }
+    },
     {
       "id": "native-fin-python-ordinary-source",
       "profiles": [
