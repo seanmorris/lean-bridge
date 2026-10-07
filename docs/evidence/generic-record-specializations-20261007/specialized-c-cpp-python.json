@@ -1,0 +1,584 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0-c.tar.gz": "335a86b3671ab88b60c883358ebc877dc22694bf18d1fb18e0f0669d99a5c56d",
+    "archives/genericrecords-1.0.0-cpp.tar.gz": "e850d2acca9b3bef6bea00e1ccc43a92179bc7a1d7093119dc2356b62dc6e9c2",
+    "archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "c1dbae033e99eb120a9cceacdd22e2dbc2cff58276303c89d5ca636b6c0232fb"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "a517ef241f9d2951efd56756791d3137f0d3e1563081c718809f3876c33bfe46",
+      "checks": 1029,
+      "compilerFreePath": true,
+      "consumerSha256": "b36971096ba246e78db0aea400943b83b9b8209968025f63df36fe2ae7b22b56",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "e531d12c52f918fb4f739ccfb586eece9688b023694202a1fb781e1c341b9997",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53873329,
+              "path": "archives/genericrecords-1.0.0-c.tar.gz",
+              "sha256": "335a86b3671ab88b60c883358ebc877dc22694bf18d1fb18e0f0669d99a5c56d"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "bba45bf8484cea88f6c7696f76b1e7abdfb759137645f0780b39ead60d37c43e",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "39775c26d4de0c90b27348afa1742f52dbb9fd3924e1a8261488e3a977d99475",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "a517ef241f9d2951efd56756791d3137f0d3e1563081c718809f3876c33bfe46",
+      "checks": 1024,
+      "compilerFreePath": true,
+      "consumerSha256": "f4aa664ccc8c1f8de48b84561b76162cd8ef880b3d073a60844f0168a0c4bc44",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "e531d12c52f918fb4f739ccfb586eece9688b023694202a1fb781e1c341b9997",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51793926,
+              "path": "archives/genericrecords-1.0.0-cpp.tar.gz",
+              "sha256": "e850d2acca9b3bef6bea00e1ccc43a92179bc7a1d7093119dc2356b62dc6e9c2"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "bba45bf8484cea88f6c7696f76b1e7abdfb759137645f0780b39ead60d37c43e",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "39775c26d4de0c90b27348afa1742f52dbb9fd3924e1a8261488e3a977d99475",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "a517ef241f9d2951efd56756791d3137f0d3e1563081c718809f3876c33bfe46",
+      "checks": 1036,
+      "compilerFreePath": true,
+      "consumerSha256": "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "e531d12c52f918fb4f739ccfb586eece9688b023694202a1fb781e1c341b9997",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51401599,
+              "path": "archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "c1dbae033e99eb120a9cceacdd22e2dbc2cff58276303c89d5ca636b6c0232fb"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "bba45bf8484cea88f6c7696f76b1e7abdfb759137645f0780b39ead60d37c43e",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "39775c26d4de0c90b27348afa1742f52dbb9fd3924e1a8261488e3a977d99475",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

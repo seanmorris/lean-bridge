@@ -1,0 +1,469 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "25587d2cacacc0cd3d1afc82e9b46de25aad62f0fcb321a3ef58e020abcb7e9c",
+    "archives/genericrecords-1.0.0.crate": "a9b69727bebff8c019f31441906fb44dc4778f9d57369c5617f3d5ff6da2c9ca"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "92d5226e291bc1cf3e957995c9ed06c1dad1830ad060d27a220124221c8b2bd0",
+      "checks": 1036,
+      "compilerFreePath": true,
+      "consumerSha256": "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "2db81ae6a3543017ed9678bc66a6b27b15c5e83892266cf93112a5ec8398eeda",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51390729,
+              "path": "archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "25587d2cacacc0cd3d1afc82e9b46de25aad62f0fcb321a3ef58e020abcb7e9c"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "960d43939bda4fe97adb7da8a6acad03dad815f269bee8caf1129e04d2ea4ddc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "94abd580b6b245021e6c36f5e1f93ba7f31e1e09624b1adf0cd0c79bed8ae358",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "92d5226e291bc1cf3e957995c9ed06c1dad1830ad060d27a220124221c8b2bd0",
+      "checks": 1025,
+      "compilerFreePath": true,
+      "consumerSha256": "6adc6c3e6a5560deffcd99ce816c8633794459d65d0e5c552f9647463f328b14",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "2db81ae6a3543017ed9678bc66a6b27b15c5e83892266cf93112a5ec8398eeda",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51378992,
+              "path": "archives/genericrecords-1.0.0.crate",
+              "sha256": "a9b69727bebff8c019f31441906fb44dc4778f9d57369c5617f3d5ff6da2c9ca"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "960d43939bda4fe97adb7da8a6acad03dad815f269bee8caf1129e04d2ea4ddc",
+      "rustTypes": {
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 104,
+                "file": "invalid-alias.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "b685d75dd0c26b8c5fa0233d4e9d806529cd5a7f6d7972148e64a2b500347d15"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 42,
+                "file": "invalid-field.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "c9dc0d33ebdfd10d9b9f40b7b28d4ff87a4cf90f96df648af5c30623cd68a845"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "E0063",
+                "column": 21,
+                "file": "invalid-missing.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "2cf7d3ecca07b638a9ba8c4d6d11c2cf2f6ec88abe70318e8c1971b4f73db4a9"
+          },
+          {
+            "case": "namespace",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 106,
+                "file": "invalid-namespace.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "e371e3ff488727251219781ff251c20d3f7d47dfa211b34224cca4549bba5ebc"
+          },
+          {
+            "case": "specialized-list",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 131,
+                "file": "invalid-specialized-list.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "07c18eb0cd225ea3a8d0fc863b0d9acd1d992474995a6d1176d8abbca8cf31ec"
+          },
+          {
+            "case": "specialized-option",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 50,
+                "file": "invalid-specialized-option.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "6f2006daaeb45025f2833059145b31b32147e7fe1170612ddcb673df053c92cb"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "94abd580b6b245021e6c36f5e1f93ba7f31e1e09624b1adf0cd0c79bed8ae358",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

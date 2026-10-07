@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1433,
+    1439
+  ],
+  "execution": "local",
+  "glibcMinimumVersion": "2.36",
+  "sourcePath": "ordinary-source",
+  "scope": "Nine config-only finite function specializations over closed generic record aliases, two namespaces and Option/List aliases. These reports do not cover open generic dispatch, refined generic fields, reviewed IR, npm, browser or PHP-Wasm.",
+  "reports": [
+    {
+      "id": "specialized-c-cpp-python",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-c-cpp-python.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "7d5fc9f6329a8890c286cc44a391ebc141ec4f6cd273c480414ad256232a3f9e",
+      "profiles": [
+        "c",
+        "cpp",
+        "python"
+      ],
+      "pythonRuntime": "Python 3.11.2",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp,python LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-c-cpp-python.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-python312-rust",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-python312-rust.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "a81e5025607d325be456b06284205e3edde5eb7cb43bb48aa30aae03950061ce",
+      "profiles": [
+        "python",
+        "rust"
+      ],
+      "pythonRuntime": "Python 3.12.14",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON=/app/.toolchains/python312/bin/python3.12 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python,rust LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312-rust.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-dotnet-java-kotlin",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-dotnet-java-kotlin.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "e0b392e33ef384aa69cfcf0beeca077dccbbc52faef2c3f42d56b86b599be724",
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet,java,kotlin LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-dotnet-java-kotlin.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-php-native-ruby-wit-wasi",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-php-native-ruby-wit-wasi.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "5891a6b8e607b3e0d86ea704cf83df096cc2ed25ec8826d66f4840dd76ecf38b",
+      "profiles": [
+        "php-native",
+        "ruby",
+        "wit-wasi"
+      ],
+      "phpRuntime": "PHP 8.2.33",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native,ruby,wit-wasi LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-php-native-ruby-wit-wasi.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    }
+  ]
+}
