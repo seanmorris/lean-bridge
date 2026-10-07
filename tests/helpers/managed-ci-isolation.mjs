@@ -51,7 +51,15 @@ export const assertManagedCiIsolation = (workflow, previous = null) => {
 	assert.match(body, /^ {4}strategy:\n {6}fail-fast: false\n {6}matrix:\n {8}profile: \[dotnet, jvm, ruby\]$/mu);
 	const prepare = named("Prepare the pinned native compiler");
 	assert.equal(prepare.condition, undefined);
-	const setup = commands(prepare);
+	const dependencies = parsed.find(step => step.name === "Install apt dependencies for Prepare the pinned native compiler");
+	if(dependencies)
+	{
+		assert.equal(dependencies.condition, undefined);
+		assert.ok(parsed.indexOf(dependencies) < parsed.indexOf(prepare));
+		assert.match(dependencies.text, /^ {8}timeout-minutes: 20$/mu);
+		assert.doesNotMatch(dependencies.text, /continue-on-error/u);
+	}
+	const setup = (dependencies ? commands(dependencies) : "") + commands(prepare);
 	assert.equal(setup, "          sudo apt-get update && sudo apt-get install -y build-essential zstd m4\n          bash scripts/bootstrap-toolchains.sh --lean-only\n");
 	const baseline = identified("consumer");
 	assert.equal(baseline.condition, undefined);

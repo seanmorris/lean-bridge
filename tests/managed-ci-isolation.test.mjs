@@ -22,7 +22,11 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 	const source = await workflow();
 	const step = source.split("      - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin\n")[1]?.split("      - name: ")[0];
 	assert.ok(step);
-	const commands = step.split("          sudo apt-get install -y maven unzip\n")[1]?.split("          echo '")[0];
+	const dependencies = source.split("      - name: Install dependencies for ordinary_jvm\n")[1]?.split("      - name: ")[0];
+	assert.ok(dependencies);
+	assert.ok(dependencies.includes("sudo apt-get install -y maven unzip\n"));
+	assert.ok(dependencies.includes("if: matrix.profile == 'jvm'\n"));
+	const commands = step.split("        run: |\n")[1]?.split("          echo '")[0];
 	assert.ok(commands);
 	const download = "https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip";
 	assert.ok(commands.includes(download));
@@ -54,6 +58,8 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 		, ["name: consumer-results-managed-${{ matrix.profile }}-${{ github.sha }}", "name: consumer-results-managed-${{ github.sha }}"]
 		, ["path: build/consumer-ci/results/${{ matrix.profile }}.json", "path: build/consumer-ci/results/*.json"]
 		, ["      - name: Prepare the pinned native compiler\n", "      - name: Prepare the pinned native compiler\n        if: matrix.profile == 'dotnet'\n"]
+		, ["      - name: Install apt dependencies for Prepare the pinned native compiler\n", "      - name: Install apt dependencies for Prepare the pinned native compiler\n        if: matrix.profile == 'dotnet'\n"]
+		, ["          sudo apt-get update && sudo apt-get install -y build-essential zstd m4\n", ""]
 		, ["steps.type_corpus_jvm.outcome != 'success'))", "steps.type_corpus_jvm.outcome == 'failure'))"]
 	]) {
 		const changed = body.replace(before, after);

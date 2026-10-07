@@ -109,13 +109,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install dependencies and pinned Lean and Wasm toolchains
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
+      - name: Install dependencies and pinned Lean and Wasm toolchains
+        run: |
           npm ci --ignore-scripts
           bash scripts/bootstrap-toolchains.sh
       - name: Install owned npm browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the production runtime with the shared ownership broker
         shell: bash
@@ -291,13 +298,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install compiler tools and log tooling
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install compiler tools and log tooling
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
+      - name: Install compiler tools and log tooling
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
       - name: Install all JavaScript browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the production runtime for receiver packages
         shell: bash
@@ -387,10 +401,16 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.424'
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
@@ -399,6 +419,7 @@ jobs:
           python3 -m venv build/python-collection-typecheck
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -512,12 +533,18 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.424'
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install native tools, Maven, Lean and Kotlin
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
       - name: Install native tools, Maven, Lean and Kotlin
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
@@ -543,6 +570,7 @@ jobs:
           node scripts/build-perl-toolchains.mjs 5.38.2 threaded
           node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -661,12 +689,18 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.424'
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install native tools, Maven, Lean and Kotlin
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
       - name: Install native tools, Maven, Lean and Kotlin
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
@@ -679,6 +713,7 @@ jobs:
           echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -787,10 +822,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
@@ -799,6 +840,7 @@ jobs:
           python3 -m venv build/python-collection-typecheck
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -873,10 +915,16 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
@@ -885,6 +933,7 @@ jobs:
           python3 -m venv build/python-collection-typecheck
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -948,14 +997,21 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
           bash scripts/bootstrap-rust-ci.sh
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -1015,13 +1071,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -1081,13 +1144,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install callback acceptance tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install callback acceptance tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd
+      - name: Install callback acceptance tools
+        run: |
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/bootstrap-toolchains.sh
       - name: Install all callback browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
@@ -1163,9 +1233,14 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
       - name: Install documentation browser engines
+        timeout-minutes: 20
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Install archive acceptance tools
+        timeout-minutes: 20
         run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep
       - name: Package and execute clean Node consumers
         id: consumer
@@ -1192,6 +1267,29 @@ jobs:
           test -s build/generic-records/npm.json
           test -s build/generic-records/specialized-npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
+      - name: Check ordinary and reviewed Fin packages in Node, TypeScript and browsers
+        id: reviewed_fin_npm
+        timeout-minutes: 60
+        env:
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST: "1"
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST: "1"
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs
+          test -s build/reviewed-fin-wasm/ordinary-scalar.json
+          test -s build/reviewed-fin-wasm/reviewed-scalar.json
+          test -s build/reviewed-fin-wasm/ordinary-structural.json
+          test -s build/reviewed-fin-wasm/reviewed-structural.json
+      - name: Preserve ordinary and reviewed Fin npm observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reviewed-fin-npm-${{ github.sha }}
+          path: build/reviewed-fin-wasm/*.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Build and install owned npm exports through real Nix
         shell: bash
         env:
@@ -1292,13 +1390,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
+      - name: Install dependencies for Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT, PyPI, Cargo and PHP and execute installations
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd m4 unzip
       - name: Build one captured API for npm, CPAN, C, C++, NuGet, Maven, RubyGems, WIT, PyPI, Cargo and PHP and execute installations
         env:
           LEAN_BRIDGE_MULTI_PROFILE_TEST: "1"
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd m4 unzip
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           bash scripts/bootstrap-rust-ci.sh
@@ -1342,10 +1443,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs"
+          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -1356,7 +1457,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce Node support and the browser corpus
-        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success'
         run: exit 1
       - name: Preserve executable documentation observations
         if: always()
@@ -1383,7 +1484,11 @@ jobs:
           cache: npm
       - name: Install Nix
         uses: cachix/install-nix-action@v31
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
       - name: Install dependencies and browser
+        timeout-minutes: 20
         run: |
           npm ci --ignore-scripts
           npx playwright install --with-deps chromium
@@ -1425,10 +1530,16 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install native PHP callback tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install native PHP callback tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake composer curl libgmp-dev libuv1-dev pkg-config php-cli php-common php-mbstring php-zip unzip zstd ripgrep
+      - name: Install native PHP callback tools
+        run: |
           npm ci --ignore-scripts
           bash scripts/bootstrap-toolchains.sh --lean-only
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
@@ -1510,10 +1621,16 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - name: Install native PHP receiver tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install native PHP receiver tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake curl libgmp-dev libuv1-dev pkg-config php-cli php-common php-zip php-mbstring composer unzip zstd ripgrep
+      - name: Install native PHP receiver tools
+        run: |
           npm ci --ignore-scripts
           bash scripts/bootstrap-toolchains.sh --lean-only
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
@@ -1587,19 +1704,28 @@ jobs:
           key: consumer-php-receivers-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Install PHP, compiler tools and log tooling
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install PHP, compiler tools and log tooling
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+      - name: Install PHP, compiler tools and log tooling
+        run: |
           bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
             sudo phpdismod -s cli xdebug
           fi
           env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\n"); exit(1); }'
+      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host
+        timeout-minutes: 20
+        run: |
+          npx playwright install --with-deps chromium
       - name: Build the pinned PHP-Wasm runtime and browser host
         run: |
           bash scripts/bootstrap-php-wasm-ci.sh
-          npx playwright install --with-deps chromium
           bash scripts/bootstrap-toolchains.sh
           export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
           bash scripts/build-lean-runtime.sh
@@ -1671,19 +1797,28 @@ jobs:
           key: consumer-php-callback-results-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Install PHP, compiler tools and log tooling
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install PHP, compiler tools and log tooling
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+      - name: Install PHP, compiler tools and log tooling
+        run: |
           bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
             sudo phpdismod -s cli xdebug
           fi
           env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\n"); exit(1); }'
+      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host
+        timeout-minutes: 20
+        run: |
+          npx playwright install --with-deps chromium
       - name: Build the pinned PHP-Wasm runtime and browser host
         run: |
           bash scripts/bootstrap-php-wasm-ci.sh
-          npx playwright install --with-deps chromium
           bash scripts/bootstrap-toolchains.sh
           export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
           bash scripts/build-lean-runtime.sh
@@ -1745,10 +1880,16 @@ jobs:
           key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
-      - name: Install native PHP and PHP-Wasm host build tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install native PHP and PHP-Wasm host build tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+      - name: Install native PHP and PHP-Wasm host build tools
+        run: |
           bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
       - name: Disable host PHP debugging instrumentation
         run: |
@@ -1929,6 +2070,10 @@ jobs:
         run: |
           bash scripts/bootstrap-php-wasm-ci.sh
           node --test tests/php-copied-zend.test.mjs
+      - name: Install dependencies for ordinary_php_wasm
+        timeout-minutes: 20
+        run: |
+          npx playwright install --with-deps chromium
       - name: Compile ordinary Lean APIs and execute installed PHP-Wasm packages
         id: ordinary_php_wasm
         continue-on-error: true
@@ -1939,7 +2084,6 @@ jobs:
           LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
           LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
         run: |
-          npx playwright install --with-deps chromium
           bash scripts/bootstrap-toolchains.sh
           export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
           bash scripts/build-lean-runtime.sh
@@ -2173,10 +2317,16 @@ jobs:
           key: consumer-php-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Install PHP and compiler tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Install PHP and compiler tools
+        timeout-minutes: 20
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
+      - name: Install PHP and compiler tools
+        run: |
           bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
           if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
             sudo phpdismod -s cli xdebug
@@ -2229,11 +2379,18 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:native
-      - name: Prepare native compiler for this shard
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Prepare native compiler for this shard
+        timeout-minutes: 20
         run: |
           sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd m4 libgmp-dev
+      - name: Prepare native compiler for this shard
+        run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
       - name: Install the TAP log verifier
+        timeout-minutes: 20
         run: sudo apt-get install -y ripgrep
       - name: Compile ordinary Lean APIs once for relocated C and C++ consumers
         id: ordinary_c
@@ -2478,6 +2635,11 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Install dependencies for ordinary_python
+        timeout-minutes: 20
+        if: matrix.profile == 'python'
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-venv
       - name: Build ordinary Lean APIs and install relocated Python wheels
         id: ordinary_python
         if: matrix.profile == 'python'
@@ -2485,7 +2647,6 @@ jobs:
         env:
           LEAN_BRIDGE_NATIVE_PYTHON_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y python3-venv
           source scripts/env.sh
           node --test tests/native-python.test.mjs
       - name: Compare installed Python corpus packages with fresh Lean results
@@ -2963,11 +3124,18 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:managed
-      - name: Prepare the pinned native compiler
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Prepare the pinned native compiler
+        timeout-minutes: 20
         run: |
           sudo apt-get update && sudo apt-get install -y build-essential zstd m4
+      - name: Prepare the pinned native compiler
+        run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
       - name: Install the TAP log verifier
+        timeout-minutes: 20
         run: sudo apt-get install -y ripgrep
       - name: Install the ordinary C# compiler
         if: matrix.profile == 'dotnet'
@@ -2988,12 +3156,16 @@ jobs:
         run: |
           source scripts/env.sh
           node --test tests/native-dotnet.test.mjs
+      - name: Install dependencies for type_corpus_dotnet
+        timeout-minutes: 20
+        if: matrix.profile == 'dotnet'
+        run: |
+          sudo apt-get install -y python3-venv pkg-config
       - name: Compare installed NuGet corpus packages with fresh Lean results
         if: matrix.profile == 'dotnet'
         id: type_corpus_dotnet
         continue-on-error: true
         run: |
-          sudo apt-get install -y python3-venv pkg-config
           bash scripts/bootstrap-rust-ci.sh
           export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
@@ -3170,6 +3342,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '22.0.2'
+      - name: Install dependencies for ordinary_jvm
+        timeout-minutes: 20
+        if: matrix.profile == 'jvm'
+        run: |
+          sudo apt-get install -y maven unzip
       - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin
         if: matrix.profile == 'jvm'
         id: ordinary_jvm
@@ -3177,7 +3354,6 @@ jobs:
         env:
           LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
         run: |
-          sudo apt-get install -y maven unzip
           mkdir -p build
           curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
           echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
@@ -3188,12 +3364,16 @@ jobs:
           export LEAN_BRIDGE_KOTLIN="$PWD/build/kotlin-tools/kotlinc/bin/kotlin"
           source scripts/env.sh
           node --test tests/native-jvm.test.mjs
+      - name: Install dependencies for type_corpus_jvm
+        timeout-minutes: 20
+        if: matrix.profile == 'jvm'
+        run: |
+          sudo apt-get install -y python3-venv pkg-config
       - name: Compare isolated Java and Kotlin corpus consumers with fresh Lean
         if: matrix.profile == 'jvm'
         id: type_corpus_jvm
         continue-on-error: true
         run: |
-          sudo apt-get install -y python3-venv pkg-config
           bash scripts/bootstrap-rust-ci.sh
           export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
@@ -3416,12 +3596,16 @@ jobs:
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           source scripts/env.sh
           node --test tests/native-ruby.test.mjs
+      - name: Install dependencies for type_corpus_ruby
+        timeout-minutes: 20
+        if: matrix.profile == 'ruby'
+        run: |
+          sudo apt-get install -y python3-venv pkg-config
       - name: Compare installed Ruby corpus packages with fresh Lean results
         if: matrix.profile == 'ruby'
         id: type_corpus_ruby
         continue-on-error: true
         run: |
-          sudo apt-get install -y python3-venv pkg-config
           bash scripts/bootstrap-rust-ci.sh
           export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
@@ -3706,12 +3890,18 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Prepare the pinned WIT and native toolchains
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep libgmp-dev
       - name: Prepare the pinned WIT and native toolchains
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep libgmp-dev
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
@@ -3795,13 +3985,19 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:wasi
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install dependencies for ordinary_wit
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep
       - name: Compile ordinary Lean APIs and consume relocated WIT packages
         id: ordinary_wit
         continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_WIT_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           nix build .#wasmtime-c-api --out-link build/wasmtime-c-api

@@ -63,6 +63,7 @@ import { finProductsCiChangedPaths } from "./fin-products-ci-source-history.mjs"
 import { finProductsFloorsChangedPaths } from "./fin-products-floors-source-history.mjs";
 import { genericRecordsEngineChangedPaths } from "./generic-records-engine-source-history.mjs";
 import { finProductArraysChangedPaths } from "./fin-product-arrays-source-history.mjs";
+import { reviewedFinAcceptanceChangedPaths } from "./reviewed-fin-acceptance-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -590,6 +591,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finProductsFloorsChangedPaths
 	, ...genericRecordsEngineChangedPaths
 	, ...finProductArraysChangedPaths
+	, ...reviewedFinAcceptanceChangedPaths
 ])].sort());
 
 /**

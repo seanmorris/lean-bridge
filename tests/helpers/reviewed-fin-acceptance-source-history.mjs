@@ -1,24 +1,26 @@
 /**
- * Preserve exact source predecessors of the Fin product arrays change (#1441).
+ * Preserve exact source predecessors of the Reviewed Fin acceptance change (#1438).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedFinAcceptanceSource } from "./reviewed-fin-acceptance-source-history.mjs";
 
-export const finProductArraysHistoryPath = "docs/evidence/fin-product-arrays-source-history-20261007.json";
-export const finProductArraysChangedPaths = [
+export const reviewedFinAcceptanceHistoryPath = "docs/evidence/reviewed-fin-acceptance-source-history-20261007.json";
+export const reviewedFinAcceptanceChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
 	, ".github/workflows/perl-consumer.yml"
 	, "docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
 	, "tests/documentation.test.mjs"
+	, "tests/generic-records.test.mjs"
+	, "tests/helpers/fin-product-arrays-source-history-tests.mjs"
+	, "tests/helpers/fin-product-arrays-source-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/generic-records-engine-source-history-tests.mjs"
-	, "tests/helpers/generic-records-engine-source-history.mjs"
-	, "tests/native-fin-products.test.mjs"
+	, "tests/helpers/managed-ci-isolation.mjs"
+	, "tests/helpers/type-corpus-browser.mjs"
+	, "tests/managed-ci-isolation.test.mjs"
+	, "tests/perl-fin-containers.test.mjs"
 ];
 let history;
 
@@ -28,8 +30,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinProductArraysUpdate = (source, update) => {
-	assert.ok(finProductArraysChangedPaths.includes(update.path));
+export const reverseReviewedFinAcceptanceUpdate = (source, update) => {
+	assert.ok(reviewedFinAcceptanceChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -49,18 +51,17 @@ export const reverseFinProductArraysUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1441, stopping at an explicitly requested identity.
+ * Restore the source before #1438, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinProductArraysSource = (path, source, expected) => {
-	source = beforeReviewedFinAcceptanceSource(path, source, expected);
-	if(typeof source !== "string" || !finProductArraysChangedPaths.includes(path)) return source;
+export const beforeReviewedFinAcceptanceSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedFinAcceptanceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finProductArraysHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedFinAcceptanceHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinProductArraysUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedFinAcceptanceUpdate(source, update) : source;
 };

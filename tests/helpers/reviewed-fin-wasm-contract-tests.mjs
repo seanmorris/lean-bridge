@@ -223,3 +223,20 @@ test("Fin browser observations require the selected corpus, real realm and every
 			assert.throws(() => validate({ ...result, ...replacement }));
 	}
 });
+
+test("CI requires all four Fin npm selections and all three browser engines", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split(/(?=^ {6}- )/mu).find(item => item.includes("id: reviewed_fin_npm\n"));
+	assert.ok(step);
+	assert.doesNotMatch(step, /continue-on-error/u);
+	for(const gate of ["LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST", "LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST"])
+		assert.ok(step.includes(`${gate}: "1"`));
+	assert.ok(step.includes("LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit"));
+	assert.ok(step.includes("LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine"));
+	assert.ok(step.includes("node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs"));
+	for(const selection of ["scalar", "structural"]) for(const route of ["ordinary", "reviewed"])
+		assert.ok(step.includes(`test -s build/reviewed-fin-wasm/${route}-${selection}.json`));
+	assert.ok(workflow.includes("path: build/reviewed-fin-wasm/*.json\n          if-no-files-found: error"));
+	assert.ok(workflow.includes("steps.reviewed_fin_npm.outcome != 'success'"));
+	assert.equal(workflow.match(/steps\.reviewed_fin_npm\.outcome == 'success'/gu)?.length, 2);
+});

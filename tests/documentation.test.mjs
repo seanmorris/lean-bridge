@@ -29,6 +29,26 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+/**
+ * Require the bounded dependency step before its original acceptance step.
+ *
+ * @param workflow - Complete downstream workflow.
+ * @param id - Acceptance step identifier.
+ * @param command - Exact dependency command.
+ * @param condition - Optional matching matrix condition.
+ */
+const assertDependencyStep = (workflow, id, command, condition) => {
+	const marker = `- name: Install dependencies for ${id}\n`;
+	assert.ok(workflow.includes(marker));
+	const step = workflow.split(marker)[1].split("      - name:")[0];
+	assert.ok(step.includes(command));
+	assert.match(step, /timeout-minutes: 20/u);
+	assert.doesNotMatch(step, /continue-on-error/u);
+	if(condition) assert.ok(step.includes(`if: ${condition}\n`));
+	else assert.doesNotMatch(step, /\bif:/u);
+	assert.ok(workflow.indexOf(marker) < workflow.indexOf(`id: ${id}\n`));
+};
+
 test("the Alpha C# documentation project compiles only its own entrypoint", async () => {
 	const project = await readFile("tests/fixtures/documentation/consumers/dotnet/Consumer.csproj", "utf8");
 	assert.match(project, /<EnableDefaultCompileItems>false<\/EnableDefaultCompileItems>/u);
@@ -138,8 +158,9 @@ test("owned C# transfer docs and CI require offline packages and the combined co
 	const step = workflow.split("- name: Compare installed NuGet corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
 	for(const marker of ["bootstrap-rust-ci.sh", "export LEAN_BRIDGE_PYTHON="
 		, "export LEAN_BRIDGE_RUBY=", "export LEAN_BRIDGE_GEM="
-		, "python3-venv pkg-config", "npm run test:owned-dotnet-transfers\n"])
+		, "npm run test:owned-dotnet-transfers\n"])
 		assert.ok(step.includes(marker), marker);
+	assertDependencyStep(workflow, "type_corpus_dotnet", "sudo apt-get install -y python3-venv pkg-config", "matrix.profile == 'dotnet'");
 	assert.ok(workflow.includes("- name: Install Ruby for the combined NuGet transfer build\n"));
 	for(const directory of ["transfers", "transfer-packaging"])
 	{
@@ -163,7 +184,7 @@ test("owned Ruby documentation and CI require installed gems, companions and run
 	const step = workflow.split("- name: Compare installed Ruby corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
 	assert.match(step, /bootstrap-rust-ci\.sh/u);
 	assert.match(step, /export LEAN_BRIDGE_PYTHON=/u);
-	assert.match(step, /python3-venv pkg-config/u);
+	assertDependencyStep(workflow, "type_corpus_ruby", "sudo apt-get install -y python3-venv pkg-config", "matrix.profile == 'ruby'");
 	for(const command of ["tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
 		, "tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"])
 		assert.ok(step.includes(`LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 ${command}`));
@@ -1067,7 +1088,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const ordinaryPhpWasm = workflow.split("id: ordinary_php_wasm\n")[1].split("      - name:")[0];
   assert.match(ordinaryPhpWasm, /LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST: "1"/);
   assert.match(ordinaryPhpWasm, /LEAN_BRIDGE_PHP_WASM_BROWSER_TEST: "1"/);
-  assert.match(ordinaryPhpWasm, /npx playwright install --with-deps chromium/);
+  assertDependencyStep(workflow, "ordinary_php_wasm", "npx playwright install --with-deps chromium");
   assert.match(ordinaryPhpWasm, /node --test tests\/php-wasm-ordinary\.test\.mjs/);
   assert.match(workflow, /steps\.ordinary_php_wasm\.outcome != 'success'/);
   assert.match(workflow, /steps\.ordinary_php\.outcome != 'success'/);
