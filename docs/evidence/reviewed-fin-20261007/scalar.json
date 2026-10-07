@@ -1,0 +1,225 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "6f32707a1874d8270e572fccc7c2860ceb0616c5469c2f525055fd2b63a451fc",
+    "archives/native-fin-1.0.0-cpp.tar.gz": "6cf4e2fdcbb053e1c69618441dfbf142f81414911de3d9bcedc2032fe7a22730"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "881d4786c5bba127ea96e35a06ea6900bdea6031d9ad78e71029e4e1607f2931",
+      "checks": 2029,
+      "command": "/tmp/lean-bridge-native-fin-consumer-q8JpxG/c/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "0fb1fef7950dd2786e5f26e4bdbe33790af3af530236fced2819f150b0cad12a",
+      "dispatch": {
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label",
+          "lb_b703515a10173a97c2e27e46",
+          "lb_1d7e0c72a4d6e1cde32466e4",
+          "lb_9afacce322a81504ba9eb75b"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-mirror",
+            0,
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-mirror",
+            1,
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-impossible",
+            1,
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-label",
+            1,
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-label",
+            0,
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror",
+            1,
+            [
+              1,
+              0,
+              1,
+              2,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-impossible",
+            1,
+            [
+              1,
+              0,
+              1,
+              2,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-valid-mirror",
+            1,
+            [
+              2,
+              0,
+              1,
+              3,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror-large",
+            1,
+            [
+              2,
+              0,
+              1,
+              4,
+              1,
+              1
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts",
+        "runtimeTableChecks": 1544
+      },
+      "executableSha256": "46396be28e4b3fd4cb48a39925840503ff9585676a02d2d302413f047e5198fa",
+      "installedFilesSha256": "d4354822a28b81f22a89be3197b30e01072b144382c2280bd50a46759b937e88",
+      "installedFilesUnchanged": true,
+      "modelSha256": "729e1ed66cf2810e5c129e7b229201ea161b2d787e9d9e5311928f577c474cdc",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53818063,
+              "path": "archives/native-fin-1.0.0-c.tar.gz",
+              "sha256": "6f32707a1874d8270e572fccc7c2860ceb0616c5469c2f525055fd2b63a451fc"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "c",
+      "receiptSha256": "f5e2c4f78377735bb8ec6e6a45de349d13e34a2b2585036e46b80b5edc967770",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "8625ab1359092d863c03b62879905ad7a83db8c5af69d8f5a9ad2d306c3c3d1f",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2ef1c093c259ee29ce00a0dbf824b36ee352ca602f1792b80e9fb2b5acd90aeb"
+    },
+    {
+      "bindingIrSha256": "881d4786c5bba127ea96e35a06ea6900bdea6031d9ad78e71029e4e1607f2931",
+      "checks": 2020,
+      "command": "/tmp/lean-bridge-native-fin-consumer-q8JpxG/cpp/consumer",
+      "compilerFreePath": true,
+      "consumerSha256": "a0ec788a8ab053eeb116d774492a139a36460fce9fb32577cabeb378fcbc123e",
+      "executableSha256": "97552669995c0f1062e94bc2e1fbf77f10f59c08dd6adf5e5902c3c61e583d79",
+      "installedFilesSha256": "dfdc6a1cd80a6f03f96e1c78f492bb380d0b59d23a9ca5ae8ad6a9bb8b82a0a4",
+      "installedFilesUnchanged": true,
+      "modelSha256": "729e1ed66cf2810e5c129e7b229201ea161b2d787e9d9e5311928f577c474cdc",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51754982,
+              "path": "archives/native-fin-1.0.0-cpp.tar.gz",
+              "sha256": "6cf4e2fdcbb053e1c69618441dfbf142f81414911de3d9bcedc2032fe7a22730"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "cpp",
+      "receiptSha256": "f5e2c4f78377735bb8ec6e6a45de349d13e34a2b2585036e46b80b5edc967770",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "8625ab1359092d863c03b62879905ad7a83db8c5af69d8f5a9ad2d306c3c3d1f",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2ef1c093c259ee29ce00a0dbf824b36ee352ca602f1792b80e9fb2b5acd90aeb"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

@@ -328,17 +328,19 @@ The native targets `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `p
 
 #### Refinement support by target
 
-Every combination below either passes installed checks or fails the build with a classified diagnostic; no target erases a bound or a constructor. "Native" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`.
+"Installed" records executed package consumers; "pending" means no installed result is recorded. "Native" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`.
 
 | Site | npm (Node and browser) | Native | `cpan` | `php-wasm` | Reviewed Binding IR |
 | --- | --- | --- | --- | --- | --- |
-| `Fin n` parameter or result | Installed | Installed | Installed (scalar only) | Rejected | Rejected |
-| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Generated; installed acceptance pending | Rejected | Rejected |
-| `Fin n` inside pairs and `Except` | Installed | Rejected at the source | Rejected | Rejected | Rejected |
+| `Fin n` parameter or result | Installed | Installed | Installed (scalar only) | Rejected | Installed: C/C++; other targets pending |
+| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Generated; installed acceptance pending | Rejected | Installed: C/C++, including aliases; other targets pending |
+| `Fin n` inside pairs and `Except` | Installed | Rejected at the source | Rejected | Rejected | Native: rejected; npm: pending |
 | `Fin n` in record or variant fields | Installed (nominal constructors) | Rejected at the source | Rejected | Rejected | Rejected |
 | `Fin n` in callbacks and closures | Installed | Rejected at the source | Rejected | Rejected | Rejected |
 | `Subtype` parameter or result over a primitive | Installed | Installed | Generated; installed acceptance pending | Rejected | Rejected |
 | `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |
+
+C and C++ also compile independently authored reviewed `Fin` signatures. The review describes the erased `Nat` transport and the exact bound in `source.extensions["lean-lang.org/refinements"]`; a transparent alias keeps its target constraint in `lean-lang.org/nominal-refinements`. Fresh Lean metadata must match every constraint, including nested bounds and parameter/result positions. A missing, invented or changed bound fails with `reviewed-ir-source-mismatch`. Reviewed parameter names are retained, including in host error messages. The [installed reports](../evidence/reviewed-fin-20261007/receipt.json) cover scalar bounds, aliases and structural containers in local glibc 2.36 builds, two-root reproducibility and source-free consumers. The C probes count both source and adapter calls; the C++ reports do not claim independent dispatch counters. Reviewed `Subtype` constructors, nominal fields and callbacks remain rejected.
 
 The npm column covers Node JavaScript and TypeScript, and, for top-level `Fin` and `Subtype` sites and structural `Fin` containers, Chromium, Firefox and WebKit pages, React effects and dedicated workers through the [browser acceptance](../evidence/npm-browser-refinements-20261007.md). In npm packages the compiled adapter entry fails a call with an out-of-bound top-level `Fin` or a rejected `Subtype` before the typed wrapper or the source runs, so a direct call through the package-internal runtime cannot obtain a default value; the generated JavaScript rejects the same inputs first ([scalar Fin rejection](../evidence/npm-scalar-fin-rejection-20261007.md)). Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. The `cpan` column's container and `Subtype` cells remain pending their installed report.
 

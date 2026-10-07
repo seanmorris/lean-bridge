@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "glibcMinimumVersion": "2.36",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "sourcePath": "reviewed-ir",
+  "reports": [
+    {
+      "path": "docs/evidence/reviewed-fin-20261007/scalar.json",
+      "sha256": "85419c0f332780561984e68751b6e499eaabf296c76f129ba291275d615c366b",
+      "revision": "e332ce1a1e440a728adf6f0ba2626a3c809b8f3c",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed C and C\\+\\+ Fin packages' tests/native-fin.test.mjs"
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-20261007/containers.json",
+      "sha256": "fddb0bd654ad4db463eff22425560f6bf179b26b4b39dd321a099020b97d8cd2",
+      "revision": "a82e4c55bbf94585e0edf733ffe561b055c360bb",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check container and alias Fin bounds' tests/native-fin-containers.test.mjs"
+    }
+  ]
+}

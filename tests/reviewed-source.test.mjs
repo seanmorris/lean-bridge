@@ -14,6 +14,8 @@ import { validateReviewedSource, verifyReviewedSourceInputs } from "../src/analy
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import "./helpers/reviewed-semantic-decisions-tests.mjs";
 import "./helpers/reviewed-fin-tests.mjs";
+import "./helpers/reviewed-fin-evidence-tests.mjs";
+import "./helpers/reviewed-fin-evidence-source-history-tests.mjs";
 import "./helpers/reviewed-fin-source-history-tests.mjs";
 import "./helpers/reviewed-semantic-decisions-source-history-tests.mjs";
 

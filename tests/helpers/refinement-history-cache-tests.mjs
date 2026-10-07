@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedFinEvidenceSource } from "./reviewed-fin-evidence-source-history.mjs";
 import { beforeRefinementHistoryCacheSource, refinementHistoryCacheChangedPaths
 	, refinementHistoryCacheHistoryPath, reverseRefinementHistoryCacheUpdate } from "./refinement-history-cache-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Fin cache integration authenticates every historical verifier edit", async
 	assert.deepEqual(record.updates.map(update => update.path), refinementHistoryCacheChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedFinEvidenceSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseRefinementHistoryCacheUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementHistoryCacheSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRefinementHistoryCacheSource(update.path, source, update.currentSha256), source);
