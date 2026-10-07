@@ -65,6 +65,7 @@ import { genericRecordsEngineChangedPaths } from "./generic-records-engine-sourc
 import { finProductArraysChangedPaths } from "./fin-product-arrays-source-history.mjs";
 import { reviewedFinAcceptanceChangedPaths } from "./reviewed-fin-acceptance-source-history.mjs";
 import { nativeFinRecordsChangedPaths } from "./native-fin-records-source-history.mjs";
+import { phpWasmFinChangedPaths } from "./php-wasm-fin-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -594,6 +595,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finProductArraysChangedPaths
 	, ...reviewedFinAcceptanceChangedPaths
 	, ...nativeFinRecordsChangedPaths
+	, ...phpWasmFinChangedPaths
 ])].sort());
 
 /**

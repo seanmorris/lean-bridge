@@ -18,6 +18,7 @@ import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { phpWasmFinReadme } from "../src/release/php-wasm-copied-package.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { finRecordCompilerInput, finRecordNat } from "./helpers/fin-record-model.mjs";
+import "./helpers/php-wasm-fin-source-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);

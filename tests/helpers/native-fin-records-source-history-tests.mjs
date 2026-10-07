@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpWasmFinSource } from "./php-wasm-fin-source-history.mjs";
 import { beforeNativeFinRecordsSource, nativeFinRecordsChangedPaths, nativeFinRecordsHistoryPath, reverseNativeFinRecordsUpdate } from "./native-fin-records-source-history.mjs";
 
 test("Native Fin records authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Native Fin records authenticates each exact source predecessor", async () 
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinRecordsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePhpWasmFinSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinRecordsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinRecordsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinRecordsSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("Native Fin records authenticates each exact source predecessor", async () 
 });
 
 test("Native Fin records changes current source pins without inventing installed evidence", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePhpWasmFinSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeNativeFinRecordsSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -42,7 +43,7 @@ test("Native Fin records changes current source pins without inventing installed
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(nativeFinRecordsChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforePhpWasmFinSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(sha256(beforeNativeFinRecordsSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

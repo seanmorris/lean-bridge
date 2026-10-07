@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpWasmFinSource } from "./php-wasm-fin-source-history.mjs";
 
 export const nativeFinRecordsHistoryPath = "docs/evidence/native-fin-records-source-history-20261007.json";
 export const nativeFinRecordsChangedPaths = [
@@ -75,6 +76,7 @@ export const reverseNativeFinRecordsUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeFinRecordsSource = (path, source, expected) => {
+	source = beforePhpWasmFinSource(path, source, expected);
 	if(typeof source !== "string" || !nativeFinRecordsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
