@@ -15,7 +15,12 @@ const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap
 const fin = bound => ({ kind: "refinement", base: nat, predicate: { kind: "fin", bound }, abi: nat.abi });
 const checked = constructor => ({ kind: "refinement", base: text, predicate: { kind: "subtype", constructor }, abi: text.abi });
 const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
-/** Fresh fixture metadata whose single export takes `parameter` and returns `result`. */
+/**
+ * Fresh fixture metadata whose single export takes `parameter` and returns `result`.
+ *
+ * @param parameter - Native metadata type of the exported parameter.
+ * @param result - Native metadata type of the exported result.
+ */
 const refined = (parameter, result = nat) => {
 	const input = nativeMetadataFixture();
 	const projection = input.metadata.modules[0].declarations[0].projection;
