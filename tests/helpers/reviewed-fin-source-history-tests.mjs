@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeRefinementHistoryCacheSource } from "./refinement-history-cache-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedFinSource, reviewedFinChangedPaths
 	, reviewedFinHistoryPath, reverseReviewedFinUpdate } from "./reviewed-fin-source-history.mjs";
@@ -17,7 +18,7 @@ test("reviewed Fin history authenticates exact predecessors and rejects unknown 
 	assert.deepEqual(record.updates.map(item => item.path), reviewedFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeRefinementHistoryCacheSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseReviewedFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedFinSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedFinSource(update.path, source, update.currentSha256), source);
@@ -30,7 +31,7 @@ test("reviewed Fin history authenticates exact predecessors and rejects unknown 
 });
 
 test("reviewed Fin admission adds no support claims or rewritten archived observations", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeRefinementHistoryCacheSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedFinSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -44,7 +45,7 @@ test("reviewed Fin admission adds no support claims or rewritten archived observ
 		{
 			if(now.files[position].sha256 === file.sha256) continue;
 			assert.ok(reviewedFinChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforeRefinementHistoryCacheSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(file.sha256, sha256(beforeReviewedFinSource(file.path, bytes)));
 			assert.equal(now.files[position].sha256, sha256(bytes));
 			refreshed++;

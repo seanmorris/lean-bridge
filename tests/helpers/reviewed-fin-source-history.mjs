@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeRefinementHistoryCacheSource } from "./refinement-history-cache-source-history.mjs";
 
 export const reviewedFinHistoryPath = "docs/evidence/reviewed-fin-source-history-20261007.json";
 export const reviewedFinChangedPaths = [
@@ -62,6 +63,7 @@ export const reverseReviewedFinUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedFinSource = (path, source, expected) => {
+	source = beforeRefinementHistoryCacheSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
