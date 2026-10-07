@@ -15,7 +15,12 @@ const browsers = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST === "1" || browsers;
 for(const selection of reviewedFinWasmSelections) for(const reviewed of [false, true])
 	test(`${reviewed ? "independently reviewed" : "ordinary"} ${selection} Fin runs in source-free installed npm packages`, { skip: !enabled, timeout: 1_800_000 }, async t => {
-		const report = await checkReviewedFinWasm(t, selection, reviewed, { browsers });
+		const report = await checkReviewedFinWasm(t, selection, reviewed, { browsers }).catch(error => {
+			// Node's test reporter omits custom Error fields. Preserve subprocess diagnostics
+			// before the disposable source-free consumer is cleaned up.
+			if(error.details) t.diagnostic(JSON.stringify(error.details));
+			throw error;
+		});
 		const path = resolve(process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_REPORT_DIR ?? "build/reviewed-fin-wasm", `${reviewed ? "reviewed" : "ordinary"}-${selection}.json`);
 		await saveLakeFile(dirname(path), basename(path), canonicalJson(report));
 	});
