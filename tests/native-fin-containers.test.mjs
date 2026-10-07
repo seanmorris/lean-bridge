@@ -64,18 +64,23 @@ const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap
 const refined = { kind: "refinement", base: nat, predicate: { kind: "fin", bound: "10" }, abi: nat.abi };
 const container = (kind, element) => ({ kind, element, abi: heap });
 
-test("native types admit Fin only at top level and inside arrays, lists and options", () => {
+test("native types admit Fin only at top level and inside arrays, lists, options, products and results", () => {
 	validateNativeType(refined);
 	validateNativeType(container("array", refined));
 	validateNativeType(container("list", container("option", refined)));
 	validateNativeType({ kind: "alias", name: "Digits", lean: "Digits", target: container("array", refined), abi: heap });
 	const text = { kind: "primitive", name: "string", lean: "String", abi: { ...heap } };
+	// Products and results are structural since VO #1441, alone and nested with the other containers.
+	validateNativeType({ kind: "tuple", arguments: [refined, text], abi: heap });
+	validateNativeType({ kind: "result", arguments: [text, container("array", refined)], abi: heap });
+	validateNativeType(container("list", { kind: "tuple", arguments: [refined, { kind: "result", arguments: [refined, text], abi: heap }], abi: heap }));
+	const product = { kind: "tuple", arguments: [refined, text], abi: heap };
 	for(const [label, type] of [
-		["tuple", { kind: "tuple", arguments: [refined, text], abi: heap }]
-		, ["result", { kind: "result", arguments: [text, container("array", refined)], abi: heap }]
-		, ["record", { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digit", projection: "Box.digit", type: refined }], abi: heap }]
-		, ["callback", { kind: "callback", parameters: [container("array", refined)], result: nat, abi: heap }]])
-		assert.throws(() => validateNativeType(type), /Fin refinements require a top-level native parameter or result, or an array, list or option of one/, label);
+		["record", { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digit", projection: "Box.digit", type: refined }], abi: heap }]
+		, ["record field product", { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: product }], abi: heap }]
+		, ["callback", { kind: "callback", parameters: [container("array", refined)], result: nat, abi: heap }]
+		, ["callback result", { kind: "callback", parameters: [nat], result: { kind: "result", arguments: [refined, text], abi: heap }, abi: heap }]])
+		assert.throws(() => validateNativeType(type), /Fin refinements require a top-level native parameter or result, or an array, list, option, product or Except of one/, label);
 	assert.deepEqual(nativeFinBoundPaths(finContainerRefinements["FinContainers.present"].parameters[0], "arg0"), ["arg0[*]? < 10"]);
 	assert.deepEqual(nativeFinBoundPaths(finContainerRefinements["FinContainers.flatten"].result, "result"), ["result?[*] < 10"]);
 });
@@ -106,13 +111,13 @@ test("every native profile has a Fin container consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/fin-container-consumers/${profile}.${extension}`);
 });
 
-test("native builds still reject Fin in fields, callbacks, products and results", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
-	const pattern = /outside top-level parameters, results and their arrays, lists and options/;
+test("native builds still reject Fin in fields and callbacks, including products and results there", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+	const pattern = /outside top-level parameters, results and their arrays, lists, options, products and Except values/;
 	const cases = [
 		["field", "structure Box where\n  digit : Fin 5\ndef fieldSite (value : Box) : Nat := value.digit.val"]
 		, ["callback", "def callbackSite (value : Array (Fin 5) → Nat) : Nat := value #[]"]
-		, ["tuple", "def tupleSite (value : Array (Fin 5) × Nat) : Nat := value.2"]
-		, ["result", "def resultSite (value : Nat) : Except String (Array (Fin 5)) := .error \"no\""]];
+		, ["tuple field", "structure Pair where\n  digits : Array (Fin 5) × Nat\ndef tupleSite (value : Pair) : Nat := value.digits.2"]
+		, ["result callback", "def resultSite (value : Nat → Except String (Array (Fin 5))) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]];
 	for(const [name, source] of cases)
 	{
 		const directory = await mkdtemp(join(tmpdir(), `lean-bridge-fin-container-${name}-`));

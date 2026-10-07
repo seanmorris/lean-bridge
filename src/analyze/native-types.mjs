@@ -62,7 +62,7 @@ export const validateOwnedNativeType = (type, policy) => {
 	return validate(type, 0, false, undefined, policy);
 };
 
-// `structural` stays true while only arrays, lists, options and aliases separate a
+// `structural` stays true while only arrays, lists, options, products, results and aliases separate a
 // position from its top-level parameter or result.
 const validate = (type, depth, copied, references, policy, owned = false, structural = true) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
@@ -108,7 +108,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	} else if(type.kind === "refinement")
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
-		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list or option of one");
+		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product or Except of one");
 		if(type.predicate?.kind === "subtype")
 		{
 			// An author-supplied checked constructor runs only at a top-level site over a primitive base.
@@ -135,7 +135,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	else if(["result", "tuple"].includes(type.kind))
 	{
 		if(!Array.isArray(type.arguments) || type.arguments.length !== 2 || !Object.hasOwn(type.arguments, 0) || !Object.hasOwn(type.arguments, 1)) fail("native results and products require two arguments");
-		type.arguments.forEach(child => recurse(child, true, false));
+		// Both components and both branches are structural; the adapters check only the active branch.
+		type.arguments.forEach(child => recurse(child, true));
 	}
 	else if(type.kind === "record")
 	{

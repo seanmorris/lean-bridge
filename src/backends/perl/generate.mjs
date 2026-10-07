@@ -249,9 +249,10 @@ const finLeaf = (value, bound, name, path) => {
       if (!below) ${message}; }`;
 };
 // Walk a converted argument along its refinement tree, borrowing every element: arrays are read
-// in place, a list is viewed through its scope-owned array, and an option is opened only when
-// present. A Fin 0 leaf is therefore rejected exactly when it is present. The message names the
-// parameter, the failing element's path and the leaf's own bound.
+// in place, a list is viewed through its scope-owned array, an option is opened only when present,
+// a product through both components and an Except through its active branch only. A Fin 0 leaf
+// is therefore rejected exactly when it is present. The message names the parameter, the failing
+// element's path and the leaf's own bound.
 const finGuard = (type, refinement, value, name, depth = 0, path = { format: "", indices: [] }) => {
 	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth, path);
 	if(refinement.kind === "fin") return finLeaf(value, refinement.bound, name, path);
@@ -267,6 +268,17 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 	if(refinement.kind === "option" && type.kind === "option")
 		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get0(${value})`)};
       ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1, { format: `${path.format}?`, indices: path.indices })} } }`;
+	// Both product components are checked; an Except is checked only on its active branch.
+	// Each projection consumes one reference, so the walk retains the value first.
+	if(refinement.kind === "tuple" && type.kind === "tuple")
+		return `{ ${refinement.arguments.map((child, index) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${index} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
+      ${finGuard(type.arguments[index], child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${index}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`;
+	if(refinement.kind === "result" && type.kind === "result")
+	{
+		const branch = index => refinement.arguments[index] === null ? "" : `lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
+      ${finGuard(type.arguments[index], refinement.arguments[index], `v${depth}`, name, depth + 1, { format: `${path.format}.${index ? "error" : "ok"}`, indices: path.indices })}`;
+		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { ${branch(0)} } else { ${branch(1)} } }`;
+	}
 	throw new TypeError(`${name}: checked ${refinement.kind} refinements are not implemented for cpan packages`);
 };
 // Run the author's checked constructor through the exported validator after every bound passed,
