@@ -169,6 +169,8 @@ jobs:
           test -s build/native-fin-containers/perl.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=perl node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/perl.json
+          LEAN_BRIDGE_PERL_REFINEMENT_TEST=1 node --test tests/perl-refinements.test.mjs
+          test -s build/perl-refinements/perl.json
           test -s build/variants/perl.json
           test -s build/recursive/perl-values.json
           test -s build/recursive/perl-conversions.json
@@ -235,6 +237,7 @@ jobs:
             build/native-specializations/perl.json
             build/native-fin-containers/perl.json
             build/native-subtype/perl.json
+            build/perl-refinements/perl.json
             build/variants/perl.json
             build/recursive/perl-values.json
             build/recursive/perl-conversions.json
