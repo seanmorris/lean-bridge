@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1441,
+  "execution": "local",
+  "scope": "Installed, source-free C and C++ packages for Fin inside products and active Except branches, including aliases and List/Option nesting. These local executions do not establish other host, browser, PHP-Wasm, Array-of-product or CI runtime-floor acceptance.",
+  "reports": [
+    {
+      "id": "ordinary-c-cpp",
+      "path": "docs/evidence/native-fin-products-20261007/ordinary-c-cpp.json",
+      "revision": "92e4e933606fe3afcd12c388430303a83b6626a5",
+      "sha256": "62ffaf34d8466c1b3bb3afd963f1cab5955fb60640c06649308edcc28e2afcdf",
+      "sourcePath": "ordinary-source",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "gate": "LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs"
+    },
+    {
+      "id": "reviewed-c-cpp",
+      "path": "docs/evidence/native-fin-products-20261007/reviewed-c-cpp.json",
+      "revision": "fbdd44bf4cec74ea7b2cd0e21ec5a84657f1a75c",
+      "sha256": "714b72fd99614290cc3fe12f3b57411b0ead08d4679e6ba6fd1fe3286e79e14f",
+      "sourcePath": "reviewed-ir",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "gate": "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/native-fin-products-20261007/ordinary-baseline.tap",
+      "revision": "92e4e933606fe3afcd12c388430303a83b6626a5",
+      "sha256": "8cfc1db1afae592d9c2e28d771e86dab95edac4e1f8862563a97655375438e0e",
+      "pass": 17,
+      "fail": 1,
+      "skipped": 0,
+      "note": "The ordinary installed route and four declaration-refinement mismatch controls passed. The reviewed installed route failed because the authored contract incorrectly included a separate bare-Fin Digit alias."
+    },
+    {
+      "path": "docs/evidence/native-fin-products-20261007/reviewed-corrected.tap",
+      "revision": "fbdd44bf4cec74ea7b2cd0e21ec5a84657f1a75c",
+      "sha256": "009570ae286053a4b6cc454bd6caf5653470e8aad1733a1a904f201f298bc090",
+      "pass": 17,
+      "fail": 0,
+      "skipped": 1,
+      "note": "The corrected reviewed installed route and the four declaration-refinement mismatch controls passed. The ordinary installed route was disabled, retaining the earlier successful report."
+    }
+  ],
+  "remaining": [
+    "Product execution on other native profiles, both Python floors and four CPAN ABIs.",
+    "Installed negative control for an altered nominal alias bound; the four archived controls alter declaration refinements.",
+    "Explicit Array-of-product acceptance.",
+    "Required CI reports and supported runtime-floor acceptance.",
+    "C++ dispatch was not independently instrumented; the archived counter table belongs to C only."
+  ]
+}
