@@ -196,7 +196,8 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			return `${id(type)}_in(${value})`;
 		});
 		// Every bound is checked on caller limbs before any Lean value is allocated,
-		// including each element reached through arrays, lists, options, products and results.
+		// including each element reached through arrays, lists, options, products, results,
+		// record fields and the active variant case.
 		refinements.forEach((refinement, i) => {
 			if(!refinement || refinement.kind === "subtype") return;
 			let sites = 0;
@@ -216,6 +217,16 @@ export const generateCopiedNativeCalls = (model, surface) => {
 				{
 					const index = `k${indent.length}`;
 					return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `), `${indent}}`];
+				}
+				// A record checks each refined field in declaration order; a variant only its active case.
+				if(site.kind === "record")
+					return site.arguments.flatMap((child, index) => child === null ? [] : check(child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent));
+				if(site.kind === "variant")
+				{
+					const cases = copy(type).cases;
+					return site.cases.flatMap(({ arguments: children }, index) => children.every(child => child === null) ? [] : [`${indent}if (${value}->kind == ${index}u) {`
+						, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `))
+						, `${indent}}`]);
 				}
 				const flag = { option: "has_value", result: "is_ok" }[site.kind];
 				return site.arguments.flatMap((child, index) => {

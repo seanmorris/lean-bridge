@@ -11,7 +11,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
-import { assertReviewedFin, assertReviewedFinAlias } from "./reviewed-refinements.mjs";
+import { assertReviewedFin, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -47,12 +47,13 @@ const checkReview = document => {
 	const source = (item, callbackName, declaration = false) => {
 		reject(callbackName ? item.id !== `bridge:${callbackName}` || item.source.declaration !== callbackName || item.name !== callbackName
 			: !leanName(item.source.declaration) || item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
-		const refinementKey = declaration ? "lean-lang.org/refinements" : item.kind === "alias" ? "lean-lang.org/nominal-refinements" : null;
+		// Aliases, records and variants carry their bounds on the definition, as compiled metadata does.
+		const refinementKey = declaration ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
 		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey), `${item.id}.source.extensions`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
-			{ (declaration ? assertReviewedFin : assertReviewedFinAlias)(item, item.source.extensions[refinementKey]); }
+			{ (declaration ? assertReviewedFin : assertReviewedFinNominal)(item, item.source.extensions[refinementKey]); }
 			catch
 			{ unsupported("Reviewed Fin decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
 		}

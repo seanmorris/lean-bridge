@@ -237,6 +237,13 @@ const perlFinBounds = item => {
 	return parts.length ? parts.join("; ") : null;
 };
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
+// Packages without record or variant bounds keep their earlier closing sentence byte for byte.
+const perlNominalFinNote = model => {
+	const nominal = tree => tree !== null && typeof tree === "object" && (["record", "variant"].includes(tree.kind) || (tree.arguments ?? []).some(nominal));
+	return model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(nominal))
+		? "Every field of a record and only the fields of the active variant case are checked the same way; a rejection names the field path, such as C<arg0.inner.digit> or C<arg0.circle.radius>. Fin inside callbacks, generic record instantiations or reviewed Binding IR is not supported in CPAN packages."
+		: "Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.";
+};
 // Compare a Lean Nat argument with its exact Fin bound before the guarded adapter runs.
 // The surrounding scope still owns every argument, so croak releases them all.
 // A top-level scalar leaf keeps its literal message. Inside containers the message is assembled
@@ -278,6 +285,19 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 		const branch = index => refinement.arguments[index] === null ? "" : `lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
       ${finGuard(type.arguments[index], refinement.arguments[index], `v${depth}`, name, depth + 1, { format: `${path.format}.${index ? "error" : "ok"}`, indices: path.indices })}`;
 		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { ${branch(0)} } else { ${branch(1)} } }`;
+	}
+	// A record is walked field by field and a variant only on its active case, through the same
+	// helpers that convert them; the path names each field and the case.
+	if(refinement.kind === "record" && type.kind === "record")
+		return `{ ${refinement.arguments.map((child, index) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${index} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
+      ${finGuard(type.fields[index].type, child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${type.fields[index].name}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`;
+	if(refinement.kind === "variant" && type.kind === "variant")
+	{
+		const key = nativeTypeKey(type);
+		const cases = refinement.cases.map(({ arguments: children }, index) => children.every(child => child === null) ? "" : `if (t${depth} == ${index}u) { ${children.map((child, field) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${field} = ${keep(`lb_t${key}_get${index}_${field}(${value})`)};
+      ${finGuard(type.cases[index].fields[field].type, child, `v${depth}_${field}`, name, depth + 1, { format: `${path.format}.${type.cases[index].name}.${type.cases[index].fields[field].name}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`).filter(Boolean);
+		return `{ lean_inc(${value}); uint32_t t${depth} = lb_t${key}_tag(${value});
+      ${cases.join(" else ")} }`;
 	}
 	throw new TypeError(`${name}: checked ${refinement.kind} refinements are not implemented for cpan packages`);
 };
@@ -505,7 +525,7 @@ _callback_${type.key}(...)
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
 	if(model.exports.some(perlFinBounds)) pm.push("=head1 BOUNDED INTEGERS", ""
-		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.", "");
+		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. " + perlNominalFinNote(model), "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

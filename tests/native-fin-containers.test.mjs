@@ -64,7 +64,7 @@ const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap
 const refined = { kind: "refinement", base: nat, predicate: { kind: "fin", bound: "10" }, abi: nat.abi };
 const container = (kind, element) => ({ kind, element, abi: heap });
 
-test("native types admit Fin only at top level and inside arrays, lists, options, products and results", () => {
+test("native types admit Fin at top level, inside structural containers and in plain record and variant fields", () => {
 	validateNativeType(refined);
 	validateNativeType(container("array", refined));
 	validateNativeType(container("list", container("option", refined)));
@@ -75,12 +75,18 @@ test("native types admit Fin only at top level and inside arrays, lists, options
 	validateNativeType({ kind: "result", arguments: [text, container("array", refined)], abi: heap });
 	validateNativeType(container("list", { kind: "tuple", arguments: [refined, { kind: "result", arguments: [refined, text], abi: heap }], abi: heap }));
 	const product = { kind: "tuple", arguments: [refined, text], abi: heap };
+	// Plain record and variant fields are structural since VO #1442.
+	const box = { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digit", projection: "Box.digit", type: refined }], abi: heap };
+	validateNativeType(box);
+	validateNativeType({ kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: product }], abi: heap });
+	validateNativeType({ kind: "variant", name: "Shape", lean: "Shape", abi: heap, cases: [{ name: "circle", constructor: "Shape.circle", fields: [{ name: "radius", type: refined }] }, { name: "empty", constructor: "Shape.empty", fields: [] }] });
+	// An instantiated generic structure's fields and callbacks stay unchecked, so a bound there is refused.
+	const generic = { kind: "record", name: "NatBox", lean: "NatBox", constructor: "Holder.mk", provenance: { structure: "Holder", arguments: [nat] }, fields: [{ name: "digit", projection: "Holder.digit", type: refined }], abi: heap };
 	for(const [label, type] of [
-		["record", { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digit", projection: "Box.digit", type: refined }], abi: heap }]
-		, ["record field product", { kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: product }], abi: heap }]
+		["generic record field", generic]
 		, ["callback", { kind: "callback", parameters: [container("array", refined)], result: nat, abi: heap }]
 		, ["callback result", { kind: "callback", parameters: [nat], result: { kind: "result", arguments: [refined, text], abi: heap }, abi: heap }]])
-		assert.throws(() => validateNativeType(type), /Fin refinements require a top-level native parameter or result, or an array, list, option, product or Except of one/, label);
+		assert.throws(() => validateNativeType(type), /Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one/, label);
 	assert.deepEqual(nativeFinBoundPaths(finContainerRefinements["FinContainers.present"].parameters[0], "arg0"), ["arg0[*]? < 10"]);
 	assert.deepEqual(nativeFinBoundPaths(finContainerRefinements["FinContainers.flatten"].result, "result"), ["result?[*] < 10"]);
 });
@@ -111,13 +117,12 @@ test("every native profile has a Fin container consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/fin-container-consumers/${profile}.${extension}`);
 });
 
-test("native builds still reject Fin in fields and callbacks, including products and results there", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
-	const pattern = /outside top-level parameters, results and their arrays, lists, options, products and Except values/;
+test("native builds still reject Fin in callbacks and generic record instantiations, including containers there", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+	const pattern = /inside callbacks or generic record instantiations/;
 	const cases = [
-		["field", "structure Box where\n  digit : Fin 5\ndef fieldSite (value : Box) : Nat := value.digit.val"]
-		, ["callback", "def callbackSite (value : Array (Fin 5) → Nat) : Nat := value #[]"]
-		, ["tuple field", "structure Pair where\n  digits : Array (Fin 5) × Nat\ndef tupleSite (value : Pair) : Nat := value.digits.2"]
-		, ["result callback", "def resultSite (value : Nat → Except String (Array (Fin 5))) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]];
+		["callback", "def callbackSite (value : Array (Fin 5) → Nat) : Nat := value #[]"]
+		, ["result callback", "def resultSite (value : Nat → Except String (Array (Fin 5))) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]
+		, ["generic field", "structure Holder (α : Type) where\n  digits : Array (Fin 5)\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digits.size"]];
 	for(const [name, source] of cases)
 	{
 		const directory = await mkdtemp(join(tmpdir(), `lean-bridge-fin-container-${name}-`));

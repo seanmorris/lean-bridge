@@ -50,7 +50,7 @@ test("Fin bounds split into exact little-endian uint32 limbs", () => {
 	for(const bound of ["", "01", "-1", "1.5", "1e3", 7]) assert.throws(() => finBoundLimbs(bound), /Invalid Fin bound/);
 });
 
-test("native validation admits Fin at a top-level Nat site or inside its structural containers", () => {
+test("native validation admits Fin at a top-level Nat site, inside its structural containers and in plain record fields", () => {
 	for(const bound of ["0", "1", huge]) assert.equal(validateNativeType(fin(bound)).predicate.bound, bound);
 	assert.throws(() => validateNativeType(fin("5"), 1), /top-level/);
 	assert.throws(() => validateNativeType(fin("5"), 0, true), /top-level/);
@@ -59,7 +59,9 @@ test("native validation admits Fin at a top-level Nat site or inside its structu
 	validateNativeType({ kind: "option", element: fin("5"), abi: nat.abi });
 	validateNativeType({ kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi });
 	validateNativeType({ kind: "result", arguments: [nat, fin("5")], abi: nat.abi });
-	assert.throws(() => validateNativeType({ kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: { kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi } }], abi: nat.abi }), /top-level/);
+	// Plain record fields are structural since VO #1442; a generic instantiation's fields are not.
+	validateNativeType({ kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: { kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi } }], abi: nat.abi });
+	assert.throws(() => validateNativeType({ kind: "record", name: "NatBox", lean: "NatBox", constructor: "Holder.mk", provenance: { structure: "Holder", arguments: [nat] }, fields: [{ name: "digit", projection: "Holder.digit", type: fin("5") }], abi: nat.abi }), /top-level/);
 	for(const bound of ["", "05", "-1", "1e3", 5]) assert.throws(() => validateNativeType(fin(bound)), /invalid Fin refinement/);
 	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "subtype", bound: "5" } }), /refinement predicate fields/);
 	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "fin", bound: "5", extra: true } }), /invalid refinement predicate fields/);
@@ -149,17 +151,16 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 		&& error.details.field.includes("lean-lang.org/refinements"));
 });
 
-// Arrays, lists and options of Fin are checked containers since VO #1427; other positions stay rejected.
-test("native builds reject Fin outside top-level sites and their structural containers", { skip: !enabled, timeout: 900_000 }, async t => {
-	// Products and Except values are structural containers; inside a record field or a callback they are not.
-	const sites = [["field", "structure Box where\n  digit : Fin 5\ndef fieldSite (value : Box) : Nat := value.digit.val"]
-		, ["callback", "def callbackSite (value : Fin 5 → Nat) : Nat := value 0"]
-		, ["tuple field", "structure Pair where\n  digits : Fin 5 × Nat\ndef tupleSite (value : Pair) : Nat := value.digits.2"]
-		, ["except callback", "def exceptSite (value : Nat → Except String (Fin 5)) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]];
+// Arrays, lists and options of Fin are checked containers since VO #1427, products and results since
+// VO #1441 and plain record and variant fields since VO #1442; other positions stay rejected.
+test("native builds reject Fin inside callbacks and generic record instantiations", { skip: !enabled, timeout: 900_000 }, async t => {
+	const sites = [["callback", "def callbackSite (value : Fin 5 → Nat) : Nat := value 0"]
+		, ["except callback", "def exceptSite (value : Nat → Except String (Fin 5)) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]
+		, ["generic field", "structure Holder (α : Type) where\n  digit : Fin 5\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digit.val"]];
 	for(const [name, source] of sites)
 	{
 		const nested = await project(t, `namespace NativeFin\n${source}\nend NativeFin\n`);
-		await assert.rejects(() => component(nested, true), error => /Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists, options, products and Except values/.test(JSON.stringify(error.details ?? error.message)), name);
+		await assert.rejects(() => component(nested, true), error => /Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations/.test(JSON.stringify(error.details ?? error.message)), name);
 	}
 });
 

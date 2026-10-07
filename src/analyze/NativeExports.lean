@@ -160,8 +160,8 @@ def structuralConstructors : List Name := [``Array, ``Prod, ``Fin, ``Subtype]
 def genericStructure? (env : Environment) (name : Name) : Option StructureInfo :=
   if structuralConstructors.contains name then none else getStructureInfo? env name
 
-/-- `structural` stays true while only arrays, lists, options, products, results and aliases
-separate a position from its top-level parameter or result. -/
+/-- `structural` stays true while only arrays, lists, options, products, results, aliases and
+plain record and variant fields separate a position from its top-level parameter or result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
     (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none) : ShapeM Json := do
@@ -173,10 +173,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
   if e.isAppOfArity ``Fin 1 then
     if (depth != 0 || copied) && !containerFin then
       reject e "Fin refinements require a top-level or structural-container parameter or result"
-    -- Native libraries check bounds around top-level parameters and results and inside
-    -- their structural containers; record and variant fields and callbacks stay unchecked.
+    -- Native libraries check bounds around top-level parameters and results, inside their
+    -- structural containers and in plain record and variant fields; callbacks and generic
+    -- record instantiations stay unchecked.
     if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && !structural then
-      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists, options, products and Except values"
+      reject e "Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations"
     let bound ← whnf e.appArg!
     let .lit (.natVal bound) := bound
       | reject e "Fin refinements require a closed literal bound"
@@ -356,9 +357,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
             !nativeIdentifier projection.toString then reject e "invalid or reserved native record field"
         let projectionInfo ← getConstInfo projection
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
+        -- A plain record's fields are structural: each Fin field is checked where the record crosses.
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin false)])
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])
       return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
     if let .inductInfo induct ← getConstInfo name then
@@ -397,8 +399,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           if !nativeIdentifier fieldName || (fieldName.splitOn ".").length != 1 ||
               ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
+          -- Variant fields are structural too; only the active case is checked.
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin false)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
