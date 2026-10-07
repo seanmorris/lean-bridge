@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "revision": "3190d5ff252ef44ea52534e58850b2b6197a4a6c",
+  "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST=1 LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs",
+  "scope": {
+    "nodeProfiles": [
+      "node-javascript",
+      "node-typescript"
+    ],
+    "browserProfiles": [
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "reactVariants": [
+      "production",
+      "strict"
+    ],
+    "independentBuilds": 2,
+    "sourceDispatchCountersObserved": false
+  },
+  "runs": [
+    {
+      "id": "ordinary-scalar",
+      "sourcePath": "ordinary-source",
+      "selection": "scalar",
+      "privateAbi": 2,
+      "report": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/ordinary-scalar.json",
+        "sha256": "b169d6a38f8facfa63760b529065f0955d5a2b166bc3591961a83f9628cd251a"
+      },
+      "checks": 50,
+      "rejections": 126
+    },
+    {
+      "id": "reviewed-scalar",
+      "sourcePath": "reviewed-ir",
+      "selection": "scalar",
+      "privateAbi": 2,
+      "report": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/reviewed-scalar.json",
+        "sha256": "e15c8c2fdf880cba85163b8c040e6a8f1bc65abcebd88c2435b0b41bcd562658"
+      },
+      "checks": 50,
+      "rejections": 126
+    },
+    {
+      "id": "ordinary-structural",
+      "sourcePath": "ordinary-source",
+      "selection": "structural",
+      "privateAbi": 6,
+      "report": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/ordinary-structural.json",
+        "sha256": "06bf95f3655b83f6da2b520dc2c2dd891363ca62af9b8c40e2b2099abedcb97c"
+      },
+      "checks": 200,
+      "rejections": 270
+    },
+    {
+      "id": "reviewed-structural",
+      "sourcePath": "reviewed-ir",
+      "selection": "structural",
+      "privateAbi": 6,
+      "report": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json",
+        "sha256": "eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19"
+      },
+      "checks": 200,
+      "rejections": 270
+    }
+  ],
+  "log": {
+    "path": "docs/evidence/reviewed-fin-npm-20261007/installed-all-browsers.tap",
+    "sha256": "117cebe9aaff0c7456b6c5da89c9e602287b65ad2eea6f94f8e5985425b9703d",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 740081.74811
+  },
+  "earlierFailures": [
+    {
+      "revision": "01fe4a4947050c6d43c231cbae9aac0b7f625ec7",
+      "log": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/initial-scalar-status-failure.tap",
+        "sha256": "fd5f29ede072ee3796c609c83819e3bd13e1f0c24d3f17755646b1394598eca0"
+      },
+      "passed": 2,
+      "failed": 2,
+      "reason": "The consumer expected copied ABI failure status 5 for the scalar ABI, which returns status 6. Original reports at the shared output paths were overwritten by the corrected run; only this original log is retained."
+    },
+    {
+      "revision": "dd0e48e4884ed8b5418c037898a30518ab66a61a",
+      "log": {
+        "path": "docs/evidence/reviewed-fin-npm-20261007/scalar-status-diagnostic.tap",
+        "sha256": "cd25b0a50beece38e1c7c1eb8b7d74c5dd48e4df8fd729ab52f03996aab009fe"
+      },
+      "passed": 0,
+      "failed": 1,
+      "reason": "Subprocess diagnostics identify 'wrong rejection: mirror raw bound: Component scalar call failed (6)'. Commit 649294c fixes only the ABI-specific test expectation and adds an opposite-ABI negative control."
+    }
+  ],
+  "remaining": [
+    "Inventory promotion must preserve each source/host/position combination.",
+    "No nominal-field, callback, Subtype, native-host or PHP-Wasm acceptance is inferred from this fixture.",
+    "Public and raw boundary rejections are executed; source-dispatch counters are not measured by these reports.",
+    "Hosted CI on the integrated revision remains separate."
+  ]
+}
