@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeGenericRecordHostsSource } from "./generic-record-hosts-source-history.mjs";
 
 export const historyDigestHistoryPath = "docs/evidence/history-digest-source-history-20261007.json";
 export const historyDigestChangedPaths = [
@@ -238,6 +239,7 @@ export const reverseHistoryDigestUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeHistoryDigestSource = (path, source, expected) => {
+	source = beforeGenericRecordHostsSource(path, source, expected);
 	if(typeof source !== "string" || !historyDigestChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

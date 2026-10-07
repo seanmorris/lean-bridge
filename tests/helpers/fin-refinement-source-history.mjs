@@ -49,6 +49,7 @@ import { reviewedFinChangedPaths } from "./reviewed-fin-source-history.mjs";
 import { refinementHistoryCacheChangedPaths } from "./refinement-history-cache-source-history.mjs";
 import { reviewedFinEvidenceChangedPaths } from "./reviewed-fin-evidence-source-history.mjs";
 import { historyDigestChangedPaths } from "./history-digest-source-history.mjs";
+import { genericRecordHostsChangedPaths } from "./generic-record-hosts-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -562,6 +563,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...refinementHistoryCacheChangedPaths
 	, ...reviewedFinEvidenceChangedPaths
 	, ...historyDigestChangedPaths
+	, ...genericRecordHostsChangedPaths
 ])].sort());
 
 /**

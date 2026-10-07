@@ -1,0 +1,1010 @@
+{
+  "schemaVersion": 1,
+  "milestone": "generic-record-hosts-v1",
+  "predecessorCommit": "c91cccb3eb064940e8ac0bb256ba4ad4d4d4b8f9",
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a",
+      "previousSha256": "9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc",
+      "edits": [
+        {
+          "start": 93126,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/php-native.json\n"
+        },
+        {
+          "start": 97802,
+          "previous": "",
+          "current": "            build/generic-records/php-native.json\n"
+        },
+        {
+          "start": 110453,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n"
+        },
+        {
+          "start": 137172,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/python.json\n          LEAN_BRIDGE_PYTHON=\"${{ steps.collection_python312.outputs.python-path }}\" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/python312.json\n"
+        },
+        {
+          "start": 142762,
+          "previous": "",
+          "current": "            build/generic-records/python.json\n            build/generic-records/python312.json\n"
+        },
+        {
+          "start": 148498,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=rust node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/rust.json\n"
+        },
+        {
+          "start": 151492,
+          "previous": "",
+          "current": "            build/generic-records/rust.json\n"
+        },
+        {
+          "start": 158192,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n"
+        },
+        {
+          "start": 162827,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=rust node --test tests/native-specializations.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=rust node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=rust node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n"
+        },
+        {
+          "start": 172803,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/dotnet.json\n"
+        },
+        {
+          "start": 175865,
+          "previous": "",
+          "current": "            build/generic-records/dotnet.json\n"
+        },
+        {
+          "start": 186463,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/java-kotlin.json\n"
+        },
+        {
+          "start": 190406,
+          "previous": "",
+          "current": "            build/generic-records/java-kotlin.json\n"
+        },
+        {
+          "start": 197371,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/ruby.json\n"
+        },
+        {
+          "start": 198813,
+          "previous": "",
+          "current": "            build/generic-records/ruby.json\n"
+        },
+        {
+          "start": 202564,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n"
+        },
+        {
+          "start": 207428,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n"
+        },
+        {
+          "start": 211972,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\"\n"
+        },
+        {
+          "start": 221651,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/wit-wasi.json\n"
+        },
+        {
+          "start": 234809,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n"
+        },
+        {
+          "start": 238762,
+          "previous": "",
+          "current": "            build/generic-records/wit-wasi.json\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "currentSha256": "040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4",
+      "previousSha256": "49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3",
+      "edits": [
+        {
+          "start": 8895,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs\n          test -s build/generic-records/perl.json\n"
+        },
+        {
+          "start": 13148,
+          "previous": "",
+          "current": "            build/generic-records/perl.json\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "42686e500f43f932f8e8bb292aaeea8fdb23ef48b2b86345bbf4322b4dc78424",
+      "previousSha256": "e1e7d4ebaa66e510d14ea8fed11d50ba5d8f7707fcd3c8e155b9a1c239a5866f",
+      "edits": [
+        {
+          "start": 54801,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 77359,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 94554,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 110855,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 125623,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 134905,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 144530,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 167914,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 180883,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 195778,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 208562,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 221782,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 230315,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 238745,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 247762,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 256136,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 266007,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 275416,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 285255,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 297390,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 307270,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 315988,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 325284,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 337967,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 347222,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 356505,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 365638,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 374497,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 381884,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 389808,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 400454,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 407351,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 414560,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 421658,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 431887,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 439631,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 446005,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 452168,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 458265,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 458430,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 464786,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 472452,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 481746,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 492968,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 502665,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 512270,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 523800,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 532365,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 543373,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 575258,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 581887,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 592146,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 601471,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 613019,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 621542,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 632492,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 664010,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 673229,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 680569,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 692852,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 699712,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 708740,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 722766,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 733808,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 747856,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 758602,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 770673,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 781961,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 790544,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 797002,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 805388,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 813196,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 813521,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 822978,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 823143,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 831571,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 843974,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 844139,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 899315,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1011377,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1057778,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1071618,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1074895,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1079012,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1082669,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1085610,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1088101,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1092712,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1095202,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1102368,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1107262,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1109425,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1114872,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1117677,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1125150,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 1127140,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1136846,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1144151,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1148733,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1151226,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1156604,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1159123,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1166569,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1170003,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1176683,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1182165,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1188444,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1205691,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1221005,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1237046,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1251284,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1269846,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1284270,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1284435,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 1304946,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1324071,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1324236,
+          "previous": "          \"sha256\": \"49a59a0ba28ee0deaaebe3c8fbb8272909f029219792031ce9f82c57825248d3\"\n",
+          "current": "          \"sha256\": \"040545f994cf68e178b360776623e16f37cdd68dd2bd9fda90c54b807bc59ad4\"\n"
+        },
+        {
+          "start": 1335792,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1350647,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1359089,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1373184,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1380980,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1392851,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1401053,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1416239,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1420833,
+          "previous": "          \"sha256\": \"a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0\"\n",
+          "current": "          \"sha256\": \"e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb\"\n"
+        },
+        {
+          "start": 1427867,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1451013,
+          "previous": "          \"sha256\": \"9b1aec207cb4bd0aa8522c24bf8bfcc6cd7245fe3262d804dc800990dae0f9bc\"\n",
+          "current": "          \"sha256\": \"00f3a384800860d2bdcc5d1b2296c29ee278bc87a0f95b479df3a5f74a97714a\"\n"
+        },
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"10dd8e93b62d813a6349de168cc3532bfabf33295b2973b830b043cfe5eddc27\"\n",
+          "current": "          \"sha256\": \"c3b8c6d8ecc6654642cb86b4449f65572374caa9d769fd236b90a2a75d6f9e4b\"\n"
+        },
+        {
+          "start": 1466444,
+          "previous": "          \"sha256\": \"21c18427d9852c6f065a8e9b2c24d0c1e3f2fe3667b7ca74ec90b75ddeef8f76\"\n",
+          "current": "          \"sha256\": \"db57006887f18a35029962f761c7443bbd425a3e553cbeed4cfee50348924bf8\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"10dd8e93b62d813a6349de168cc3532bfabf33295b2973b830b043cfe5eddc27\"\n",
+          "current": "          \"sha256\": \"c3b8c6d8ecc6654642cb86b4449f65572374caa9d769fd236b90a2a75d6f9e4b\"\n"
+        },
+        {
+          "start": 1470379,
+          "previous": "          \"sha256\": \"21c18427d9852c6f065a8e9b2c24d0c1e3f2fe3667b7ca74ec90b75ddeef8f76\"\n",
+          "current": "          \"sha256\": \"db57006887f18a35029962f761c7443bbd425a3e553cbeed4cfee50348924bf8\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "e2207c423a352838936547de70ba8f07d2768a8ef99b4701923581f953ce16cb",
+      "previousSha256": "a444148271f89548dc2e9152e44ff4bed6c2f9bac9d31f4e5960f42dd5b768e0",
+      "edits": [
+        {
+          "start": 48157,
+          "previous": "  assert.match(workflow, /build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 53371,
+          "previous": "",
+          "current": "    , \"build/generic-records/java-kotlin.json\"\n"
+        },
+        {
+          "start": 56417,
+          "previous": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 62408,
+          "previous": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n  assert.match(workflow, /build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n  assert.match(workflow, /build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 66294,
+          "previous": "  assert.match(workflow, /node --test tests\\/native-wit\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests\\/wit-callable-contract\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests\\/wit-callables\\.test\\.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests\\/wit-compounds\\.test\\.mjs tests\\/wit-compound-contract\\.test\\.mjs tests\\/wit-compound-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests\\/wit-lists\\.test\\.mjs tests\\/wit-list-contract\\.test\\.mjs tests\\/wit-list-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests\\/wit-aliases\\.test\\.mjs tests\\/wit-alias-contract\\.test\\.mjs tests\\/wit-alias-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests\\/wit-fin\\.test\\.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests\\/native-specializations\\.test\\.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests\\/native-fin-containers\\.test\\.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests\\/native-subtype\\.test\\.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests\\/wit-variants\\.test\\.mjs tests\\/wit-variant-contract\\.test\\.mjs tests\\/wit-variant-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests\\/wit-collections\\.test\\.mjs tests\\/wit-collection-contract\\.test\\.mjs tests\\/wit-collection-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests\\/wit-copied-graph-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests\\/wit-copied-graph-native\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests\\/wit-host-evidence\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests\\/wit-host-packages\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests\\/wit-graph-composition\\.test\\.mjs && npm run test:type-corpus:wit-wasi/);\n",
+          "current": "  assert.match(workflow, /node --test tests\\/native-wit\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests\\/wit-callable-contract\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests\\/wit-callables\\.test\\.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests\\/wit-compounds\\.test\\.mjs tests\\/wit-compound-contract\\.test\\.mjs tests\\/wit-compound-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests\\/wit-lists\\.test\\.mjs tests\\/wit-list-contract\\.test\\.mjs tests\\/wit-list-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests\\/wit-aliases\\.test\\.mjs tests\\/wit-alias-contract\\.test\\.mjs tests\\/wit-alias-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests\\/wit-fin\\.test\\.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests\\/native-specializations\\.test\\.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests\\/generic-records\\.test\\.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests\\/native-fin-containers\\.test\\.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests\\/native-subtype\\.test\\.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests\\/wit-variants\\.test\\.mjs tests\\/wit-variant-contract\\.test\\.mjs tests\\/wit-variant-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests\\/wit-collections\\.test\\.mjs tests\\/wit-collection-contract\\.test\\.mjs tests\\/wit-collection-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests\\/wit-copied-graph-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests\\/wit-copied-graph-native\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests\\/wit-host-evidence\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests\\/wit-host-packages\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests\\/wit-graph-composition\\.test\\.mjs && npm run test:type-corpus:wit-wasi/);\n"
+        },
+        {
+          "start": 68848,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/wit-wasi\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-wit-wasi\\.json\\n\\s*build\\/char-native\\/wit-wasi\\.json\\n\\s*build\\/word-native\\/wit-wasi\\.json\\n\\s*build\\/callables\\/wit\\.json\\n\\s*build\\/compounds\\/wit\\.json\\n\\s*build\\/compounds\\/wit-conversions\\.json\\n\\s*build\\/lists\\/wit\\.json\\n\\s*build\\/lists\\/wit-conversions\\.json\\n\\s*build\\/aliases\\/wit\\.json\\n\\s*build\\/aliases\\/wit-conversions\\.json\\n\\s*build\\/native-fin\\/wit\\.json\\n\\s*build\\/native-specializations\\/wit-wasi\\.json\\n\\s*build\\/native-fin-containers\\/wit-wasi\\.json\\n\\s*build\\/native-subtype\\/wit-wasi\\.json\\n\\s*build\\/variants\\/wit\\.json\\n\\s*build\\/variants\\/wit-conversions\\.json\\n\\s*build\\/collections\\/wit\\.json\\n\\s*build\\/collections\\/wit-conversions\\.json\\n\\s*build\\/recursive-wit\\/conversions\\.json\\n\\s*build\\/recursive-wit\\/native\\.json\\n\\s*build\\/recursive\\/wit-packages\\.json\\n\\s*build\\/recursive\\/wit-reproducibility\\.json\\n\\s*build\\/recursive-wit\\/host-hash\\.json\\n\\s*build\\/recursive-wit\\/host-isolation\\.json\\n\\s*build\\/recursive-wit\\/composition\\.json\\n\\s*build\\/recursive-wit\\/mixed-packages\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/wit-wasi\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-wit-wasi\\.json\\n\\s*build\\/char-native\\/wit-wasi\\.json\\n\\s*build\\/word-native\\/wit-wasi\\.json\\n\\s*build\\/callables\\/wit\\.json\\n\\s*build\\/compounds\\/wit\\.json\\n\\s*build\\/compounds\\/wit-conversions\\.json\\n\\s*build\\/lists\\/wit\\.json\\n\\s*build\\/lists\\/wit-conversions\\.json\\n\\s*build\\/aliases\\/wit\\.json\\n\\s*build\\/aliases\\/wit-conversions\\.json\\n\\s*build\\/native-fin\\/wit\\.json\\n\\s*build\\/native-specializations\\/wit-wasi\\.json\\n\\s*build\\/generic-records\\/wit-wasi\\.json\\n\\s*build\\/native-fin-containers\\/wit-wasi\\.json\\n\\s*build\\/native-subtype\\/wit-wasi\\.json\\n\\s*build\\/variants\\/wit\\.json\\n\\s*build\\/variants\\/wit-conversions\\.json\\n\\s*build\\/collections\\/wit\\.json\\n\\s*build\\/collections\\/wit-conversions\\.json\\n\\s*build\\/recursive-wit\\/conversions\\.json\\n\\s*build\\/recursive-wit\\/native\\.json\\n\\s*build\\/recursive\\/wit-packages\\.json\\n\\s*build\\/recursive\\/wit-reproducibility\\.json\\n\\s*build\\/recursive-wit\\/host-hash\\.json\\n\\s*build\\/recursive-wit\\/host-isolation\\.json\\n\\s*build\\/recursive-wit\\/composition\\.json\\n\\s*build\\/recursive-wit\\/mixed-packages\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 70900,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-values\\.json\\n\\s*build\\/owned\\/php-values\\.json\\n\\s*build\\/owned-php-runtime\\/\\n\\s*build\\/owned-php-conversions\\/\\n\\s*build\\/owned-php-calls\\/\\n\\s*build\\/owned-php-packaging\\/\\n\\s*build\\/owned-php-transfers\\/\\n\\s*build\\/owned-php-transfer-packaging\\/\\n\\s*build\\/owned-php-borrows\\/\\n\\s*build\\/owned-php-borrow-packaging\\/\\n\\s*build\\/recursive\\/php-conversions\\.json\\n\\s*build\\/recursive\\/php-native\\.json\\n\\s*build\\/recursive\\/php-package-cold\\.json\\n\\s*build\\/recursive\\/php-packages\\.json\\n\\s*build\\/recursive\\/php-reproducibility\\.json\\n\\s*build\\/recursive\\/php-composition\\.json\\n\\s*build\\/recursive\\/php-conflicts\\.json\\n\\s*build\\/type-corpus\\/php-native\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-php-native\\.json\\n\\s*build\\/char-native\\/php-native\\.json\\n\\s*build\\/word-native\\/php-native\\.json\\n\\s*build\\/callables\\/php-native\\.json\\n\\s*build\\/structured-callables\\/php-native\\.json\\n\\s*build\\/recursive-callables\\/php-recursive\\.json\\n\\s*build\\/recursive-callables\\/php-mixed\\.json\\n\\s*build\\/compounds\\/php-native\\.json\\n\\s*build\\/lists\\/php-native\\.json\\n\\s*build\\/aliases\\/php-native\\.json\\n\\s*build\\/native-fin\\/php\\.json\\n\\s*build\\/native-specializations\\/php-native\\.json\\n\\s*build\\/native-fin-containers\\/php-native\\.json\\n\\s*build\\/native-subtype\\/php-native\\.json\\n\\s*build\\/variants\\/php-native\\.json\\n\\s*build\\/collections\\/php-native-conversions\\.json\\n\\s*build\\/equality\\/php\\.json\\n\\s*build\\/collections\\/php-native\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-values\\.json\\n\\s*build\\/owned\\/php-values\\.json\\n\\s*build\\/owned-php-runtime\\/\\n\\s*build\\/owned-php-conversions\\/\\n\\s*build\\/owned-php-calls\\/\\n\\s*build\\/owned-php-packaging\\/\\n\\s*build\\/owned-php-transfers\\/\\n\\s*build\\/owned-php-transfer-packaging\\/\\n\\s*build\\/owned-php-borrows\\/\\n\\s*build\\/owned-php-borrow-packaging\\/\\n\\s*build\\/recursive\\/php-conversions\\.json\\n\\s*build\\/recursive\\/php-native\\.json\\n\\s*build\\/recursive\\/php-package-cold\\.json\\n\\s*build\\/recursive\\/php-packages\\.json\\n\\s*build\\/recursive\\/php-reproducibility\\.json\\n\\s*build\\/recursive\\/php-composition\\.json\\n\\s*build\\/recursive\\/php-conflicts\\.json\\n\\s*build\\/type-corpus\\/php-native\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-php-native\\.json\\n\\s*build\\/char-native\\/php-native\\.json\\n\\s*build\\/word-native\\/php-native\\.json\\n\\s*build\\/callables\\/php-native\\.json\\n\\s*build\\/structured-callables\\/php-native\\.json\\n\\s*build\\/recursive-callables\\/php-recursive\\.json\\n\\s*build\\/recursive-callables\\/php-mixed\\.json\\n\\s*build\\/compounds\\/php-native\\.json\\n\\s*build\\/lists\\/php-native\\.json\\n\\s*build\\/aliases\\/php-native\\.json\\n\\s*build\\/native-fin\\/php\\.json\\n\\s*build\\/native-specializations\\/php-native\\.json\\n\\s*build\\/generic-records\\/php-native\\.json\\n\\s*build\\/native-fin-containers\\/php-native\\.json\\n\\s*build\\/native-subtype\\/php-native\\.json\\n\\s*build\\/variants\\/php-native\\.json\\n\\s*build\\/collections\\/php-native-conversions\\.json\\n\\s*build\\/equality\\/php\\.json\\n\\s*build\\/collections\\/php-native\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 80676,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/dotnet\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-dotnet\\.json\\n\\s*build\\/char-native\\/dotnet\\.json\\n\\s*build\\/word-native\\/dotnet\\.json\\n\\s*build\\/callables\\/dotnet\\.json\\n\\s*build\\/structured-callables\\/dotnet\\.json\\n\\s*build\\/recursive-callables\\/dotnet\\.json\\n\\s*build\\/compounds\\/dotnet\\.json\\n\\s*build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/dotnet\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-dotnet\\.json\\n\\s*build\\/char-native\\/dotnet\\.json\\n\\s*build\\/word-native\\/dotnet\\.json\\n\\s*build\\/callables\\/dotnet\\.json\\n\\s*build\\/structured-callables\\/dotnet\\.json\\n\\s*build\\/recursive-callables\\/dotnet\\.json\\n\\s*build\\/compounds\\/dotnet\\.json\\n\\s*build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 87772,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 93583,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 95525,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/ruby\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-ruby\\.json\\n\\s*build\\/char-native\\/ruby\\.json\\n\\s*build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/ruby\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-ruby\\.json\\n\\s*build\\/char-native\\/ruby\\.json\\n\\s*build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 99380,
+          "previous": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/native-fin\\/perl\\.json\\n\\s*build\\/native-specializations\\/perl\\.json\\n\\s*build\\/native-fin-containers\\/perl\\.json\\n\\s*build\\/native-subtype\\/perl\\.json\\n\\s*build\\/perl-refinements\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/native-fin\\/perl\\.json\\n\\s*build\\/native-specializations\\/perl\\.json\\n\\s*build\\/generic-records\\/perl\\.json\\n\\s*build\\/native-fin-containers\\/perl\\.json\\n\\s*build\\/native-subtype\\/perl\\.json\\n\\s*build\\/perl-refinements\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "c3b8c6d8ecc6654642cb86b4449f65572374caa9d769fd236b90a2a75d6f9e4b",
+      "previousSha256": "10dd8e93b62d813a6349de168cc3532bfabf33295b2973b830b043cfe5eddc27",
+      "edits": [
+        {
+          "start": 1166,
+          "previous": "",
+          "current": "import { prepareRustCorpusDependencies } from \"./helpers/type-corpus-rust.mjs\";\nimport { genericRecordRustDiagnostics } from \"./helpers/generic-record-rust.mjs\";\nimport { genericRecordDotnetDiagnostics } from \"./helpers/generic-record-managed-types.mjs\";\nimport \"./helpers/generic-record-hosts-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2047,
+          "previous": "",
+          "current": "assert.equal(new Set(profiles).size, profiles.length, \"Duplicate generic record profile\");\n"
+        },
+        {
+          "start": 23710,
+          "previous": "test(\"every selected native profile has a generic record consumer\", async () => {\n\tfor(const [profile, extension] of [[\"c\", \"c\"], [\"cpp\", \"cpp\"]]) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);\n",
+          "current": "// Every native profile the harness can select has its own consumer and package coordinate.\ntest(\"Rust generic-record rejection reports require exact caller type errors\", () => {\n\tconst message = { reason: \"compiler-message\", message: { level: \"error\", code: { code: \"E0308\" }, spans: [{ is_primary: true, file_name: \"invalid-alias.rs\", line_start: 2, column_start: 70 }] } };\n\tconst result = { code: 101, stdout: JSON.stringify(message) + \"\\n\", stderr: \"\" };\n\tassert.deepEqual(genericRecordRustDiagnostics(result, \"invalid-alias.rs\", \"E0308\"), [{ code: \"E0308\", file: \"invalid-alias.rs\", line: 2, column: 70 }]);\n\tfor(const changed of [{ ...result, code: 0 }, { ...result, stdout: \"\" }, { ...result, stdout: \"not JSON\" }])\n\t\tassert.throws(() => genericRecordRustDiagnostics(changed, \"invalid-alias.rs\", \"E0308\"));\n\tfor(const change of [value => { value.message.code.code = \"E0433\"; }, value => { value.message.spans[0].file_name = \"dependency/lib.rs\"; }, value => { value.message.spans[0].is_primary = false; }])\n\t{\n\t\tconst changed = structuredClone(message); change(changed);\n\t\tassert.throws(() => genericRecordRustDiagnostics({ ...result, stdout: JSON.stringify(changed) }, \"invalid-alias.rs\", \"E0308\"));\n\t}\n});\n\nconst consumerExtensions = { c: \"c\", cpp: \"cpp\", python: \"py\", rust: \"rs\", perl: \"pl\", ruby: \"rb\", dotnet: \"cs\", java: \"java\", kotlin: \"kt\", \"php-native\": \"php\", \"wit-wasi\": \"c\" };\n\ntest(\"generic record CI requires every remaining native report and both Python floors\", async () => {\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst perl = await readFile(\".github/workflows/perl-consumer.yml\", \"utf8\");\n\tfor(const profiles of [\"python\", \"rust\", \"ruby\", \"dotnet\", \"java,kotlin\", \"php-native\", \"wit-wasi\", \"perl\"])\n\t{\n\t\tconst source = profiles === \"perl\" ? perl : workflow, report = profiles.replaceAll(\",\", \"-\");\n\t\tconst command = `LEAN_BRIDGE_GENERIC_RECORD_PROFILES=${profiles} node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs`;\n\t\tassert.ok(source.includes(`          ${command}\\n          test -s build/generic-records/${report}.json\\n`), profiles);\n\t\tassert.ok(source.includes(`            build/generic-records/${report}.json\\n`), profiles);\n\t\tif(profiles !== \"perl\") assert.ok(source.split(\"\\n\").some(line => /consumer_command=|--command /u.test(line) && line.includes(command)), profiles);\n\t}\n\tassert.ok(workflow.includes('LEAN_BRIDGE_PYTHON: ${{ steps.collection_python311.outputs.python-path }}'));\n\tassert.ok(workflow.includes('LEAN_BRIDGE_PYTHON=\"${{ steps.collection_python312.outputs.python-path }}\" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json'));\n\tassert.ok(workflow.includes(\"          test -s build/generic-records/python312.json\\n\"));\n\tassert.ok(workflow.includes(\"            build/generic-records/python312.json\\n\"));\n\tassert.ok(workflow.split(\"\\n\").some(line => line.includes(\"consumer_command=\") && line.includes(\"LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python\")));\n\tfor(const configuration of [\"5.36.3-threaded\", \"5.36.3-unthreaded\", \"5.38.2-threaded\", \"5.38.2-unthreaded\"])\n\t\tassert.ok(perl.includes(`          - ${configuration}\\n`));\n\tassert.ok(perl.includes('LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl\"'));\n"
+        },
+        {
+          "start": 27177,
+          "previous": "test(\"relocated source-free C and C++ packages construct and project alias-named generic records\", { skip: !profiles.length, timeout: 2_400_000 }, async t => {\n",
+          "current": "test(\"C# generic-record rejection reports require exact caller type errors\", () => {\n\tconst result = { code: 1, stdout: \"invalid-alias.cs(1,70): error CS1503: Argument type mismatch\\n\", stderr: \"\" };\n\tassert.deepEqual(genericRecordDotnetDiagnostics(result, \"/consumer\", \"invalid-alias.cs\", \"CS1503\"), [{ code: \"CS1503\", file: \"invalid-alias.cs\", line: 1, column: 70 }]);\n\tfor(const changed of [\n\t\t{ ...result, code: 0 }, { ...result, stdout: \"\" }\n\t\t, { ...result, stdout: result.stdout.replace(\"CS1503\", \"CS0006\") }\n\t\t, { ...result, stdout: result.stdout.replace(\"invalid-alias.cs\", \"dependency.cs\") }\n\t\t, { ...result, stdout: result.stdout.replace(\"(1,70)\", \"(0,70)\") }\n\t\t, { ...result, stderr: \"error: unrelated compiler failure\" }])\n\t\tassert.throws(() => genericRecordDotnetDiagnostics(changed, \"/consumer\", \"invalid-alias.cs\", \"CS1503\"));\n});\n\ntest(\"every native profile has a generic record consumer and a target\", async () => {\n\tassert.deepEqual(Object.keys(genericRecordTargets).sort(), Object.keys(consumerExtensions).sort());\n\tfor(const profile of profiles) assert.ok(profile in genericRecordTargets, profile);\n\tfor(const [profile, extension] of Object.entries(consumerExtensions)) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);\n});\n\ntest(\"relocated source-free native packages construct and project alias-named generic records\", { skip: !profiles.length, timeout: 2_400_000 }, async t => {\n"
+        },
+        {
+          "start": 28797,
+          "previous": "",
+          "current": "\t// CI exports the Ruby toolchain; local runs use the pinned MRI 3.3 beside the other toolchains.\n\tif(profiles.includes(\"ruby\"))\n\t{\n\t\tenvironment.LEAN_BRIDGE_RUBY ??= resolve(\".toolchains/ruby33/bin/ruby\");\n\t\tenvironment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), \"gem\");\n\t}\n"
+        },
+        {
+          "start": 31185,
+          "previous": "",
+          "current": "\t\tconst dependencies = attempt === 0 && profiles.includes(\"rust\")\n\t\t\t? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, \"native/rust\"), directory, handoff: join(consumer, \"dependencies\"), environment }) : undefined;\n\t\t// Install from prepared archives only. No author workspace or build staging remains.\n"
+        },
+        {
+          "start": 31808,
+          "previous": "\t\t\tconst { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment });\n",
+          "current": "\t\t\tconst { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, dependencies, environment });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "507cd44808c3c745c7fae2ca51b01451679acbbca986d7cd72f8938e45952b83",
+      "previousSha256": "db0ef2e2d5c046230449650047e3780aa1a4f7ccbc4c8ce2d12bb350fc8704ea",
+      "edits": [
+        {
+          "start": 3954,
+          "previous": "",
+          "current": "import { genericRecordHostsChangedPaths } from \"./generic-record-hosts-source-history.mjs\";\n"
+        },
+        {
+          "start": 38681,
+          "previous": "",
+          "current": "\t, ...genericRecordHostsChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-packages.mjs",
+      "currentSha256": "db57006887f18a35029962f761c7443bbd425a3e553cbeed4cfee50348924bf8",
+      "previousSha256": "21c18427d9852c6f065a8e9b2c24d0c1e3f2fe3667b7ca74ec90b75ddeef8f76",
+      "edits": [
+        {
+          "start": 4,
+          "previous": " * Closed, alias-named generic records in installed npm packages and native C-family packages.\n",
+          "current": " * Closed, alias-named generic records in installed npm and native packages.\n"
+        },
+        {
+          "start": 702,
+          "previous": "",
+          "current": "import { checkGenericRecordRustTypes } from \"./generic-record-rust.mjs\";\nimport { checkGenericRecordManagedTypes } from \"./generic-record-managed-types.mjs\";\n"
+        },
+        {
+          "start": 1168,
+          "previous": "export const genericRecordTargets = Object.freeze({ c: [\"c\", coordinate], cpp: [\"cpp\", coordinate] });\n",
+          "current": "export const genericRecordTargets = Object.freeze({ c: [\"c\", coordinate]\n\t, cpp: [\"cpp\", coordinate]\n\t, python: [\"pypi\", coordinate]\n\t, rust: [\"cargo\", coordinate]\n\t, dotnet: [\"nuget\", { name: \"GenericRecords.Api\", version: \"1.0.0\" }]\n\t, java: [\"maven\", { name: \"org.leanbridge:genericrecords\", version: \"1.0.0\" }]\n\t, kotlin: [\"maven\", { name: \"org.leanbridge:genericrecords\", version: \"1.0.0\" }]\n\t, ruby: [\"rubygems\", coordinate]\n\t, perl: [\"cpan\", { module: \"LeanBridge::GenericRecords\", version: \"1.000\" }]\n\t, \"php-native\": [\"php-native\", { name: \"example/genericrecords\", version: \"1.0.0\" }]\n\t, \"wit-wasi\": [\"wit-wasi\", coordinate] });\n"
+        },
+        {
+          "start": 12670,
+          "previous": " * Install and exercise the native package through its generated C or C++ API.\n",
+          "current": " * Install and exercise the native package through its generated public API.\n"
+        },
+        {
+          "start": 12830,
+          "previous": "export const installGenericRecordConsumer = options => installCopiedConsumer({ ...options, fixture: {\n\tsource: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, \"utf8\")\n\t, success: \"generic-records-ok\"\n} });\n",
+          "current": "export const installGenericRecordConsumer = async options => {\n\tconst observation = await installCopiedConsumer({ ...options, fixture: {\n\t\tsource: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, \"utf8\")\n\t\t// Each alias is its own WIT record with the structure's fields instantiated; two aliases of one application stay distinct.\n\t\t, wit: [...[\"nat-box\", \"nat-box-again\", \"text-box\", \"word-pair\", \"maybe-box\", \"box-pair\", \"tagged-nat\", \"marker-tag\"].map(name => new RegExp(`record ${name} \\\\{`))\n\t\t\t, /bump: func\\([^)]*: nat-box\\) -> nat-box/\n\t\t\t, /unpair: func\\([^)]*: box-pair\\) -> /\n\t\t\t, /type (bridge-value-\\d+) = list<nat-box>;[\\s\\S]*?type boxes = \\1;[\\s\\S]*?type (bridge-alias-value-\\d+) = option<boxes>;[\\s\\S]*?first-boxes: func\\([^)]*\\) -> \\2;/u]\n\t\t, success: \"generic-records-ok\"\n\t} });\n\tif(options.profile === \"rust\") return { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) };\n\tif([\"dotnet\", \"java\", \"kotlin\"].includes(options.profile))\n\t\treturn { ...observation, managedTypes: await checkGenericRecordManagedTypes(options, observation) };\n\treturn observation;\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/history-digest-source-history-tests.mjs",
+      "currentSha256": "bca6da0f71d9d4c5991aeebb8b6c618752cdbf6066d284a0c0b90437e167016a",
+      "previousSha256": "07ffb30179de65ade13348d6b2f51ad8dd0dbd45c5289609d0f34d9372a76812",
+      "edits": [
+        {
+          "start": 349,
+          "previous": "",
+          "current": "import { beforeGenericRecordHostsSource } from \"./generic-record-hosts-source-history.mjs\";\n"
+        },
+        {
+          "start": 994,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeGenericRecordHostsSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1918,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeGenericRecordHostsSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2800,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeGenericRecordHostsSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/history-digest-source-history.mjs",
+      "currentSha256": "4df339834a9453394a89725805d80f8a89aa30d7b88d30c1111e4e6f9f2c4cc3",
+      "previousSha256": "59a650fe8a199e1b146ea394952568759573a7d96359c035a3753dfe7fec4ce7",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "",
+          "current": "import { beforeGenericRecordHostsSource } from \"./generic-record-hosts-source-history.mjs\";\n"
+        },
+        {
+          "start": 12305,
+          "previous": "",
+          "current": "\tsource = beforeGenericRecordHostsSource(path, source, expected);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeGenericRecordHostsSource } from "./generic-record-hosts-source-history.mjs";
 import { beforeHistoryDigestSource, historyDigestChangedPaths, historyDigestHistoryPath, reverseHistoryDigestUpdate } from "./history-digest-source-history.mjs";
 
 test("history digest integration authenticates each complete verifier predecessor", async () => {
@@ -16,7 +17,7 @@ test("history digest integration authenticates each complete verifier predecesso
 	assert.deepEqual(record.updates.map(update => update.path), historyDigestChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeGenericRecordHostsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseHistoryDigestUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeHistoryDigestSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeHistoryDigestSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("history digest integration authenticates each complete verifier predecesso
 });
 
 test("history digest cache changes current verifier pins only, not support or archived receipts", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeGenericRecordHostsSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeHistoryDigestSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -42,7 +43,7 @@ test("history digest cache changes current verifier pins only, not support or ar
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(historyDigestChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforeGenericRecordHostsSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(sha256(beforeHistoryDigestSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

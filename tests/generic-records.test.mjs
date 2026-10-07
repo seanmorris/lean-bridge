@@ -22,6 +22,7 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs";
 import { genericRecordDotnetDiagnostics } from "./helpers/generic-record-managed-types.mjs";
+import "./helpers/generic-record-hosts-source-history-tests.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -270,6 +271,27 @@ test("Rust generic-record rejection reports require exact caller type errors", (
 });
 
 const consumerExtensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", perl: "pl", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
+
+test("generic record CI requires every remaining native report and both Python floors", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const perl = await readFile(".github/workflows/perl-consumer.yml", "utf8");
+	for(const profiles of ["python", "rust", "ruby", "dotnet", "java,kotlin", "php-native", "wit-wasi", "perl"])
+	{
+		const source = profiles === "perl" ? perl : workflow, report = profiles.replaceAll(",", "-");
+		const command = `LEAN_BRIDGE_GENERIC_RECORD_PROFILES=${profiles} node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs`;
+		assert.ok(source.includes(`          ${command}\n          test -s build/generic-records/${report}.json\n`), profiles);
+		assert.ok(source.includes(`            build/generic-records/${report}.json\n`), profiles);
+		if(profiles !== "perl") assert.ok(source.split("\n").some(line => /consumer_command=|--command /u.test(line) && line.includes(command)), profiles);
+	}
+	assert.ok(workflow.includes('LEAN_BRIDGE_PYTHON: ${{ steps.collection_python311.outputs.python-path }}'));
+	assert.ok(workflow.includes('LEAN_BRIDGE_PYTHON="${{ steps.collection_python312.outputs.python-path }}" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json'));
+	assert.ok(workflow.includes("          test -s build/generic-records/python312.json\n"));
+	assert.ok(workflow.includes("            build/generic-records/python312.json\n"));
+	assert.ok(workflow.split("\n").some(line => line.includes("consumer_command=") && line.includes("LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python")));
+	for(const configuration of ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"])
+		assert.ok(perl.includes(`          - ${configuration}\n`));
+	assert.ok(perl.includes('LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"'));
+});
 
 test("C# generic-record rejection reports require exact caller type errors", () => {
 	const result = { code: 1, stdout: "invalid-alias.cs(1,70): error CS1503: Argument type mismatch\n", stderr: "" };
