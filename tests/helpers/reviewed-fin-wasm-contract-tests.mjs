@@ -4,12 +4,18 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference, reviewedSourceSelection, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmWide } from "./reviewed-fin-wasm-fixture.mjs";
 import { executeCorpus } from "../fixtures/reviewed-fin-wasm/javascript.mjs";
+import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-fin-wasm-install.mjs";
+import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { saveLakeFile } from "./lake-workspace.mjs";
 
 const input = document => {
 	const source = canonicalJson(document);
@@ -81,7 +87,12 @@ const faithfulApi = () => {
 			return item;
 		})(values).reverse()
 	};
-	return { ...api, raw: (name, args) => api[name](...args) };
+	return { ...api, raw: (name, args) => {
+		try
+		{ return api[name](...args); }
+		catch
+		{ throw new Error("component call failed (5)"); }
+	} };
 };
 
 test("the shared Fin consumer rejects permissive public or raw substitutes", () => {
@@ -89,7 +100,7 @@ test("the shared Fin consumer rejects permissive public or raw substitutes", () 
 	{
 		const request = { module: "reviewed-fin", selection }, api = faithfulApi();
 		const observed = executeCorpus(request, api);
-		assert.ok(observed.checks > 40 && observed.rejections > 100);
+		assert.deepEqual({ checks: observed.checks, rejections: observed.rejections }, reviewedFinWasmExpected[selection]);
 		assert.equal(observed.module, request.module);
 		assert.equal(observed.selection, selection);
 		assert.throws(() => executeCorpus(request, { ...api, mirror: () => 0n }), /failed: mirror endpoints/u);
@@ -101,6 +112,13 @@ test("the shared Fin consumer rejects permissive public or raw substitutes", () 
 			{ return 0n; }
 		};
 		assert.throws(() => executeCorpus(request, { ...api, raw: lenient }), /accepted: mirror raw bound/u);
+		const wrongFailure = (name, args) => {
+			try
+			{ return api.raw(name, args); }
+			catch
+			{ throw new Error("unrelated transport failure"); }
+		};
+		assert.throws(() => executeCorpus(request, { ...api, raw: wrongFailure }), /wrong rejection: mirror raw bound/u);
 		if(selection === "structural")
 		{
 			assert.throws(() => executeCorpus(request, { ...api, empty: values => values }), /accepted: empty public bound/u);
@@ -108,4 +126,63 @@ test("the shared Fin consumer rejects permissive public or raw substitutes", () 
 		}
 	}
 	assert.throws(() => executeCorpus({ module: "reviewed-fin", selection: "missing" }, faithfulApi()), /Unknown Fin selection/u);
+});
+
+test("Fin Wasm receipt checks reject changed review, source, private ABI and lowered bounds", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-wasm-facts-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const source = await readFile("tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean");
+	for(const selection of ["scalar", "structural"])
+	{
+		// Synthetic evidence tests only the verifier. Installed tests supply fresh Lean output.
+		const ir = reviewedFinWasmIr(selection), review = input(ir);
+		const metadata = {
+			reviewedBindingIr: review, leanCompilerSha256: "a".repeat(64)
+			, metadata: { modules: [{ name: "ReviewedFin", sourceSha256: sha256(source) }] } };
+		const plan = { privateAbi: { version: selection === "scalar" ? 2 : 6 }
+			, exports: ir.declarations.map(item => ({ sourceDeclaration: item.source.declaration, refinements: item.source.extensions["lean-lang.org/refinements"] })) };
+		const save = async (document = ir, compiled = metadata, lowered = plan) => {
+			await saveLakeFile(root, "binding/binding-ir.json", canonicalJson(document));
+			await saveLakeFile(root, "metadata/lake-entry-exports.json", canonicalJson(compiled));
+			await saveLakeFile(root, "locks/compiler-adapters.json", canonicalJson(lowered));
+		};
+		await save();
+		assert.equal((await reviewedFinWasmBuildFacts(root, selection, true)).reviewedSourceSha256, review.sourceSha256);
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, false));
+		const changedIr = structuredClone(ir);
+		changedIr.declarations[0].source.extensions["lean-lang.org/refinements"].result.bound = "11";
+		await save(changedIr);
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, true));
+		const wrongSource = structuredClone(metadata);
+		wrongSource.metadata.modules[0].sourceSha256 = "b".repeat(64);
+		await save(ir, wrongSource);
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, true));
+		const wrongReview = structuredClone(metadata);
+		wrongReview.reviewedBindingIr.source += " ";
+		await save(ir, wrongReview);
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, true));
+		await save(ir, metadata, { ...plan, privateAbi: { version: 9 } });
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, true));
+		const wrongBound = structuredClone(plan);
+		wrongBound.exports[0].refinements.parameters[0].bound = "11";
+		await save(ir, metadata, wrongBound);
+		await assert.rejects(reviewedFinWasmBuildFacts(root, selection, true));
+		const ordinary = structuredClone(metadata);
+		delete ordinary.reviewedBindingIr;
+		await save(ir, ordinary);
+		assert.equal(Object.hasOwn(await reviewedFinWasmBuildFacts(root, selection, false), "reviewedSourceSha256"), false);
+	}
+});
+
+test("Fin TypeScript consumers state exact public signatures and reject erased number representations", () => {
+	for(const selection of ["scalar", "structural"])
+	{
+		const source = reviewedFinWasmTypeScript(selection);
+		assert.doesNotMatch(source, /\bany\b/u);
+		assert.match(source, /Expect<Equal<typeof api\.mirror, Scalar>>/u);
+		assert.match(source, /api\.label\("prefix", 9, "suffix"\)/u);
+		assert.match(source, /executeCorpus\(request, await loadApi\(\)\)/u);
+		assert.equal(source.includes("type Items ="), selection === "structural");
+	}
+	assert.throws(() => reviewedFinWasmTypeScript("missing"), /Unknown Fin selection/u);
 });

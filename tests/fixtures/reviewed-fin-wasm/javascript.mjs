@@ -16,11 +16,14 @@ export const executeCorpus = (request, api) => {
 	const check = (ok, label) => { if(!ok) throw new Error(`failed: ${label}`); checks++; };
 	const encode = value => JSON.stringify(value, (_, item) => typeof item === "bigint" ? `${item}n` : item);
 	const same = (left, right) => encode(left) === encode(right);
-	const rejected = (call, label) => {
+	const rejected = (call, label, expected = undefined) => {
 		try
 		{ call(); }
-		catch
-		{ rejections++; return; }
+		catch(error)
+		{
+			if(expected && !expected.test(error.message)) throw new Error(`wrong rejection: ${label}: ${error.message}`, { cause: error });
+			rejections++; return;
+		}
 		throw new Error(`accepted: ${label}`);
 	};
 	const wide = 184467440737095516170n;
@@ -36,7 +39,7 @@ export const executeCorpus = (request, api) => {
 		for(const input of invalid)
 		{
 			rejected(() => api[name](input), `${name} public bound`);
-			rejected(() => api.raw(name, [input]), `${name} raw bound`);
+			rejected(() => api.raw(name, [input]), `${name} raw bound`, input >= 0n ? /failed \(5\)/u : undefined);
 			check(api.mirror(3n) === 6n && api.raw("mirror", [9n]) === 0n, `${name} recovery`);
 		}
 		for(const input of [3, "3", null, undefined, true])
@@ -50,7 +53,7 @@ export const executeCorpus = (request, api) => {
 	for(let round = 0; round < 32; round++)
 	{
 		rejected(() => api.label(prefix, 10n, suffix), "label public late bound");
-		rejected(() => api.raw("label", [prefix, 10n, suffix]), "label raw late bound");
+		rejected(() => api.raw("label", [prefix, 10n, suffix]), "label raw late bound", /failed \(5\)/u);
 		check(api.label(prefix, 9n, suffix) === prefix + "9" + suffix
 			&& api.raw("label", [prefix, 0n, suffix]) === prefix + "0" + suffix, "label heap recovery");
 	}
@@ -71,7 +74,7 @@ export const executeCorpus = (request, api) => {
 			{
 				const badBefore = encode(bad);
 				rejected(() => api[name](bad), `${name} public bound`);
-				rejected(() => api.raw(name, [bad]), `${name} raw bound`);
+				rejected(() => api.raw(name, [bad]), `${name} raw bound`, /failed \(5\)/u);
 				check(same(api[name](input), expected) && same(api.raw(name, [input]), expected), `${name} recovery`);
 				check(encode(bad) === badBefore, `${name} rejected input unchanged`);
 			}
