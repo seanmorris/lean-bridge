@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1441,
+  "execution": "local",
+  "revision": "3ece09f611054538c71d5104acc46f2eb3e1a4d7",
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+      "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": null,
+      "LEAN_BRIDGE_LAKE_ENGINE": null
+    }
+  },
+  "scope": {
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "shape": "Array (Fin 4 × Except (Fin 6) Nat)",
+    "measuredExport": "FinProductArrays.rows",
+    "dispatchProfiles": [
+      "c"
+    ],
+    "unmeasuredDispatchProfiles": [
+      "cpp"
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean",
+      "sha256": "72cd38b5cb424e5d652dbf9e45bc697583965aba7f01fdbff3bb02a3623710b3"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/c.c",
+      "sha256": "2263e57b51ef321285769a2d163fd27c30f132baa018cb04dcf9807cc817170d"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/cpp.cpp",
+      "sha256": "2aa83aece8683b5ac4bf299165021d4fabd61b14bcb6275d867739a7bc6a05e5"
+    },
+    {
+      "path": "tests/helpers/fin-product-array-install.mjs",
+      "sha256": "80bbf184fd2b7b7ecdb022487e446e1f739e76dc028031d7314e6ebc954bd951"
+    },
+    {
+      "path": "tests/helpers/fin-product-array-dispatch.mjs",
+      "sha256": "4042f1fd2d74ccaf16c54adc131de367812f66bc9418481858779edb0df75d5a"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-array-fixture.mjs",
+      "sha256": "ec84070065000341646e64738a964b79280993ee4c59d8ac2f57a1229eb8b58e"
+    }
+  ],
+  "runs": [
+    {
+      "id": "ordinary-c-cpp",
+      "sourcePath": "ordinary-source",
+      "reproduceCommand": "env -u LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR -u LEAN_BRIDGE_LAKE_ENGINE LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=c,cpp LEAN_BRIDGE_FIN_PRODUCT_ARRAY_REPORT=build/vo1441-array-dispatch-ordinary-c-cpp.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-product-arrays.test.mjs",
+      "report": {
+        "path": "docs/evidence/native-fin-product-array-dispatch-20261007/ordinary-c-cpp.json",
+        "sha256": "ea9e0facca587bf3fccc2f325cf6267b6c0dbb048a6c9e0475eeae1bc38431bd"
+      },
+      "log": {
+        "path": "docs/evidence/native-fin-product-array-dispatch-20261007/ordinary-c-cpp.tap",
+        "sha256": "57d1b716f2616a05ee6e15bd139ef247956470da0a5aa4a76b5ee05af2236cdb",
+        "passed": 11,
+        "failed": 0,
+        "skipped": 2
+      }
+    },
+    {
+      "id": "reviewed-c-cpp",
+      "sourcePath": "reviewed-ir",
+      "reproduceCommand": "env -u LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR -u LEAN_BRIDGE_LAKE_ENGINE LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_REPORT=build/vo1441-array-dispatch-reviewed-c-cpp.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-product-arrays.test.mjs",
+      "report": {
+        "path": "docs/evidence/native-fin-product-array-dispatch-20261007/reviewed-c-cpp.json",
+        "sha256": "23a6bda6a9e647f6b1f467237964faab1a06a9c0ee5dd2125b122891ca5d736b"
+      },
+      "log": {
+        "path": "docs/evidence/native-fin-product-array-dispatch-20261007/reviewed-c-cpp.tap",
+        "sha256": "bb14da42548da66509203bfecb4e0c8f7d741225c72546a09f187d4640d096eb",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 1
+      }
+    }
+  ],
+  "remaining": [
+    "Installed Array-of-product execution on the other native profiles, both Python floors and four CPAN ABIs.",
+    "Independent C++ dispatch counters; only C measures source and raw-adapter dispatch here.",
+    "Dispatch for reversed is unmeasured because Lean inlines it; its public consumer checks remain recorded.",
+    "Integrated hosted CI and supported release-floor acceptance.",
+    "No nominal-field, generic, recursive, browser, PHP-Wasm, callback or Subtype acceptance is inferred."
+  ],
+  "previousUninstrumentedReceipt": "docs/evidence/native-fin-product-arrays-20261007/receipt.json"
+}

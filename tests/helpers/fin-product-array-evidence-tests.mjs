@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./fin-product-array-dispatch-evidence-tests.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { finProductArrayRefinements } from "./fin-product-array-install.mjs";
 import { finProductArrayReviewedIr } from "./reviewed-fin-product-array-fixture.mjs";
