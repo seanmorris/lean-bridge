@@ -23,6 +23,8 @@ import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs";
 import { genericRecordDotnetDiagnostics } from "./helpers/generic-record-managed-types.mjs";
 import "./helpers/generic-record-hosts-source-history-tests.mjs";
+import "./helpers/generic-record-specialization-source-history-tests.mjs";
+import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -167,6 +169,12 @@ test("installed npm packages carry alias-named generic records with their instan
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", ...observation }));
 });
 
+test("installed npm packages specialize generic functions over records in two namespaces and Option/List aliases", { skip: !wasm, timeout: 3_600_000 }, async t => {
+	const observation = await checkGenericRecordNpmPackages(t, { fixture, build, runtimeRoot, engineRoot, specialized: specializedGenericRecordCase });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_NPM_REPORT ?? "build/generic-records/specialized-npm.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", specializations: genericRecordSpecializations("OnboardingSmall"), ...observation }));
+});
+
 // A phantom argument that carries a Fin bound: the npm profile admits nested Fin, so only the argument rule refuses it.
 const refinedPhantom = "abbrev DigitTag := Tag (Option (Fin 10))\ndef digitTagged (value : DigitTag) : String := value.label";
 
@@ -281,13 +289,17 @@ test("generic record CI requires every remaining native report and both Python f
 		const command = `LEAN_BRIDGE_GENERIC_RECORD_PROFILES=${profiles} node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs`;
 		assert.ok(source.includes(`          ${command}\n          test -s build/generic-records/${report}.json\n`), profiles);
 		assert.ok(source.includes(`            build/generic-records/${report}.json\n`), profiles);
+		assert.ok(source.includes(`          test -s build/generic-records/specialized-${report}.json\n`), profiles);
+		assert.ok(source.includes(`            build/generic-records/specialized-${report}.json\n`), profiles);
 		if(profiles !== "perl") assert.ok(source.split("\n").some(line => /consumer_command=|--command /u.test(line) && line.includes(command)), profiles);
 	}
 	assert.ok(workflow.includes('LEAN_BRIDGE_PYTHON: ${{ steps.collection_python311.outputs.python-path }}'));
 	assert.ok(workflow.includes('LEAN_BRIDGE_PYTHON="${{ steps.collection_python312.outputs.python-path }}" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json'));
 	assert.ok(workflow.includes("          test -s build/generic-records/python312.json\n"));
 	assert.ok(workflow.includes("            build/generic-records/python312.json\n"));
-	assert.ok(workflow.split("\n").some(line => line.includes("consumer_command=") && line.includes("LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python")));
+	assert.ok(workflow.split("\n").some(line => line.includes("consumer_command=") && line.includes("LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python")));
+	assert.ok(workflow.includes("          test -s build/generic-records/specialized-python312.json\n"));
+	assert.ok(workflow.includes("            build/generic-records/specialized-python312.json\n"));
 	for(const configuration of ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"])
 		assert.ok(perl.includes(`          - ${configuration}\n`));
 	assert.ok(perl.includes('LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"'));
@@ -311,7 +323,30 @@ test("every native profile has a generic record consumer and a target", async ()
 	for(const [profile, extension] of Object.entries(consumerExtensions)) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);
 });
 
-test("relocated source-free native packages construct and project alias-named generic records", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+test("generic record specializations name closed aliases in two namespaces and every consumer exercises all nine", async () => {
+	const specializations = genericRecordSpecializations(), source = await specializedGenericRecordCase.source();
+	assert.equal(specializations.length, 9);
+	assert.equal(new Set(specializations.map(item => item.declaration)).size, 1);
+	assert.equal(new Set(specializations.flatMap(item => item.types)).size, 9);
+	assert.match(source, /def echo \{α : Type u\}/u);
+	assert.match(source, /namespace Left\nabbrev LeftBox := Box Nat/u);
+	assert.match(source, /namespace Right\nabbrev RightBox := Box Nat/u);
+	assert.match(source, /abbrev Nats := List Nat/u);
+	assert.match(source, /abbrev OptionalNat := Option Nat/u);
+	for(const { name } of specializations) assert.ok(!source.includes(`def ${name.split(".").at(-1)}`));
+	for(const [profile, extension] of Object.entries(consumerExtensions))
+	{
+		const caller = await specializedGenericRecordConsumer(profile, extension);
+		for(const { name } of specializations)
+		{
+			const camel = name.split(".").at(-1), snake = camel.replace(/[A-Z]/gu, value => `_${value.toLowerCase()}`);
+			const publicName = ["java", "kotlin"].includes(profile) ? camel : profile === "dotnet" ? camel[0].toUpperCase() + camel.slice(1) : profile === "wit-wasi" ? snake.replaceAll("_", "-") : snake;
+			assert.ok(caller.includes(publicName), `${profile}: ${publicName}`);
+		}
+	}
+});
+
+const checkInstalledGenericRecords = async (t, specialized = false) => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
 	const environment = genericRecordEnvironment(profiles);
@@ -328,7 +363,8 @@ test("relocated source-free native packages construct and project alias-named ge
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/generic-records", projectRoot, { recursive: true });
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], exports: genericRecordExports, targets }));
+		if(specialized) await saveLakeFile(projectRoot, "GenericRecords.lean", await specializedGenericRecordCase.source());
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], exports: genericRecordExports, targets, ...specialized ? specializedGenericRecordCase.configuration() : {} }));
 		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
@@ -336,11 +372,12 @@ test("relocated source-free native packages construct and project alias-named ge
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		// The native model keeps each alias-named record with its structure and resolved arguments.
 		const records = model.types.filter(type => type.kind === "record");
-		assert.deepEqual(records.map(type => type.name).sort(), Object.keys(genericRecordInstantiations).map(name => `GenericRecords.${name}`).sort());
-		for(const type of records) assert.equal(type.provenance.structure, `GenericRecords.${genericRecordInstantiations[type.name.split(".").at(-1)].structure}`, type.name);
+		const expectedRecords = { ...genericRecordInstantiations, ...specialized ? { "Left.LeftBox": { structure: "Box" }, "Right.RightBox": { structure: "Box" } } : {} };
+		assert.deepEqual(records.map(type => type.name).sort(), Object.keys(expectedRecords).map(name => `GenericRecords.${name}`).sort());
+		for(const type of records) assert.equal(type.provenance.structure, `GenericRecords.${expectedRecords[type.name.slice("GenericRecords.".length)].structure}`, type.name);
 		// A definition only a provenance names is not a transport type; the Binding IR carries it.
 		assert.ok(!model.types.some(type => type.name === "GenericRecords.Marker"));
-		assertGenericRecordIr(model.bindingIr, "GenericRecords");
+		(specialized ? specializedGenericRecordCase.assertIr : assertGenericRecordIr)(model.bindingIr, "GenericRecords");
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -354,10 +391,21 @@ test("relocated source-free native packages construct and project alias-named ge
 			t.diagnostic(`installing and checking ${profile}`);
 			const target = genericRecordTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
-			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, dependencies, environment });
+			const { command, ...observation } = await installGenericRecordConsumer({ profile
+				, consumer
+				, handoff
+				, packages
+				, dependencies
+				, environment
+				, ...specialized ? { specialized: true
+					, source: specializedGenericRecordConsumer
+					, wit: [/echo-left: func\([^)]*: left-box\) -> left-box/u
+						, /echo-right: func\([^)]*: right-box\) -> right-box/u
+						, /echo-optional-boxes: func\([^)]*: optional-boxes\) -> optional-boxes/u] } : {} });
 			void command;
 			reports.push({ profile, path: "ordinary-source", ...observation, packages
 				, instantiations: genericRecordInstantiations
+				, ...specialized ? { specializations: genericRecordSpecializations() } : {}
 				, bindingIrSha256: built.bindingIrSha256
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
@@ -368,6 +416,9 @@ test("relocated source-free native packages construct and project alias-named ge
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.deepEqual(archives[1], archives[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_GENERIC_RECORD_REPORT ?? `build/generic-records/${profiles.join("-")}.json`);
+	const reportPath = resolve(process.env[specialized ? "LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT" : "LEAN_BRIDGE_GENERIC_RECORD_REPORT"] ?? `build/generic-records/${specialized ? "specialized-" : ""}${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+};
+
+test("relocated source-free native packages construct and project alias-named generic records", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledGenericRecords(t));
+test("relocated source-free native packages construct specialized generic records in two namespaces and Option/List aliases", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledGenericRecords(t, true));

@@ -42,12 +42,18 @@ export const genericRecordRustDiagnostics = (result, file, expected) => {
  * @param options - Installed consumer root and absolute compiler selection.
  * @param options.consumer - Consumer handoff root, with the author removed.
  * @param options.environment - Selected Cargo and rustc executables.
+ * @param options.specialized - Include the specialization and namespace controls.
  * @param observation - Successful public consumer execution.
  */
-export const checkGenericRecordRustTypes = async ({ consumer, environment }, observation) => {
+export const checkGenericRecordRustTypes = async ({ consumer, environment, specialized }, observation) => {
 	const root = join(consumer, "rust"), manifestPath = join(root, "Cargo.toml");
 	const manifest = await readFile(manifestPath, "utf8");
-	const sources = rejections.map(([name, code, body]) => ({ name, code, file: `invalid-${name}.rs`, source: `use genericrecords as api;\nfn main() { ${body} }\n` }));
+	const extra = specialized ? [
+		["namespace", "E0308", "let input = api::RightBox { value: 1u32.into(), count: 0u32.into() }; let _ = api::echo_left(&input);"]
+		, ["specialized-list", "E0308", "let input = Some(vec![api::NatBoxAgain { value: 1u32.into(), count: 0u32.into() }]); let _ = api::echo_optional_boxes(&input);"]
+		, ["specialized-option", "E0308", "let _ = api::echo_optional_nat(&Some(String::from(\"wrong\"))); "]
+	] : [];
+	const sources = [...rejections, ...extra].map(([name, code, body]) => ({ name, code, file: `invalid-${name}.rs`, source: `use genericrecords as api;\nfn main() { ${body} }\n` }));
 	await saveLakeFile(root, "Cargo.toml", manifest + sources.map(item => `\n[[bin]]\nname="invalid-${item.name}"\npath="${item.file}"\n`).join(""));
 	const compile = { ...copiedCleanEnvironment
 		, PATH: "/usr/bin:/bin"

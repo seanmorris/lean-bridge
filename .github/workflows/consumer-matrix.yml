@@ -1190,6 +1190,7 @@ jobs:
           test -s build/scalar-fin-rejection/report.json
           node --test tests/generic-records.test.mjs
           test -s build/generic-records/npm.json
+          test -s build/generic-records/specialized-npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
       - name: Build and install owned npm exports through real Nix
         shell: bash
@@ -1264,6 +1265,7 @@ jobs:
             build/browser-refinements/report.json
             build/scalar-fin-rejection/report.json
             build/generic-records/npm.json
+            build/generic-records/specialized-npm.json
             build/char-npm/
             build/word-npm/
             build/callables/npm/
@@ -1810,6 +1812,7 @@ jobs:
           test -s build/native-specializations/php-native.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/php-native.json
+          test -s build/generic-records/specialized-php-native.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/php-native.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs
@@ -1890,6 +1893,7 @@ jobs:
             build/native-fin/php.json
             build/native-specializations/php-native.json
             build/generic-records/php-native.json
+            build/generic-records/specialized-php-native.json
             build/native-fin-containers/php-native.json
             build/native-subtype/php-native.json
             build/variants/php-native.json
@@ -2255,6 +2259,7 @@ jobs:
           test -s build/native-subtype/c-cpp.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
           test -s build/generic-records/c-cpp.json
+          test -s build/generic-records/specialized-c-cpp.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
           test -s build/variants/cpp.json
           LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests/c-variants.test.mjs
@@ -2430,6 +2435,7 @@ jobs:
             build/native-fin-containers/reviewed-c-cpp.json
             build/native-subtype/c-cpp.json
             build/generic-records/c-cpp.json
+            build/generic-records/specialized-c-cpp.json
             build/variants/cpp.json
             build/variants/c.json
             build/recursive/c-family.json
@@ -2495,8 +2501,10 @@ jobs:
           test -s build/native-specializations/python.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/python.json
-          LEAN_BRIDGE_PYTHON="${{ steps.collection_python312.outputs.python-path }}" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
+          test -s build/generic-records/specialized-python.json
+          LEAN_BRIDGE_PYTHON="${{ steps.collection_python312.outputs.python-path }}" LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/python312.json
+          test -s build/generic-records/specialized-python312.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/python.json
           test -s build/native-fin-containers/reviewed-python.json
@@ -2577,7 +2585,9 @@ jobs:
             build/native-fin/python.json
             build/native-specializations/python.json
             build/generic-records/python.json
+            build/generic-records/specialized-python.json
             build/generic-records/python312.json
+            build/generic-records/specialized-python312.json
             build/native-fin-containers/python.json
             build/native-fin-containers/reviewed-python.json
             build/native-subtype/python.json
@@ -2677,6 +2687,7 @@ jobs:
           test -s build/native-specializations/rust.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=rust node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/rust.json
+          test -s build/generic-records/specialized-rust.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/rust.json
           test -s build/native-fin-containers/reviewed-rust.json
@@ -2727,6 +2738,7 @@ jobs:
             build/native-fin/rust.json
             build/native-specializations/rust.json
             build/generic-records/rust.json
+            build/generic-records/specialized-rust.json
             build/native-fin-containers/rust.json
             build/native-fin-containers/reviewed-rust.json
             build/native-subtype/rust.json
@@ -2796,7 +2808,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON='${{ steps.collection_python312.outputs.python-path }}' LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
@@ -2983,6 +2995,7 @@ jobs:
           test -s build/native-specializations/dotnet.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/dotnet.json
+          test -s build/generic-records/specialized-dotnet.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/dotnet.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs
@@ -3029,6 +3042,7 @@ jobs:
             build/native-fin/dotnet.json
             build/native-specializations/dotnet.json
             build/generic-records/dotnet.json
+            build/generic-records/specialized-dotnet.json
             build/native-fin-containers/dotnet.json
             build/native-subtype/dotnet.json
             build/variants/dotnet.json
@@ -3208,6 +3222,7 @@ jobs:
           test -s build/native-specializations/java-kotlin.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/java-kotlin.json
+          test -s build/generic-records/specialized-java-kotlin.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/java-kotlin.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs
@@ -3273,6 +3288,7 @@ jobs:
             build/native-fin/jvm.json
             build/native-specializations/java-kotlin.json
             build/generic-records/java-kotlin.json
+            build/generic-records/specialized-java-kotlin.json
             build/native-fin-containers/java-kotlin.json
             build/native-subtype/java-kotlin.json
             build/variants/jvm.json
@@ -3387,6 +3403,7 @@ jobs:
           test -s build/native-specializations/ruby.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/ruby.json
+          test -s build/generic-records/specialized-ruby.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/ruby.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs
@@ -3414,6 +3431,7 @@ jobs:
             build/native-fin/ruby.json
             build/native-specializations/ruby.json
             build/generic-records/ruby.json
+            build/generic-records/specialized-ruby.json
             build/native-fin-containers/ruby.json
             build/native-subtype/ruby.json
             build/variants/ruby.json
@@ -3694,6 +3712,7 @@ jobs:
           test -s build/native-specializations/wit-wasi.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/wit-wasi.json
+          test -s build/generic-records/specialized-wit-wasi.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/wit-wasi.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs
@@ -3941,6 +3960,7 @@ jobs:
             build/native-fin/wit.json
             build/native-specializations/wit-wasi.json
             build/generic-records/wit-wasi.json
+            build/generic-records/specialized-wit-wasi.json
             build/native-fin-containers/wit-wasi.json
             build/native-subtype/wit-wasi.json
             build/variants/wit.json

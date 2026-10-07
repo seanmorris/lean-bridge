@@ -27,6 +27,20 @@ const cases = {
 		, ["field", 'NatBox("wrong", BigInteger.ZERO)', "ARGUMENT_TYPE_MISMATCH"]
 		, ["missing", "NatBox(BigInteger.ONE)", "NO_VALUE_FOR_PARAMETER"]]
 };
+const specializedCases = {
+	dotnet: [
+		["namespace", "Api.EchoLeft(new RightBox(1, 0));", "CS1503"]
+		, ["specialized-field", 'new LeftBox("wrong", 0);', "CS1503"]
+		, ["specialized-missing", "new RightBox(1);", "CS7036"]]
+	, java: [
+		["namespace", "Api.echoLeft(new RightBox(BigInteger.ONE, BigInteger.ZERO));", "compiler.err.cant.apply.symbol"]
+		, ["specialized-field", 'new LeftBox("wrong", BigInteger.ZERO);', "compiler.err.cant.apply.symbol"]
+		, ["specialized-missing", "new RightBox(BigInteger.ONE);", "compiler.err.cant.apply.symbol"]]
+	, kotlin: [
+		["namespace", "Api.echoLeft(RightBox(BigInteger.ONE, BigInteger.ZERO))", "ARGUMENT_TYPE_MISMATCH"]
+		, ["specialized-field", 'LeftBox("wrong", BigInteger.ZERO)', "ARGUMENT_TYPE_MISMATCH"]
+		, ["specialized-missing", "RightBox(BigInteger.ONE)", "NO_VALUE_FOR_PARAMETER"]]
+};
 
 /**
  * Require every C# error to originate at the independently authored caller.
@@ -61,9 +75,10 @@ export const genericRecordDotnetDiagnostics = (result, root, file, expected) => 
  * @param options.profile - Selected dotnet, java or kotlin profile.
  * @param options.consumer - Source-free consumer handoff directory.
  * @param options.environment - Selected managed toolchains.
+ * @param options.specialized - Include the specialized namespace controls.
  * @param observation - Valid installed consumer result.
  */
-export const checkGenericRecordManagedTypes = async ({ profile, consumer, environment }, observation) => {
+export const checkGenericRecordManagedTypes = async ({ profile, consumer, environment, specialized }, observation) => {
 	assert.ok(Object.hasOwn(cases, profile));
 	const root = join(consumer, profile), dotnet = profile === "dotnet", java = profile === "java";
 	const extension = dotnet ? "cs" : java ? "java" : "kt";
@@ -97,13 +112,14 @@ export const checkGenericRecordManagedTypes = async ({ profile, consumer, enviro
 		repeatArgs = ["--enable-native-access=ALL-UNNAMED", "-cp", `${artifact}:${java ? root : join(root, "consumer.jar")}`, java ? "Consumer" : "ConsumerKt"];
 	}
 	const artifactSha256 = sha256(await readFile(artifact));
-	const positive = sourceFor(dotnet ? "Api.Bump(new NatBox(1, 0));" : `Api.bump(${java ? "new " : ""}NatBox(BigInteger.ONE, BigInteger.ZERO));`);
+	const positive = sourceFor((dotnet ? "Api.Bump(new NatBox(1, 0));" : `Api.bump(${java ? "new " : ""}NatBox(BigInteger.ONE, BigInteger.ZERO));`)
+		+ (specialized ? dotnet ? "Api.EchoLeft(new LeftBox(1, 0));" : `Api.echoLeft(${java ? "new " : ""}LeftBox(BigInteger.ONE, BigInteger.ZERO));` : ""));
 	const positiveFile = `valid.${extension}`;
 	await saveLakeFile(root, positiveFile, positive);
 	const accepted = await captureCorpusCompiler(command, argumentsFor(positiveFile), root, env);
 	assert.equal(accepted.code, 0, accepted.stdout + accepted.stderr);
 	const rejected = [];
-	for(const [name, statement, expected] of cases[profile])
+	for(const [name, statement, expected] of [...cases[profile], ...specialized ? specializedCases[profile] : []])
 	{
 		const file = `invalid-${name}.${extension}`, source = sourceFor(statement);
 		await saveLakeFile(root, file, source);

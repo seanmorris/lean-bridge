@@ -81,7 +81,7 @@ export const assertGenericRecordIr = (ir, module) => {
 };
 
 /** Node consumer: every export through its alias-named records, plus shape rejections and recovery. */
-const nodeConsumer = () => `import assert from "node:assert/strict";
+export const genericRecordNodeConsumer = () => `import assert from "node:assert/strict";
 import * as api from "onboarding-small";
 let checks = 0, rejections = 0;
 const check = (ok, label) => { if(!ok) throw new Error("failed: " + label); checks++; };
@@ -120,11 +120,12 @@ console.log(JSON.stringify({ checks, rejections }));
  * @param options.build - Builds the canonical project for npm.
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param options.engineRoot - Checkout containing the TypeScript compiler.
+ * @param options.specialized - Optional additional source, configured exports and public caller checks.
  */
-export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot }) => {
+export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized }) => {
 	const { directory, root } = await project(t);
-	await saveLakeFile(root, "OnboardingSmall.lean", await genericRecordSource("OnboardingSmall"));
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")) }));
+	await saveLakeFile(root, "OnboardingSmall.lean", specialized ? await specialized.source("OnboardingSmall") : await genericRecordSource("OnboardingSmall"));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")), ...specialized?.configuration("OnboardingSmall") }));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	for(const [index, projectRoot] of [root, moved].entries())
@@ -133,7 +134,7 @@ export const checkGenericRecordNpmPackages = async (t, { fixture: project, build
 		await build(projectRoot, outputRoot).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 		const plan = JSON.parse(await readFile(join(outputRoot, "bundle/locks/compiler-adapters.json"), "utf8"));
 		assert.equal(plan.privateAbi.version, 7, "alias-named records with an Option field select the nominal ABI");
-		assertGenericRecordIr(JSON.parse(await readFile(join(outputRoot, "bundle/binding/binding-ir.json"), "utf8")), "OnboardingSmall");
+		(specialized?.assertIr ?? assertGenericRecordIr)(JSON.parse(await readFile(join(outputRoot, "bundle/binding/binding-ir.json"), "utf8")), "OnboardingSmall");
 		releases.push(await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
 		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
 		assert.deepEqual(await lakeInputState(projectRoot), before);
@@ -146,11 +147,11 @@ export const checkGenericRecordNpmPackages = async (t, { fixture: project, build
 	const consumer = join(directory, "consumer"); await mkdir(consumer);
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
 	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
-	await saveLakeFile(consumer, "index.mjs", nodeConsumer());
+	await saveLakeFile(consumer, "index.mjs", specialized ? await specialized.nodeConsumer() : genericRecordNodeConsumer());
 	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout.trim());
-	assert.deepEqual(result, { checks: 1010, rejections: 1005 });
+	assert.deepEqual(result, specialized?.expectedNodeResult ?? { checks: 1010, rejections: 1005 });
 	// Strict TypeScript sees one interface per alias; a structurally equal alias is a separate declaration.
 	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
 	for(const name of Object.keys(genericRecordInstantiations).filter(name => name !== "Boxes")) assert.match(declarations, new RegExp(`export interface ${name} \\{`), name);
@@ -167,7 +168,7 @@ const sum: bigint = api.total(boxes) + api.unpair({ first: box, second: { value:
 api.bump({ value: 1, count: 2n });
 // @ts-expect-error Every field is required.
 api.shout({ value: "x" });
-void again; void pair; void sum; void tagged; void marker;
+void again; void pair; void sum; void tagged; void marker;${specialized?.typescript ?? ""}
 `);
 	await processBuildRunner.capture({ command: process.execPath, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	return { archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), abi: 7, ...result };
@@ -180,12 +181,13 @@ void again; void pair; void sum; void tagged; void marker;
  */
 export const installGenericRecordConsumer = async options => {
 	const observation = await installCopiedConsumer({ ...options, fixture: {
-		source: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8")
+		source: options.source ?? ((profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8"))
 		// Each alias is its own WIT record with the structure's fields instantiated; two aliases of one application stay distinct.
 		, wit: [...["nat-box", "nat-box-again", "text-box", "word-pair", "maybe-box", "box-pair", "tagged-nat", "marker-tag"].map(name => new RegExp(`record ${name} \\{`))
 			, /bump: func\([^)]*: nat-box\) -> nat-box/
 			, /unpair: func\([^)]*: box-pair\) -> /
-			, /type (bridge-value-\d+) = list<nat-box>;[\s\S]*?type boxes = \1;[\s\S]*?type (bridge-alias-value-\d+) = option<boxes>;[\s\S]*?first-boxes: func\([^)]*\) -> \2;/u]
+			, /type (bridge-value-\d+) = list<nat-box>;[\s\S]*?type boxes = \1;[\s\S]*?type (bridge-alias-value-\d+) = option<boxes>;[\s\S]*?first-boxes: func\([^)]*\) -> \2;/u
+			, ...options.wit ?? []]
 		, success: "generic-records-ok"
 	} });
 	if(options.profile === "rust") return { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) };
