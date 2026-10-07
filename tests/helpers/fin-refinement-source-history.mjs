@@ -37,6 +37,7 @@ import { nativeSubtypeChangedPaths } from "./native-subtype-source-history.mjs";
 import { refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { browserRefinementsChangedPaths } from "./browser-refinements-source-history.mjs";
 import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
+import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -537,6 +538,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...refinementAuditChangedPaths
 	, ...browserRefinementsChangedPaths
 	, ...scalarFinRejectionChangedPaths
+	, ...scalarFinWordingChangedPaths
 ])].sort());
 
 /**

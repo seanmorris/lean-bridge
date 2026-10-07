@@ -12,6 +12,7 @@ import { compileComponentCopiedCodec } from "../src/release/component-copied-cod
 import { compileComponentCopiedCall } from "../src/release/component-copied-runtime.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { generateComponentRecordAdapters } from "../src/build/component-record-adapters.mjs";
+import { assertRefinement } from "../src/abi/refinements.mjs";
 import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { createComponentRuntime } from "../src/release/component-runtime.mjs";
@@ -86,10 +87,25 @@ test("checked record inputs reject recoverably and release every decoded object"
 		, refinements: { parameters: [{ kind: "subtype", constructor: "Records.checkedText" }, null] } }]);
 	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${item.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
 	assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
-	// A top-level Fin beside a record gets the same validator and status instead of a Lean panic.
-	const fin = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId, refinements: { parameters: [null, { kind: "fin", bound: "10" }] } }]);
-	assert.match(fin, new RegExp(`lean_inc\\(a1\\);\\n {2}if \\(!${item.symbol}_refinement_1\\(a1\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
-	assert.ok(fin.indexOf(`${item.symbol}_refinement_1(a1)`) < fin.indexOf(`${item.symbol}_lean(a0, a1)`));
+});
+
+// A top-level Fin beside a record gets the same validator and status as a Subtype instead of a Lean panic.
+test("checked scalar Fin bounds beside records fail the call before dispatch", () => {
+	const ir = recordReviewedIr();
+	const declaration = ir.declarations[0];
+	declaration.parameters.push({ ...declaration.parameters[0], name: "digit", type: primitive("nat") });
+	const abi = createComponentPrivateAbi(ir), item = abi.exports[0];
+	assert.deepEqual(item.parameters.map(type => type.kind), ["named", "primitive"]);
+	const refinements = { parameters: [null, { kind: "fin", bound: "184467440737095516170" }], result: null };
+	refinements.parameters.forEach((refinement, index) => assertRefinement(refinement, item.parameters[index]));
+	assert.throws(() => assertRefinement(refinements.parameters[1], item.parameters[0]), /does not match its transport type/u);
+	const c = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId, refinements }]);
+	assert.match(c, new RegExp(`extern uint8_t ${item.symbol}_refinement_1\\(lean_object \\*\\);`));
+	// The retained reference is consumed by the validator; a rejection releases both originals once and returns the copied status.
+	assert.match(c, new RegExp(`lean_inc\\(a1\\);\\n {2}if \\(!${item.symbol}_refinement_1\\(a1\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
+	assert.equal(c.match(new RegExp(`${item.symbol}_refinement_1\\(a1\\)`, "gu")).length, 1);
+	assert.doesNotMatch(c, new RegExp(`${item.symbol}_refinement_0`));
+	assert.ok(c.indexOf(`${item.symbol}_refinement_1(a1)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
 });
 
 test("record ABI rejects mismatched nominal identities, fields, ownership and unsupported kinds", () => {

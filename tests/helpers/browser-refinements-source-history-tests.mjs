@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeScalarFinRejectionSource, scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
+import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { beforeBrowserRefinementsSource, browserRefinementsChangedPaths
 	, browserRefinementsHistoryPath, reverseBrowserRefinementsUpdate } from "./browser-refinements-source-history.mjs";
 
@@ -73,7 +74,7 @@ test("Browser refinements evidence adds one receipt and one Fin and one Subtype 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeBrowserRefinementsSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeScalarFinRejectionSource(file.path, source)));

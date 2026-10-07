@@ -1,0 +1,722 @@
+{
+  "schemaVersion": 1,
+  "milestone": "scalar-fin-wording-v1",
+  "predecessorCommit": "9740bb0dadef59ea92b0acada2b21e783c19fc18",
+  "updates": [
+    {
+      "path": "docs/evidence/npm-scalar-fin-rejection-20261007.md",
+      "currentSha256": "cb3d91f3db93f255488e3a50981e48d23a4b558a9986c923676144a1f8994850",
+      "previousSha256": "9e83dd82f101e92b17e605143337153b7755c6e759a3439a769898675a21eb88",
+      "edits": [
+        {
+          "start": 2623,
+          "previous": "The consumer calls each export through the public API and through the package-internal runtime. Valid controls: endpoints of every bound, `huge` at its bound minus one, `pair(2, 3) = 11`, `tenth(123) = 3` and `tenth(2^70) = 4` with no rejection, `mix(\"λ🙂\", 0)`, and the ABI's own export. Rejections: at-bound, beyond-bound and `2^70` for every bound, `Fin 0` for 0 and 1, late rejection of `pair`'s second argument after the first passed, `mix` rejected by the `Subtype` validator on empty text and by the `Fin` bound after a 4 KiB `String` passed the validator, 500 such cycles releasing the string each time, a host callback that is not invoked when the `Fin` beside it is rejected, and 1,000 cycles alternating direct and public rejections with valid calls. A direct rejection must carry the ABI's exact status message, and the consumer's stderr must be empty, where the pre-repair wrapper printed its panic.\n",
+          "current": "The consumer calls each export through the public API and through the package-internal runtime. Valid controls: endpoints of every bound, `huge` at its bound minus one, `pair(2, 3) = 11`, `tenth(123) = 3` and `tenth(2^70) = 4` with no rejection, `mix(\"λ🙂\", 0)`, and the ABI's own export. Rejections: at-bound, beyond-bound and `2^70` for every bound, `Fin 0` for 0 and 1, late rejection of `pair`'s second argument after the first passed, `mix` rejected by the `Subtype` validator on empty text and by the `Fin` bound after a 4 KiB `String` passed the validator, 500 such cycles releasing the string each time, a host callback that is not invoked when the `Fin` beside it is rejected, and 1,000 cycles alternating direct and public rejections with valid calls. A direct rejection must carry the ABI's exact status message, and the consumer's stderr must be empty: the pre-repair wrapper printed its panic diagnostic there on every invalid direct call, so the invalid calls now return the C-entry status without that diagnostic. The recovery cycles exercise the generated rejection cleanup (`lean_dec` of each retained original) on heap-backed arguments and show the runtime stays usable; they do not measure released allocations.\n"
+        },
+        {
+          "start": 3855,
+          "previous": "Dispatch observables in the installed Wasm artifact: a valid call's result can only come from the source (`mirror(3) = 6`), the host callback counter in the callable fixture advances once per valid call and not at all for a rejected one, and an empty stderr shows the typed wrapper's guard never ran, so the rejection happened at the C entry. The status value distinguishes the C entry (6 or 5) from a wrapper panic (a success with a default value and a stderr line).\n",
+          "current": "What places the rejection: source inspection of the generated C entry puts the validator call and its `return 5`/`return 6` before the `<symbol>_lean` wrapper call and therefore before the source, and the contract tests pin that order. In the installed Wasm artifact, a valid call's result can only come from the source (`mirror(3) = 6`), the host callback counter in the callable fixture advances once per valid call and not at all on a rejected one, and an invalid direct call returns the C-entry status without the old panic diagnostic. Valid calls do execute the wrapper's guard on their way to the source; an empty stderr therefore shows only that no invalid call reached that guard's rejection branch.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f586a8719872c9335c820d68b4d83ea8a4756a49ae0e5f98e869cbd09518dfe9",
+      "previousSha256": "e4fffec046932cc4877596c9f4ae3187b49e2e6c7290368db82183cedbe2b42b",
+      "edits": [
+        {
+          "start": 27989,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 654674,
+          "previous": "          \"sha256\": \"d07cdc74fff2d6b3afc6a2b4e79de17f67e8a9bdb1b31545ce701984b3a91358\"\n",
+          "current": "          \"sha256\": \"65827f5af81dd7ae73405c368949e6b304287c4b3c8f6e30441000dc6aa18425\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"2ac2bec5eb1b26211cf6e10abc85a0435fead7ea8ac3dadf39d9421cf6813b3c\"\n",
+          "current": "          \"sha256\": \"ba21522da32361f19526a29dff5514dc50bb7a47efc72b947b1ee3c77447ffb9\"\n"
+        },
+        {
+          "start": 684813,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 698844,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 710219,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 724439,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 735893,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 747964,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 759252,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 767835,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 774293,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 782679,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 790656,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 813586,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1055179,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1061877,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1068880,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1076386,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1083340,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1090974,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1109339,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1124274,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1132321,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1141293,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1150684,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1163707,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1196819,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1227063,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1259999,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1299302,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1325843,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1348223,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1368115,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1389568,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1402587,
+          "previous": "          \"sha256\": \"de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11\"\n",
+          "current": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"2ac2bec5eb1b26211cf6e10abc85a0435fead7ea8ac3dadf39d9421cf6813b3c\"\n",
+          "current": "          \"sha256\": \"ba21522da32361f19526a29dff5514dc50bb7a47efc72b947b1ee3c77447ffb9\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"2ac2bec5eb1b26211cf6e10abc85a0435fead7ea8ac3dadf39d9421cf6813b3c\"\n",
+          "current": "          \"sha256\": \"ba21522da32361f19526a29dff5514dc50bb7a47efc72b947b1ee3c77447ffb9\"\n"
+        },
+        {
+          "start": 1424802,
+          "previous": "          \"sha256\": \"d07cdc74fff2d6b3afc6a2b4e79de17f67e8a9bdb1b31545ce701984b3a91358\"\n",
+          "current": "          \"sha256\": \"65827f5af81dd7ae73405c368949e6b304287c4b3c8f6e30441000dc6aa18425\"\n"
+        },
+        {
+          "start": 1431674,
+          "previous": "      \"scope\": \"One ordinary-source fixture per private ABI that carries scalar exports (scalar 2, callable 3, copied 4, record 5, compound 6, nominal 7), each with a Fin 10 alias, Fin 0, Fin 1, a bound above 64 bits, a two-Fin export, a result-only Fin and a contract-checked String Subtype beside a Fin, plus the shape that selects the ABI. Each build asserts the selected ABI and one exported Lean validator per refined parameter, reproduces its archive from two clean roots, installs offline with the source removed, and passes scalar (ABI 2) 1535 checks and 2546 rejections, callable (ABI 3) 1537 checks and 2548 rejections, copied (ABI 4) 1536 checks and 2548 rejections, record (ABI 5) 1536 checks and 2548 rejections, compound (ABI 6) 1536 checks and 2548 rejections, nominal (ABI 7) 1536 checks and 2548 rejections through the public API and the package-internal runtime: endpoints, at-bound, beyond-bound and 2^70 inputs, late rejection of the second argument after the first passed, Subtype rejection before and Fin rejection after a passing Subtype with a 4 KiB String released on each, a host callback that never runs on a rejected Fin, result-only Fin never rejecting, and 1,000 rejection and recovery cycles. A direct call with an out-of-bound value fails with the ABI's call status (6 on the scalar and callable ABIs, 5 on the copied family) and nothing reaches stderr, where the pre-repair wrapper printed its panic.\",\n",
+          "current": "      \"scope\": \"One ordinary-source fixture per private ABI that carries scalar exports (scalar 2, callable 3, copied 4, record 5, compound 6, nominal 7), each with a Fin 10 alias, Fin 0, Fin 1, a bound above 64 bits, a two-Fin export, a result-only Fin and a contract-checked String Subtype beside a Fin, plus the shape that selects the ABI. Each build asserts the selected ABI and one exported Lean validator per refined parameter, reproduces its archive from two clean roots, installs offline with the source removed, and passes scalar (ABI 2) 1535 checks and 2546 rejections, callable (ABI 3) 1537 checks and 2548 rejections, copied (ABI 4) 1536 checks and 2548 rejections, record (ABI 5) 1536 checks and 2548 rejections, compound (ABI 6) 1536 checks and 2548 rejections, nominal (ABI 7) 1536 checks and 2548 rejections through the public API and the package-internal runtime: endpoints, at-bound, beyond-bound and 2^70 inputs, late rejection of the second argument after the first passed, Subtype rejection before and Fin rejection after a passing Subtype with a 4 KiB String released on each, a host callback that never runs on a rejected Fin, result-only Fin never rejecting, and 1,000 rejection and recovery cycles. A direct call with an out-of-bound value returns the ABI's call status (6 on the scalar and callable ABIs, 5 on the copied family) without the panic diagnostic the pre-repair wrapper printed to stderr; source inspection and the contract tests place that status before the wrapper and source dispatch, and the callback counter observes no callback on rejected calls. The recovery cycles exercise the generated rejection cleanup on heap-backed arguments without measuring released allocations.\",\n"
+        },
+        {
+          "start": 1435170,
+          "previous": "          \"sha256\": \"9e83dd82f101e92b17e605143337153b7755c6e759a3439a769898675a21eb88\"\n",
+          "current": "          \"sha256\": \"cb3d91f3db93f255488e3a50981e48d23a4b558a9986c923676144a1f8994850\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "ba21522da32361f19526a29dff5514dc50bb7a47efc72b947b1ee3c77447ffb9",
+      "previousSha256": "2ac2bec5eb1b26211cf6e10abc85a0435fead7ea8ac3dadf39d9421cf6813b3c",
+      "edits": [
+        {
+          "start": 3542,
+          "previous": "",
+          "current": "import \"./helpers/scalar-fin-wording-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-record-contract.test.mjs",
+      "currentSha256": "65827f5af81dd7ae73405c368949e6b304287c4b3c8f6e30441000dc6aa18425",
+      "previousSha256": "d07cdc74fff2d6b3afc6a2b4e79de17f67e8a9bdb1b31545ce701984b3a91358",
+      "edits": [
+        {
+          "start": 790,
+          "previous": "",
+          "current": "import { assertRefinement } from \"../src/abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 5815,
+          "previous": "\t// A top-level Fin beside a record gets the same validator and status instead of a Lean panic.\n\tconst fin = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId, refinements: { parameters: [null, { kind: \"fin\", bound: \"10\" }] } }]);\n\tassert.match(fin, new RegExp(`lean_inc\\\\(a1\\\\);\\\\n {2}if \\\\(!${item.symbol}_refinement_1\\\\(a1\\\\)\\\\) \\\\{ lean_dec\\\\(a0\\\\); lean_dec\\\\(a1\\\\); return 5; \\\\}`));\n\tassert.ok(fin.indexOf(`${item.symbol}_refinement_1(a1)`) < fin.indexOf(`${item.symbol}_lean(a0, a1)`));\n",
+          "current": "});\n\n// A top-level Fin beside a record gets the same validator and status as a Subtype instead of a Lean panic.\ntest(\"checked scalar Fin bounds beside records fail the call before dispatch\", () => {\n\tconst ir = recordReviewedIr();\n\tconst declaration = ir.declarations[0];\n\tdeclaration.parameters.push({ ...declaration.parameters[0], name: \"digit\", type: primitive(\"nat\") });\n\tconst abi = createComponentPrivateAbi(ir), item = abi.exports[0];\n\tassert.deepEqual(item.parameters.map(type => type.kind), [\"named\", \"primitive\"]);\n\tconst refinements = { parameters: [null, { kind: \"fin\", bound: \"184467440737095516170\" }], result: null };\n\trefinements.parameters.forEach((refinement, index) => assertRefinement(refinement, item.parameters[index]));\n\tassert.throws(() => assertRefinement(refinements.parameters[1], item.parameters[0]), /does not match its transport type/u);\n\tconst c = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId, refinements }]);\n\tassert.match(c, new RegExp(`extern uint8_t ${item.symbol}_refinement_1\\\\(lean_object \\\\*\\\\);`));\n\t// The retained reference is consumed by the validator; a rejection releases both originals once and returns the copied status.\n\tassert.match(c, new RegExp(`lean_inc\\\\(a1\\\\);\\\\n {2}if \\\\(!${item.symbol}_refinement_1\\\\(a1\\\\)\\\\) \\\\{ lean_dec\\\\(a0\\\\); lean_dec\\\\(a1\\\\); return 5; \\\\}`));\n\tassert.equal(c.match(new RegExp(`${item.symbol}_refinement_1\\\\(a1\\\\)`, \"gu\")).length, 1);\n\tassert.doesNotMatch(c, new RegExp(`${item.symbol}_refinement_0`));\n\tassert.ok(c.indexOf(`${item.symbol}_refinement_1(a1)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-refinements-source-history-tests.mjs",
+      "currentSha256": "b8ff9017f50e45228b641755cbdaa52562a16db2c6a22c74ce31842305441f0e",
+      "previousSha256": "db1af50fd491acd27f2cada15493f458ed9ee8ff469e9ff4ef9dd7b367406db5",
+      "edits": [
+        {
+          "start": 483,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 5127,
+          "previous": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "c5e7e7c136e5dcfd4d7839b4d7531ab5395be042e00618155e1256d58a914e60",
+      "previousSha256": "a76dac0809fcfd6a35fb263bac73af53d73f922ef3fefe9366e0d8c40a6ed73d",
+      "edits": [
+        {
+          "start": 1794,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4406,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "c2508ce66ca4330e70b544ee9578cb22d44f1189146548301fa4bf3023e167e1",
+      "previousSha256": "7c89972854685fb3875620ad9b6df390c54c40a3e8d95447fc88ef9504af99a7",
+      "edits": [
+        {
+          "start": 1654,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4031,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "ae88465ebf881d526615a2aff09757803f08f1ff92056690c860b9e1ee525a8b",
+      "previousSha256": "3377252962728dac32e28aeb59f325471d69773cea79d2e6ce20d54ab408487e",
+      "edits": [
+        {
+          "start": 1793,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4503,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "3ae6be4ba059376a58002f5c01774cbcaf04c9ae5f2c33973c7510da1ab26294",
+      "previousSha256": "21cb6f326ecd206087a49cd981732221af079c781a92b641caf7fe75cfa3b9ff",
+      "edits": [
+        {
+          "start": 1356,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3647,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "57032422e4a7b0f899d3825692e646cb99e130ae36c4d650ce48ca656abf454a",
+      "previousSha256": "648661ac2c050e80927998b74443f74674e2c53f24e9a85b4b78d823890d0d12",
+      "edits": [
+        {
+          "start": 1079,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3472,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "52cf5bd8b0d56f0a9e0f7a92cd97dc6c4425e3514a8e5435fb26e9a6a3c37992",
+      "previousSha256": "d4dc7492e4a822831c4abef6196f8c6a155298562f80121170567dbcd8a8b505",
+      "edits": [
+        {
+          "start": 2855,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 37047,
+          "previous": "",
+          "current": "\t, ...scalarFinWordingChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/host-fin-evidence-source-history-tests.mjs",
+      "currentSha256": "16c8887804d3cf48bc3f89b4b33b3fce7812921798785dbef1df18a52405adb8",
+      "previousSha256": "0061696ceff2d9e2ee233f2eec59ef8cbf09fe16bed5ad1c608225579b9e6685",
+      "edits": [
+        {
+          "start": 932,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 5589,
+          "previous": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "72e6fe712768c5dd7beaffd24efc1bfde3953b4f71de3854d6b7e9af95b10ef7",
+      "previousSha256": "22f706baaf8edce53a811750a85b0a510f10b221668782b92da71fef5612162d",
+      "edits": [
+        {
+          "start": 1288,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3535,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-containers-source-history-tests.mjs",
+      "currentSha256": "f4cb5d85a2c27c2e272737716150164a51dab2ca24eb47d91ea282aadb2b195d",
+      "previousSha256": "9c3988e8d395ff93650cc97a242ff07b2dcc1816e8b3c322f47dda55d6cc9e49",
+      "edits": [
+        {
+          "start": 736,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 6549,
+          "previous": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "3862ee0d520dca58c7d9d9201d3b470de685e46ca1d7085f8febcd2685346ac8",
+      "previousSha256": "a0c9722531d94348d1a4394b7f49630b0133799ec5ced7541c0d879e298402ef",
+      "edits": [
+        {
+          "start": 1795,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 5668,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-specializations-source-history-tests.mjs",
+      "currentSha256": "73aef0b84b3a1808388dbbd0588f5b22ecd39ee46a5a3226ec00fb6c13d16fef",
+      "previousSha256": "08fc6cc603758d0da61994ab8c3f753d05db15710e25a4b2925d256f1d81e854",
+      "edits": [
+        {
+          "start": 837,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 5796,
+          "previous": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history-tests.mjs",
+      "currentSha256": "ef064f77b9ce35e8b266235b9c400796926e32ccb5542bc4141e7654aad9e9dc",
+      "previousSha256": "cb506c2ae27f3b21a08ee348b2b52ba555b3d4e293541cb2fd15d8ab1e5ddcd2",
+      "edits": [
+        {
+          "start": 651,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 5589,
+          "previous": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "2fe615845d006e4c4b2e3166e7b0cbc6d0ef1c7b6c59883d191a25aed350b3f6",
+      "previousSha256": "fe41a63877363aaaf44353192e92da694c5eeb8884d2bfef03257d02bc179b2d",
+      "edits": [
+        {
+          "start": 1792,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4585,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "5e0ad4ea45e90283cd4075377ce565cc9df436f5dbc854db47f7bc23c7876803",
+      "previousSha256": "057fb8316653eea8a4a2f93c70af8e8c0c1c30dad9cf3adb34e87726d2027297",
+      "edits": [
+        {
+          "start": 1010,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3291,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "e378c6858c00abd523424f930c70302d1f954591720835dde5532fafc9db38cb",
+      "previousSha256": "c1163bf39054a6317a28cdb99dc6bfcfe7111a673708f1c33f466dd7ca87412c",
+      "edits": [
+        {
+          "start": 1221,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3468,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "5b48455880bc74510d05dff57df2b6c1f82d22e3bf7e50de655dc558834da3b8",
+      "previousSha256": "d2f2c6003c2e7adeb15ce121a7aba55fb81c6363d92556b9a1f0075d5f9d40ae",
+      "edits": [
+        {
+          "start": 1570,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3867,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-audit-source-history-tests.mjs",
+      "currentSha256": "860e39b4d2925c7ccd82d0a9c27f4ad291a54a18053747a4f4896dba5ea8c91f",
+      "previousSha256": "faa3334429f2fe0f1f83e78cc1010135424f5d546ff5e60dd356b19c6e431fad",
+      "edits": [
+        {
+          "start": 571,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3053,
+          "previous": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "b997a27d653c5dbbbd142e690043811f4f236282400725b5de9c5cea8cd9a5ef",
+      "previousSha256": "06a45dd9eb56308857a2a53bd586d9895891633ac4f70517e1720b641b94ee77",
+      "edits": [
+        {
+          "start": 1432,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3701,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "3a7623285be024b8a4e66a75fb6269379fc75963070d7af798792af96134ec53",
+      "previousSha256": "672e1a2084ed0281eae73b656741d2b55460c7b95d709460241535ade7eb7ebc",
+      "edits": [
+        {
+          "start": 1732,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4116,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "ce1633c7f74b8f185c82a0f2dbd67f5be99b35e740b2ae0483e626cccb1a9de4",
+      "previousSha256": "9aca78a597503a09cd93da0bfbbbeee472181f38f651a64c7ed6b9e83aa9b0d4",
+      "edits": [
+        {
+          "start": 1499,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3764,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-source-history-tests.mjs",
+      "currentSha256": "9f8d797dac939cd693b335092fb3121bf3a00bdf88c0b93b7730c0628a24a7b7",
+      "previousSha256": "a39e9a63e9f0eb0773a0b3d5d92d2d057b24614891fed9f37082f5627d7a7ee7",
+      "edits": [
+        {
+          "start": 360,
+          "previous": "",
+          "current": "import { beforeScalarFinWordingSource, scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 1077,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeScalarFinWordingSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2458,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeScalarFinRejectionSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeScalarFinWordingSource(path, text)), previous = JSON.parse(beforeScalarFinRejectionSource(path, text));\n"
+        },
+        {
+          "start": 5574,
+          "previous": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 5863,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeScalarFinWordingSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-source-history.mjs",
+      "currentSha256": "aa1e71e68df27efccd0aef1a8ee9c0cff6242685da89097626d923fcb6f4f0f1",
+      "previousSha256": "d2eb49681472e1f97c78176be6a2f4042ce6575081e5fa18bd90aed310d2f6d1",
+      "edits": [
+        {
+          "start": 229,
+          "previous": "",
+          "current": "import { beforeScalarFinWordingSource } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4188,
+          "previous": "",
+          "current": "\tsource = beforeScalarFinWordingSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "23d2fca3301b610a400f414bbae6b7a5e9115ff7fd4476611b38a8c986c75f41",
+      "previousSha256": "a15a27dc48b7d6f557c8808ba2a38249017eee918d210234a8be3feb79ebd187",
+      "edits": [
+        {
+          "start": 1817,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 4692,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "b7ab14ce59b6f0f060487df3467b0c1d7498b2d1eed44b7dcd09300fd8d0b11a",
+      "previousSha256": "b6a9b0f33c6816503353ec0b8c10f3d18b492cc647532ad4516239ad1f5458ed",
+      "edits": [
+        {
+          "start": 1163,
+          "previous": "",
+          "current": "import { scalarFinWordingChangedPaths } from \"./scalar-fin-wording-source-history.mjs\";\n"
+        },
+        {
+          "start": 3428,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6",
+      "previousSha256": "de1d789ee1c4c6e4bace97ff0d47f2187b2a91170029f2693660e685211b6a11",
+      "edits": [
+        {
+          "start": 33427,
+          "previous": "\tassert.match(evidence.scope, /nothing reaches stderr/u);\n",
+          "current": "\tassert.match(evidence.scope, /without the panic diagnostic the pre-repair wrapper printed to stderr/u);\n"
+        }
+      ]
+    }
+  ]
+}

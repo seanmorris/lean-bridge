@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementAuditSource, refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { browserRefinementsChangedPaths } from "./browser-refinements-source-history.mjs";
 import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
+import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { beforeNativeSubtypeSource, nativeSubtypeChangedPaths
 	, nativeSubtypeHistoryPath, reverseNativeSubtypeUpdate } from "./native-subtype-source-history.mjs";
 
@@ -83,7 +84,7 @@ test("Native Subtype evidence adds one receipt and one Subtype cell per host gro
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeSubtypeSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeRefinementAuditSource(file.path, source)));

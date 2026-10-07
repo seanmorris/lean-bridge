@@ -480,7 +480,7 @@ test("scalar Fin rejection evidence backs every npm Fin cell's generation and co
 	const evidence = document.evidence.find(entry => entry.id === "npm-scalar-fin-rejection-installed");
 	assert.equal(evidence.kind, "installed");
 	assert.match(evidence.scope, /scalar 2, callable 3, copied 4, record 5, compound 6, nominal 7/u);
-	assert.match(evidence.scope, /nothing reaches stderr/u);
+	assert.match(evidence.scope, /without the panic diagnostic the pre-repair wrapper printed to stderr/u);
 	assert.equal(evidence.artifacts.length, 7);
 	assert.ok(evidence.files.some(file => file.path === "src/build/component-scalar-adapters.mjs"));
 	// The browser receipt cites the same repaired revision, so no Fin claim points at the pre-repair artifacts.
