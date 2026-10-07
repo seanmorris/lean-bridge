@@ -188,22 +188,19 @@ test("direct and aliased Array, List, Option, Prod and Except keep their metadat
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], exports, targets: Object.fromEntries([genericRecordTargets.c]) }));
 	await buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: genericRecordEnvironment(["c"]) }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
-	const shape = type => type.kind === "alias" ? `${type.name.split(".").at(-1)}=${shape(type.target)}` : type.kind === "record" ? `record:${type.name.split(".").at(-1)}` : type.element ? `${type.kind}(${shape(type.element)})` : type.arguments ? `${type.kind}(${type.arguments.map(shape).join(",")})` : type.name;
-	const signature = name => { const item = model.exports.find(item => item.name === `GenericRecords.${name}`); return `${item.parameters.map(parameter => shape(parameter.type)).join(", ")} -> ${shape(item.result)}`; };
-	assert.equal(signature("tupleDirect"), "tuple(nat,string) -> tuple(nat,string)");
-	assert.equal(signature("tupleAlias"), "Pairish=tuple(nat,string) -> Pairish=tuple(nat,string)");
-	assert.equal(signature("arrayDirect"), "array(nat) -> array(nat)");
-	assert.equal(signature("arrayAlias"), "Nums=array(nat) -> Nums=array(nat)");
-	assert.equal(signature("listDirect"), "list(string) -> list(string)");
-	assert.equal(signature("listAlias"), "Names=list(string) -> Names=list(string)");
-	assert.equal(signature("optionDirect"), "option(nat) -> option(nat)");
-	assert.equal(signature("optionAlias"), "MaybeNat=option(nat) -> MaybeNat=option(nat)");
-	assert.equal(signature("exceptDirect"), "result(nat,string) -> result(nat,string)");
-	assert.equal(signature("exceptAlias"), "Outcome=result(nat,string) -> Outcome=result(nat,string)");
+	// The Binding IR keeps alias names as definitions; the native transport resolves them to their targets.
+	const ir = model.bindingIr, definitions = new Map(ir.types.map(type => [type.id, type]));
+	const shape = type => type.kind === "named" ? definition(definitions.get(type.id)) : type.kind === "apply" ? `${type.constructor}(${type.arguments.map(shape).join(",")})` : type.name;
+	const definition = type => type.kind === "alias" ? `${type.id.split(".").at(-1)}=${shape(type.target)}` : `${type.kind}:${type.id.split(".").at(-1)}`;
+	const signature = name => { const item = ir.declarations.find(item => item.source.declaration === `GenericRecords.${name}`); return `${item.parameters.map(parameter => shape(parameter.type)).join(", ")} -> ${shape(item.result.type)}`; };
 	assert.equal(signature("bump"), "record:NatBox -> record:NatBox");
 	// The controls define no record and carry no instantiation; the alias-named records are unchanged beside them.
-	assert.deepEqual(model.bindingIr.types.filter(type => type.kind === "record").map(type => type.id).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `lean:GenericRecords.${name}`).sort());
-	assertGenericRecordIr(model.bindingIr, "GenericRecords");
+	assert.deepEqual(ir.types.filter(type => type.kind === "record").map(type => type.id).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `lean:GenericRecords.${name}`).sort());
+	assertGenericRecordIr(ir, "GenericRecords");
+	// The native transport resolves the aliases to their targets and keeps the tuple and result shapes.
+	const transport = type => type.element ? `${type.kind}(${transport(type.element)})` : type.arguments ? `${type.kind}(${type.arguments.map(transport).join(",")})` : type.name;
+	assert.equal(transport(model.exports.find(item => item.name === "GenericRecords.tupleAlias").parameters[0].type), "tuple(nat,string)");
+	assert.equal(transport(model.exports.find(item => item.name === "GenericRecords.exceptAlias").result), "result(nat,string)");
 });
 
 test("every selected native profile has a generic record consumer", async () => {
@@ -229,8 +226,10 @@ test("relocated source-free C and C++ packages construct and project alias-named
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		// The native model keeps each alias-named record with its structure and resolved arguments.
 		const records = model.types.filter(type => type.kind === "record");
-		assert.deepEqual(records.map(type => type.name).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `GenericRecords.${name}`).sort());
-		for(const type of records) assert.equal(type.provenance?.structure, genericRecordInstantiations[type.name.split(".").at(-1)] && `GenericRecords.${genericRecordInstantiations[type.name.split(".").at(-1)].structure}`, type.name);
+		assert.deepEqual(records.map(type => type.name).sort(), Object.keys(genericRecordInstantiations).map(name => `GenericRecords.${name}`).sort());
+		for(const type of records) assert.equal(type.provenance.structure, `GenericRecords.${genericRecordInstantiations[type.name.split(".").at(-1)].structure}`, type.name);
+		// A definition only a provenance names is not a transport type; the Binding IR carries it.
+		assert.ok(!model.types.some(type => type.name === "GenericRecords.Marker"));
 		assertGenericRecordIr(model.bindingIr, "GenericRecords");
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
