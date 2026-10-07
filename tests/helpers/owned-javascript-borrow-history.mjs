@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedWitBorrow, ownedWitBorrowNormalizationPaths } from "./wit-owned-borrow-history.mjs";
 
 export const ownedJavaScriptBorrowPath = "docs/evidence/owned-javascript-borrows-20261001.json";

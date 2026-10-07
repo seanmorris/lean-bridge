@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { assertNativeGraphJvmRegression } from "./native-graph-jvm-regression.mjs";
 import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 

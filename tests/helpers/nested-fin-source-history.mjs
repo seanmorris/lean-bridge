@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeRefinementClosureSource } from "./refinement-closure-source-history.mjs";
 export { refinementClosureChangedPaths } from "./refinement-closure-source-history.mjs";
 

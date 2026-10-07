@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedDotnet, ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
 
 export const ownedRubyBaseline = "ef9bd830d49a932a13bbc0d683a7a14cd7139b62";

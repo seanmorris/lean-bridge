@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationNormalizationPaths } from "./owned-javascript-publication-history.mjs";
 
 export const ownedJavaScriptEngineBaseline = "2494d70ddb05f85245133c1ce5c7610dba918a8d";

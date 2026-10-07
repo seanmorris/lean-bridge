@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedWitBuildRepair, ownedWitBuildRepairNormalizationPaths } from "./wit-owned-build-repair-history.mjs";
 
 export const ownedWitPackageBaseline = "2ae8ff5cb06fc2b56adc20aa33b10a170b81d3f1";

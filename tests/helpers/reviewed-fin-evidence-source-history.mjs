@@ -5,7 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { beforeHistoryDigestSource } from "./history-digest-source-history.mjs";
 
 export const reviewedFinEvidenceHistoryPath = "docs/evidence/reviewed-fin-evidence-source-history-20261007.json";
 export const reviewedFinEvidenceChangedPaths = [
@@ -54,6 +55,7 @@ export const reverseReviewedFinEvidenceUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedFinEvidenceSource = (path, source, expected) => {
+	source = beforeHistoryDigestSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedFinEvidenceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

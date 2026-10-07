@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedRustBorrow, ownedRustBorrowNormalizationPaths } from "./owned-rust-borrow-history.mjs";
 
 export const ownedCppBorrowCiPath = "docs/evidence/owned-cpp-borrow-ci-repair-20260930.json";

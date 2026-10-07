@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
 
 export const ownedDotnetCallbackHistoryPath = "docs/evidence/owned-dotnet-callback-result-source-history-20261002.json";

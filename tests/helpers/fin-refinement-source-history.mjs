@@ -6,7 +6,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeRefinementSource, subtypeRefinementChangedPaths } from "./subtype-refinement-source-history.mjs";
 import { subtypeHeapChangedPaths } from "./subtype-heap-source-history.mjs";
 import { subtypeComponentChangedPaths } from "./subtype-component-source-history.mjs";
@@ -48,6 +48,7 @@ import { genericRecordsChangedPaths } from "./generic-records-source-history.mjs
 import { reviewedFinChangedPaths } from "./reviewed-fin-source-history.mjs";
 import { refinementHistoryCacheChangedPaths } from "./refinement-history-cache-source-history.mjs";
 import { reviewedFinEvidenceChangedPaths } from "./reviewed-fin-evidence-source-history.mjs";
+import { historyDigestChangedPaths } from "./history-digest-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -560,6 +561,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedFinChangedPaths
 	, ...refinementHistoryCacheChangedPaths
 	, ...reviewedFinEvidenceChangedPaths
+	, ...historyDigestChangedPaths
 ])].sort());
 
 /**

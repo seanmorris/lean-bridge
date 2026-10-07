@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJvmPackages, ownedJvmNormalizationPaths } from "./owned-jvm-source-history.mjs";
 
 export const managedCiIsolationBaseline = "733bd5a289841309c3ed0b6a99e322cdcb361a09";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedCiFollowup, ownedCiFollowupNormalizationPaths } from "./owned-ci-followup-history.mjs";
 
 export const ownedPerlCiBaseline = "29b8e25a1609031a6e8af1113a31ceb1458fe493";

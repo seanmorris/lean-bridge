@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpWasmBorrow, ownedPhpWasmBorrowNormalizationPaths } from "./owned-php-wasm-borrow-history.mjs";
 
 export const ownedPhpBorrowPath = "docs/evidence/owned-php-borrows-20261001.json";

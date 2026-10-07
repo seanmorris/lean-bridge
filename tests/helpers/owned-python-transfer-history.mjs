@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedRubyTransfer, ownedRubyTransferNormalizationPaths } from "./owned-ruby-transfer-history.mjs";
 
 export const ownedPythonTransferBaseline = "008b0ae88d43beaa82c27b60d8ab65c8755a602a";

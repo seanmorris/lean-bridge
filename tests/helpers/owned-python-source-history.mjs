@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedRuby } from "./owned-ruby-source-history.mjs";
 
 export const ownedPythonBaseline = "78d2e09252d81f0b123d6175bb6ea454c9205577";

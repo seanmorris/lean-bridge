@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpTransfer, ownedPhpTransferNormalizationPaths } from "./owned-php-transfer-history.mjs";
 
 export const ownedCiFollowupBaseline = "7ef53b13a552c28d9ccc52b54d197d916836a26c";

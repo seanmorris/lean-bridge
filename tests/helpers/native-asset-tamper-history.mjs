@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { assertTestManifestRegistration } from "./source-registration-upgrade.mjs";
 import { beforeNumericTestFlags } from "./source-registration-flags.mjs";
 

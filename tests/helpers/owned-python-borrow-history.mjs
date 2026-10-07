@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedRubyBorrow, ownedRubyBorrowNormalizationPaths } from "./owned-ruby-borrow-history.mjs";
 
 export const ownedPythonBorrowPath = "docs/evidence/owned-python-borrows-20260930.json";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJvmTransfer, ownedJvmTransferNormalizationPaths } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedDotnetTransferBaseline = "ea7759886937d82bc6c8c2c90f867b99e8ea10e0";

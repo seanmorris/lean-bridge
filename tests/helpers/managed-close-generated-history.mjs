@@ -4,7 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { ownedPythonAnchoredValues } from "../../src/backends/python/owned-borrows.mjs";
 import { ownedRubyAnchoredValues } from "../../src/backends/ruby/owned-borrows.mjs";
 

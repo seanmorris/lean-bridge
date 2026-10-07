@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { beforeCopiedFixtureReaders, copiedFixtureReaderPaths } from "./copied-fixture-source-history.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 
 export const ownedJvmReceiverGcPath = "docs/evidence/owned-jvm-receiver-gc-20261001.json";
 export const ownedJvmReceiverGcBaseline = "2ce50a51702a6510821197c0476eb95b08a0e359";

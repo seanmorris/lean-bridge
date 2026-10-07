@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpPackages, ownedPhpNormalizationPaths } from "./owned-php-source-history.mjs";
 
 export const perlContractRepairBaseline = "20d95044ae6f1dcf2d156cd8043126a16bbd1b4e";

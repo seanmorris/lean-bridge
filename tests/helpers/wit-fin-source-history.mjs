@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
 
 export const witFinHistoryPath = "docs/evidence/wit-fin-source-history-20261006.json";

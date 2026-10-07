@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedAggregates } from "./owned-aggregate-source-history.mjs";
 
 export const witRecursiveCallableHistoryPath = "docs/evidence/wit-recursive-callable-integration-20260926.json";

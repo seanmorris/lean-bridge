@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeReviewedSemanticDecisionsSource } from "./reviewed-semantic-decisions-source-history.mjs";
 
 export const containerHostDispatchHistoryPath = "docs/evidence/container-host-dispatch-source-history-20261007.json";

@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { memoizeSourceHistory } from "./helpers/source-history-memo.mjs";
 import "./helpers/refinement-history-cache-tests.mjs";
+import "./helpers/source-history-digest-tests.mjs";
+import "./helpers/history-digest-source-history-tests.mjs";
 
 test("history memoization keys every input and never accepts changed source text", () => {
 	const calls = [], original = "authentic\0🙂";

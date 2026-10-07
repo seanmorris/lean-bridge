@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 
 export const perlVariantHistoryPath = "docs/evidence/owned-perl-callback-result-variant-source-history-20261003.json";
 export const perlVariantHistorySha256 = "d17e1c3c522a1accfa7efc839ac3a9f7a0c46de7a7f7d2568ba9e0fb1dee824c";

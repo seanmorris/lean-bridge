@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeDiagnosticFollowupSource } from "./diagnostic-followup-source-history.mjs";
 
 export const npmFinDiagnosticsHistoryPath = "docs/evidence/npm-fin-diagnostics-source-history-20261006.json";

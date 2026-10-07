@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 
 export const ownedPerlCallbackHistoryPath = "docs/evidence/owned-perl-callback-result-source-history-20261003.json";

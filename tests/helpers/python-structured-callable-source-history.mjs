@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeRubyStructuredCallables } from "./ruby-structured-callable-source-history.mjs";
 
 export const pythonStructuredCallableHistoryPath = "docs/evidence/python-structured-callable-integration-20260924.json";

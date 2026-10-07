@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeScalarFinRejectionSource } from "./scalar-fin-rejection-source-history.mjs";
 
 export const browserRefinementsHistoryPath = "docs/evidence/browser-refinements-source-history-20261007.json";

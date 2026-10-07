@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforePhpNixBoundaryRepair, phpNixBoundaryNormalizationPaths } from "./php-nix-boundary-repair-history.mjs";
 
 export const jvmThreadExitRepairBaseline = "86ba0ad47469d0f13dd32d400d2a36b0d8288f95";

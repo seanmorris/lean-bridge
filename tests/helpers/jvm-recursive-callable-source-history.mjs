@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforePhpRecursiveCallables } from "./php-recursive-callable-source-history.mjs";
 
 export const jvmRecursiveCallableHistoryPath = "docs/evidence/jvm-recursive-callable-integration-20260926.json";

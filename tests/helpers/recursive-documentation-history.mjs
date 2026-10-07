@@ -5,7 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeRecursiveAcceptanceDocument } from "./recursive-acceptance-updates.mjs";
 import { beforeWitGraphRegistration } from "./wit-graph-source-lineage.mjs";
 

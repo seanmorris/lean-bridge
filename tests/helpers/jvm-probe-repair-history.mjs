@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPerlPackages, ownedPerlNormalizationPaths } from "./owned-perl-source-history.mjs";
 
 export const jvmProbeRepairBaseline = "578f04d09320e6998959390a3a0218ac6fd66d02";

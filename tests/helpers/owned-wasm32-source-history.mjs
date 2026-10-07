@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeJvmThreadExitRepair, jvmThreadExitNormalizationPaths } from "./jvm-thread-exit-repair-history.mjs";
 
 export const ownedWasm32Baseline = "8261ccfbb22152dda4a4edef00aa161f3958ec78";

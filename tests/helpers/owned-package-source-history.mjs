@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedHost } from "./owned-host-source-history.mjs";
 
 export const ownedPackageBaseline = "b1f4d2d8eaa626e1e6084d9ae777a98feecf5c0e";

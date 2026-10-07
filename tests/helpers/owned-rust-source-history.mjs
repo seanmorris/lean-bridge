@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPython } from "./owned-python-source-history.mjs";
 
 export const ownedRustBaseline = "16e4ef6994b2594bf87e0b2805a85b437c53f091";

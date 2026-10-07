@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedWitTransfer, ownedWitTransferNormalizationPaths } from "./wit-owned-transfer-history.mjs";
 
 export const ownedJavaScriptTransferBaseline = "10463a29b72d47b01e11cc799d97589f2ca594fe";

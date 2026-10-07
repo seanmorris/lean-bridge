@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJavaScriptTransfer, ownedJavaScriptTransferNormalizationPaths } from "./owned-javascript-transfer-history.mjs";
 
 export const ownedPhpWasmTransferBaseline = "7a05e2fa3186112a364df8451d16f5dfa34348c6";

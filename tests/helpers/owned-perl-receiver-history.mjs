@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpReceiver, ownedPhpReceiverNormalizationPaths } from "./owned-php-receiver-history.mjs";
 
 export const ownedPerlReceiverPath = "docs/evidence/owned-perl-receivers-20261001.json";

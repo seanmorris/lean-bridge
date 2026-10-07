@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforePerlFinSource } from "./perl-fin-source-history.mjs";
 
 export const finDistributionHistoryPath = "docs/evidence/fin-distribution-source-history-20261006.json";

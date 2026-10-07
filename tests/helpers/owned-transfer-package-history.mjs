@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedCppTransfer, ownedCppTransferNormalizationPaths } from "./owned-cpp-transfer-history.mjs";
 
 export const ownedTransferPackageBaseline = "27e0eac89682a498537f7a2c5861ac3a53f3b3f1";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPerlBorrow, ownedPerlBorrowNormalizationPaths } from "./owned-perl-borrow-history.mjs";
 
 export const managedClosePath = "docs/evidence/managed-whole-close-repair-20260930.json";

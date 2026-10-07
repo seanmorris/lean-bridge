@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPerlProfile, ownedPerlProfileNormalizationPaths } from "./owned-perl-profile-history.mjs";
 
 export const ownedPerlTransferBaseline = "9591a41dd71d74db92a614cbfa352a712359945c";

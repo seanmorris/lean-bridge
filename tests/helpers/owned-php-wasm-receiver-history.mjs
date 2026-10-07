@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJavaScriptReceiver, ownedJavaScriptReceiverNormalizationPaths } from "./owned-javascript-receiver-history.mjs";
 
 export const ownedPhpWasmReceiverPath = "docs/evidence/owned-php-wasm-receivers-20261001.json";

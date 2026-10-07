@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPythonTransfer, ownedPythonTransferNormalizationPaths } from "./owned-python-transfer-history.mjs";
 
 export const ownedConsumerCiBaseline = "23dbfd68ae4a1e8593f99f97aa3d2717b4632ca9";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeSpecializationsSource } from "./native-specializations-source-history.mjs";
 
 export const hostFinEvidenceHistoryPath = "docs/evidence/host-fin-evidence-source-history-20261006.json";

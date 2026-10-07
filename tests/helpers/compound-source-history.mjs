@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 
 const upgraded = new Set(["perl", "php", "php-wasm", "ruby", "wit"].map(name => `tests/${name}-compounds.test.mjs`));
 const previous = 'from "./helpers/compound-fixture.mjs";';

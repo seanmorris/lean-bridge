@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedTransferC, ownedTransferCNormalizationPaths } from "./owned-transfer-c-history.mjs";
 
 export const ownedWitBuildRepairBaseline = "2313a9d9a95ba980191a0c516db6ae7da7745a7e";

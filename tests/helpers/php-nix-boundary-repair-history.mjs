@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpWasmPackages, ownedPhpWasmNormalizationPaths } from "./owned-php-wasm-source-history.mjs";
 
 export const phpNixBoundaryBaseline = "f2e2c6a324bc52cb4c34efdcef120c1b3cce8fe6";

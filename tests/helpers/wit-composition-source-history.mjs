@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeWitAcceptance } from "./wit-acceptance-source-history.mjs";
 
 export const witCompositionHistoryPath = "docs/evidence/wit-recursive-composition-integration-20260924.json";

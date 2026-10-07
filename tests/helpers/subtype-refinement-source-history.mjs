@@ -7,7 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeSubtypeHeapSource } from "./subtype-heap-source-history.mjs";
 
 export const subtypeRefinementHistoryPath = "docs/evidence/npm-subtype-refinement-source-history-20261005.json";

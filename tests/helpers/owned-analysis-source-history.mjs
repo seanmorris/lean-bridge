@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedZendBailoutRepair, ownedZendBailoutNormalizationPaths } from "./owned-zend-bailout-repair-history.mjs";
 
 export const ownedAnalysisBaseline = "caeec400c8c5848ee2e31da702dbb3345e106aa1";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeManagedCiIsolation, managedCiIsolationNormalizationPaths } from "./managed-ci-isolation-history.mjs";
 
 export const nativeForkRepairBaseline = "6e73096a2e309bca71106924a5276e0a2ddb0c8c";

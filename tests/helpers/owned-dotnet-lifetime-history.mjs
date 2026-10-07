@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeStructuredDocsCi, structuredDocsCiNormalizationPaths } from "./structured-docs-ci-history.mjs";
 
 export const ownedDotnetLifetimePath = "docs/evidence/owned-dotnet-lifetime-repair-20260930.json";

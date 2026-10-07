@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforePhpCallbackAcceptance } from "./php-callback-acceptance-history.mjs";
 
 export const phpCallbackInstalledHistoryPath = "docs/evidence/php-callback-installed-staging-source-history-20261003.json";

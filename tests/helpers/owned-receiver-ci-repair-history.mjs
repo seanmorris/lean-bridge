@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverNormalizationPaths } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedReceiverCiRepairPath = "docs/evidence/owned-receiver-ci-repair-20261001.json";

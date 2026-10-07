@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcNormalizationPaths } from "./owned-jvm-receiver-gc-history.mjs";
 
 export const ownedWitReceiverPath = "docs/evidence/wit-owned-receivers-20261001.json";

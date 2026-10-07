@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedBorrowCi, ownedBorrowCiNormalizationPaths } from "./owned-borrow-ci-history.mjs";
 
 export const ownedBorrowBaseline = "2fab6b1635341d6622fc13fe8da9b3fdc947790e";

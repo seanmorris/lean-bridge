@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";
 import { assertPerlGraphSourceTransition } from "./native-perl-graph-regression.mjs";
 import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regression.mjs";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedWitNative, ownedWitNativeNormalizationPaths } from "./wit-owned-native-history.mjs";
 
 export const ownedJavaScriptNixBaseline = "f79432dac08bcaf4a7ff6d6c369956961ad2d391";

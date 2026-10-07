@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeOwnedDotnetLifetime, ownedDotnetLifetimeNormalizationPaths } from "./owned-dotnet-lifetime-history.mjs";
 
 export const ownedJvmBorrowPath = "docs/evidence/owned-jvm-borrows-20260930.json";

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeForkRepair, nativeForkRepairNormalizationPaths } from "./native-fork-repair-history.mjs";
 
 export const ownedDotnetProcessBaseline = "02d067429ab3b2b72d38270ea9c491c81017fe2f";

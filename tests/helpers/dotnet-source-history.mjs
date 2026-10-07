@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { copiedFixtureHistoricalBytes } from "./copied-fixture-source-history.mjs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 
 const fixtureImport = 'import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";';
 const declarations = [

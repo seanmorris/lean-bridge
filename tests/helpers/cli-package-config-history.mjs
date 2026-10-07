@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
 import { beforeCombinedLineageSource } from "./combined-lineage-source-history.mjs";

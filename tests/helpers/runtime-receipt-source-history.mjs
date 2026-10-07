@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeCpanCliControlSource } from "./cpan-cli-control-source-history.mjs";
 
 export const runtimeReceiptHistoryPath = "docs/evidence/runtime-receipt-source-history-20261006.json";
