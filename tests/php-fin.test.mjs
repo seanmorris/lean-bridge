@@ -17,6 +17,7 @@ import { supportsNativeRefinementTargets } from "../src/build/native-project.mjs
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -116,7 +117,7 @@ test("generated PHP bound docs come only from checked refinement metadata", () =
 	assert.throws(() => renderCopiedPhpPackage(compileCopiedPhpModel(ir)), TypeError);
 });
 
-test("relocated source-free native PHP packages check Fin bounds through the bundled C adapter", { skip: process.env.LEAN_BRIDGE_PHP_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
+const checkInstalledPhpFin = async (t, reviewed = false) => {
 	const environment = nativeFixtureEnvironment(["c", "php-native"]), reports = [], archives = [];
 	for(const attempt of [0, 1])
 	{
@@ -125,6 +126,8 @@ test("relocated source-free native PHP packages check Fin bounds through the bun
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { c: { name: "native-fin", version: "1.0.0" }, "php-native": { name: "lean-bridge-fixtures/native-fin", version: "1.0.0" } } }));
@@ -134,6 +137,11 @@ test("relocated source-free native PHP packages check Fin bounds through the bun
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, bounds(item.refinements)])), expectedBounds);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -167,7 +175,8 @@ test("relocated source-free native PHP packages check Fin bounds through the bun
 		await rename(root, relocated);
 		const repeated = await runCopied(command, ["-n", "-d", "extension=ffi", "-d", "ffi.enable=1", "consumer.php"], relocated, copiedCleanEnvironment);
 		assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `php-fin-ok:${observation.checks}`);
-		reports.push({ profile: "php-native", path: "ordinary-source"
+		reports.push({ profile: "php-native"
+			, path: reviewed ? "reviewed-ir" : "ordinary-source"
 			, ...observation
 			, packages
 			, sharedNativeLibraries: Object.fromEntries(shared.map(name => [name, packageLibraries[name]]))
@@ -176,10 +185,15 @@ test("relocated source-free native PHP packages check Fin bounds through the bun
 			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 			, modelSha256: sha256(canonicalJson(model))
 			, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+			, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 			, sourceRemovedBeforeInstallation: true
 			, relocatedInstallation: true, repeatExecution: true });
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.deepEqual(archives[1], archives[0]);
-	await saveLakeFile("build/native-fin", "php.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+	await saveLakeFile("build/native-fin", reviewed ? "php-reviewed.json" : "php.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free native PHP packages check Fin bounds through the bundled C adapter", { skip: process.env.LEAN_BRIDGE_PHP_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPhpFin(t));
+
+test("independently reviewed Php packages check scalar Fin through installed consumers", { skip: process.env.LEAN_BRIDGE_PHP_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPhpFin(t, true));

@@ -32,18 +32,35 @@ test("reviewed scalar host fixture changes argument labels without changing auth
 	});
 });
 
-test("reviewed Python and Rust scalar gates require separate uploaded observations", async () => {
+test("reviewed WIT scalar contract changes only the package identity", () => {
+	const original = reviewedScalarHostIr(), wit = reviewedScalarHostIr("nativefin");
+	assert.deepEqual(wit.component, { ...original.component, id: "nativefin@1.0.0", name: "nativefin" });
+	assert.deepEqual({ ...wit, component: original.component }, original);
+	const source = canonicalJson(wit);
+	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source
+		, sourceSha256: sha256(source), semanticSha256: hashBindingIr(wit) });
+});
+
+test("reviewed scalar host gates require separate uploaded observations", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	for(const profile of ["python", "rust"])
+	const perlWorkflow = await readFile(".github/workflows/perl-consumer.yml", "utf8");
+	for(const profile of ["python", "rust", "ruby", "dotnet", "jvm", "php", "wit", "perl"])
 	{
+		const selected = profile === "perl" ? perlWorkflow : workflow;
 		const source = await readFile(`tests/${profile}-fin.test.mjs`, "utf8");
-		assert.ok(source.includes('const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr()) : null;'));
+		const argument = profile === "wit" ? '"nativefin"' : "";
+		assert.ok(source.includes(`const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr(${argument})) : null;`));
+		assert.ok(source.includes('if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);'));
 		assert.ok(source.includes('assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);'));
 		assert.ok(source.includes('assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));'));
 		assert.ok(source.includes(`reviewed ? "${profile}-reviewed.json" : "${profile}.json"`));
 		assert.ok(source.includes('path: reviewed ? "reviewed-ir" : "ordinary-source"'));
-		assert.ok(workflow.includes(`LEAN_BRIDGE_${profile.toUpperCase()}_FIN_TEST=1 node --test tests/${profile}-fin.test.mjs`));
-		assert.ok(workflow.includes(`          test -s build/native-fin/${profile}-reviewed.json\n`));
-		assert.ok(workflow.includes(`            build/native-fin/${profile}-reviewed.json\n`));
+		assert.ok(source.includes('reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256'));
+		assert.ok(selected.includes(`LEAN_BRIDGE_${profile.toUpperCase()}_FIN_TEST=1 node --test tests/${profile}-fin.test.mjs`));
+		for(const suffix of ["", "-reviewed"])
+		{
+			assert.ok(selected.includes(`          test -s build/native-fin/${profile}${suffix}.json\n`));
+			assert.ok(selected.includes(`            build/native-fin/${profile}${suffix}.json\n`));
+		}
 	}
 });

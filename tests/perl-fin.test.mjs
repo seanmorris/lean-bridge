@@ -16,6 +16,7 @@ import { supportsNativeRefinementTargets } from "../src/build/native-project.mjs
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -164,7 +165,7 @@ test("generated XS checks each exact bound before dispatch and unwraps the check
 	assert.doesNotMatch(plain["lib/LeanBridge/Sample.pm"], /BOUNDED INTEGERS|Fin/);
 });
 
-test("relocated source-free CPAN packages check Fin bounds before Lean dispatch on every selected ABI", { skip: process.env.LEAN_BRIDGE_PERL_FIN_TEST !== "1", timeout: 2_400_000 }, async t => {
+const checkInstalledPerlFin = async (t, reviewed = false) => {
 	const environment = nativeFixtureEnvironment(["perl"]);
 	const perls = JSON.parse(process.env.LEAN_BRIDGE_PERLS ?? environment.LEAN_BRIDGE_PERLS);
 	environment.LEAN_BRIDGE_PERLS = JSON.stringify(perls);
@@ -176,6 +177,8 @@ test("relocated source-free CPAN packages check Fin bounds before Lean dispatch 
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(reviewedScalarHostIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { cpan: { module: "LeanBridge::NativeFin", version: "1.000" } } }));
@@ -185,6 +188,11 @@ test("relocated source-free CPAN packages check Fin bounds before Lean dispatch 
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, bounds(item.refinements)])), expectedBounds);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -215,7 +223,8 @@ test("relocated source-free CPAN packages check Fin bounds before Lean dispatch 
 			}
 			const repeated = await runCopied(command, ["consumer.pl"], installed, { ...copiedCleanEnvironment, PERL5LIB: library });
 			assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `perl-fin-ok:${observation.checks}`);
-			reports.push({ profile: "perl", perl, path: "ordinary-source"
+			reports.push({ profile: "perl", perl
+				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
 				, dispatch: {
 					columns: dispatchColumns, observed: dispatch
@@ -227,11 +236,16 @@ test("relocated source-free CPAN packages check Fin bounds before Lean dispatch 
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 				, sourceRemovedBeforeInstallation: true, repeatExecution: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
 	}
 	// Two clean authoring roots must produce byte-identical CPAN archives.
 	assert.deepEqual(archives[1], archives[0]);
-	await saveLakeFile("build/native-fin", "perl.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+	await saveLakeFile("build/native-fin", reviewed ? "perl-reviewed.json" : "perl.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free CPAN packages check Fin bounds before Lean dispatch on every selected ABI", { skip: process.env.LEAN_BRIDGE_PERL_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPerlFin(t));
+
+test("independently reviewed Perl packages check scalar Fin through installed consumers", { skip: process.env.LEAN_BRIDGE_PERL_FIN_TEST !== "1", timeout: 2_400_000 }, t => checkInstalledPerlFin(t, true));

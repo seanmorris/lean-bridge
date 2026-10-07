@@ -163,6 +163,7 @@ jobs:
           test -s build/collections/perl.json
           test -s build/aliases/perl.json
           test -s build/native-fin/perl.json
+          test -s build/native-fin/perl-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=perl node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/perl.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -237,6 +238,7 @@ jobs:
             build/collections/perl.json
             build/aliases/perl.json
             build/native-fin/perl.json
+            build/native-fin/perl-reviewed.json
             build/native-specializations/perl.json
             build/generic-records/perl.json
             build/generic-records/specialized-perl.json

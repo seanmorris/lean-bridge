@@ -1808,6 +1808,7 @@ jobs:
           test -s build/variants/php-native.json
           test -s build/aliases/php-native.json
           test -s build/native-fin/php.json
+          test -s build/native-fin/php-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/php-native.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -1891,6 +1892,7 @@ jobs:
             build/lists/php-native.json
             build/aliases/php-native.json
             build/native-fin/php.json
+            build/native-fin/php-reviewed.json
             build/native-specializations/php-native.json
             build/generic-records/php-native.json
             build/generic-records/specialized-php-native.json
@@ -2995,6 +2997,7 @@ jobs:
           test -s build/aliases/dotnet.json
           LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs
           test -s build/native-fin/dotnet.json
+          test -s build/native-fin/dotnet-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/dotnet.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -3044,6 +3047,7 @@ jobs:
             build/lists/dotnet.json
             build/aliases/dotnet.json
             build/native-fin/dotnet.json
+            build/native-fin/dotnet-reviewed.json
             build/native-specializations/dotnet.json
             build/generic-records/dotnet.json
             build/generic-records/specialized-dotnet.json
@@ -3222,6 +3226,7 @@ jobs:
           test -s build/aliases/jvm.json
           LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs
           test -s build/native-fin/jvm.json
+          test -s build/native-fin/jvm-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/java-kotlin.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=java,kotlin node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -3290,6 +3295,7 @@ jobs:
             build/lists/jvm.json
             build/aliases/jvm.json
             build/native-fin/jvm.json
+            build/native-fin/jvm-reviewed.json
             build/native-specializations/java-kotlin.json
             build/generic-records/java-kotlin.json
             build/generic-records/specialized-java-kotlin.json
@@ -3403,6 +3409,7 @@ jobs:
           test -s build/lists/ruby.json
           test -s build/aliases/ruby.json
           test -s build/native-fin/ruby.json
+          test -s build/native-fin/ruby-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/ruby.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -3433,6 +3440,7 @@ jobs:
             build/lists/ruby.json
             build/aliases/ruby.json
             build/native-fin/ruby.json
+            build/native-fin/ruby-reviewed.json
             build/native-specializations/ruby.json
             build/generic-records/ruby.json
             build/generic-records/specialized-ruby.json
@@ -3712,6 +3720,7 @@ jobs:
           test -s build/aliases/wit.json
           test -s build/aliases/wit-conversions.json
           test -s build/native-fin/wit.json
+          test -s build/native-fin/wit-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/wit-wasi.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
@@ -3962,6 +3971,7 @@ jobs:
             build/aliases/wit.json
             build/aliases/wit-conversions.json
             build/native-fin/wit.json
+            build/native-fin/wit-reviewed.json
             build/native-specializations/wit-wasi.json
             build/generic-records/wit-wasi.json
             build/generic-records/specialized-wit-wasi.json

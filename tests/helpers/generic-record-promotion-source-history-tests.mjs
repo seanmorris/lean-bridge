@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedScalarRolloutSource } from "./reviewed-scalar-rollout-source-history.mjs";
 import { beforeGenericRecordPromotionSource, genericRecordPromotionChangedPaths, genericRecordPromotionHistoryPath, reverseGenericRecordPromotionUpdate } from "./generic-record-promotion-source-history.mjs";
 
 test("Generic record promotion authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Generic record promotion authenticates each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), genericRecordPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedScalarRolloutSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseGenericRecordPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeGenericRecordPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeGenericRecordPromotionSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("Generic record promotion authenticates each exact source predecessor", asy
 });
 
 test("generic promotion cites nine installed bundles without changing unrelated profiles or historical claims", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedScalarRolloutSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeGenericRecordPromotionSource(path, source));
 	const receipt = JSON.parse(await readFile("docs/evidence/generic-record-specializations-20261007/receipt.json", "utf8"));
 	const references = receipt.reports.map(report => ({ ...report, evidenceId: `generic-record-${report.id.replaceAll(".", "-")}-installed` }));
@@ -74,7 +75,7 @@ test("generic promotion cites nine installed bundles without changing unrelated 
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(genericRecordPromotionChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforeReviewedScalarRolloutSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(sha256(beforeGenericRecordPromotionSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}
@@ -91,6 +92,7 @@ test("generic promotion cites nine installed bundles without changing unrelated 
 		const report = JSON.parse(bytes);
 		const hashes = reference.id === "specialized-npm" ? [report.archiveSha256, report.runtimeArchiveSha256] : Object.values(report.archives);
 		assert.deepEqual(evidence.artifacts.map(item => item.sha256).sort(), hashes.sort());
-		for(const file of evidence.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of evidence.files)
+			assert.equal(sha256(beforeReviewedScalarRolloutSource(file.path, await readFile(file.path, "utf8"))), file.sha256, file.path);
 	}
 });
