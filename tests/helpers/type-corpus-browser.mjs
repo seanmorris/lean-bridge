@@ -43,9 +43,9 @@ const ready = async page => {
 	await page.locator('#result[data-status="ready"], #result[data-status="error"]').waitFor();
 	assert.equal(await page.locator("#result").getAttribute("data-status"), "ready", await page.locator("#result").textContent());
 };
-const observation = async (page, browser, library, oracle) => {
+const observation = async (page, browser, validate) => {
 	const result = { ...await page.evaluate(() => globalThis.corpusResult), hostVersion: browser.version() };
-	validateCorpusObservation(library, corpusCases(library), oracle, result);
+	validate(result);
 	return result;
 };
 const instrumentWorkers = page => page.addInitScript(() => {
@@ -85,14 +85,14 @@ const openPage = async (browser, url, intercept = undefined) => {
 	return { context, page, errors, foreignRequests, assets, pendingAssets };
 };
 
-const checkExecution = async ({ browser, engine, variant, url, library, profile, oracle, installedAssets }) => {
+const checkExecution = async ({ browser, engine, variant, url, profile, validate, installedAssets }) => {
 	const state = await openPage(browser, url);
 	const { page } = state;
 	try
 	{
 		await page.goto(url);
 		await ready(page);
-		const first = await observation(page, browser, library, oracle);
+		const first = await observation(page, browser, validate);
 		await Promise.all(state.pendingAssets);
 		const initialRequests = state.assets.length;
 		let lifecycle;
@@ -104,7 +104,7 @@ const checkExecution = async ({ browser, engine, variant, url, library, profile,
 				assert.equal(await page.locator("#result").count(), 0);
 				await page.locator("#toggle").click();
 				await ready(page);
-				assert.deepEqual(await observation(page, browser, library, oracle), first);
+				assert.deepEqual(await observation(page, browser, validate), first);
 			}
 			lifecycle = await page.evaluate(() => globalThis.corpusLifecycle);
 			assert.deepEqual(lifecycle, variant === "strict"
@@ -117,7 +117,7 @@ const checkExecution = async ({ browser, engine, variant, url, library, profile,
 			await page.locator("#rerun").click();
 			await page.waitForFunction(previous => document.querySelector("#result").textContent !== previous, before);
 			await ready(page);
-			assert.deepEqual(await observation(page, browser, library, oracle), first);
+			assert.deepEqual(await observation(page, browser, validate), first);
 			lifecycle = { rerun: true };
 		}
 		await Promise.all(state.pendingAssets);
@@ -128,7 +128,7 @@ const checkExecution = async ({ browser, engine, variant, url, library, profile,
 			assert.deepEqual(await page.evaluate(() => globalThis.corpusWorkers()), { created: 1, terminated: 1, live: 0 });
 			await page.locator("#rerun").click();
 			await ready(page);
-			assert.deepEqual(await observation(page, browser, library, oracle), first);
+			assert.deepEqual(await observation(page, browser, validate), first);
 			await page.locator("#stop").click();
 			lifecycle = await page.evaluate(() => globalThis.corpusWorkers());
 			assert.deepEqual(lifecycle, { created: 2, terminated: 2, live: 0 });
@@ -149,7 +149,7 @@ const checkExecution = async ({ browser, engine, variant, url, library, profile,
 	{ await state.context.close(); }
 };
 
-const checkFailure = async (browser, url, library, oracle) => {
+const checkFailure = async (browser, url, validate) => {
 	let failing = true;
 	const state = await openPage(browser, url, route => failing ? route.fulfill({ status: 404, body: "Missing test WASM asset" }) : route.continue());
 	try
@@ -161,7 +161,7 @@ const checkFailure = async (browser, url, library, oracle) => {
 		failing = false;
 		await state.page.reload();
 		await ready(state.page);
-		await observation(state.page, browser, library, oracle);
+		await observation(state.page, browser, validate);
 		await Promise.all(state.pendingAssets);
 		assert.deepEqual(state.errors, []);
 		assert.deepEqual(state.foreignRequests, []);
@@ -171,7 +171,7 @@ const checkFailure = async (browser, url, library, oracle) => {
 	{ await state.context.close(); }
 };
 
-const checkPendingUnmount = async (browser, url, variant, library, oracle) => {
+const checkPendingUnmount = async (browser, url, variant, validate) => {
 	let release;
 	const held = new Promise(resolveHeld => { release = resolveHeld; });
 	const state = await openPage(browser, url, async route => { await held; await route.continue().catch(() => {}); });
@@ -188,7 +188,7 @@ const checkPendingUnmount = async (browser, url, variant, library, oracle) => {
 		assert.equal(await state.page.evaluate(() => globalThis.corpusResult), undefined);
 		await state.page.locator("#toggle").click();
 		await ready(state.page);
-		await observation(state.page, browser, library, oracle);
+		await observation(state.page, browser, validate);
 		await Promise.all(state.pendingAssets);
 		assert.deepEqual(state.errors, []);
 		assert.deepEqual(state.foreignRequests, []);
@@ -208,14 +208,17 @@ const checkPendingUnmount = async (browser, url, variant, library, oracle) => {
  * @param options.oracle - Fresh Lean results.
  * @param options.framework - Exact framework archives, when React is selected.
  * @param options.environment - Compiler-free consumer environment.
+ * @param options.consumer - Optional package loader and independent observation validator.
  */
-export const installedBrowserCorpus = async ({ library, profile, root, oracle, framework, environment }) => {
+export const installedBrowserCorpus = async ({ library, profile, root, oracle, framework, environment, consumer }) => {
+	const validate = consumer?.validateObservation ?? (result => validateCorpusObservation(library, corpusCases(library), oracle, result));
+	const packageSource = consumer?.packageSource ?? `import request from "./request.json";\nexport { request };\nexport const loadApi = () => import(${JSON.stringify(library.npmModule)});\n`;
 	const requestedEngines = corpusBrowserSelection(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS);
 	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
 	const entry = { "browser-javascript": "plain", "browser-react": "react", "browser-worker": "worker-main" }[profile];
 	for(const name of [entry, ...(profile === "browser-worker" ? ["worker"] : [])])
 		await saveLakeFile(root, `${name}.mjs`, await readFile(join(fixtures, `${name}.mjs`)));
-	await saveLakeFile(root, "package.mjs", `import request from "./request.json";\nexport { request };\nexport const loadApi = () => import(${JSON.stringify(library.npmModule)});\n`);
+	await saveLakeFile(root, "package.mjs", packageSource);
 	await saveLakeFile(root, "index.html", `<!doctype html><meta charset="utf-8"><title>Installed corpus</title><div id="root"><button id="rerun">Run again</button><button id="stop">Stop worker</button><pre id="result" data-status="loading"></pre></div><script type="module" src="./${entry}.mjs"></script>\n`);
 	for(const item of framework) assert.equal((await json(join(root, "node_modules", item.name, "package.json"))).version, item.version);
 	for(const name of [library.npmModule, "@lean-bridge/runtime"])
@@ -254,9 +257,9 @@ export const installedBrowserCorpus = async ({ library, profile, root, oracle, f
 				const server = await startSiteServer({ root: join(root, `dist-${variant}`), base });
 				try
 				{
-					const execution = await checkExecution({ browser, engine, variant, url: server.url, library, profile, oracle, installedAssets });
-					execution.failedAssetRecovery = await checkFailure(browser, server.url, library, oracle);
-					if(profile === "browser-react") execution.pendingUnmount = await checkPendingUnmount(browser, server.url, variant, library, oracle);
+					const execution = await checkExecution({ browser, engine, variant, url: server.url, profile, validate, installedAssets });
+					execution.failedAssetRecovery = await checkFailure(browser, server.url, validate);
+					if(profile === "browser-react") execution.pendingUnmount = await checkPendingUnmount(browser, server.url, variant, validate);
 					executions.push(execution);
 				}
 				finally

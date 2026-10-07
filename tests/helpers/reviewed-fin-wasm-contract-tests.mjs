@@ -17,6 +17,7 @@ import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-f
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinBrowserProfiles, validateReviewedFinBrowserObservation } from "./reviewed-fin-wasm-browser.mjs";
 
 const input = document => {
 	const source = canonicalJson(document);
@@ -200,4 +201,25 @@ test("Wasm Fin mismatch probes are admissible reviews but differ at exact compil
 		assert.match(reviewedContractDifference(ir, expected), /source\.extensions\.lean-lang\.org\/refinements/u, label);
 	}
 	assert.deepEqual(reviewedFinWasmIr("structural"), expected);
+});
+
+test("Fin browser observations require the selected corpus, real realm and every rejection", () => {
+	assert.deepEqual(reviewedFinBrowserProfiles, ["browser-javascript", "browser-react", "browser-worker"]);
+	for(const profile of reviewedFinBrowserProfiles) for(const selection of ["scalar", "structural"])
+	{
+		const expected = reviewedFinWasmExpected[selection];
+		const result = { schemaVersion: 1, profile, module: "reviewed-fin"
+			, realm: profile === "browser-worker" ? "dedicated-worker" : "window"
+			, results: { module: "reviewed-fin", selection, ...expected }
+			, hostVersion: "test-validator-only" };
+		const validate = value => validateReviewedFinBrowserObservation(value, profile, selection, expected);
+		validate(result);
+		for(const replacement of [{ profile: "node-javascript" }
+			, { module: "another-package" }, { hostVersion: "" }
+			, { realm: result.realm === "window" ? "dedicated-worker" : "window" }
+			, { results: { ...result.results, checks: expected.checks - 1 } }
+			, { results: { ...result.results, rejections: expected.rejections - 1 } }
+			, { results: { ...result.results, selection: selection === "scalar" ? "structural" : "scalar" } }])
+			assert.throws(() => validate({ ...result, ...replacement }));
+	}
 });

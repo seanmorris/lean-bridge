@@ -19,6 +19,7 @@ import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
+import { checkReviewedFinWasmBrowsers } from "./reviewed-fin-wasm-browser.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixture = join(repository, "tests/fixtures/onboarding/reviewed-fin-wasm");
@@ -88,8 +89,11 @@ export const reviewedFinWasmBuildFacts = async (bundle, selection, reviewed) => 
  * @param handoff - Prepared component and shared-runtime archives.
  * @param receipt - Verified package receipt.
  * @param selection - Scalar-only or structural corpus.
+ * @param options - Optional browser profile and locally prepared framework archives.
+ * @param options.profile - Browser context, omitted for Node consumers.
+ * @param options.framework - Exact framework archives for the React consumer.
  */
-export const installReviewedFinWasm = async (root, handoff, receipt, selection) => {
+export const installReviewedFinWasm = async (root, handoff, receipt, selection, { profile, framework = [] } = {}) => {
 	const bin = join(root, "bin");
 	await mkdir(bin, { recursive: true });
 	await symlink(process.execPath, join(bin, "node"));
@@ -106,8 +110,9 @@ export const installReviewedFinWasm = async (root, handoff, receipt, selection) 
 		, "--cache"
 		, join(root, "empty-cache")
 		, join(handoff, receipt.runtime.archive)
-		, join(handoff, receipt.package.archive)], root, { ...clean, PATH: bin });
-	const request = { module: "reviewed-fin", selection };
+		, join(handoff, receipt.package.archive)
+		, ...framework.map(item => join(root, item.archive))], root, { ...clean, PATH: bin });
+	const request = { module: "reviewed-fin", selection, ...profile ? { profile } : {} };
 	await saveLakeFile(root, "request.json", canonicalJson(request));
 	await saveLakeFile(root, "javascript.mjs", await readFile(join(repository, "tests/fixtures/reviewed-fin-wasm/javascript.mjs")));
 	await saveLakeFile(root, "package.mjs", `export const request = ${JSON.stringify(request)};
@@ -185,8 +190,10 @@ const checkMismatches = async (t, producers, runtimeRoot) => {
  * @param t - Test context responsible for temporary fixture cleanup.
  * @param selection - Scalar-only or structural corpus.
  * @param reviewed - Independent review rather than ordinary source selection.
+ * @param options - Optional real-browser acceptance in addition to Node and TypeScript.
+ * @param options.browsers - Require pages, React effects and dedicated workers.
  */
-export const checkReviewedFinWasm = async (t, selection, reviewed) => {
+export const checkReviewedFinWasm = async (t, selection, reviewed, { browsers = false } = {}) => {
 	assert.ok(reviewedFinWasmSelections.includes(selection));
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-fin-wasm-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
@@ -225,6 +232,10 @@ export const checkReviewedFinWasm = async (t, selection, reviewed) => {
 	const consumer = join(directory, "consumer");
 	await installReviewedFinWasm(consumer, handoff, receipt, selection);
 	const node = await installedNode(consumer, selection);
+	const browser = browsers ? await checkReviewedFinWasmBrowsers({ directory
+		, handoff, receipt, selection
+		, expected: reviewedFinWasmExpected[selection]
+		, install: installReviewedFinWasm, environment: clean }) : [];
 	return {
 		schemaVersion: 1
 		, path: reviewed ? "reviewed-ir" : "ordinary-source"
@@ -234,5 +245,6 @@ export const checkReviewedFinWasm = async (t, selection, reviewed) => {
 		, compilerFreePath: true, offlineInstall: true, receipt
 		, mismatches
 		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
-		, consumerSha256: sha256(await readFile(join(consumer, "javascript.mjs"))), ...node };
+		, consumerSha256: sha256(await readFile(join(consumer, "javascript.mjs")))
+		, ...node, browser };
 };
