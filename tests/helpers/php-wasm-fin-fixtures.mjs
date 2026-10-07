@@ -36,8 +36,8 @@ export const phpWasmFinFixtures = Object.freeze({ products, records });
  */
 export const phpWasmFinConsumer = (source, mode) => {
 	const lines = source.split("\n");
-	if(lines[1] !== "declare(strict_types=0);" || lines[2] !== "require 'vendor/autoload.php';" || !/^echo "fin-[a-z-]+-ok:\$checks\\n";$/u.test(lines.at(-2)) || lines.at(-1) !== "")
-		throw new TypeError("Unexpected native PHP Fin consumer layout");
+	if(lines[1] !== "declare(strict_types=0);" || lines[2] !== "require 'vendor/autoload.php';" || !/^echo "[a-z-]+-ok:\$checks\\n";$/u.test(lines.at(-2)) || lines.at(-1) !== "")
+		throw new TypeError("Unexpected native PHP consumer layout");
 	lines[1] = `declare(strict_types=${mode === "strict" ? 1 : 0});`;
 	lines.splice(2, 1);
 	lines[lines.length - 2] = "echo json_encode(['checks' => $checks, 'word_bits' => PHP_INT_SIZE * 8, 'php' => PHP_VERSION], JSON_THROW_ON_ERROR) . \"\\n\";";

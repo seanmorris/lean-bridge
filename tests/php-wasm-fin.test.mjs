@@ -93,7 +93,7 @@ test("PHP-Wasm callers are the native PHP Fin consumers with only loading and re
 		}
 		assert.deepEqual(JSON.parse(request("composer")), { module: fixture.namespace, operations: { probe: fixture.operation }, autoload: "vendor/autoload.php" });
 	}
-	assert.throws(() => phpWasmFinConsumer("<?php\necho 1;\n", "weak"), /Unexpected native PHP Fin consumer layout/u);
+	assert.throws(() => phpWasmFinConsumer("<?php\necho 1;\n", "weak"), /Unexpected native PHP consumer layout/u);
 });
 
 test("relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts", { skip: process.env.LEAN_BRIDGE_PHP_WASM_FIN_TEST !== "1", timeout: 3_600_000 }, async t => {
