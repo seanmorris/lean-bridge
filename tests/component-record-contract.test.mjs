@@ -86,6 +86,10 @@ test("checked record inputs reject recoverably and release every decoded object"
 		, refinements: { parameters: [{ kind: "subtype", constructor: "Records.checkedText" }, null] } }]);
 	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${item.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
 	assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
+	// A top-level Fin beside a record gets the same validator and status instead of a Lean panic.
+	const fin = generateComponentRecordAdapters(abi, [{ bindingId: item.bindingId, refinements: { parameters: [null, { kind: "fin", bound: "10" }] } }]);
+	assert.match(fin, new RegExp(`lean_inc\\(a1\\);\\n {2}if \\(!${item.symbol}_refinement_1\\(a1\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
+	assert.ok(fin.indexOf(`${item.symbol}_refinement_1(a1)`) < fin.indexOf(`${item.symbol}_lean(a0, a1)`));
 });
 
 test("record ABI rejects mismatched nominal identities, fields, ownership and unsupported kinds", () => {

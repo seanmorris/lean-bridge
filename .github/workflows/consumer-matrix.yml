@@ -1186,6 +1186,8 @@ jobs:
           node --test tests/component-publication.test.mjs
           node --test tests/lake-wasm.test.mjs
           node --test tests/unlocked-component.test.mjs
+          node --test tests/scalar-fin-rejection.test.mjs
+          test -s build/scalar-fin-rejection/report.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
       - name: Build and install owned npm exports through real Nix
         shell: bash
@@ -1258,6 +1260,7 @@ jobs:
             build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
             build/type-corpus/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
             build/browser-refinements/report.json
+            build/scalar-fin-rejection/report.json
             build/char-npm/
             build/word-npm/
             build/callables/npm/

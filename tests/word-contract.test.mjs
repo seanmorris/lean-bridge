@@ -202,3 +202,20 @@ test("checked heap refinements retain inputs for validation and clean rejected c
 	assert.ok(source.indexOf("lean_inc(a0)") < source.indexOf("refined_text_refinement_0(a0)"));
 	assert.ok(source.indexOf("refined_text_refinement_0(a0)") < source.indexOf("refined_text_lean(a0, a1)"));
 });
+
+// A top-level Fin is validated like a Subtype: the adapter fails the call before dispatch instead of leaving it to the Lean guard.
+test("checked scalar Fin bounds fail the call before dispatch on every parameter", () => {
+	const abi = { exports: [{
+		bindingId: "lean:Library.pair"
+		, symbol: "refined_pair"
+		, parameters: [scalar("nat"), scalar("nat"), scalar("string")]
+		, result: scalar("nat")
+		, resultMode: "value" }] };
+	const exports = [{ bindingId: "lean:Library.pair"
+	, refinements: { parameters: [{ kind: "fin", bound: "10" }, { kind: "fin", bound: "184467440737095516170" }, null], result: { kind: "fin", bound: "40" } } }];
+	const source = generateComponentScalarAdapters(abi, exports);
+	assert.match(source, /extern uint8_t refined_pair_refinement_0\(lean_object \*\);\nextern uint8_t refined_pair_refinement_1\(lean_object \*\);/u);
+	assert.match(source, /lean_inc\(a0\);\n {2}if \(!refined_pair_refinement_0\(a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 6; \}\n {2}lean_inc\(a1\);\n {2}if \(!refined_pair_refinement_1\(a1\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 6; \}/u);
+	assert.ok(source.indexOf("refined_pair_refinement_1(a1)") < source.indexOf("refined_pair_lean(a0, a1, a2)"));
+	assert.doesNotMatch(source, /refined_pair_refinement_2/u);
+});

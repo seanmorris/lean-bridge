@@ -63,8 +63,8 @@ test("the shared browser checks reject every invalid refinement through the pack
 		catch
 		{ return 0n; }
 	};
-	assert.throws(() => executeCorpus({ module: "onboarding-small" }, { ...faithful, raw: lenient }), /accepted: raw rows/);
-	assert.throws(() => executeCorpus({ module: "onboarding-small" }, { ...faithful, raw: (name, args) => name === "rows" ? faithful.rows(...args) : lenient(name, args) }), /accepted: raw empty/);
+	assert.throws(() => executeCorpus({ module: "onboarding-small" }, { ...faithful, raw: lenient }), /accepted: raw mirror/);
+	assert.throws(() => executeCorpus({ module: "onboarding-small" }, { ...faithful, raw: (name, args) => name === "mirror" ? faithful.mirror(...args) : lenient(name, args) }), /accepted: raw rows/);
 	assert.equal(executeCorpus({ module: "onboarding-small" }, { ...faithful, raw: (name, args) => faithful[name](...args) }).checks, browserRefinementExpected.checks);
 	assert.deepEqual(browserRefinementProfiles, ["browser-javascript", "browser-react", "browser-worker"]);
 	assert.ok(browserRefinementExpected.checks > 50 && browserRefinementExpected.rejections > 100);

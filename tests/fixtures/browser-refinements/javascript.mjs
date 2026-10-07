@@ -56,11 +56,10 @@ export const executeCorpus = (request, api) => {
 		rejected(() => api.echo(""), "echo empty again");
 		check(api.echo("x") === "x" && api.use("hello", 0, "") === "hello0", "subtype recovers");
 	}
-	// Direct runtime calls skip the generated JavaScript validation; compiled Lean must still reject and recover.
-	// A top-level scalar Fin adapter rejects with a Lean panic that returns the default value instead of failing
-	// the call, so only the copied container and Subtype paths are required to fail here.
+	// Direct runtime calls skip the generated JavaScript validation; the compiled adapter entry must still fail the
+	// call before any dispatch, for a top-level scalar Fin as much as for containers and Subtypes.
 	check(api.raw("mirror", [3n]) === 6n && same(api.raw("rows", [[[0n, 9n], []]]), [[], [0n, 9n]]) && api.raw("echo", ["raw"]) === "raw", "raw valid");
-	const rawInvalid = [["rows", [[[10n]]]], ["empty", [[0n]]], ["huge", [[184467440737095516170n]]]];
+	const rawInvalid = [["mirror", [10n]], ["mirror", [2n ** 70n]], ["rows", [[[10n]]]], ["empty", [[0n]]], ["huge", [[184467440737095516170n]]]];
 	rawInvalid.push(["nested", [[some([0n, { error: 2n }])]]], ["echo", [""]], ["use", ["valid", 10, "!"]], ["use", ["", 0, ""]]);
 	for(const [name, args] of rawInvalid)
 	{

@@ -247,7 +247,7 @@ const renderLeanSource = ({ imports, exports, module, privateAbi, nominalRefinem
 		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
 		const callback = privateAbi.callbacks?.find(type => type.id === signature.result.id);
 		const parameters = item.parameters.map(parameter => `(${parameter.name} : ${parameter.leanType})`).join(" ");
-		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement && refinement.kind !== "fin")
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement)
 		{
 			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
 			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${item.parameters[index].leanType}) : _root_.UInt8 :=`);

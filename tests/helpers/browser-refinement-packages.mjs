@@ -22,7 +22,7 @@ const json = async path => JSON.parse(await readFile(path, "utf8"));
 /** The browser profiles and the number of result commits each page produces. */
 export const browserRefinementProfiles = Object.freeze(["browser-javascript", "browser-react", "browser-worker"]);
 /** Checks and rejections every context must report; the counts are pinned so a silent skip is visible. */
-export const browserRefinementExpected = Object.freeze({ checks: 128, rejections: 129 });
+export const browserRefinementExpected = Object.freeze({ checks: 130, rejections: 131 });
 
 const source = `namespace OnboardingSmall
 abbrev Digit := Fin 10

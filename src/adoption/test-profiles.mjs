@@ -229,6 +229,7 @@ const profileManifest = Object.freeze({
 		, "copied-fixture-source-history"
 		, "unlocked-component"
 		, "browser-refinements"
+		, "scalar-fin-rejection"
 		, "component-consumer-docs"
 		, "component-runtime"
 		, "component-scalar-codec"

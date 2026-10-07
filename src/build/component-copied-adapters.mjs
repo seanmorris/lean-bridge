@@ -29,7 +29,7 @@ export const generateComponentCopiedAdapters = (abi, exports = []) => {
 		const refinements = source?.refinements?.parameters ?? item.parameters.map(() => null);
 		const rejectionCleanup = item.parameters.flatMap((type, index) => object(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
-			, ...refinements.flatMap((refinement, index) => refinement && refinement.kind !== "fin"
+			, ...refinements.flatMap((refinement, index) => refinement
 				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_copied_frame_validate(frame, ${item.parameters.length});`
@@ -43,7 +43,7 @@ export const generateComponentCopiedAdapters = (abi, exports = []) => {
 			lines.push(`  ${cType(type)} a${index} = ${object(type) ? `boxed${index}` : `(${cType(type)})lean_unbox${suffix(type)}(boxed${index})`};`);
 			if(!object(type)) lines.push(`  lean_dec(boxed${index});`);
 		}
-		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin")
+		for(const [index, refinement] of refinements.entries()) if(refinement)
 		{
 			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
 			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);
