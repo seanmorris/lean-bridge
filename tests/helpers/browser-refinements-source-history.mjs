@@ -1,19 +1,23 @@
 /**
- * Preserve exact source predecessors of the Refinement audit (#1220).
+ * Preserve exact source predecessors of the Browser refinements (#1429).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeBrowserRefinementsSource } from "./browser-refinements-source-history.mjs";
 
-export const refinementAuditHistoryPath = "docs/evidence/refinement-audit-source-history-20261006.json";
-export const refinementAuditChangedPaths = [
-	"docs/lean/existing-package.md"
+export const browserRefinementsHistoryPath = "docs/evidence/browser-refinements-source-history-20261007.json";
+export const browserRefinementsChangedPaths = [
+	".github/workflows/consumer-matrix.yml"
+	, "docs/contributing/testing.md"
+	, "docs/javascript-typescript.md"
+	, "docs/lean/existing-package.md"
 	, "docs/type-surface.v1.json"
+	, "eslint.config.mjs"
 	, "src/adoption/test-profiles.mjs"
 	, "tests/component-array-contract.test.mjs"
+	, "tests/documentation.test.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
 	, "tests/helpers/cpan-cli-control-source-history-tests.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
@@ -26,16 +30,18 @@ export const refinementAuditChangedPaths = [
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/native-specializations-source-history-tests.mjs"
 	, "tests/helpers/native-subtype-source-history-tests.mjs"
-	, "tests/helpers/native-subtype-source-history.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
 	, "tests/helpers/perl-fin-source-history-tests.mjs"
 	, "tests/helpers/php-fin-source-history-tests.mjs"
 	, "tests/helpers/python-fin-source-history-tests.mjs"
+	, "tests/helpers/refinement-audit-source-history-tests.mjs"
+	, "tests/helpers/refinement-audit-source-history.mjs"
 	, "tests/helpers/ruby-fin-source-history-tests.mjs"
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
 	, "tests/helpers/rust-fin-source-history-tests.mjs"
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/helpers/wit-fin-source-history-tests.mjs"
+	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -45,8 +51,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseRefinementAuditUpdate = (source, update) => {
-	assert.ok(refinementAuditChangedPaths.includes(update.path));
+export const reverseBrowserRefinementsUpdate = (source, update) => {
+	assert.ok(browserRefinementsChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -66,18 +72,17 @@ export const reverseRefinementAuditUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1220, stopping at an explicitly requested identity.
+ * Restore the source before #1429, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeRefinementAuditSource = (path, source, expected) => {
-	source = beforeBrowserRefinementsSource(path, source, expected);
-	if(typeof source !== "string" || !refinementAuditChangedPaths.includes(path)) return source;
+export const beforeBrowserRefinementsSource = (path, source, expected) => {
+	if(typeof source !== "string" || !browserRefinementsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(refinementAuditHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(browserRefinementsHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseRefinementAuditUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseBrowserRefinementsUpdate(source, update) : source;
 };

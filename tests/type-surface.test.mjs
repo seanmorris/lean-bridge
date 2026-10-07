@@ -440,10 +440,11 @@ test("refinements, host null and erased proofs retain their individual value pos
 test("checked Subtype evidence promotes only top-level parameters and results", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	// Node (VO #1219) and, since VO #1428, the nine native profiles that share the C-family adapter.
+	// Node (VO #1219), since VO #1428 the nine native profiles that share the C-family adapter, and since VO #1429 the three browser profiles.
 	const native = ["c", "cpp", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
-	assert.equal(installed.length, 2 * (2 + native.length));
-	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native].sort());
+	const browser = ["browser-javascript", "browser-react", "browser-worker"];
+	assert.equal(installed.length, 2 * (2 + native.length + browser.length));
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, ...browser].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
 	for(const cell of installed)
 	{
@@ -454,9 +455,25 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 			assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);
 			continue;
 		}
-		assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-subtype-refinements-installed"]);
+		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
 	}
+});
+
+test("browser Fin evidence promotes only top-level parameters and results from the shared npm archive", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "fin" && cell.stages.installedExecution.evidence.includes("npm-browser-refinements-installed"));
+	assert.equal(cells.length, 6);
+	assert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker"]);
+	assert.deepEqual([...new Set(cells.map(cell => cell.position))], ["parameter", "result"]);
+	for(const cell of cells)
+	{
+		assert.equal(cell.path, "ordinary-source");
+		assert.match(cell.hostType, /bigint checked as 0 <= value < n/u);
+		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+	}
+	const evidence = document.evidence.find(entry => entry.id === "npm-browser-refinements-installed");
+	assert.match(evidence.command, /LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit/u);
+	assert.match(evidence.scope, /Chromium [\d.]+, Firefox [\d.]+, WebKit [\d.]+ pages, React effects/u);
 });
 
 test("unknown fields, versions, evidence states and unsafe paths fail closed", () => {

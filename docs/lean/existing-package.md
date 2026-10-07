@@ -314,7 +314,7 @@ The native targets `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `p
 
 Every combination below either passes installed checks or fails the build with a classified diagnostic; no target erases a bound or a constructor. "Native" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`.
 
-| Site | npm (Node) | Native | `cpan` | `php-wasm` | Reviewed Binding IR |
+| Site | npm (Node and browser) | Native | `cpan` | `php-wasm` | Reviewed Binding IR |
 | --- | --- | --- | --- | --- | --- |
 | `Fin n` parameter or result | Installed | Installed | Installed (scalar only) | Rejected | Rejected |
 | `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |
@@ -324,7 +324,7 @@ Every combination below either passes installed checks or fails the build with a
 | `Subtype` parameter or result over a primitive | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |
 | `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |
 
-Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Browser profiles are not audited for refinements. Python wheels run the same installed checks as the other native hosts but are recorded only from CI.
+The npm column covers Node JavaScript and TypeScript, and, for top-level `Fin` and `Subtype` sites and structural `Fin` containers, Chromium, Firefox and WebKit pages, React effects and dedicated workers through the [browser acceptance](../evidence/npm-browser-refinements-20261007.md). Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Browser profiles are not audited for refinements. Python wheels run the same installed checks as the other native hosts but are recorded only from CI.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.
 
