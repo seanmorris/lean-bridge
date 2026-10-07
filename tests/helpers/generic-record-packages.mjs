@@ -185,7 +185,7 @@ export const installGenericRecordConsumer = async options => {
 		, wit: [...["nat-box", "nat-box-again", "text-box", "word-pair", "maybe-box", "box-pair", "tagged-nat", "marker-tag"].map(name => new RegExp(`record ${name} \\{`))
 			, /bump: func\([^)]*: nat-box\) -> nat-box/
 			, /unpair: func\([^)]*: box-pair\) -> /
-			, /first-boxes: func\([^)]*\) -> option<list<nat-box>>/]
+			, /type (bridge-value-\d+) = list<nat-box>;[\s\S]*?type boxes = \1;[\s\S]*?type (bridge-alias-value-\d+) = option<boxes>;[\s\S]*?first-boxes: func\([^)]*\) -> \2;/u]
 		, success: "generic-records-ok"
 	} });
 	if(options.profile === "rust") return { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) };
