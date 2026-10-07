@@ -4,18 +4,14 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { readFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import test from "node:test";
-import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
-import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
+import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
-import { installedPhpWasmCorpus } from "./helpers/type-corpus-php-wasm-install.mjs";
-import { phpWasmFinCaller, phpWasmFinConsumer, phpWasmFinFixtures } from "./helpers/php-wasm-fin-fixtures.mjs";
+import { checkInstalledPhpWasmFixture, phpWasmFinCaller, phpWasmFinConsumer, phpWasmFinFixtures } from "./helpers/php-wasm-fin-fixtures.mjs";
+import { createCompiledPhpWasmModel } from "../src/build/php-wasm-graph-model.mjs";
+import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
 import { createNativeModel, createPhpWasmCopiedModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
@@ -53,7 +49,7 @@ test("the PHP-Wasm side module compares caller limbs with each bound before the 
 	assert.ok(provider.includes("static const uint32_t lb_fin_tile_sum_0_0[1] = {0x5u};"));
 });
 
-test("PHP-Wasm keeps checked Subtype, callables and graph packages refused", () => {
+test("PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused", async () => {
 	const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
 	const input = parameter => {
 		const value = nativeMetadataFixture(), projection = value.metadata.modules[0].declarations[0].projection;
@@ -66,6 +62,37 @@ test("PHP-Wasm keeps checked Subtype, callables and graph packages refused", () 
 	const signatures = { tileSum: finRecordCompilerInput().metadata.modules[0].declarations.find(item => item.identity === "Sample.tileSum").projection.parameters[0].type };
 	const mixed = finRecordCompilerInput({}, { callable: [{ kind: "callback", parameters: [finRecordNat], result: finRecordNat, abi: heap }, finRecordNat], tileSum: [signatures.tileSum, finRecordNat] });
 	assert.throws(() => createPhpWasmCopiedModel(mixed), refinedError(/cannot share a PHP-Wasm package with callables/u));
+	// Graph and owned packages have no Fin walk: a bound beside a recursive export, or in an owned
+	// package, is refused at the PHP-Wasm entry, naming the refined declaration.
+	const reselect = (value, extra = {}) => {
+		const { metadata, ...selection } = value.sourceIdentity.request;
+		void metadata;
+		Object.assign(selection, extra, { exports: value.metadata.modules[0].declarations.map(item => item.identity) });
+		const modules = [{ name: "Sample", sourcePath: "Sample.lean", sourceSha256: "e".repeat(64), interfaceSha256: "1".repeat(64) }];
+		const identity = { toolchain: "leanprover/lean4:v4.32.2", modules, leanCompilerSha256: value.sourceIdentity.leanCompilerSha256, extractorSha256: value.sourceIdentity.extractorSha256 };
+		value.sourceIdentity.request = { ...selection, metadata: createMetadataRequest(selection, identity).metadata };
+		value.metadata.producer.invocationIdentitySha256 = value.sourceIdentity.request.metadata.invocationIdentitySha256;
+		return { ...value, component };
+	};
+	const fin = { kind: "refinement", base: finRecordNat, predicate: { kind: "fin", bound: "10" }, abi: finRecordNat.abi };
+	const graphed = nativeMetadataFixture(), declaration = graphed.metadata.modules[0].declarations[0];
+	const bounded = JSON.parse(JSON.stringify(declaration).replaceAll("Sample.increment", "Sample.bounded"));
+	bounded.projection.parameters[0].type = fin; bounded.projection.result = finRecordNat;
+	const reference = { kind: "reference", name: "Sample.Tree", lean: "Sample.Tree", abi: heap };
+	const leaf = { name: "leaf", constructor: "Sample.Tree.leaf", fields: [{ name: "value", type: declaration.projection.result }] };
+	const tree = { kind: "variant", name: "Sample.Tree", lean: "Sample.Tree", abi: heap, cases: [leaf, { name: "next", constructor: "Sample.Tree.next", fields: [{ name: "child", type: reference }] }] };
+	const graph = { kind: "graph", root: reference, types: [tree], abi: heap };
+	declaration.projection.parameters[0].type = graph; declaration.projection.result = graph;
+	graphed.metadata.modules[0].declarations.unshift(bounded);
+	assert.throws(() => createCompiledPhpWasmModel(reselect(graphed)), refinedError(/^Sample\.bounded: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports$/u));
+	// The same recursive export alone still compiles: the refusal is about the bound, not the graph.
+	const plainGraph = nativeMetadataFixture(), alone = plainGraph.metadata.modules[0].declarations[0].projection;
+	alone.parameters[0].type = graph; alone.result = graph;
+	assert.ok(createCompiledPhpWasmModel(reselect(plainGraph)).copiedGraph);
+	const owned = nativeMetadataFixture(), site = owned.metadata.modules[0].declarations[0].projection;
+	site.parameters[0].type = fin; site.result = finRecordNat;
+	const ownedAggregates = JSON.parse(await readFile("docs/evidence/owned-php-transfers-20260930.json", "utf8")).runtime[0].input.sourceIdentity.request.ownedAggregates;
+	assert.throws(() => createCompiledPhpWasmModel(reselect(owned, { ownedAggregates })), refinedError(/implemented only for ordinary native packages with bound-checking adapters/u));
 });
 
 test("PHP-Wasm packages document each checked path, and packages without bounds document nothing new", () => {
@@ -96,46 +123,16 @@ test("PHP-Wasm callers are the native PHP Fin consumers with only loading and re
 	assert.throws(() => phpWasmFinConsumer("<?php\necho 1;\n", "weak"), /Unexpected native PHP consumer layout/u);
 });
 
-test("relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts", { skip: process.env.LEAN_BRIDGE_PHP_WASM_FIN_TEST !== "1", timeout: 3_600_000 }, async t => {
+test("relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)", { skip: process.env.LEAN_BRIDGE_PHP_WASM_FIN_TEST !== "1", timeout: 3_600_000 }, async t => {
 	const reports = [];
 	for(const [name, fixture] of Object.entries(phpWasmFinFixtures))
 	{
-		const author = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-fin-author-"));
-		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-fin-consumer-"));
-		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
-		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
-		await cp(fixture.root, projectRoot, { recursive: true });
-		const exports = { schemaVersion: 1, modules: [fixture.module], exports: Object.keys(fixture.refinements), targets: { "php-wasm": fixture.settings } };
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(exports));
-		const environment = nativeFixtureEnvironment(["php-wasm"]);
-		if(environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME) environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME = environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
-		t.diagnostic(`${name}: compiling for wasm32`);
-		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: ["php-wasm"], environment }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
-		const model = JSON.parse(await readFile(join(outputRoot, "php-wasm/component/model.json"), "utf8"));
-		assert.equal(model.pointerBits, 32);
 		// Lean elaboration supplies every bound; the wasm32 model carries exactly the native trees.
-		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
-		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
-		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
-		const packageSet = JSON.parse(await readFile(join(outputRoot, "packages/php-wasm/php-wasm-package-set.json")));
-		await rm(author, { recursive: true, force: true });
-		const caller = await phpWasmFinCaller(fixture);
-		const clean = { ...copiedCleanEnvironment, LEAN_BRIDGE_PHP_SOURCE: "/unavailable/php", LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler", LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime" };
-		const installation = { settings: fixture.settings, source: caller.source, request: caller.request, removeHandoff: true };
-		const options = { t, library: { id: `fin-${name}` }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath: "ordinary-source", fixture: installation };
-		const installed = await installedPhpWasmCorpus(options).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
-		const readme = await readFile(join(consumer, "relocated/node_modules", fixture.settings.npm.name, "README.md"), "utf8");
+		const verifyModel = model => assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements);
+		const spec = { ...fixture, label: `fin-${name}`, exports: Object.keys(fixture.refinements), verifyModel, minimumChecks: 2000 };
+		const { readme, report } = await checkInstalledPhpWasmFixture(t, spec);
 		assert.match(readme, /\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n\. The PHP-Wasm side module/u);
-		// Node and browser, embedded and Composer, startup and lazy, weak and strict: one observation each.
-		assert.ok(installed.phpWasm.executions.length >= 8);
-		for(const execution of installed.phpWasm.executions)
-		{
-			assert.equal(execution.observation.word_bits, 32);
-			assert.ok(execution.observation.checks > 2000, `${name} ${execution.realm}`);
-		}
-		const identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256 };
-		reports.push({ fixture: name, profile: "php-wasm", path: "ordinary-source", refinements: fixture.refinements, ...identities, packages: receipt.packages, ...installed, sourceRemovedBeforeInstallation: true });
+		reports.push({ fixture: name, refinements: fixture.refinements, ...report });
 	}
 	const reportPath = resolve(process.env.LEAN_BRIDGE_PHP_WASM_FIN_REPORT ?? "build/php-wasm-fin/ordinary.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports }));
