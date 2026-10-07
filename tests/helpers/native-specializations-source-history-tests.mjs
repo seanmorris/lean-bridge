@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeFinContainersSource, nativeFinContainersChangedPaths } from "./native-fin-containers-source-history.mjs";
 import { beforeNativeSpecializationsSource, nativeSpecializationsChangedPaths
 	, nativeSpecializationsHistoryPath, reverseNativeSpecializationsUpdate } from "./native-specializations-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Native specialization history authenticates exact predecessors and rejects
 	assert.deepEqual(record.updates.map(item => item.path), nativeSpecializationsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeFinContainersSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeSpecializationsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeSpecializationsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeSpecializationsSource(update.path, source, update.currentSha256), source);
@@ -37,7 +38,7 @@ const acceptedRevision = "78955d7f25c08dd3606c07807cf525435daae250";
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Native specialization adds one installed receipt and one signature cell per native host, and changes no other claim", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeNativeSpecializationsSource(path, text));
+	const current = JSON.parse(beforeNativeFinContainersSource(path, text)), previous = JSON.parse(beforeNativeSpecializationsSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), groups.map(([key]) => `native-specializations-${key}-installed`));
 	const cells = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -72,10 +73,10 @@ test("Native specialization adds one installed receipt and one signature cell pe
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeSpecializationsSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeNativeFinContainersSource(file.path, source)));
 			++refreshed;
 		}
 	}

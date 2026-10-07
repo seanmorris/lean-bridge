@@ -370,7 +370,13 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : cell.shape === "fin" ? finEvidence : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			// Scalar Fin cells cite their host receipt and, since VO #1427, the container receipt of the same build group.
+			if(cell.shape === "fin")
+			{
+				assert.deepEqual(stage.evidence, [finEvidence, `native-fin-containers-${specializationEvidence}-installed`]);
+				continue;
+			}
+			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

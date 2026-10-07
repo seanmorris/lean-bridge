@@ -21,6 +21,7 @@ import { finDistributionChangedPaths } from "./fin-distribution-source-history.m
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
 import { nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
+import { nativeFinContainersChangedPaths } from "./native-fin-containers-source-history.mjs";
 import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsChangedPaths } from "./npm-fin-diagnostics-source-history.mjs";
 import { diagnosticFollowupChangedPaths } from "./diagnostic-followup-source-history.mjs";
 import { combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
@@ -75,7 +76,7 @@ test("native Fin inventory changes only source pins and the four evidenced C-fam
 			if(now.files[index].sha256 === file.sha256) continue;
 			// Only branch-changed sources move, and only to their exact authenticated successor.
 			// Later layers may also refresh pins; each still reconstructs its exact predecessor.
-			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			if(!predecessors.has(file.path))
 				predecessors.set(file.path, sha256(beforeNativeFinSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(file.sha256, predecessors.get(file.path), `${entry.id}: ${file.path} predecessor`);

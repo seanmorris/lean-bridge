@@ -18,6 +18,7 @@ import { finDistributionChangedPaths } from "./fin-distribution-source-history.m
 import { perlFinChangedPaths } from "./perl-fin-source-history.mjs";
 import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.mjs";
 import { nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
+import { nativeFinContainersChangedPaths } from "./native-fin-containers-source-history.mjs";
 import { beforePythonFinSource, pythonFinChangedPaths
 	, pythonFinHistoryPath, reversePythonFinUpdate } from "./python-fin-source-history.mjs";
 
@@ -53,7 +54,7 @@ test("Python scalar Fin changes only evidence source pins, not support or archiv
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforePythonFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeRustFinSource(file.path, source)));
