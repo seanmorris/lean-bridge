@@ -228,30 +228,14 @@ export const validateElaboratedMetadata = (report, request) => {
 							if(!text(type.provenance.structure) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.provenance.structure)
 								|| type.provenance.structure === type.name || !Array.isArray(type.provenance.arguments)
 								|| !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("Invalid component record provenance");
-							// Arguments are descriptors: primitives and their containers inline, nominal types by name.
-							const descriptor = (argument, level) => {
-								if(level > 32 || !argument || typeof argument !== "object") fail("Invalid component record provenance argument");
-								if(argument.kind === "reference")
-								{
-									closed(argument, ["kind", "name"]);
-									if(!text(argument.name)) fail("Invalid component record provenance reference");
-									return;
-								}
-								if(argument.kind === "primitive") return scalar(argument);
-								if(["array", "list", "option"].includes(argument.kind))
-								{
-									closed(argument, ["kind", "element"]);
-									return descriptor(argument.element, level + 1);
-								}
-								if(["result", "tuple"].includes(argument.kind))
-								{
-									closed(argument, ["kind", "arguments"]);
-									if(!Array.isArray(argument.arguments) || argument.arguments.length !== 2) fail("Invalid component record provenance container");
-									return argument.arguments.forEach(child => descriptor(child, level + 1));
-								}
-								fail("Component record provenance arguments must be primitives, their containers or nominal references");
-							};
-							type.provenance.arguments.forEach(argument => descriptor(argument, 0));
+							// Arguments are copied types validated like field types; identity, callback and
+							// refinement arguments never instantiate a record.
+							const argumentKind = value => value?.kind === "alias" ? argumentKind(value.target) : value?.kind;
+							for(const argument of type.provenance.arguments)
+							{
+								if(["resource", "callback", "refinement"].includes(argumentKind(argument))) fail("Component record provenance arguments cannot be resource, callback or refinement types");
+								copied(argument, depth + 1, references, refinements);
+							}
 						}
 						const names = new Set();
 						for(const field of type.fields)
@@ -298,7 +282,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				});
 				validateType(projection.result);
 				// Every record provenance reference must name a nominal definition this declaration carries:
-				// an inline definition, or an entry of its copied graph table. A phantom argument has none.
+				// an inline definition, including one only a provenance argument carries, or a table entry.
 				const defined = new Set(), provenance = [];
 				const survey = value => {
 					if(!value || typeof value !== "object") return;
@@ -308,7 +292,11 @@ export const validateElaboratedMetadata = (report, request) => {
 						return survey(value.root);
 					}
 					if(["alias", "record", "variant"].includes(value.kind) && typeof value.name === "string") defined.add(value.name);
-					if(value.kind === "record" && value.provenance) provenance.push(...value.provenance.arguments);
+					if(value.kind === "record" && value.provenance)
+					{
+						provenance.push(...value.provenance.arguments);
+						value.provenance.arguments.forEach(survey);
+					}
 					if(value.kind === "alias") survey(value.target);
 					if(value.kind === "refinement") survey(value.base);
 					if(["array", "list", "option"].includes(value.kind)) survey(value.element);

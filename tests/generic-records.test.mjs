@@ -18,7 +18,7 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
+import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const profiles = process.env.LEAN_BRIDGE_GENERIC_RECORD_PROFILES?.split(",").sort() ?? [];
@@ -46,24 +46,36 @@ const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, o
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap: false } };
 const text = { kind: "primitive", name: "string", lean: "String", abi: heap };
-const record = (name, structure, args, fields) => ({ kind: "record", name, lean: name, constructor: `${structure}.mk`, provenance: { structure, arguments: args }, fields, abi: heap });
+const record = (name, structure, args, fields) => ({ kind: "record", name, lean: name, constructor: `${structure ?? name}.mk`, ...(structure ? { provenance: { structure, arguments: args } } : {}), fields, abi: heap });
 const field = (name, type) => ({ name, projection: `Sample.Box.${name}`, type });
 
 test("native types accept an alias-named instantiation with closed provenance and refuse malformed origins", () => {
 	const box = record("Sample.NatBox", "Sample.Box", [nat], [field("value", nat), field("count", nat)]);
 	validateNativeType(box);
 	validateNativeType(record("Sample.MaybeBox", "Sample.Box", [{ kind: "option", element: nat, abi: heap }], [field("value", { kind: "option", element: nat, abi: heap }), field("count", nat)]));
-	validateNativeType(record("Sample.BoxPair", "Sample.Pair", [{ kind: "reference", name: "Sample.NatBox", lean: "Sample.NatBox", abi: heap }, text], [field("first", box), field("second", text)]));
+	// Inline form: a nominal argument is the inline definition, as it is in a field.
+	validateNativeType(record("Sample.BoxPair", "Sample.Pair", [box, text], [field("first", box), field("second", text)]));
+	// A phantom argument: the definition travels only through the provenance.
+	validateNativeType(record("Sample.MarkerTag", "Sample.Tag", [record("Sample.Marker", undefined, undefined, [field("id", nat)])], [field("label", text)]));
+	// Graph form: arguments are references into the table, like field types.
+	const boxReference = { kind: "reference", name: "Sample.NatBox", lean: "Sample.NatBox", abi: heap };
+	const tablePair = record("Sample.BoxPair", "Sample.Pair", [boxReference, text], [field("first", boxReference), field("second", text)]);
+	validateNativeType({ kind: "graph", root: { ...boxReference, name: "Sample.BoxPair", lean: "Sample.BoxPair" }, abi: heap, types: [box, tablePair] });
 	const invalid = [
 		["structure equal to the alias", { ...box, provenance: { structure: "Sample.NatBox", arguments: [nat] } }]
 		, ["constructor outside the structure", { ...box, constructor: "Sample.Other.mk" }]
 		, ["no arguments", { ...box, provenance: { structure: "Sample.Box", arguments: [] } }]
 		, ["open provenance fields", { ...box, provenance: { structure: "Sample.Box", arguments: [nat], extra: true } }]
-		, ["an inline nominal argument", { ...box, provenance: { structure: "Sample.Box", arguments: [box] } }]
 		, ["a callback argument", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "callback", parameters: [nat], result: nat, abi: heap }] } }]
-		, ["an unnamed reference", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "reference", name: "Sample.NatBox", lean: "Other", abi: heap }] } }]];
+		, ["an unnamed reference", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "reference", name: "Sample.NatBox", lean: "Other", abi: heap }] } }]
+		// Descriptor representations are checked like every type's, not only closed.
+		, ["a malformed reference representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "reference", name: "Sample.NatBox", lean: "Sample.NatBox", abi: { malformed: true } }] } }]
+		, ["an open container representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "option", element: nat, abi: { ...heap, extra: 1 } }] } }]
+		, ["an inconsistent container representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "list", element: nat, abi: { ...heap, box: "lean_box_uint32" } }] } }]
+		, ["a scalar tuple representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "tuple", arguments: [nat, nat], abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: true } }] } }]
+		, ["a missing primitive representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "primitive", name: "nat", lean: "Nat" }] } }]];
 	for(const [label, type] of invalid) assert.throws(() => validateNativeType(type), /native-library-v1/, label);
-	assert.equal(Object.keys(genericRecordInstantiations).length, 7);
+	assert.equal(Object.keys(genericRecordInstantiations).length, 8);
 });
 
 // Synthetic native metadata whose first declaration takes the first record and returns the second.
@@ -74,18 +86,25 @@ const withRecord = (parameter, result = parameter) => {
 	return input;
 };
 
-test("provenance references bind to a carried definition and two origins for one alias conflict", () => {
+test("provenance arguments carry their definitions, dangling references and conflicting origins are refused", () => {
 	const box = record("Sample.NatBox", "Sample.Box", [nat], [field("value", nat), field("count", nat)]);
-	const reference = { kind: "reference", name: "Sample.NatBox", lean: "Sample.NatBox", abi: heap };
-	const pair = record("Sample.BoxPair", "Sample.Pair", [reference, text], [field("first", box), field("second", text)]);
+	const pair = record("Sample.BoxPair", "Sample.Pair", [box, text], [field("first", box), field("second", text)]);
 	createNativeModel(withRecord(pair));
-	// A phantom argument names a definition no field carries: nothing binds it, so the model refuses it.
-	const phantom = record("Sample.Tagged", "Sample.Tag", [{ ...reference, name: "Sample.Missing", lean: "Sample.Missing" }], [field("count", nat)]);
-	assert.throws(() => createNativeModel(withRecord(phantom)), /[Rr]ecord provenance references an undefined nominal type:? Sample\.Missing/u);
-	// A reference whose representation disagrees with the definition it names is refused.
-	const disagreeing = record("Sample.BoxPair", "Sample.Pair", [{ ...reference, abi: { ...heap, heap: false } }, text], [field("first", box), field("second", text)]);
-	assert.throws(() => createNativeModel(withRecord(disagreeing)), /disagrees with its definition's representation/u);
-	// The same alias with two different origins is a conflicting definition, never a silent merge.
+	// A phantom argument carries the definition only the instantiation names: the Binding IR defines it, the transport does not.
+	const marker = record("Sample.Marker", undefined, undefined, [field("id", nat)]);
+	const phantom = record("Sample.MarkerTag", "Sample.Tag", [marker], [field("label", text)]);
+	const phantomModel = createNativeModel(withRecord(phantom));
+	assert.ok(phantomModel.bindingIr.types.some(type => type.id === "lean:Sample.Marker" && type.kind === "record"));
+	assert.ok(!phantomModel.types.some(type => type.name === "Sample.Marker"));
+	// A reference that no table defines binds to nothing, in the inline form and in a graph.
+	const reference = { kind: "reference", name: "Sample.Missing", lean: "Sample.Missing", abi: heap };
+	const dangling = record("Sample.Tagged", "Sample.Tag", [reference], [field("count", nat)]);
+	assert.throws(() => createNativeModel(withRecord(dangling)), /reference requires a matching nominal definition/u);
+	assert.throws(() => createNativeModel(withRecord({ kind: "graph", root: { ...reference, name: "Sample.Tagged", lean: "Sample.Tagged" }, types: [dangling], abi: heap })), /reference requires a matching nominal definition/u);
+	// An argument definition that disagrees with the same definition carried by a field is a conflict, never a silent merge.
+	const disagreeing = record("Sample.BoxPair", "Sample.Pair", [{ ...box, fields: [field("value", text), field("count", nat)] }, text], [field("first", box), field("second", text)]);
+	assert.throws(() => createNativeModel(withRecord(disagreeing)), /Conflicting compiler type definitions: lean:Sample\.NatBox/u);
+	// The same alias with two different origins is a conflicting definition too.
 	const drifted = record("Sample.NatBox", "Sample.Crate", [nat], [field("value", nat), field("count", nat)]);
 	const input = withRecord(box, drifted);
 	assert.throws(() => createElaboratedSemanticModel({ metadata: input.metadata, request: input.sourceIdentity.request, component: elaboratedComponent({ name: "Sample", version: "1.0.0" }), elaborationSha256: "9".repeat(64) }), /Conflicting compiler type definitions: lean:Sample\.NatBox/u);
@@ -139,6 +158,54 @@ test("generic structure instantiations are rejected at the Lean source unless an
 	});
 });
 
+// Established structural constructors are Lean structures too; their mappings stay ahead of generic-record admission.
+const structuralControls = `
+abbrev Pairish := Nat × String
+abbrev Nums := Array Nat
+abbrev Names := List String
+abbrev MaybeNat := Option Nat
+abbrev Outcome := Except String Nat
+def tupleDirect (value : Nat × String) : Nat × String := (value.1 + 1, value.2)
+def tupleAlias (value : Pairish) : Pairish := (value.1 + 1, value.2)
+def arrayDirect (value : Array Nat) : Array Nat := value.push 1
+def arrayAlias (value : Nums) : Nums := value.push 1
+def listDirect (value : List String) : List String := value.reverse
+def listAlias (value : Names) : Names := value.reverse
+def optionDirect (value : Option Nat) : Option Nat := value.map (· + 1)
+def optionAlias (value : MaybeNat) : MaybeNat := value.map (· + 1)
+def exceptDirect (value : Except String Nat) : Except String Nat := value
+def exceptAlias (value : Outcome) : Outcome := value
+`;
+
+test("direct and aliased Array, List, Option, Prod and Except keep their metadata shapes beside alias-named records", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-records-controls-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
+	await cp("tests/fixtures/onboarding/generic-records", projectRoot, { recursive: true });
+	await saveLakeFile(projectRoot, "GenericRecords.lean", (await genericRecordSource()).replace("end GenericRecords", `${structuralControls}\nend GenericRecords`));
+	const controls = ["tupleDirect", "tupleAlias", "arrayDirect", "arrayAlias", "listDirect", "listAlias", "optionDirect", "optionAlias", "exceptDirect", "exceptAlias"];
+	const exports = [...genericRecordExports, ...controls.map(name => `GenericRecords.${name}`)];
+	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], exports, targets: Object.fromEntries([genericRecordTargets.c]) }));
+	await buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: genericRecordEnvironment(["c"]) }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
+	const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+	const shape = type => type.kind === "alias" ? `${type.name.split(".").at(-1)}=${shape(type.target)}` : type.kind === "record" ? `record:${type.name.split(".").at(-1)}` : type.element ? `${type.kind}(${shape(type.element)})` : type.arguments ? `${type.kind}(${type.arguments.map(shape).join(",")})` : type.name;
+	const signature = name => { const item = model.exports.find(item => item.name === `GenericRecords.${name}`); return `${item.parameters.map(parameter => shape(parameter.type)).join(", ")} -> ${shape(item.result)}`; };
+	assert.equal(signature("tupleDirect"), "tuple(nat,string) -> tuple(nat,string)");
+	assert.equal(signature("tupleAlias"), "Pairish=tuple(nat,string) -> Pairish=tuple(nat,string)");
+	assert.equal(signature("arrayDirect"), "array(nat) -> array(nat)");
+	assert.equal(signature("arrayAlias"), "Nums=array(nat) -> Nums=array(nat)");
+	assert.equal(signature("listDirect"), "list(string) -> list(string)");
+	assert.equal(signature("listAlias"), "Names=list(string) -> Names=list(string)");
+	assert.equal(signature("optionDirect"), "option(nat) -> option(nat)");
+	assert.equal(signature("optionAlias"), "MaybeNat=option(nat) -> MaybeNat=option(nat)");
+	assert.equal(signature("exceptDirect"), "result(nat,string) -> result(nat,string)");
+	assert.equal(signature("exceptAlias"), "Outcome=result(nat,string) -> Outcome=result(nat,string)");
+	assert.equal(signature("bump"), "record:NatBox -> record:NatBox");
+	// The controls define no record and carry no instantiation; the alias-named records are unchanged beside them.
+	assert.deepEqual(model.bindingIr.types.filter(type => type.kind === "record").map(type => type.id).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `lean:GenericRecords.${name}`).sort());
+	assertGenericRecordIr(model.bindingIr, "GenericRecords");
+});
+
 test("every selected native profile has a generic record consumer", async () => {
 	for(const [profile, extension] of [["c", "c"], ["cpp", "cpp"]]) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);
 });
@@ -162,8 +229,8 @@ test("relocated source-free C and C++ packages construct and project alias-named
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		// The native model keeps each alias-named record with its structure and resolved arguments.
 		const records = model.types.filter(type => type.kind === "record");
-		assert.deepEqual(records.map(type => type.name).sort(), Object.keys(genericRecordInstantiations).map(name => `GenericRecords.${name}`).sort());
-		for(const type of records) assert.equal(type.provenance.structure, `GenericRecords.${genericRecordInstantiations[type.name.split(".").at(-1)].structure}`, type.name);
+		assert.deepEqual(records.map(type => type.name).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `GenericRecords.${name}`).sort());
+		for(const type of records) assert.equal(type.provenance?.structure, genericRecordInstantiations[type.name.split(".").at(-1)] && `GenericRecords.${genericRecordInstantiations[type.name.split(".").at(-1)].structure}`, type.name);
 		assertGenericRecordIr(model.bindingIr, "GenericRecords");
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });

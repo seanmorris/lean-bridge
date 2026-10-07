@@ -33,6 +33,8 @@ int main() {
   /* A universe-polymorphic structure instantiated at Type. */
   const api::TaggedNat retagged = api::retag(api::TaggedNat{"t", 1});
   CHECK(retagged.tag == "t#" && retagged.payload == 2);
+  /* A phantom argument: the instantiation names Marker, which no field carries. */
+  CHECK(api::relabel(api::MarkerTag{"m"}).label == "m?");
   for (unsigned i = 0; i < 1000; ++i) {
     const api::NatBox round = api::bump(api::NatBox{i, i});
     if (round.value != i + 1 || round.count != i + 1) { std::fprintf(stderr, "round %u failed\n", i); return 1; }

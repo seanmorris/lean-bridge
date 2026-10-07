@@ -18,7 +18,7 @@ const fixture = "tests/fixtures/onboarding/generic-records";
 // The WIT host header and the C prefix both derive from this hyphen-free name.
 const coordinate = { name: "genericrecords", version: "1.0.0" };
 export const genericRecordTargets = Object.freeze({ c: ["c", coordinate], cpp: ["cpp", coordinate] });
-export const genericRecordExports = Object.freeze(["swapNamed", "bump", "shout", "again", "orZero", "total", "firstBoxes", "unpair", "retag"].map(name => `GenericRecords.${name}`));
+export const genericRecordExports = Object.freeze(["swapNamed", "bump", "shout", "again", "orZero", "total", "firstBoxes", "unpair", "retag", "relabel"].map(name => `GenericRecords.${name}`));
 const named = id => ({ kind: "named", id });
 const primitive = name => ({ kind: "primitive", name });
 /** The instantiation every alias-named record must record in its Binding IR definition. */
@@ -30,7 +30,11 @@ export const genericRecordInstantiations = Object.freeze({
 	, MaybeBox: { structure: "Box", arguments: [{ kind: "apply", constructor: "option", arguments: [primitive("nat")] }] }
 	, BoxPair: { structure: "Pair", arguments: [named("NatBox"), named("TextBox")] }
 	// Universe-polymorphic structure instantiated at Type.
-	, TaggedNat: { structure: "Tagged", arguments: [primitive("string"), primitive("nat")] } });
+	, TaggedNat: { structure: "Tagged", arguments: [primitive("string"), primitive("nat")] }
+	// A phantom argument: the nominal Marker reaches the package only through this provenance.
+	, MarkerTag: { structure: "Tag", arguments: [named("Marker")], fields: 1 } });
+/** Nominal records the fixture carries only as provenance, never in a signature or field. */
+export const genericRecordProvenanceOnly = Object.freeze(["Marker"]);
 
 /**
  * Read the fixture source under another module name, for the npm author project.
@@ -47,14 +51,16 @@ export const genericRecordSource = async (module = "GenericRecords") => (await r
  */
 export const assertGenericRecordIr = (ir, module) => {
 	const records = ir.types.filter(type => type.kind === "record");
-	assert.deepEqual(records.map(type => type.id).sort(), Object.keys(genericRecordInstantiations).map(name => `lean:${module}.${name}`).sort());
+	assert.deepEqual(records.map(type => type.id).sort(), [...Object.keys(genericRecordInstantiations), ...genericRecordProvenanceOnly].map(name => `lean:${module}.${name}`).sort());
+	// A definition reached only through a provenance reference is still carried, without an instantiation of its own.
+	for(const name of genericRecordProvenanceOnly) assert.equal(records.find(type => type.id === `lean:${module}.${name}`).source.extensions?.["lean-lang.org/instantiation"], undefined, name);
 	for(const [name, expected] of Object.entries(genericRecordInstantiations))
 	{
 		const record = records.find(type => type.id === `lean:${module}.${name}`);
 		const instantiation = record.source.extensions["lean-lang.org/instantiation"];
 		const qualify = argument => argument.kind === "named" ? named(`lean:${module}.${argument.id}`) : argument.kind === "apply" ? { ...argument, arguments: argument.arguments.map(qualify) } : argument;
 		assert.deepEqual(instantiation, { structure: `${module}.${expected.structure}`, arguments: expected.arguments.map(qualify) }, name);
-		assert.equal(record.fields.length, 2, name);
+		assert.equal(record.fields.length, expected.fields ?? 2, name);
 	}
 	// Two aliases of one application are two definitions with identical fields and the same origin.
 	const [natBox, again] = ["NatBox", "NatBoxAgain"].map(name => records.find(type => type.id === `lean:${module}.${name}`));
@@ -80,6 +86,7 @@ check(first.tag === "some" && first.value.length === 2 && first.value[1].value =
 check(api.unpair({ first: { value: 3n, count: 0n }, second: { value: "abcd", count: 0n } }) === 7n, "unpair");
 const retagged = api.retag({ tag: "t", payload: 1n });
 check(retagged.tag === "t#" && retagged.payload === 2n, "retag");
+check(api.relabel({ label: "m" }).label === "m?", "relabel");
 rejected(() => api.bump({ value: "x", count: 1n }), "wrong field type");
 rejected(() => api.bump({ value: 4n }), "missing field");
 rejected(() => api.bump({ value: 4n, count: 1n, extra: 1n }), "extra field");
@@ -131,7 +138,7 @@ export const checkGenericRecordNpmPackages = async (t, { fixture: project, build
 	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout.trim());
-	assert.deepEqual(result, { checks: 1009, rejections: 1005 });
+	assert.deepEqual(result, { checks: 1010, rejections: 1005 });
 	// Strict TypeScript sees one interface per alias; a structurally equal alias is a separate declaration.
 	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
 	for(const name of Object.keys(genericRecordInstantiations).filter(name => name !== "Boxes")) assert.match(declarations, new RegExp(`export interface ${name} \\{`), name);
@@ -142,12 +149,13 @@ const again: api.NatBoxAgain = api.again({ value: 1n, count: 2n });
 const boxes: api.Boxes = [box, { value: 0n, count: 0n }];
 const pair: api.WordPair = api.swapNamed({ first: "a", second: 1n });
 const tagged: api.TaggedNat = api.retag({ tag: "t", payload: 1n });
+const marker: api.MarkerTag = api.relabel({ label: "m" });
 const sum: bigint = api.total(boxes) + api.unpair({ first: box, second: { value: "x", count: 0n } }) + api.orZero({ value: { tag: "none" }, count: 1n });
 // @ts-expect-error Nat fields keep bigint.
 api.bump({ value: 1, count: 2n });
 // @ts-expect-error Every field is required.
 api.shout({ value: "x" });
-void again; void pair; void sum; void tagged;
+void again; void pair; void sum; void tagged; void marker;
 `);
 	await processBuildRunner.capture({ command: process.execPath, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	return { archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), abi: 7, ...result };

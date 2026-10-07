@@ -63,6 +63,11 @@ int main(void) {
   tagged_in.tag = text("t"); mpz_set_ui(tagged_in.payload, 1);
   CHECK(OK(genericrecords_retag(&tagged_in, &tagged_out, &error)) && same(&tagged_out.tag, "t#") && is_small(tagged_out.payload, 2));
   genericrecords_tagged_nat_clear(&tagged_out); mpz_clear(tagged_in.payload);
+  /* A phantom argument: the instantiation names Marker, which no field carries. */
+  genericrecords_marker_tag label_in, label_out; genericrecords_marker_tag_init(&label_in); genericrecords_marker_tag_init(&label_out);
+  label_in.label = text("m");
+  CHECK(OK(genericrecords_relabel(&label_in, &label_out, &error)) && same(&label_out.label, "m?"));
+  genericrecords_marker_tag_clear(&label_out);
   for (unsigned long i = 0; i < 1000; ++i) {
     genericrecords_nat_box round; genericrecords_nat_box_init(&round);
     mpz_set_ui(box.value, i); mpz_set_ui(box.count, i);

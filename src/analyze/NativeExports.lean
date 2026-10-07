@@ -136,6 +136,13 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
 
+/-- Structures with their own mappings: never generic-record instantiations, however an alias spells them. -/
+def structuralConstructors : List Name := [``Array, ``Prod, ``Fin, ``Subtype]
+
+/-- The structure a closed application may instantiate as an alias-named record. -/
+def genericStructure? (env : Environment) (name : Name) : Option StructureInfo :=
+  if structuralConstructors.contains name then none else getStructureInfo? env name
+
 /-- `structural` stays true while only arrays, lists, options and aliases separate a
 position from its top-level parameter or result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
@@ -212,7 +219,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
               -- A closed application of a generic structure becomes a record named by this alias.
               let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
-                (getStructureInfo? (← getEnv) definition.value.getAppFn.constName!).isSome
+                (genericStructure? (← getEnv) definition.value.getAppFn.constName!).isSome
               let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none)
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
@@ -223,9 +230,25 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                 ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
+  -- Established structural constructors keep their mappings ahead of generic-record admission.
+  if e.isAppOfArity ``Array 1 then
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+  if e.isAppOfArity ``List 1 then
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+  if e.isAppOfArity ``Option 1 then
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+  if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
+    let args := e.getAppArgs
+    -- Products and results are not checked containers for native packages yet.
+    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin false
+    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin false
+    -- IR result arguments are [success, error]; Lean's Except is [error, success].
+    let result := e.isAppOfArity ``Except 2
+    return obj [("kind", str (if result then "result" else "tuple")),
+      ("arguments", toJson (if result then #[second, first] else #[first, second])), ("abi", ← abi e)]
   if e.isApp then
     if let .const structureName levels := e.getAppFn then
-      if let some info := getStructureInfo? (← getEnv) structureName then
+      if let some info := genericStructure? (← getEnv) structureName then
         -- A closed instantiation is admitted only through the alias that names it: the alias is the
         -- record's identity and Lean spelling, and the application is recorded as its provenance.
         let some aliasName := alias
@@ -362,21 +385,6 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         cases := cases.push (obj [("name", str caseName), ("constructor", str constructor.toString), ("fields", toJson fields)])
       return ← rememberShape e name <| obj [("kind", str "variant"), ("name", str name.toString),
         ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
-  if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
-  if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
-  if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
-  if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
-    let args := e.getAppArgs
-    -- Products and results are not checked containers for native packages yet.
-    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin false
-    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin false
-    -- IR result arguments are [success, error]; Lean's Except is [error, success].
-    let result := e.isAppOfArity ``Except 2
-    return obj [("kind", str (if result then "result" else "tuple")),
-      ("arguments", toJson (if result then #[second, first] else #[first, second])), ("abi", ← abi e)]
   if e.isForall then
     if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e
@@ -420,7 +428,13 @@ partial def inlineCopiedType (types : Array Json) (value : Json)
     let fields ← fields.mapM fun (field : Json) => do
       pure (field.setObjVal! "type" (← inlineCopiedType types (← ofExcept <| field.getObjVal? "type") seen (depth + 1)))
     pure (owner.setObjVal! "fields" (toJson fields))
-  if kind == "record" then return ← expandFields value
+  if kind == "record" then
+    let value ← expandFields value
+    -- Provenance arguments expand like fields, so a definition only the instantiation names stays inline.
+    let some provenance := (value.getObjVal? "provenance").toOption | return value
+    let arguments ← ofExcept <| provenance.getObjValAs? (Array Json) "arguments"
+    let arguments ← arguments.mapM fun child => inlineCopiedType types child seen (depth + 1)
+    return value.setObjVal! "provenance" (provenance.setObjVal! "arguments" (toJson arguments))
   if kind == "variant" then
     let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
     return value.setObjVal! "cases" (toJson (← cases.mapM expandFields))

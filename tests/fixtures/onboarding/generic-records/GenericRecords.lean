@@ -15,8 +15,17 @@ structure Tagged (α : Type u) (β : Type v) where
   tag : α
   payload : β
 
+/-- A phantom parameter: no field carries it, so only the instantiation names its argument. -/
+structure Tag (α : Type) where
+  label : String
+
+/-- A nominal type that reaches the package only as a phantom argument. -/
+structure Marker where
+  id : Nat
+
 abbrev WordPair := Pair String Nat
 abbrev TaggedNat := Tagged String Nat
+abbrev MarkerTag := Tag Marker
 abbrev NatBox := Box Nat
 abbrev TextBox := Box String
 /-- A second alias of the same application: a distinct host type with the same layout. -/
@@ -36,5 +45,6 @@ def total (values : Boxes) : Nat := values.foldl (fun acc box => acc + box.value
 def firstBoxes (count : Nat) : Option Boxes := if count == 0 then none else some ((List.range count).map fun n => ⟨n, count⟩)
 def unpair (value : BoxPair) : Nat := value.first.value + value.second.value.length
 def retag (value : TaggedNat) : TaggedNat := ⟨value.tag ++ "#", value.payload + 1⟩
+def relabel (value : MarkerTag) : MarkerTag := ⟨value.label ++ "?"⟩
 
 end GenericRecords

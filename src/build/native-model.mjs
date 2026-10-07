@@ -188,13 +188,14 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
 		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
+		// Provenance arguments are not transport types; the Binding IR carries a definition that only an instantiation names.
 		if(type.kind === "variant") for(const branch of type.cases) for(const field of branch.fields) visit(field.type);
 		if(type.kind === "callback")
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
 	};
-	// A record's provenance may reference only nominal definitions the model carries; the
-	// reference's representation must agree with that definition. Phantom arguments have none.
+	// In the graph form a record's provenance references only nominal definitions the model
+	// carries, and the reference's representation must agree with that definition.
 	const resolveProvenance = () => {
 		const named = new Map([...allTypes.values()].filter(type => ["alias", "record", "variant"].includes(type.kind)).map(type => [type.name, type]));
 		const resolve = (argument, owner) => {

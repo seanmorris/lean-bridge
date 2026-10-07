@@ -16,30 +16,16 @@ const closed = (value, fields, label) => {
 		|| fields.some(key => !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key) ?? {}, "value"))) fail(`invalid ${label} fields`);
 };
 
-// A provenance argument is a descriptor, not a transport: primitives and their structural
-// containers inline, and every nominal type as a reference by name. The record's own fields
-// carry the transport shapes, so no definition table is needed here.
-const provenanceArgument = (value, depth) => {
-	if(depth > 32 || !value || typeof value !== "object") fail("invalid record provenance argument");
-	if(value.kind === "reference")
-	{
-		closed(value, ["kind", "name", "lean", "abi"], "provenance reference");
-		if(!identifier.test(value.name) || value.name !== value.lean) fail("invalid record provenance reference");
-		return;
-	}
-	if(value.kind === "primitive") return validate(value, depth + 1, true);
-	if(["array", "list", "option"].includes(value.kind))
-	{
-		closed(value, ["kind", "element", "abi"], "provenance container");
-		return provenanceArgument(value.element, depth + 1);
-	}
-	if(["result", "tuple"].includes(value.kind))
-	{
-		closed(value, ["kind", "arguments", "abi"], "provenance container");
-		if(!Array.isArray(value.arguments) || value.arguments.length !== 2) fail("invalid record provenance container");
-		return value.arguments.forEach(child => provenanceArgument(child, depth + 1));
-	}
-	fail("record provenance arguments must be primitives, their containers or nominal references");
+// Every type carries one checked C representation.
+const representation = type => {
+	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
+	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "size_t", "float", "double"].includes(type.abi.cType)
+	  || !/^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.box)
+	  || !/^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.unbox)
+	  || typeof type.abi.heap !== "boolean") fail("missing checked native representation");
+	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
+	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
+	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
 };
 
 /**
@@ -89,14 +75,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		, refinement: ["kind", "base", "predicate", "abi"] }[type.kind];
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
-	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
-	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "size_t", "float", "double"].includes(type.abi.cType)
-	  || !/^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.box)
-	  || !/^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.unbox)
-	  || typeof type.abi.heap !== "boolean") fail("missing checked native representation");
-	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
-	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
-	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
+	representation(type);
 	const recurse = (child, copy = copied, inner = structural) => validate(child, depth + 1, copy, references, policy, owned, inner);
 	if(type.kind === "graph")
 	{
@@ -157,7 +136,14 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			if(!identifier.test(type.provenance.structure) || type.provenance.structure === type.name
 				|| !type.constructor.startsWith(`${type.provenance.structure}.`)) fail("invalid record provenance");
 			if(!Array.isArray(type.provenance.arguments) || !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("invalid record provenance arguments");
-			type.provenance.arguments.forEach(child => provenanceArgument(child, 0));
+			// Arguments are copied types validated like field types: inline definitions in the inline form,
+			// references in the graph form. Identity, callback and refinement arguments never instantiate a record.
+			const argumentKind = value => value?.kind === "alias" ? argumentKind(value.target) : value?.kind;
+			for(const child of type.provenance.arguments)
+			{
+				recurse(child, true, false);
+				if(["resource", "callback", "refinement"].includes(argumentKind(child))) fail("record provenance arguments cannot be resource, callback or refinement types");
+			}
 		}
 		for(const field of type.fields)
 		{

@@ -76,7 +76,8 @@ export const validateCopiedMetadataGraph = (graph, validate, native = false) => 
 		charge(0);
 		const kind = kindOf(type);
 		if(!["alias", "record", "variant"].includes(kind)) fail("nominal table only admits aliases, records and variants");
-		keys(type, ["kind", "name", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...(native && kind === "record" ? ["constructor"] : [])], true);
+		// An instantiated generic record keeps its provenance in the table; the profile validator checks it.
+		keys(type, ["kind", "name", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...(native && kind === "record" ? ["constructor"] : []), ...(kind === "record" && Object.hasOwn(type, "provenance") ? ["provenance"] : [])], true);
 		if(typeof type.name !== "string") fail("expected a nominal identity");
 		const id = `lean:${type.name}`;
 		if(kind === "alias") return { kind, id, target: reference(type.target) };

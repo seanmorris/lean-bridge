@@ -62,7 +62,8 @@ test("native builds admit a generic structure instantiation named by an alias, w
 	// The alias is the record's identity; the structure and its resolved arguments are its provenance.
 	assert.equal(record.name, "Specialized.WordPair"); assert.equal(record.lean, "Specialized.WordPair"); assert.equal(record.constructor, "Specialized.Pair.mk");
 	assert.equal(record.provenance.structure, "Specialized.Pair");
-	assert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}`), ["reference:Specialized.Word", "primitive:string"]);
+	// Arguments travel like field types: the alias inline, with its own target.
+	assert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}${argument.target ? `=${argument.target.name}` : ""}`), ["alias:Specialized.Word=string", "primitive:string"]);
 	assert.deepEqual(record.fields.map(field => [field.name, field.type.kind === "alias" ? field.type.name : field.type.name]), [["first", "Specialized.Word"], ["second", "string"]]);
 	assert.equal(model.exports.find(item => item.name === "Specialized.echoPair").result.name, "Specialized.WordPair");
 });
