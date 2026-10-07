@@ -48,8 +48,10 @@ test("checked exports never share a component with callbacks, and Subtype never 
 	// The type validator refuses a nested Subtype before the model's own guard can.
 	const nested = { kind: "array", element: checked("Sample.checkedText"), abi: heap };
 	assert.throws(() => createNativeModel(refined(nested), { refinements: true }), /Subtype refinements require a top-level native parameter or result/);
+	// A product is a structural container (VO #1441); Subtype still never enters one.
 	const product = { kind: "tuple", arguments: [fin("10"), nat], abi: heap };
-	assert.throws(() => createNativeModel(refined(product), { refinements: true }), /Fin refinements require a top-level native parameter or result, or an array, list or option of one/);
+	assert.deepEqual(createNativeModel(refined(product), { refinements: true }).exports[0].refinements.parameters[0], { kind: "tuple", arguments: [{ kind: "fin", bound: "10" }, null] });
+	assert.throws(() => createNativeModel(refined({ ...product, arguments: [checked("Sample.checkedText"), nat] }), { refinements: true }), /Subtype refinements require a top-level native parameter or result/);
 });
 
 // Reviewed Binding IR rejection needs a real build with a reviewed document; tests/native-fin.test.mjs covers it.

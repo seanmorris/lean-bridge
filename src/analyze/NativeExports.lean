@@ -160,8 +160,8 @@ def structuralConstructors : List Name := [``Array, ``Prod, ``Fin, ``Subtype]
 def genericStructure? (env : Environment) (name : Name) : Option StructureInfo :=
   if structuralConstructors.contains name then none else getStructureInfo? env name
 
-/-- `structural` stays true while only arrays, lists, options and aliases separate a
-position from its top-level parameter or result. -/
+/-- `structural` stays true while only arrays, lists, options, products, results and aliases
+separate a position from its top-level parameter or result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
     (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none) : ShapeM Json := do
@@ -176,7 +176,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     -- Native libraries check bounds around top-level parameters and results and inside
     -- their structural containers; record and variant fields and callbacks stay unchecked.
     if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && !structural then
-      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists and options"
+      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists, options, products and Except values"
     let bound ← whnf e.appArg!
     let .lit (.natVal bound) := bound
       | reject e "Fin refinements require a closed literal bound"
@@ -256,9 +256,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
-    -- Products and results are not checked containers for native packages yet.
-    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin false
-    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin false
+    -- Products and results are structural containers: native packages check Fin in both
+    -- components and in the active branch.
+    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin structural
+    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin structural
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     let result := e.isAppOfArity ``Except 2
     return obj [("kind", str (if result then "result" else "tuple")),

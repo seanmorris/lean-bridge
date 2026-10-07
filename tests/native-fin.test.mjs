@@ -50,14 +50,16 @@ test("Fin bounds split into exact little-endian uint32 limbs", () => {
 	for(const bound of ["", "01", "-1", "1.5", "1e3", 7]) assert.throws(() => finBoundLimbs(bound), /Invalid Fin bound/);
 });
 
-test("native validation admits Fin at a top-level Nat site or inside its arrays, lists and options", () => {
+test("native validation admits Fin at a top-level Nat site or inside its structural containers", () => {
 	for(const bound of ["0", "1", huge]) assert.equal(validateNativeType(fin(bound)).predicate.bound, bound);
 	assert.throws(() => validateNativeType(fin("5"), 1), /top-level/);
 	assert.throws(() => validateNativeType(fin("5"), 0, true), /top-level/);
-	// Structural containers of a top-level site are checked since VO #1427; products are not.
+	// Structural containers of a top-level site are checked since VO #1427, products and results since VO #1441.
 	validateNativeType({ kind: "array", element: fin("5"), abi: nat.abi });
 	validateNativeType({ kind: "option", element: fin("5"), abi: nat.abi });
-	assert.throws(() => validateNativeType({ kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi }), /top-level/);
+	validateNativeType({ kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi });
+	validateNativeType({ kind: "result", arguments: [nat, fin("5")], abi: nat.abi });
+	assert.throws(() => validateNativeType({ kind: "record", name: "Box", lean: "Box", constructor: "Box.mk", fields: [{ name: "digits", projection: "Box.digits", type: { kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi } }], abi: nat.abi }), /top-level/);
 	for(const bound of ["", "05", "-1", "1e3", 5]) assert.throws(() => validateNativeType(fin(bound)), /invalid Fin refinement/);
 	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "subtype", bound: "5" } }), /refinement predicate fields/);
 	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "fin", bound: "5", extra: true } }), /invalid refinement predicate fields/);
@@ -148,15 +150,16 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 });
 
 // Arrays, lists and options of Fin are checked containers since VO #1427; other positions stay rejected.
-test("native builds reject Fin outside top-level sites and their arrays, lists and options", { skip: !enabled, timeout: 900_000 }, async t => {
+test("native builds reject Fin outside top-level sites and their structural containers", { skip: !enabled, timeout: 900_000 }, async t => {
+	// Products and Except values are structural containers; inside a record field or a callback they are not.
 	const sites = [["field", "structure Box where\n  digit : Fin 5\ndef fieldSite (value : Box) : Nat := value.digit.val"]
 		, ["callback", "def callbackSite (value : Fin 5 → Nat) : Nat := value 0"]
-		, ["tuple", "def tupleSite (value : Fin 5 × Nat) : Nat := value.2"]
-		, ["except", "def exceptSite (value : Nat) : Except String (Fin 5) := .error \"no\""]];
+		, ["tuple field", "structure Pair where\n  digits : Fin 5 × Nat\ndef tupleSite (value : Pair) : Nat := value.digits.2"]
+		, ["except callback", "def exceptSite (value : Nat → Except String (Fin 5)) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]];
 	for(const [name, source] of sites)
 	{
 		const nested = await project(t, `namespace NativeFin\n${source}\nend NativeFin\n`);
-		await assert.rejects(() => component(nested, true), error => /Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists and options/.test(JSON.stringify(error.details ?? error.message)), name);
+		await assert.rejects(() => component(nested, true), error => /Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists, options, products and Except values/.test(JSON.stringify(error.details ?? error.message)), name);
 	}
 });
 

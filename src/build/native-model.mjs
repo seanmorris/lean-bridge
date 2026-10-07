@@ -149,6 +149,12 @@ const nativeRefinements = declaration => {
 			const element = tree(type.element, false);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
 		}
+		// Products keep [first, second]; results keep [ok, error], as the transport does.
+		if(["tuple", "result"].includes(type.kind))
+		{
+			const children = type.arguments.map(child => tree(child, false));
+			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
+		}
 		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.
 		if(containsGraph(type, "refinement")) throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements inside ${type.kind} values are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
 		return null;
