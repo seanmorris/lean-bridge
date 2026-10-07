@@ -42,9 +42,9 @@ const configuration = (selection, reviewed) => ({
 	, modules: ["ReviewedFin"]
 	, ...reviewed ? {} : { exports: reviewedFinWasmIr(selection).declarations.map(item => item.source.declaration) }
 	, targets: { npm: { name: "reviewed-fin", version: "1.0.0" } } });
-const build = (projectRoot, outputRoot, runtimeRoot) => buildCanonicalProject({
+const build = (projectRoot, outputRoot) => buildCanonicalProject({
 	projectRoot, outputRoot, engineRoot: repository, targets: ["npm"]
-	, environment: { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot }
+	, environment: { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix" }
 	, runner: refinementEngineTransport()
 });
 
@@ -159,7 +159,7 @@ const installedNode = async (root, selection) => {
 			, compilerSha256: sha256(await readFile(join(repository, "node_modules/typescript/lib/_tsc.js"))) } };
 };
 
-const checkMismatches = async (t, producers, runtimeRoot) => {
+const checkMismatches = async (t, producers) => {
 	const observations = [];
 	for(const [index, { label, ir }] of reviewedFinWasmMismatches().entries())
 	{
@@ -169,7 +169,7 @@ const checkMismatches = async (t, producers, runtimeRoot) => {
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration("structural", true)));
 		const source = canonicalJson(ir);
 		await saveLakeFile(projectRoot, "api.binding-ir.json", source);
-		await assert.rejects(build(projectRoot, outputRoot, runtimeRoot), error => {
+		await assert.rejects(build(projectRoot, outputRoot), error => {
 			assert.equal(error.code, "reviewed-ir-source-mismatch", label);
 			assert.equal(error.message, "Reviewed contract does not match the freshly compiled Lean API", label);
 			// Local transport preserves the field; the locked process envelope intentionally omits it.
@@ -208,7 +208,7 @@ export const checkReviewedFinWasm = async (t, selection, reviewed, { browsers = 
 	{
 		t.diagnostic(`${reviewed ? "reviewed" : "ordinary"} ${selection}: WASM and npm build ${index + 1}/2`);
 		const before = await lakeInputState(projectRoot), outputRoot = join(producers, `build-${index}`);
-		await build(projectRoot, outputRoot, runtimeRoot);
+		await build(projectRoot, outputRoot);
 		const bundleRoot = join(outputRoot, "bundle");
 		facts.push(await reviewedFinWasmBuildFacts(bundleRoot, selection, reviewed));
 		const release = await buildComponentNpmPackages({ bundleRoot, runtimeRoot, outputRoot: join(producers, `npm-${index}`) });
@@ -221,7 +221,7 @@ export const checkReviewedFinWasm = async (t, selection, reviewed, { browsers = 
 	assert.deepEqual(releases[0].report, releases[1].report);
 	for(const key of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][key]), await readFile(releases[1][key]));
-	const mismatches = reviewed && selection === "structural" ? await checkMismatches(t, producers, runtimeRoot) : [];
+	const mismatches = reviewed && selection === "structural" ? await checkMismatches(t, producers) : [];
 	const receipt = releases[0].report, handoff = join(directory, "handoff");
 	await mkdir(handoff);
 	for(const name of [receipt.package.archive, receipt.runtime.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
