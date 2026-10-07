@@ -15,6 +15,8 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { finProductEnvironment, finProductRefinements, finProductTargets, installFinProductConsumer } from "./helpers/fin-product-install.mjs";
+import { finProductDispatchColumns, finProductDispatchExpected, finProductDispatchInterposer, finProductDispatchProbe } from "./helpers/fin-product-dispatch.mjs";
+import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -147,6 +149,38 @@ test("every native profile has a Fin product consumer and a target", async () =>
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/fin-product-consumers/${profile}.${extension}`);
 });
 
+/**
+ * Count real dispatch in the installed C package with a test-only interposer: public
+ * rejections reach neither Lean symbol, raw adapter rejections reach only the adapter,
+ * and valid raw calls reach the adapter and the source.
+ *
+ * @param consumer - Consumer root containing the installed C package.
+ * @param packages - Installed C packages.
+ * @param leanPrefix - Pinned Lean installation providing lean.h for raw adapter values.
+ */
+const observeDispatch = async (consumer, packages, leanPrefix) => {
+	const root = join(consumer, "c"), pkg = packages.find(item => item.role === "component");
+	const installed = join(root, `${pkg.name}-${pkg.version}-c`), lib = join(installed, "lib");
+	const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
+	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(lib, "pkgconfig"), PKG_CONFIG_PATH: "" };
+	const strict = ["-std=c11", "-Wall", "-Wextra", "-Werror"];
+	await saveLakeFile(root, "interposer.c", finProductDispatchInterposer());
+	await saveLakeFile(root, "probe.c", finProductDispatchProbe());
+	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root, compile);
+	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], root, compile)).stdout.trim().split(/\s+/);
+	await runCopied("/usr/bin/cc", [...strict, "-isystem", join(leanPrefix, "include"), "probe.c", ...flags, "-lleanshared", "-o", "probe"], root, compile);
+	// Without the interposer the probe refuses to report, so a missing counter cannot pass.
+	await assert.rejects(() => runCopied(join(root, "probe"), [], root, copiedCleanEnvironment), /interposer is not loaded/u);
+	const run = await runCopied(join(root, "probe"), [], root, { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") });
+	assert.equal(run.stderr, "");
+	const observed = run.stdout.trim().split("\n").map(line => {
+		const [step, status, ...counts] = line.split(" ");
+		return [step, Number(status), counts.map(Number)];
+	});
+	assert.deepEqual(observed, finProductDispatchExpected);
+	return { columns: finProductDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl: "valid public and raw calls increment source and adapter counts" };
+};
+
 test("relocated source-free native packages check Fin inside products and the active Except branch", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => finProductTargets[profile]));
@@ -187,7 +221,9 @@ test("relocated source-free native packages check Fin inside products and the ac
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
 			const { command, ...observation } = await installFinProductConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			void command;
+			const dispatch = profile === "c" ? { dispatch: await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) } : {};
 			reports.push({ profile, path: "ordinary-source", ...observation, packages
+				, ...dispatch
 				, refinements: finProductRefinements
 				, bindingIrSha256: built.bindingIrSha256
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256

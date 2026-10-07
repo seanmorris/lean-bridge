@@ -57,28 +57,36 @@ int main(void) {
   CHECK(OK(finproducts_ok_only(&o, count, &error)) && is_small(count, 9));
   mpz_set_ui(o.ok, 10);
   CHECK(rejected(finproducts_ok_only(&o, count, &error), &error, "arg0 is not below its Fin 10 bound"));
-  /* An out-of-bound value in the inactive ok slot is never read. */
-  o.is_ok = 0; o.error = text("four");
-  CHECK(OK(finproducts_ok_only(&o, count, &error)) && is_small(count, 104));
-  mpz_clear(o.ok);
+  finproducts_result_nat_string_value_clear(&o);
+  /* The inactive branch is never checked: a well-formed error text passes without an ok value. */
+  ok_only text_error; finproducts_result_nat_string_value_init(&text_error);
+  text_error.is_ok = 0; text_error.error = text("four");
+  CHECK(OK(finproducts_ok_only(&text_error, count, &error)) && is_small(count, 104));
+  mpz_clear(text_error.ok);
   /* Except (Fin 5) Nat: the error branch is bounded; any ok Nat is valid. */
   branches e; finproducts_result_nat_nat_value_init(&e);
-  e.is_ok = 1; mpz_setbit(e.ok, 100); mpz_set_ui(e.error, 99);
+  e.is_ok = 1; mpz_setbit(e.ok, 100); /* A well-formed ok Nat; the bounded error slot is never written. */
   CHECK(OK(finproducts_error_only(&e, count, &error)) && mpz_tstbit(count, 100));
+  finproducts_result_nat_nat_value_clear(&e); finproducts_result_nat_nat_value_init(&e);
   e.is_ok = 0; mpz_set_ui(e.error, 4);
   CHECK(OK(finproducts_error_only(&e, count, &error)) && is_small(count, 104));
   mpz_set_ui(e.error, 5);
   CHECK(rejected(finproducts_error_only(&e, count, &error), &error, "arg0 is not below its Fin 5 bound"));
-  /* Except (Fin 3) (Fin 7): only the active branch is checked. */
-  e.is_ok = 1; mpz_set_ui(e.ok, 6); mpz_set_ui(e.error, 1000);
-  CHECK(OK(finproducts_both(&e, count, &error)) && is_small(count, 6));
-  mpz_set_ui(e.ok, 7);
-  CHECK(rejected(finproducts_both(&e, count, &error), &error, "arg0 is not below its Fin 7 bound"));
-  e.is_ok = 0; mpz_set_ui(e.error, 2);
-  CHECK(OK(finproducts_both(&e, count, &error)) && is_small(count, 102));
-  mpz_set_ui(e.error, 3);
-  CHECK(rejected(finproducts_both(&e, count, &error), &error, "arg0 is not below its Fin 3 bound"));
   finproducts_result_nat_nat_value_clear(&e);
+  /* Except (Fin 3) (Fin 7): only the active branch is checked. Each call builds a fresh value
+     whose inactive slot is never written, so no inactive payload is fabricated. */
+  const unsigned long both_cases[4][2] = {{1, 6}, {1, 7}, {0, 2}, {0, 3}};
+  for (int i = 0; i < 4; ++i) {
+    branches b; finproducts_result_nat_nat_value_init(&b);
+    b.is_ok = (int)both_cases[i][0];
+    mpz_set_ui(both_cases[i][0] ? b.ok : b.error, both_cases[i][1]);
+    finproducts_status status = finproducts_both(&b, count, &error);
+    if (i == 0) CHECK(OK(status) && is_small(count, 6));
+    if (i == 1) CHECK(rejected(status, &error, "arg0 is not below its Fin 7 bound"));
+    if (i == 2) CHECK(OK(status) && is_small(count, 102));
+    if (i == 3) CHECK(rejected(status, &error, "arg0 is not below its Fin 3 bound"));
+    finproducts_result_nat_nat_value_clear(&b);
+  }
   /* List (Option (Fin 3 × Except (Fin 2) Nat)): every present element, both levels. */
   finproducts_option_tuple_nat_result_nat_nat_value rows[3];
   for (int i = 0; i < 3; ++i) finproducts_option_tuple_nat_result_nat_nat_value_init(&rows[i]);

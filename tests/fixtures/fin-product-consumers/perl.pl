@@ -13,7 +13,15 @@ sub rejected {
   my $passed = eval { $call->(); 1 }; my $error = "$@";
   return !$passed && index($error, "$path is not below its Fin $bound bound") == 0;
 }
+sub dies { my ($call) = @_; my $passed = eval { $call->(); 1 }; my $error = "$@"; return !$passed && index($error, 'is not below its Fin') < 0; }
 my $wide = Math::BigInt->new(10)->blsft(64)->badd(10);
+# Malformed shapes fail conversion with their own errors before any bound is walked.
+check(dies(sub { LeanBridge::FinProducts::first([n(1)]) }), 'short product');
+check(dies(sub { LeanBridge::FinProducts::first([undef, n(1)]) }), 'undefined component');
+check(dies(sub { LeanBridge::FinProducts::first({ 0 => n(1), 1 => n(2) }) }), 'hash instead of product');
+check(dies(sub { LeanBridge::FinProducts::both(bless({ value => n(1) }, 'PretendOk')) }), 'foreign Except class');
+check(dies(sub { LeanBridge::FinProducts::both(undef) }), 'undefined Except');
+check(dies(sub { LeanBridge::FinProducts::nested([some([n(1), 'text'])]) }), 'nested non-Except');
 # Fin 10 × Nat: only the first component is bounded; the path names the component.
 for my $d (0 .. 9) {
   my $out = LeanBridge::FinProducts::first([n($d), n(1000)]);
