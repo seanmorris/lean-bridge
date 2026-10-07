@@ -1,0 +1,18 @@
+    check!(api::echo_nat_box(&input).unwrap().value == n(4));
+    check!(api::echo_again(&api::NatBoxAgain { value: n(4), count: n(1) }).unwrap().value == n(4));
+    check!(api::echo_text_box(&api::TextBox { value: greeting.into(), count: n(0) }).unwrap().value == greeting);
+    let left: api::LeftBox = api::echo_left(&api::LeftBox { value: n(5), count: n(2) }).unwrap();
+    let right: api::RightBox = api::echo_right(&api::RightBox { value: n(6), count: n(3) }).unwrap();
+    check!(left.value == n(5));
+    check!(right.count == n(3));
+    let specialized_boxes: api::Boxes = api::echo_boxes(&boxes).unwrap();
+    check!(specialized_boxes.len() == 3 && specialized_boxes[2].value == n(1) << 70usize);
+    check!(api::echo_boxes(&[]).unwrap().is_empty());
+    let specialized_optional: api::OptionalBoxes = api::echo_optional_boxes(&Some(boxes)).unwrap();
+    check!(specialized_optional.as_ref().is_some_and(|v| v.len() == 3 && v[2].value == n(1) << 70usize));
+    check!(api::echo_optional_boxes(&None).unwrap().is_none());
+    check!(api::echo_optional_boxes(&Some(vec![])).unwrap().is_some_and(|v| v.is_empty()));
+    let specialized_nats: api::Nats = api::echo_nats(&[n(0), n(1) << 70usize]).unwrap();
+    check!(specialized_nats.len() == 2 && specialized_nats[1] == n(1) << 70usize && api::echo_nats(&[]).unwrap().is_empty());
+    let specialized_nat: api::OptionalNat = api::echo_optional_nat(&Some(n(1) << 70usize)).unwrap();
+    check!(specialized_nat == Some(n(1) << 70usize) && api::echo_optional_nat(&None).unwrap().is_none());
