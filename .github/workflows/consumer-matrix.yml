@@ -1290,6 +1290,25 @@ jobs:
           path: build/reviewed-fin-wasm/*.json
           if-no-files-found: error
           retention-days: 30
+      - name: Check alias-named generic records in browser pages, React effects and workers
+        id: generic_record_browser
+        timeout-minutes: 60
+        env:
+          LEAN_BRIDGE_GENERIC_RECORD_BROWSER_TEST: "1"
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          node --test --test-concurrency=1 tests/generic-records-browser.test.mjs
+          test -s build/generic-records/browser.json
+      - name: Preserve browser generic-record observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-records-browser-${{ github.sha }}
+          path: build/generic-records/browser.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Build and install owned npm exports through real Nix
         shell: bash
         env:
