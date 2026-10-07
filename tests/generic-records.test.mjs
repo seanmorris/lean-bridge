@@ -13,6 +13,7 @@ import { executeComponentEngineRequest } from "../src/build/component-engine.mjs
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
+import "./helpers/generic-records-source-history-tests.mjs";
 import { createElaboratedSemanticModel, elaboratedComponent } from "../src/analyze/semantic-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
