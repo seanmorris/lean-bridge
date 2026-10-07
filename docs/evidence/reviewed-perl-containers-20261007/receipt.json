@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "revision": "9d5a708809b42d5847e1106814985bed0fddc97b",
+  "sourcePath": "reviewed-ir",
+  "producerEnvironment": {
+    "host": "Debian 12 / glibc 2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+      "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+    }
+  },
+  "runs": [
+    {
+      "abi": "5.36.3-threaded",
+      "interpreter": "/app/.toolchains/perl/5.36.3-threaded/bin/perl",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-threaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.36.3-threaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "report": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-threaded.json",
+        "sha256": "d7c1f5ff52003dc03501be3f8f183ce7dfa5f963a392c33b1389e09c7b9fd2c1"
+      },
+      "log": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-threaded.txt",
+        "sha256": "0d4a9c723fbe7670da88e2b996ea6ffda17394996b39a7946a8443b9018f75a2"
+      }
+    },
+    {
+      "abi": "5.36.3-unthreaded",
+      "interpreter": "/app/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-unthreaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.36.3-unthreaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "report": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-unthreaded.json",
+        "sha256": "99afd2963e7676c54108e9a78d1bf74a2c0f51c5d5028f2e4f73ad1105bcab69"
+      },
+      "log": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-unthreaded.txt",
+        "sha256": "df7b9adc63f584b62cf90b711e7c0df99681a71888b6f931252b479c3d612997"
+      }
+    },
+    {
+      "abi": "5.38.2-threaded",
+      "interpreter": "/app/.toolchains/perl/5.38.2-threaded/bin/perl",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-threaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.38.2-threaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "report": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-threaded.json",
+        "sha256": "81e4c545b35b6a231063b7a4d70af1ac286cc7f71c25c5e94979b1f21d19b081"
+      },
+      "log": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-threaded.txt",
+        "sha256": "62555186252575cdff68760a407c8a93189f298de3271ff59587736a38fe562e"
+      }
+    },
+    {
+      "abi": "5.38.2-unthreaded",
+      "interpreter": "/app/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-unthreaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.38.2-unthreaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "report": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-unthreaded.json",
+        "sha256": "83104d9c73b759456620d37033871dc97a78f3d86344cdc37813d11fb6f2608e"
+      },
+      "log": {
+        "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-unthreaded.txt",
+        "sha256": "6a2e55a76a53887859067670aa3f530326ee3671a691d964f1950c42fb3d4ab1"
+      }
+    }
+  ],
+  "initialFailure": {
+    "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+    "log": {
+      "path": "docs/evidence/reviewed-perl-containers-20261007/initial-counter-failure.txt",
+      "sha256": "2402b0334f18d4ccb6303f02ef334bb5e931764d964cfe9f8df1ec7fc7377654"
+    },
+    "cause": "Lean inlines countNone (Array.size) into the checked adapter. The source-symbol interposer cannot observe a call eliminated by compilation.",
+    "repair": "Observe orDefault, which retains a source call; require nonzero source and adapter positive controls. Keep the full consumer's Fin 0 checks."
+  },
+  "scope": {
+    "consumer": "Perl / XS",
+    "shapes": [
+      "Array",
+      "List",
+      "Option",
+      "transparent aliases"
+    ],
+    "sourceDispatchObserved": true,
+    "directRawAdapterDispatchObserved": false,
+    "reviewedSubtypeObserved": false,
+    "browserObserved": false
+  },
+  "notes": [
+    "All four invocations selected one explicit interpreter; the raw reports are preserved without adding ABI fields.",
+    "Each raw report compares archive identities across two unrelated producer roots.",
+    "The archive records local acceptance, not hosted CI or registry publication."
+  ]
+}

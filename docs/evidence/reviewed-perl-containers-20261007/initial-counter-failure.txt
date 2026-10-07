@@ -1,0 +1,38 @@
+✖ independently reviewed native packages check container and alias Fin bounds after source-free installation (84951.45847ms)
+ℹ build 0: perl
+ℹ installing and checking perl
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85670.605378
+
+✖ failing tests:
+
+test at tests/native-fin-containers.test.mjs:280:1
+✖ independently reviewed native packages check container and alias Fin bounds after source-free installation (84951.45847ms)
+  AssertionError [ERR_ASSERTION]: valid-empty
+  + actual - expected
+  
+    [
+      0,
+  -   1,
+      0,
+  +   0,
+      1
+    ]
+  
+      at observePerlDispatch (file:///app/build/worktrees/generic-records-hosts-vo1439/tests/native-fin-containers.test.mjs:188:10)
+      at async checkInstalledFinContainers (file:///app/build/worktrees/generic-records-hosts-vo1439/tests/native-fin-containers.test.mjs:253:28)
+      at async Test.run (node:internal/test_runner/test:1054:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 0, 0, 0, 1 ],
+    expected: [ 0, 1, 0, 1 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
