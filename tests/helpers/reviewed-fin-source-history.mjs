@@ -1,33 +1,30 @@
 /**
- * Preserve exact source predecessors of the Generic records change (#1433).
+ * Preserve exact source predecessors of the Reviewed Fin admission change (#1438).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeReviewedFinSource } from "./reviewed-fin-source-history.mjs";
 
-export const genericRecordsHistoryPath = "docs/evidence/generic-records-source-history-20261007.json";
-export const genericRecordsChangedPaths = [
+export const reviewedFinHistoryPath = "docs/evidence/reviewed-fin-source-history-20261007.json";
+export const reviewedFinChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
-	, "docs/consume/c.md"
-	, "docs/consume/cpp.md"
-	, "docs/javascript-typescript.md"
-	, "docs/lean/existing-package.md"
+	, "config/checked-javascript.json"
+	, "config/cli-package.v1.json"
 	, "docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
-	, "src/analyze/NativeExports.lean"
-	, "src/analyze/copied-metadata-graph.mjs"
-	, "src/analyze/elaborated-metadata.mjs"
-	, "src/analyze/native-types.mjs"
-	, "src/analyze/semantic-model.mjs"
+	, "nix/component-engine-source-boundary.json"
+	, "nix/perl-engine-source-boundary.json"
+	, "package.json"
+	, "src/analyze/reviewed-source.mjs"
 	, "src/build/native-model.mjs"
 	, "tests/documentation.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-semantic-decisions-source-history-tests.mjs"
-	, "tests/helpers/reviewed-semantic-decisions-source-history.mjs"
-	, "tests/native-specializations.test.mjs"
+	, "tests/helpers/generic-records-source-history-tests.mjs"
+	, "tests/helpers/generic-records-source-history.mjs"
+	, "tests/native-fin-containers.test.mjs"
+	, "tests/native-fin.test.mjs"
+	, "tests/reviewed-source.test.mjs"
 ];
 let history;
 
@@ -37,8 +34,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseGenericRecordsUpdate = (source, update) => {
-	assert.ok(genericRecordsChangedPaths.includes(update.path));
+export const reverseReviewedFinUpdate = (source, update) => {
+	assert.ok(reviewedFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -58,18 +55,17 @@ export const reverseGenericRecordsUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1433, stopping at an explicitly requested identity.
+ * Restore the source before #1438, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeGenericRecordsSource = (path, source, expected) => {
-	source = beforeReviewedFinSource(path, source, expected);
-	if(typeof source !== "string" || !genericRecordsChangedPaths.includes(path)) return source;
+export const beforeReviewedFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(genericRecordsHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseGenericRecordsUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedFinUpdate(source, update) : source;
 };

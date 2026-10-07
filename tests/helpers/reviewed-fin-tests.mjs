@@ -85,6 +85,8 @@ test("the independent container fixture keeps alias and structural constraints a
 	const ir = finContainerReviewedIr();
 	validateReviewedSource(reviewInput(ir));
 	assert.equal(reviewedSourceSelection(reviewInput(ir)).exports.length, 8);
+	for(const declaration of ir.declarations)
+		assert.deepEqual(declaration.parameters.map(parameter => parameter.name), declaration.parameters.map((_, index) => `arg${index}`));
 	assert.deepEqual(ir.types.map(type => [type.id, type.kind]), [["lean:FinContainers.Digits", "alias"]]);
 	assert.deepEqual(ir.types[0].source.extensions["lean-lang.org/nominal-refinements"], { kind: "alias", target: wrap("array", fin("10")) });
 	const mirror = ir.declarations.find(declaration => declaration.name === "mirrorAll");

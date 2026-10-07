@@ -25,6 +25,9 @@ export const finContainerReviewedIr = () => {
 	const ir = corpusReviewedIr({ id: "fincontainers" }, signatures.map(([name, parameters, result]) => ({ name: `FinContainers.${name}`, parameters, result })));
 	for(const [index, declaration] of ir.declarations.entries())
 	{
+		// Keep the public argument labels shared with the ordinary-source consumers.
+		// A review can rename parameters, and those names appear in host diagnostics.
+		declaration.parameters.forEach((parameter, position) => { parameter.name = `arg${position}`; });
 		const [, , , parameters, result] = signatures[index];
 		if(result !== null || parameters.some(value => value !== null))
 			declaration.source.extensions["lean-lang.org/refinements"] = { parameters, result };
