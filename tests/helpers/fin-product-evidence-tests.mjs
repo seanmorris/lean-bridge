@@ -25,6 +25,9 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 	assert.equal(receipt.schemaVersion, 1);
 	assert.equal(receipt.planNode, 1441);
 	assert.equal(receipt.execution, "local");
+	assert.equal(receipt.producerEnvironment.platform, "Debian 12");
+	assert.equal(receipt.producerEnvironment.hostGlibcVersion, "2.36");
+	assert.equal(receipt.producerEnvironment.overrides.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, null);
 	assert.deepEqual(receipt.reports.map(report => report.id), identities.map(([id]) => id));
 	for(const [id, path, revision, digest] of identities)
 	{
@@ -34,6 +37,8 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 		assert.equal(reference.path, `${directory}/${id}.json`);
 		assert.equal(reference.sourcePath, path);
 		assert.deepEqual(reference.profiles, ["c", "cpp"]);
+		assert.ok(reference.reproduceCommand.includes("node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-products.test.mjs"));
+		assert.ok(!reference.reproduceCommand.includes("LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"));
 		const bytes = await readFile(reference.path);
 		assert.equal(sha256(bytes), digest);
 		const report = JSON.parse(bytes);

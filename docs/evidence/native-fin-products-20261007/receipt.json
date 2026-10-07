@@ -14,7 +14,8 @@
         "c",
         "cpp"
       ],
-      "gate": "LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs"
+      "gate": "LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs",
+      "reproduceCommand": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-products.test.mjs"
     },
     {
       "id": "reviewed-c-cpp",
@@ -26,7 +27,8 @@
         "c",
         "cpp"
       ],
-      "gate": "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs"
+      "gate": "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-products.test.mjs",
+      "reproduceCommand": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-products.test.mjs"
     }
   ],
   "logs": [
@@ -55,5 +57,14 @@
     "Explicit Array-of-product acceptance.",
     "Required CI reports and supported runtime-floor acceptance.",
     "C++ dispatch was not independently instrumented; the archived counter table belongs to C only."
-  ]
+  ],
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": null
+    },
+    "confirmation": "Producing agent Claude, VO #board message1428; the override was unset for both runs.",
+    "scope": "Host version and invocation only. The raw reports do not establish compatibility with a lower distribution runtime floor."
+  }
 }
