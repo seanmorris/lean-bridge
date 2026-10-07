@@ -25,6 +25,13 @@ import { beforePhpWasmRecursiveCallables } from './php-wasm-recursive-callable-s
 
 const priorSource = async path => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'));
 
+/**
+ * Authenticate the inventory's original bytes before parsing its historical data.
+ *
+ * @param source - Complete raw inventory file, without JSON reserialization.
+ */
+export const phpRecursiveTypeSurface = source => JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', source));
+
 export const phpRecursiveCallableBaseline = 'e17c1fe6e137d1a3bbdb65d9a9ec1e49dbc751be';
 export const phpRecursiveCallableExecutionPath = 'docs/evidence/php-recursive-callables-20260926.json';
 export const phpRecursiveCallableScope = {
@@ -258,7 +265,9 @@ export const assertPhpRecursiveCallableIntegration = async record => {
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	const { document: current, ...contracts } = await readTypeSurface(), old = JSON.parse(restored['docs/type-surface.v1.json']);
-	const document = JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', JSON.stringify(current, null, 2) + '\n'));
+	assert.ok(current.contractVersion);
+	// History authenticates file bytes, including whitespace, before JSON parsing.
+	const document = phpRecursiveTypeSurface(await readFile('docs/type-surface.v1.json', 'utf8'));
 	assert.equal(document.contractVersion, '0.105.0'); assert.equal(old.contractVersion, '0.104.0');
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === 'passed').length;

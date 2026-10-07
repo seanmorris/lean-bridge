@@ -12,10 +12,17 @@ import { generateCopiedRubyPackage } from "../src/backends/ruby/copied-values.mj
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { assertRubyStructuredCodegenRegression } from "./helpers/ruby-structured-callable-regression.mjs";
 import { assertRubyStructuredFaults } from "./helpers/ruby-structured-callable-install.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 
 test("Ruby structured callbacks preserve all earlier generated packages byte for byte", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/ruby-structured-codegen-regression-20260924.json"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+	{
+		const source = await readFile(path, "utf8");
+		assert.equal(sha256(beforeFinRefinementSource(path, source, hash)), hash, path);
+		const changed = source + "\n// unrelated change\n";
+		assert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);
+	}
 	assertRubyStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);

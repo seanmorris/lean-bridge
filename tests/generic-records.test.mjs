@@ -24,6 +24,8 @@ import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs"
 import { genericRecordDotnetDiagnostics } from "./helpers/generic-record-managed-types.mjs";
 import "./helpers/generic-record-hosts-source-history-tests.mjs";
 import "./helpers/generic-record-specialization-source-history-tests.mjs";
+import "./helpers/generic-record-host-evidence-tests.mjs";
+import "./helpers/refinement-core-followup-source-history-tests.mjs";
 import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 

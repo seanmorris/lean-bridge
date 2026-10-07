@@ -12,10 +12,17 @@ import { generateCopiedPythonPackage } from "../src/backends/python/copied-value
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { assertPythonStructuredCodegenRegression } from "./helpers/python-structured-callable-regression.mjs";
 import { assertPythonStructuredFaults } from "./helpers/python-structured-callable-install.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 
 test("Python structured callbacks preserve all earlier generated packages byte for byte", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/python-structured-codegen-regression-20260924.json"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+	{
+		const source = await readFile(path, "utf8");
+		assert.equal(sha256(beforeFinRefinementSource(path, source, hash)), hash, path);
+		const changed = source + "\n// unrelated change\n";
+		assert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);
+	}
 	assertPythonStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);

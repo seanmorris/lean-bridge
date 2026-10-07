@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-core-followup-v1",
+  "predecessorCommit": "4f07abddfeb6b7fd2dfa16faefde41f0fdeb8cea",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d7d71bf3dd729db91369f905a3bd83a84f929109fbe196468e73d9ae5d0f0ec0",
+      "previousSha256": "f97295e83ee0e146fd3fe18949b30ad2ef19f98fb14cb955decc863403e9b273",
+      "edits": [
+        {
+          "start": 1097919,
+          "previous": "          \"sha256\": \"f6dc8e9b00d59bbd78e6ec1cd49b9553711e2ab34d4df6b5247cfff7ae34bbcf\"\n",
+          "current": "          \"sha256\": \"8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242\"\n"
+        },
+        {
+          "start": 1105055,
+          "previous": "          \"sha256\": \"63208e172e779703f50ecc7efc6b2f69f9751442a5fe0139fd27e5213de0ef1d\"\n",
+          "current": "          \"sha256\": \"95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd\"\n"
+        },
+        {
+          "start": 1218352,
+          "previous": "          \"sha256\": \"f6dc8e9b00d59bbd78e6ec1cd49b9553711e2ab34d4df6b5247cfff7ae34bbcf\"\n",
+          "current": "          \"sha256\": \"8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242\"\n"
+        },
+        {
+          "start": 1281360,
+          "previous": "          \"sha256\": \"63208e172e779703f50ecc7efc6b2f69f9751442a5fe0139fd27e5213de0ef1d\"\n",
+          "current": "          \"sha256\": \"95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd\"\n"
+        },
+        {
+          "start": 1385104,
+          "previous": "          \"sha256\": \"fa5feea1307d546535b9334dec8262a37cf4ce6daec6fa29a7adff1988e9ceea\"\n",
+          "current": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n"
+        },
+        {
+          "start": 1388803,
+          "previous": "          \"sha256\": \"ce5d00840fecac253cdef5267d1153cd20caab95a325f9d6e529cd388665ba17\"\n",
+          "current": "          \"sha256\": \"827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976\"\n"
+        },
+        {
+          "start": 1403403,
+          "previous": "          \"sha256\": \"fa5feea1307d546535b9334dec8262a37cf4ce6daec6fa29a7adff1988e9ceea\"\n",
+          "current": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n"
+        },
+        {
+          "start": 1408477,
+          "previous": "          \"sha256\": \"ce5d00840fecac253cdef5267d1153cd20caab95a325f9d6e529cd388665ba17\"\n",
+          "current": "          \"sha256\": \"827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976\"\n"
+        },
+        {
+          "start": 1421783,
+          "previous": "          \"sha256\": \"fa5feea1307d546535b9334dec8262a37cf4ce6daec6fa29a7adff1988e9ceea\"\n",
+          "current": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n"
+        },
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"cbd089be28b1bc9347d8ccad2df51352bafcb7bec6680c80337984ba3e1ccd9e\"\n",
+          "current": "          \"sha256\": \"b22c2798db023a33c93cafe6404d63f424b9504f929a477603a044fced725028\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"cbd089be28b1bc9347d8ccad2df51352bafcb7bec6680c80337984ba3e1ccd9e\"\n",
+          "current": "          \"sha256\": \"b22c2798db023a33c93cafe6404d63f424b9504f929a477603a044fced725028\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "b22c2798db023a33c93cafe6404d63f424b9504f929a477603a044fced725028",
+      "previousSha256": "cbd089be28b1bc9347d8ccad2df51352bafcb7bec6680c80337984ba3e1ccd9e",
+      "edits": [
+        {
+          "start": 1562,
+          "previous": "",
+          "current": "import \"./helpers/generic-record-host-evidence-tests.mjs\";\nimport \"./helpers/refinement-core-followup-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c24d2e6d59b7f372ffa8dd8485d71728338f27f785f7b8f8ba0602e31078c1de",
+      "previousSha256": "d5d7ff6c392f5a273b472b379b51b506f2f53f8b0407bea89e14cb5aaf20966e",
+      "edits": [
+        {
+          "start": 4156,
+          "previous": "",
+          "current": "import { refinementCoreFollowupChangedPaths } from \"./refinement-core-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 38974,
+          "previous": "",
+          "current": "\t, ...refinementCoreFollowupChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-specialization-source-history-tests.mjs",
+      "currentSha256": "e7a14e1e9412546fe289bbd5e88ba7fb8243e4b68366944a7022885ec197f1fb",
+      "previousSha256": "2367ddf882a45466015381cd5331207f8df371e6aa3df24e787fb1b22dfaf713",
+      "edits": [
+        {
+          "start": 268,
+          "previous": "",
+          "current": "import { beforeRefinementCoreFollowupSource } from \"./refinement-core-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 1104,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementCoreFollowupSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2126,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeRefinementCoreFollowupSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3040,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeRefinementCoreFollowupSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-specialization-source-history.mjs",
+      "currentSha256": "8e9be6158041f6b6448e08046f5531b944fc4cd0439fdc86eb389470a2a22cda",
+      "previousSha256": "21eae9bfb1a23f3b098918e40e22c6d327ffe45f258d876224209c460e993e54",
+      "edits": [
+        {
+          "start": 252,
+          "previous": "",
+          "current": "import { beforeRefinementCoreFollowupSource } from \"./refinement-core-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 2544,
+          "previous": "",
+          "current": "\tsource = beforeRefinementCoreFollowupSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-recursive-callable-evidence.mjs",
+      "currentSha256": "4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182",
+      "previousSha256": "fa5feea1307d546535b9334dec8262a37cf4ce6daec6fa29a7adff1988e9ceea",
+      "edits": [
+        {
+          "start": 1892,
+          "previous": "",
+          "current": "/**\n * Authenticate the inventory's original bytes before parsing its historical data.\n *\n * @param source - Complete raw inventory file, without JSON reserialization.\n */\nexport const phpRecursiveTypeSurface = source => JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', source));\n\n"
+        },
+        {
+          "start": 18253,
+          "previous": "\tconst document = JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', JSON.stringify(current, null, 2) + '\\n'));\n",
+          "current": "\tassert.ok(current.contractVersion);\n\t// History authenticates file bytes, including whitespace, before JSON parsing.\n\tconst document = phpRecursiveTypeSurface(await readFile('docs/type-surface.v1.json', 'utf8'));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-recursive-callable-evidence.test.mjs",
+      "currentSha256": "827c0e09e618426fc4d88acb4337d064d699bb37b5ac3b86fa8abeb92f168976",
+      "previousSha256": "ce5d00840fecac253cdef5267d1153cd20caab95a325f9d6e529cd388665ba17",
+      "edits": [
+        {
+          "start": 267,
+          "previous": "import { assertPhpRecursiveCallableExecution, assertPhpRecursiveCallableIntegration, assertPhpRecursiveInspection, phpRecursiveCallableExecutionPath } from './helpers/php-recursive-callable-evidence.mjs';\n",
+          "current": "import { assertPhpRecursiveCallableExecution, assertPhpRecursiveCallableIntegration, assertPhpRecursiveInspection, phpRecursiveCallableExecutionPath, phpRecursiveTypeSurface } from './helpers/php-recursive-callable-evidence.mjs';\n"
+        },
+        {
+          "start": 772,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from './helpers/fin-refinement-source-history.mjs';\n"
+        },
+        {
+          "start": 932,
+          "previous": "",
+          "current": "test('PHP historical inventory authentication preserves noncanonical whitespace', async () => {\n\tconst path = 'docs/type-surface.v1.json';\n\tconst expected = '8a319697940c5b471eb944adde08bc6de1b3fa6ccb5d51538b0cea949a4a2569';\n\tconst original = beforeFinRefinementSource(path, await readFile(path, 'utf8'), expected);\n\tassert.equal(sha256(original), expected);\n\tconst reformatted = JSON.stringify(JSON.parse(original), null, 2) + '\\n';\n\tassert.deepEqual(JSON.parse(original), JSON.parse(reformatted));\n\tassert.notEqual(sha256(original), sha256(reformatted));\n\tassert.equal(phpRecursiveTypeSurface(original).contractVersion, '0.105.0');\n\tassert.equal(beforePhpWasmRecursiveCallables(path, reformatted), reformatted);\n\tassert.notEqual(phpRecursiveTypeSurface(reformatted).contractVersion, '0.105.0');\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/python-structured-callable-contract.test.mjs",
+      "currentSha256": "8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242",
+      "previousSha256": "f6dc8e9b00d59bbd78e6ec1cd49b9553711e2ab34d4df6b5247cfff7ae34bbcf",
+      "edits": [
+        {
+          "start": 741,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1047,
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);\n",
+          "current": "\tfor(const [path, hash] of Object.entries(record.sourceHashes))\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.equal(sha256(beforeFinRefinementSource(path, source, hash)), hash, path);\n\t\tconst changed = source + \"\\n// unrelated change\\n\";\n\t\tassert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/ruby-structured-callable-contract.test.mjs",
+      "currentSha256": "95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd",
+      "previousSha256": "63208e172e779703f50ecc7efc6b2f69f9751442a5fe0139fd27e5213de0ef1d",
+      "edits": [
+        {
+          "start": 718,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1020,
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);\n",
+          "current": "\tfor(const [path, hash] of Object.entries(record.sourceHashes))\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.equal(sha256(beforeFinRefinementSource(path, source, hash)), hash, path);\n\t\tconst changed = source + \"\\n// unrelated change\\n\";\n\t\tassert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);\n\t}\n"
+        }
+      ]
+    }
+  ]
+}

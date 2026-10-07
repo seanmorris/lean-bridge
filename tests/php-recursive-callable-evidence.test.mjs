@@ -7,11 +7,25 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { sha256 } from '../src/capsule/node.mjs';
-import { assertPhpRecursiveCallableExecution, assertPhpRecursiveCallableIntegration, assertPhpRecursiveInspection, phpRecursiveCallableExecutionPath } from './helpers/php-recursive-callable-evidence.mjs';
+import { assertPhpRecursiveCallableExecution, assertPhpRecursiveCallableIntegration, assertPhpRecursiveInspection, phpRecursiveCallableExecutionPath, phpRecursiveTypeSurface } from './helpers/php-recursive-callable-evidence.mjs';
 import { beforePhpRecursiveCallables, phpRecursiveCallableHistoryPath, reversePhpRecursiveCallableUpdate } from './helpers/php-recursive-callable-source-history.mjs';
 import { beforePhpWasmRecursiveCallables } from './helpers/php-wasm-recursive-callable-source-history.mjs';
+import { beforeFinRefinementSource } from './helpers/fin-refinement-source-history.mjs';
 
 const json = async path => JSON.parse(await readFile(path, 'utf8'));
+
+test('PHP historical inventory authentication preserves noncanonical whitespace', async () => {
+	const path = 'docs/type-surface.v1.json';
+	const expected = '8a319697940c5b471eb944adde08bc6de1b3fa6ccb5d51538b0cea949a4a2569';
+	const original = beforeFinRefinementSource(path, await readFile(path, 'utf8'), expected);
+	assert.equal(sha256(original), expected);
+	const reformatted = JSON.stringify(JSON.parse(original), null, 2) + '\n';
+	assert.deepEqual(JSON.parse(original), JSON.parse(reformatted));
+	assert.notEqual(sha256(original), sha256(reformatted));
+	assert.equal(phpRecursiveTypeSurface(original).contractVersion, '0.105.0');
+	assert.equal(beforePhpWasmRecursiveCallables(path, reformatted), reformatted);
+	assert.notEqual(phpRecursiveTypeSurface(reformatted).contractVersion, '0.105.0');
+});
 
 test('recursive PHP acceptance adds exactly four cells and preserves authenticated history', async () => {
 	await assertPhpRecursiveCallableIntegration(await json(phpRecursiveCallableHistoryPath));
