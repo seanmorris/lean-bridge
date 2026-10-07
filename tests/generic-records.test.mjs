@@ -19,11 +19,13 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const profiles = process.env.LEAN_BRIDGE_GENERIC_RECORD_PROFILES?.split(",").sort() ?? [];
 assert.ok(profiles.every(profile => Object.hasOwn(genericRecordTargets, profile)), "Unknown generic record profile");
+assert.equal(new Set(profiles).size, profiles.length, "Duplicate generic record profile");
 const engineRoot = process.cwd();
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
 const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
@@ -251,14 +253,25 @@ test("direct and aliased Array, List, Option, Prod and Except keep their metadat
 	assert.equal(transport(model.exports.find(item => item.name === "GenericRecords.exceptAlias").result), "result(nat,string)");
 });
 
-test("every selected native profile has a generic record consumer", async () => {
-	for(const [profile, extension] of [["c", "c"], ["cpp", "cpp"]]) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);
+// Every native profile the harness can select has its own consumer and package coordinate.
+const consumerExtensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", perl: "pl", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
+
+test("every native profile has a generic record consumer and a target", async () => {
+	assert.deepEqual(Object.keys(genericRecordTargets).sort(), Object.keys(consumerExtensions).sort());
+	for(const profile of profiles) assert.ok(profile in genericRecordTargets, profile);
+	for(const [profile, extension] of Object.entries(consumerExtensions)) await access(`tests/fixtures/generic-record-consumers/${profile}.${extension}`);
 });
 
-test("relocated source-free C and C++ packages construct and project alias-named generic records", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+test("relocated source-free native packages construct and project alias-named generic records", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
 	const environment = genericRecordEnvironment(profiles);
+	// CI exports the Ruby toolchain; local runs use the pinned MRI 3.3 beside the other toolchains.
+	if(profiles.includes("ruby"))
+	{
+		environment.LEAN_BRIDGE_RUBY ??= resolve(".toolchains/ruby33/bin/ruby");
+		environment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), "gem");
+	}
 	for(const attempt of [0, 1])
 	{
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-records-author-"));
@@ -282,6 +295,9 @@ test("relocated source-free C and C++ packages construct and project alias-named
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		const dependencies = attempt === 0 && profiles.includes("rust")
+			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
+		// Install from prepared archives only. No author workspace or build staging remains.
 		await rm(directory, { recursive: true, force: true });
 		if(attempt === 1) break;
 		for(const profile of profiles)
@@ -289,7 +305,7 @@ test("relocated source-free C and C++ packages construct and project alias-named
 			t.diagnostic(`installing and checking ${profile}`);
 			const target = genericRecordTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
-			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment });
+			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			void command;
 			reports.push({ profile, path: "ordinary-source", ...observation, packages
 				, instantiations: genericRecordInstantiations
