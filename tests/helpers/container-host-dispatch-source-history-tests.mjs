@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSemanticDecisionsSource } from "./reviewed-semantic-decisions-source-history.mjs";
 import { beforeContainerHostDispatchSource, containerHostDispatchChangedPaths
 	, containerHostDispatchHistoryPath, reverseContainerHostDispatchUpdate } from "./container-host-dispatch-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("container dispatch history authenticates exact predecessors and rejects un
 	assert.deepEqual(record.updates.map(item => item.path), containerHostDispatchChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedSemanticDecisionsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseContainerHostDispatchUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeContainerHostDispatchSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeContainerHostDispatchSource(update.path, source, update.currentSha256), source);
@@ -30,7 +31,7 @@ test("container dispatch history authenticates exact predecessors and rejects un
 });
 
 test("container dispatch adds no support claims or rewritten archived observations", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedSemanticDecisionsSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeContainerHostDispatchSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -44,7 +45,7 @@ test("container dispatch adds no support claims or rewritten archived observatio
 		{
 			if(now.files[position].sha256 === file.sha256) continue;
 			assert.ok(containerHostDispatchChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforeReviewedSemanticDecisionsSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(file.sha256, sha256(beforeContainerHostDispatchSource(file.path, bytes)));
 			assert.equal(now.files[position].sha256, sha256(bytes));
 			refreshed++;

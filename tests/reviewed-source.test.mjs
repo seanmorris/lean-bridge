@@ -12,6 +12,8 @@ import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
 import { validateReviewedSource, verifyReviewedSourceInputs } from "../src/analyze/reviewed-source.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import "./helpers/reviewed-semantic-decisions-tests.mjs";
+import "./helpers/reviewed-semantic-decisions-source-history-tests.mjs";
 
 const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
 const reviewInput = document => {

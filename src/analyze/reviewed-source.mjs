@@ -187,11 +187,22 @@ export const readReviewedSource = async (projectRoot, inventory, signal) => {
 	return review;
 };
 
+// These compiler extensions change the accepted API, unlike source locations or
+// proof references. Compare the complete decisions even before reviewed builds
+// admit them, so a review cannot silently lose a bound or concrete type choice.
+const semanticSourceExtensions = [
+	"lean-lang.org/refinements"
+	, "lean-lang.org/nominal-refinements"
+	, "lean-lang.org/specialization"
+	, "lean-lang.org/instantiation"];
+
 const contract = document => {
 	const strip = (value, key = "") => {
 		if(Array.isArray(value)) return value.map(item => strip(item));
 		if(value === null || typeof value !== "object") return value;
-		if(key === "source") return { declaration: value.declaration };
+		if(key === "source") return { declaration: value.declaration
+			, extensions: Object.fromEntries(semanticSourceExtensions.filter(name => Object.hasOwn(value.extensions, name))
+				.map(name => [name, value.extensions[name]])) };
 		return Object.fromEntries(Object.entries(value).filter(([field]) => field !== "documentation")
 			.map(([field, item]) => [field, field === "parameters" ? item.map(parameter => strip({ ...parameter, name: null })) : strip(item, field)]));
 	};
@@ -215,7 +226,7 @@ const difference = (left, right, path = "bindingIr") => {
 };
 
 /**
- * Compare semantic decisions, excluding annotations and compiler provenance.
+ * Compare semantic decisions, excluding annotations and compiler-only evidence.
  * Callers must first validate both documents against their explicit schema.
  *
  * @param reviewed - Validated authored contract.
