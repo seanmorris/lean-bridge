@@ -53,7 +53,15 @@ export const finRecordSignatures = {
  * @param options - Extra model options, such as a Perl module name.
  * @param signatures - Exported shapes; the fixture's by default.
  */
-export const finRecordCompilerModel = (options = {}, signatures = finRecordSignatures) => {
+export const finRecordCompilerModel = (options = {}, signatures = finRecordSignatures) => createNativeModel(finRecordCompilerInput(options, signatures), { refinements: true });
+
+/**
+ * Compiler-shaped model input for the fixture's exports, for any native model reader.
+ *
+ * @param options - Extra model options, such as a Perl module name.
+ * @param signatures - Exported shapes; the fixture's by default.
+ */
+export const finRecordCompilerInput = (options = {}, signatures = finRecordSignatures) => {
 	const input = nativeMetadataFixture(), module = input.metadata.modules[0], template = module.declarations[0];
 	module.declarations = Object.entries(signatures).sort(([a], [b]) => a < b ? -1 : 1).map(([name, [parameter, result]]) => ({ ...structuredClone(template), identity: `Sample.${name}`
 		, projection: { ...structuredClone(template.projection), parameters: [{ name: "value", type: parameter }], result } }));
@@ -64,5 +72,5 @@ export const finRecordCompilerModel = (options = {}, signatures = finRecordSigna
 	const identity = { toolchain: "leanprover/lean4:v4.32.2", modules, leanCompilerSha256: input.sourceIdentity.leanCompilerSha256, extractorSha256: input.sourceIdentity.extractorSha256 };
 	input.sourceIdentity.request = { ...selection, metadata: createMetadataRequest(selection, identity).metadata };
 	input.metadata.producer.invocationIdentitySha256 = input.sourceIdentity.request.metadata.invocationIdentitySha256;
-	return createNativeModel({ ...input, ...options, component: { id: "finrecords@1.0.0", name: "finrecords", version: "1.0.0" } }, { refinements: true });
+	return { ...input, ...options, component: { id: "finrecords@1.0.0", name: "finrecords", version: "1.0.0" } };
 };

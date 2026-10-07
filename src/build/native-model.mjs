@@ -288,7 +288,15 @@ export const createNativeModel = (options, capabilities) => createCompiledModel(
  */
 export const createPhpWasmCopiedModel = options => {
 	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm models cannot carry a Perl namespace");
-	const model = createCompiledModel(options, "php-wasm-copied-v1", 32);
+	const model = createCompiledModel(options, "php-wasm-copied-v1", 32, { refinements: true });
+	// The plain copied side module carries the same caller-limb Fin walk and Lean guards as native
+	// packages. Author-checked Subtype constructors and components with callbacks have no PHP-Wasm
+	// acceptance yet, so they stay refused rather than inferred from native PHP.
+	const refined = model.exports.filter(item => item.refinements);
+	const subtype = refined.find(item => [...item.refinements.parameters, item.refinements.result].some(value => value?.kind === "subtype"));
+	if(subtype) throw Object.assign(new TypeError(`${subtype.name}: checked Subtype refinements are not yet supported by PHP-Wasm packages`), { code: "native-refinements-unsupported", details: { declaration: subtype.name } });
+	const callback = refined.length ? model.types.find(type => type.kind === "callback") : null;
+	if(callback) throw Object.assign(new TypeError(`${refined[0].name}: checked Fin refinements cannot share a PHP-Wasm package with callables`), { code: "native-refinements-unsupported", details: { declaration: refined[0].name } });
 	const copied = type => type.kind === "primitive" || (["array", "list", "option"].includes(type.kind) && copied(type.element))
 		|| (["result", "tuple"].includes(type.kind) && type.arguments.every(copied)) || (type.kind === "record" && type.fields.every(field => copied(field.type)))
 		|| (type.kind === "variant" && type.cases.every(branch => branch.fields.every(field => copied(field.type))));

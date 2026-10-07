@@ -793,6 +793,8 @@ const profileManifest = Object.freeze({
 		, "native-fin-products"
 		, "native-fin-product-arrays"
 		, "native-fin-records"
+		, "php-wasm-fin"
+		, "php-wasm-generic-records"
 		, "native-subtype"
 		, "native-refinement-boundaries"
 		, "cpp-variants"

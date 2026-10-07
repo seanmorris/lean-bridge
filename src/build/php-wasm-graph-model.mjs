@@ -32,6 +32,8 @@ const leanType = type => {
 };
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
+const containsKind = (value, kind) => value !== null && typeof value === "object"
+	&& (value.kind === kind || Object.values(value).some(child => containsKind(child, kind)));
 
 const descriptor = ir => ir.types.some(type => type.kind === "callback")
 	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
@@ -72,8 +74,11 @@ export const createCompiledPhpWasmModel = options => {
 	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm graph compilation does not accept a Perl namespace");
 	const { metadata, component, sourceIdentity } = options;
 	if(sourceIdentity.request.ownedAggregates !== undefined) return createOwnedPhpWasmModel(options);
-	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
+	// Checked Fin reaches only the plain copied side module; graph packages have no walk yet.
+	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: true });
 	if(!elaborated.declarations.some(containsGraph)) return createPhpWasmCopiedModel(options);
+	const refined = elaborated.declarations.find(item => containsKind(item, "refinement"));
+	if(refined) throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements cannot share a PHP-Wasm package with copied graph exports`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
