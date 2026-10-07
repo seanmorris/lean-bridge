@@ -25,6 +25,8 @@ import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { finProductArrayStubRuntime } from "./helpers/fin-product-array-mutation.mjs";
+import { finProductArrayDispatchColumns, finProductArrayDispatchExpected, finProductArrayDispatchInterposer, finProductArrayDispatchProbe } from "./helpers/fin-product-array-dispatch.mjs";
+import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { finProductArrayRefinements, finProductArrayTargets, finProductArrayTree, finProductArrayWitPatterns, installFinProductArrayConsumer } from "./helpers/fin-product-array-install.mjs";
 import { finProductArrayReviewedIr } from "./helpers/reviewed-fin-product-array-fixture.mjs";
@@ -131,10 +133,43 @@ test("reviewed array bounds and positions must equal the freshly compiled tree",
 const profiles = finFixtureProfiles("LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES", finProductArrayTargets);
 const reviewedProfiles = finFixtureProfiles("LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES", finProductArrayTargets);
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
+/**
+ * Count real dispatch in the installed C package with a test-only interposer: public
+ * rejections reach neither Lean symbol, raw adapter rejections reach only the adapter,
+ * and valid calls reach the adapter and the source.
+ *
+ * @param consumer - Consumer root containing the installed C package.
+ * @param packages - Installed C packages.
+ * @param leanPrefix - Pinned Lean installation providing lean.h for raw adapter values.
+ */
+const observeDispatch = async (consumer, packages, leanPrefix) => {
+	const root = join(consumer, "c"), pkg = packages.find(item => item.role === "component");
+	const installed = join(root, `${pkg.name}-${pkg.version}-c`), lib = join(installed, "lib");
+	const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
+	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(lib, "pkgconfig"), PKG_CONFIG_PATH: "" };
+	const strict = ["-std=c11", "-Wall", "-Wextra", "-Werror"];
+	await saveLakeFile(root, "interposer.c", finProductArrayDispatchInterposer());
+	await saveLakeFile(root, "probe.c", finProductArrayDispatchProbe());
+	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root, compile);
+	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], root, compile)).stdout.trim().split(/\s+/u);
+	await runCopied("/usr/bin/cc", [...strict, "-isystem", join(leanPrefix, "include"), "probe.c", ...flags, "-lleanshared", "-o", "probe"], root, compile);
+	// Without the interposer the probe refuses to report, so a missing counter cannot pass.
+	await assert.rejects(() => runCopied(join(root, "probe"), [], root, copiedCleanEnvironment), /interposer is not loaded/u);
+	const run = await runCopied(join(root, "probe"), [], root, { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") });
+	assert.equal(run.stderr, "");
+	const observed = run.stdout.trim().split("\n").map(line => {
+		const [step, status, ...counts] = line.split(" ");
+		return [step, Number(status), counts.map(Number)];
+	});
+	assert.deepEqual(observed, finProductArrayDispatchExpected);
+	return { columns: finProductArrayDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl: "valid public and raw calls increment source and adapter counts" };
+};
+// The installed C package also reports measured dispatch for rows.
+const observe = async ({ profile, consumer, packages, environment }) => profile === "c" ? { dispatch: await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) } : {};
 const report = { variable: "LEAN_BRIDGE_FIN_PRODUCT_ARRAY_REPORT", reviewedVariable: "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_REPORT", directory: "build/native-fin-product-arrays" };
 const spec = {
 	fixture: "tests/fixtures/onboarding/native-fin-product-arrays"
-	, module: "FinProductArrays", label: "fin-product-array", report
+	, module: "FinProductArrays", label: "fin-product-array", report, observe
 	, targets: finProductArrayTargets
 	, refinements: finProductArrayRefinements
 	, reviewedIr: finProductArrayReviewedIr
