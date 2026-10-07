@@ -20,6 +20,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
+import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -254,6 +255,19 @@ test("direct and aliased Array, List, Option, Prod and Except keep their metadat
 });
 
 // Every native profile the harness can select has its own consumer and package coordinate.
+test("Rust generic-record rejection reports require exact caller type errors", () => {
+	const message = { reason: "compiler-message", message: { level: "error", code: { code: "E0308" }, spans: [{ is_primary: true, file_name: "invalid-alias.rs", line_start: 2, column_start: 70 }] } };
+	const result = { code: 101, stdout: JSON.stringify(message) + "\n", stderr: "" };
+	assert.deepEqual(genericRecordRustDiagnostics(result, "invalid-alias.rs", "E0308"), [{ code: "E0308", file: "invalid-alias.rs", line: 2, column: 70 }]);
+	for(const changed of [{ ...result, code: 0 }, { ...result, stdout: "" }, { ...result, stdout: "not JSON" }])
+		assert.throws(() => genericRecordRustDiagnostics(changed, "invalid-alias.rs", "E0308"));
+	for(const change of [value => { value.message.code.code = "E0433"; }, value => { value.message.spans[0].file_name = "dependency/lib.rs"; }, value => { value.message.spans[0].is_primary = false; }])
+	{
+		const changed = structuredClone(message); change(changed);
+		assert.throws(() => genericRecordRustDiagnostics({ ...result, stdout: JSON.stringify(changed) }, "invalid-alias.rs", "E0308"));
+	}
+});
+
 const consumerExtensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", perl: "pl", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
 
 test("every native profile has a generic record consumer and a target", async () => {

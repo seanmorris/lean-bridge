@@ -1,5 +1,5 @@
 /**
- * Closed, alias-named generic records in installed npm packages and native C-family packages.
+ * Closed, alias-named generic records in installed npm and native packages.
  *
  * @file
  */
@@ -12,6 +12,7 @@ import { buildComponentNpmPackages } from "../../src/release/component-npm-packa
 import { verifyComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { installCopiedConsumer } from "./copied-fixture-install.mjs";
+import { checkGenericRecordRustTypes } from "./generic-record-rust.mjs";
 export { nativeFixtureEnvironment as genericRecordEnvironment } from "./copied-fixture-install.mjs";
 
 const fixture = "tests/fixtures/onboarding/generic-records";
@@ -172,16 +173,19 @@ void again; void pair; void sum; void tagged; void marker;
 };
 
 /**
- * Install and exercise the native package through its generated C or C++ API.
+ * Install and exercise the native package through its generated public API.
  *
  * @param options - Verified archive handoff and selected consumer profile.
  */
-export const installGenericRecordConsumer = options => installCopiedConsumer({ ...options, fixture: {
-	source: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8")
-	// Each alias is its own WIT record with the structure's fields instantiated; two aliases of one application stay distinct.
-	, wit: [...["nat-box", "nat-box-again", "text-box", "word-pair", "maybe-box", "box-pair", "tagged-nat", "marker-tag"].map(name => new RegExp(`record ${name} \\{`))
-		, /bump: func\([^)]*: nat-box\) -> nat-box/
-		, /unpair: func\([^)]*: box-pair\) -> /
-		, /first-boxes: func\([^)]*\) -> option<list<nat-box>>/]
-	, success: "generic-records-ok"
-} });
+export const installGenericRecordConsumer = async options => {
+	const observation = await installCopiedConsumer({ ...options, fixture: {
+		source: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8")
+		// Each alias is its own WIT record with the structure's fields instantiated; two aliases of one application stay distinct.
+		, wit: [...["nat-box", "nat-box-again", "text-box", "word-pair", "maybe-box", "box-pair", "tagged-nat", "marker-tag"].map(name => new RegExp(`record ${name} \\{`))
+			, /bump: func\([^)]*: nat-box\) -> nat-box/
+			, /unpair: func\([^)]*: box-pair\) -> /
+			, /first-boxes: func\([^)]*\) -> option<list<nat-box>>/]
+		, success: "generic-records-ok"
+	} });
+	return options.profile === "rust" ? { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) } : observation;
+};
