@@ -9,7 +9,7 @@ import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { createNativeModel, generateNativeLeanAdapters, nativeTypeKey } from "../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { perlSubtypeInterposer } from "./helpers/perl-subtype-dispatch.mjs";
-import { perlContainerInterposer } from "./helpers/perl-fin-container-dispatch.mjs";
+import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainerInterposer } from "./helpers/perl-fin-container-dispatch.mjs";
 
 const huge = "1180591620717411303424";
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -127,7 +127,16 @@ test("the Perl dispatch interposers repeat the exported prototypes they wrap", (
 	assert.match(subtype, /\nvoid \*l_Subtypes_mix\(void \*a0, void \*a1\) \{/);
 	assert.match(subtype, /\nvoid \*l_Subtypes_half\(void \*a0\) \{\n {2}static void \*\(\*next\)\(void \*\);/);
 	assert.doesNotMatch(subtype, /void \*lb_mixsym_refinement_0/);
-	const container = perlContainerInterposer({ "FinContainers.mirrorAll": "lb_mirrorsym", "FinContainers.countNone": "lb_countsym" });
-	for(const symbol of ["l_FinContainers_mirrorAll", "l_FinContainers_countNone", "lb_mirrorsym", "lb_countsym"])
+	const container = perlContainerInterposer({ "FinContainers.mirrorAll": "lb_mirrorsym", "FinContainers.orDefault": "lb_optionsym" });
+	for(const symbol of ["l_FinContainers_mirrorAll", "l_FinContainers_orDefault", "lb_mirrorsym", "lb_optionsym"])
 		assert.match(container, new RegExp(`\\nvoid \\*${symbol}\\(void \\*a0\\) \\{\\n {2}static void \\*\\(\\*next\\)\\(void \\*\\);`));
+	assert.doesNotMatch(container, /l_FinContainers_countNone|undefined/u);
+	assert.deepEqual(perlContainerDispatchColumns, ["l_FinContainers_mirrorAll", "l_FinContainers_orDefault", "adapter:FinContainers.mirrorAll", "adapter:FinContainers.orDefault"]);
+	const absent = perlContainerDispatchSteps.find(([step]) => step === "valid-absent");
+	assert.match(absent[1], /or_default\(undef\)/u);
+	assert.deepEqual(absent[2], [0, 1, 0, 1]);
+	const invalid = perlContainerDispatchSteps.find(([step]) => step === "invalid-only");
+	assert.ok(invalid[1].includes("count_none([n(0)])"));
+	assert.ok(invalid[1].includes("or_default(LeanBridge::FinContainers::Some->new(n(1)))"));
+	assert.deepEqual(invalid[2], [0, 0, 0, 0]);
 });
