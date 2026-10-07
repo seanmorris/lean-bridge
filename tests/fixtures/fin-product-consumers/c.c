@@ -46,11 +46,11 @@ int main(void) {
   mpz_sub_ui(in.fst, in.fst, 1); mpz_set_ui(in.snd, 10);
   CHECK(rejected(finproducts_wide(&in, count, &error), &error, "arg0 is not below its Fin 10 bound"));
   /* Option (Fin 0 × Nat): only none is valid. */
-  finproducts_option_tuple_nat_nat_value never; finproducts_option_tuple_nat_nat_value_init(&never);
-  CHECK(OK(finproducts_never(&never, count, &error)) && is_small(count, 7));
-  never.has_value = 1;
-  CHECK(rejected(finproducts_never(&never, count, &error), &error, "arg0 is not below its Fin 0 bound"));
-  finproducts_option_tuple_nat_nat_value_clear(&never);
+  finproducts_option_tuple_nat_nat_value absent; finproducts_option_tuple_nat_nat_value_init(&absent);
+  CHECK(OK(finproducts_absent_only(&absent, count, &error)) && is_small(count, 7));
+  absent.has_value = 1;
+  CHECK(rejected(finproducts_absent_only(&absent, count, &error), &error, "arg0 is not below its Fin 0 bound"));
+  finproducts_option_tuple_nat_nat_value_clear(&absent);
   /* Except String (Fin 10): the ok branch is bounded; any error text is valid. */
   ok_only o; finproducts_result_nat_string_value_init(&o);
   o.is_ok = 1; mpz_set_ui(o.ok, 9);

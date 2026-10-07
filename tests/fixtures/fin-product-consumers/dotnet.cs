@@ -25,8 +25,8 @@ class Consumer {
         Check(Rejected(() => Api.Wide((wide, N(9))), "arg0", wide.ToString()), "wide at bound");
         Check(Rejected(() => Api.Wide((wide - 1, N(10))), "arg0", "10"), "wide second at bound");
         // Option (Fin 0 × Nat): only none is valid.
-        Check(Api.Never(Option<(BigInteger, BigInteger)>.None) == 7, "never absent");
-        Check(Rejected(() => Api.Never(Option<(BigInteger, BigInteger)>.Some((N(0), N(0)))), "arg0", "0"), "never present");
+        Check(Api.AbsentOnly(Option<(BigInteger, BigInteger)>.None) == 7, "absent only none");
+        Check(Rejected(() => Api.AbsentOnly(Option<(BigInteger, BigInteger)>.Some((N(0), N(0)))), "arg0", "0"), "absent only some");
         // Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
         Check(Api.OkOnly(Result<BigInteger, string>.Ok(9)) == 9, "ok valid");
         Check(Rejected(() => Api.OkOnly(Result<BigInteger, string>.Ok(10)), "arg0", "10"), "ok at bound");

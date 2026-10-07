@@ -17,7 +17,9 @@ import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mj
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { phpWasmFinReadme } from "../src/release/php-wasm-copied-package.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
-import { finRecordCompilerInput, finRecordNat } from "./helpers/fin-record-model.mjs";
+import { finRecordCompilerInput, finRecordNat, finRecordSignatures } from "./helpers/fin-record-model.mjs";
+import { finProductCompilerInput, finProductSignatures } from "./helpers/fin-product-model.mjs";
+import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import "./helpers/php-wasm-fin-source-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -35,6 +37,27 @@ test("plain copied PHP-Wasm models carry the native Fin trees and the same Lean 
 	const fuel = text => text.replace(/loop \d+ value #\[\]/gu, "loop FUEL value #[]");
 	assert.equal(fuel(lean(wasm)), fuel(lean(native)));
 	assert.match(lean(wasm), /def LbErased\.FinRecords\.Tile\.check/u);
+});
+
+test("every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run", async () => {
+	// FinProducts once exported never, a PHP keyword; both PHP targets refused it only after a full Lean build.
+	const fixtures = [["products", phpWasmFinFixtures.products, finProductSignatures, finProductCompilerInput]
+		, ["records", phpWasmFinFixtures.records, finRecordSignatures, finRecordCompilerInput]];
+	for(const [label, fixture, signatures, compilerInput] of fixtures)
+	{
+		// The compiler-shaped model names exactly the declarations of the Lean fixture.
+		const source = await readFile(`${fixture.root}/${fixture.module}.lean`, "utf8");
+		assert.deepEqual([...source.matchAll(/^(?:@\[noinline\] )?def (\w+) /gmu)].map(match => match[1]).sort(), Object.keys(signatures).sort(), label);
+		const input = compilerInput();
+		generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr);
+		compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
+	}
+	// The same input under a reserved name is refused by both targets, so the check above can fail.
+	const reserved = { ...finProductSignatures, never: finProductSignatures.absentOnly };
+	delete reserved.absentOnly;
+	const input = finProductCompilerInput(reserved);
+	assert.throws(() => generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: never/u);
+	assert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true }), /PHP function name is reserved or duplicated: never/u);
 });
 
 test("the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean", () => {

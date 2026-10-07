@@ -37,8 +37,8 @@ check(LeanBridge::FinProducts::wide([$wide->copy->bdec, n(9)])->bstr eq $wide->c
 check(rejected(sub { LeanBridge::FinProducts::wide([$wide->copy, n(9)]) }, 'arg0.0', $wide->bstr), 'wide at bound');
 check(rejected(sub { LeanBridge::FinProducts::wide([$wide->copy->bdec, n(10)]) }, 'arg0.1', '10'), 'wide second at bound');
 # Option (Fin 0 × Nat): only none is valid.
-check(LeanBridge::FinProducts::never(undef)->bstr eq '7', 'never absent');
-check(rejected(sub { LeanBridge::FinProducts::never(some([n(0), n(0)])) }, 'arg0?.0', '0'), 'never present');
+check(LeanBridge::FinProducts::absent_only(undef)->bstr eq '7', 'absent only none');
+check(rejected(sub { LeanBridge::FinProducts::absent_only(some([n(0), n(0)])) }, 'arg0?.0', '0'), 'absent only some');
 # Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
 check(LeanBridge::FinProducts::ok_only(ok(n(9)))->bstr eq '9', 'ok valid');
 check(rejected(sub { LeanBridge::FinProducts::ok_only(ok(n(10))) }, 'arg0.ok', '10'), 'ok at bound');

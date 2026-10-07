@@ -3,7 +3,7 @@ declare(strict_types=0);
 require 'vendor/autoload.php';
 use Brick\Math\BigInteger;
 use LeanFinproducts\{Some, Ok, Err, LeanBridgeError};
-use function LeanFinproducts\{first, second, wide, never, ok_only, error_only, both, nested, aliased, produce, pair_up};
+use function LeanFinproducts\{first, second, wide, absent_only, ok_only, error_only, both, nested, aliased, produce, pair_up};
 $checks = 0;
 function check($condition, $label) { global $checks; if (!$condition) throw new Exception('failed: ' . $label); ++$checks; }
 function n($value) { return BigInteger::of($value); }
@@ -26,8 +26,8 @@ check(wide([$wide->minus(1), n(9)])->isEqualTo($wide->plus(8)), 'wide valid');
 check(rejected(fn() => wide([$wide, n(9)]), 'arg0', (string)$wide), 'wide at bound');
 check(rejected(fn() => wide([$wide->minus(1), n(10)]), 'arg0', '10'), 'wide second at bound');
 // Option (Fin 0 × Nat): only none is valid.
-check(never(null)->isEqualTo(7), 'never absent');
-check(rejected(fn() => never(new Some([n(0), n(0)])), 'arg0', '0'), 'never present');
+check(absent_only(null)->isEqualTo(7), 'absent only none');
+check(rejected(fn() => absent_only(new Some([n(0), n(0)])), 'arg0', '0'), 'absent only some');
 // Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
 check(ok_only(new Ok(n(9)))->isEqualTo(9), 'ok valid');
 check(rejected(fn() => ok_only(new Ok(n(10))), 'arg0', '10'), 'ok at bound');

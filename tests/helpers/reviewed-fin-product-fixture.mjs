@@ -23,7 +23,7 @@ export const finProductReviewedIr = () => {
 		["first", [nats], nats, [pair(fin("10"), null)], pair(fin("10"), null)]
 		, ["second", [nats], "nat", [pair(null, fin("1"))], null]
 		, ["wide", [nats], "nat", [pair(fin("184467440737095516170"), fin("10"))], null]
-		, ["never", [{ option: nats }], "nat", [{ kind: "option", arguments: [pair(fin("0"), null)] }], null]
+		, ["absentOnly", [{ option: nats }], "nat", [{ kind: "option", arguments: [pair(fin("0"), null)] }], null]
 		, ["okOnly", [{ result: ["nat", "string"] }], "nat", [branches(fin("10"), null)], null]
 		, ["errorOnly", [{ result: ["nat", "nat"] }], "nat", [branches(null, fin("5"))], null]
 		, ["both", [{ result: ["nat", "nat"] }], "nat", [branches(fin("7"), fin("3"))], null]

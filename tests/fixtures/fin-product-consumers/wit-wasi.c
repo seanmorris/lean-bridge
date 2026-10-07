@@ -73,8 +73,8 @@ int main(void) {
   arg = pair(limbs(at_wide, 3), nat(9)); CHECK(rejected("wide", &arg, "arg0 is not below its Fin 184467440737095516170 bound"));
   arg = pair(limbs(below_wide, 3), nat(10)); CHECK(rejected("wide", &arg, "arg0 is not below its Fin 10 bound"));
   /* Option (Fin 0 × Nat): only none is valid. */
-  arg = none(); out = call("never", &arg); CHECK(is_nat(&out, 7)); clear(&out);
-  arg = some(pair(nat(0), nat(0))); CHECK(rejected("never", &arg, "arg0 is not below its Fin 0 bound"));
+  arg = none(); out = call("absent-only", &arg); CHECK(is_nat(&out, 7)); clear(&out);
+  arg = some(pair(nat(0), nat(0))); CHECK(rejected("absent-only", &arg, "arg0 is not below its Fin 0 bound"));
   /* Except String (Fin 10): the ok branch is bounded; an inactive branch is never read. */
   arg = branch(true, nat(9)); out = call("ok-only", &arg); CHECK(is_nat(&out, 9)); clear(&out);
   arg = branch(true, nat(10)); CHECK(rejected("ok-only", &arg, "arg0 is not below its Fin 10 bound"));

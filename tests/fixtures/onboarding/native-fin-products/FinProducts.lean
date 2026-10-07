@@ -17,7 +17,7 @@ def second (value : Nat × Fin 1) : Nat := value.1 + value.2.val
 def wide (value : Wide × Fin 10) : Nat := value.1.val + value.2.val
 
 /-- Fin 0 has no values, so only an absent product is accepted. -/
-def never (value : Option (Fin 0 × Nat)) : Nat := match value with | none => 7 | some (f, _) => f.elim0
+def absentOnly (value : Option (Fin 0 × Nat)) : Nat := match value with | none => 7 | some (f, _) => f.elim0
 
 /-- Only the ok branch is bounded; any error text is valid. -/
 def okOnly (value : Except String (Fin 10)) : Nat := match value with | .ok d => d.val | .error e => e.length + 100

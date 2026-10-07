@@ -25,8 +25,8 @@ fn main() {
     check!(rejected(api::wide(&(wide.clone(), n(9))), "arg0", "184467440737095516170"));
     check!(rejected(api::wide(&(&wide - n(1), n(10))), "arg0", "10"));
     // Option (Fin 0 × Nat): only none is valid.
-    check!(api::never(&None).unwrap() == n(7));
-    check!(rejected(api::never(&Some((n(0), n(0)))), "arg0", "0"));
+    check!(api::absent_only(&None).unwrap() == n(7));
+    check!(rejected(api::absent_only(&Some((n(0), n(0)))), "arg0", "0"));
     // Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
     check!(api::ok_only(&Ok(n(9))).unwrap() == n(9));
     check!(rejected(api::ok_only(&Ok(n(10))), "arg0", "10"));
