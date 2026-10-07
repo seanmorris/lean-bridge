@@ -361,12 +361,14 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + specialized.length);
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...specialized].sort());
+	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
+	const subtypes = specializationEvidence ? ["subtype"] : [];
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if(cell.shape === "fin") assert.notEqual(cell.position, "field");
+		if(cell.shape === "fin" || cell.shape === "subtype") assert.notEqual(cell.position, "field");
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
@@ -374,6 +376,11 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			if(cell.shape === "fin")
 			{
 				assert.deepEqual(stage.evidence, [finEvidence, `native-fin-containers-${specializationEvidence}-installed`]);
+				continue;
+			}
+			if(cell.shape === "subtype")
+			{
+				assert.deepEqual(stage.evidence, [`native-subtype-${specializationEvidence}-installed`]);
 				continue;
 			}
 			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
@@ -430,15 +437,23 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence promotes only Node parameters and results", () => {
+test("checked Subtype evidence promotes only top-level parameters and results", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 4);
-	assert.deepEqual([...new Set(installed.map(cell => cell.profile))], ["node-javascript", "node-typescript"]);
+	// Node (VO #1219) and, since VO #1428, the nine native profiles that share the C-family adapter.
+	const native = ["c", "cpp", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
+	assert.equal(installed.length, 2 * (2 + native.length));
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
 	for(const cell of installed)
 	{
 		assert.equal(cell.path, "ordinary-source");
+		if(native.includes(cell.profile))
+		{
+			assert.match(cell.stages.installedExecution.evidence[0], /^native-subtype-[a-z-]+-installed$/u);
+			assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);
+			continue;
+		}
 		assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
 	}

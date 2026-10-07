@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeSubtypeSource, nativeSubtypeChangedPaths } from "./native-subtype-source-history.mjs";
 import { beforeNativeFinContainersSource, nativeFinContainersChangedPaths
 	, nativeFinContainersHistoryPath, reverseNativeFinContainersUpdate } from "./native-fin-containers-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Native Fin container history authenticates exact predecessors and rejects 
 	assert.deepEqual(record.updates.map(item => item.path), nativeFinContainersChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeSubtypeSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinContainersUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinContainersSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinContainersSource(update.path, source, update.currentSha256), source);
@@ -44,7 +45,7 @@ const acceptedRevision = "f68cf7da2f428be1255fa298d37d5ec65510636e";
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Native Fin container evidence adds one receipt per host group and extends only the existing Fin cells", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeNativeFinContainersSource(path, text));
+	const current = JSON.parse(beforeNativeSubtypeSource(path, text)), previous = JSON.parse(beforeNativeFinContainersSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), groups.map(([key]) => `native-fin-containers-${key}-installed`));
 	assert.deepEqual(current.observations.map(entry => entry.id), previous.observations.map(entry => entry.id));
@@ -84,10 +85,10 @@ test("Native Fin container evidence adds one receipt per host group and extends 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeFinContainersChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeFinContainersSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeNativeSubtypeSource(file.path, source)));
 			++refreshed;
 		}
 	}

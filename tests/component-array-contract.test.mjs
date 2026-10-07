@@ -49,6 +49,7 @@ import "./helpers/perl-fin-source-history-tests.mjs";
 import "./helpers/host-fin-evidence-source-history-tests.mjs";
 import "./helpers/native-specializations-source-history-tests.mjs";
 import "./helpers/native-fin-containers-source-history-tests.mjs";
+import "./helpers/native-subtype-source-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);
