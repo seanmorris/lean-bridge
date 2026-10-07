@@ -4,7 +4,18 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { installedPhpWasmCorpus } from "./helpers/type-corpus-php-wasm-install.mjs";
+import { phpWasmFinCaller, phpWasmFinConsumer, phpWasmFinFixtures } from "./helpers/php-wasm-fin-fixtures.mjs";
 import { createNativeModel, createPhpWasmCopiedModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
@@ -66,4 +77,66 @@ test("PHP-Wasm packages document each checked path, and packages without bounds 
 		assert.ok(readme.includes(`\\${line}\n`), line);
 	const plain = { ...nativeMetadataFixture(), component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } };
 	assert.equal(phpWasmFinReadme(compileCopiedPhpModel(createPhpWasmCopiedModel(plain).bindingIr, settings)), "");
+});
+
+test("PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed", async () => {
+	for(const fixture of Object.values(phpWasmFinFixtures))
+	{
+		const native = await readFile(fixture.consumer, "utf8"), { source, request } = await phpWasmFinCaller(fixture);
+		for(const mode of ["weak", "strict"])
+		{
+			const wasm = source(mode);
+			assert.ok(wasm.startsWith(`<?php\ndeclare(strict_types=${mode === "strict" ? 1 : 0});\nuse Brick\\Math\\BigInteger;`), fixture.root);
+			assert.doesNotMatch(wasm, /require 'vendor\/autoload\.php'/u);
+			// Every case line of the native caller survives unchanged.
+			assert.equal(wasm.split("\n").length, native.split("\n").length - 1);
+		}
+		assert.deepEqual(JSON.parse(request("composer")), { module: fixture.namespace, operations: { probe: fixture.operation }, autoload: "vendor/autoload.php" });
+	}
+	assert.throws(() => phpWasmFinConsumer("<?php\necho 1;\n", "weak"), /Unexpected native PHP Fin consumer layout/u);
+});
+
+test("relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts", { skip: process.env.LEAN_BRIDGE_PHP_WASM_FIN_TEST !== "1", timeout: 3_600_000 }, async t => {
+	const reports = [];
+	for(const [name, fixture] of Object.entries(phpWasmFinFixtures))
+	{
+		const author = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-fin-author-"));
+		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-fin-consumer-"));
+		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
+		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
+		await cp(fixture.root, projectRoot, { recursive: true });
+		const exports = { schemaVersion: 1, modules: [fixture.module], exports: Object.keys(fixture.refinements), targets: { "php-wasm": fixture.settings } };
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(exports));
+		const environment = nativeFixtureEnvironment(["php-wasm"]);
+		if(environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME) environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME = environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
+		t.diagnostic(`${name}: compiling for wasm32`);
+		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: ["php-wasm"], environment }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+		const model = JSON.parse(await readFile(join(outputRoot, "php-wasm/component/model.json"), "utf8"));
+		assert.equal(model.pointerBits, 32);
+		// Lean elaboration supplies every bound; the wasm32 model carries exactly the native trees.
+		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements);
+		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		const packageSet = JSON.parse(await readFile(join(outputRoot, "packages/php-wasm/php-wasm-package-set.json")));
+		await rm(author, { recursive: true, force: true });
+		const caller = await phpWasmFinCaller(fixture);
+		const clean = { ...copiedCleanEnvironment, LEAN_BRIDGE_PHP_SOURCE: "/unavailable/php", LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler", LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime" };
+		const installation = { settings: fixture.settings, source: caller.source, request: caller.request, removeHandoff: true };
+		const options = { t, library: { id: `fin-${name}` }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath: "ordinary-source", fixture: installation };
+		const installed = await installedPhpWasmCorpus(options).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+		const readme = await readFile(join(consumer, "relocated/node_modules", fixture.settings.npm.name, "README.md"), "utf8");
+		assert.match(readme, /\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n\. The PHP-Wasm side module/u);
+		// Node and browser, embedded and Composer, startup and lazy, weak and strict: one observation each.
+		assert.ok(installed.phpWasm.executions.length >= 8);
+		for(const execution of installed.phpWasm.executions)
+		{
+			assert.equal(execution.observation.word_bits, 32);
+			assert.ok(execution.observation.checks > 2000, `${name} ${execution.realm}`);
+		}
+		const identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256 };
+		reports.push({ fixture: name, profile: "php-wasm", path: "ordinary-source", refinements: fixture.refinements, ...identities, packages: receipt.packages, ...installed, sourceRemovedBeforeInstallation: true });
+	}
+	const reportPath = resolve(process.env.LEAN_BRIDGE_PHP_WASM_FIN_REPORT ?? "build/php-wasm-fin/ordinary.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports }));
 });
