@@ -1233,6 +1233,8 @@ jobs:
           node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs
           node --test tests/component-aliases.test.mjs
           node --test tests/component-recursive.test.mjs
+          LEAN_BRIDGE_LAKE_WASM_TEST=1 node --test tests/browser-refinements.test.mjs
+          test -s build/browser-refinements/report.json
           test -s build/callables/npm/report.json
           test -s build/structured-callables/npm/report.json
           test -s build/arrays/npm/report.json
@@ -1255,6 +1257,7 @@ jobs:
           path: |
             build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
             build/type-corpus/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
+            build/browser-refinements/report.json
             build/char-npm/
             build/word-npm/
             build/callables/npm/

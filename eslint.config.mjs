@@ -33,6 +33,7 @@ const browserFiles = [
 	, 'tests/fixtures/browser-consumer/**/*.{js,mjs}'
 	, 'tests/fixtures/documentation/consumers/browser/main.js'
 	, 'tests/fixtures/type-corpus/consumers/browser/*.mjs'
+	, 'tests/fixtures/browser-refinements/*.mjs'
 	, 'tests/helpers/type-corpus-browser.mjs'
 ];
 const generatedSourceTemplateFiles = [
