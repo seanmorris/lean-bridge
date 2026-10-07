@@ -13,6 +13,7 @@ import { refinementAuditChangedPaths } from "./refinement-audit-source-history.m
 import { browserRefinementsChangedPaths } from "./browser-refinements-source-history.mjs";
 import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
 import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
+import { perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
 import { beforeNativeFinContainersSource, nativeFinContainersChangedPaths
 	, nativeFinContainersHistoryPath, reverseNativeFinContainersUpdate } from "./native-fin-containers-source-history.mjs";
 
@@ -89,7 +90,7 @@ test("Native Fin container evidence adds one receipt per host group and extends 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeFinContainersSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeNativeSubtypeSource(file.path, source)));

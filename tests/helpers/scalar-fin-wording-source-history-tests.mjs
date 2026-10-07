@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePerlRefinementsSource, perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
 import { beforeScalarFinWordingSource, scalarFinWordingChangedPaths
 	, scalarFinWordingHistoryPath, reverseScalarFinWordingUpdate } from "./scalar-fin-wording-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Scalar Fin wording history authenticates exact predecessors and rejects un
 	assert.deepEqual(record.updates.map(item => item.path), scalarFinWordingChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePerlRefinementsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseScalarFinWordingUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeScalarFinWordingSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeScalarFinWordingSource(update.path, source, update.currentSha256), source);
@@ -50,7 +51,7 @@ test("Scalar Fin wording changes only the scalar Fin receipt's scope wording and
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(scalarFinWordingChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeScalarFinWordingSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

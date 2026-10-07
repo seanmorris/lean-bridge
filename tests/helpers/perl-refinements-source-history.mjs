@@ -1,24 +1,30 @@
 /**
- * Preserve exact source predecessors of the Scalar Fin wording (#1430).
+ * Preserve exact source predecessors of the Perl refinements (#1431).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePerlRefinementsSource } from "./perl-refinements-source-history.mjs";
 
-export const scalarFinWordingHistoryPath = "docs/evidence/scalar-fin-wording-source-history-20261007.json";
-export const scalarFinWordingChangedPaths = [
-	"docs/evidence/npm-scalar-fin-rejection-20261007.md"
+export const perlRefinementsHistoryPath = "docs/evidence/perl-refinements-source-history-20261007.json";
+export const perlRefinementsChangedPaths = [
+	".github/workflows/perl-consumer.yml"
+	, "docs/consume/perl.md"
+	, "docs/lean/existing-package.md"
 	, "docs/type-surface.v1.json"
+	, "src/adoption/test-profiles.mjs"
+	, "src/backends/perl/generate.mjs"
+	, "src/build/native-project.mjs"
+	, "src/release/cpan-package.mjs"
 	, "tests/component-array-contract.test.mjs"
-	, "tests/component-record-contract.test.mjs"
+	, "tests/documentation.test.mjs"
 	, "tests/helpers/browser-refinements-source-history-tests.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
 	, "tests/helpers/cpan-cli-control-source-history-tests.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
 	, "tests/helpers/dotnet-fin-source-history-tests.mjs"
+	, "tests/helpers/fin-container-install.mjs"
 	, "tests/helpers/fin-distribution-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/helpers/host-fin-evidence-source-history-tests.mjs"
@@ -26,6 +32,7 @@ export const scalarFinWordingChangedPaths = [
 	, "tests/helpers/native-fin-containers-source-history-tests.mjs"
 	, "tests/helpers/native-fin-source-history-tests.mjs"
 	, "tests/helpers/native-specializations-source-history-tests.mjs"
+	, "tests/helpers/native-subtype-install.mjs"
 	, "tests/helpers/native-subtype-source-history-tests.mjs"
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
 	, "tests/helpers/perl-fin-source-history-tests.mjs"
@@ -36,10 +43,12 @@ export const scalarFinWordingChangedPaths = [
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
 	, "tests/helpers/rust-fin-source-history-tests.mjs"
 	, "tests/helpers/scalar-fin-rejection-source-history-tests.mjs"
-	, "tests/helpers/scalar-fin-rejection-source-history.mjs"
+	, "tests/helpers/scalar-fin-wording-source-history-tests.mjs"
+	, "tests/helpers/scalar-fin-wording-source-history.mjs"
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/helpers/wit-fin-source-history-tests.mjs"
-	, "tests/type-surface.test.mjs"
+	, "tests/native-fin-containers.test.mjs"
+	, "tests/native-subtype.test.mjs"
 ];
 let history;
 
@@ -49,8 +58,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseScalarFinWordingUpdate = (source, update) => {
-	assert.ok(scalarFinWordingChangedPaths.includes(update.path));
+export const reversePerlRefinementsUpdate = (source, update) => {
+	assert.ok(perlRefinementsChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -70,18 +79,17 @@ export const reverseScalarFinWordingUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1430, stopping at an explicitly requested identity.
+ * Restore the source before #1431, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeScalarFinWordingSource = (path, source, expected) => {
-	source = beforePerlRefinementsSource(path, source, expected);
-	if(typeof source !== "string" || !scalarFinWordingChangedPaths.includes(path)) return source;
+export const beforePerlRefinementsSource = (path, source, expected) => {
+	if(typeof source !== "string" || !perlRefinementsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(scalarFinWordingHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(perlRefinementsHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseScalarFinWordingUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePerlRefinementsUpdate(source, update) : source;
 };
