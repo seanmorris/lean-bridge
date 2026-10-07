@@ -12,6 +12,7 @@ import { beforeBrowserRefinementsSource, browserRefinementsChangedPaths } from "
 import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
 import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
+import { perlIndexedErrorsChangedPaths } from "./perl-indexed-errors-source-history.mjs";
 import { beforeRefinementAuditSource, refinementAuditChangedPaths
 	, refinementAuditHistoryPath, reverseRefinementAuditUpdate } from "./refinement-audit-source-history.mjs";
 
@@ -48,7 +49,7 @@ test("Refinement audit changes only evidence source pins, not support or archive
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRefinementAuditSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeBrowserRefinementsSource(file.path, source)));

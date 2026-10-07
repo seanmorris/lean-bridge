@@ -1,0 +1,939 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-indexed-errors-v1",
+  "predecessorCommit": "7f7bd65104050efddd328377389072f4c4272ac0",
+  "updates": [
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "f4dd638681ec80c06d7664a6170310d1ef078652a45180dbfe1dd22f9e9e7b2a",
+      "previousSha256": "0f4cfae074cb47186dd7ea4d93f29e7c60412a5671b612a04ec525df09442772",
+      "edits": [
+        {
+          "start": 29981,
+          "previous": "A Lean `Fin n` parameter or result is a `Math::BigInt`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(Math::BigInt->new(3))` returns `6`. `mirror(Math::BigInt->new(10))` dies with the message `arg0 is not below its Fin 10 bound`. A negative value dies with the error that `Nat` raises, and a value that is not a `Math::BigInt` dies as for `Nat`. The generated XS compares each argument with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs, so caller data is unchanged. `Fin` inside an array, `List` or option is checked the same way for every present element: an empty array reference or `undef` is accepted even for `Fin 0`, a present `Fin 0` element is rejected, and the message names the parameter and the bound of the element that failed. The package POD lists each checked path, such as `arg0[*]? < 10`.\n",
+          "current": "A Lean `Fin n` parameter or result is a `Math::BigInt`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(Math::BigInt->new(3))` returns `6`. `mirror(Math::BigInt->new(10))` dies with the message `arg0 is not below its Fin 10 bound`. A negative value dies with the error that `Nat` raises, and a value that is not a `Math::BigInt` dies as for `Nat`. The generated XS compares each argument with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs, so caller data is unchanged. `Fin` inside an array, `List` or option is checked the same way for every present element: an empty array reference or `undef` is accepted even for `Fin 0`, a present `Fin 0` element is rejected, and the message names the failing element's path and bound, for example `arg0[2]? is not below its Fin 10 bound` for the third element of an array of options or `arg0[1][0] is not below its Fin 10 bound` for the first element of the second row. The package POD lists each checked path, such as `arg0[*]? < 10`.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752",
+      "previousSha256": "0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd",
+      "edits": [
+        {
+          "start": 26931,
+          "previous": "Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). Python wheels and CPAN packages have the same checks in their generated code, but their installed acceptance is not yet recorded. `Fin` is also checked inside `Array`, `List` and `Option` at top-level parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed; generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN packages generate the same element checks in XS, walking each converted array, List or option through the typed accessors before the guarded adapter or the exported function runs and dying with the same message; their installed acceptance is not yet recorded. Checked `Subtype` constructors are run by the generated XS the same way. `Fin` inside products, `Except`, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages. See the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). Python wheels and CPAN packages have the same checks in their generated code, but their installed acceptance is not yet recorded. `Fin` is also checked inside `Array`, `List` and `Option` at top-level parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed; generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN packages generate the same element checks in XS, walking each converted array, List or option through the typed accessors before the guarded adapter or the exported function runs, and die with the failing element's path, such as `arg0[2]? is not below its Fin 10 bound`; their installed acceptance is not yet recorded. Checked `Subtype` constructors are run by the generated XS the same way. `Fin` inside products, `Except`, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages. See the [container checks](../evidence/native-fin-containers-20261006.md).\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f675ff193789db7c02e9dded6707c6e71ffe0dcc6531245c45328b5d80148239",
+      "previousSha256": "73264a0c2de8c5fd5d2b2ba1f991375459ac0f71ffcfac5cf220d6c6bbc23038",
+      "edits": [
+        {
+          "start": 39698,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 243775,
+          "previous": "          \"sha256\": \"0f4cfae074cb47186dd7ea4d93f29e7c60412a5671b612a04ec525df09442772\"\n",
+          "current": "          \"sha256\": \"f4dd638681ec80c06d7664a6170310d1ef078652a45180dbfe1dd22f9e9e7b2a\"\n"
+        },
+        {
+          "start": 245070,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 286684,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 386430,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 492148,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 547697,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 581357,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 636326,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"5ef340eef1bb222dc4634e9e7679889ae8e051160cc0ba0eef7cbd750ab2d743\"\n",
+          "current": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n"
+        },
+        {
+          "start": 789015,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 805399,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 823570,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 956940,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 1006507,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 1049753,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1057342,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1063943,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1071051,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1078545,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1085601,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1093202,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1103483,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1104438,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 1115816,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1169275,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1201818,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1232097,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1265064,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1273965,
+          "previous": "          \"sha256\": \"81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032\"\n",
+          "current": "          \"sha256\": \"e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e\"\n"
+        },
+        {
+          "start": 1306474,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1332322,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1355002,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1374694,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1395179,
+          "previous": "          \"sha256\": \"0dfd8ddc2718ed33f1c6596fb0a1520f769eadc534bd17edf160109a05db4dcd\"\n",
+          "current": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"5ef340eef1bb222dc4634e9e7679889ae8e051160cc0ba0eef7cbd750ab2d743\"\n",
+          "current": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"5ef340eef1bb222dc4634e9e7679889ae8e051160cc0ba0eef7cbd750ab2d743\"\n",
+          "current": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/perl/generate.mjs",
+      "currentSha256": "e0b512f9f9ab5a22b4f2e145bb4f5dd1bf6bec65868941a913493b85d6cd161e",
+      "previousSha256": "81fece1109abd374e9c5909238b985202b1cbd796952eab6e3f7171109409032",
+      "edits": [
+        {
+          "start": 15000,
+          "previous": "\tconst parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, item.parameters[index].name));\n",
+          "current": "\t// Messages and documentation name parameters by position, as every other native host does.\n\tconst parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, `arg${index}`));\n"
+        },
+        {
+          "start": 15624,
+          "previous": "const finLeaf = (value, bound, name) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);\n      if (!below) croak(\"%s\", ${q(`${name} is not below its Fin ${bound} bound`)}); }`;\n",
+          "current": "// A top-level scalar leaf keeps its literal message. Inside containers the message is assembled\n// only on rejection: the parameter name is the %s argument, every enclosing array or List level\n// contributes \"[%zu]\" and its size_t loop index in order, and every option level contributes \"?\".\nconst finLeaf = (value, bound, name, path) => {\n\tconst message = path.format ? `croak(${[q(`%s${path.format} is not below its Fin ${bound} bound`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(\", \")})`\n\t\t: `croak(\"%s\", ${q(`${name} is not below its Fin ${bound} bound`)})`;\n\treturn `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);\n      if (!below) ${message}; }`;\n};\n"
+        },
+        {
+          "start": 16658,
+          "previous": "// parameter and the failing leaf's own bound, as the shared C adapter does.\nconst finGuard = (type, refinement, value, name, depth = 0) => {\n\tif(type.kind === \"alias\") return finGuard(type.target, refinement, value, name, depth);\n\tif(refinement.kind === \"fin\") return finLeaf(value, refinement.bound, name);\n",
+          "current": "// parameter, the failing element's path and the leaf's own bound.\nconst finGuard = (type, refinement, value, name, depth = 0, path = { format: \"\", indices: [] }) => {\n\tif(type.kind === \"alias\") return finGuard(type.target, refinement, value, name, depth, path);\n\tif(refinement.kind === \"fin\") return finLeaf(value, refinement.bound, name, path);\n"
+        },
+        {
+          "start": 17301,
+          "previous": "",
+          "current": "\t\tconst inner = { format: `${path.format}[%zu]`, indices: [...path.indices, index] };\n"
+        },
+        {
+          "start": 17685,
+          "previous": "      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1)} } }`;\n",
+          "current": "      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1, inner)} } }`;\n"
+        },
+        {
+          "start": 18023,
+          "previous": "      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1)} } }`;\n",
+          "current": "      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1, { format: `${path.format}?`, indices: path.indices })} } }`;\n"
+        },
+        {
+          "start": 25818,
+          "previous": "\tfor(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map(p => p.name)));\n",
+          "current": "\tfor(const item of model.exports) lines.push(publicXsub(item.publicName, item.symbol, item.parameters.map(p => p.type), item.result, item.refinements ?? null, item.parameters.map((_, index) => `arg${index}`)));\n"
+        },
+        {
+          "start": 34971,
+          "previous": "\t\t, \"Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.\", \"\");\n",
+          "current": "\t\t, \"Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.\", \"\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f",
+      "previousSha256": "5ef340eef1bb222dc4634e9e7679889ae8e051160cc0ba0eef7cbd750ab2d743",
+      "edits": [
+        {
+          "start": 3668,
+          "previous": "",
+          "current": "import \"./helpers/perl-indexed-errors-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/perl.pl",
+      "currentSha256": "7851aed00c573e8c2e019a64f052540329c7cf9026a03895e3a2250142499649",
+      "previousSha256": "777721bf655cc39cdfff35e83ea2e95be70aeeac53b8ccc8f3acb1cb71a3acb7",
+      "edits": [
+        {
+          "start": 1058,
+          "previous": "  check(rejected(sub { LeanBridge::FinContainers::mirror_all($bad) }, 'arg0', '10'), \"invalid element at $position\");\n",
+          "current": "  check(rejected(sub { LeanBridge::FinContainers::mirror_all($bad) }, \"arg0[$position]\", '10'), \"invalid element at $position\");\n"
+        },
+        {
+          "start": 1250,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::mirror_all([$word->copy, n(1), n(2)]) }, 'arg0', '10'), 'word element');\ncheck(dies(sub { LeanBridge::FinContainers::mirror_all([n(-1), n(1)]) }) && !rejected(sub { LeanBridge::FinContainers::mirror_all([n(-1), n(1)]) }, 'arg0', '10'), 'negative is the Nat error');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::mirror_all([$word->copy, n(1), n(2)]) }, 'arg0[0]', '10'), 'word element');\ncheck(dies(sub { LeanBridge::FinContainers::mirror_all([n(-1), n(1)]) }) && !rejected(sub { LeanBridge::FinContainers::mirror_all([n(-1), n(1)]) }, 'arg0[0]', '10'), 'negative is the Nat error');\n"
+        },
+        {
+          "start": 1848,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::count_none(ns(0)) }, 'arg0', '0'), 'Fin 0 present');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::count_none(ns(0)) }, 'arg0[0]', '0'), 'Fin 0 present');\n"
+        },
+        {
+          "start": 2195,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::sum_huge([$word->copy, $huge->copy]) }, 'arg0', $huge->bstr), 'huge bound');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::sum_huge([$word->copy, $huge->copy]) }, 'arg0[1]', $huge->bstr), 'huge bound');\n"
+        },
+        {
+          "start": 2534,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::or_default(some(n(1))) }, 'arg0', '1'), 'present Fin 1');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::or_default(some(n(1))) }, 'arg0?', '1'), 'present Fin 1');\n"
+        },
+        {
+          "start": 2809,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::present([some(n(1)), undef, some(n(10))]) }, 'arg0', '10'), 'present invalid');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::present([some(n(1)), undef, some(n(10))]) }, 'arg0[2]?', '10'), 'present invalid');\n"
+        },
+        {
+          "start": 3389,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::flatten([ns(1, 2), ns(10)]) }, 'arg0', '10'), 'nested invalid last');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::flatten([ns(1, 2), ns(10)]) }, 'arg0[1][0]', '10'), 'nested invalid last');\ncheck(rejected(sub { LeanBridge::FinContainers::flatten([ns(1, 10), ns(3)]) }, 'arg0[0][1]', '10'), 'nested invalid column');\n"
+        },
+        {
+          "start": 3794,
+          "previous": "check(rejected(sub { LeanBridge::FinContainers::label($names, ns(1, 4)) }, 'arg1', '4') && \"@$names\" eq 'a b', 'late argument, caller data unchanged');\n",
+          "current": "check(rejected(sub { LeanBridge::FinContainers::label($names, ns(1, 4)) }, 'arg1[1]', '4') && \"@$names\" eq 'a b', 'late argument, caller data unchanged');\n"
+        },
+        {
+          "start": 4207,
+          "previous": "  die \"invalid call accepted at $i\\n\" unless rejected(sub { LeanBridge::FinContainers::mirror_all(ns(10 + $i % 5)) }, 'arg0', '10');\n",
+          "current": "  die \"invalid call accepted at $i\\n\" unless rejected(sub { LeanBridge::FinContainers::mirror_all(ns(10 + $i % 5)) }, 'arg0[0]', '10');\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-refinements-source-history-tests.mjs",
+      "currentSha256": "b6d9b05f85494719f1de330c770b0381a056cbc6d4948651a476b91b3347d07f",
+      "previousSha256": "1fdaaba6f5dc4f4a529b32dcc3130e2e20d8829879cdd83bc3ffda34e5bf2594",
+      "edits": [
+        {
+          "start": 656,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5302,
+          "previous": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "5fb9172298d9a1cba805541baeac4184be5d9b23ba6b1e891bba6c144303c3aa",
+      "previousSha256": "67208c325cca1ed775ece932e4bc845167cac7fc738ef5d18c14f2349310f37c",
+      "edits": [
+        {
+          "start": 1967,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4581,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "db0c4356bb244d0894b4eca9818146a6d6c6b98731e55eec631c0209b93b3a12",
+      "previousSha256": "d50e7abe196c8ff9808ca470c50cec377fd7ebb5119264bb2d3ff8cd09c9b1e0",
+      "edits": [
+        {
+          "start": 1827,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4206,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "b5d3b580e36fe9e9cfa9ec6c134fabcbcb63ed970db833584cb8594fa9e63525",
+      "previousSha256": "4121d1338e8abe2f5fd53c1ed1ab3d5c11ab8e0fceb9233c4fb461c53000af22",
+      "edits": [
+        {
+          "start": 1966,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4678,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "376ac327fa0ace0509d62f19e4a92c060cdfc1d1e12df4cd9c02c0979fa992ea",
+      "previousSha256": "73ecb48b765f3be37e209935f0d4e175c0c4b12e0c98cab501189fa7ca260ac2",
+      "edits": [
+        {
+          "start": 1529,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3822,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "4d154a99c78024724be95e5fa0ea05d5b3ba75a730fba1dec593b9a74722bace",
+      "previousSha256": "08dd1da7cf55c0154780b3138474369386fcab2cac2d132c6ac160a91a631b68",
+      "edits": [
+        {
+          "start": 1252,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3647,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e7fff8a2b5bb10912eb26347c955154695e8256dbb74d16272d3a498ee2214ff",
+      "previousSha256": "f378ff93ce42694e37dc2a1eb6f539ca2ead38549027d76cf51525ee0cec75b2",
+      "edits": [
+        {
+          "start": 3028,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 37291,
+          "previous": "",
+          "current": "\t, ...perlIndexedErrorsChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/host-fin-evidence-source-history-tests.mjs",
+      "currentSha256": "0e25edec272f31bf2e4d0b508603f57f71ecaf18f734f0f4d0bb1947de865aea",
+      "previousSha256": "0e01e65eada0722916fe1d6ae1c65a2441e977dcdfd533f8d92710b76347d719",
+      "edits": [
+        {
+          "start": 1105,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5764,
+          "previous": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "62dc4bca841f3e78530285f0b2ffc73f87c20fe255c0e05698839dcd7c1e8f13",
+      "previousSha256": "34a3231e95efcd9b2818372f1892fb24f02390636e4228d08a188399ab08d5b8",
+      "edits": [
+        {
+          "start": 1461,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3710,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-containers-source-history-tests.mjs",
+      "currentSha256": "39e6471afd04424b715174264c5f2644daa30816763752b165cc3aea7922a7ca",
+      "previousSha256": "3b5852da3319ff2d57fad945a564e550442337bfc681fa680d053a4db07886e9",
+      "edits": [
+        {
+          "start": 909,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 6724,
+          "previous": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "ce1dbbcc0791efe0a13798e6c48d20d09447c973826b121f744867b4a06b50f6",
+      "previousSha256": "628db0d43d135916d403e480fa05c82162f11a21324cb9085d09f61b78f18a7b",
+      "edits": [
+        {
+          "start": 1968,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5843,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-specializations-source-history-tests.mjs",
+      "currentSha256": "1ec620f92cf0cc091dcdb662ff01faabd85b992e54dff67857d605651b58472b",
+      "previousSha256": "c276367c186e44f5ad39a1aaf142e8303fac4eed77689eb2bda454660a143a5c",
+      "edits": [
+        {
+          "start": 1010,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5971,
+          "previous": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history-tests.mjs",
+      "currentSha256": "e844630f5a101d43e3d7c67a03d61d48ce3e3d5216a9623cc9fd7572f6f6be98",
+      "previousSha256": "fccb80a25b40e207a263deb673efa3fdd9288c19deadeff6c559a2610281617b",
+      "edits": [
+        {
+          "start": 824,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5764,
+          "previous": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "52e8405d55b115fdf1a7734ac326f0e56f613863fb5f24271ddae54fbe1317dd",
+      "previousSha256": "c610e2a9efb34c0e18ff4b7495f040d997fa6c43d2283b47a97b6a79575f0ed0",
+      "edits": [
+        {
+          "start": 1965,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4760,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "a9da691825d566d548272d6f2328741700eda4a5c7d4aed7a243caf6a0fae2a8",
+      "previousSha256": "9fb51e02de5d3ccaa00142820f3b668a0864470179b37850d56217346b5f563b",
+      "edits": [
+        {
+          "start": 1183,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3466,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinements-source-history-tests.mjs",
+      "currentSha256": "68be21437c84c814fa499bd2f86b9d19084cf76674d5f7b595329ec96abbc74b",
+      "previousSha256": "b4cef4ef202b73864ca4a08c655dc67a27ad29806e798f61c4e26adf3d602e2a",
+      "edits": [
+        {
+          "start": 356,
+          "previous": "",
+          "current": "import { beforePerlIndexedErrorsSource, perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 1050,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePerlIndexedErrorsSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2844,
+          "previous": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinements-source-history.mjs",
+      "currentSha256": "0b345f891340fbdf7f5c38252f3f9383946cbad51809dfb66a0af617acf34c60",
+      "previousSha256": "bfebe407996f2e5b87ebb36182a35ba5c7093fdf849a24333481c0f7eb5d4f14",
+      "edits": [
+        {
+          "start": 225,
+          "previous": "",
+          "current": "import { beforePerlIndexedErrorsSource } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3988,
+          "previous": "",
+          "current": "\tsource = beforePerlIndexedErrorsSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "b7dc4aeefec14710fae83a3b690a0e818dfe510e6f1265eb7d4beba4c5271a62",
+      "previousSha256": "2db11190f42ee9e0cc4a0cc86d61a3f0a0186afcef0f0568e61e4791a801a8c8",
+      "edits": [
+        {
+          "start": 1394,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3643,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "bbe4ac1976cbe3ce8ed676373dee99e9a390e2440ba07108dc4cc5277589dcbf",
+      "previousSha256": "972031dedb74f61f5b90a6df0329ed9b167aaec29e442cc18065b93b74055079",
+      "edits": [
+        {
+          "start": 1743,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4042,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-audit-source-history-tests.mjs",
+      "currentSha256": "aecf8ca2845549519f5d9eaae12aae3ab01381898f2eb36b5a01d609f5612475",
+      "previousSha256": "8e8b76542c93492cae43dcebe972e2a259d4abe8fa8a9ee9b5db0e4468d412c7",
+      "edits": [
+        {
+          "start": 744,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3228,
+          "previous": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "f1b528b370d53a2e1661188e64d940847f362ec51373aba30f8c456b38b5fe65",
+      "previousSha256": "dd81f8236eff78a934001a9412f878823bf5fb99c777b4d2086eb563f80571d2",
+      "edits": [
+        {
+          "start": 1605,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3876,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "7e0c8206a7f1516086d14bfe383bcee2792c2ab9c2cf84a0965641e6899173e8",
+      "previousSha256": "bbe843b91231930973247eba6775142287cf02bd2c425020e240309adc60d5c2",
+      "edits": [
+        {
+          "start": 1905,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4291,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "54aefb3d1f63aea1beef14eb69e1124cfd5b4d76b4b916268fe43ef56b7b4998",
+      "previousSha256": "a3e0d9d58e52ccc4fb23fe36b317aa0e1be2dce321b3752b2cabd1ce043714c5",
+      "edits": [
+        {
+          "start": 1672,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3939,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-source-history-tests.mjs",
+      "currentSha256": "6a2265791382de1b6a7d49d4a1ca00d99a503f7875d9fe87f8a9a11e03ee75c5",
+      "previousSha256": "7c68054c47099f3494165ef0b3f7e8f8af51f69a16253dfea6938168a6b59c8b",
+      "edits": [
+        {
+          "start": 563,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 5749,
+          "previous": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-wording-source-history-tests.mjs",
+      "currentSha256": "035e6572aa7029e489b504505d8c90122d520c0fd28811444cfa18876ad0e0e3",
+      "previousSha256": "dacf992c15f89e2902f94334187022a0df2adc2959c82562861ac49b40189638",
+      "edits": [
+        {
+          "start": 472,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3326,
+          "previous": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "09ed780736f6cb424207459fd183df40ea3d1eed0ceb8fc2b36da518c948c9b4",
+      "previousSha256": "09e6f34622c707fb80485402a33f1e75a524f8a7891099c0997b8808948795bb",
+      "edits": [
+        {
+          "start": 1990,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 4867,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "dcfcdec64262f60fc40044f63ae0266925b16bac4e73a83dd027fef8e78aa8ea",
+      "previousSha256": "0b7e426b06281084b55b2bb97a68b0d37948ee62011b0e0c31a6d3451d06ba52",
+      "edits": [
+        {
+          "start": 1336,
+          "previous": "",
+          "current": "import { perlIndexedErrorsChangedPaths } from \"./perl-indexed-errors-source-history.mjs\";\n"
+        },
+        {
+          "start": 3603,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-fin-containers.test.mjs",
+      "currentSha256": "6b47e29cab7693d756a9baa305e12bb00c84390283f22dfd52df2e691007c977",
+      "previousSha256": "732f4217ab09f5da208e7a573882f048804dd3d82632b20814b530074125da5c",
+      "edits": [
+        {
+          "start": 2177,
+          "previous": "\t\t\titem(\"mirrorAll\", [[\"values\", alias]], alias, { parameters: [inside(\"array\", fin(\"10\"))], result: inside(\"array\", fin(\"10\")) })\n\t\t\t, item(\"countNone\", [[\"values\", digits]], nat, { parameters: [inside(\"array\", fin(\"0\"))], result: null })\n\t\t\t, item(\"sumHuge\", [[\"values\", huges]], nat, { parameters: [inside(\"list\", fin(huge))], result: null })\n",
+          "current": "\t\t\titem(\"mirrorAll\", [[\"arg0\", alias]], alias, { parameters: [inside(\"array\", fin(\"10\"))], result: inside(\"array\", fin(\"10\")) })\n\t\t\t, item(\"countNone\", [[\"arg0\", digits]], nat, { parameters: [inside(\"array\", fin(\"0\"))], result: null })\n\t\t\t, item(\"sumHuge\", [[\"arg0\", huges]], nat, { parameters: [inside(\"list\", fin(huge))], result: null })\n"
+        },
+        {
+          "start": 2625,
+          "previous": "\t\t\t, item(\"present\", [[\"values\", cells]], digits, { parameters: [inside(\"array\", inside(\"option\", fin(\"10\")))], result: inside(\"array\", fin(\"10\")) })\n\t\t\t, item(\"flatten\", [[\"rows\", rows]], nat, { parameters: [inside(\"list\", inside(\"array\", fin(\"10\")))], result: null })\n\t\t\t, item(\"label\", [[\"names\", text], [\"offsets\", digits]], text, { parameters: [null, inside(\"array\", fin(\"4\"))], result: null })\n\t\t\t, item(\"wrapAll\", [[\"values\", digits]], digits, { parameters: [null], result: inside(\"array\", fin(\"7\")) })] };\n",
+          "current": "\t\t\t, item(\"present\", [[\"arg0\", cells]], digits, { parameters: [inside(\"array\", inside(\"option\", fin(\"10\")))], result: inside(\"array\", fin(\"10\")) })\n\t\t\t, item(\"flatten\", [[\"arg0\", rows]], nat, { parameters: [inside(\"list\", inside(\"array\", fin(\"10\")))], result: null })\n\t\t\t, item(\"label\", [[\"names\", text], [\"arg1\", digits]], text, { parameters: [null, inside(\"array\", fin(\"4\"))], result: null })\n\t\t\t, item(\"wrapAll\", [[\"arg0\", digits]], digits, { parameters: [null], result: inside(\"array\", fin(\"7\")) })] };\n"
+        },
+        {
+          "start": 3677,
+          "previous": "\tassert.match(mirror, /for \\(size_t k0 = 0; k0 < lean_array_size\\(a0\\); \\+\\+k0\\) \\{ lean_object \\*e0 = lean_array_get_core\\(a0, k0\\);\\s+\\{ lean_object \\*bound = lean_cstr_to_nat\\(\"10\"\\); int below = lean_nat_lt\\(e0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\(\"%s\", \"values is not below its Fin 10 bound\"\\); \\} \\} \\}/);\n",
+          "current": "\tassert.match(mirror, /for \\(size_t k0 = 0; k0 < lean_array_size\\(a0\\); \\+\\+k0\\) \\{ lean_object \\*e0 = lean_array_get_core\\(a0, k0\\);\\s+\\{ lean_object \\*bound = lean_cstr_to_nat\\(\"10\"\\); int below = lean_nat_lt\\(e0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\(\"%s\\[%zu\\] is not below its Fin 10 bound\", \"arg0\", \\(size_t\\)k0\\); \\} \\} \\}/);\n"
+        },
+        {
+          "start": 4490,
+          "previous": "\tassert.match(section(\"countNone\"), /lean_cstr_to_nat\\(\"0\"\\); int below = lean_nat_lt\\(e0, bound\\)/);\n",
+          "current": "\tassert.match(section(\"countNone\"), /lean_cstr_to_nat\\(\"0\"\\); int below = lean_nat_lt\\(e0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\(\"%s\\[%zu\\] is not below its Fin 0 bound\", \"arg0\", \\(size_t\\)k0\\);/);\n"
+        },
+        {
+          "start": 5037,
+          "previous": "\tassert.match(sum, new RegExp(`lean_cstr_to_nat\\\\(\"${huge}\"\\\\); int below = lean_nat_lt\\\\(e0, bound\\\\)`));\n",
+          "current": "\tassert.match(sum, new RegExp(`lean_cstr_to_nat\\\\(\"${huge}\"\\\\); int below = lean_nat_lt\\\\(e0, bound\\\\); lean_dec\\\\(bound\\\\);\\\\s+if \\\\(!below\\\\) croak\\\\(\"%s\\\\[%zu\\\\] is not below its Fin ${huge} bound\", \"arg0\", \\\\(size_t\\\\)k0\\\\);`));\n"
+        },
+        {
+          "start": 5705,
+          "previous": "",
+          "current": "\t// An option level adds \"?\" and no index; the leaf below the top-level option carries no %zu.\n\tassert.match(option, /croak\\(\"%s\\? is not below its Fin 1 bound\", \"arg0\"\\);/);\n"
+        },
+        {
+          "start": 6324,
+          "previous": "",
+          "current": "\tassert.match(present, /croak\\(\"%s\\[%zu\\]\\? is not below its Fin 10 bound\", \"arg0\", \\(size_t\\)k0\\);/);\n"
+        },
+        {
+          "start": 6464,
+          "previous": "",
+          "current": "\t// Nested levels carry one index per enclosing array or List, in order.\n\tassert.match(flatten, /croak\\(\"%s\\[%zu\\]\\[%zu\\] is not below its Fin 10 bound\", \"arg0\", \\(size_t\\)k0, \\(size_t\\)k1\\);/);\n"
+        },
+        {
+          "start": 7143,
+          "previous": "\tassert.match(label, /\"offsets is not below its Fin 4 bound\"/);\n",
+          "current": "\tassert.match(label, /croak\\(\"%s\\[%zu\\] is not below its Fin 4 bound\", \"arg1\", \\(size_t\\)k0\\);/);\n\t// Messages are assembled only on rejection: no format call precedes the comparison and no allocation joins the bound.\n\tassert.doesNotMatch(files[\"Component.xs\"], /snprintf|SvPVf|newSVpvf|sv_catpvf/);\n"
+        },
+        {
+          "start": 7943,
+          "previous": "\tassert.match(pod, /=head2 mirrorAll\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: values\\[\\*\\] < 10; result\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 present\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: values\\[\\*\\]\\? < 10; result\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 flatten\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: rows\\[\\*\\]\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 orDefault\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: value\\? < 1\\.\\n/);\n\tassert.match(pod, /=head1 BOUNDED INTEGERS[^]*no present element|C<Fin 0> element is rejected while an empty array or an undefined option is accepted/);\n",
+          "current": "\tassert.match(pod, /=head2 mirrorAll\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: arg0\\[\\*\\] < 10; result\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 present\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: arg0\\[\\*\\]\\? < 10; result\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 flatten\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: arg0\\[\\*\\]\\[\\*\\] < 10\\.\\n/);\n\tassert.match(pod, /=head2 orDefault\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: arg0\\? < 1\\.\\n/);\n\tassert.match(pod, /=head1 BOUNDED INTEGERS[^]*C<Fin 0> element is rejected while an empty array or an undefined option is accepted[^]*C<arg0\\[2\\]\\? is not below its Fin 10 bound>/);\n"
+        },
+        {
+          "start": 8845,
+          "previous": "\tconst mix = { ...base.exports[0], name: \"Sample.mix\", publicName: \"mix\", symbol: \"lb_mix\", parameters: [{ name: \"text\", type: text }, { name: \"values\", type: digits }], result: nat };\n",
+          "current": "\tconst mix = { ...base.exports[0], name: \"Sample.mix\", publicName: \"mix\", symbol: \"lb_mix\", parameters: [{ name: \"text\", type: text }, { name: \"arg0\", type: digits }], result: nat };\n"
+        },
+        {
+          "start": 9527,
+          "previous": "\tassert.match(xs, /lean_inc\\(a0\\); if \\(!lb_mix_refinement_0\\(a0\\)\\) croak\\(\"%s\", \"text was rejected by Sample.checkedText\"\\);/);\n",
+          "current": "\tassert.match(xs, /lean_inc\\(a0\\); if \\(!lb_mix_refinement_0\\(a0\\)\\) croak\\(\"%s\", \"arg0 was rejected by Sample.checkedText\"\\);/);\n"
+        },
+        {
+          "start": 9747,
+          "previous": "\tassert.match(files[\"lib/LeanBridge/Sample.pm\"], /Checked Lean refinements: text checked by Sample\\.checkedText; values\\[\\*\\] < 10\\./);\n",
+          "current": "\tassert.match(files[\"lib/LeanBridge/Sample.pm\"], /Checked Lean refinements: arg0 checked by Sample\\.checkedText; arg1\\[\\*\\] < 10\\./);\n"
+        },
+        {
+          "start": 10565,
+          "previous": "\tassert.match(unboxed, /\\n {4} if \\(!lb_tiny_refinement_0\\(a0\\)\\) croak\\(\"%s\", \"value was rejected by Sample.checkedDigit32\"\\);/);\n",
+          "current": "\tassert.match(unboxed, /\\n {4} if \\(!lb_tiny_refinement_0\\(a0\\)\\) croak\\(\"%s\", \"arg0 was rejected by Sample.checkedDigit32\"\\);/);\n"
+        },
+        {
+          "start": 11539,
+          "previous": "\tassert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /values: checked subtype refinements are not implemented for cpan packages/);\n",
+          "current": "\tassert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /arg1: checked subtype refinements are not implemented for cpan packages/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-fin.test.mjs",
+      "currentSha256": "7e63d936e331498bbd5abd2a1d7ea567058fe78d91a777e40104e49e5f706b61",
+      "previousSha256": "718defe52e16036c19ae67b4d9dfa8d112ae6d83c6af0eefea383e5961e919f1",
+      "edits": [
+        {
+          "start": 9018,
+          "previous": "\tassert.match(mirror, new RegExp(`lean_cstr_to_nat\\\\(\"${huge}\"\\\\); int below = lean_nat_lt\\\\(a0, bound\\\\); lean_dec\\\\(bound\\\\);\\\\s+if \\\\(!below\\\\) croak\\\\(\"%s\", \"value is not below its Fin ${huge} bound\"\\\\);`));\n",
+          "current": "\tassert.match(mirror, new RegExp(`lean_cstr_to_nat\\\\(\"${huge}\"\\\\); int below = lean_nat_lt\\\\(a0, bound\\\\); lean_dec\\\\(bound\\\\);\\\\s+if \\\\(!below\\\\) croak\\\\(\"%s\", \"arg0 is not below its Fin ${huge} bound\"\\\\);`));\n"
+        },
+        {
+          "start": 9788,
+          "previous": "\tassert.match(label, /\"offset is not below its Fin 4 bound\"/);\n",
+          "current": "\tassert.match(label, /\"arg1 is not below its Fin 4 bound\"/);\n"
+        },
+        {
+          "start": 10473,
+          "previous": "\tassert.match(pod, new RegExp(`=head2 mirror\\\\n\\\\nCalls C<Sample\\\\.mirror> in the compiled Lean component\\\\.\\\\n\\\\nChecked Lean Fin bounds: value < ${huge}; result < ${huge}\\\\.\\\\n`));\n\tassert.match(pod, /=head2 label\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: offset < 4\\.\\n/);\n",
+          "current": "\tassert.match(pod, new RegExp(`=head2 mirror\\\\n\\\\nCalls C<Sample\\\\.mirror> in the compiled Lean component\\\\.\\\\n\\\\nChecked Lean Fin bounds: arg0 < ${huge}; result < ${huge}\\\\.\\\\n`));\n\tassert.match(pod, /=head2 label\\n\\n[^\\n]+\\n\\nChecked Lean Fin bounds: arg1 < 4\\.\\n/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-refinements.test.mjs",
+      "currentSha256": "434cf92b4c29dd2008fd0a44dc01ebfe7db3ed298b60faba724da214389bf9c3",
+      "previousSha256": "e5397abb99e29728400ab4a72fa836c3760b5d0b1386073e0412db98690cc8cf",
+      "edits": [
+        {
+          "start": 4953,
+          "previous": "check(bound(sub { LeanBridge::PerlRefinements::count_absent([undef, some(n(0))]) }, 'arg0', '0'), 'Array (Option (Fin 0)) with a present leaf');\n",
+          "current": "check(bound(sub { LeanBridge::PerlRefinements::count_absent([undef, some(n(0))]) }, 'arg0[1]?', '0'), 'Array (Option (Fin 0)) with a present leaf');\n"
+        },
+        {
+          "start": 5284,
+          "previous": "check(bound(sub { LeanBridge::PerlRefinements::empty_rows(some([n(0)])) }, 'arg0', '0'), 'Option (Array (Fin 0)) with a present leaf');\n",
+          "current": "check(bound(sub { LeanBridge::PerlRefinements::empty_rows(some([n(0)])) }, 'arg0?[0]', '0'), 'Option (Array (Fin 0)) with a present leaf');\n"
+        },
+        {
+          "start": 5607,
+          "previous": "check(bound(sub { LeanBridge::PerlRefinements::nested_empty($rows) }, 'arg0', '0') && $rows->[1][0]->bstr eq '0', 'nested present leaf, caller data unchanged');\n",
+          "current": "check(bound(sub { LeanBridge::PerlRefinements::nested_empty($rows) }, 'arg0[1][0]', '0') && $rows->[1][0]->bstr eq '0', 'nested present leaf, caller data unchanged');\n"
+        },
+        {
+          "start": 5896,
+          "previous": "check(bound(sub { LeanBridge::PerlRefinements::nested_digits([some(n(1)), some(n(3))]) }, 'arg0', '3'), 'nested present invalid leaf');\n",
+          "current": "check(bound(sub { LeanBridge::PerlRefinements::nested_digits([some(n(1)), some(n(3))]) }, 'arg0[1]?', '3'), 'nested present invalid leaf');\n"
+        },
+        {
+          "start": 6187,
+          "previous": "  die \"invalid leaf accepted at $i\\\\n\" unless bound(sub { LeanBridge::PerlRefinements::count_absent([some(n($i))]) }, 'arg0', '0');\n",
+          "current": "  die \"invalid leaf accepted at $i\\\\n\" unless bound(sub { LeanBridge::PerlRefinements::count_absent([some(n($i))]) }, 'arg0[0]?', '0');\n"
+        },
+        {
+          "start": 9301,
+          "previous": "",
+          "current": "\t\tfor(const message of ['\"%s[%zu]? is not below its Fin 0 bound\", \"arg0\", (size_t)k0', '\"%s?[%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0', '\"%s[%zu][%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0, (size_t)k1'])\n\t\t\tassert.ok(xs.includes(`croak(${message})`), message);\n"
+        }
+      ]
+    }
+  ]
+}
