@@ -40,6 +40,7 @@ import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-hi
 import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
 import { perlIndexedErrorsChangedPaths } from "./perl-indexed-errors-source-history.mjs";
+import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-history.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -543,6 +544,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...scalarFinWordingChangedPaths
 	, ...perlRefinementsChangedPaths
 	, ...perlIndexedErrorsChangedPaths
+	, ...refinementCiRepairChangedPaths
 ])].sort());
 
 /**

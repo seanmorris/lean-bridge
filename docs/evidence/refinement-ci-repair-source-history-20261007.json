@@ -1,0 +1,603 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-ci-repair-v1",
+  "predecessorCommit": "1f010bb34bed300119756bdcf8d96f1ec320ad7e",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "4db3ad7dd40311ccea31c8df4397cb5244cb2efe2922d1de04f0e853f42db074",
+      "previousSha256": "f675ff193789db7c02e9dded6707c6e71ffe0dcc6531245c45328b5d80148239",
+      "edits": [
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n",
+          "current": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n"
+        },
+        {
+          "start": 1068213,
+          "previous": "          \"sha256\": \"4324716a26a8d64e8b43a90e1a2b6572c482ea5686a54c995815731b09b411d0\"\n",
+          "current": "          \"sha256\": \"c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2\"\n"
+        },
+        {
+          "start": 1226224,
+          "previous": "          \"sha256\": \"4324716a26a8d64e8b43a90e1a2b6572c482ea5686a54c995815731b09b411d0\"\n",
+          "current": "          \"sha256\": \"c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n",
+          "current": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f\"\n",
+          "current": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n"
+        },
+        {
+          "start": 1429282,
+          "previous": "          \"sha256\": \"d2ed9f12b303e7bb01cc616c7729a115ba67316939f787145bd71e8c8f0e7504\"\n",
+          "current": "          \"sha256\": \"f264963a1742a0b76ee838b1c5fe120de669bc022ad2558707990e9663f0cf88\"\n"
+        },
+        {
+          "start": 1434813,
+          "previous": "          \"sha256\": \"72916c49db7b09a3cba5a046eb2290b381e4d6afdb3e11edd0421ef4001169f1\"\n",
+          "current": "          \"sha256\": \"6cfafc94be55d741e16a79d27824f06f81e5774faadee0b6a4a73ba0ff6fc92b\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/browser-refinements.test.mjs",
+      "currentSha256": "f264963a1742a0b76ee838b1c5fe120de669bc022ad2558707990e9663f0cf88",
+      "previousSha256": "d2ed9f12b303e7bb01cc616c7729a115ba67316939f787145bd71e8c8f0e7504",
+      "edits": [
+        {
+          "start": 410,
+          "previous": "import { executeComponentEngineRequest } from \"../src/build/component-engine.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 753,
+          "previous": "",
+          "current": "import { refinementEngineTransport } from \"./helpers/refinement-engine.mjs\";\n"
+        },
+        {
+          "start": 1482,
+          "previous": "// Only the Nix command transport is substituted; the pinned engine executes in-process.\nconst transport = () => ({ capture: async command => {\n\tif(command.command === \"docker\") throw new Error(\"Docker is absent in the injected transport\");\n\tif(command.args[0] === \"--version\") return { stdout: \"nix (Nix) 2.24.11\", stderr: \"\", code: 0 };\n\tconst arg = flag => command.args[command.args.indexOf(flag) + 1];\n\tawait executeComponentEngineRequest({ requestPath: arg(\"--request\"), inputRoot: arg(\"--component\"), outputRoot: arg(\"--output\"), engineRoot: arg(\"--engine\"), backend: \"native-nix\" });\n\treturn { stdout: \"\", stderr: \"\", code: 0 };\n} });\nconst build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: transport() });\n",
+          "current": "const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: refinementEngineTransport() });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8",
+      "previousSha256": "ddad3607ab0d79d7fc26a407556b3813b2920d966029d9620fa6e5c9c8cac66f",
+      "edits": [
+        {
+          "start": 3733,
+          "previous": "",
+          "current": "import \"./helpers/refinement-ci-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-refinements-source-history-tests.mjs",
+      "currentSha256": "1c3b93d2921d43c83f6f3995e1c9224d5bf08a5ac419b69b70bd7c2237e693b3",
+      "previousSha256": "b6d9b05f85494719f1de330c770b0381a056cbc6d4948651a476b91b3347d07f",
+      "edits": [
+        {
+          "start": 746,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5394,
+          "previous": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "61af0dde44136de54046c1b56d0973b0261bdbfe69c808402929b4d80b8f0a6c",
+      "previousSha256": "5fb9172298d9a1cba805541baeac4184be5d9b23ba6b1e891bba6c144303c3aa",
+      "edits": [
+        {
+          "start": 2057,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4673,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "3db63eb8997fbec6756925fe72e29118c698988eec0b0d6ebd98704f83da4044",
+      "previousSha256": "db0c4356bb244d0894b4eca9818146a6d6c6b98731e55eec631c0209b93b3a12",
+      "edits": [
+        {
+          "start": 1917,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4298,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "aae5c70b5d3491202a5c6539db7690d0facaddd5b10d0ee0a6bf56ad57be3ecc",
+      "previousSha256": "b5d3b580e36fe9e9cfa9ec6c134fabcbcb63ed970db833584cb8594fa9e63525",
+      "edits": [
+        {
+          "start": 2056,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4770,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "5e403355230be02c6ace281c1342beac4d39db47e7b75dca5879cbd2726852cb",
+      "previousSha256": "376ac327fa0ace0509d62f19e4a92c060cdfc1d1e12df4cd9c02c0979fa992ea",
+      "edits": [
+        {
+          "start": 1619,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3914,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "7b7d66159cc50ce9498449aac54a89b8ef1491503dec6a672adb0bd34652d0d8",
+      "previousSha256": "4d154a99c78024724be95e5fa0ea05d5b3ba75a730fba1dec593b9a74722bace",
+      "edits": [
+        {
+          "start": 1342,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3739,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "026059a804d17d4f42858d42141d99743120b773e44ba07875b0b19afee42ae5",
+      "previousSha256": "e7fff8a2b5bb10912eb26347c955154695e8256dbb74d16272d3a498ee2214ff",
+      "edits": [
+        {
+          "start": 3118,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 37419,
+          "previous": "",
+          "current": "\t, ...refinementCiRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/host-fin-evidence-source-history-tests.mjs",
+      "currentSha256": "c31c6f0ec702889628cd70a3b926a6230cbb66e47091d2259891d8d4da4299fd",
+      "previousSha256": "0e25edec272f31bf2e4d0b508603f57f71ecaf18f734f0f4d0bb1947de865aea",
+      "edits": [
+        {
+          "start": 1195,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5856,
+          "previous": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "fb6779eeb56abb94d53dc2c55f6ff4f2c7b64b95e1ffb1d95854b38ab0908e8a",
+      "previousSha256": "62dc4bca841f3e78530285f0b2ffc73f87c20fe255c0e05698839dcd7c1e8f13",
+      "edits": [
+        {
+          "start": 1551,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3802,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-containers-source-history-tests.mjs",
+      "currentSha256": "8bcf0f043a9363e39fa4f761b2a498e27baceb8cd3e373bf4558e17cf97c19e2",
+      "previousSha256": "39e6471afd04424b715174264c5f2644daa30816763752b165cc3aea7922a7ca",
+      "edits": [
+        {
+          "start": 999,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 6816,
+          "previous": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "3b6e82cb7020db111fafd07ed32e1def5cfe03bf1da75b0cff7d63953470f3bc",
+      "previousSha256": "ce1dbbcc0791efe0a13798e6c48d20d09447c973826b121f744867b4a06b50f6",
+      "edits": [
+        {
+          "start": 2058,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5935,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-specializations-source-history-tests.mjs",
+      "currentSha256": "5438f364cff22a3509c4987a7c399e8a169cc56cda6e1744e5bbca336b5ea278",
+      "previousSha256": "1ec620f92cf0cc091dcdb662ff01faabd85b992e54dff67857d605651b58472b",
+      "edits": [
+        {
+          "start": 1100,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 6063,
+          "previous": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history-tests.mjs",
+      "currentSha256": "2fefb2911bea6eb52b75d236704b825c3166b49203a4d5554a02e0873f722512",
+      "previousSha256": "e844630f5a101d43e3d7c67a03d61d48ce3e3d5216a9623cc9fd7572f6f6be98",
+      "edits": [
+        {
+          "start": 914,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5856,
+          "previous": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "04e431b746f19ebce783502f45ae6a85aaafd244b9826e6e4b90a2f2187683ca",
+      "previousSha256": "52e8405d55b115fdf1a7734ac326f0e56f613863fb5f24271ddae54fbe1317dd",
+      "edits": [
+        {
+          "start": 2055,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4852,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "782ac42bf8501393cee1b468b8745b1f21aedf4069e62d8e9243697e0d1615b4",
+      "previousSha256": "a9da691825d566d548272d6f2328741700eda4a5c7d4aed7a243caf6a0fae2a8",
+      "edits": [
+        {
+          "start": 1273,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3558,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-indexed-errors-source-history-tests.mjs",
+      "currentSha256": "ab94192ea2ce5ac04a1b4c4a32068cc68df020c9624c6350e401cb0a0ea9a6ef",
+      "previousSha256": "08eec0bf0068b65c088d0925fce1133f1d63d8898bf30f1d2335a9eca38e11eb",
+      "edits": [
+        {
+          "start": 544,
+          "previous": "",
+          "current": "import { beforeRefinementCiRepairSource, refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1074,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementCiRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2886,
+          "previous": "\t\t\tassert.ok(perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-indexed-errors-source-history.mjs",
+      "currentSha256": "509ff70ae24cf96791feca8ba86a8326497b9f4d71893a9894d10c6801839f18",
+      "previousSha256": "ee705c89a61505b27d4067ac8468e1b853eec9cbd7bc77f7fdc91ee1dc17dbf7",
+      "edits": [
+        {
+          "start": 228,
+          "previous": "",
+          "current": "import { beforeRefinementCiRepairSource } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3876,
+          "previous": "",
+          "current": "\tsource = beforeRefinementCiRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinements-source-history-tests.mjs",
+      "currentSha256": "828f9595cb0e682f6a54c96aaa01bc2c2b9cfc1a3140cedd57917d913e4e3a22",
+      "previousSha256": "68be21437c84c814fa499bd2f86b9d19084cf76674d5f7b595329ec96abbc74b",
+      "edits": [
+        {
+          "start": 477,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2936,
+          "previous": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "207f842953becd2e4574c0c7ccaaa83759f732b16c8768956fd7406513cfe1a9",
+      "previousSha256": "b7dc4aeefec14710fae83a3b690a0e818dfe510e6f1265eb7d4beba4c5271a62",
+      "edits": [
+        {
+          "start": 1484,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3735,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "1e1b3fc80d9097b6df1cf907b3b55c9078925cd4458d4aa467bfd0a444f16377",
+      "previousSha256": "bbe4ac1976cbe3ce8ed676373dee99e9a390e2440ba07108dc4cc5277589dcbf",
+      "edits": [
+        {
+          "start": 1833,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4134,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-audit-source-history-tests.mjs",
+      "currentSha256": "f6a79ef27c369d09d877f71b91f641dd79ce8916095ca26be5aa824b2b2f1365",
+      "previousSha256": "aecf8ca2845549519f5d9eaae12aae3ab01381898f2eb36b5a01d609f5612475",
+      "edits": [
+        {
+          "start": 834,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3320,
+          "previous": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "d85bfcc537398e0b5be97e231fcb945160d3eb416bfc50e1021e067282c0c3d4",
+      "previousSha256": "f1b528b370d53a2e1661188e64d940847f362ec51373aba30f8c456b38b5fe65",
+      "edits": [
+        {
+          "start": 1695,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3968,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "f1c384170d610980a7ac0e14c6fdc466af480a6eb37ab7dbbdefc3135a3ff1a8",
+      "previousSha256": "7e0c8206a7f1516086d14bfe383bcee2792c2ab9c2cf84a0965641e6899173e8",
+      "edits": [
+        {
+          "start": 1995,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4383,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "7ab27de1b93edab3d8a933b74c0596a738a55ad30f151327217d385815140cfd",
+      "previousSha256": "54aefb3d1f63aea1beef14eb69e1124cfd5b4d76b4b916268fe43ef56b7b4998",
+      "edits": [
+        {
+          "start": 1762,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4031,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-source-history-tests.mjs",
+      "currentSha256": "dfe3908a974d331e2aea2abd49dfc5fbf5887587f65961f0ab8152d014dc3c4a",
+      "previousSha256": "6a2265791382de1b6a7d49d4a1ca00d99a503f7875d9fe87f8a9a11e03ee75c5",
+      "edits": [
+        {
+          "start": 653,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5841,
+          "previous": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-wording-source-history-tests.mjs",
+      "currentSha256": "c144ccf7bae28e0d33b105b95d5a8ea35bcc205b6b51105e3b98190b89a66a22",
+      "previousSha256": "035e6572aa7029e489b504505d8c90122d520c0fd28811444cfa18876ad0e0e3",
+      "edits": [
+        {
+          "start": 562,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3418,
+          "previous": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "13fcc23c8ec84e08570f28236496c25d34606046519050f802d249bf520a5391",
+      "previousSha256": "09ed780736f6cb424207459fd183df40ea3d1eed0ceb8fc2b36da518c948c9b4",
+      "edits": [
+        {
+          "start": 2080,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 4959,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "2f515c6f771ba07110b4926fced174acaa6e173bfb983326d874ac1a9a8232e7",
+      "previousSha256": "dcfcdec64262f60fc40044f63ae0266925b16bac4e73a83dd027fef8e78aa8ea",
+      "edits": [
+        {
+          "start": 1426,
+          "previous": "",
+          "current": "import { refinementCiRepairChangedPaths } from \"./refinement-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 3695,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/rust-structured-callable-contract.test.mjs",
+      "currentSha256": "c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2",
+      "previousSha256": "4324716a26a8d64e8b43a90e1a2b6572c482ea5686a54c995815731b09b411d0",
+      "edits": [
+        {
+          "start": 1070,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1379,
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);\n",
+          "current": "\tfor(const [path, hash] of Object.entries(record.sourceHashes))\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.equal(sha256(beforeFinRefinementSource(path, source, hash)), hash, path);\n\t\t// Only authenticated transitions may explain a newer generator; arbitrary edits stay visible.\n\t\tconst changed = source + \"\\n// unrelated change\\n\";\n\t\tassert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/scalar-fin-rejection.test.mjs",
+      "currentSha256": "6cfafc94be55d741e16a79d27824f06f81e5774faadee0b6a4a73ba0ff6fc92b",
+      "previousSha256": "72916c49db7b09a3cba5a046eb2290b381e4d6afdb3e11edd0421ef4001169f1",
+      "edits": [
+        {
+          "start": 406,
+          "previous": "import { executeComponentEngineRequest } from \"../src/build/component-engine.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 635,
+          "previous": "",
+          "current": "import { refinementEngineTransport } from \"./helpers/refinement-engine.mjs\";\nimport \"./helpers/refinement-engine-tests.mjs\";\n"
+        },
+        {
+          "start": 1413,
+          "previous": "// Only the Nix command transport is substituted; the pinned engine executes in-process.\nconst transport = () => ({ capture: async command => {\n\tif(command.command === \"docker\") throw new Error(\"Docker is absent in the injected transport\");\n\tif(command.args[0] === \"--version\") return { stdout: \"nix (Nix) 2.24.11\", stderr: \"\", code: 0 };\n\tconst arg = flag => command.args[command.args.indexOf(flag) + 1];\n\tawait executeComponentEngineRequest({ requestPath: arg(\"--request\"), inputRoot: arg(\"--component\"), outputRoot: arg(\"--output\"), engineRoot: arg(\"--engine\"), backend: \"native-nix\" });\n\treturn { stdout: \"\", stderr: \"\", code: 0 };\n} });\nconst build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: transport() });\n",
+          "current": "const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: refinementEngineTransport() });\n"
+        }
+      ]
+    }
+  ]
+}

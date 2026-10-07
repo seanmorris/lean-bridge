@@ -9,11 +9,11 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
-import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { browserRefinementExpected, browserRefinementProfiles, checkBrowserRefinementPackages } from "./helpers/browser-refinement-packages.mjs";
 import { executeCorpus } from "./fixtures/browser-refinements/javascript.mjs";
+import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -26,15 +26,7 @@ const fixture = async t => {
 	await cp("tests/fixtures/documentation/lean-author", root, { recursive: true });
 	return { directory, root };
 };
-// Only the Nix command transport is substituted; the pinned engine executes in-process.
-const transport = () => ({ capture: async command => {
-	if(command.command === "docker") throw new Error("Docker is absent in the injected transport");
-	if(command.args[0] === "--version") return { stdout: "nix (Nix) 2.24.11", stderr: "", code: 0 };
-	const arg = flag => command.args[command.args.indexOf(flag) + 1];
-	await executeComponentEngineRequest({ requestPath: arg("--request"), inputRoot: arg("--component"), outputRoot: arg("--output"), engineRoot: arg("--engine"), backend: "native-nix" });
-	return { stdout: "", stderr: "", code: 0 };
-} });
-const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner: transport() });
+const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() });
 
 test("the shared browser checks reject every invalid refinement through the package, never the harness", () => {
 	// A fake API that accepts everything makes the harness itself fail: every rejection must come from the package.

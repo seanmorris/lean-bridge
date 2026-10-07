@@ -16,6 +16,7 @@ import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-hi
 import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
 import { perlIndexedErrorsChangedPaths } from "./perl-indexed-errors-source-history.mjs";
+import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-history.mjs";
 import { beforeNativeSpecializationsSource, nativeSpecializationsChangedPaths
 	, nativeSpecializationsHistoryPath, reverseNativeSpecializationsUpdate } from "./native-specializations-source-history.mjs";
 
@@ -80,7 +81,7 @@ test("Native specialization adds one installed receipt and one signature cell pe
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeSpecializationsSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeNativeFinContainersSource(file.path, source)));

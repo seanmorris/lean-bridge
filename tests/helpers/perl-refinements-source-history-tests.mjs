@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlIndexedErrorsSource, perlIndexedErrorsChangedPaths } from "./perl-indexed-errors-source-history.mjs";
+import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-history.mjs";
 import { beforePerlRefinementsSource, perlRefinementsChangedPaths
 	, perlRefinementsHistoryPath, reversePerlRefinementsUpdate } from "./perl-refinements-source-history.mjs";
 
@@ -45,7 +46,7 @@ test("Perl refinements changes only refreshed source pins, no claim, receipt sco
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforePerlRefinementsSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));

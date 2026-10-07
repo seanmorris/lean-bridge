@@ -21,6 +21,7 @@ import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-hi
 import { scalarFinWordingChangedPaths } from "./scalar-fin-wording-source-history.mjs";
 import { perlRefinementsChangedPaths } from "./perl-refinements-source-history.mjs";
 import { perlIndexedErrorsChangedPaths } from "./perl-indexed-errors-source-history.mjs";
+import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-history.mjs";
 import { beforePhpFinSource, phpFinChangedPaths
 	, phpFinHistoryPath, reversePhpFinUpdate } from "./php-fin-source-history.mjs";
 
@@ -56,7 +57,7 @@ test("PHP scalar Fin changes only evidence source pins, not support or archives"
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforePhpFinSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeWitFinSource(file.path, source)));
