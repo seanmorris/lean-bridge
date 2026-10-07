@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeGenericRecordsEngineSource } from "./generic-records-engine-source-history.mjs";
 import { beforeFinProductsFloorsSource, finProductsFloorsChangedPaths, finProductsFloorsHistoryPath, reverseFinProductsFloorsUpdate } from "./fin-products-floors-source-history.mjs";
 
 test("Fin products floors authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Fin products floors authenticates each exact source predecessor", async ()
 	assert.deepEqual(record.updates.map(update => update.path), finProductsFloorsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeGenericRecordsEngineSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinProductsFloorsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinProductsFloorsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinProductsFloorsSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("Fin products floors authenticates each exact source predecessor", async ()
 });
 
 test("Fin products floors changes current source pins without inventing installed evidence", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeGenericRecordsEngineSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinProductsFloorsSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -42,7 +43,7 @@ test("Fin products floors changes current source pins without inventing installe
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(finProductsFloorsChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforeGenericRecordsEngineSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(sha256(beforeFinProductsFloorsSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

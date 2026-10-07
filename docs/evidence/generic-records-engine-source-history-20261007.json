@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "milestone": "generic-records-engine-v1",
+  "predecessorCommit": "827947d087e7c0afd746b57bf93d332e22f1e9aa",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d19e647795d83814e67031e8240587cb5ae69bb38a2a748192eb40ccda734b46",
+      "previousSha256": "b5977a9c2ba9ad5cd87e74d799d3d099cc0c9032f07508854a097c7ea0a5f20b",
+      "edits": [
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1570079,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1574853,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1579408,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1584389,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1589277,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1593651,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1598023,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1602397,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        },
+        {
+          "start": 1606645,
+          "previous": "          \"sha256\": \"ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb\"\n",
+          "current": "          \"sha256\": \"fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "fe34c4b0a9e307800add9b2d677e2abfa47d30b11cf77646018a8ec08e35299d",
+      "previousSha256": "ecd63e342c064048c426c0e9fed4dadc6ea1f533c6da85dd7df3d6427a47ccdb",
+      "edits": [
+        {
+          "start": 435,
+          "previous": "import { executeComponentEngineRequest } from \"../src/build/component-engine.mjs\";\n",
+          "current": "import { refinementEngineTransport } from \"./helpers/refinement-engine.mjs\";\nimport \"./helpers/refinement-engine-tests.mjs\";\nimport \"./helpers/generic-records-engine-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 3697,
+          "previous": "// Only the Nix command transport is substituted; the pinned engine executes in-process.\nconst transport = () => ({ capture: async command => {\n\tif(command.command === \"docker\") throw new Error(\"Docker is absent in the injected transport\");\n\tif(command.args[0] === \"--version\") return { stdout: \"nix (Nix) 2.24.11\", stderr: \"\", code: 0 };\n\tconst arg = flag => command.args[command.args.indexOf(flag) + 1];\n\tawait executeComponentEngineRequest({ requestPath: arg(\"--request\"), inputRoot: arg(\"--component\"), outputRoot: arg(\"--output\"), engineRoot: arg(\"--engine\"), backend: \"native-nix\" });\n\treturn { stdout: \"\", stderr: \"\", code: 0 };\n} });\nconst build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: transport() });\n",
+          "current": "// Only the Nix command transport is substituted: CI's locked engine when configured, else the pinned local engine.\nconst build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: [\"npm\"], runner: refinementEngineTransport() });\n\ntest(\"the npm generic-record acceptance compiles only through the shared engine transport\", async () => {\n\t// A private in-process transport here once ignored LEAN_BRIDGE_LAKE_ENGINE and spawned a local Lean CI lacks.\n\tconst source = await readFile(new URL(import.meta.url), \"utf8\");\n\tassert.equal(source.match(/runner: refinementEngineTransport\\(\\)/gu)?.length, 1);\n\tassert.doesNotMatch(source, /^import .*component-engine/mu);\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-products-floors-source-history-tests.mjs",
+      "currentSha256": "e2d7710bd93b5edf0295df46ea6c5b53a45257baed2a557ef860d69c95c87bbf",
+      "previousSha256": "0c2d5ea18a5a1b767db24b6c99747e765230f31741be64bab6e08d7632b94b0e",
+      "edits": [
+        {
+          "start": 379,
+          "previous": "",
+          "current": "import { beforeGenericRecordsEngineSource } from \"./generic-records-engine-source-history.mjs\";\n"
+        },
+        {
+          "start": 1045,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeGenericRecordsEngineSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1990,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeGenericRecordsEngineSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2882,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeGenericRecordsEngineSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-products-floors-source-history.mjs",
+      "currentSha256": "c869df76c9ed29c9434116a208936d823a838e64afef1ab48626c374e625f908",
+      "previousSha256": "eb27f291383bd5541adaf8060cdfeb402585f1d211b28ddaf354035e40cd2e9e",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforeGenericRecordsEngineSource } from \"./generic-records-engine-source-history.mjs\";\n"
+        },
+        {
+          "start": 2318,
+          "previous": "",
+          "current": "\tsource = beforeGenericRecordsEngineSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c1d6393fdc7a1a186ace30f3b6f58741c39c79c0999f0f744f0cc67c70715895",
+      "previousSha256": "37e02302f4ebb737a9e756010e36549f988d828791dff13bb72a1810ee82c615",
+      "edits": [
+        {
+          "start": 5062,
+          "previous": "",
+          "current": "import { genericRecordsEngineChangedPaths } from \"./generic-records-engine-source-history.mjs\";\n"
+        },
+        {
+          "start": 40239,
+          "previous": "",
+          "current": "\t, ...genericRecordsEngineChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

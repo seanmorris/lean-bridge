@@ -9,7 +9,9 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
-import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
+import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
+import "./helpers/refinement-engine-tests.mjs";
+import "./helpers/generic-records-engine-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
@@ -51,15 +53,15 @@ const fixture = async t => {
 	await cp("tests/fixtures/documentation/lean-author", root, { recursive: true });
 	return { directory, root };
 };
-// Only the Nix command transport is substituted; the pinned engine executes in-process.
-const transport = () => ({ capture: async command => {
-	if(command.command === "docker") throw new Error("Docker is absent in the injected transport");
-	if(command.args[0] === "--version") return { stdout: "nix (Nix) 2.24.11", stderr: "", code: 0 };
-	const arg = flag => command.args[command.args.indexOf(flag) + 1];
-	await executeComponentEngineRequest({ requestPath: arg("--request"), inputRoot: arg("--component"), outputRoot: arg("--output"), engineRoot: arg("--engine"), backend: "native-nix" });
-	return { stdout: "", stderr: "", code: 0 };
-} });
-const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner: transport() });
+// Only the Nix command transport is substituted: CI's locked engine when configured, else the pinned local engine.
+const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() });
+
+test("the npm generic-record acceptance compiles only through the shared engine transport", async () => {
+	// A private in-process transport here once ignored LEAN_BRIDGE_LAKE_ENGINE and spawned a local Lean CI lacks.
+	const source = await readFile(new URL(import.meta.url), "utf8");
+	assert.equal(source.match(/runner: refinementEngineTransport\(\)/gu)?.length, 1);
+	assert.doesNotMatch(source, /^import .*component-engine/mu);
+});
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap: false } };
