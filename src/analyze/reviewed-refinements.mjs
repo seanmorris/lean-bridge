@@ -35,7 +35,7 @@ export const assertReviewedFin = (declaration, value) => {
 
 /**
  * Preserve the bound when a transparent alias names a refined container.
- * Records, variants and callbacks keep their separate admission gates.
+ * Records and variants use assertReviewedFinNominal; callbacks keep their own gate.
  *
  * @param definition - Reviewed transparent alias.
  * @param value - Closed nominal-refinement extension for its target.
@@ -45,4 +45,19 @@ export const assertReviewedFinAlias = (definition, value) => {
 	const refinement = nominalRefinement(definition, value);
 	if(refinement === null) throw new TypeError("Expected a reviewed alias refinement");
 	finOnly(refinement.target);
+};
+
+/**
+ * Admit authored field bounds of a record, or of each variant case, against the definition's
+ * own shape. Fresh Lean metadata must still match them exactly.
+ *
+ * @param definition - Reviewed alias, record or variant.
+ * @param value - Closed nominal-refinement extension for its fields.
+ */
+export const assertReviewedFinNominal = (definition, value) => {
+	if(definition.kind === "alias") return assertReviewedFinAlias(definition, value);
+	if(!["record", "variant"].includes(definition.kind)) throw new TypeError("Expected a reviewed alias, record or variant");
+	const refinement = nominalRefinement(definition, value);
+	if(refinement === null) throw new TypeError("Expected a reviewed field refinement");
+	(definition.kind === "record" ? refinement.fields : refinement.cases.flat()).forEach(finOnly);
 };

@@ -16,7 +16,12 @@ import { nativeFinBoundPaths } from "../src/backends/native/fin-refinements.mjs"
 import { finRecordCompilerModel, finRecordNat, finRecordShape } from "./helpers/fin-record-model.mjs";
 import { finRecordRefinements, finRecordTargets, finRecordWitPatterns, installFinRecordConsumer } from "./helpers/fin-record-install.mjs";
 import { finRecordDispatchColumns, finRecordDispatchExpected, finRecordDispatchInterposer, finRecordDispatchProbe } from "./helpers/fin-record-dispatch.mjs";
-import { checkInstalledFinFixture, finFixtureProfiles } from "./helpers/fin-fixture-installed.mjs";
+import { assertReviewedFinChangesRefused, checkInstalledFinFixture, finFixtureProfiles } from "./helpers/fin-fixture-installed.mjs";
+import { finRecordReviewedIr } from "./helpers/reviewed-fin-record-fixture.mjs";
+import { reviewedContractDifference, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
+import { validateBindingIr } from "../src/binding-ir/contract.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
@@ -141,6 +146,41 @@ test("hosts reading only the Binding IR document record and variant bounds from 
 });
 
 const profiles = finFixtureProfiles("LEAN_BRIDGE_FIN_RECORD_PROFILES", finRecordTargets);
+const reviewedProfiles = finFixtureProfiles("LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES", finRecordTargets);
+// The compiler-shaped model names its exports Sample.*; the reviewed fixture uses the Lean module's names.
+const compiledForReview = () => JSON.parse(JSON.stringify(finRecordCompilerModel().bindingIr)
+	.replaceAll("lean:Sample.", "lean:FinRecords.").replaceAll('"declaration":"Sample.', '"declaration":"FinRecords.').replaceAll('"overloadKey":"Sample.', '"overloadKey":"FinRecords.'));
+const nominalKey = "lean-lang.org/nominal-refinements";
+
+test("the independent record review passes reviewed admission and equals the compiled contract", () => {
+	const review = finRecordReviewedIr(), source = canonicalJson(review);
+	validateBindingIr(review);
+	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(review) });
+	assert.equal(reviewedContractDifference(review, compiledForReview()), null);
+	for(const declaration of review.declarations) assert.equal(declaration.source.extensions["lean-lang.org/refinements"], undefined, declaration.id);
+});
+
+test("reviewed record and variant field bounds must equal the freshly compiled definitions", () => {
+	const compiled = compiledForReview();
+	const definition = (ir, name) => ir.types.find(type => type.id === `lean:FinRecords.${name}`).source.extensions[nominalKey];
+	const mutations = [
+		["tightened field", ir => { definition(ir, "Tile").fields[0].bound = "4"; }]
+		, ["bound moved to the other field", ir => { definition(ir, "Tile").fields.reverse(); }]
+		, ["loosened nested record's own bound", ir => { definition(ir, "Nest").fields[1].bound = "4"; }]
+		, ["tightened case field", ir => { definition(ir, "Shape").cases[0][0].bound = "9"; }]
+		, ["loosened Fin 0 case", ir => { definition(ir, "Gate").cases[1][0].bound = "1"; }]
+		, ["loosened option field", ir => { definition(ir, "Slot").fields[0].arguments[0].bound = "1"; }]];
+	for(const [label, mutate] of mutations)
+	{
+		const reviewed = finRecordReviewedIr();
+		mutate(reviewed);
+		assert.match(reviewedContractDifference(reviewed, compiled) ?? "", /^bindingIr\.types\[\d+\]\.source\.extensions\.lean-lang\.org\/nominal-refinements/u, label);
+	}
+	// A definition the review leaves unbounded is a difference too, not an erased bound.
+	const unbounded = finRecordReviewedIr();
+	delete unbounded.types.find(type => type.id === "lean:FinRecords.Tile").source.extensions[nominalKey];
+	assert.match(reviewedContractDifference(unbounded, compiled) ?? "", /^bindingIr\.types\[\d+\]\.source\.extensions/u);
+});
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 
 test("every native profile has a Fin record consumer and a target", async () => {
@@ -182,15 +222,26 @@ const observeDispatch = async (consumer, packages, leanPrefix) => {
 
 const report = { variable: "LEAN_BRIDGE_FIN_RECORD_REPORT", reviewedVariable: "LEAN_BRIDGE_REVIEWED_FIN_RECORD_REPORT", directory: "build/native-fin-records" };
 const observe = async ({ profile, consumer, packages, environment }) => profile === "c" ? { dispatch: await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) } : {};
-// The reviewed route is milestone 2 of VO #1442; until then this fixture has no independent review.
-const reviewedIr = () => { throw new Error("FinRecords has no reviewed Binding IR yet"); };
 const spec = {
 	fixture: "tests/fixtures/onboarding/native-fin-records"
 	, module: "FinRecords", label: "fin-record", report, observe
 	, targets: finRecordTargets
 	, refinements: finRecordRefinements
-	, reviewedIr
+	, reviewedIr: finRecordReviewedIr
 	, install: installFinRecordConsumer
 };
 
 test("relocated source-free native packages check Fin inside record fields and the active variant case", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledFinFixture(t, spec, profiles));
+
+test("independently reviewed native packages check record and variant field bounds after source-free installation", { skip: !reviewedProfiles.length, timeout: 2_400_000 }, t => checkInstalledFinFixture(t, spec, reviewedProfiles, true));
+
+test("changed record and variant reviews are refused against fresh Lean before any output", { skip: !reviewedProfiles.includes("c"), timeout: 1_800_000 }, async t => {
+	const nominal = /types\[\d+\]\.source\.extensions\.lean-lang\.org\/nominal-refinements/u;
+	const definition = (ir, name) => ir.types.find(type => type.id === `lean:FinRecords.${name}`).source.extensions[nominalKey];
+	await assertReviewedFinChangesRefused(t, spec, [
+		["tightened field", ir => { definition(ir, "Tile").fields[0].bound = "4"; }, nominal]
+		, ["bound moved to the other field", ir => { definition(ir, "Tile").fields.reverse(); }, nominal]
+		, ["loosened nested record's own bound", ir => { definition(ir, "Nest").fields[1].bound = "4"; }, nominal]
+		, ["tightened case field", ir => { definition(ir, "Shape").cases[0][0].bound = "9"; }, nominal]
+		, ["loosened Fin 0 case", ir => { definition(ir, "Gate").cases[1][0].bound = "1"; }, nominal]]);
+});
