@@ -703,6 +703,8 @@ Finite function specializations become ordinary Python functions, such as `echo_
 
 The [Python CI receipt](../evidence/python-refinements-20261007/receipt.json) records the installed checks. Scalar `Fin` ran on Python 3.11 and 3.12 with source-free installation, relocation and dispatch probes. Container `Fin` and `Subtype` have Python consumer checks; their dispatch probes currently run only in C. These observations cover ordinary-source parameters and results, not reviewed IR, refined fields or callbacks.
 
+Separately, [reviewed scalar Fin](../evidence/reviewed-scalar-hosts-20261007/receipt.json) runs on Python 3.11 and 3.12, and [reviewed container Fin](../evidence/reviewed-fin-hosts-20261007/receipt.json) runs through installed Python packages. Both retain exact bounds and measured Python source/adapter rejection controls. These local glibc 2.36 reports do not extend reviewed support to Subtype, fields or callbacks.
+
 ### Type conversions
 
 Profiles: Python. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.

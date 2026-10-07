@@ -11,6 +11,7 @@ import { checkReviewedFinWasm } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import "./reviewed-fin-wasm-contract-tests.mjs";
 import "./reviewed-fin-wasm-evidence-tests.mjs";
+import "./reviewed-fin-promotion-tests.mjs";
 
 const browsers = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST === "1" || browsers;

@@ -1,28 +1,20 @@
 /**
- * Preserve exact source predecessors of the PHP-Wasm Fin admission change (#1443).
+ * Preserve exact source predecessors of the Reviewed Fin promotion change (#1438).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedFinPromotionSource } from "./reviewed-fin-promotion-source-history.mjs";
 
-export const phpWasmFinHistoryPath = "docs/evidence/php-wasm-fin-source-history-20261007.json";
-export const phpWasmFinChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
-	, "docs/lean/existing-package.md"
+export const reviewedFinPromotionHistoryPath = "docs/evidence/reviewed-fin-promotion-source-history-20261007.json";
+export const reviewedFinPromotionChangedPaths = [
+	"docs/consume/python.md"
 	, "docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
-	, "src/build/native-model.mjs"
-	, "src/build/php-wasm-graph-model.mjs"
-	, "src/release/php-wasm-copied-package.mjs"
-	, "tests/documentation.test.mjs"
-	, "tests/helpers/fin-record-model.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-fin-records-source-history.mjs"
-	, "tests/helpers/native-fin-records-source-history-tests.mjs"
-	, "tests/native-refinement-boundaries.test.mjs"
+	, "tests/helpers/php-wasm-fin-source-history.mjs"
+	, "tests/helpers/php-wasm-fin-source-history-tests.mjs"
+	, "tests/helpers/reviewed-fin-wasm-installed-tests.mjs"
 ];
 let history;
 
@@ -32,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmFinUpdate = (source, update) => {
-	assert.ok(phpWasmFinChangedPaths.includes(update.path));
+export const reverseReviewedFinPromotionUpdate = (source, update) => {
+	assert.ok(reviewedFinPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,18 +45,17 @@ export const reversePhpWasmFinUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1443, stopping at an explicitly requested identity.
+ * Restore the source before #1438, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmFinSource = (path, source, expected) => {
-	source = beforeReviewedFinPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmFinChangedPaths.includes(path)) return source;
+export const beforeReviewedFinPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedFinPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmFinHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedFinPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmFinUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedFinPromotionUpdate(source, update) : source;
 };

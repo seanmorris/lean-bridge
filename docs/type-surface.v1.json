@@ -5346,7 +5346,7 @@
         },
         {
           "path": "docs/consume/python.md",
-          "sha256": "ba11329823ea2a23ed43d0296e0ce1ff0ed2191fe701292e20f036763d9a18e3"
+          "sha256": "fb275e7b372ef0b97c8d46b05f7d1c1867ad449269746f47b9749d18a2813533"
         },
         {
           "path": "docs/evidence/python-collections-20260922.json",
@@ -33220,6 +33220,1431 @@
         },
         {
           "path": "specialized-npm/runtime.tgz",
+          "sha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-hosts-reviewed-python-rust-installed",
+      "kind": "installed",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python,rust taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in python, rust. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-host-evidence-tests.mjs",
+          "sha256": "3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/receipt.json",
+          "sha256": "a58bce8a8e2bf04a2e72d28c5ffa32c5c54fc23b43cb2ace4dda80ae61152730"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-python-rust.json",
+          "sha256": "86a14fab5433ae94f7b4b99261a61e8f004b2b81300096f80c95b8b1447b4f93"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-hosts-reviewed-python-rust-installed/archives/fincontainers-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "c966052eb56f95a7f0f3b3f27022e915bcec201dde016418385a4fe57760ef20"
+        },
+        {
+          "path": "reviewed-fin-hosts-reviewed-python-rust-installed/archives/fincontainers-1.0.0.crate",
+          "sha256": "293c24bb3652b77607163b81c8a82868175d3c25ff3e37d3bcb518e36439b4e0"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+      "kind": "installed",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet,java,kotlin taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in dotnet, java, kotlin. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-host-evidence-tests.mjs",
+          "sha256": "3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/receipt.json",
+          "sha256": "a58bce8a8e2bf04a2e72d28c5ffa32c5c54fc23b43cb2ace4dda80ae61152730"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-dotnet-java-kotlin.json",
+          "sha256": "239369e4bc0542a58b89c4aca181aa9b81915a3a53e917875e3095d439681f10"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed/archives/FinContainers.Api.1.0.0.nupkg",
+          "sha256": "953e81e1a524b8cddd899291098c1845f4f3d0b638579a1581ee5afb42fe1fee"
+        },
+        {
+          "path": "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed/archives/fincontainers-1.0.0.jar",
+          "sha256": "21547ba03d8d916f7fe30b878516beaaad70c2dc25d5d72a2f6364e853593df1"
+        },
+        {
+          "path": "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed/archives/fincontainers-1.0.0.pom",
+          "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+      "kind": "installed",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native,ruby,wit-wasi taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in php-native, ruby, wit-wasi. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-host-evidence-tests.mjs",
+          "sha256": "3f5ee5995e7a63c34e948ce6ae9a869280bedf4d257d90c05bd28db5d3181f28"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/receipt.json",
+          "sha256": "a58bce8a8e2bf04a2e72d28c5ffa32c5c54fc23b43cb2ace4dda80ae61152730"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-php-native-ruby-wit-wasi.json",
+          "sha256": "e17fb2f98f385a53d76c03d1881a9d5cfda355e97a967096519488d175257069"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed/archives/example-fincontainers-1.0.0-linux-x86_64.zip",
+          "sha256": "8dfb0dc311ddadde4cab53800960e7507add1e2a81050f383f42832dbbd4e626"
+        },
+        {
+          "path": "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed/archives/fincontainers-1.0.0-wit-wasi.tar.gz",
+          "sha256": "b9dc162553fcabac7f47074746bcc3a9d0205cd761559e7c8d8f2bb81cb78c9a"
+        },
+        {
+          "path": "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed/archives/fincontainers-1.0.0-x86_64-linux.gem",
+          "sha256": "fab33798d5cf7e84b711b7c88c8f6d26f4111ade65fbbb198d54659f54e1aaf3"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-hosts-python-installed",
+      "kind": "installed",
+      "revision": "c9ebbcec21b002abf7397fc96844ab3d777f8e61",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON_FIN_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed Python wheels' tests/python-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in python. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-evidence-tests.mjs",
+          "sha256": "c6ec7281c7fac090b2ace019c466ecd842d88e65136d4bf8e2a86a7c769aa5f9"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-hosts-20261007/receipt.json",
+          "sha256": "2dd6ca4d52e15d1e3d22c276e20241a5f87b7418c86345ced768e749de1e46a1"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-hosts-20261007/python.json",
+          "sha256": "c27ad521e5762908ad1b0b95e4fdfeb2fe1f81d670f86e83da0815017b5b0c19"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-hosts-python-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "7dce2b9535d79608a8708cbd6e2a440159eb7535d7c02c99ae4d45a63aad86ab"
+        },
+        {
+          "path": "reviewed-scalar-hosts-python-installed/archives/native_fin-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "e641ca7480ee6b8bc6e889829836eb1e323995ac7d6e45c958e6f9bd1ab0c8a5"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-hosts-rust-installed",
+      "kind": "installed",
+      "revision": "c9ebbcec21b002abf7397fc96844ab3d777f8e61",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUST_FIN_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed Rust crates' tests/rust-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in rust. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-evidence-tests.mjs",
+          "sha256": "c6ec7281c7fac090b2ace019c466ecd842d88e65136d4bf8e2a86a7c769aa5f9"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-hosts-20261007/receipt.json",
+          "sha256": "2dd6ca4d52e15d1e3d22c276e20241a5f87b7418c86345ced768e749de1e46a1"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-hosts-20261007/rust.json",
+          "sha256": "fd91e8d0bdd481cc45816ecb0536a3b88ee107c98192733456a6ec0d75ad35f8"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-hosts-rust-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "4365ed88bfe0ae9a4adca5ed2a382d0e80997af7888f3fb5b8271683b49d6c39"
+        },
+        {
+          "path": "reviewed-scalar-hosts-rust-installed/archives/native-fin-1.0.0.crate",
+          "sha256": "aaaacc6e996c4e90554fd26f125483e25e78d6377e72bf9e4da61996f0da4d89"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-rollout-dotnet-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in dotnet. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-rollout-evidence-tests.mjs",
+          "sha256": "a566e50869e758299aa33517bf09f6980ae6d5f3200d5770c8a2b97a14d7e19b"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/receipt.json",
+          "sha256": "c7db4372a7d73f5fdc19e9281e4b2e638baa15d7f60a7646def10fc7685355db"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/dotnet.json",
+          "sha256": "e0f009a0d5fee4446a6d708d7c1747136d6044db65b4e16d33355973728bef46"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-rollout-dotnet-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "d56d1e45c04fc0f45b05515c82779e334e763689f55c1094c5444d9777cdc653"
+        },
+        {
+          "path": "reviewed-scalar-rollout-dotnet-installed/archives/native-fin.1.0.0.nupkg",
+          "sha256": "a363849d72ce5ab4e43d2a625815d4b66fd9fc19ad974f5b26f7a6e5facb7aa5"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-rollout-jvm-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in java, kotlin. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-rollout-evidence-tests.mjs",
+          "sha256": "a566e50869e758299aa33517bf09f6980ae6d5f3200d5770c8a2b97a14d7e19b"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/receipt.json",
+          "sha256": "c7db4372a7d73f5fdc19e9281e4b2e638baa15d7f60a7646def10fc7685355db"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/jvm.json",
+          "sha256": "6f1e827fd1da45d697f52995788e0fd7673a1a5332c117ee11be83626c0445aa"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-rollout-jvm-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "b791fb8a8009f56eb00bf531201c40c47f2cdc807d211f4bbec424f561f78bf8"
+        },
+        {
+          "path": "reviewed-scalar-rollout-jvm-installed/archives/native-fin-1.0.0.jar",
+          "sha256": "83a20fbbb5451b5beb61c2492027a026a120068577ccef84d982986a4a1c7df2"
+        },
+        {
+          "path": "reviewed-scalar-rollout-jvm-installed/archives/native-fin-1.0.0.pom",
+          "sha256": "518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-rollout-php-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in php-native. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-rollout-evidence-tests.mjs",
+          "sha256": "a566e50869e758299aa33517bf09f6980ae6d5f3200d5770c8a2b97a14d7e19b"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/receipt.json",
+          "sha256": "c7db4372a7d73f5fdc19e9281e4b2e638baa15d7f60a7646def10fc7685355db"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/php.json",
+          "sha256": "4f5f7534816ce8479c34940916b15b1018dbc5bea093d4bc6c3bbf3d37dffb66"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-rollout-php-installed/archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip",
+          "sha256": "d5df0ad6b773a0b0e129474c2daa26f74d8d50aa82b0835d31c2c8f76aa65ead"
+        },
+        {
+          "path": "reviewed-scalar-rollout-php-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "f15659e798975ce736fac6bbac2b8a0c2a563f6e723b3b3dae9aef6a2391e19f"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-rollout-ruby-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in ruby. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-rollout-evidence-tests.mjs",
+          "sha256": "a566e50869e758299aa33517bf09f6980ae6d5f3200d5770c8a2b97a14d7e19b"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/receipt.json",
+          "sha256": "c7db4372a7d73f5fdc19e9281e4b2e638baa15d7f60a7646def10fc7685355db"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/ruby.json",
+          "sha256": "a03b69e4b0965385d04337ea225539f14765c8fa8d7d2d3c9feecbc08cae4d70"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-rollout-ruby-installed/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "57c8c1ab611b5ec74963a083b903315112ad14c302235af70893aadce20dbd19"
+        },
+        {
+          "path": "reviewed-scalar-rollout-ruby-installed/archives/native-fin-1.0.0-x86_64-linux.gem",
+          "sha256": "16412e1cd43865819b56463c4c1f77728155b62b75b4d3985abaec675a335887"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-scalar-rollout-wit-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in wit-wasi. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-rollout-evidence-tests.mjs",
+          "sha256": "a566e50869e758299aa33517bf09f6980ae6d5f3200d5770c8a2b97a14d7e19b"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/receipt.json",
+          "sha256": "c7db4372a7d73f5fdc19e9281e4b2e638baa15d7f60a7646def10fc7685355db"
+        },
+        {
+          "path": "docs/evidence/reviewed-scalar-rollout-20261007/wit.json",
+          "sha256": "2844e489e534075d6213b05ba15013652adac43c413eeb9a91ff77c5d48dde45"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-scalar-rollout-wit-installed/archives/nativefin-1.0.0-c.tar.gz",
+          "sha256": "e9215a8a5d9bd3e5d9670bfb6663cb22546b255b1e3d41ed1f2f54987c92fa75"
+        },
+        {
+          "path": "reviewed-scalar-rollout-wit-installed/archives/nativefin-1.0.0-wit-wasi.tar.gz",
+          "sha256": "b5702471c5314a1b3db9b529d9d8edc2276baa7e0435be1b9b2aef769d2f6e0f"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-perl-scalar-perl-installed",
+      "kind": "installed",
+      "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/perl-fin.test.mjs",
+      "scope": "Reviewed scalar Fin in perl. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "tests/helpers/reviewed-scalar-host-fixture.mjs",
+          "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c"
+        },
+        {
+          "path": "tests/helpers/reviewed-perl-scalar-evidence-tests.mjs",
+          "sha256": "db85684c76a314fe0b7458e8166b0284cfcf3ae57615f47a8e53bd856bf860eb"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-scalar-20261007/receipt.json",
+          "sha256": "d78adad13c9f4a0fe8a111b2eefcf2e8339cadbdbf3bab2b39593bfa06cc4af3"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-scalar-20261007/perl.json",
+          "sha256": "fd3d402aae575dff95e480890d49683c2cdaba6fd9aa79dd384b5934c2161c5a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-perl-scalar-perl-installed/archives/LeanBridge-NativeFin-1.000.tar.gz",
+          "sha256": "74f70acdfd13eb824841371c8bfed205e6e5e5872538f3fd0df6dd3566e224c6"
+        },
+        {
+          "path": "reviewed-perl-scalar-perl-installed/archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz",
+          "sha256": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-perl-containers-5-36-3-threaded-installed",
+      "kind": "installed",
+      "revision": "9d5a708809b42d5847e1106814985bed0fddc97b",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-threaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.36.3-threaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in perl. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-perl-container-evidence-tests.mjs",
+          "sha256": "e736d19cb5506ac1d7c08ff01e0954492fb5ab05d82c0ae481b1a09365e5e362"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/receipt.json",
+          "sha256": "fb3b6d2ebad0fc48d19402739b437493961ee1985b752152003b05c29cb0d640"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-threaded.json",
+          "sha256": "d7c1f5ff52003dc03501be3f8f183ce7dfa5f963a392c33b1389e09c7b9fd2c1"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-perl-containers-5-36-3-threaded-installed/archives/LeanBridge-FinContainers-1.000.tar.gz",
+          "sha256": "4de060f9a17e66e72b07c5fba9cd03ca28cbb830a6b6ca6d1fff1ef801c05469"
+        },
+        {
+          "path": "reviewed-perl-containers-5-36-3-threaded-installed/archives/LeanBridge-Runtime-0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831.tar.gz",
+          "sha256": "d491ea25c0225fdef41ad2296827915aca31298553cda95b16b1afd411064405"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-perl-containers-5-36-3-unthreaded-installed",
+      "kind": "installed",
+      "revision": "9d5a708809b42d5847e1106814985bed0fddc97b",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-unthreaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.36.3-unthreaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in perl. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-perl-container-evidence-tests.mjs",
+          "sha256": "e736d19cb5506ac1d7c08ff01e0954492fb5ab05d82c0ae481b1a09365e5e362"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/receipt.json",
+          "sha256": "fb3b6d2ebad0fc48d19402739b437493961ee1985b752152003b05c29cb0d640"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/5.36.3-unthreaded.json",
+          "sha256": "99afd2963e7676c54108e9a78d1bf74a2c0f51c5d5028f2e4f73ad1105bcab69"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-perl-containers-5-36-3-unthreaded-installed/archives/LeanBridge-FinContainers-1.000.tar.gz",
+          "sha256": "810d9f1e5e1c244a6bf7491071edd9d40b62a2c08fb3e86f506be1c31f71d840"
+        },
+        {
+          "path": "reviewed-perl-containers-5-36-3-unthreaded-installed/archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz",
+          "sha256": "0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-perl-containers-5-38-2-threaded-installed",
+      "kind": "installed",
+      "revision": "9d5a708809b42d5847e1106814985bed0fddc97b",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-threaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.38.2-threaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in perl. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-perl-container-evidence-tests.mjs",
+          "sha256": "e736d19cb5506ac1d7c08ff01e0954492fb5ab05d82c0ae481b1a09365e5e362"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/receipt.json",
+          "sha256": "fb3b6d2ebad0fc48d19402739b437493961ee1985b752152003b05c29cb0d640"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-threaded.json",
+          "sha256": "81e4c545b35b6a231063b7a4d70af1ac286cc7f71c25c5e94979b1f21d19b081"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-perl-containers-5-38-2-threaded-installed/archives/LeanBridge-FinContainers-1.000.tar.gz",
+          "sha256": "c378a3b107d626d2d4663782575eba33786899e60b5dff320fb9584b602241e1"
+        },
+        {
+          "path": "reviewed-perl-containers-5-38-2-threaded-installed/archives/LeanBridge-Runtime-0.0020649019466355169428665596934324519271137332101333675993431253885473724224759211.tar.gz",
+          "sha256": "56e4f9f4c762b9b59bc1388a5b4b9f73f09b09a60d2a5a0da25e780fde4ec3b2"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-perl-containers-5-38-2-unthreaded-installed",
+      "kind": "installed",
+      "revision": "9d5a708809b42d5847e1106814985bed0fddc97b",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-unthreaded/bin/perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT=build/native-fin-containers/reviewed-perl-5.38.2-unthreaded.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs",
+      "scope": "Reviewed containers Fin in perl. Original local glibc 2.36 packages reproduce from two author roots and run after source removal. Each report retains its observed or unobserved dispatch status; no hosted CI, nominal-field, callback, product, Except or Subtype coverage is inferred.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "e64697293e657810ef972293e085a517ada0632b340eddac66ea46b8e35ae3ab"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-container-fixture.mjs",
+          "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+        },
+        {
+          "path": "tests/helpers/reviewed-perl-container-evidence-tests.mjs",
+          "sha256": "e736d19cb5506ac1d7c08ff01e0954492fb5ab05d82c0ae481b1a09365e5e362"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/receipt.json",
+          "sha256": "fb3b6d2ebad0fc48d19402739b437493961ee1985b752152003b05c29cb0d640"
+        },
+        {
+          "path": "docs/evidence/reviewed-perl-containers-20261007/5.38.2-unthreaded.json",
+          "sha256": "83104d9c73b759456620d37033871dc97a78f3d86344cdc37813d11fb6f2608e"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-perl-containers-5-38-2-unthreaded-installed/archives/LeanBridge-FinContainers-1.000.tar.gz",
+          "sha256": "d7ea83115f077fb18d8d764d91a1de6bb6bbc775371da45cc20f6861ea5446f8"
+        },
+        {
+          "path": "reviewed-perl-containers-5-38-2-unthreaded-installed/archives/LeanBridge-Runtime-0.0020296570762749893938651682061484224333828129339178168879023802512434562123650631.tar.gz",
+          "sha256": "aed7ec5e71a788194d9d4dcd2dfb165e82d4d3bd0604875bb167ae551ab4c115"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-npm-ordinary-scalar-installed",
+      "kind": "installed",
+      "revision": "3190d5ff252ef44ea52534e58850b2b6197a4a6c",
+      "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST=1 LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs",
+      "scope": "ordinary-source scalar Fin: Node JavaScript, strict TypeScript and Chromium/Firefox/WebKit page, React production/strict lifecycle and worker consumers. Two independent builds and source-free offline installation. Boundary rejections and recovery are executed; source counters are unmeasured.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "483cbbb18a5eabc03d5a03df03f2a3634ab337aa0d35aa40e3db2520157862e6"
+        },
+        {
+          "path": "src/build/component-copied-adapters.mjs",
+          "sha256": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+        },
+        {
+          "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+          "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07"
+        },
+        {
+          "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+          "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+          "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+          "sha256": "2c112e2736899620503056f360c383d19a3a14bd23aa48eb54b8659f0d4d9c97"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-browser.mjs",
+          "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+          "sha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/receipt.json",
+          "sha256": "d0d6c9d3992a4e96d868e71c4e9ca82ec6b8cde818b29f73ee9457d12f6dc513"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/ordinary-scalar.json",
+          "sha256": "b169d6a38f8facfa63760b529065f0955d5a2b166bc3591961a83f9628cd251a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-npm-ordinary-scalar-installed/reviewed-fin-1.0.0.tgz",
+          "sha256": "c6a79c03682d7c45774305b4c2f8e575ef9c78670cf341f95a6ad987cbea2cd5"
+        },
+        {
+          "path": "reviewed-fin-npm-ordinary-scalar-installed/lean-bridge-runtime-0.0.0-abi2.d03c46bd2b7befb3d336d9cfe83c306b8f1309b4f97d1bcdbab11332c1e5b9f0.tgz",
+          "sha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-npm-reviewed-scalar-installed",
+      "kind": "installed",
+      "revision": "3190d5ff252ef44ea52534e58850b2b6197a4a6c",
+      "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST=1 LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs",
+      "scope": "reviewed-ir scalar Fin: Node JavaScript, strict TypeScript and Chromium/Firefox/WebKit page, React production/strict lifecycle and worker consumers. Two independent builds and source-free offline installation. Boundary rejections and recovery are executed; source counters are unmeasured.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "483cbbb18a5eabc03d5a03df03f2a3634ab337aa0d35aa40e3db2520157862e6"
+        },
+        {
+          "path": "src/build/component-copied-adapters.mjs",
+          "sha256": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+        },
+        {
+          "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+          "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07"
+        },
+        {
+          "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+          "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+          "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+          "sha256": "2c112e2736899620503056f360c383d19a3a14bd23aa48eb54b8659f0d4d9c97"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-browser.mjs",
+          "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+          "sha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/receipt.json",
+          "sha256": "d0d6c9d3992a4e96d868e71c4e9ca82ec6b8cde818b29f73ee9457d12f6dc513"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/reviewed-scalar.json",
+          "sha256": "e15c8c2fdf880cba85163b8c040e6a8f1bc65abcebd88c2435b0b41bcd562658"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-npm-reviewed-scalar-installed/reviewed-fin-1.0.0.tgz",
+          "sha256": "bcd2d19986eb06f98e2a4f6b10165b65081e26ccaf51e893929d173b64d79416"
+        },
+        {
+          "path": "reviewed-fin-npm-reviewed-scalar-installed/lean-bridge-runtime-0.0.0-abi2.d03c46bd2b7befb3d336d9cfe83c306b8f1309b4f97d1bcdbab11332c1e5b9f0.tgz",
+          "sha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-npm-ordinary-structural-installed",
+      "kind": "installed",
+      "revision": "3190d5ff252ef44ea52534e58850b2b6197a4a6c",
+      "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST=1 LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs",
+      "scope": "ordinary-source structural Fin: Node JavaScript, strict TypeScript and Chromium/Firefox/WebKit page, React production/strict lifecycle and worker consumers. Two independent builds and source-free offline installation. Boundary rejections and recovery are executed; source counters are unmeasured.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "483cbbb18a5eabc03d5a03df03f2a3634ab337aa0d35aa40e3db2520157862e6"
+        },
+        {
+          "path": "src/build/component-copied-adapters.mjs",
+          "sha256": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+        },
+        {
+          "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+          "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07"
+        },
+        {
+          "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+          "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+          "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+          "sha256": "2c112e2736899620503056f360c383d19a3a14bd23aa48eb54b8659f0d4d9c97"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-browser.mjs",
+          "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+          "sha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/receipt.json",
+          "sha256": "d0d6c9d3992a4e96d868e71c4e9ca82ec6b8cde818b29f73ee9457d12f6dc513"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/ordinary-structural.json",
+          "sha256": "06bf95f3655b83f6da2b520dc2c2dd891363ca62af9b8c40e2b2099abedcb97c"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-npm-ordinary-structural-installed/reviewed-fin-1.0.0.tgz",
+          "sha256": "f9ad39e554dc50a33284aed1eea6328e3f07bcff50bcd0eab50298b4b4573006"
+        },
+        {
+          "path": "reviewed-fin-npm-ordinary-structural-installed/lean-bridge-runtime-0.0.0-abi2.d03c46bd2b7befb3d336d9cfe83c306b8f1309b4f97d1bcdbab11332c1e5b9f0.tgz",
+          "sha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff"
+        }
+      ]
+    },
+    {
+      "id": "reviewed-fin-npm-reviewed-structural-installed",
+      "kind": "installed",
+      "revision": "3190d5ff252ef44ea52534e58850b2b6197a4a6c",
+      "command": "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST=1 LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs",
+      "scope": "reviewed-ir structural Fin: Node JavaScript, strict TypeScript and Chromium/Firefox/WebKit page, React production/strict lifecycle and worker consumers. Two independent builds and source-free offline installation. Boundary rejections and recovery are executed; source counters are unmeasured.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/analyze/reviewed-refinements.mjs",
+          "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "6bc2a697b2840578ef1c44f38361c70e877bf2a7872211835050a002910b0e73"
+        },
+        {
+          "path": "src/abi/refinements.mjs",
+          "sha256": "e4fcbe93a47f72433eef9605f68bf6d773eb0d17a159346333c0ae74333674f0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-references.mjs",
+          "sha256": "afc7415fd43508ddad30147cbd4b364a8260cf739a06252114c1f839b8b43bc0"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
+          "sha256": "75a81716fd0a810ae0ac05675c97dd1f9ca660f9f6524b53db772d4672cbf313"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+        },
+        {
+          "path": "src/build/component-scalar-adapters.mjs",
+          "sha256": "483cbbb18a5eabc03d5a03df03f2a3634ab337aa0d35aa40e3db2520157862e6"
+        },
+        {
+          "path": "src/build/component-copied-adapters.mjs",
+          "sha256": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+        },
+        {
+          "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+          "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07"
+        },
+        {
+          "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+          "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+          "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+          "sha256": "2c112e2736899620503056f360c383d19a3a14bd23aa48eb54b8659f0d4d9c97"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-browser.mjs",
+          "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+          "sha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/receipt.json",
+          "sha256": "d0d6c9d3992a4e96d868e71c4e9ca82ec6b8cde818b29f73ee9457d12f6dc513"
+        },
+        {
+          "path": "docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json",
+          "sha256": "eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reviewed-fin-npm-reviewed-structural-installed/reviewed-fin-1.0.0.tgz",
+          "sha256": "6be48b8e37cf94fc3dd0403ab7d039e0669870161e9170ef195a58bba001595b"
+        },
+        {
+          "path": "reviewed-fin-npm-reviewed-structural-installed/lean-bridge-runtime-0.0.0-abi2.d03c46bd2b7befb3d336d9cfe83c306b8f1309b4f97d1bcdbab11332c1e5b9f0.tgz",
           "sha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff"
         }
       ]
@@ -67700,7 +69125,9 @@
         "analysis": {
           "state": "passed",
           "evidence": [
-            "npm-fin-refinements-installed"
+            "npm-fin-refinements-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Lean records exact closed literal bounds through structural containers, including Fin aliases. Nominal-field checks are recorded separately; callback-internal constraints remain unsupported."
         },
@@ -67708,7 +69135,9 @@
           "state": "passed",
           "evidence": [
             "npm-fin-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "The generated JavaScript validates every constrained leaf before Wasm dispatch, and the compiled C adapter entry runs an exported Lean validator per refined parameter, including a top-level scalar Fin, before any dispatch; a direct runtime call with an out-of-bound value fails with the ABI's call status."
         },
@@ -67716,14 +69145,18 @@
           "state": "passed",
           "evidence": [
             "npm-fin-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "The C adapter entry fails the call before the typed Lean wrapper or the source runs; the wrapper's own bound guard is not reached from any runtime entry. Generated Lean constructs Fin only inside the decidable check and projects results after the source call."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "npm-fin-refinements-installed"
+            "npm-fin-refinements-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Relocated builds reproduce the npm archives and verify the component-package receipt."
         },
@@ -67731,7 +69164,9 @@
           "state": "passed",
           "evidence": [
             "npm-fin-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Installed packages reject invalid leaves through both public JS and direct runtime calls, recover after rejection, preserve empty Fin 0 containers and exact large bounds, and pass strict TypeScript."
         }
@@ -67839,7 +69274,9 @@
         "analysis": {
           "state": "passed",
           "evidence": [
-            "npm-browser-refinements-installed"
+            "npm-browser-refinements-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Lean records exact closed literal bounds through structural containers, including Fin aliases; the browser package shares the Node metadata."
         },
@@ -67847,7 +69284,9 @@
           "state": "passed",
           "evidence": [
             "npm-browser-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "The generated JavaScript validates every constrained leaf before Wasm dispatch, and the compiled C adapter entry runs an exported Lean validator per refined parameter, including a top-level scalar Fin, before any dispatch; a direct runtime call with an out-of-bound value fails with the ABI's call status. The same bundle serves Node, pages, React and workers."
         },
@@ -67855,14 +69294,18 @@
           "state": "passed",
           "evidence": [
             "npm-browser-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "The C adapter entry fails the call before the typed Lean wrapper or the source runs; the wrapper's own bound guard is not reached from any runtime entry. Generated Lean constructs Fin only inside the decidable check and projects results after the source call."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "npm-browser-refinements-installed"
+            "npm-browser-refinements-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Two clean roots reproduce the npm archives and verify the component-package receipt; Vite bundles the installed package for each context."
         },
@@ -67870,7 +69313,9 @@
           "state": "passed",
           "evidence": [
             "npm-browser-refinements-installed",
-            "npm-scalar-fin-rejection-installed"
+            "npm-scalar-fin-rejection-installed",
+            "reviewed-fin-npm-ordinary-scalar-installed",
+            "reviewed-fin-npm-ordinary-structural-installed"
           ],
           "note": "Chromium 151.0.7922.34, Firefox 153.0, WebKit 26.5 pages, React effects in strict and production modes, and dedicated workers pass the pinned checks and rejections, recover after every rejection, rerun identically and load the Wasm asset from the served bundle."
         }
@@ -69733,6 +71178,735 @@
       ],
       "conversionNotes": {
         "subtype": "Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value."
+      }
+    },
+    {
+      "id": "reviewed-fin-python-scalar-containers",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "Exact int below the declared bound; declared list/tuple and Some carriers for containers",
+          "result": "int below the bound; independent tuples and Some carriers for containers"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-python-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-python-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-python-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-python-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-python-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-rust-scalar-containers",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "&BigUint checked against the declared bound",
+          "result": "BigUint below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-rust-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-rust-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-rust-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-rust-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-python-rust-installed",
+            "reviewed-scalar-hosts-rust-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-dotnet-scalar-containers",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "System.Numerics.BigInteger checked against the declared bound",
+          "result": "BigInteger below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-dotnet-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-dotnet-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-dotnet-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-dotnet-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-dotnet-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-java-scalar-containers",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "java.math.BigInteger checked against the declared bound",
+          "result": "BigInteger below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-kotlin-scalar-containers",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "java.math.BigInteger checked against the declared bound",
+          "result": "BigInteger below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-dotnet-java-kotlin-installed",
+            "reviewed-scalar-rollout-jvm-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-php-native-scalar-containers",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "Brick\\Math\\BigInteger checked against the declared bound",
+          "result": "BigInteger below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-php-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-php-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-php-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-php-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-php-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-ruby-scalar-containers",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "Integer checked against the declared bound",
+          "result": "Integer below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-ruby-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-ruby-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-ruby-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-ruby-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-ruby-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-wit-wasi-scalar-containers",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "list<u32> little-endian limbs checked against the declared bound",
+          "result": "list<u32> limbs below the declared bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-wit-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-wit-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-wit-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-wit-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-hosts-reviewed-php-native-ruby-wit-wasi-installed",
+            "reviewed-scalar-rollout-wit-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-perl-scalar-containers",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "Math::BigInt checked against the declared bound",
+          "result": "Math::BigInt below the bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-perl-scalar-perl-installed",
+            "reviewed-perl-containers-5-36-3-threaded-installed",
+            "reviewed-perl-containers-5-36-3-unthreaded-installed",
+            "reviewed-perl-containers-5-38-2-threaded-installed",
+            "reviewed-perl-containers-5-38-2-unthreaded-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-perl-scalar-perl-installed",
+            "reviewed-perl-containers-5-36-3-threaded-installed",
+            "reviewed-perl-containers-5-36-3-unthreaded-installed",
+            "reviewed-perl-containers-5-38-2-threaded-installed",
+            "reviewed-perl-containers-5-38-2-unthreaded-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-perl-scalar-perl-installed",
+            "reviewed-perl-containers-5-36-3-threaded-installed",
+            "reviewed-perl-containers-5-36-3-unthreaded-installed",
+            "reviewed-perl-containers-5-38-2-threaded-installed",
+            "reviewed-perl-containers-5-38-2-unthreaded-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-perl-scalar-perl-installed",
+            "reviewed-perl-containers-5-36-3-threaded-installed",
+            "reviewed-perl-containers-5-36-3-unthreaded-installed",
+            "reviewed-perl-containers-5-38-2-threaded-installed",
+            "reviewed-perl-containers-5-38-2-unthreaded-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-perl-scalar-perl-installed",
+            "reviewed-perl-containers-5-36-3-threaded-installed",
+            "reviewed-perl-containers-5-36-3-unthreaded-installed",
+            "reviewed-perl-containers-5-38-2-threaded-installed",
+            "reviewed-perl-containers-5-38-2-unthreaded-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.",
+        "Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.",
+        "Perl 5.36.3 and 5.38.2, threaded and unthreaded, each execute scalar and container consumers. Ordinary-source acceptance is not inferred."
+      ],
+      "conversionNotes": {
+        "fin": "Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected."
+      }
+    },
+    {
+      "id": "reviewed-fin-npm-scalar-structural",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed npm scalar and Array/List/Option/pair/Except parameter and result signatures execute in Node JavaScript/strict TypeScript and all three browser engines through page, React and worker consumers.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "bigint checked as 0 <= value < n before Wasm dispatch",
+          "result": "bigint checked as 0 <= value < n after Wasm return"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-npm-reviewed-scalar-installed",
+            "reviewed-fin-npm-reviewed-structural-installed"
+          ],
+          "note": "Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-npm-reviewed-scalar-installed",
+            "reviewed-fin-npm-reviewed-structural-installed"
+          ],
+          "note": "Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-npm-reviewed-scalar-installed",
+            "reviewed-fin-npm-reviewed-structural-installed"
+          ],
+          "note": "Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-npm-reviewed-scalar-installed",
+            "reviewed-fin-npm-reviewed-structural-installed"
+          ],
+          "note": "Two independent author roots reproduce the original archives, verified before offline installation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "reviewed-fin-npm-reviewed-scalar-installed",
+            "reviewed-fin-npm-reviewed-structural-installed"
+          ],
+          "note": "Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted."
+        }
+      },
+      "limitations": [
+        "Chromium, Firefox and WebKit only; nominal-field, callback, Subtype and PHP-Wasm positions are not covered by these reports.",
+        "Scalar ABI 2 and structural ABI 6 are separate executions; their rejection statuses are 6 and 5 respectively.",
+        "Public and raw boundary rejection is executed, but source-dispatch counters are not measured."
+      ],
+      "conversionNotes": {
+        "fin": "Use bigint leaves with the declared closed bound. Public JavaScript and raw compiled adapters reject invalid inputs, and later valid calls remain usable."
       }
     }
   ]
