@@ -7,6 +7,8 @@ import org.leanbridge.finrecords.GateNever
 import org.leanbridge.finrecords.Late
 import org.leanbridge.finrecords.Nest
 import org.leanbridge.finrecords.Option
+import org.leanbridge.finrecords.Pair
+import org.leanbridge.finrecords.Result
 import org.leanbridge.finrecords.Shape
 import org.leanbridge.finrecords.ShapeCircle
 import org.leanbridge.finrecords.ShapeEmpty
@@ -32,6 +34,22 @@ private fun tile(digit: BigInteger, count: BigInteger) = Tile(digit, count)
 private fun tile(digit: Long, count: Long) = tile(n(digit), n(count))
 private fun late(digit: Long) = Late("ab", arrayOf(n(1), n(2)), n(digit))
 private fun row(): Array<Tile> = arrayOf(tile(0, 1), tile(4, 2), tile(1, 0))
+// Each element position in turn: the rejected sequence is compared with an independently
+// built snapshot immediately after the rejection, then the caller restores the element.
+private fun sequence(label: String, call: (Array<Tile>) -> BigInteger) {
+    val values = row()
+    check(call(arrayOf()) == n(0), "$label empty")
+    check(call(values) == n(8), "$label valid")
+    for (k in 0 until 3) {
+        val kept = values[k]
+        values[k] = tile(n(5), kept.count())
+        val before = row()
+        before[k] = tile(n(5), kept.count())
+        check(rejected("arg0", "5") { call(values) } && Objects.deepEquals(values, before), "$label element $k")
+        values[k] = kept
+    }
+    check(call(values) == n(8), "$label recovery")
+}
 
 fun main() {
     val huge = BigInteger.ONE.shiftLeft(100)
@@ -60,19 +78,22 @@ fun main() {
     // Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
     check(Api.gateOpen(GateClosed()) == n(1), "gate closed")
     check(refused<Gate>("0", { GateNever(n(0)) }) { Api.gateOpen(it) }, "gate never")
-    // Array Tile: every element; the empty array is valid.
-    val tiles = row()
-    check(Api.tiles(arrayOf()) == n(0), "tiles empty")
-    check(Api.tiles(tiles) == n(8), "tiles valid")
-    for (k in 0 until 3) {
-        val kept = tiles[k]
-        tiles[k] = tile(n(5), kept.count())
-        val before = row()
-        before[k] = tile(n(5), kept.count())
-        check(rejected("arg0", "5") { Api.tiles(tiles) } && Objects.deepEquals(tiles, before), "tiles element $k")
-        tiles[k] = kept
-    }
-    check(Api.tiles(tiles) == n(8), "tiles recovery")
+    // Array Tile and List Tile: every element's fields; the empty sequence is valid.
+    sequence("tiles") { Api.tiles(it) }
+    sequence("list") { Api.tileList(it) }
+    // Tile × Shape: both components; the inactive circle of a label is never read.
+    check(Api.tilePair(Pair(tile(4, 6), ShapeCircle(n(9)))) == n(19), "pair valid")
+    check(refused("5", { Pair<Tile, Shape>(tile(5, 6), ShapeCircle(n(9))) }) { Api.tilePair(it) }, "pair tile at bound")
+    check(refused("10", { Pair<Tile, Shape>(tile(4, 6), ShapeCircle(n(10))) }) { Api.tilePair(it) }, "pair circle at bound")
+    check(Api.tilePair(Pair(tile(4, 6), ShapeCircle(n(9)))) == n(19), "pair recovery")
+    check(Api.tilePair(Pair(tile(1, 1), ShapeLabel("ab"))) == n(1004), "pair label")
+    // Except Shape Tile: the ok record or the error variant, only the active branch.
+    check(Api.tileExcept(Result.ok(tile(3, 4))) == n(7), "except ok")
+    check(refused("5", { Result.ok<Tile, Shape>(tile(5, 4)) }) { Api.tileExcept(it) }, "except ok at bound")
+    check(Api.tileExcept(Result.err(ShapeCircle(n(9)))) == n(509), "except error circle")
+    check(refused("10", { Result.err<Tile, Shape>(ShapeCircle(n(10))) }) { Api.tileExcept(it) }, "except error at bound")
+    check(Api.tileExcept(Result.err(ShapeLabel("x"))) == n(1501), "except error label")
+    check(Api.tileExcept(Result.ok(tile(3, 4))) == n(7), "except recovery")
     // Option Shape: absent, a valid present circle, then an invalid one.
     check(Api.maybeShape(Option.none()) == n(99), "maybe absent")
     check(Api.maybeShape(Option.some(ShapeCircle(n(3)))) == n(3), "maybe circle")

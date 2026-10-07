@@ -58,6 +58,17 @@ def maybeShape (value : Option Shape) : Nat := match value with
   | none => 99
   | some s => shapeSize s
 
+/-- A List of refined records: every element's fields are checked. -/
+def tileList (values : List Tile) : Nat := values.foldl (fun acc b => acc + b.digit.val + b.count) 0
+
+/-- A product of a refined record and a variant: both components are checked. -/
+def tilePair (value : Tile × Shape) : Nat := tileSum value.1 + shapeSize value.2
+
+/-- Except with a record on the ok branch and a variant on the error branch: only the active one is checked. -/
+def tileExcept (value : Except Shape Tile) : Nat := match value with
+  | .ok t => tileSum t
+  | .error s => shapeSize s + 500
+
 /-- Results carrying bounds are produced by Lean and arrive below them. -/
 def bump (value : Tile) : Tile := { digit := ⟨(value.digit.val + 1) % 5, Nat.mod_lt _ (by decide)⟩, count := value.count + 1 }
 

@@ -2,8 +2,8 @@
 declare(strict_types=0);
 require 'vendor/autoload.php';
 use Brick\Math\BigInteger;
-use LeanFinrecords\{Some, Tile, Nest, Late, Slot, ShapeCircle, ShapeLabel, ShapeEmpty, GateClosed, GateNever, LeanBridgeError};
-use function LeanFinrecords\{tile_sum, nest_sum, late_sum, slot_count, shape_size, gate_open, tiles, maybe_shape, bump, make_shape};
+use LeanFinrecords\{Some, Ok, Err, Tile, Nest, Late, Slot, ShapeCircle, ShapeLabel, ShapeEmpty, GateClosed, GateNever, LeanBridgeError};
+use function LeanFinrecords\{tile_sum, nest_sum, late_sum, slot_count, shape_size, gate_open, tiles, maybe_shape, tile_list, tile_pair, tile_except, bump, make_shape};
 $checks = 0;
 function check($condition, $label) { global $checks; if (!$condition) throw new Exception('failed: ' . $label); ++$checks; }
 function n($value) { return BigInteger::of($value); }
@@ -75,6 +75,35 @@ check(maybe_shape(null)->isEqualTo(99), 'maybe absent');
 check(maybe_shape(new Some(new ShapeCircle(n(3))))->isEqualTo(3), 'maybe present');
 $maybe = new Some(new ShapeCircle(n(10)));
 check(rejected(fn() => maybe_shape($maybe), 'arg0', '10') && $maybe->equals(new Some(new ShapeCircle(n(10)))), 'maybe at bound');
+// List Tile: every element's fields; a rejected list is unchanged before the caller restores it.
+check(tile_list([])->isEqualTo(0), 'tile list empty');
+check(tile_list($row)->isEqualTo(8), 'tile list valid');
+for ($k = 0; $k < 3; ++$k) {
+    $kept = $row[$k];
+    $row[$k] = tile(5, $kept->count);
+    $before = $fresh();
+    $before[$k] = tile(5, $before[$k]->count);
+    check(rejected(fn() => tile_list($row), 'arg0', '5') && same_list($row, $before), "tile list element $k");
+    $row[$k] = $kept;
+}
+check(tile_list($row)->isEqualTo(8), 'tile list recovery');
+// Tile × Shape: both components; the inactive circle of a label is never read.
+check(tile_pair([tile(4, 6), new ShapeCircle(n(9))])->isEqualTo(19), 'pair valid');
+$pair = [tile(5, 6), new ShapeCircle(n(9))];
+check(rejected(fn() => tile_pair($pair), 'arg0', '5') && same_list($pair, [tile(5, 6), new ShapeCircle(n(9))]), 'pair tile at bound');
+$pair = [tile(4, 6), new ShapeCircle(n(10))];
+check(rejected(fn() => tile_pair($pair), 'arg0', '10') && same_list($pair, [tile(4, 6), new ShapeCircle(n(10))]), 'pair shape at bound');
+check(tile_pair([tile(4, 6), new ShapeCircle(n(9))])->isEqualTo(19), 'pair recovery');
+check(tile_pair([tile(1, 1), new ShapeLabel('ab')])->isEqualTo(1004), 'pair label');
+// Except Shape Tile: the ok record or the error variant, only the active branch.
+check(tile_except(new Ok(tile(3, 4)))->isEqualTo(7), 'except ok');
+$except = new Ok(tile(5, 4));
+check(rejected(fn() => tile_except($except), 'arg0', '5') && $except->equals(new Ok(tile(5, 4))), 'except ok at bound');
+check(tile_except(new Err(new ShapeCircle(n(9))))->isEqualTo(509), 'except error');
+$except = new Err(new ShapeCircle(n(10)));
+check(rejected(fn() => tile_except($except), 'arg0', '10') && $except->equals(new Err(new ShapeCircle(n(10)))), 'except error at bound');
+check(tile_except(new Err(new ShapeLabel('x')))->isEqualTo(1501), 'except label');
+check(tile_except(new Ok(tile(3, 4)))->isEqualTo(7), 'except recovery');
 // Results carrying bounds are produced by Lean and arrive below them.
 check(bump(tile(4, 9))->equals(tile(0, 10)), 'bump');
 $t = tile(5, 9);

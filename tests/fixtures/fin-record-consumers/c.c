@@ -96,6 +96,51 @@ int main(void) {
   mpz_set_ui(maybe.value.cases.circle.radius, 10);
   CHECK(rejected(finrecords_maybe_shape(&maybe, count, &error), &error, "arg0 is not below its Fin 10 bound"));
   finrecords_option_lean_fin_records_shape_value_clear(&maybe);
+  /* List Tile: every element's fields; a rejected list is unchanged before the caller restores it. */
+  finrecords_list_lean_fin_records_tile_span list = {row, 3, NULL, NULL}, empty_list = {NULL, 0, NULL, NULL};
+  CHECK(OK(finrecords_tile_list(&empty_list, count, &error)) && mpz_cmp_ui(count, 0) == 0);
+  CHECK(OK(finrecords_tile_list(&list, count, &error)) && mpz_cmp_ui(count, 8) == 0);
+  for (int k = 0; k < 3; ++k) {
+    unsigned long kept = mpz_get_ui(row[k].digit);
+    mpz_set_ui(row[k].digit, 5);
+    CHECK(rejected(finrecords_tile_list(&list, count, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(row[k].digit, 5) == 0 && list.length == 3);
+    mpz_set_ui(row[k].digit, kept);
+  }
+  CHECK(OK(finrecords_tile_list(&list, count, &error)) && mpz_cmp_ui(count, 8) == 0);
+  /* Tile × Shape: both components; the inactive circle of a label is never read. */
+  finrecords_tuple_lean_fin_records_tile_lean_fin_records_shape_value pair; finrecords_tuple_lean_fin_records_tile_lean_fin_records_shape_value_init(&pair);
+  mpz_set_ui(pair.fst.digit, 4); mpz_set_ui(pair.fst.count, 6);
+  CHECK(OK(finrecords_shape_select(&pair.snd, FINRECORDS_SHAPE_KIND_CIRCLE))); mpz_set_ui(pair.snd.cases.circle.radius, 9);
+  CHECK(OK(finrecords_tile_pair(&pair, count, &error)) && mpz_cmp_ui(count, 19) == 0);
+  mpz_set_ui(pair.fst.digit, 5);
+  CHECK(rejected(finrecords_tile_pair(&pair, count, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(pair.fst.digit, 5) == 0 && mpz_cmp_ui(pair.snd.cases.circle.radius, 9) == 0);
+  mpz_set_ui(pair.fst.digit, 4); mpz_set_ui(pair.snd.cases.circle.radius, 10);
+  CHECK(rejected(finrecords_tile_pair(&pair, count, &error), &error, "arg0 is not below its Fin 10 bound") && mpz_cmp_ui(pair.fst.digit, 4) == 0 && mpz_cmp_ui(pair.snd.cases.circle.radius, 10) == 0);
+  mpz_set_ui(pair.snd.cases.circle.radius, 9);
+  CHECK(OK(finrecords_tile_pair(&pair, count, &error)) && mpz_cmp_ui(count, 19) == 0);
+  CHECK(OK(finrecords_shape_select(&pair.snd, FINRECORDS_SHAPE_KIND_LABEL))); pair.snd.cases.label.text = text("ab");
+  mpz_set_ui(pair.fst.digit, 1); mpz_set_ui(pair.fst.count, 1);
+  CHECK(OK(finrecords_tile_pair(&pair, count, &error)) && mpz_cmp_ui(count, 1004) == 0);
+  pair.snd.cases.label.text = text("");
+  finrecords_tuple_lean_fin_records_tile_lean_fin_records_shape_value_clear(&pair);
+  /* Except Shape Tile: the ok record or the error variant, only the active branch. Each value is
+     built fresh, so the inactive branch is never written. */
+  for (int i = 0; i < 6; ++i) {
+    finrecords_result_lean_fin_records_tile_lean_fin_records_shape_value e; finrecords_result_lean_fin_records_tile_lean_fin_records_shape_value_init(&e);
+    e.is_ok = i < 2 || i == 5;
+    if (e.is_ok) { mpz_set_ui(e.ok.digit, i == 1 ? 5 : 3); mpz_set_ui(e.ok.count, 4); }
+    else if (i < 4) { CHECK(OK(finrecords_shape_select(&e.error, FINRECORDS_SHAPE_KIND_CIRCLE))); mpz_set_ui(e.error.cases.circle.radius, i == 2 ? 9 : 10); }
+    else { CHECK(OK(finrecords_shape_select(&e.error, FINRECORDS_SHAPE_KIND_LABEL))); e.error.cases.label.text = text("x"); }
+    finrecords_status status = finrecords_tile_except(&e, count, &error);
+    if (i == 0) CHECK(OK(status) && mpz_cmp_ui(count, 7) == 0);
+    if (i == 1) CHECK(rejected(status, &error, "arg0 is not below its Fin 5 bound") && e.is_ok && mpz_cmp_ui(e.ok.digit, 5) == 0);
+    if (i == 2) CHECK(OK(status) && mpz_cmp_ui(count, 509) == 0);
+    if (i == 3) CHECK(rejected(status, &error, "arg0 is not below its Fin 10 bound") && !e.is_ok && mpz_cmp_ui(e.error.cases.circle.radius, 10) == 0);
+    if (i == 4) CHECK(OK(status) && mpz_cmp_ui(count, 1501) == 0);
+    if (i == 4) e.error.cases.label.text = text("");
+    if (i == 5) CHECK(OK(status) && mpz_cmp_ui(count, 7) == 0); /* Recovery after both rejections. */
+    finrecords_result_lean_fin_records_tile_lean_fin_records_shape_value_clear(&e);
+  }
   /* Results carrying bounds are produced by Lean and arrive below them. */
   finrecords_tile bumped; finrecords_tile_init(&bumped); tile(&t, 4, 9);
   CHECK(OK(finrecords_bump(&t, &bumped, &error)) && mpz_cmp_ui(bumped.digit, 0) == 0 && mpz_cmp_ui(bumped.count, 10) == 0);

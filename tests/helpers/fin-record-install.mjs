@@ -37,6 +37,9 @@ export const finRecordRefinements = Object.freeze({
 	, "FinRecords.nestSum": { parameters: [{ kind: "record", definition: "FinRecords.Nest", fields: ["inner", "tag"], arguments: [tile, fin("3")] }], result: null }
 	, "FinRecords.shapeSize": { parameters: [shape], result: null }
 	, "FinRecords.slotCount": { parameters: [{ kind: "record", definition: "FinRecords.Slot", fields: ["maybe", "count"], arguments: [{ kind: "option", arguments: [fin("0")] }, null] }], result: null }
+	, "FinRecords.tileExcept": { parameters: [{ kind: "result", arguments: [tile, shape] }], result: null }
+	, "FinRecords.tileList": { parameters: [{ kind: "list", arguments: [tile] }], result: null }
+	, "FinRecords.tilePair": { parameters: [{ kind: "tuple", arguments: [tile, shape] }], result: null }
 	, "FinRecords.tileSum": { parameters: [tile], result: null }
 	, "FinRecords.tiles": { parameters: [{ kind: "array", arguments: [tile] }], result: null } });
 

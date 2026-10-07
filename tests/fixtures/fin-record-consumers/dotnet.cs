@@ -23,6 +23,22 @@ class Consumer {
     static Tile Piece(BigInteger digit, BigInteger count) => new(digit, count);
     static Late L(long digit) => new("ab", [N(1), N(2)], N(digit));
     static Tile[] Row() => [Piece(0, 1), Piece(4, 2), Piece(1, 0)];
+    // Each element position in turn: the rejected sequence is compared with an independently
+    // built snapshot immediately after the rejection, then the caller restores the element.
+    static void Sequence(Func<Tile[], BigInteger> call, string label) {
+        Tile[] values = Row();
+        Check(call([]) == 0, label + " empty");
+        Check(call(values) == 8, label + " valid");
+        for (int k = 0; k < 3; ++k) {
+            Tile kept = values[k];
+            values[k] = Piece(5, kept.Count);
+            Tile[] before = Row();
+            before[k] = Piece(5, kept.Count);
+            Check(Rejected(() => call(values), "arg0", "5") && Same(values, before), $"{label} element {k}");
+            values[k] = kept;
+        }
+        Check(call(values) == 8, label + " recovery");
+    }
     static void Main() {
         BigInteger huge = BigInteger.One << 100;
         // Tile: the digit is Fin 5; any count is valid.
@@ -50,19 +66,22 @@ class Consumer {
         // Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
         Check(Api.GateOpen(new GateClosed()) == 1, "gate closed");
         Check(Refused<Gate>(v => Api.GateOpen(v), () => new GateNever(0), "0"), "gate never");
-        // Array Tile: every element; the empty array is valid.
-        Tile[] tiles = Row();
-        Check(Api.Tiles([]) == 0, "tiles empty");
-        Check(Api.Tiles(tiles) == 8, "tiles valid");
-        for (int k = 0; k < 3; ++k) {
-            Tile kept = tiles[k];
-            tiles[k] = Piece(5, kept.Count);
-            Tile[] before = Row();
-            before[k] = Piece(5, kept.Count);
-            Check(Rejected(() => Api.Tiles(tiles), "arg0", "5") && Same(tiles, before), $"tiles element {k}");
-            tiles[k] = kept;
-        }
-        Check(Api.Tiles(tiles) == 8, "tiles recovery");
+        // Array Tile and List Tile: every element's fields; the empty sequence is valid.
+        Sequence(Api.Tiles, "tiles");
+        Sequence(Api.TileList, "list");
+        // Tile × Shape: both components; the inactive circle of a label is never read.
+        Check(Api.TilePair((Piece(4, 6), new ShapeCircle(9))) == 19, "pair valid");
+        Check(Refused(v => Api.TilePair(v), () => (Piece(5, 6), (Shape)new ShapeCircle(9)), "5"), "pair tile at bound");
+        Check(Refused(v => Api.TilePair(v), () => (Piece(4, 6), (Shape)new ShapeCircle(10)), "10"), "pair circle at bound");
+        Check(Api.TilePair((Piece(4, 6), new ShapeCircle(9))) == 19, "pair recovery");
+        Check(Api.TilePair((Piece(1, 1), new ShapeLabel("ab"))) == 1004, "pair label");
+        // Except Shape Tile: the ok record or the error variant, only the active branch.
+        Check(Api.TileExcept(Result<Tile, Shape>.Ok(Piece(3, 4))) == 7, "except ok");
+        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Ok(Piece(5, 4)), "5"), "except ok at bound");
+        Check(Api.TileExcept(Result<Tile, Shape>.Err(new ShapeCircle(9))) == 509, "except error circle");
+        Check(Refused(v => Api.TileExcept(v), () => Result<Tile, Shape>.Err(new ShapeCircle(10)), "10"), "except error at bound");
+        Check(Api.TileExcept(Result<Tile, Shape>.Err(new ShapeLabel("x"))) == 1501, "except error label");
+        Check(Api.TileExcept(Result<Tile, Shape>.Ok(Piece(3, 4))) == 7, "except recovery");
         // Option Shape: absent, a valid present circle, then an invalid one.
         Check(Api.MaybeShape(Option<Shape>.None) == 99, "maybe absent");
         Check(Api.MaybeShape(Option<Shape>.Some(new ShapeCircle(3))) == 3, "maybe circle");

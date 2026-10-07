@@ -29,6 +29,12 @@ static bool named(const wasm_name_t *name, const char *expected) {
 static value text(const char *bytes) { value v = {.kind = WASMTIME_COMPONENT_STRING}; wasm_name_new(&v.of.string, strlen(bytes), bytes); return v; }
 static value none(void) { return (value){.kind = WASMTIME_COMPONENT_OPTION}; }
 static value some(value child) { return (value){.kind = WASMTIME_COMPONENT_OPTION, .of.option = wasmtime_component_val_new(&child)}; }
+static value branch(bool ok, value child) { return (value){.kind = WASMTIME_COMPONENT_RESULT, .of.result = {ok, wasmtime_component_val_new(&child)}}; }
+static value pair(value first, value second) {
+  value v = {.kind = WASMTIME_COMPONENT_TUPLE};
+  wasmtime_component_valtuple_new_uninit(&v.of.tuple, 2);
+  v.of.tuple.data[0] = first; v.of.tuple.data[1] = second; return v;
+}
 static value record(const char **names, value *fields, size_t count) {
   value result = {.kind = WASMTIME_COMPONENT_RECORD};
   wasmtime_component_valrecord_new_uninit(&result.of.record, count);
@@ -91,6 +97,14 @@ static bool same(const value *a, const value *b) {
     if (!a->of.variant.val || !b->of.variant.val) return !a->of.variant.val && !b->of.variant.val;
     return same(a->of.variant.val, b->of.variant.val);
   }
+  case WASMTIME_COMPONENT_TUPLE:
+    if (a->of.tuple.size != b->of.tuple.size) return false;
+    for (size_t i = 0; i < a->of.tuple.size; ++i) if (!same(&a->of.tuple.data[i], &b->of.tuple.data[i])) return false;
+    return true;
+  case WASMTIME_COMPONENT_RESULT:
+    if (a->of.result.is_ok != b->of.result.is_ok) return false;
+    if (!a->of.result.val || !b->of.result.val) return !a->of.result.val && !b->of.result.val;
+    return same(a->of.result.val, b->of.result.val);
   case WASMTIME_COMPONENT_OPTION:
     if (!a->of.option || !b->of.option) return !a->of.option && !b->of.option;
     return same(a->of.option, b->of.option);
@@ -159,19 +173,35 @@ int main(void) {
   /* Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid. */
   arg = tagged("closed", NULL); out = call("gate-open", &arg); CHECK(is_nat(&out, 1)); clear(&out);
   arg = one_field("never", "value", nat(0)); CHECK(rejected("gate-open", &arg, "arg0 is not below its Fin 0 bound"));
-  /* Array Tile: every element; the empty array is valid. */
-  arg = (value){.kind = WASMTIME_COMPONENT_LIST}; wasmtime_component_vallist_new_uninit(&arg.of.list, 0);
-  out = call("tiles", &arg); CHECK(is_nat(&out, 0)); clear(&out);
-  value tiles = row();
-  out = run("tiles", &tiles); CHECK(is_nat(&out, 8)); clear(&out);
-  for (int k = 0; k < 3; ++k) {
-    value *digit = field(&tiles.of.list.data[k], 0), kept = *digit;
-    *digit = nat(5);
-    CHECK(rejected_kept("tiles", &tiles, "arg0 is not below its Fin 5 bound") && is_nat(digit, 5));
-    clear(digit); *digit = kept;
+  /* Array Tile and List Tile: every element's fields; the empty sequence is valid. */
+  const char *sequences[2] = {"tiles", "tile-list"};
+  for (int which = 0; which < 2; ++which) {
+    arg = (value){.kind = WASMTIME_COMPONENT_LIST}; wasmtime_component_vallist_new_uninit(&arg.of.list, 0);
+    out = call(sequences[which], &arg); CHECK(is_nat(&out, 0)); clear(&out);
+    value tiles = row();
+    out = run(sequences[which], &tiles); CHECK(is_nat(&out, 8)); clear(&out);
+    for (int k = 0; k < 3; ++k) {
+      value *digit = field(&tiles.of.list.data[k], 0), kept = *digit;
+      *digit = nat(5);
+      CHECK(rejected_kept(sequences[which], &tiles, "arg0 is not below its Fin 5 bound") && is_nat(digit, 5));
+      clear(digit); *digit = kept;
+    }
+    out = run(sequences[which], &tiles); CHECK(is_nat(&out, 8)); clear(&out); /* Recovery. */
+    clear(&tiles);
   }
-  out = run("tiles", &tiles); CHECK(is_nat(&out, 8)); clear(&out); /* Recovery. */
-  clear(&tiles);
+  /* Tile × Shape: both components; the inactive circle of a label is never read. */
+  arg = pair(tile(4, 6), circle(9)); out = call("tile-pair", &arg); CHECK(is_nat(&out, 19)); clear(&out);
+  arg = pair(tile(5, 6), circle(9)); CHECK(rejected("tile-pair", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = pair(tile(4, 6), circle(10)); CHECK(rejected("tile-pair", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = pair(tile(4, 6), circle(9)); out = call("tile-pair", &arg); CHECK(is_nat(&out, 19)); clear(&out); /* Recovery. */
+  arg = pair(tile(1, 1), label("ab")); out = call("tile-pair", &arg); CHECK(is_nat(&out, 1004)); clear(&out);
+  /* Except Shape Tile crosses as result<tile, shape>: only the active branch is checked. */
+  arg = branch(true, tile(3, 4)); out = call("tile-except", &arg); CHECK(is_nat(&out, 7)); clear(&out);
+  arg = branch(true, tile(5, 4)); CHECK(rejected("tile-except", &arg, "arg0 is not below its Fin 5 bound"));
+  arg = branch(false, circle(9)); out = call("tile-except", &arg); CHECK(is_nat(&out, 509)); clear(&out);
+  arg = branch(false, circle(10)); CHECK(rejected("tile-except", &arg, "arg0 is not below its Fin 10 bound"));
+  arg = branch(false, label("x")); out = call("tile-except", &arg); CHECK(is_nat(&out, 1501)); clear(&out);
+  arg = branch(true, tile(3, 4)); out = call("tile-except", &arg); CHECK(is_nat(&out, 7)); clear(&out); /* Recovery. */
   /* Option Shape: absent, a valid present circle, then an invalid one. */
   arg = none(); out = call("maybe-shape", &arg); CHECK(is_nat(&out, 99)); clear(&out);
   arg = some(circle(3)); out = call("maybe-shape", &arg); CHECK(is_nat(&out, 3)); clear(&out);

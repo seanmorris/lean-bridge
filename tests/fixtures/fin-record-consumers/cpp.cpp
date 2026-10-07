@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
 namespace api = lean_bridge::finrecords;
@@ -106,6 +107,51 @@ int main() {
     const std::optional<api::Shape> before = api::Shape{api::ShapeCircle{10}};
     CHECK(rejected([&] { api::maybe_shape(maybe); }, "arg0 is not below its Fin 10 bound") && maybe == before);
   }
+  /* List Tile: every element's fields; a rejected list is unchanged before the caller restores it. */
+  CHECK(api::tile_list({}) == 0);
+  CHECK(api::tile_list(row) == 8);
+  for (size_t k = 0; k < row.size(); ++k) {
+    const Nat kept = row[k].digit;
+    row[k].digit = 5;
+    std::vector<api::Tile> before = {{0, 1}, {4, 2}, {1, 0}}; before[k].digit = 5;
+    CHECK(rejected([&] { api::tile_list(row); }, "arg0 is not below its Fin 5 bound") && row == before);
+    row[k].digit = kept;
+  }
+  CHECK(api::tile_list(row) == 8);
+  /* Tile × Shape: both components; the inactive circle of a label is never read. */
+  std::pair<api::Tile, api::Shape> pair{api::Tile{4, 6}, api::ShapeCircle{9}};
+  CHECK(api::tile_pair(pair) == 19);
+  pair.first.digit = 5;
+  {
+    const std::pair<api::Tile, api::Shape> before{api::Tile{5, 6}, api::ShapeCircle{9}};
+    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0 is not below its Fin 5 bound") && pair == before);
+  }
+  pair.first.digit = 4; pair.second = api::ShapeCircle{10};
+  {
+    const std::pair<api::Tile, api::Shape> before{api::Tile{4, 6}, api::ShapeCircle{10}};
+    CHECK(rejected([&] { api::tile_pair(pair); }, "arg0 is not below its Fin 10 bound") && pair == before);
+  }
+  pair.second = api::ShapeCircle{9};
+  CHECK(api::tile_pair(pair) == 19);
+  CHECK((api::tile_pair({api::Tile{1, 1}, api::ShapeLabel{"ab"}}) == 1004));
+  /* Except Shape Tile: the ok record or the error variant, only the active branch. */
+  using Except = api::Result<api::Tile, api::Shape>;
+  Except except = api::Ok<api::Tile>{api::Tile{3, 4}};
+  CHECK(api::tile_except(except) == 7);
+  except = api::Ok<api::Tile>{api::Tile{5, 4}};
+  {
+    const Except before = api::Ok<api::Tile>{api::Tile{5, 4}};
+    CHECK(rejected([&] { api::tile_except(except); }, "arg0 is not below its Fin 5 bound") && except == before);
+  }
+  CHECK(api::tile_except(api::Err<api::Shape>{api::ShapeCircle{9}}) == 509);
+  except = api::Err<api::Shape>{api::ShapeCircle{10}};
+  {
+    const Except before = api::Err<api::Shape>{api::ShapeCircle{10}};
+    CHECK(rejected([&] { api::tile_except(except); }, "arg0 is not below its Fin 10 bound") && except == before);
+  }
+  CHECK(api::tile_except(api::Err<api::Shape>{api::ShapeLabel{"x"}}) == 1501);
+  except = api::Ok<api::Tile>{api::Tile{3, 4}};
+  CHECK(api::tile_except(except) == 7); /* Recovery after both rejections. */
   /* Results carrying bounds are produced by Lean and arrive below them. */
   t = api::Tile{4, 9};
   CHECK((api::bump(t) == api::Tile{0, 10}));
