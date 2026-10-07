@@ -17,6 +17,9 @@ import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { finProductEnvironment, finProductRefinements, finProductTargets, installFinProductConsumer } from "./helpers/fin-product-install.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected, finProductDispatchInterposer, finProductDispatchProbe } from "./helpers/fin-product-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { finProductReviewedIr } from "./helpers/reviewed-fin-product-fixture.mjs";
+import { validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -24,6 +27,9 @@ import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { nativeFinBoundPaths, nativeFinContainerNote } from "../src/backends/native/fin-refinements.mjs";
 import { reviewedContractDifference } from "../src/analyze/reviewed-source.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
+import { generateCopiedRubyPackage } from "../src/backends/ruby/copied-values.mjs";
+import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
+import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -74,7 +80,37 @@ test("documentation paths name product components and the active Except branch",
 	const note = nativeFinContainerNote(ir.declarations, "Ruby gems");
 	assert.match(note, /^Fin inside arrays, lists, options, products and Except values is checked before Lean runs: /);
 	assert.match(note, /both product components and only the active Except branch\. An empty array, an absent option or an inactive branch is valid even for Fin 0\./);
-	assert.match(note, /product components as name\.0 and name\.1, and the active branch as name\.ok or name\.error\./);
+	assert.match(note, /product components as name\.0 and name\.1, and the active branch as name\.ok or name\.error\. Fin inside records, variants or callbacks is not supported in Ruby gems\.$/);
+});
+
+test("the independent product review passes reviewed admission and states every compiled bound", () => {
+	const review = finProductReviewedIr(), source = canonicalJson(review);
+	validateBindingIr(review);
+	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(review) });
+	// Declarations carry their product and Except trees; the alias pair's bounds live on the Digit alias.
+	for(const declaration of review.declarations)
+	{
+		const expected = finProductRefinements[declaration.id.slice("lean:".length)];
+		const stated = declaration.source.extensions["lean-lang.org/refinements"] ?? null;
+		if(declaration.id === "lean:FinProducts.aliased") assert.equal(stated, null);
+		else assert.deepEqual(stated, expected, declaration.id);
+	}
+	assert.deepEqual(review.types.find(type => type.id === "lean:FinProducts.Digit").source.extensions["lean-lang.org/nominal-refinements"], { kind: "alias", target: leaf("10") });
+	assert.deepEqual(review.types.find(type => type.id === "lean:FinProducts.DigitPair").source.extensions, {});
+});
+
+test("generated host documentation lists product and Except bound paths", () => {
+	const ir = mixed().bindingIr;
+	const readmes = [
+		["Ruby gems", generateCopiedRubyPackage(ir)["README.md"]]
+		, ["NuGet packages", generateCopiedDotnetPackage(ir)["README.md"]]
+		, ["Maven packages", generateCopiedJvmPackage(ir)["README.md"]]];
+	for(const [host, readme] of readmes)
+	{
+		assert.match(readme, /Fin inside arrays, lists, options, products and Except values is checked before Lean runs/u, host);
+		assert.match(readme, /arg0\.0 < 10; arg0\.1\.ok < 3; arg0\.1\.error < 2/u, host);
+		assert.doesNotMatch(readme, /products and Except values[^\n]*reviewed Binding IR is not supported/u, host);
+	}
 });
 
 test("C adapters compare both components and only the active branch on caller limbs before Lean runs", () => {
@@ -139,8 +175,12 @@ test("reviewed product and Except bounds must equal the freshly compiled tree", 
 });
 
 const profiles = process.env.LEAN_BRIDGE_FIN_PRODUCT_PROFILES?.split(",").sort() ?? [];
-assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin product profile");
-assert.ok(profiles.every(profile => Object.hasOwn(finProductTargets, profile)), "Unknown or empty Fin product profile");
+const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES?.split(",").sort() ?? [];
+for(const selection of [profiles, reviewedProfiles])
+{
+	assert.equal(new Set(selection).size, selection.length, "Duplicate Fin product profile");
+	assert.ok(selection.every(profile => Object.hasOwn(finProductTargets, profile)), "Unknown or empty Fin product profile");
+}
 const fixture = "tests/fixtures/onboarding/native-fin-products";
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 
@@ -181,7 +221,7 @@ const observeDispatch = async (consumer, packages, leanPrefix) => {
 	return { columns: finProductDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl: "valid public and raw calls increment source and adapter counts" };
 };
 
-test("relocated source-free native packages check Fin inside products and the active Except branch", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+const checkInstalledFinProducts = async (t, profiles, reviewed = false) => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => finProductTargets[profile]));
 	const environment = finProductEnvironment(profiles);
@@ -198,14 +238,23 @@ test("relocated source-free native packages check Fin inside products and the ac
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await cp(fixture, projectRoot, { recursive: true });
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinProducts"], exports: Object.keys(finProductRefinements), targets }));
+		// The reviewed route selects its exports from the authored Binding IR; the ordinary route names them.
+		const reviewedSource = reviewed ? canonicalJson(finProductReviewedIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinProducts"], ...(reviewed ? {} : { exports: Object.keys(finProductRefinements) }), targets }));
 		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		// Lean elaboration supplies every bound; the model carries exactly the expected trees.
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), finProductRefinements);
+		for(const item of model.exports) for(const parameter of item.parameters) assert.ok(!JSON.stringify(parameter.type).includes('"refinement"'), item.name);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -222,8 +271,10 @@ test("relocated source-free native packages check Fin inside products and the ac
 			const { command, ...observation } = await installFinProductConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			void command;
 			const dispatch = profile === "c" ? { dispatch: await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) } : {};
-			reports.push({ profile, path: "ordinary-source", ...observation, packages
+			reports.push({ profile, ...observation, packages
+				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...dispatch
+				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 				, refinements: finProductRefinements
 				, bindingIrSha256: built.bindingIrSha256
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
@@ -236,6 +287,37 @@ test("relocated source-free native packages check Fin inside products and the ac
 	}
 	// Two unrelated author roots produce byte-identical archives.
 	assert.deepEqual(archives[1], archives[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_FIN_PRODUCT_REPORT ?? `build/native-fin-products/${profiles.join("-")}.json`);
+	const configuredReport = process.env[reviewed ? "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_REPORT" : "LEAN_BRIDGE_FIN_PRODUCT_REPORT"];
+	const reportPath = resolve(configuredReport ?? `build/native-fin-products/${reviewed ? "reviewed-" : ""}${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free native packages check Fin inside products and the active Except branch", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledFinProducts(t, profiles));
+
+test("independently reviewed native packages check product and Except bounds after source-free installation", { skip: !reviewedProfiles.length, timeout: 2_400_000 }, t => checkInstalledFinProducts(t, reviewedProfiles, true));
+
+test("the independent product review passes reviewed admission, and changed bounds are refused against fresh Lean", { skip: !reviewedProfiles.includes("c"), timeout: 1_800_000 }, async t => {
+	const review = finProductReviewedIr(), source = canonicalJson(review);
+	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(review) });
+	const declaration = (ir, name) => ir.declarations.find(item => item.id === `lean:FinProducts.${name}`).source.extensions["lean-lang.org/refinements"];
+	const cases = [
+		["tightened component", ir => { declaration(ir, "first").parameters[0].arguments[0].bound = "9"; }]
+		, ["loosened branch", ir => { declaration(ir, "both").parameters[0].arguments[1].bound = "4"; }]
+		, ["swapped branches", ir => { declaration(ir, "both").parameters[0].arguments.reverse(); }]
+		, ["moved to the other component", ir => { declaration(ir, "second").parameters[0].arguments.reverse(); }]];
+	for(const [label, mutate] of cases) await t.test(label, async () => {
+		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-product-reviewed-"));
+		t.after(() => rm(directory, { recursive: true, force: true }));
+		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
+		await cp(fixture, projectRoot, { recursive: true });
+		const ir = finProductReviewedIr(); mutate(ir);
+		await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(ir));
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinProducts"], targets: Object.fromEntries([finProductTargets.c]) }));
+		await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: finProductEnvironment(["c"]) }), error => {
+			assert.equal(error.code, "reviewed-ir-source-mismatch", label);
+			assert.match(error.details.field, /source\.extensions\.lean-lang\.org\/refinements/u, label);
+			return true;
+		});
+		await assert.rejects(() => access(outputRoot), label);
+	});
 });
