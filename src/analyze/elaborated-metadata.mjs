@@ -58,6 +58,19 @@ export const createMetadataRequest = (request, context) => ({ ...request, metada
 	, invocationIdentitySha256: sha256(canonicalJson({ request, ...context }))
 } });
 
+// Whether a copied type, or any table definition it references, has a node of one of these kinds.
+const containsKind = (value, kinds, references, seen = new Set()) => {
+	if(!value || typeof value !== "object") return false;
+	if(Array.isArray(value)) return value.some(item => containsKind(item, kinds, references, seen));
+	if(kinds.includes(value.kind)) return true;
+	if(value.kind === "reference")
+	{
+		if(seen.has(value.name) || !references?.has(value.name)) return false;
+		seen.add(value.name);
+		return containsKind(references.get(value.name), kinds, references, seen);
+	}
+	return Object.entries(value).some(([key, child]) => key !== "abi" && key !== "predicate" && containsKind(child, kinds, references, seen));
+};
 /**
  * Validate the closed shared report and its binding to this exact compiler invocation.
  *
@@ -218,9 +231,24 @@ export const validateElaboratedMetadata = (report, request) => {
 					}
 					if(type?.kind === "record")
 					{
-						closed(type, ["kind", "name", "fields"]);
+						closed(type, Object.hasOwn(type, "provenance") ? ["kind", "name", "provenance", "fields"] : ["kind", "name", "fields"]);
 						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
 							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
+						// An instantiated generic record names its structure and the resolved type arguments.
+						if(Object.hasOwn(type, "provenance"))
+						{
+							closed(type.provenance, ["structure", "arguments"]);
+							if(!text(type.provenance.structure) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.provenance.structure)
+								|| type.provenance.structure === type.name || !Array.isArray(type.provenance.arguments)
+								|| !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("Invalid component record provenance");
+							// Arguments are copied types validated like field types; nothing inside one is an
+							// identity, a callback or a refinement, so no bound is lowered away with the argument.
+							for(const argument of type.provenance.arguments)
+							{
+								if(containsKind(argument, ["resource", "callback", "refinement"], references)) fail("Component record provenance arguments cannot carry resource, callback or refinement types");
+								copied(argument, depth + 1, references, refinements);
+							}
+						}
 						const names = new Set();
 						for(const field of type.fields)
 						{
@@ -265,6 +293,41 @@ export const validateElaboratedMetadata = (report, request) => {
 					validateType(parameter.type);
 				});
 				validateType(projection.result);
+				// Every record provenance reference must name a nominal definition this declaration carries:
+				// an inline definition, including one only a provenance argument carries, or a table entry.
+				const defined = new Set(), provenance = [];
+				const survey = value => {
+					if(!value || typeof value !== "object") return;
+					if(["graph", "owned-graph"].includes(value.kind))
+					{
+						value.types.forEach(survey);
+						return survey(value.root);
+					}
+					if(["alias", "record", "variant"].includes(value.kind) && typeof value.name === "string") defined.add(value.name);
+					if(value.kind === "record" && value.provenance)
+					{
+						provenance.push(...value.provenance.arguments);
+						value.provenance.arguments.forEach(survey);
+					}
+					if(value.kind === "alias") survey(value.target);
+					if(value.kind === "refinement") survey(value.base);
+					if(["array", "list", "option"].includes(value.kind)) survey(value.element);
+					if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(survey);
+					if(value.kind === "record") value.fields.forEach(field => survey(field.type));
+					if(value.kind === "variant") value.cases.forEach(item => item.fields.forEach(field => survey(field.type)));
+					if(value.kind === "callback")
+					{
+						value.parameters.forEach(survey);
+						survey(value.result);
+					}
+				};
+				[...projection.parameters.map(parameter => parameter.type), projection.result].forEach(survey);
+				const resolve = argument => {
+					if(argument.kind === "reference" && !defined.has(argument.name)) fail(`Record provenance references an undefined nominal type: ${argument.name}`);
+					if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element);
+					if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(resolve);
+				};
+				provenance.forEach(resolve);
 				if(declaration.selected && exportContractProblem(exportContractFor(request.contracts, declaration.identity), projection, request.ownedAggregates !== undefined))
 					fail("Supported projection violates its configured export contract");
 			}

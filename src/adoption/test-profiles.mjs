@@ -230,6 +230,7 @@ const profileManifest = Object.freeze({
 		, "unlocked-component"
 		, "browser-refinements"
 		, "scalar-fin-rejection"
+		, "generic-records"
 		, "component-consumer-docs"
 		, "component-runtime"
 		, "component-scalar-codec"

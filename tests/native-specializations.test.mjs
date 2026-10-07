@@ -41,29 +41,31 @@ test("every native profile has a specialization consumer for the same concrete e
 		await access(`tests/fixtures/specialization-consumers/${profile}.${extension}`);
 });
 
-test("native builds reject a generic structure instantiation at the Lean source", { skip: !profiles.includes("c"), timeout: 900_000 }, async t => {
-	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-specialization-reject-"));
+test("native builds admit a generic structure instantiation named by an alias, with its provenance", { skip: !profiles.includes("c"), timeout: 900_000 }, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-specialization-generic-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
 	await cp("tests/fixtures/onboarding/native-specializations", projectRoot, { recursive: true });
 	const source = await readFile(join(projectRoot, "Specialized.lean"), "utf8");
-	// A closed instantiation of a generic structure, named by an alias like every other type argument.
+	// A closed instantiation of a universe-polymorphic generic structure, named by an alias like every other type argument.
 	await saveLakeFile(projectRoot, "Specialized.lean", `${source}\nnamespace Specialized\nabbrev WordPair := Pair Word String\nend Specialized\n`);
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 		, modules: ["Specialized"]
 		, exports: ["Specialized.echoPair", "Specialized.plain"]
 		, specializations: [{ name: "Specialized.echoPair", declaration: "Specialized.echo", types: ["Specialized.WordPair"] }]
 		, targets: Object.fromEntries([nativeSpecializationTargets.c]) }));
-	// The rejection is classified and names the declaration, module and the instantiated type.
-	await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: nativeSpecializationEnvironment(["c"]) }), error => {
-		assert.equal(error.code, "native-elaboration-unsupported");
-		assert.deepEqual(error.details.diagnostics.map(item => [item.category, item.code, item.module, item.declaration, item.severity])
-			, [["unsupported-meaning", "unsupported-native-type", "Specialized", "Specialized.echoPair", "error"]]);
-		assert.match(error.details.diagnostics[0].message, /^Specialized\.echoPair: unsupported native export type: Specialized\.Pair Specialized\.Word String$/);
-		assert.deepEqual(error.details.projections.map(item => [item.declaration, item.status, item.reason]), [["Specialized.echoPair", "unsupported", "unsupported-native-type"]]);
-		return true;
+	await buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: nativeSpecializationEnvironment(["c"]) }).catch(error => {
+		error.message += `: ${JSON.stringify(error.details)}`; throw error;
 	});
-	await assert.rejects(() => access(outputRoot));
+	const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+	const record = model.types.find(type => type.kind === "record");
+	// The alias is the record's identity; the structure and its resolved arguments are its provenance.
+	assert.equal(record.name, "Specialized.WordPair"); assert.equal(record.lean, "Specialized.WordPair"); assert.equal(record.constructor, "Specialized.Pair.mk");
+	assert.equal(record.provenance.structure, "Specialized.Pair");
+	// Arguments travel like field types: the alias inline, with its own target.
+	assert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}${argument.target ? `=${argument.target.name}` : ""}`), ["alias:Specialized.Word=string", "primitive:string"]);
+	assert.deepEqual(record.fields.map(field => [field.name, field.type.kind === "alias" ? field.type.name : field.type.name]), [["first", "Specialized.Word"], ["second", "string"]]);
+	assert.equal(model.exports.find(item => item.name === "Specialized.echoPair").result.name, "Specialized.WordPair");
 });
 
 test("relocated source-free native packages install concrete specializations without the generic declaration", { skip: !profiles.length, timeout: 2_400_000 }, async t => {

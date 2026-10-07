@@ -16,6 +16,31 @@ const closed = (value, fields, label) => {
 		|| fields.some(key => !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key) ?? {}, "value"))) fail(`invalid ${label} fields`);
 };
 
+// Whether a copied type, or any table definition it references, has a node of one of these kinds.
+const containsKind = (value, kinds, references, seen = new Set()) => {
+	if(!value || typeof value !== "object") return false;
+	if(Array.isArray(value)) return value.some(item => containsKind(item, kinds, references, seen));
+	if(kinds.includes(value.kind)) return true;
+	if(value.kind === "reference")
+	{
+		if(seen.has(value.name) || !references?.has(value.name)) return false;
+		seen.add(value.name);
+		return containsKind(references.get(value.name), kinds, references, seen);
+	}
+	return Object.entries(value).some(([key, child]) => key !== "abi" && key !== "predicate" && containsKind(child, kinds, references, seen));
+};
+// Every type carries one checked C representation.
+const representation = type => {
+	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
+	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "size_t", "float", "double"].includes(type.abi.cType)
+	  || !/^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.box)
+	  || !/^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.unbox)
+	  || typeof type.abi.heap !== "boolean") fail("missing checked native representation");
+	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
+	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
+	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
+};
+
 /**
  * Reject shapes before rendering either Lean or C source.
  *
@@ -56,21 +81,14 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		, option: ["kind", "element", "abi"]
 		, result: ["kind", "arguments", "abi"]
 		, tuple: ["kind", "arguments", "abi"]
-		, record: ["kind", "name", "lean", "constructor", "fields", "abi"]
+		, record: Object.hasOwn(type, "provenance") ? ["kind", "name", "lean", "constructor", "provenance", "fields", "abi"] : ["kind", "name", "lean", "constructor", "fields", "abi"]
 		, variant: ["kind", "name", "lean", "cases", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
 		, callback: ["kind", "parameters", "result", "abi"]
 		, refinement: ["kind", "base", "predicate", "abi"] }[type.kind];
 	if(!fields) fail("unknown native type");
 	closed(type, fields, "native type");
-	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
-	if(!type.abi || !["lean_object*", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "size_t", "float", "double"].includes(type.abi.cType)
-	  || !/^lean_box(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.box)
-	  || !/^lean_unbox(?:_uint32|_uint64|_usize|_float32|_float)?$/.test(type.abi.unbox)
-	  || typeof type.abi.heap !== "boolean") fail("missing checked native representation");
-	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
-	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
-	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
+	representation(type);
 	const recurse = (child, copy = copied, inner = structural) => validate(child, depth + 1, copy, references, policy, owned, inner);
 	if(type.kind === "graph")
 	{
@@ -123,6 +141,22 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(!identifier.test(type.name) || type.name !== type.lean || !identifier.test(type.constructor)) fail("invalid record identity");
 		if(!Array.isArray(type.fields) || new Set(type.fields.map(field => field.name)).size !== type.fields.length) fail("invalid record fields");
+		// An instantiated generic structure keeps its origin: the structure and the closed type arguments
+		// the compiler resolved, each a copied shape or a nominal reference. The alias stays the identity.
+		if(Object.hasOwn(type, "provenance"))
+		{
+			closed(type.provenance, ["structure", "arguments"], "record provenance");
+			if(!identifier.test(type.provenance.structure) || type.provenance.structure === type.name
+				|| !type.constructor.startsWith(`${type.provenance.structure}.`)) fail("invalid record provenance");
+			if(!Array.isArray(type.provenance.arguments) || !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("invalid record provenance arguments");
+			// Arguments are copied types validated like field types: inline definitions in the inline form,
+			// references in the graph form. Nothing inside an argument is an identity, a callback or a refinement.
+			for(const child of type.provenance.arguments)
+			{
+				recurse(child, true, false);
+				if(containsKind(child, ["resource", "callback", "refinement"], references)) fail("record provenance arguments cannot carry resource, callback or refinement types");
+			}
+		}
 		for(const field of type.fields)
 		{
 			closed(field, ["name", "projection", "type"], "record field");

@@ -188,10 +188,27 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
 		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
+		// Provenance arguments are not transport types; the Binding IR carries a definition that only an instantiation names.
 		if(type.kind === "variant") for(const branch of type.cases) for(const field of branch.fields) visit(field.type);
 		if(type.kind === "callback")
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
+	};
+	// In the graph form a record's provenance references only nominal definitions the model
+	// carries, and the reference's representation must agree with that definition.
+	const resolveProvenance = () => {
+		const named = new Map([...allTypes.values()].filter(type => ["alias", "record", "variant"].includes(type.kind)).map(type => [type.name, type]));
+		const resolve = (argument, owner) => {
+			if(argument.kind === "reference")
+			{
+				const definition = named.get(argument.name);
+				if(!definition) fail(`${owner}: record provenance references an undefined nominal type ${argument.name}`);
+				if(canonicalJson(definition.abi) !== canonicalJson(argument.abi)) fail(`${owner}: record provenance reference disagrees with its definition's representation`);
+			}
+			if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element, owner);
+			if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(child => resolve(child, owner));
+		};
+		for(const type of allTypes.values()) if(type.kind === "record" && type.provenance) type.provenance.arguments.forEach(argument => resolve(argument, type.name));
 	};
 	const checked = elaborated.declarations.map(source => {
 		const refinements = nativeRefinements(source);
@@ -203,6 +220,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
 	if(!checked.length) fail("empty export set");
+	resolveProvenance();
 	// Subtype requires a compiler-selected checked constructor, which reviewed
 	// selection does not admit yet. Fin decisions reconcile below against Lean.
 	const refined = checked.find(item => item.refinements
