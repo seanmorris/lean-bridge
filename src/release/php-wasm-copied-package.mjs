@@ -18,12 +18,29 @@ import { ownedPhpWasmReadme, ownedPhpWasmTransferReadme, ownedPhpWasmBorrowReadm
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
+import { nativeFinContainerNote, nativeFinSummary, nativeRefinementReadme } from "../backends/native/fin-refinements.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata, composerPackageMetadata, npmPackageMetadata } from "../analyze/package-metadata.mjs";
 import { brickMathRequirement, bundledBrickMath } from "../backends/php/brick-math.mjs";
+
+
+/**
+ * Document checked Fin sites of a plain copied PHP-Wasm package. Packages without
+ * a bound document nothing, so their README bytes are unchanged.
+ *
+ * @param projection - Compiled copied PHP model of the package.
+ */
+export const phpWasmFinReadme = projection => {
+	const types = projection.ir.types;
+	const bounds = fn => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);
+	const functions = projection.surface.functions.filter(bounds);
+	if(!functions.length) return "";
+	const declarations = functions.map(fn => fn.declaration);
+	return `\n## Bounded integers\n\n${nativeRefinementReadme(declarations, `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The PHP-Wasm side module compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(declarations, "PHP-Wasm packages", types)}`, "PHP-Wasm packages", types)}\n\n${functions.map(fn => `- ${projection.namespace}\\${fn.field}: ${bounds(fn)}`).join("\n")}\n`;
+};
 
 const profile = "php-wasm-copied-loading-v1";
 const runtimeName = "@lean-bridge/php-wasm-copied-runtime";
@@ -141,13 +158,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "component/package/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, "composer/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "composer/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme + phpWasmFinReadme(projection))
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

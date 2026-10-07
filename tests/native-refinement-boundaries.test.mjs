@@ -35,7 +35,9 @@ test("readers without the checked capability refuse refined metadata before any 
 	{
 		const input = refined(site);
 		unsupported(() => createNativeModel(input), /implemented only for ordinary native packages with bound-checking adapters/);
-		unsupported(() => createPhpWasmCopiedModel(input), /implemented only for ordinary native packages with bound-checking adapters/);
+		// The plain copied PHP-Wasm side module checks Fin since VO #1220; checked Subtype has no PHP-Wasm acceptance yet.
+		if(label === "Fin") assert.deepEqual(createPhpWasmCopiedModel(input).exports[0].refinements, { parameters: [{ kind: "fin", bound: "10" }], result: null });
+		else unsupported(() => createPhpWasmCopiedModel(input), /checked Subtype refinements are not yet supported by PHP-Wasm packages/);
 		unsupported(() => createCompiledNativeModel(input, { nativeRefinements: false }), /implemented only for ordinary native packages with bound-checking adapters/);
 		unsupported(() => createCompiledNativeModel(input, {}), /implemented only for ordinary native packages with bound-checking adapters/);
 		assert.deepEqual(createNativeModel(input, { refinements: true }).exports[0].refinements, { parameters: [site.predicate.kind === "fin" ? { kind: "fin", bound: "10" } : { kind: "subtype", constructor: "Sample.checkedText" }], result: null }, label);
