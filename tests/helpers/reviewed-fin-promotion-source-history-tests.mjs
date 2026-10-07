@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeCiDependencyTimeoutSource } from "./ci-dependency-timeout-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedFinPromotionSource, reviewedFinPromotionChangedPaths, reviewedFinPromotionHistoryPath, reverseReviewedFinPromotionUpdate } from "./reviewed-fin-promotion-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Reviewed Fin promotion authenticates each exact source predecessor", async
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCiDependencyTimeoutSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseReviewedFinPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedFinPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedFinPromotionSource(update.path, source, update.currentSha256), source);

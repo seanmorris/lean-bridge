@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/ci-dependency-timeout-source-history-tests.mjs";
+import { assertOwnedJavaScriptWasmCi } from "./helpers/owned-javascript-wasm-ci.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptWasmExecution } from "./helpers/owned-javascript-wasm-evidence.mjs";
 import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmHistoricalBytes } from "./helpers/owned-javascript-npm-source-history.mjs";
@@ -16,6 +18,30 @@ import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmAddedPaths
 	, ownedJavaScriptWasmPrevious, reverseOwnedJavaScriptWasmUpdate } from "./helpers/owned-javascript-wasm-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+
+test("owned browser dependency timeout is mandatory without weakening execution", async () => {
+	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	assertOwnedJavaScriptWasmCi(source);
+	const labels = ["Install owned npm browser engines"
+		, "Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains"];
+	for(const label of labels)
+	{
+		const name = `      - name: ${label}\n`;
+		const before = name + "        timeout-minutes: 20\n";
+		const alternatives = [name, name + "        timeout-minutes: 240\n"
+			, before + "        if: false\n"
+			, before + "        continue-on-error: true\n"];
+		for(const after of alternatives)
+		{
+			const changed = source.replace(before, after); assert.notEqual(changed, source);
+			assert.throws(() => assertOwnedJavaScriptWasmCi(changed));
+		}
+	}
+	const command = "sudo apt-get update\n          sudo apt-get install -y build-essential cmake";
+	const changed = source.replace(command, "sudo apt-get install -y build-essential cmake");
+	assert.notEqual(changed, source);
+	assert.throws(() => assertOwnedJavaScriptWasmCi(changed));
+});
 
 test("JavaScript ownership authenticates every source change without rewriting PHP evidence", async () => {
 	const record = await json(ownedJavaScriptWasmHistoryPath);

@@ -66,15 +66,21 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"$/mu);
 	assert.match(job, /^ {6}EMCC_CORES: "2"$/mu);
+	const dependencyName = "Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains";
+	const dependencies = requiredStep(job, dependencyName);
+	assert.doesNotMatch(dependencies, /^ {8}(?:if|continue-on-error):/mu);
+	assert.match(dependencies, /^ {8}timeout-minutes: 20$/mu);
+	assert.match(dependencies, /^ {10}sudo apt-get update$/mu);
+	assert.ok(job.indexOf(dependencyName) < job.indexOf("- name: Install dependencies and pinned Lean and Wasm toolchains"));
 	const prepare = requiredStep(job, "Install dependencies and pinned Lean and Wasm toolchains");
 	assert.doesNotMatch(prepare, /^ {8}if:/mu);
 	assert.match(prepare, /^ {10}bash scripts\/bootstrap-toolchains\.sh$/mu);
 	assert.match(prepare, /^ {10}npm ci --ignore-scripts$/mu);
 	const browsers = requiredStep(job, "Install owned npm browser engines");
 	assert.doesNotMatch(browsers, /^ {8}(?:if|continue-on-error):/mu);
-	assert.equal(browsers.trim(), "run: npx playwright install --with-deps chromium firefox webkit");
+	assert.equal(browsers.trim(), "timeout-minutes: 20\n        run: npx playwright install --with-deps chromium firefox webkit");
 	for(const dependency of ["build-essential", "cmake", "jq", "libgmp-dev", "libuv1-dev", "ripgrep", "zstd"])
-		assert.ok(prepare.split("\n").some(line => line.includes("apt-get install") && line.split(" ").includes(dependency)), dependency);
+		assert.ok(dependencies.split("\n").some(line => line.includes("apt-get install") && line.split(" ").includes(dependency)), dependency);
 	const buildName = "Build the production runtime with the shared ownership broker";
 	const executeName = "Execute owned JavaScript values and generated public APIs";
 	assert.ok(job.indexOf(buildName) < job.indexOf(executeName));

@@ -67,6 +67,7 @@ import { reviewedFinAcceptanceChangedPaths } from "./reviewed-fin-acceptance-sou
 import { nativeFinRecordsChangedPaths } from "./native-fin-records-source-history.mjs";
 import { phpWasmFinChangedPaths } from "./php-wasm-fin-source-history.mjs";
 import { reviewedFinPromotionChangedPaths } from "./reviewed-fin-promotion-source-history.mjs";
+import { ciDependencyTimeoutChangedPaths } from "./ci-dependency-timeout-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -598,6 +599,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeFinRecordsChangedPaths
 	, ...phpWasmFinChangedPaths
 	, ...reviewedFinPromotionChangedPaths
+	, ...ciDependencyTimeoutChangedPaths
 ])].sort());
 
 /**

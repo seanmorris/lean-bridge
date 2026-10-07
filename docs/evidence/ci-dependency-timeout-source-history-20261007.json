@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "milestone": "ci-dependency-timeout-v1",
+  "predecessorCommit": "6e010ce5d4e87b458cd44af41c2bf72a87314d8e",
+  "updates": [
+    {
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "currentSha256": "2553372c51d5896683ab2c7edbd7abdd3d30713165c9f1af76bb6396acabea0d",
+      "previousSha256": "4f6d40362a000be55d43154f6ff1e2e662cdbfa5f2eebc5e7b365ac52d8dea05",
+      "edits": [
+        {
+          "start": 4108,
+          "previous": "",
+          "current": "\tconst dependencyName = \"Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains\";\n\tconst dependencies = requiredStep(job, dependencyName);\n\tassert.doesNotMatch(dependencies, /^ {8}(?:if|continue-on-error):/mu);\n\tassert.match(dependencies, /^ {8}timeout-minutes: 20$/mu);\n\tassert.match(dependencies, /^ {10}sudo apt-get update$/mu);\n\tassert.ok(job.indexOf(dependencyName) < job.indexOf(\"- name: Install dependencies and pinned Lean and Wasm toolchains\"));\n"
+        },
+        {
+          "start": 5012,
+          "previous": "\tassert.equal(browsers.trim(), \"run: npx playwright install --with-deps chromium firefox webkit\");\n",
+          "current": "\tassert.equal(browsers.trim(), \"timeout-minutes: 20\\n        run: npx playwright install --with-deps chromium firefox webkit\");\n"
+        },
+        {
+          "start": 5248,
+          "previous": "\t\tassert.ok(prepare.split(\"\\n\").some(line => line.includes(\"apt-get install\") && line.split(\" \").includes(dependency)), dependency);\n",
+          "current": "\t\tassert.ok(dependencies.split(\"\\n\").some(line => line.includes(\"apt-get install\") && line.split(\" \").includes(dependency)), dependency);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-javascript-nix-evidence.mjs",
+      "currentSha256": "331e3ead031c5d7dcf2af4aadc53d223399ea7280224fa237b516597cca8b39d",
+      "previousSha256": "5eee1c87d9cc1f8b07d971d3771669b5522f0d1b0a876bf1d8bb0aed1839059a",
+      "edits": [
+        {
+          "start": 3091,
+          "previous": "\tassert.equal(step(job, \"Install archive acceptance tools\").trim(), \"run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep\");\n",
+          "current": "\tassert.equal(step(job, \"Install archive acceptance tools\").trim(), \"timeout-minutes: 20\\n        run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-javascript-wasm-evidence.test.mjs",
+      "currentSha256": "8c87f5a09577dfd28657fa14f2ed1e29bf7584d8396ff9abda72323460517d6d",
+      "previousSha256": "1957957ac53cc764b0360e7380cadfafc22ae2fe4dc95d8d5a141cf6474dee72",
+      "edits": [
+        {
+          "start": 216,
+          "previous": "",
+          "current": "import \"./helpers/ci-dependency-timeout-source-history-tests.mjs\";\nimport { assertOwnedJavaScriptWasmCi } from \"./helpers/owned-javascript-wasm-ci.mjs\";\n"
+        },
+        {
+          "start": 1120,
+          "previous": "",
+          "current": "test(\"owned browser dependency timeout is mandatory without weakening execution\", async () => {\n\tconst source = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tassertOwnedJavaScriptWasmCi(source);\n\tconst labels = [\"Install owned npm browser engines\"\n\t\t, \"Install apt dependencies for Install dependencies and pinned Lean and Wasm toolchains\"];\n\tfor(const label of labels)\n\t{\n\t\tconst name = `      - name: ${label}\\n`;\n\t\tconst before = name + \"        timeout-minutes: 20\\n\";\n\t\tconst alternatives = [name, name + \"        timeout-minutes: 240\\n\"\n\t\t\t, before + \"        if: false\\n\"\n\t\t\t, before + \"        continue-on-error: true\\n\"];\n\t\tfor(const after of alternatives)\n\t\t{\n\t\t\tconst changed = source.replace(before, after); assert.notEqual(changed, source);\n\t\t\tassert.throws(() => assertOwnedJavaScriptWasmCi(changed));\n\t\t}\n\t}\n\tconst command = \"sudo apt-get update\\n          sudo apt-get install -y build-essential cmake\";\n\tconst changed = source.replace(command, \"sudo apt-get install -y build-essential cmake\");\n\tassert.notEqual(changed, source);\n\tassert.throws(() => assertOwnedJavaScriptWasmCi(changed));\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-javascript-nix-evidence.test.mjs",
+      "currentSha256": "a7759ff467840d897e7ba23e2cde2536ba84d7cf0b21ceb1360127cc4fa1d0dd",
+      "previousSha256": "eeccf417d458d128a3f0e93336b0ce07633c8e20b13835d4f1edf174a9e28b10",
+      "edits": [
+        {
+          "start": 6608,
+          "previous": "",
+          "current": "\t\t, [\"      - name: Install archive acceptance tools\\n        timeout-minutes: 20\\n\", \"      - name: Install archive acceptance tools\\n\"]\n\t\t, [\"      - name: Install archive acceptance tools\\n        timeout-minutes: 20\\n\", \"      - name: Install archive acceptance tools\\n        timeout-minutes: 240\\n\"]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "be99201f4d967ede15ffbdf5d230216c577aa10c67a68a2192934738ea937eb9",
+      "previousSha256": "65828e852ee6e7d263ce4f3eb5829dcbf54ea533892d8dff02e9755c26106cec",
+      "edits": [
+        {
+          "start": 5604,
+          "previous": "",
+          "current": "import { ciDependencyTimeoutChangedPaths } from \"./ci-dependency-timeout-source-history.mjs\";\n"
+        },
+        {
+          "start": 40996,
+          "previous": "",
+          "current": "\t, ...ciDependencyTimeoutChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-promotion-source-history.mjs",
+      "currentSha256": "ca713d9a570095ebb493c51b2eef15615720d810b2e3ee078a6013b7f601d7c4",
+      "previousSha256": "3258b827b30e8f76d4e4f626233c70f6f2d2e86c5c9c7411357c17dd773aa0e8",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforeCiDependencyTimeoutSource } from \"./ci-dependency-timeout-source-history.mjs\";\n"
+        },
+        {
+          "start": 2256,
+          "previous": "",
+          "current": "\tsource = beforeCiDependencyTimeoutSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-promotion-source-history-tests.mjs",
+      "currentSha256": "26c5c22d0ed92969cf1928b25a52d6fa3cb2878f8b3fe28a06c36d53014dc624",
+      "previousSha256": "8bc91d8f481a0ada8d7adf2983c2976ce584d55d547239e077c2372caa2e2119",
+      "edits": [
+        {
+          "start": 271,
+          "previous": "",
+          "current": "import { beforeCiDependencyTimeoutSource } from \"./ci-dependency-timeout-source-history.mjs\";\n"
+        },
+        {
+          "start": 1040,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCiDependencyTimeoutSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

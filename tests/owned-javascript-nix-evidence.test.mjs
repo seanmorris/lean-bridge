@@ -106,6 +106,8 @@ test("real Nix CI rejects disabled tests, swallowed failures and missing observa
 		, ["          path: build/owned-nix-installed.log\n", ""]
 		, ["      - name: Preserve real Nix owned npm acceptance\n        if: always()", "      - name: Preserve real Nix owned npm acceptance\n        if: false"]
 		, ["      - name: Install archive acceptance tools\n", "      - name: Install archive acceptance tools\n        if: false\n"]
+		, ["      - name: Install archive acceptance tools\n        timeout-minutes: 20\n", "      - name: Install archive acceptance tools\n"]
+		, ["      - name: Install archive acceptance tools\n        timeout-minutes: 20\n", "      - name: Install archive acceptance tools\n        timeout-minutes: 240\n"]
 		, ["      - node-consumers\n", ""]
 		, ["if: needs.node-consumers.result != 'success'", "if: false"]
 	]) {

@@ -1,21 +1,21 @@
 /**
- * Preserve exact source predecessors of the Reviewed Fin promotion change (#1438).
+ * Preserve exact source predecessors of the CI dependency timeout change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeCiDependencyTimeoutSource } from "./ci-dependency-timeout-source-history.mjs";
 
-export const reviewedFinPromotionHistoryPath = "docs/evidence/reviewed-fin-promotion-source-history-20261007.json";
-export const reviewedFinPromotionChangedPaths = [
-	"docs/consume/python.md"
-	, "docs/type-surface.v1.json"
+export const ciDependencyTimeoutHistoryPath = "docs/evidence/ci-dependency-timeout-source-history-20261007.json";
+export const ciDependencyTimeoutChangedPaths = [
+	"tests/helpers/owned-javascript-wasm-ci.mjs"
+	, "tests/helpers/owned-javascript-nix-evidence.mjs"
+	, "tests/owned-javascript-wasm-evidence.test.mjs"
+	, "tests/owned-javascript-nix-evidence.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/php-wasm-fin-source-history.mjs"
-	, "tests/helpers/php-wasm-fin-source-history-tests.mjs"
-	, "tests/helpers/reviewed-fin-wasm-installed-tests.mjs"
+	, "tests/helpers/reviewed-fin-promotion-source-history.mjs"
+	, "tests/helpers/reviewed-fin-promotion-source-history-tests.mjs"
 ];
 let history;
 
@@ -25,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedFinPromotionUpdate = (source, update) => {
-	assert.ok(reviewedFinPromotionChangedPaths.includes(update.path));
+export const reverseCiDependencyTimeoutUpdate = (source, update) => {
+	assert.ok(ciDependencyTimeoutChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -46,18 +46,17 @@ export const reverseReviewedFinPromotionUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1438, stopping at an explicitly requested identity.
+ * Restore the source before #1220, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedFinPromotionSource = (path, source, expected) => {
-	source = beforeCiDependencyTimeoutSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedFinPromotionChangedPaths.includes(path)) return source;
+export const beforeCiDependencyTimeoutSource = (path, source, expected) => {
+	if(typeof source !== "string" || !ciDependencyTimeoutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedFinPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(ciDependencyTimeoutHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedFinPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseCiDependencyTimeoutUpdate(source, update) : source;
 };

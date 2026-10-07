@@ -59,7 +59,7 @@ export const assertOwnedJavaScriptNixCi = workflow => {
 	const job = workflow.match(/^ {2}node-consumers:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];
 	assert.ok(job); assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.equal(step(job, "Install Nix").trim(), "uses: cachix/install-nix-action@v31");
-	assert.equal(step(job, "Install archive acceptance tools").trim(), "run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep");
+	assert.equal(step(job, "Install archive acceptance tools").trim(), "timeout-minutes: 20\n        run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep");
 	const name = "Build and install owned npm exports through real Nix";
 	const execute = step(job, name), log = "build/owned-nix-installed.log";
 	assert.match(execute, /^ {10}LEAN_BRIDGE_OWNED_JS_NIX_TEST: "1"$/mu);
