@@ -17,7 +17,8 @@ export const nativeSubtypeTargets = Object.freeze({ c: ["c", coordinate]
 	, kotlin: ["maven", { name: "org.leanbridge:subtypes", version: "1.0.0" }]
 	, ruby: ["rubygems", coordinate]
 	, "php-native": ["php-native", { name: "example/subtypes", version: "1.0.0" }]
-	, "wit-wasi": ["wit-wasi", coordinate] });
+	, "wit-wasi": ["wit-wasi", coordinate]
+	, perl: ["cpan", { module: "LeanBridge::Subtypes", version: "1.000" }] });
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null, refinement: "reject" };

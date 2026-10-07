@@ -19,12 +19,13 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installNativeSubtypeConsumer, nativeSubtypeContracts, nativeSubtypeEnvironment, nativeSubtypeRefinements, nativeSubtypeTargets } from "./helpers/native-subtype-install.mjs";
 import { nativeSubtypeDispatchColumns, nativeSubtypeDispatchExpected, nativeSubtypeDispatchInterposer, nativeSubtypeDispatchProbe } from "./helpers/native-subtype-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterposer, perlSubtypePrelude } from "./helpers/perl-subtype-dispatch.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
 assert.ok(profiles.every(profile => Object.hasOwn(nativeSubtypeTargets, profile)), "Unknown or empty Subtype profile");
-const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c" };
+const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 const fixture = "tests/fixtures/onboarding/native-subtype";
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false } };
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -90,16 +91,8 @@ test("native builds reject Subtype outside top-level sites, without a constructo
 			, error => pattern.test(JSON.stringify({ message: error.message, details: error.details })), name);
 		await assert.rejects(() => access(outputRoot), name);
 	}
-	// Perl XS has no checked-constructor path; a mixed build with cpan fails before any package exists.
-	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-subtype-cpan-"));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
-	await cp(fixture, projectRoot, { recursive: true });
-	const mixed = { c: nativeSubtypeTargets.c[1], cpan: { module: "LeanBridge::Subtypes", version: "1.000" } };
-	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Subtypes"], exports: Object.keys(nativeSubtypeContracts), contracts: nativeSubtypeContracts, targets: mixed }));
-	await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c", "cpan"], environment: nativeSubtypeEnvironment(["c", "perl"]) })
-		, error => error.code === "native-refinements-unsupported" && /checked Subtype refinements are not implemented for cpan packages/.test(error.message) && error.details?.target === "cpan");
-	await assert.rejects(() => access(outputRoot));
+	// Perl XS runs the exported validators since VO #1432; the Perl profile below checks the archived XS, so a
+	// mixed build no longer belongs here, where the C job has no CPAN runtime.
 });
 
 /**
@@ -141,6 +134,34 @@ const observeDispatch = async (consumer, packages, leanPrefix) => {
 	return { columns: nativeSubtypeDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl, residentSize };
 };
 
+/**
+ * Count validator, adapter and source dispatch in the installed CPAN package. Perl code cannot call the
+ * typed adapter directly, so the direct-adapter column is observed in the C package probe.
+ *
+ * @param consumer - Consumer root containing the installed CPAN package.
+ * @param command - Selected Perl interpreter.
+ * @param adapters - Adapter symbol per Lean declaration, from the build's native model.
+ */
+const observePerlDispatch = async (consumer, command, adapters) => {
+	const installed = join(consumer, "perl"), library = join(installed, "installed/lib/perl5");
+	await saveLakeFile(installed, "interposer.c", perlSubtypeInterposer(adapters));
+	await runCopied("/usr/bin/cc", ["-std=gnu11", "-Wall", "-Wextra", "-Werror", "-Wno-strict-prototypes", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], installed
+		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
+	const observed = [];
+	for(const [step, code, expected] of perlSubtypeDispatchSteps)
+	{
+		const counts = join(installed, `counts-${step}.txt`);
+		const run = await runCopied(command, ["-e", perlSubtypePrelude + code], installed
+			, { ...copiedCleanEnvironment, PERL5LIB: library, LD_PRELOAD: join(installed, "libdispatch.so"), SUBTYPE_COUNTS: counts });
+		assert.equal(run.stderr, "", step);
+		const counted = (await readFile(counts, "utf8")).trim().split(" ").map(Number);
+		assert.deepEqual(counted, expected, step);
+		observed.push([step, counted]);
+	}
+	const positiveControl = "a valid public call increments validator, adapter and source; direct adapter calls are counted in the C package probe";
+	return { columns: perlSubtypeDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl };
+};
+
 test("relocated source-free native packages run author-checked constructors at every refined site", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => nativeSubtypeTargets[profile]));
@@ -169,6 +190,15 @@ test("relocated source-free native packages run author-checked constructors at e
 		for(const item of model.exports) for(const parameter of item.parameters) assert.ok(!JSON.stringify(parameter.type).includes('"refinement"'), item.name);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		if(profiles.includes("perl"))
+		{
+			// The archived XS calls one exported validator per checked parameter, after the Fin bound and before the adapter.
+			const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
+			const xs = (await runCopied("/usr/bin/tar", ["-xOzf", join(handoff, archive), "--wildcards", "*/Component.xs"], consumer, copiedCleanEnvironment)).stdout;
+			assert.equal((xs.match(/was rejected by Subtypes\.checked\w+"/g) ?? []).length, 8);
+			const mix = xs.slice(xs.indexOf("\nmix(...)"), xs.indexOf("XSRETURN(1);", xs.indexOf("\nmix(...)")));
+			assert.ok(mix.indexOf("is not below its Fin 10 bound") < mix.indexOf("_refinement_0(a0)") && mix.indexOf("_refinement_0(a0)") < mix.indexOf("lean_object *checked = "));
+		}
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		const dependencies = attempt === 0 && profiles.includes("rust")
 			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
@@ -180,11 +210,11 @@ test("relocated source-free native packages run author-checked constructors at e
 			t.diagnostic(`installing and checking ${profile}`);
 			const target = nativeSubtypeTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
-			const observation = await installNativeSubtypeConsumer({ profile, consumer, handoff, packages, dependencies, environment });
+			const { command, ...observation } = await installNativeSubtypeConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			// The interpreter path is machine-specific; the report keeps portable facts only.
-			delete observation.command;
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX)
-				: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
+				: profile === "perl" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
+					: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
 			reports.push({ profile, path: "ordinary-source"
 				, ...observation
 				, dispatch

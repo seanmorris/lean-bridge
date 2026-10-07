@@ -16,7 +16,6 @@ import { generateOwnedPerlPackage } from "../backends/perl/owned-package.mjs";
 import { renderOwnedPerlCallbackBuild } from "../backends/perl/owned-callback-build.mjs";
 import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
-import { nativeRefinementHasConstructor } from "../backends/native/fin-refinements.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -186,9 +185,6 @@ export const stageCpanPackage = async ({ outputRoot
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
 			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true });
-		// Perl XS checks Fin bounds itself but runs no checked constructor; refuse verified staging that carries one.
-		const unchecked = model.exports.find(item => [...(item.refinements?.parameters ?? []), item.refinements?.result ?? null].some(nativeRefinementHasConstructor));
-		if(unchecked) throw Object.assign(new TypeError(`${unchecked.name}: checked Subtype refinements are not implemented for cpan packages`), { code: "native-refinements-unsupported", details: { declaration: unchecked.name, target: "cpan" } });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");

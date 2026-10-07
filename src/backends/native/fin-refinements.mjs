@@ -45,14 +45,6 @@ export const nativeFinBoundPaths = (refinement, path) => {
 };
 
 /**
- * Whether a refinement tree names an author-checked constructor anywhere.
- *
- * @param refinement - Compiler-owned refinement tree or null.
- */
-export const nativeRefinementHasConstructor = refinement => refinement !== null && refinement !== undefined
-	&& (refinement.kind === "subtype" || (refinement.arguments ?? []).some(nativeRefinementHasConstructor));
-
-/**
  * Summarize each checked bound for generated documentation.
  *
  * @param declaration - Binding IR declaration.

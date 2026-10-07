@@ -6,8 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
-import { nativeRefinementHasConstructor } from "../src/backends/native/fin-refinements.mjs";
-import { createNativeModel, nativeTypeKey } from "../src/build/native-model.mjs";
+import { createNativeModel, generateNativeLeanAdapters, nativeTypeKey } from "../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 
 const huge = "1180591620717411303424";
@@ -86,16 +85,27 @@ test("generated XS walks every container element against its exact bound before 
 	assert.match(pod, /=head1 BOUNDED INTEGERS[^]*no present element|C<Fin 0> element is rejected while an empty array or an undefined option is accepted/);
 });
 
-test("the cpan gate now refuses only checked constructors, anywhere in a refinement tree", () => {
-	assert.equal(nativeRefinementHasConstructor(null), false);
-	assert.equal(nativeRefinementHasConstructor(fin("10")), false);
-	assert.equal(nativeRefinementHasConstructor(inside("list", inside("option", fin("0")))), false);
-	assert.equal(nativeRefinementHasConstructor({ kind: "subtype", constructor: "Sample.checkedText" }), true);
-	assert.equal(nativeRefinementHasConstructor(inside("array", { kind: "subtype", constructor: "Sample.checkedText" })), true);
-	// The walker refuses a refinement kind the Perl transport has no accessor for, rather than erasing it.
+test("a checked constructor beside container bounds runs after every bound, through the exported validator", () => {
 	const base = createNativeModel({ component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }, moduleName: "LeanBridge::Sample", ...nativeMetadataFixture() });
-	const odd = { ...base.exports[0], name: "Sample.odd", publicName: "odd", symbol: "lb_odd", parameters: [{ name: "value", type: nat }], result: nat };
-	odd.refinements = { parameters: [{ kind: "subtype", constructor: "Sample.checkedNat" }], result: null };
-	const model = { ...base, types: [keyed(nat)], exports: [odd] };
-	assert.throws(() => generatePerlBindingPackage(model, receipt), /value: checked subtype refinements are not implemented for cpan packages/);
+	const mix = { ...base.exports[0], name: "Sample.mix", publicName: "mix", symbol: "lb_mix", parameters: [{ name: "text", type: text }, { name: "values", type: digits }], result: nat };
+	mix.refinements = { parameters: [{ kind: "subtype", constructor: "Sample.checkedText" }, inside("array", fin("10"))], result: null };
+	const files = generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [mix] }, receipt), xs = files["Component.xs"];
+	const walker = xs.indexOf("lean_array_size(a1)"), validator = xs.indexOf("lb_mix_refinement_0(a0)");
+	assert.ok(walker > 0 && validator > walker && validator < xs.indexOf("lean_object *checked = lb_mix(a0, a1);"));
+	assert.match(xs, /lean_inc\(a0\); if \(!lb_mix_refinement_0\(a0\)\) croak\("%s", "text was rejected by Sample.checkedText"\);/);
+	assert.match(xs, /croak\("Lean rejected an argument outside its checked refinement"\)/);
+	assert.match(files["lib/LeanBridge/Sample.pm"], /Checked Lean refinements: text checked by Sample\.checkedText; values\[\*\] < 10\./);
+	// An unboxed base passes by value: no reference is retained for the validator, and the typed header declares the base.
+	const word = { kind: "primitive", name: "uint32", lean: "UInt32", abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: false } };
+	const tiny = { ...mix, name: "Sample.tiny", publicName: "tiny", symbol: "lb_tiny", parameters: [{ name: "value", type: word }], result: word };
+	tiny.refinements = { parameters: [{ kind: "subtype", constructor: "Sample.checkedDigit32" }], result: null };
+	const unboxed = generatePerlBindingPackage({ ...base, types: [nat, text, digits, word].map(keyed), exports: [tiny] }, receipt)["Component.xs"];
+	assert.match(unboxed, /\n {4} if \(!lb_tiny_refinement_0\(a0\)\) croak\("%s", "value was rejected by Sample.checkedDigit32"\);/);
+	assert.doesNotMatch(unboxed, /lean_inc\(a0\)/);
+	const adapters = generateNativeLeanAdapters({ component: { id: "sample@1.0.0" }, pointerBits: 64, types: [], exports: [{ ...tiny, module: "Sample", parameters: [{ name: "p0", type: word }] }] });
+	assert.ok(adapters.header.includes("uint8_t lb_tiny_refinement_0(uint32_t value);"));
+	assert.match(adapters.leanSource, /def f_lb_tiny_refinement_0 \(value : _root_\.UInt32\) : _root_\.UInt8 :=\n {2}match _root_\.Sample\.checkedDigit32 value with/);
+	// A constructor inside a container has no accessor in the XS walker; the native model rejects it first, and the generator never erases it.
+	const odd = { ...mix, name: "Sample.odd", publicName: "odd", symbol: "lb_odd", refinements: { parameters: [null, inside("array", { kind: "subtype", constructor: "Sample.checkedNat" })], result: null } };
+	assert.throws(() => generatePerlBindingPackage({ ...base, types: [nat, text, digits].map(keyed), exports: [odd] }, receipt), /values: checked subtype refinements are not implemented for cpan packages/);
 });
