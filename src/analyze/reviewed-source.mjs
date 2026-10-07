@@ -11,6 +11,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
+import { assertReviewedFin, assertReviewedFinAlias } from "./reviewed-refinements.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -43,10 +44,18 @@ const checkReview = document => {
 		, category: "boundary", payload: null
 	}] : []), "errors");
 	for(const producer of document.producers) reject(Object.keys(producer.extensions).length, `producers.${producer.id}.extensions`);
-	const source = (item, callbackName) => {
+	const source = (item, callbackName, declaration = false) => {
 		reject(callbackName ? item.id !== `bridge:${callbackName}` || item.source.declaration !== callbackName || item.name !== callbackName
 			: !leanName(item.source.declaration) || item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
-		reject(Object.keys(item.source.extensions).length, `${item.id}.source.extensions`);
+		const refinementKey = declaration ? "lean-lang.org/refinements" : item.kind === "alias" ? "lean-lang.org/nominal-refinements" : null;
+		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey), `${item.id}.source.extensions`);
+		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
+		{
+			try
+			{ (declaration ? assertReviewedFin : assertReviewedFinAlias)(item, item.source.extensions[refinementKey]); }
+			catch
+			{ unsupported("Reviewed Fin decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
+		}
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
 	const type = (value, path, copied = true) => {
@@ -111,7 +120,7 @@ const checkReview = document => {
 	}
 	for(const declaration of document.declarations)
 	{
-		source(declaration);
+		source(declaration, undefined, true);
 		const hasCallback = declaration.parameters.some(parameter => isCallback(parameter.type));
 		reject(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null
 			|| declaration.typeParameters.length || !same(declaration.effects.toSorted(), hasCallback ? ["fails", "host-call"] : []) || declaration.capabilities.length

@@ -2239,6 +2239,7 @@ jobs:
           test -s build/aliases/native.json
           npm run test:native-fin
           test -s build/native-fin/native.json
+          test -s build/native-fin/native-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/c-cpp.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs
@@ -2414,6 +2415,7 @@ jobs:
             build/collections/native.json
             build/aliases/native.json
             build/native-fin/native.json
+            build/native-fin/native-reviewed.json
             build/native-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
             build/native-subtype/c-cpp.json

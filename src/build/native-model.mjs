@@ -203,10 +203,12 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});
 	if(!checked.length) fail("empty export set");
-	// Reviewed Binding IR has no audited Fin reconciliation yet; never erase the bound silently.
-	const refined = checked.find(item => item.refinements);
+	// Subtype requires a compiler-selected checked constructor, which reviewed
+	// selection does not admit yet. Fin decisions reconcile below against Lean.
+	const refined = checked.find(item => item.refinements
+		&& [...item.refinements.parameters, item.refinements.result].some(value => value?.kind === "subtype"));
 	if(refined && sourceIdentity.reviewedBindingIr !== undefined)
-		throw Object.assign(new TypeError(`${refined.name}: checked Fin refinements are not yet supported with reviewed Binding IR`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
+		throw Object.assign(new TypeError(`${refined.name}: checked Subtype refinements are not yet supported with reviewed Binding IR`), { code: "native-refinements-unsupported", details: { declaration: refined.name } });
 	const exports = moduleName === undefined ? checked : projectPerlNames(moduleName, checked);
 	const semantic = createElaboratedSemanticModel({
 		metadata, request: sourceIdentity.request, component
