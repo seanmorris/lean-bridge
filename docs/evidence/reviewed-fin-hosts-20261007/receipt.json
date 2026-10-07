@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "glibcMinimumVersion": "2.36",
+  "sourcePath": "reviewed-ir",
+  "scope": "Reviewed array, list, option and nominal-alias Fin signatures. These reports do not cover scalar-only signatures, refined record or variant fields, callbacks, checked Subtype constructors, or finite function specializations.",
+  "reports": [
+    {
+      "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-python-rust.json",
+      "sha256": "86a14fab5433ae94f7b4b99261a61e8f004b2b81300096f80c95b8b1447b4f93",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "profiles": [
+        "python",
+        "rust"
+      ],
+      "observedDispatch": [
+        "python",
+        "rust"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python,rust taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs"
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-dotnet-java-kotlin.json",
+      "sha256": "239369e4bc0542a58b89c4aca181aa9b81915a3a53e917875e3095d439681f10",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin"
+      ],
+      "observedDispatch": [],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet,java,kotlin taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs"
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-hosts-20261007/reviewed-php-native-ruby-wit-wasi.json",
+      "sha256": "e17fb2f98f385a53d76c03d1881a9d5cfda355e97a967096519488d175257069",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "profiles": [
+        "php-native",
+        "ruby",
+        "wit-wasi"
+      ],
+      "observedDispatch": [],
+      "phpRuntime": "PHP 8.2.33",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native,ruby,wit-wasi taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed native packages check' tests/native-fin-containers.test.mjs"
+    }
+  ]
+}

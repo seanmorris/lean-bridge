@@ -1,0 +1,597 @@
+{
+  "archives": {
+    "archives/FinContainers.Api.1.0.0.nupkg": "953e81e1a524b8cddd899291098c1845f4f3d0b638579a1581ee5afb42fe1fee",
+    "archives/fincontainers-1.0.0.jar": "21547ba03d8d916f7fe30b878516beaaad70c2dc25d5d72a2f6364e853593df1",
+    "archives/fincontainers-1.0.0.pom": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "9c4b13fc73863e0b2ca861b696d196c28110cb8bf237ce40af2a6fdf2c38bd0d",
+      "checks": 2026,
+      "compilerFreePath": true,
+      "consumerSha256": "9a8d0ccd0113f647fa80bd126a3c14ff15cf1600a29ffba395fda342641ec07a",
+      "dispatch": {
+        "observed": false,
+        "reason": "counted in the C package, whose adapter this host's bundled library shares"
+      },
+      "modelSha256": "b42817b2b6a9a25ec6ede97a969550573bbd756cfc00fd0d816339588c95fc1f",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51392702,
+              "path": "archives/FinContainers.Api.1.0.0.nupkg",
+              "sha256": "953e81e1a524b8cddd899291098c1845f4f3d0b638579a1581ee5afb42fe1fee"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "FinContainers.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "bf207df1390cf91ddee03550006fc88938fdbaea7c2d1744657f05777ec04895",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2169866ceea991f244283ebdd29308b44f01132bf0a826ec4c8257fab1859143"
+    },
+    {
+      "bindingIrSha256": "9c4b13fc73863e0b2ca861b696d196c28110cb8bf237ce40af2a6fdf2c38bd0d",
+      "checks": 2026,
+      "compilerFreePath": true,
+      "consumerSha256": "6c567c87f866dc91c714bcae35fbbbfeaed65f34530e62c456f872b7d752eefa",
+      "dispatch": {
+        "observed": false,
+        "reason": "counted in the C package, whose adapter this host's bundled library shares"
+      },
+      "modelSha256": "b42817b2b6a9a25ec6ede97a969550573bbd756cfc00fd0d816339588c95fc1f",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51441031,
+              "path": "archives/fincontainers-1.0.0.jar",
+              "sha256": "21547ba03d8d916f7fe30b878516beaaad70c2dc25d5d72a2f6364e853593df1"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/fincontainers-1.0.0.pom",
+              "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "bf207df1390cf91ddee03550006fc88938fdbaea7c2d1744657f05777ec04895",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2169866ceea991f244283ebdd29308b44f01132bf0a826ec4c8257fab1859143"
+    },
+    {
+      "bindingIrSha256": "9c4b13fc73863e0b2ca861b696d196c28110cb8bf237ce40af2a6fdf2c38bd0d",
+      "checks": 2025,
+      "compilerFreePath": true,
+      "consumerSha256": "c32f3cc353d4225e7ccf2c39c07a77c06ab1b59d939aded1b4864e16bfa1a7a7",
+      "dispatch": {
+        "observed": false,
+        "reason": "counted in the C package, whose adapter this host's bundled library shares"
+      },
+      "modelSha256": "b42817b2b6a9a25ec6ede97a969550573bbd756cfc00fd0d816339588c95fc1f",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51441031,
+              "path": "archives/fincontainers-1.0.0.jar",
+              "sha256": "21547ba03d8d916f7fe30b878516beaaad70c2dc25d5d72a2f6364e853593df1"
+            },
+            {
+              "bytes": 623,
+              "path": "archives/fincontainers-1.0.0.pom",
+              "sha256": "92fac75f9c98c589f03820b64e50474ee00fdc076fdf49df2310712dfffd6dbf"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "bf207df1390cf91ddee03550006fc88938fdbaea7c2d1744657f05777ec04895",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "2169866ceea991f244283ebdd29308b44f01132bf0a826ec4c8257fab1859143"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

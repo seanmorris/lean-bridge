@@ -1,0 +1,602 @@
+{
+  "archives": {
+    "archives/fincontainers-1.0.0-py3-none-manylinux_2_36_x86_64.whl": "c966052eb56f95a7f0f3b3f27022e915bcec201dde016418385a4fe57760ef20",
+    "archives/fincontainers-1.0.0.crate": "293c24bb3652b77607163b81c8a82868175d3c25ff3e37d3bcb518e36439b4e0"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "bc2571d053568e81140a816d056b0dc8573a56c259d9987f08383d478f477bfb",
+      "checks": 2029,
+      "compilerFreePath": true,
+      "consumerSha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+      "dispatch": {
+        "columns": [
+          "l_FinContainers_mirrorAll",
+          "l_FinContainers_orDefault",
+          "lb_aba29fbaeffa9ce68e9e3ae2",
+          "lb_d6e2d2cd1dc6db4690d6dfb7"
+        ],
+        "compilerFreePath": true,
+        "installedFilesSha256": "d1d8f69e942fd64b7b9fb205a178b44063036e29727417bc6d631ca1ba54edb8",
+        "installedFilesUnchanged": true,
+        "interposer": "LD_PRELOAD",
+        "interposerSha256": "5cb718a2436c9517d8ba5f24fa29014fee5daf1f264e318cc374ef2a3373d61c",
+        "missingInterposerRejected": true,
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-mirror",
+            0,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-invalid-mirror",
+            1,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-valid-absent",
+            0,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-present",
+            1,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror",
+            1,
+            [
+              1,
+              1,
+              2,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-present",
+            1,
+            [
+              1,
+              1,
+              2,
+              2
+            ]
+          ],
+          [
+            "raw-valid-mirror",
+            1,
+            [
+              2,
+              1,
+              3,
+              2
+            ]
+          ],
+          [
+            "raw-valid-absent",
+            1,
+            [
+              2,
+              2,
+              3,
+              3
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts inside the installed host process",
+        "probeSha256": "fd82ffb532c8c901d46ff2636f78d0ea39aac83398ccf88abf53166797accf74"
+      },
+      "modelSha256": "b0de67d5dac55219178d89e4e014db8720f8269fc3ed346bb9e8e0179c049a53",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51381588,
+              "path": "archives/fincontainers-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+              "sha256": "c966052eb56f95a7f0f3b3f27022e915bcec201dde016418385a4fe57760ef20"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "python",
+      "receiptSha256": "ce82cc5e68ea86b55bda4db3ba390cc82728f6466d32f8607a22d6942cac92f3",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "04edf54fef37c703bf7015caa91d78ff7abff16ed9dc6d781e3c6160c2927b81"
+    },
+    {
+      "bindingIrSha256": "bc2571d053568e81140a816d056b0dc8573a56c259d9987f08383d478f477bfb",
+      "checks": 2027,
+      "compilerFreePath": true,
+      "consumerSha256": "da7f42bc0719d4f6ca1134bb6be473d5b4e82beece57f91518907d729236278a",
+      "dispatch": {
+        "columns": [
+          "l_FinContainers_mirrorAll",
+          "l_FinContainers_orDefault",
+          "lb_aba29fbaeffa9ce68e9e3ae2",
+          "lb_d6e2d2cd1dc6db4690d6dfb7"
+        ],
+        "compilerFreePath": true,
+        "installedFilesSha256": "c4acb76cfbdd068db4eebbae918f0742bb892e702fe68e8ebf38e91207badb74",
+        "installedFilesUnchanged": true,
+        "interposer": "LD_PRELOAD",
+        "interposerSha256": "5cb718a2436c9517d8ba5f24fa29014fee5daf1f264e318cc374ef2a3373d61c",
+        "missingInterposerRejected": true,
+        "observed": [
+          [
+            "start",
+            0,
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-mirror",
+            0,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-invalid-mirror",
+            1,
+            [
+              1,
+              0,
+              1,
+              0
+            ]
+          ],
+          [
+            "public-valid-absent",
+            0,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "public-invalid-present",
+            1,
+            [
+              1,
+              1,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror",
+            1,
+            [
+              1,
+              1,
+              2,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-present",
+            1,
+            [
+              1,
+              1,
+              2,
+              2
+            ]
+          ],
+          [
+            "raw-valid-mirror",
+            1,
+            [
+              2,
+              1,
+              3,
+              2
+            ]
+          ],
+          [
+            "raw-valid-absent",
+            1,
+            [
+              2,
+              2,
+              3,
+              3
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts inside the installed host process",
+        "probeSha256": "dde4d20e7cd49dc47314b56623d27b6fceb2e9ae8ab649a71659799dd8c853b4"
+      },
+      "modelSha256": "b0de67d5dac55219178d89e4e014db8720f8269fc3ed346bb9e8e0179c049a53",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51366648,
+              "path": "archives/fincontainers-1.0.0.crate",
+              "sha256": "293c24bb3652b77607163b81c8a82868175d3c25ff3e37d3bcb518e36439b4e0"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "rust",
+      "receiptSha256": "ce82cc5e68ea86b55bda4db3ba390cc82728f6466d32f8607a22d6942cac92f3",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "reviewedSourceSha256": "f118669910537d41255cd615c7fcf7ebce8b031ac5f4abce9f639b7d8a20c1be",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "04edf54fef37c703bf7015caa91d78ff7abff16ed9dc6d781e3c6160c2927b81"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
