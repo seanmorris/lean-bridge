@@ -16,6 +16,7 @@ import { executeCorpus } from "../fixtures/reviewed-fin-wasm/javascript.mjs";
 import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
 
 const input = document => {
 	const source = canonicalJson(document);
@@ -185,4 +186,18 @@ test("Fin TypeScript consumers state exact public signatures and reject erased n
 		assert.equal(source.includes("type Items ="), selection === "structural");
 	}
 	assert.throws(() => reviewedFinWasmTypeScript("missing"), /Unknown Fin selection/u);
+});
+
+test("Wasm Fin mismatch probes are admissible reviews but differ at exact compiled constraint sites", () => {
+	const expected = reviewedFinWasmIr("structural"), cases = reviewedFinWasmMismatches();
+	assert.equal(cases.length, 8);
+	assert.equal(new Set(cases.map(item => item.label)).size, 8);
+	const erased = ir => ir.declarations.map(item => ({ name: item.name, parameters: item.parameters, result: item.result }));
+	for(const { label, ir } of cases)
+	{
+		validateReviewedSource(input(ir));
+		assert.deepEqual(erased(ir), erased(expected), label);
+		assert.match(reviewedContractDifference(ir, expected), /source\.extensions\.lean-lang\.org\/refinements/u, label);
+	}
+	assert.deepEqual(reviewedFinWasmIr("structural"), expected);
 });

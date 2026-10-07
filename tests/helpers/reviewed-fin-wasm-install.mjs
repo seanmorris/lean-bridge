@@ -18,6 +18,7 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixture = join(repository, "tests/fixtures/onboarding/reviewed-fin-wasm");
@@ -153,6 +154,31 @@ const installedNode = async (root, selection) => {
 			, compilerSha256: sha256(await readFile(join(repository, "node_modules/typescript/lib/_tsc.js"))) } };
 };
 
+const checkMismatches = async (t, producers, runtimeRoot) => {
+	const observations = [];
+	for(const [index, { label, ir }] of reviewedFinWasmMismatches().entries())
+	{
+		t.diagnostic(`fresh Lean reconciliation: ${label}`);
+		const projectRoot = join(producers, `mismatch-${index}`), outputRoot = join(producers, `rejected-${index}`);
+		await cp(fixture, projectRoot, { recursive: true });
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration("structural", true)));
+		const source = canonicalJson(ir);
+		await saveLakeFile(projectRoot, "api.binding-ir.json", source);
+		await assert.rejects(build(projectRoot, outputRoot, runtimeRoot), error => {
+			assert.equal(error.code, "reviewed-ir-source-mismatch", label);
+			assert.equal(error.message, "Reviewed contract does not match the freshly compiled Lean API", label);
+			// Local transport preserves the field; the locked process envelope intentionally omits it.
+			if(error.details.field) assert.match(error.details.field, /source\.extensions\.lean-lang\.org\/refinements/u);
+			else assert.equal(error.details.engine.code, "reviewed-ir-source-mismatch");
+			return true;
+		});
+		await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
+		observations.push({ label, reviewedSourceSha256: sha256(source)
+			, code: "reviewed-ir-source-mismatch", outputAbsent: true });
+	}
+	return observations;
+};
+
 /**
  * Compile in two roots, erase producers, verify the handoff and execute installed JS/TS.
  *
@@ -188,6 +214,7 @@ export const checkReviewedFinWasm = async (t, selection, reviewed) => {
 	assert.deepEqual(releases[0].report, releases[1].report);
 	for(const key of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][key]), await readFile(releases[1][key]));
+	const mismatches = reviewed && selection === "structural" ? await checkMismatches(t, producers, runtimeRoot) : [];
 	const receipt = releases[0].report, handoff = join(directory, "handoff");
 	await mkdir(handoff);
 	for(const name of [receipt.package.archive, receipt.runtime.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
@@ -205,6 +232,7 @@ export const checkReviewedFinWasm = async (t, selection, reviewed) => {
 		, ...facts[0], independentBuilds: 2
 		, reproducible: true, sourceRemovedBeforeInstallation: true
 		, compilerFreePath: true, offlineInstall: true, receipt
+		, mismatches
 		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
 		, consumerSha256: sha256(await readFile(join(consumer, "javascript.mjs"))), ...node };
 };
