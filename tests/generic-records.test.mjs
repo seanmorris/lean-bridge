@@ -21,6 +21,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs";
+import { genericRecordDotnetDiagnostics } from "./helpers/generic-record-managed-types.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
@@ -269,6 +270,18 @@ test("Rust generic-record rejection reports require exact caller type errors", (
 });
 
 const consumerExtensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", perl: "pl", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
+
+test("C# generic-record rejection reports require exact caller type errors", () => {
+	const result = { code: 1, stdout: "invalid-alias.cs(1,70): error CS1503: Argument type mismatch\n", stderr: "" };
+	assert.deepEqual(genericRecordDotnetDiagnostics(result, "/consumer", "invalid-alias.cs", "CS1503"), [{ code: "CS1503", file: "invalid-alias.cs", line: 1, column: 70 }]);
+	for(const changed of [
+		{ ...result, code: 0 }, { ...result, stdout: "" }
+		, { ...result, stdout: result.stdout.replace("CS1503", "CS0006") }
+		, { ...result, stdout: result.stdout.replace("invalid-alias.cs", "dependency.cs") }
+		, { ...result, stdout: result.stdout.replace("(1,70)", "(0,70)") }
+		, { ...result, stderr: "error: unrelated compiler failure" }])
+		assert.throws(() => genericRecordDotnetDiagnostics(changed, "/consumer", "invalid-alias.cs", "CS1503"));
+});
 
 test("every native profile has a generic record consumer and a target", async () => {
 	assert.deepEqual(Object.keys(genericRecordTargets).sort(), Object.keys(consumerExtensions).sort());

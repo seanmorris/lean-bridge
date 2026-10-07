@@ -16,7 +16,7 @@ class Consumer {
         check(bumped.equals(natBox(5, 2)) && box.value().equals(n(4)) && bumped != box);
         check(Api.again(new NatBoxAgain(n(4), n(1))).equals(new NatBoxAgain(n(8), n(1))));
         // Two aliases of one application are two distinct classes with the same layout.
-        check(NatBox.class != NatBoxAgain.class && !natBox(1, 2).equals(new NatBoxAgain(n(1), n(2))));
+        check(!NatBox.class.equals(NatBoxAgain.class) && !natBox(1, 2).equals(new NatBoxAgain(n(1), n(2))));
         String greeting = "héllo 🙂";
         check(Api.shout(new TextBox(greeting, n(3))).equals(new TextBox(greeting + "!", n(3))));
         check(Api.swapNamed(new WordPair("a", n(1))).equals(new WordPair("a!", n(2))));

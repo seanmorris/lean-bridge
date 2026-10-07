@@ -13,6 +13,7 @@ import { verifyComponentPackageReceipt } from "../../src/release/component-packa
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { installCopiedConsumer } from "./copied-fixture-install.mjs";
 import { checkGenericRecordRustTypes } from "./generic-record-rust.mjs";
+import { checkGenericRecordManagedTypes } from "./generic-record-managed-types.mjs";
 export { nativeFixtureEnvironment as genericRecordEnvironment } from "./copied-fixture-install.mjs";
 
 const fixture = "tests/fixtures/onboarding/generic-records";
@@ -187,5 +188,8 @@ export const installGenericRecordConsumer = async options => {
 			, /first-boxes: func\([^)]*\) -> option<list<nat-box>>/]
 		, success: "generic-records-ok"
 	} });
-	return options.profile === "rust" ? { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) } : observation;
+	if(options.profile === "rust") return { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) };
+	if(["dotnet", "java", "kotlin"].includes(options.profile))
+		return { ...observation, managedTypes: await checkGenericRecordManagedTypes(options, observation) };
+	return observation;
 };
