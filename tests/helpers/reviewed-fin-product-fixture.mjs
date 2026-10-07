@@ -1,6 +1,7 @@
 /**
  * Independent reviewed API for the FinProducts Lean fixture (VO #1441).
- * Product and Except bounds sit on declarations; the Digit alias carries its own bound.
+ * Product and Except bounds sit on declarations; the DigitPair alias carries both of its
+ * bounds, because an alias of a bare Fin folds into its uses.
  *
  * @file
  */
@@ -8,9 +9,8 @@ import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 
 /** Describe checked product and Except decisions before Lean extraction. */
 export const finProductReviewedIr = () => {
-	// corpusReviewedIr supplies the common copied-value envelope. These placeholders
-	// become the explicitly authored alias definitions below, never runtime records.
-	const digit = { record: "FinProducts.Digit", fields: {} };
+	// corpusReviewedIr supplies the common copied-value envelope. This placeholder
+	// becomes the explicitly authored alias definition below, never a runtime record.
 	const digitPair = { record: "FinProducts.DigitPair", fields: {} };
 	const fin = bound => ({ kind: "fin", bound });
 	const pair = (first, second) => ({ kind: "tuple", arguments: [first, second] });
@@ -31,10 +31,7 @@ export const finProductReviewedIr = () => {
 		, ["aliased", [digitPair], digitPair, [null], null]
 		, ["produce", ["nat"], { result: ["string", "nat"] }, [null], branches(null, fin("10"))]
 		, ["pairUp", ["nat"], nats, [null], pair(fin("10"), null)]];
-	const ir = corpusReviewedIr({ id: "finproducts" }, [...signatures.map(([name, parameters, result]) => ({ name: `FinProducts.${name}`, parameters, result }))
-		, { name: "FinProducts.digitWitness", parameters: [digit], result: "nat" }]);
-	// The witness only makes corpusReviewedIr emit the Digit placeholder; it is not exported.
-	ir.declarations = ir.declarations.filter(declaration => declaration.id !== "lean:FinProducts.digitWitness");
+	const ir = corpusReviewedIr({ id: "finproducts" }, signatures.map(([name, parameters, result]) => ({ name: `FinProducts.${name}`, parameters, result })));
 	for(const declaration of ir.declarations)
 	{
 		// Keep the public argument labels shared with the ordinary-source consumers.
@@ -43,13 +40,9 @@ export const finProductReviewedIr = () => {
 		if(result !== null || parameters.some(value => value !== null))
 			declaration.source.extensions["lean-lang.org/refinements"] = { parameters, result };
 	}
-	const definition = id => ir.types.find(type => type.id === id);
-	const named = id => ({ kind: "named", id });
-	const pairAlias = definition("lean:FinProducts.DigitPair"), digitAlias = definition("lean:FinProducts.Digit");
-	digitAlias.kind = "alias";
-	digitAlias.target = { kind: "primitive", name: "nat" };
-	digitAlias.source.extensions["lean-lang.org/nominal-refinements"] = { kind: "alias", target: fin("10") };
-	pairAlias.kind = "alias";
-	pairAlias.target = { kind: "apply", constructor: "tuple", arguments: [named(digitAlias.id), named(digitAlias.id)] };
+	const alias = ir.types.find(type => type.id === "lean:FinProducts.DigitPair");
+	alias.kind = "alias";
+	alias.target = { kind: "apply", constructor: "tuple", arguments: [{ kind: "primitive", name: "nat" }, { kind: "primitive", name: "nat" }] };
+	alias.source.extensions["lean-lang.org/nominal-refinements"] = { kind: "alias", target: pair(fin("10"), fin("10")) };
 	return ir;
 };

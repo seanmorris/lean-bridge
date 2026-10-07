@@ -88,7 +88,8 @@ test("the independent product review passes reviewed admission and states every 
 	const review = finProductReviewedIr(), source = canonicalJson(review);
 	validateBindingIr(review);
 	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(review) });
-	// Declarations carry their product and Except trees; the alias pair's bounds live on the Digit alias.
+	// Declarations carry their product and Except trees; the alias pair's bounds live on DigitPair itself,
+	// because an alias of a bare Fin folds into its uses and is never a separate definition.
 	for(const declaration of review.declarations)
 	{
 		const expected = finProductRefinements[declaration.id.slice("lean:".length)];
@@ -96,8 +97,8 @@ test("the independent product review passes reviewed admission and states every 
 		if(declaration.id === "lean:FinProducts.aliased") assert.equal(stated, null);
 		else assert.deepEqual(stated, expected, declaration.id);
 	}
-	assert.deepEqual(review.types.find(type => type.id === "lean:FinProducts.Digit").source.extensions["lean-lang.org/nominal-refinements"], { kind: "alias", target: leaf("10") });
-	assert.deepEqual(review.types.find(type => type.id === "lean:FinProducts.DigitPair").source.extensions, {});
+	assert.deepEqual(review.types.map(type => type.id), ["lean:FinProducts.DigitPair"]);
+	assert.deepEqual(review.types[0].source.extensions["lean-lang.org/nominal-refinements"], { kind: "alias", target: { kind: "tuple", arguments: [leaf("10"), leaf("10")] } });
 });
 
 test("generated host documentation lists product and Except bound paths", () => {
