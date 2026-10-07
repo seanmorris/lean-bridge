@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeSubtypeSource, nativeSubtypeChangedPaths } from "./native-subtype-source-history.mjs";
+import { refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { beforeNativeFinContainersSource, nativeFinContainersChangedPaths
 	, nativeFinContainersHistoryPath, reverseNativeFinContainersUpdate } from "./native-fin-containers-source-history.mjs";
 
@@ -85,7 +86,7 @@ test("Native Fin container evidence adds one receipt per host group and extends 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeFinContainersSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeNativeSubtypeSource(file.path, source)));

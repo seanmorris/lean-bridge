@@ -23,6 +23,7 @@ import { hostFinEvidenceChangedPaths } from "./host-fin-evidence-source-history.
 import { nativeSpecializationsChangedPaths } from "./native-specializations-source-history.mjs";
 import { nativeFinContainersChangedPaths } from "./native-fin-containers-source-history.mjs";
 import { nativeSubtypeChangedPaths } from "./native-subtype-source-history.mjs";
+import { refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { beforeCombinedLineageSource, combinedLineageChangedPaths } from "./combined-lineage-source-history.mjs";
 import { testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
 import { beforeDiagnosticFollowupSource, diagnosticFollowupChangedPaths
@@ -62,7 +63,7 @@ test("Diagnostic follow-up changes no inventory claim, receipt or archive", asyn
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			assert.equal(file.sha256, sha256(beforeDiagnosticFollowupSource(file.path, await readFile(file.path, "utf8"))));
 			assert.equal(now.files[index].sha256, sha256(beforeCombinedLineageSource(file.path, await readFile(file.path, "utf8"))));
 			++refreshed;

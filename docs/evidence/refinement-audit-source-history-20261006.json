@@ -1,0 +1,1009 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-audit-v1",
+  "predecessorCommit": "da7de114386ada61d165b1be5b42918dc9ab2832",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef",
+      "previousSha256": "58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787",
+      "edits": [
+        {
+          "start": 31635,
+          "previous": "",
+          "current": "#### Refinement support by target\n\nEvery combination below either passes installed checks or fails the build with a classified diagnostic; no target erases a bound or a constructor. \"Native\" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`.\n\n| Site | npm (Node) | Native | `cpan` | `php-wasm` | Reviewed Binding IR |\n| --- | --- | --- | --- | --- | --- |\n| `Fin n` parameter or result | Installed | Installed | Installed (scalar only) | Rejected | Rejected |\n| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |\n| `Fin n` inside pairs and `Except` | Installed | Rejected at the source | Rejected | Rejected | Rejected |\n| `Fin n` in record or variant fields | Installed (nominal constructors) | Rejected at the source | Rejected | Rejected | Rejected |\n| `Fin n` in callbacks and closures | Installed | Rejected at the source | Rejected | Rejected | Rejected |\n| `Subtype` parameter or result over a primitive | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |\n| `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |\n\nNative rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Browser profiles are not audited for refinements. Python wheels run the same installed checks as the other native hosts but are recorded only from CI.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "7c4a59d46567c4cafd0e11ded6a8917fd3543fbce77e3bdd801e2f1c56d6b3b2",
+      "previousSha256": "74c8ba334718accee44487df8874e3fd88e1ec2b951979abe16038fc22665c3b",
+      "edits": [
+        {
+          "start": 34257,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 56815,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 74018,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 90311,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 122961,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 146190,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 159156,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 174055,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 186988,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 200207,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 208745,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 217176,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 226190,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 234856,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 244431,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 253532,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 263381,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 275520,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 285554,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 294106,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 303400,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 316089,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 325340,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 334627,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 343750,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 352613,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 359998,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 367932,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 378582,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 385467,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 392676,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 399772,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 410631,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 417747,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 424125,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 430288,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 437047,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 443889,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 450731,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 460035,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 471269,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 480958,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 490551,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 502081,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 510644,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 521658,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 554188,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 560184,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 570447,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 579760,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 591308,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 599829,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 610785,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 660201,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 662358,
+          "previous": "          \"sha256\": \"e4683c624f825a96dacb8480875fc31535847a219565141b25036acb1d55f7a4\"\n",
+          "current": "          \"sha256\": \"fe3770100fcc100369bc2c29bc4b6cc9265ac4b1d6bd9d359272c3358b72f874\"\n"
+        },
+        {
+          "start": 670303,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 677163,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 685135,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 699166,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 710379,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 724599,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 736053,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 748124,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 759412,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 767995,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 774453,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 782839,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 790974,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 802946,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 822084,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 877602,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 993177,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1049753,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1050379,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1057342,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1058123,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1063943,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1064573,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1071051,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1071833,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1078545,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1079178,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1085601,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1086231,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1093202,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1093832,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1103483,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1104112,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1115816,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1117274,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1127532,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1135418,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1146155,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1156415,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1169275,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1170834,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1201818,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1203378,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1232097,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1233660,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1265064,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1266623,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1306474,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1307849,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1332322,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1333401,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1355002,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1355938,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1374694,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1375630,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1395179,
+          "previous": "          \"sha256\": \"58233769dee81f09f0d8a856da4dcca69d4bf241f34dbe4ad08406ad740c2787\"\n",
+          "current": "          \"sha256\": \"006b38c596946745cb0e5ae912e7f990b631c5bf2767e3cf89bf5660655ceeef\"\n"
+        },
+        {
+          "start": 1396273,
+          "previous": "          \"sha256\": \"b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db\"\n",
+          "current": "          \"sha256\": \"fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56\"\n"
+        },
+        {
+          "start": 1417926,
+          "previous": "          \"sha256\": \"e4683c624f825a96dacb8480875fc31535847a219565141b25036acb1d55f7a4\"\n",
+          "current": "          \"sha256\": \"fe3770100fcc100369bc2c29bc4b6cc9265ac4b1d6bd9d359272c3358b72f874\"\n"
+        },
+        {
+          "start": 1424460,
+          "previous": "          \"sha256\": \"e4683c624f825a96dacb8480875fc31535847a219565141b25036acb1d55f7a4\"\n",
+          "current": "          \"sha256\": \"fe3770100fcc100369bc2c29bc4b6cc9265ac4b1d6bd9d359272c3358b72f874\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "fbf47926de5d56b47435f99b32785f3945289221dee834450645739aa24abe56",
+      "previousSha256": "b39147d399f38e11cbf33c8808b251da29851fdc58f455919f1e11b7e897e0db",
+      "edits": [
+        {
+          "start": 27254,
+          "previous": "",
+          "current": "\t\t, \"native-refinement-boundaries\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "fe3770100fcc100369bc2c29bc4b6cc9265ac4b1d6bd9d359272c3358b72f874",
+      "previousSha256": "e4683c624f825a96dacb8480875fc31535847a219565141b25036acb1d55f7a4",
+      "edits": [
+        {
+          "start": 3349,
+          "previous": "",
+          "current": "import \"./helpers/refinement-audit-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "85bbf3820f31ec70ee12f76e15338e74fbe19db99f61207418ba3973eee08a1d",
+      "previousSha256": "1b4a6070f9c8a44a3250ebd2262a241dae8e2e55f87baa423eb7e698c71fbf72",
+      "edits": [
+        {
+          "start": 1526,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 4135,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "34efc32c819762923d30840d39c1895d7b07f9fb7d7d3457ce01fb4e386adcdd",
+      "previousSha256": "a048614cd0720dd75e2de14b003585fc12d2318d1665f7350048ef9b7a6f8d7c",
+      "edits": [
+        {
+          "start": 1386,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3760,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "567a5e5c572ee79d7ea680c0f62e04ce483d19d0cac5b084a301dcfdc026f508",
+      "previousSha256": "55467de587121c6ddf756d660777152e3ca383483fc9acf6703c14cd250c6986",
+      "edits": [
+        {
+          "start": 1525,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 4232,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "1be1a0604ad2d7a625c3a0773a955c3d43aaff840f94fde260971b3af4da10c5",
+      "previousSha256": "88979f41029297f698efded9f97835b0bc971cd44586bfad31bd30cf38c755b8",
+      "edits": [
+        {
+          "start": 1088,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3376,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "394015762b9aab7dbf86185f2e33f5397bf63a9ffd6cd0cdcc9820b1c9656577",
+      "previousSha256": "ac8797eeb9cd3dc819c75d6b0ceab9163356c43b890ae9d536baab064e907e9a",
+      "edits": [
+        {
+          "start": 811,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3201,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "bcfa66c26eeb50fd924ad49e97163937b91f8c09eeadc23f38d9222e04ccbcc5",
+      "previousSha256": "0e5272fa0db4ef84a47dda4e9b2cf3eca49212806868119c0b08ebb8caa52990",
+      "edits": [
+        {
+          "start": 2587,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 36668,
+          "previous": "",
+          "current": "\t, ...refinementAuditChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/host-fin-evidence-source-history-tests.mjs",
+      "currentSha256": "e895ab956c20c553f8c5932dd6668f64dfaec6cf4c7b49ba6074a4350d40b511",
+      "previousSha256": "e890494155f78ff5268521248dd6cf946197eda69dcec0d91199988b1f4219ad",
+      "edits": [
+        {
+          "start": 664,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 5318,
+          "previous": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "d618f4177e1da415609d7d61118fded94221ab1b135e942b47299740d6c4f039",
+      "previousSha256": "ab20a71efd64937bdea705b5a28ed3be823d590c277939c16e2d1fc3293bed32",
+      "edits": [
+        {
+          "start": 1020,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3264,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-containers-source-history-tests.mjs",
+      "currentSha256": "e350c73dc5478e93390e50183a7fab49eeb8179d25aa6b9efb162d194f8050c9",
+      "previousSha256": "910a9787b4d0bbfe0b9a5e7cff72a68e731eb9482b6a99f84b304efc46c0b1a1",
+      "edits": [
+        {
+          "start": 468,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 6278,
+          "previous": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "41a444161ece26ba03f578f30600998ea2d767c83cd7190913f172be772f2082",
+      "previousSha256": "f4ce95e13322900f03393b5d34b2d3342d99a448fa8cc577ae1cf3638b10e4b5",
+      "edits": [
+        {
+          "start": 1527,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 5397,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-specializations-source-history-tests.mjs",
+      "currentSha256": "22fe45d4fdae3cdb457c845848bcee457aa4e112c4a8213844d8978a332475fc",
+      "previousSha256": "fe24c3446e79755f91b4a737a1c5b88be435a38b1b3960f8134bedc7250048ea",
+      "edits": [
+        {
+          "start": 569,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 5525,
+          "previous": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history-tests.mjs",
+      "currentSha256": "95eeebc78c97a48bce322ce7292efe68073a29b9de73fb7c01a575005f21bd0d",
+      "previousSha256": "106727f47f56ebcbe582d5aff5deae02c28f1eae9c54ccdef228e231c1a6b6de",
+      "edits": [
+        {
+          "start": 354,
+          "previous": "",
+          "current": "import { beforeRefinementAuditSource, refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 1025,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementAuditSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2546,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeNativeSubtypeSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforeRefinementAuditSource(path, text)), previous = JSON.parse(beforeNativeSubtypeSource(path, text));\n"
+        },
+        {
+          "start": 5318,
+          "previous": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 5596,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforeRefinementAuditSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history.mjs",
+      "currentSha256": "88a300045b5da00441af7af22b1dc23827f187f17c7a95a9fd7b8b20293f3617",
+      "previousSha256": "be22eeabea4713d1f72f39aeadcd7f2d1bcaacd7e5d2a56aa505391aea4eaa88",
+      "edits": [
+        {
+          "start": 223,
+          "previous": "",
+          "current": "import { beforeRefinementAuditSource } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 4451,
+          "previous": "",
+          "current": "\tsource = beforeRefinementAuditSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "9c6050f4352e508bedc05cc90eaccd78016261ee523f56b048f6c6049fabd034",
+      "previousSha256": "4f46d3516761abe12bb6b90b7b2546eb1aca7d680f8559769c43913e422b4a97",
+      "edits": [
+        {
+          "start": 1524,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 4314,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "16dec0d520ccbe3a04c30fe4887d85cc7d6e31363a7fa44e696eb32df3123447",
+      "previousSha256": "2a029348680205a261c2d6630b45b892d369eb0215baa0eff68c155e0e518d84",
+      "edits": [
+        {
+          "start": 742,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3020,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "9f7fa1c5419e79d560404703eea3798a11ad550d8bdff50baf91f670bf15336a",
+      "previousSha256": "b73d75836051b3eaa806478d32c51ed86a08f0e4a3d5f6816439d95d2bdf3dcb",
+      "edits": [
+        {
+          "start": 953,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3197,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "e8bc255bf838d72c219219a89a4d7c089b96e0b8f9a6ffc995b2c1991250a2c9",
+      "previousSha256": "537fe9327546bda33f71e9f99081ccf7e9095b759d9adbd785ccfc309739d20b",
+      "edits": [
+        {
+          "start": 1302,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3596,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "a27352302e314468789cfc802d94b4c8f81c576ee62c062dd7a8e123b6743955",
+      "previousSha256": "705a6d67979af817ee612f687a9d079632e7468e50f6c67cde7451e1e2bf6b02",
+      "edits": [
+        {
+          "start": 1164,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3430,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "51f1fd4ec77095294ef19d8faae91ba0aab6be4bb259ab93446783a1cf027e15",
+      "previousSha256": "9d86b49c59d48f3eb922feb247312850cfc24c671486d2d595e6523f40ee0d1a",
+      "edits": [
+        {
+          "start": 1464,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3845,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "2edb90c3e3f7540844548b920d6c7cf508b4c1935fc997217b4c7882e8d32043",
+      "previousSha256": "103113ff0ff68e6f3fbd45539b81baed9a4e4373c253c0a8796591cd4d92d080",
+      "edits": [
+        {
+          "start": 1231,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3493,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "d43abfad8f2311a68cf54176dcc7ec6601dcbca0ce3f245b8a63002ff2db4f70",
+      "previousSha256": "c5a3c0687c18fa83bc8ec9dd53198d00b54f6e50ad7751fdbfd8fca1e35f9a85",
+      "edits": [
+        {
+          "start": 1549,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 4421,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "241577ec6f5bb07b65fd362b1bc6150ffe1852db8597ecad40edd0636aca17bf",
+      "previousSha256": "46f735e4dee22c584b483127f3fc78a2d503939e2806bbeea36ed449a0a7fa83",
+      "edits": [
+        {
+          "start": 895,
+          "previous": "",
+          "current": "import { refinementAuditChangedPaths } from \"./refinement-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 3157,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    }
+  ]
+}

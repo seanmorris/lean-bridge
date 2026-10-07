@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeRefinementAuditSource, refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { beforeNativeSubtypeSource, nativeSubtypeChangedPaths
 	, nativeSubtypeHistoryPath, reverseNativeSubtypeUpdate } from "./native-subtype-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Native Subtype history authenticates exact predecessors and rejects unknow
 	assert.deepEqual(record.updates.map(item => item.path), nativeSubtypeChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeRefinementAuditSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeSubtypeUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeSubtypeSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeSubtypeSource(update.path, source, update.currentSha256), source);
@@ -44,7 +45,7 @@ const acceptedRevision = "8ff62bf224300418a4748dd3209bb607e963f140";
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Native Subtype evidence adds one receipt and one Subtype cell per host group, and changes no other claim", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeNativeSubtypeSource(path, text));
+	const current = JSON.parse(beforeRefinementAuditSource(path, text)), previous = JSON.parse(beforeNativeSubtypeSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), groups.map(([key]) => `native-subtype-${key}-installed`));
 	const cells = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -80,10 +81,10 @@ test("Native Subtype evidence adds one receipt and one Subtype cell per host gro
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(nativeSubtypeChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeNativeSubtypeSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeRefinementAuditSource(file.path, source)));
 			++refreshed;
 		}
 	}

@@ -310,6 +310,22 @@ Ordinary-source npm packages accept top-level parameters and results over primit
 
 The native targets `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi` accept the same top-level primitive-base sites with the same constructor checks. The host passes the base value; the bundled adapter validates every argument's structure and every `Fin` bound first, then runs each checked constructor through an exported validator before the exported function runs, so a rejected value fails the call with the host's invalid-argument error naming the parameter and constructor, for example `arg0 was rejected by Library.checkedSmall`, and no caller data or output changes. A valid call runs the constructor twice (once in the validator, once in the adapter that builds the proof-carrying value) and the exported function once; the exported function receives the constructed value, so a normalizing constructor such as `fun value => some ⟨min value 100, _⟩` changes what it sees. Results are projected through `.val`. Generated documentation names each constructor, for example `arg0 checked by Library.checkedSmall`. A build that selects `cpan` for an export with a checked `Subtype` fails with the `native-refinements-unsupported` diagnostic; CPAN packages check only top-level scalar `Fin` bounds. See the [installed checks](../evidence/native-subtype-20261007.md).
 
+#### Refinement support by target
+
+Every combination below either passes installed checks or fails the build with a classified diagnostic; no target erases a bound or a constructor. "Native" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`.
+
+| Site | npm (Node) | Native | `cpan` | `php-wasm` | Reviewed Binding IR |
+| --- | --- | --- | --- | --- | --- |
+| `Fin n` parameter or result | Installed | Installed | Installed (scalar only) | Rejected | Rejected |
+| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |
+| `Fin n` inside pairs and `Except` | Installed | Rejected at the source | Rejected | Rejected | Rejected |
+| `Fin n` in record or variant fields | Installed (nominal constructors) | Rejected at the source | Rejected | Rejected | Rejected |
+| `Fin n` in callbacks and closures | Installed | Rejected at the source | Rejected | Rejected | Rejected |
+| `Subtype` parameter or result over a primitive | Installed | Installed | Rejected (`native-refinements-unsupported`) | Rejected | Rejected |
+| `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |
+
+Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Browser profiles are not audited for refinements. Python wheels run the same installed checks as the other native hosts but are recorded only from CI.
+
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input.
