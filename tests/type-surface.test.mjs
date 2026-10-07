@@ -361,6 +361,13 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
+	const genericRecordReports = {
+		python: ["c-cpp-python", "python312-rust"], rust: ["python312-rust"]
+		, dotnet: ["dotnet-java-kotlin"], java: ["dotnet-java-kotlin"]
+		, kotlin: ["dotnet-java-kotlin"], ruby: ["php-native-ruby-wit-wasi"]
+		, "php-native": ["php-native-ruby-wit-wasi"]
+		, "wit-wasi": ["php-native-ruby-wit-wasi"]
+	}[profile] ?? [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
 	const subtypes = specializationEvidence ? ["subtype"] : [];
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length);
@@ -381,6 +388,12 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			if(cell.shape === "subtype")
 			{
 				assert.deepEqual(stage.evidence, [`native-subtype-${specializationEvidence}-installed`]);
+				continue;
+			}
+			if(specialized.includes(cell.shape))
+			{
+				assert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`
+					, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)]);
 				continue;
 			}
 			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);

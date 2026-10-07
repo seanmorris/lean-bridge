@@ -1,29 +1,35 @@
 /**
- * Preserve exact source predecessors of the Fin products change (#1441).
+ * Preserve exact source predecessors of the Generic record promotion change (#1439).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeGenericRecordPromotionSource } from "./generic-record-promotion-source-history.mjs";
 
-export const finProductsHistoryPath = "docs/evidence/fin-products-source-history-20261007.json";
-export const finProductsChangedPaths = [
-	"docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
-	, "src/analyze/NativeExports.lean"
-	, "src/analyze/native-types.mjs"
-	, "src/backends/native/fin-refinements.mjs"
-	, "src/backends/perl/generate.mjs"
-	, "src/build/native-model.mjs"
+export const genericRecordPromotionHistoryPath = "docs/evidence/generic-record-promotion-source-history-20261007.json";
+export const genericRecordPromotionChangedPaths = [
+	"docs/consume/c.md"
+	, "docs/consume/cpp.md"
+	, "docs/consume/dotnet.md"
+	, "docs/consume/java.md"
+	, "docs/consume/kotlin.md"
+	, "docs/consume/perl.md"
+	, "docs/consume/python.md"
+	, "docs/consume/ruby.md"
+	, "docs/consume/rust.md"
+	, "docs/consume/wit-wasi.md"
+	, "docs/javascript-typescript.md"
+	, "docs/lean/existing-package.md"
+	, "docs/php.md"
+	, "docs/type-surface.v1.json"
+	, "tests/documentation.test.mjs"
 	, "tests/generic-records.test.mjs"
+	, "tests/helpers/fin-products-source-history-tests.mjs"
+	, "tests/helpers/fin-products-source-history.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/perl-fin-xs-audit-source-history-tests.mjs"
-	, "tests/helpers/perl-fin-xs-audit-source-history.mjs"
-	, "tests/native-fin-containers.test.mjs"
-	, "tests/native-fin.test.mjs"
-	, "tests/native-refinement-boundaries.test.mjs"
+	, "tests/native-specializations.test.mjs"
+	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -33,8 +39,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinProductsUpdate = (source, update) => {
-	assert.ok(finProductsChangedPaths.includes(update.path));
+export const reverseGenericRecordPromotionUpdate = (source, update) => {
+	assert.ok(genericRecordPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -54,18 +60,17 @@ export const reverseFinProductsUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1441, stopping at an explicitly requested identity.
+ * Restore the source before #1439, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinProductsSource = (path, source, expected) => {
-	source = beforeGenericRecordPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !finProductsChangedPaths.includes(path)) return source;
+export const beforeGenericRecordPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !genericRecordPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finProductsHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(genericRecordPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinProductsUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseGenericRecordPromotionUpdate(source, update) : source;
 };

@@ -1,0 +1,1304 @@
+{
+  "schemaVersion": 1,
+  "milestone": "generic-record-promotion-v1",
+  "predecessorCommit": "e79ff60b547325fd10e5d0261bc35c75e818d509",
+  "updates": [
+    {
+      "path": "docs/consume/c.md",
+      "currentSha256": "6751c75f2de240edd945d779a01c60a1f36523574461c8a8b1f9fcab6aa51652",
+      "previousSha256": "25579945464ac2d36abf4e08add3f2e774b2e46de581e85d67a2f7cc8c49fca7",
+      "edits": [
+        {
+          "start": 55814,
+          "previous": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "currentSha256": "086a81b470aa4b605113fc754f0a2f3d653f0aaef64b65d1a31aafeded78a678",
+      "previousSha256": "6b1519a16a3e464ba4677f5c24b97ced06011c6736186905f0ec926394b9b639",
+      "edits": [
+        {
+          "start": 47049,
+          "previous": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "currentSha256": "34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06",
+      "previousSha256": "a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6",
+      "edits": [
+        {
+          "start": 55343,
+          "previous": "| `Polymorphic exports` | `Concrete static C# method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete static C# method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/java.md",
+      "currentSha256": "7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904",
+      "previousSha256": "4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae",
+      "edits": [
+        {
+          "start": 62606,
+          "previous": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "currentSha256": "a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538",
+      "previousSha256": "eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81",
+      "edits": [
+        {
+          "start": 55561,
+          "previous": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete static JVM method for each configured specialization, called from Java and Kotlin` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "729b5d19c046c0013341fd9a3e31801333dadde13320cfea35518c08684e027c",
+      "previousSha256": "f4dd638681ec80c06d7664a6170310d1ef078652a45180dbfe1dd22f9e9e7b2a",
+      "edits": [
+        {
+          "start": 50466,
+          "previous": "| `Polymorphic exports` | `Concrete named Perl subroutine for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete named Perl subroutine for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/python.md",
+      "currentSha256": "ba11329823ea2a23ed43d0296e0ce1ff0ed2191fe701292e20f036763d9a18e3",
+      "previousSha256": "6f1e6d87d0abd50c71e2300012383be8264c8b258a5de2654607046a60c48ac7",
+      "edits": [
+        {
+          "start": 33569,
+          "previous": "Finite function specializations become ordinary Python functions, such as `echo_nat`. Python passes neither type arguments nor instance dictionaries. The current installed checks cover scalar types and an `Array UInt32` alias; generic-record support remains separate work.\n",
+          "current": "Finite function specializations become ordinary Python functions, such as `echo_nat`. Python passes neither type arguments nor instance dictionaries. A closed generic structure named by a Lean alias becomes a generated record class, such as `NatBox`. The [installed checks](../evidence/generic-record-specializations-20261007.md) cover direct record exports and configured functions over record, `List` and `Option` aliases on Python 3.11 and 3.12, in addition to the earlier scalar and `Array UInt32` cases.\n"
+        },
+        {
+          "start": 53068,
+          "previous": "| `Polymorphic exports` | `Concrete Python function for each configured specialization` (signature); `Named finite specializations` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generator inspected | Each configured application produces a monomorphic Python function. The open declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete Python function for each configured specialization` (signature); `Named finite specializations` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generator inspected | Each configured application produces a monomorphic Python function. The open declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "currentSha256": "972501495e2bd20c074838c92f41590d03ebb102bd7683d5017752c56299740b",
+      "previousSha256": "33d3b4ccab1881d49368463775b4c6b0614b112bea0b1a61d6d3b96b4deab886",
+      "edits": [
+        {
+          "start": 53867,
+          "previous": "| `Polymorphic exports` | `Concrete Ruby module method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete Ruby module method for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "currentSha256": "e1827c0b79085b72aa840b2a4db4f00864bb6cd15b45919213fa6f019007297f",
+      "previousSha256": "73ce9a9bde77b781fb6d3e25c190a7e596c7d7e7008c8c0e38b43dea22571401",
+      "edits": [
+        {
+          "start": 53365,
+          "previous": "| `Polymorphic exports` | `Concrete Rust function for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete Rust function for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "ec072d3e312375872971ef9615a232ce92d46b229c438bfd6639e4cfd20a39b4",
+      "previousSha256": "14a60d3f8956b556d59b95fc4c60acc1b1f8a4f8ddadf7edb28d60d4ae610cbf",
+      "edits": [
+        {
+          "start": 68726,
+          "previous": "| `Polymorphic exports` | `Concrete WIT export for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. The Alpha executable adapter does not expose this type. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | `Concrete WIT export for each configured specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generation rejected | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. The Alpha executable adapter does not expose this type. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "94fa1afcca544ca6bd3e0ba048765ebb28f983ad4e1011c0e38885596197f3a3",
+      "previousSha256": "d729d77da51e5233dd58b93a395375dab04976163e96b85fb08ee830f4e3bbee",
+      "edits": [
+        {
+          "start": 37226,
+          "previous": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Named finite specializations` (signature); Browser / React / Worker: `Named finite specializations` (signature) | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Generator inspected | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Named finite specializations` (signature); Browser / React / Worker: `Named finite specializations` (signature) | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Generator inspected | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32",
+      "previousSha256": "da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff",
+      "edits": [
+        {
+          "start": 19462,
+          "previous": "The alias is the record's name in every host: npm declares `interface NatBox`, C declares `library_nat_box`, C++ declares `struct NatBox`. Lean instantiates each field's type and the constructor at the alias's arguments and universes, so `Box Nat` and `Box String` under two aliases are two unrelated host types, and two aliases of the same application, such as `NatBox` and `NatBoxAgain`, are two host types with the same layout. The Binding IR records where each one came from as the `lean-lang.org/instantiation` extension: the structure and its resolved arguments, with nominal arguments as references to definitions the package carries. An application that is not named by an alias, in a signature or as an argument of another instantiation (`Box (Box Nat)` needs an alias for the inner box), stops the build with `name this instantiation of a generic structure with an abbrev`. Inherited structures, fields whose type depends on the value or is a proof, propositions as arguments, and arguments that carry a resource, a callback or a refinement anywhere inside them (`Box (Fin 10)`, `Tag (Option (Fin 10))`, or a record whose field is refined) are rejected at the source, so no bound is lowered away with an argument. An argument that no field carries (a phantom parameter) is admitted: the package still carries the nominal type it names, reachable only through the instantiation. Generic variants still require a [specialization](#export-concrete-specializations), and refined fields inside an instantiated record follow the [refinement matrix](#refinement-support-by-target).\n",
+          "current": "The alias is the record's name in every host: npm declares `interface NatBox`, C declares `library_nat_box`, C++ declares `struct NatBox`. Lean instantiates each field's type and the constructor at the alias's arguments and universes. `Box Nat` and `Box String` under two aliases have different fields. Two aliases of the same application, such as `NatBox` and `NatBoxAgain`, keep separate names and the same layout. Host assignability follows the host language: TypeScript interfaces with the same fields are interchangeable. The Binding IR records each alias's origin as the `lean-lang.org/instantiation` extension, including the structure and resolved arguments.\n"
+        },
+        {
+          "start": 20129,
+          "previous": "Installed checks cover [npm and C/C++](../evidence/generic-records-20261007.md); the other native hosts generate the same records from the same Binding IR but their installed acceptance is not yet recorded.\n",
+          "current": "An application that is not named by an alias, in a signature or as an argument of another instantiation (`Box (Box Nat)` needs an alias for the inner box), stops the build with `name this instantiation of a generic structure with an abbrev`. Inherited structures, fields whose type depends on the value or is a proof, propositions as arguments, and arguments that carry a resource, a callback or a refinement anywhere inside them (`Box (Fin 10)`, `Tag (Option (Fin 10))`, or a record whose field is refined) are rejected at the source. An argument that no field carries (a phantom parameter) is admitted: the package still carries the nominal type it names, reachable only through the instantiation. Generic variants still require a [specialization](#export-concrete-specializations), and refined fields inside an instantiated record follow the [refinement matrix](#refinement-support-by-target).\n\nThe [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options. Reviewed generic signatures, browser contexts and PHP-Wasm remain unmeasured by these runs.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84",
+      "previousSha256": "04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc",
+      "edits": [
+        {
+          "start": 97541,
+          "previous": "| `Polymorphic exports` | Native PHP: `Concrete namespaced PHP function for each configured specialization` (signature); `Named finite specializations` (signature); PHP-Wasm: `Named finite specializations` (signature) | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n",
+          "current": "| `Polymorphic exports` | Native PHP: `Concrete namespaced PHP function for each configured specialization` (signature); `Named finite specializations` (signature); PHP-Wasm: `Named finite specializations` (signature) | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Not audited. Reviewed IR: Generator inspected | Native PHP: Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "2c7260b0c30e3b42b57bbd96eecb158e07d0a2305be6bbce216b902995ea074d",
+      "previousSha256": "54fb40e5c4d5929ec9f31ec7fdc943f0c2802f769d63ad560bd09959701b0fe5",
+      "edits": [
+        {
+          "start": 35767,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 46698,
+          "previous": "          \"sha256\": \"a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6\"\n",
+          "current": "          \"sha256\": \"34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06\"\n"
+        },
+        {
+          "start": 46848,
+          "previous": "          \"sha256\": \"4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae\"\n",
+          "current": "          \"sha256\": \"7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904\"\n"
+        },
+        {
+          "start": 47000,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 49166,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 50371,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 144682,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 168068,
+          "previous": "          \"sha256\": \"14a60d3f8956b556d59b95fc4c60acc1b1f8a4f8ddadf7edb28d60d4ae610cbf\"\n",
+          "current": "          \"sha256\": \"ec072d3e312375872971ef9615a232ce92d46b229c438bfd6639e4cfd20a39b4\"\n"
+        },
+        {
+          "start": 181378,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 196277,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 208712,
+          "previous": "          \"sha256\": \"4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae\"\n",
+          "current": "          \"sha256\": \"7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904\"\n"
+        },
+        {
+          "start": 208864,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 221932,
+          "previous": "          \"sha256\": \"73ce9a9bde77b781fb6d3e25c190a7e596c7d7e7008c8c0e38b43dea22571401\"\n",
+          "current": "          \"sha256\": \"e1827c0b79085b72aa840b2a4db4f00864bb6cd15b45919213fa6f019007297f\"\n"
+        },
+        {
+          "start": 230467,
+          "previous": "          \"sha256\": \"6f1e6d87d0abd50c71e2300012383be8264c8b258a5de2654607046a60c48ac7\"\n",
+          "current": "          \"sha256\": \"ba11329823ea2a23ed43d0296e0ce1ff0ed2191fe701292e20f036763d9a18e3\"\n"
+        },
+        {
+          "start": 238897,
+          "previous": "          \"sha256\": \"a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6\"\n",
+          "current": "          \"sha256\": \"34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06\"\n"
+        },
+        {
+          "start": 247912,
+          "previous": "          \"sha256\": \"33d3b4ccab1881d49368463775b4c6b0614b112bea0b1a61d6d3b96b4deab886\"\n",
+          "current": "          \"sha256\": \"972501495e2bd20c074838c92f41590d03ebb102bd7683d5017752c56299740b\"\n"
+        },
+        {
+          "start": 256283,
+          "previous": "          \"sha256\": \"25579945464ac2d36abf4e08add3f2e774b2e46de581e85d67a2f7cc8c49fca7\"\n",
+          "current": "          \"sha256\": \"6751c75f2de240edd945d779a01c60a1f36523574461c8a8b1f9fcab6aa51652\"\n"
+        },
+        {
+          "start": 256432,
+          "previous": "          \"sha256\": \"6b1519a16a3e464ba4677f5c24b97ced06011c6736186905f0ec926394b9b639\"\n",
+          "current": "          \"sha256\": \"086a81b470aa4b605113fc754f0a2f3d653f0aaef64b65d1a31aafeded78a678\"\n"
+        },
+        {
+          "start": 266157,
+          "previous": "          \"sha256\": \"f4dd638681ec80c06d7664a6170310d1ef078652a45180dbfe1dd22f9e9e7b2a\"\n",
+          "current": "          \"sha256\": \"729b5d19c046c0013341fd9a3e31801333dadde13320cfea35518c08684e027c\"\n"
+        },
+        {
+          "start": 707195,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 721226,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 732601,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 746821,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 758275,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 770346,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 781634,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 790217,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 796675,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 805061,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 813038,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 813196,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 831571,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 835968,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1057778,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1072135,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1074895,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1077561,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1079724,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1082669,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1084259,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1086325,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1088101,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1091262,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1093433,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1095202,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1098768,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1100927,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1102368,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1105722,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1107983,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1109425,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1113356,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1115584,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1117677,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1122594,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1125865,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1127140,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1131721,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1138198,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1144151,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1146656,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1151226,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1154703,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1159123,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1163675,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1170003,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1173066,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1182165,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1186089,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1191657,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1205691,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1219201,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1224200,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1237046,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1249445,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1254479,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1269846,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1282381,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1287446,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1304946,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1321684,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1324877,
+          "previous": "          \"sha256\": \"4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae\"\n",
+          "current": "          \"sha256\": \"7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904\"\n"
+        },
+        {
+          "start": 1325029,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 1328856,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1329156,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 1335792,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1348225,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1351449,
+          "previous": "          \"sha256\": \"a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6\"\n",
+          "current": "          \"sha256\": \"34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06\"\n"
+        },
+        {
+          "start": 1354704,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1355004,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 1359089,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1370605,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1373827,
+          "previous": "          \"sha256\": \"a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6\"\n",
+          "current": "          \"sha256\": \"34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06\"\n"
+        },
+        {
+          "start": 1373977,
+          "previous": "          \"sha256\": \"4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae\"\n",
+          "current": "          \"sha256\": \"7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904\"\n"
+        },
+        {
+          "start": 1374129,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 1377384,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1380980,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1390497,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1393494,
+          "previous": "          \"sha256\": \"a353123e46d2165efe6215384b62a40cda97c25ebc5ecf701e597dc15b7843d6\"\n",
+          "current": "          \"sha256\": \"34976dbc86bf6f55021bffc0cf1c128685bcd48a58d09e20c4945f57a4884a06\"\n"
+        },
+        {
+          "start": 1393644,
+          "previous": "          \"sha256\": \"4c2682fb8ed5de7f7df61d55f405761dcf726eba47ac25f55a75580ceb2d5fae\"\n",
+          "current": "          \"sha256\": \"7ff4bc0b855d0042c9f15fc78aed7f0edcd3a3fae12c721387d51d0f06fc4904\"\n"
+        },
+        {
+          "start": 1393796,
+          "previous": "          \"sha256\": \"eb2d717e4873ebbce0be946f163519a1a537997edf4adf77e2ac1b39659cce81\"\n",
+          "current": "          \"sha256\": \"a8a736357503654aeeba518b7543f0023250c031bbb667c268b77ca112cca538\"\n"
+        },
+        {
+          "start": 1397076,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1401053,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1411950,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1416884,
+          "previous": "          \"sha256\": \"14a60d3f8956b556d59b95fc4c60acc1b1f8a4f8ddadf7edb28d60d4ae610cbf\"\n",
+          "current": "          \"sha256\": \"ec072d3e312375872971ef9615a232ce92d46b229c438bfd6639e4cfd20a39b4\"\n"
+        },
+        {
+          "start": 1417561,
+          "previous": "          \"sha256\": \"da0c6c3f4c58e291a6dad0279459b7525d1c3da7a88d25b097688bef53fe36ff\"\n",
+          "current": "          \"sha256\": \"9ec22e378352f54284f4214c0df16beca83e8b5ce776cb7b66db3d55e6472b32\"\n"
+        },
+        {
+          "start": 1420833,
+          "previous": "          \"sha256\": \"abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d\"\n",
+          "current": "          \"sha256\": \"1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0\"\n"
+        },
+        {
+          "start": 1424969,
+          "previous": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n",
+          "current": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n"
+        },
+        {
+          "start": 1428384,
+          "previous": "          \"sha256\": \"04a2a077a9ce2e5e06cb364d295765f64c953071d7cf78002b90650bc0b853bc\"\n",
+          "current": "          \"sha256\": \"7812e94329cc72e4cf486ce60a106d9199f8af75b68396af7526e3d413450b84\"\n"
+        },
+        {
+          "start": 1462453,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"1e1ef3b6af271e4885d7fe000a6ee16c50eb6ccaebee7fc2bd974238f3d57755\"\n",
+          "current": "          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"1e1ef3b6af271e4885d7fe000a6ee16c50eb6ccaebee7fc2bd974238f3d57755\"\n",
+          "current": "          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n"
+        },
+        {
+          "start": 1473477,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1476106,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1479095,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1481687,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1484297,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1486887,
+          "previous": "          \"sha256\": \"4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df\"\n",
+          "current": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n"
+        },
+        {
+          "start": 1567745,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"generic-record-specialized-c-cpp-python-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp,python LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-c-cpp-python.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. C executes 1029 checks; C++ executes 1024 checks; Python executes 1036 checks. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-c-cpp-python.json\",\n          \"sha256\": \"7d5fc9f6329a8890c286cc44a391ebc141ec4f6cd273c480414ad256232a3f9e\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/c.c\",\n          \"sha256\": \"3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/cpp.cpp\",\n          \"sha256\": \"28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/python.py\",\n          \"sha256\": \"10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-c-cpp-python/archives/genericrecords-1.0.0-c.tar.gz\",\n          \"sha256\": \"335a86b3671ab88b60c883358ebc877dc22694bf18d1fb18e0f0669d99a5c56d\"\n        },\n        {\n          \"path\": \"specialized-c-cpp-python/archives/genericrecords-1.0.0-cpp.tar.gz\",\n          \"sha256\": \"e850d2acca9b3bef6bea00e1ccc43a92179bc7a1d7093119dc2356b62dc6e9c2\"\n        },\n        {\n          \"path\": \"specialized-c-cpp-python/archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl\",\n          \"sha256\": \"c1dbae033e99eb120a9cceacdd22e2dbc2cff58276303c89d5ca636b6c0232fb\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-python312-rust-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON=/app/.toolchains/python312/bin/python3.12 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python,rust LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-python312-rust.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Python executes 1036 checks; Rust executes 1025 checks. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-python312-rust.json\",\n          \"sha256\": \"a81e5025607d325be456b06284205e3edde5eb7cb43bb48aa30aae03950061ce\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/python.py\",\n          \"sha256\": \"10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/rust.rs\",\n          \"sha256\": \"3ad3f7766e48cb7b2cc45e9cf25cd0799cad933e2cb7090ee500eb6909d38a75\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-rust.mjs\",\n          \"sha256\": \"c85b411d0a23981209c949ce2ec11a182c8a10c8b9893c5755863d8bd9de5549\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-python312-rust/archives/genericrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl\",\n          \"sha256\": \"25587d2cacacc0cd3d1afc82e9b46de25aad62f0fcb321a3ef58e020abcb7e9c\"\n        },\n        {\n          \"path\": \"specialized-python312-rust/archives/genericrecords-1.0.0.crate\",\n          \"sha256\": \"a9b69727bebff8c019f31441906fb44dc4778f9d57369c5617f3d5ff6da2c9ca\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-dotnet-java-kotlin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet,java,kotlin LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-dotnet-java-kotlin.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. C# executes 1034 checks; Java executes 1034 checks; Kotlin executes 1030 checks. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-dotnet-java-kotlin.json\",\n          \"sha256\": \"e0b392e33ef384aa69cfcf0beeca077dccbbc52faef2c3f42d56b86b599be724\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/dotnet.cs\",\n          \"sha256\": \"6e5d9bd86f7a668ce57462c2637c82f1c8523df26f9fbeae5aecbc8a9af37a91\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/java.java\",\n          \"sha256\": \"4c5c5b20637e263e8c14e59cb4827bea6055d9d66051eba5e1b886f7ec76c357\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/kotlin.kt\",\n          \"sha256\": \"538252f21fd680f808e4aa91ff246c46fe675752bc609bfb4ced4211d1ea74b5\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-managed-types.mjs\",\n          \"sha256\": \"33d25bf1b040a9e3b71f6bb3d5a9b3e8de5a660bb33699284bf9d220883e2716\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-dotnet-java-kotlin/archives/GenericRecords.Api.1.0.0.nupkg\",\n          \"sha256\": \"74fe8b9236bf61d92aae74da5e0660b3ab03951875459a33ffdf79d849e59ede\"\n        },\n        {\n          \"path\": \"specialized-dotnet-java-kotlin/archives/genericrecords-1.0.0.jar\",\n          \"sha256\": \"501f170cef2cb811a26c9a974f1de7af436680c960651761a2bf90472ab6be6f\"\n        },\n        {\n          \"path\": \"specialized-dotnet-java-kotlin/archives/genericrecords-1.0.0.pom\",\n          \"sha256\": \"db36a8879493eb18bc249f6773ef2a7e7333ec49870ec86de62a1c5de2f7f876\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-php-native-ruby-wit-wasi-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native,ruby,wit-wasi LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-php-native-ruby-wit-wasi.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. native PHP executes 1035 checks; Ruby executes 1036 checks; WIT/WASI executes 1036 checks. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-php-native-ruby-wit-wasi.json\",\n          \"sha256\": \"5891a6b8e607b3e0d86ea704cf83df096cc2ed25ec8826d66f4840dd76ecf38b\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/php-native.php\",\n          \"sha256\": \"f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/ruby.rb\",\n          \"sha256\": \"5ed93b95395da55cda2b9035568d2e816ed40d01dc20f2cbf0c052dcd00e95c6\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/wit-wasi.c\",\n          \"sha256\": \"c311efc21745a457af7eb9eadd1b44425a1474bb703167d93b7a39f7e354bb38\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-php-native-ruby-wit-wasi/archives/example-genericrecords-1.0.0-linux-x86_64.zip\",\n          \"sha256\": \"8e863769b25da80beddbeb88ffc20ebbf51fc38ca6399f879bb424e8bd3cd824\"\n        },\n        {\n          \"path\": \"specialized-php-native-ruby-wit-wasi/archives/genericrecords-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"3b359ac83529d04dd8ad690b0b51ba7084ef550b5875ff60411d1ce95e821cf4\"\n        },\n        {\n          \"path\": \"specialized-php-native-ruby-wit-wasi/archives/genericrecords-1.0.0-x86_64-linux.gem\",\n          \"sha256\": \"90b9589b126c28e71785b3afc010ca0ba892f7d291f9ec18a295550c1c2ed535\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-threaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.36.3-threaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Perl executes 1040 checks. Runtime: 5.36.3-threaded. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-perl-5.36.3-threaded.json\",\n          \"sha256\": \"1c8a5efb1da07cb2955500b4021a9e448116da9a593b754d06e0c12c4a3c8187\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/perl.pl\",\n          \"sha256\": \"f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-perl-5.36.3-threaded/archives/LeanBridge-GenericRecords-1.000.tar.gz\",\n          \"sha256\": \"3de54f81bee2cfca2d9eee7388c3ec8f5110086db5d5034419e97c2105f18b8a\"\n        },\n        {\n          \"path\": \"specialized-perl-5.36.3-threaded/archives/LeanBridge-Runtime-0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831.tar.gz\",\n          \"sha256\": \"d491ea25c0225fdef41ad2296827915aca31298553cda95b16b1afd411064405\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-unthreaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.36.3-unthreaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Perl executes 1040 checks. Runtime: 5.36.3-unthreaded. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-perl-5.36.3-unthreaded.json\",\n          \"sha256\": \"cb3deedb0bbdb776c0eb7cf7742206bfced64b07db6226e2dd57579f58311c11\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/perl.pl\",\n          \"sha256\": \"f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-perl-5.36.3-unthreaded/archives/LeanBridge-GenericRecords-1.000.tar.gz\",\n          \"sha256\": \"55e7c202cd68cd22b1131298a24a6e23bd54db985dcda89106fa4baee3887ca4\"\n        },\n        {\n          \"path\": \"specialized-perl-5.36.3-unthreaded/archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz\",\n          \"sha256\": \"0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-threaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.38.2-threaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Perl executes 1040 checks. Runtime: 5.38.2-threaded. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-perl-5.38.2-threaded.json\",\n          \"sha256\": \"fa8bce44ecba6f9a73286ef01f1d3387abcbe6d9da0754c80f6b5c44fde009d4\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/perl.pl\",\n          \"sha256\": \"f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-perl-5.38.2-threaded/archives/LeanBridge-GenericRecords-1.000.tar.gz\",\n          \"sha256\": \"1ffe875d3b029c6eb0ff9644ed94edc96823fe1c2b767662ca782b675f408994\"\n        },\n        {\n          \"path\": \"specialized-perl-5.38.2-threaded/archives/LeanBridge-Runtime-0.0020649019466355169428665596934324519271137332101333675993431253885473724224759211.tar.gz\",\n          \"sha256\": \"56e4f9f4c762b9b59bc1388a5b4b9f73f09b09a60d2a5a0da25e780fde4ec3b2\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-perl-5-38-2-unthreaded-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-unthreaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.38.2-unthreaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Perl executes 1040 checks. Runtime: 5.38.2-unthreaded. Two clean author roots reproduce the archives; consumers install offline after author removal. Local native execution uses glibc floor 2.36, not the CI distribution floor. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-perl-5.38.2-unthreaded.json\",\n          \"sha256\": \"f5abd1a10de1e3e4fb2f1f0bd6d3eaad9d182dfaab17d9187dba189d1bb7cd4d\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-consumers/perl.pl\",\n          \"sha256\": \"f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-perl-5.38.2-unthreaded/archives/LeanBridge-GenericRecords-1.000.tar.gz\",\n          \"sha256\": \"78138aa196ea523544bad8733572d47d713226934b427a1dd43ed284c45e1cfd\"\n        },\n        {\n          \"path\": \"specialized-perl-5.38.2-unthreaded/archives/LeanBridge-Runtime-0.0020296570762749893938651682061484224333828129339178168879023802512434562123650631.tar.gz\",\n          \"sha256\": \"aed7ec5e71a788194d9d4dcd2dfb165e82d4d3bd0604875bb167ae551ab4c115\"\n        }\n      ]\n    },\n    {\n      \"id\": \"generic-record-specialized-npm-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"d5705ff38d67e6410c987a3a3a28cc409162ebfd\",\n      \"command\": \"LEAN_BRIDGE_LAKE_WASM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy taskset -c 3 node --test --test-reporter=spec --test-name-pattern='installed npm packages specialize generic functions' tests/generic-records.test.mjs\",\n      \"scope\": \"Nine configured function specializations over closed alias-named generic records, two namespaces, List and Option aliases, alongside ten direct generic-record exports. Node executes 1019 checks and 1010 runtime rejections; strict TypeScript checks the installed declarations with skipLibCheck disabled. Runtime: Node and strict TypeScript. Two clean author roots reproduce the archives; consumers install offline after author removal. Node and strict TypeScript only; browser contexts are unmeasured. Ordinary source only; reviewed generic signatures, open dispatch and refined generic arguments are not covered.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a9f959c418db66567a4cbea6b5fa0b2d732fecc0a2f7f432d755e60cb76c4efd\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"8d9ba47b38a30058414996b19a27a9026029d540bcc2ce6bbd11cbb25a45788f\"\n        },\n        {\n          \"path\": \"src/analyze/semantic-model.mjs\",\n          \"sha256\": \"8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72\"\n        },\n        {\n          \"path\": \"src/analyze/copied-metadata-graph.mjs\",\n          \"sha256\": \"4020e5a4804d6f404065d42608e50f56a9235f9ac518f4532985a5cb2f9c522a\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"063d72dd5ddee27183dda8f8c37ea1c8080e98c40dc175cf1a6f66064fc83bbc\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/generic-records/GenericRecords.lean\",\n          \"sha256\": \"01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f\"\n        },\n        {\n          \"path\": \"tests/fixtures/generic-record-specializations.lean\",\n          \"sha256\": \"26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9\"\n        },\n        {\n          \"path\": \"tests/generic-records.test.mjs\",\n          \"sha256\": \"3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-packages.mjs\",\n          \"sha256\": \"160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-record-specializations.mjs\",\n          \"sha256\": \"a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f\"\n        },\n        {\n          \"path\": \"tests/helpers/generic-specialization-evidence-tests.mjs\",\n          \"sha256\": \"6aa89b97c8c067c7fb1cd2e5438088aa0bb13ab2757f7e1f7859d653efd4851f\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007.md\",\n          \"sha256\": \"46db84d5ddfee3b281ecdf2c59e0bdb3752d9ad4cca8c19cd7a489f6d3b7d6ee\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/receipt.json\",\n          \"sha256\": \"690a1c5f481649f856bbe7d92c21d531548c6b447f577c6cd807d5d0b3d61b73\"\n        },\n        {\n          \"path\": \"docs/evidence/generic-record-specializations-20261007/specialized-npm.json\",\n          \"sha256\": \"6823785a955b34446c8ad254afb6113cdbcbfc8c1da2c7c6d7ca3c48394a0c07\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"specialized-npm/component.tgz\",\n          \"sha256\": \"09be27d6338cdb17da704056691d22dc818f42e712fe270fb7eff1792e246f56\"\n        },\n        {\n          \"path\": \"specialized-npm/runtime.tgz\",\n          \"sha256\": \"253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff\"\n        }\n      ]\n"
+        },
+        {
+          "start": 1615303,
+          "previous": "      \"scope\": \"Ordinary-source Python wheels expose finite function specializations with compiler-resolved type arguments and instance dictionaries. Source-free consumers exercise scalar and Array UInt32 alias applications; open declarations stay absent.\",\n",
+          "current": "      \"scope\": \"Ordinary-source Python wheels expose finite function specializations with compiler-resolved type arguments and instance dictionaries. Source-free consumers exercise scalar and Array UInt32 alias applications; open declarations stay absent. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 1616330,
+          "previous": "            \"native-specializations-python-installed\"\n",
+          "current": "            \"native-specializations-python-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 1616728,
+          "previous": "            \"native-specializations-python-installed\"\n",
+          "current": "            \"native-specializations-python-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 1617106,
+          "previous": "            \"native-specializations-python-installed\"\n",
+          "current": "            \"native-specializations-python-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 1617517,
+          "previous": "            \"native-specializations-python-installed\"\n",
+          "current": "            \"native-specializations-python-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 1617904,
+          "previous": "            \"native-specializations-python-installed\"\n",
+          "current": "            \"native-specializations-python-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 1618495,
+          "previous": "        \"Type arguments are closed constants or aliases. Positive generic-structure applications require the separate #1433 implementation and installed host rollout.\",\n        \"Ordinary-source Python only; reviewed IR is not covered.\"\n",
+          "current": "        \"Type arguments are closed constants or aliases; generic structure applications require an abbrev naming the instantiation.\",\n        \"Ordinary-source Python only; reviewed IR is not covered.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 1619038,
+          "previous": "        \"generic\": \"Each configured application produces a monomorphic Python function. The open declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured application produces a monomorphic Python function. The open declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3809464,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete npm exports for finite generic specializations. Node executes the installed WebAssembly, strict TypeScript compiles against the installed declarations with skipLibCheck disabled, Lean resolves leading implicit type arguments and following instance dictionaries, and the unspecialized declaration stays absent. A closed instantiation of a generic structure named by an abbrev is an alias-named record: the alias is its identity and Lean spelling, Lean instantiates every field and the constructor at the alias's arguments and universes, the Binding IR records the structure and its resolved arguments as the lean-lang.org/instantiation extension, and two aliases of one application are two host types with identical layout and the same origin. An offline installed Node consumer passes 1010 checks and 1005 shape rejections over the alias-named records and strict TypeScript compiles one interface per alias; an unnamed application or a refined phantom argument stops the build with a classified hint.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete npm exports for finite generic specializations. Node executes the installed WebAssembly, strict TypeScript compiles against the installed declarations with skipLibCheck disabled, Lean resolves leading implicit type arguments and following instance dictionaries, and the unspecialized declaration stays absent. A closed instantiation of a generic structure named by an abbrev is an alias-named record: the alias is its identity and Lean spelling, Lean instantiates every field and the constructor at the alias's arguments and universes, the Binding IR records the structure and its resolved arguments as the lean-lang.org/instantiation extension, and two aliases of one application are two host types with identical layout and the same origin. An offline installed Node consumer passes 1010 checks and 1005 shape rejections over the alias-named records and strict TypeScript compiles one interface per alias; an unnamed application or a refined phantom argument stops the build with a classified hint. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language. TypeScript interfaces with the same fields are structurally assignable.\",\n"
+        },
+        {
+          "start": 3811452,
+          "previous": "            \"npm-generic-records-installed\"\n",
+          "current": "            \"npm-generic-records-installed\",\n            \"generic-record-specialized-npm-installed\"\n"
+        },
+        {
+          "start": 3811836,
+          "previous": "            \"npm-generic-records-installed\"\n",
+          "current": "            \"npm-generic-records-installed\",\n            \"generic-record-specialized-npm-installed\"\n"
+        },
+        {
+          "start": 3812193,
+          "previous": "            \"npm-generic-records-installed\"\n",
+          "current": "            \"npm-generic-records-installed\",\n            \"generic-record-specialized-npm-installed\"\n"
+        },
+        {
+          "start": 3812577,
+          "previous": "            \"npm-generic-records-installed\"\n",
+          "current": "            \"npm-generic-records-installed\",\n            \"generic-record-specialized-npm-installed\"\n"
+        },
+        {
+          "start": 3812944,
+          "previous": "            \"npm-generic-records-installed\"\n",
+          "current": "            \"npm-generic-records-installed\",\n            \"generic-record-specialized-npm-installed\"\n"
+        },
+        {
+          "start": 3813598,
+          "previous": "        \"Alias-named records cover nonrecursive copied structures over supported copied fields; inherited, indexed, open and dependent structures, proof fields, and arguments that carry a resource, a callback or a refinement anywhere inside them are rejected at the source, an application that no abbrev names is rejected, and refined fields, browsers and reviewed IR are not covered by this evidence.\"\n",
+          "current": "        \"Alias-named records cover nonrecursive copied structures over supported copied fields; inherited, indexed, open and dependent structures, proof fields, and arguments that carry a resource, a callback or a refinement anywhere inside them are rejected at the source, an application that no abbrev names is rejected, and refined fields, browsers and reviewed IR are not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3814343,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3815443,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete CPAN exports for finite generic specializations through prebuilt and compiled-XS paths. Installed Perl consumers exercise leading implicit type arguments, following instance dictionaries, aliases, multiple type arguments, copied values and identities without access to the source tree; the unspecialized declaration stays absent.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete CPAN exports for finite generic specializations through prebuilt and compiled-XS paths. Installed Perl consumers exercise leading implicit type arguments, following instance dictionaries, aliases, multiple type arguments, copied values and identities without access to the source tree; the unspecialized declaration stays absent. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3816635,
+          "previous": "            \"perl-finite-specializations-installed\"\n",
+          "current": "            \"perl-finite-specializations-installed\",\n            \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n            \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-unthreaded-installed\"\n"
+        },
+        {
+          "start": 3817215,
+          "previous": "            \"perl-finite-specializations-installed\"\n",
+          "current": "            \"perl-finite-specializations-installed\",\n            \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n            \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-unthreaded-installed\"\n"
+        },
+        {
+          "start": 3817766,
+          "previous": "            \"perl-finite-specializations-installed\"\n",
+          "current": "            \"perl-finite-specializations-installed\",\n            \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n            \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-unthreaded-installed\"\n"
+        },
+        {
+          "start": 3818323,
+          "previous": "            \"perl-finite-specializations-installed\"\n",
+          "current": "            \"perl-finite-specializations-installed\",\n            \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n            \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-unthreaded-installed\"\n"
+        },
+        {
+          "start": 3818895,
+          "previous": "            \"perl-finite-specializations-installed\"\n",
+          "current": "            \"perl-finite-specializations-installed\",\n            \"generic-record-specialized-perl-5-36-3-threaded-installed\",\n            \"generic-record-specialized-perl-5-36-3-unthreaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-threaded-installed\",\n            \"generic-record-specialized-perl-5-38-2-unthreaded-installed\"\n"
+        },
+        {
+          "start": 3819658,
+          "previous": "        \"Ordinary-source native Perl only; reviewed IR and other native consumers are not covered by this evidence.\"\n",
+          "current": "        \"Ordinary-source native Perl only; reviewed IR and other native consumers are not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3820117,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic Perl subroutine. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3821045,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete C and C++ exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. A closed instantiation of a generic structure named by an abbrev is an alias-named record: the alias is its identity and Lean spelling, Lean instantiates every field and the constructor at the alias's arguments and universes, the Binding IR records the structure and its resolved arguments as the lean-lang.org/instantiation extension, and two aliases of one application are two host types with identical layout and the same origin. Source-free offline C and C++ consumers pass 1013 and 1012 checks over the alias-named records, including a phantom instantiation and the pair of two named instantiations.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete C and C++ exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. A closed instantiation of a generic structure named by an abbrev is an alias-named record: the alias is its identity and Lean spelling, Lean instantiates every field and the constructor at the alias's arguments and universes, the Binding IR records the structure and its resolved arguments as the lean-lang.org/instantiation extension, and two aliases of one application are two host types with identical layout and the same origin. Source-free offline C and C++ consumers pass 1013 and 1012 checks over the alias-named records, including a phantom instantiation and the pair of two named instantiations. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3823107,
+          "previous": "            \"native-generic-records-c-cpp-installed\"\n",
+          "current": "            \"native-generic-records-c-cpp-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\"\n"
+        },
+        {
+          "start": 3823511,
+          "previous": "            \"native-generic-records-c-cpp-installed\"\n",
+          "current": "            \"native-generic-records-c-cpp-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\"\n"
+        },
+        {
+          "start": 3823897,
+          "previous": "            \"native-generic-records-c-cpp-installed\"\n",
+          "current": "            \"native-generic-records-c-cpp-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\"\n"
+        },
+        {
+          "start": 3824300,
+          "previous": "            \"native-generic-records-c-cpp-installed\"\n",
+          "current": "            \"native-generic-records-c-cpp-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\"\n"
+        },
+        {
+          "start": 3824701,
+          "previous": "            \"native-generic-records-c-cpp-installed\"\n",
+          "current": "            \"native-generic-records-c-cpp-installed\",\n            \"generic-record-specialized-c-cpp-python-installed\"\n"
+        },
+        {
+          "start": 3825503,
+          "previous": "        \"Alias-named records cover nonrecursive copied structures over supported copied fields; inherited, indexed, open and dependent structures, proof fields, and arguments that carry a resource, a callback or a refinement anywhere inside them are rejected at the source, an application that no abbrev names is rejected, and refined fields inside an instantiated record are not covered by this evidence.\"\n",
+          "current": "        \"Alias-named records cover nonrecursive copied structures over supported copied fields; inherited, indexed, open and dependent structures, proof fields, and arguments that carry a resource, a callback or a refinement anywhere inside them are rejected at the source, an application that no abbrev names is rejected, and refined fields inside an instantiated record are not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3826252,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3827290,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete .NET exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete .NET exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3828654,
+          "previous": "            \"native-specializations-dotnet-installed\"\n",
+          "current": "            \"native-specializations-dotnet-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3829011,
+          "previous": "            \"native-specializations-dotnet-installed\"\n",
+          "current": "            \"native-specializations-dotnet-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3829345,
+          "previous": "            \"native-specializations-dotnet-installed\"\n",
+          "current": "            \"native-specializations-dotnet-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3829701,
+          "previous": "            \"native-specializations-dotnet-installed\"\n",
+          "current": "            \"native-specializations-dotnet-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3830050,
+          "previous": "            \"native-specializations-dotnet-installed\"\n",
+          "current": "            \"native-specializations-dotnet-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3830585,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source .NET only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source .NET only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3831190,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3832136,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Java and Kotlin exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Java and Kotlin exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3833541,
+          "previous": "            \"native-specializations-java-kotlin-installed\"\n",
+          "current": "            \"native-specializations-java-kotlin-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3833903,
+          "previous": "            \"native-specializations-java-kotlin-installed\"\n",
+          "current": "            \"native-specializations-java-kotlin-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3834253,
+          "previous": "            \"native-specializations-java-kotlin-installed\"\n",
+          "current": "            \"native-specializations-java-kotlin-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3834614,
+          "previous": "            \"native-specializations-java-kotlin-installed\"\n",
+          "current": "            \"native-specializations-java-kotlin-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3834964,
+          "previous": "            \"native-specializations-java-kotlin-installed\"\n",
+          "current": "            \"native-specializations-java-kotlin-installed\",\n            \"generic-record-specialized-dotnet-java-kotlin-installed\"\n"
+        },
+        {
+          "start": 3835515,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source Java and Kotlin only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source Java and Kotlin only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3836131,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3837064,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete native PHP exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete native PHP exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3838441,
+          "previous": "            \"native-specializations-php-native-installed\"\n",
+          "current": "            \"native-specializations-php-native-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3838808,
+          "previous": "            \"native-specializations-php-native-installed\"\n",
+          "current": "            \"native-specializations-php-native-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3839158,
+          "previous": "            \"native-specializations-php-native-installed\"\n",
+          "current": "            \"native-specializations-php-native-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3839524,
+          "previous": "            \"native-specializations-php-native-installed\"\n",
+          "current": "            \"native-specializations-php-native-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3839886,
+          "previous": "            \"native-specializations-php-native-installed\"\n",
+          "current": "            \"native-specializations-php-native-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3840437,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source native PHP only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source native PHP only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3841048,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3841969,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Ruby exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Ruby exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3843335,
+          "previous": "            \"native-specializations-ruby-installed\"\n",
+          "current": "            \"native-specializations-ruby-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3843696,
+          "previous": "            \"native-specializations-ruby-installed\"\n",
+          "current": "            \"native-specializations-ruby-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3844034,
+          "previous": "            \"native-specializations-ruby-installed\"\n",
+          "current": "            \"native-specializations-ruby-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3844394,
+          "previous": "            \"native-specializations-ruby-installed\"\n",
+          "current": "            \"native-specializations-ruby-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3844737,
+          "previous": "            \"native-specializations-ruby-installed\"\n",
+          "current": "            \"native-specializations-ruby-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3845276,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source Ruby only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source Ruby only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3845881,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3846802,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Rust exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete Rust exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3848163,
+          "previous": "            \"native-specializations-rust-installed\"\n",
+          "current": "            \"native-specializations-rust-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 3848514,
+          "previous": "            \"native-specializations-rust-installed\"\n",
+          "current": "            \"native-specializations-rust-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 3848842,
+          "previous": "            \"native-specializations-rust-installed\"\n",
+          "current": "            \"native-specializations-rust-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 3849192,
+          "previous": "            \"native-specializations-rust-installed\"\n",
+          "current": "            \"native-specializations-rust-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 3849527,
+          "previous": "            \"native-specializations-rust-installed\"\n",
+          "current": "            \"native-specializations-rust-installed\",\n            \"generic-record-specialized-python312-rust-installed\"\n"
+        },
+        {
+          "start": 3850056,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source Rust only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source Rust only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3850661,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        },
+        {
+          "start": 3851590,
+          "previous": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete WIT/WASI exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic.\",\n",
+          "current": "      \"scope\": \"Relocated ordinary-source Lean builds reproduce and install concrete WIT/WASI exports for finite generic specializations. Installed consumers exercise leading implicit type arguments, explicit type arguments, Lean-selected instance dictionaries at scalar and constructed types, and alias type arguments including an alias of Array UInt32, without access to the source tree; the unspecialized declarations stay absent. A generic structure instantiation named by an abbrev is admitted as an alias-named record; an unnamed one is rejected at the source with a classified diagnostic. Installed packages also execute nine configured specializations over alias-named generic records, separate namespaces and List/Option aliases, alongside the ten direct record exports. Each alias keeps its name and compiler-recorded origin; host assignability follows the host language.\",\n"
+        },
+        {
+          "start": 3852952,
+          "previous": "            \"native-specializations-wit-wasi-installed\"\n",
+          "current": "            \"native-specializations-wit-wasi-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3853317,
+          "previous": "            \"native-specializations-wit-wasi-installed\"\n",
+          "current": "            \"native-specializations-wit-wasi-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3853663,
+          "previous": "            \"native-specializations-wit-wasi-installed\"\n",
+          "current": "            \"native-specializations-wit-wasi-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3854027,
+          "previous": "            \"native-specializations-wit-wasi-installed\"\n",
+          "current": "            \"native-specializations-wit-wasi-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3854392,
+          "previous": "            \"native-specializations-wit-wasi-installed\"\n",
+          "current": "            \"native-specializations-wit-wasi-installed\",\n            \"generic-record-specialized-php-native-ruby-wit-wasi-installed\"\n"
+        },
+        {
+          "start": 3854939,
+          "previous": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them, and this host's installed acceptance of them is not yet recorded.\",\n        \"Ordinary-source WIT/WASI only; reviewed IR is not covered by this evidence.\"\n",
+          "current": "        \"Type arguments name closed constants or aliases; instantiations of generic variants are rejected; instantiations of generic structures require an abbrev that names them.\",\n        \"Ordinary-source WIT/WASI only; reviewed IR is not covered by this evidence.\",\n        \"Alias-named records cover nonrecursive copied structures over supported copied fields. Inherited, indexed, open and dependent structures, proof fields, unnamed applications and refined generic arguments remain unsupported; reviewed generic signatures and PHP-Wasm are not covered by these runs.\"\n"
+        },
+        {
+          "start": 3855548,
+          "previous": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent.\",\n",
+          "current": "        \"generic\": \"Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures.\",\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "1a993647d73aaf6736bfab85b24dc07307b4bfa688d127600aff142ab53972d0",
+      "previousSha256": "abc65a22c1db73568beeb64afe13b62d2b233e4461385c7b69a9db7b73f7026d",
+      "edits": [
+        {
+          "start": 56529,
+          "previous": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 62674,
+          "previous": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 88400,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 94355,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "3bb08a3b8de99f0e7ab852ff4d21f20ea1c93fc957a568e6b110fe2504de5868",
+      "previousSha256": "1e1ef3b6af271e4885d7fe000a6ee16c50eb6ccaebee7fc2bd974238f3d57755",
+      "edits": [
+        {
+          "start": 1997,
+          "previous": "",
+          "current": "import \"./helpers/reviewed-scalar-host-evidence-tests.mjs\";\nimport \"./helpers/generic-record-promotion-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-products-source-history-tests.mjs",
+      "currentSha256": "ecaee6fb1a483a66df8b362dc74a4c40e4101bef9525beee73ecf5427e6d4e21",
+      "previousSha256": "a74b0619ed92c14ef3a471b56f4d00f67af029ba552221d128c3d846ec10e86c",
+      "edits": [
+        {
+          "start": 280,
+          "previous": "",
+          "current": "import { beforeGenericRecordPromotionSource } from \"./generic-record-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 981,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeGenericRecordPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1885,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeGenericRecordPromotionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2767,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeGenericRecordPromotionSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-products-source-history.mjs",
+      "currentSha256": "891a71fb087ba5d3c46d056027739ab333b871b65178e9b5d658fa40c8390228",
+      "previousSha256": "faceab1f5122e31cc89b92042b5130269df75da7034f84d348d824910c6117e4",
+      "edits": [
+        {
+          "start": 229,
+          "previous": "",
+          "current": "import { beforeGenericRecordPromotionSource } from \"./generic-record-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2499,
+          "previous": "",
+          "current": "\tsource = beforeGenericRecordPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "146bfee552fd0cb51e2730d898149542cbab5a37f1d80c0c0373c681c655faf4",
+      "previousSha256": "ecc370eeec71f8b0b7abfac67b7413ceb363dfb0bdde5900c7dd51f5662e413d",
+      "edits": [
+        {
+          "start": 4692,
+          "previous": "",
+          "current": "import { genericRecordPromotionChangedPaths } from \"./generic-record-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 39724,
+          "previous": "",
+          "current": "\t, ...genericRecordPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-specializations.test.mjs",
+      "currentSha256": "f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051",
+      "previousSha256": "4dbc1feac374e4314cc265cae1ec25abe36e6897fab76853cccdb5791beca8df",
+      "edits": [
+        {
+          "start": 4821,
+          "previous": "\tassert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}${argument.target ? `=${argument.target.name}` : \"\"}`), [\"alias:Specialized.Word=string\", \"primitive:string\"]);\n",
+          "current": "\tassert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}${argument.target ? `=${argument.target.name}` : \"\"}`), [\"alias:Specialized.Word=uint32\", \"primitive:string\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554",
+      "previousSha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633",
+      "edits": [
+        {
+          "start": 24520,
+          "previous": "",
+          "current": "\tconst genericRecordReports = {\n\t\tpython: [\"c-cpp-python\", \"python312-rust\"], rust: [\"python312-rust\"]\n\t\t, dotnet: [\"dotnet-java-kotlin\"], java: [\"dotnet-java-kotlin\"]\n\t\t, kotlin: [\"dotnet-java-kotlin\"], ruby: [\"php-native-ruby-wit-wasi\"]\n\t\t, \"php-native\": [\"php-native-ruby-wit-wasi\"]\n\t\t, \"wit-wasi\": [\"php-native-ruby-wit-wasi\"]\n\t}[profile] ?? [];\n"
+        },
+        {
+          "start": 26261,
+          "previous": "",
+          "current": "\t\t\tif(specialized.includes(cell.shape))\n\t\t\t{\n\t\t\t\tassert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`\n\t\t\t\t\t, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)]);\n\t\t\t\tcontinue;\n\t\t\t}\n"
+        }
+      ]
+    }
+  ]
+}
