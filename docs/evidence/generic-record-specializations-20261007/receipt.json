@@ -7,7 +7,7 @@
   "execution": "local",
   "glibcMinimumVersion": "2.36",
   "sourcePath": "ordinary-source",
-  "scope": "Nine config-only finite function specializations over closed generic record aliases, two namespaces and Option/List aliases. These reports do not cover open generic dispatch, refined generic fields, reviewed IR, npm, browser or PHP-Wasm.",
+  "scope": "Nine config-only finite function specializations over closed generic record aliases, two namespaces and Option/List aliases. These reports do not cover open generic dispatch, refined generic fields, reviewed IR, browser or PHP-Wasm.",
   "reports": [
     {
       "id": "specialized-c-cpp-python",
@@ -58,6 +58,63 @@
       ],
       "phpRuntime": "PHP 8.2.33",
       "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native,ruby,wit-wasi LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-php-native-ruby-wit-wasi.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-perl-5.36.3-threaded",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-perl-5.36.3-threaded.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "1c8a5efb1da07cb2955500b4021a9e448116da9a593b754d06e0c12c4a3c8187",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.36.3-threaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-threaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.36.3-threaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-perl-5.36.3-unthreaded",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-perl-5.36.3-unthreaded.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "cb3deedb0bbdb776c0eb7cf7742206bfced64b07db6226e2dd57579f58311c11",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.36.3-unthreaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-unthreaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.36.3-unthreaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-perl-5.38.2-threaded",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-perl-5.38.2-threaded.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "fa8bce44ecba6f9a73286ef01f1d3387abcbe6d9da0754c80f6b5c44fde009d4",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.38.2-threaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-threaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.38.2-threaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-perl-5.38.2-unthreaded",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-perl-5.38.2-unthreaded.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "f5abd1a10de1e3e4fb2f1f0bd6d3eaad9d182dfaab17d9187dba189d1bb7cd4d",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.38.2-unthreaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-unthreaded/bin/perl LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl LEAN_BRIDGE_GENERIC_RECORD_SPECIALIZED_REPORT=build/generic-records/specialized-perl-5.38.2-unthreaded.json taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct specialized' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "specialized-npm",
+      "path": "docs/evidence/generic-record-specializations-20261007/specialized-npm.json",
+      "revision": "d5705ff38d67e6410c987a3a3a28cc409162ebfd",
+      "sha256": "6823785a955b34446c8ad254afb6113cdbcbfc8c1da2c7c6d7ca3c48394a0c07",
+      "profiles": [
+        "npm"
+      ],
+      "runtime": "Node and strict TypeScript",
+      "setup": "Use the locked browser runtime cache at build/lean-runtime and its side-linker at /app/build/lean-link-spike/lazy; the isolated worktree used build/lean-runtime -> /app/build/lean-runtime.",
+      "scope": "Node execution and strict TypeScript checking, with two-root archive equality and source-free offline installation asserted by the producing test. The original report records checks, rejections, archive hashes and the nine configured specializations, not per-stage installation flags.",
+      "reproduceCommand": "LEAN_BRIDGE_LAKE_WASM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy taskset -c 3 node --test --test-reporter=spec --test-name-pattern='installed npm packages specialize generic functions' tests/generic-records.test.mjs"
     }
   ]
 }

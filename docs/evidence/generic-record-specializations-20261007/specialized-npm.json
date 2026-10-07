@@ -1,0 +1,74 @@
+{
+  "abi": 7,
+  "archiveSha256": "09be27d6338cdb17da704056691d22dc818f42e712fe270fb7eff1792e246f56",
+  "checks": 1019,
+  "profile": "npm",
+  "rejections": 1010,
+  "runtimeArchiveSha256": "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff",
+  "schemaVersion": 1,
+  "specializations": [
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNatBox",
+      "types": [
+        "OnboardingSmall.NatBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoAgain",
+      "types": [
+        "OnboardingSmall.NatBoxAgain"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoTextBox",
+      "types": [
+        "OnboardingSmall.TextBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoLeft",
+      "types": [
+        "OnboardingSmall.Left.LeftBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoRight",
+      "types": [
+        "OnboardingSmall.Right.RightBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoBoxes",
+      "types": [
+        "OnboardingSmall.Boxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalBoxes",
+      "types": [
+        "OnboardingSmall.OptionalBoxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNats",
+      "types": [
+        "OnboardingSmall.Nats"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalNat",
+      "types": [
+        "OnboardingSmall.OptionalNat"
+      ]
+    }
+  ]
+}

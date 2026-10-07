@@ -1,0 +1,225 @@
+{
+  "archives": {
+    "archives/LeanBridge-GenericRecords-1.000.tar.gz": "55e7c202cd68cd22b1131298a24a6e23bd54db985dcda89106fa4baee3887ca4",
+    "archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz": "0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "1d43bb1290b91e94fc6438dc52b6ea2c1a06bc9d2aa7cf1ab1dc1c2f4f175844",
+      "checks": 1040,
+      "compilerFreePath": true,
+      "consumerSha256": "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "c2a6aef0c6df5e160aeca8424ea1af67fdb5c88091c7fdaa22ee4cb6619e7e04",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 100443,
+              "path": "archives/LeanBridge-GenericRecords-1.000.tar.gz",
+              "sha256": "55e7c202cd68cd22b1131298a24a6e23bd54db985dcda89106fa4baee3887ca4"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-GenericRecords",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51361769,
+              "path": "archives/LeanBridge-Runtime-0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381.tar.gz",
+              "sha256": "0b1b2695e45317b52283ba42f8ac54db15f6fa21158103b54d609f213f9ecf31"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpan",
+          "version": "0.0020786926711574380382417250240901665129177177720593006464839539885241349844200381"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "194bf23de13f0b71da96f1993a273a98d06366de08c7a0d9add4e69413a5903f",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "5f059109585c5a679cb60406b68f654582bc240c3f969e8da2655d7ca317eaf2",
+      "specializations": [
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNatBox",
+          "types": [
+            "GenericRecords.NatBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoAgain",
+          "types": [
+            "GenericRecords.NatBoxAgain"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoTextBox",
+          "types": [
+            "GenericRecords.TextBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoLeft",
+          "types": [
+            "GenericRecords.Left.LeftBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoRight",
+          "types": [
+            "GenericRecords.Right.RightBox"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoBoxes",
+          "types": [
+            "GenericRecords.Boxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalBoxes",
+          "types": [
+            "GenericRecords.OptionalBoxes"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoNats",
+          "types": [
+            "GenericRecords.Nats"
+          ]
+        },
+        {
+          "declaration": "GenericRecords.echo",
+          "name": "GenericRecords.echoOptionalNat",
+          "types": [
+            "GenericRecords.OptionalNat"
+          ]
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

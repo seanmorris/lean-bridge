@@ -16,9 +16,14 @@ const expected = [
 	, ["specialized-python312-rust", "a81e5025607d325be456b06284205e3edde5eb7cb43bb48aa30aae03950061ce", ["python", "rust"]]
 	, ["specialized-dotnet-java-kotlin", "e0b392e33ef384aa69cfcf0beeca077dccbbc52faef2c3f42d56b86b599be724", ["dotnet", "java", "kotlin"]]
 	, ["specialized-php-native-ruby-wit-wasi", "5891a6b8e607b3e0d86ea704cf83df096cc2ed25ec8826d66f4840dd76ecf38b", ["php-native", "ruby", "wit-wasi"]]
+	, ["specialized-perl-5.36.3-threaded", "1c8a5efb1da07cb2955500b4021a9e448116da9a593b754d06e0c12c4a3c8187", ["perl"]]
+	, ["specialized-perl-5.36.3-unthreaded", "cb3deedb0bbdb776c0eb7cf7742206bfced64b07db6226e2dd57579f58311c11", ["perl"]]
+	, ["specialized-perl-5.38.2-threaded", "fa8bce44ecba6f9a73286ef01f1d3387abcbe6d9da0754c80f6b5c44fde009d4", ["perl"]]
+	, ["specialized-perl-5.38.2-unthreaded", "f5abd1a10de1e3e4fb2f1f0bd6d3eaad9d182dfaab17d9187dba189d1bb7cd4d", ["perl"]]
+	, ["specialized-npm", "6823785a955b34446c8ad254afb6113cdbcbfc8c1da2c7c6d7ca3c48394a0c07", ["npm"]]
 ];
-const counts = { c: 1029, cpp: 1024, python: 1036, rust: 1025, dotnet: 1034, java: 1034, kotlin: 1030, "php-native": 1035, ruby: 1036, "wit-wasi": 1036 };
-const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", ruby: "rb", "wit-wasi": "c" };
+const counts = { c: 1029, cpp: 1024, python: 1036, rust: 1025, dotnet: 1034, java: 1034, kotlin: 1030, "php-native": 1035, ruby: 1036, "wit-wasi": 1036, perl: 1040 };
+const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", ruby: "rb", "wit-wasi": "c", perl: "pl" };
 
 test("specialization archives retain nine configured applications and real installed host rejection controls", async () => {
 	const receipt = JSON.parse(await readFile(`${directory}/receipt.json`, "utf8"));
@@ -37,12 +42,26 @@ test("specialization archives retain nine configured applications and real insta
 		assert.equal(reference.sha256, digest);
 		assert.equal(reference.revision, "d5705ff38d67e6410c987a3a3a28cc409162ebfd");
 		assert.deepEqual(reference.profiles, profiles);
-		assert.ok(reference.reproduceCommand.includes(`LEAN_BRIDGE_GENERIC_RECORD_PROFILES=${profiles.join(",")}`));
-		assert.ok(reference.reproduceCommand.includes("--test-name-pattern='relocated source-free native packages construct specialized'"));
 		const bytes = await readFile(reference.path);
 		assert.equal(sha256(bytes), digest);
 		const report = JSON.parse(bytes);
 		assert.equal(report.schemaVersion, 1);
+		if(id === "specialized-npm")
+		{
+			assert.equal(report.profile, "npm");
+			assert.equal(report.abi, 7);
+			assert.equal(report.checks, 1019);
+			assert.equal(report.rejections, 1010);
+			assert.deepEqual(report.specializations, genericRecordSpecializations("OnboardingSmall"));
+			assert.equal(report.archiveSha256, "09be27d6338cdb17da704056691d22dc818f42e712fe270fb7eff1792e246f56");
+			assert.equal(report.runtimeArchiveSha256, "253ebd12714831828d2710a45f3c411a4004a5516a75ae63dc98d03e450ca7ff");
+			assert.match(reference.reproduceCommand, /LEAN_BRIDGE_LAKE_WASM_TEST=1/u);
+			assert.ok(reference.reproduceCommand.includes("--test-name-pattern='installed npm packages specialize generic functions'"));
+			assert.match(reference.scope, /not per-stage installation flags/u);
+			continue;
+		}
+		assert.ok(reference.reproduceCommand.includes(`LEAN_BRIDGE_GENERIC_RECORD_PROFILES=${profiles.join(",")}`));
+		assert.ok(reference.reproduceCommand.includes("--test-name-pattern='relocated source-free native packages construct specialized'"));
 		assert.equal(report.reproducible, true);
 		assert.deepEqual(report.reports.map(item => item.profile), profiles);
 		for(const item of report.reports)
@@ -84,4 +103,11 @@ test("specialization archives retain nine configured applications and real insta
 	assert.match(receipt.reports[1].reproduceCommand, /LEAN_BRIDGE_PYTHON=\/app\/\.toolchains\/python312\/bin\/python3\.12/u);
 	assert.equal(receipt.reports[3].phpRuntime, "PHP 8.2.33");
 	assert.match(receipt.reports[3].reproduceCommand, /LEAN_BRIDGE_PHP=\/usr\/bin\/php/u);
+	for(const abi of ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"])
+	{
+		const perl = receipt.reports.find(item => item.id === `specialized-perl-${abi}`);
+		assert.equal(perl.runtime, abi);
+		assert.ok(perl.reproduceCommand.includes(`LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/${abi}/bin/perl`));
+		assert.ok(perl.reproduceCommand.includes("LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36"));
+	}
 });
