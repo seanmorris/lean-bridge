@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-history-cache-v1",
+  "predecessorCommit": "a82e4c55bbf94585e0edf733ffe561b055c360bb",
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "5c1cd778ba030743e7974c01dadce11eb450f089b4b13a52e05af2f5dec63e21",
+      "previousSha256": "87b640f0818ee0bcdf8e8c737d66a8260ab4f59308aefe67b4512084411e6a72",
+      "edits": [
+        {
+          "start": 3678,
+          "previous": "",
+          "current": "import { refinementHistoryCacheChangedPaths } from \"./refinement-history-cache-source-history.mjs\";\nimport { memoizeSourceHistory } from \"./source-history-memo.mjs\";\n"
+        },
+        {
+          "start": 35613,
+          "previous": "const normalizeFinRefinementSource = (path, source, expected) => {\n",
+          "current": "const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {\n"
+        },
+        {
+          "start": 36813,
+          "previous": "};\n",
+          "current": "});\n"
+        },
+        {
+          "start": 38302,
+          "previous": "",
+          "current": "\t, ...refinementHistoryCacheChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-source-history-tests.mjs",
+      "currentSha256": "54db08d0de418aa4ae8b7ced0b1a690115d3f74076aa72f1e84bdbd87eed5095",
+      "previousSha256": "50107787d18d6aeac71d05d5007a6892a168f6028751c6541a0d1b39f3758ddb",
+      "edits": [
+        {
+          "start": 271,
+          "previous": "",
+          "current": "import { beforeRefinementHistoryCacheSource } from \"./refinement-history-cache-source-history.mjs\";\n"
+        },
+        {
+          "start": 993,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementHistoryCacheSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1893,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeRefinementHistoryCacheSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2783,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeRefinementHistoryCacheSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-source-history.mjs",
+      "currentSha256": "7dce896af4d606c9ab691a0d83676012179529f21b613b48d9288efe2be698bf",
+      "previousSha256": "d299c71c5cca7500f6bf97a6a06724d9393d20eb7aeafd1072fafcbb30e4b3c5",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeRefinementHistoryCacheSource } from \"./refinement-history-cache-source-history.mjs\";\n"
+        },
+        {
+          "start": 2557,
+          "previous": "",
+          "current": "\tsource = beforeRefinementHistoryCacheSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/source-history-memo.test.mjs",
+      "currentSha256": "0e77e5e003f0e00ba7e94782f14d0dbf1ad0d3c9d6a3b372632444975570efa6",
+      "previousSha256": "0b22f40c277d6bf63adb88660f79c00b3ddd90bbd63efa95e3805b816b16dc2a",
+      "edits": [
+        {
+          "start": 246,
+          "previous": "",
+          "current": "import \"./helpers/refinement-history-cache-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

@@ -45,6 +45,9 @@ import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-eviden
 import { containerHostDispatchChangedPaths } from "./container-host-dispatch-source-history.mjs";
 import { reviewedSemanticDecisionsChangedPaths } from "./reviewed-semantic-decisions-source-history.mjs";
 import { genericRecordsChangedPaths } from "./generic-records-source-history.mjs";
+import { reviewedFinChangedPaths } from "./reviewed-fin-source-history.mjs";
+import { refinementHistoryCacheChangedPaths } from "./refinement-history-cache-source-history.mjs";
+import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -493,7 +496,7 @@ const beforeFinTypeSurface = source => {
  * @param source - Complete current source.
  * @param expected - Optional exact stopping SHA-256.
  */
-const normalizeFinRefinementSource = (path, source, expected) => {
+const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
 	source = beforeSubtypeRefinementSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	if(path === typeSurfacePath) return beforeFinTypeSurface(source);
@@ -517,7 +520,7 @@ const normalizeFinRefinementSource = (path, source, expected) => {
 	const previous = reverse(source, transition.edits, `Fin ${path}`);
 	assert.equal(sha256(previous), transition.previous);
 	return previous;
-};
+});
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	extractorPath, typeSurfacePath, ...Object.keys(transitions)
@@ -553,6 +556,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...containerHostDispatchChangedPaths
 	, ...reviewedSemanticDecisionsChangedPaths
 	, ...genericRecordsChangedPaths
+	, ...reviewedFinChangedPaths
+	, ...refinementHistoryCacheChangedPaths
 ])].sort());
 
 /**

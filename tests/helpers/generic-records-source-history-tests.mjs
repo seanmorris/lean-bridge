@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeReviewedFinSource } from "./reviewed-fin-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeGenericRecordsSource, genericRecordsChangedPaths
 	, genericRecordsHistoryPath, reverseGenericRecordsUpdate } from "./generic-records-source-history.mjs";
@@ -17,7 +18,7 @@ test("Generic records history authenticates exact predecessors and rejects unkno
 	assert.deepEqual(record.updates.map(item => item.path), genericRecordsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedFinSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseGenericRecordsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeGenericRecordsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeGenericRecordsSource(update.path, source, update.currentSha256), source);
@@ -36,7 +37,7 @@ const reworded = ["dotnet", "java-kotlin", "php-native", "ruby", "rust", "wit-wa
 
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Generic records evidence adds two receipts, extends the two generic signature cells they cover, rewords six limitations and changes no other claim", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeReviewedFinSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeGenericRecordsSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), Object.values(receipts));
@@ -86,7 +87,7 @@ test("Generic records evidence adds two receipts, extends the two generic signat
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(genericRecordsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = beforeReviewedFinSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(file.sha256, sha256(beforeGenericRecordsSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;

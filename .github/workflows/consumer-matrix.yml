@@ -2242,10 +2242,12 @@ jobs:
           test -s build/aliases/native.json
           npm run test:native-fin
           test -s build/native-fin/native.json
+          test -s build/native-fin/native-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/c-cpp.json
-          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs
+          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/c-cpp.json
+          test -s build/native-fin-containers/reviewed-c-cpp.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/c-cpp.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
@@ -2419,8 +2421,10 @@ jobs:
             build/collections/native.json
             build/aliases/native.json
             build/native-fin/native.json
+            build/native-fin/native-reviewed.json
             build/native-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
+            build/native-fin-containers/reviewed-c-cpp.json
             build/native-subtype/c-cpp.json
             build/generic-records/c-cpp.json
             build/variants/cpp.json
@@ -2486,8 +2490,9 @@ jobs:
           test -s build/native-fin/python.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/python.json
-          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs
+          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/python.json
+          test -s build/native-fin-containers/reviewed-python.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/python.json
           LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs
@@ -2565,6 +2570,7 @@ jobs:
             build/native-fin/python.json
             build/native-specializations/python.json
             build/native-fin-containers/python.json
+            build/native-fin-containers/reviewed-python.json
             build/native-subtype/python.json
             build/variants/python.json
             build/collections/python.json
@@ -2660,8 +2666,9 @@ jobs:
           test -s build/native-fin/rust.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=rust node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/rust.json
-          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs
+          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/rust.json
+          test -s build/native-fin-containers/reviewed-rust.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/rust.json
           LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs
@@ -2709,6 +2716,7 @@ jobs:
             build/native-fin/rust.json
             build/native-specializations/rust.json
             build/native-fin-containers/rust.json
+            build/native-fin-containers/reviewed-rust.json
             build/native-subtype/rust.json
             build/variants/rust.json
             build/collections/rust-conversions.json
@@ -2734,7 +2742,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
               consumer_command="$consumer_command && npm run test:native-fin"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
@@ -2776,7 +2784,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
@@ -2809,7 +2817,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_FIN_TEST=1 node --test tests/rust-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=rust node --test tests/native-specializations.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"

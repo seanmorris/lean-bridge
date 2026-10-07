@@ -21,6 +21,7 @@ import { nativeFinConsumer, nativeFinDispatchColumns, nativeFinDispatchInterpose
 import { supportsNativeRefinementTargets } from "../src/build/native-project.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { nativeFinReviewedIr } from "./helpers/reviewed-fin-fixture.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_FIN_TEST === "1";
 const huge = "1180591620717411303424";
@@ -135,15 +136,15 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 	await assert.rejects(() => readVerifiedNativeComponent(outputRoot, identity, { copiedGraphs: true }), error => error.code === "native-refinements-unavailable");
 	const verified = await readVerifiedNativeComponent(outputRoot, identity, { copiedGraphs: true, nativeRefinements: true });
 	assert.equal(canonicalJson(verified.model), canonicalJson(model));
-	// Reviewed Binding IR is outside this slice; the same document must not erase a bound.
+	// A reviewed document must not erase a compiler-owned bound.
 	const reviewed = await project(t);
 	const reviewedIr = structuredClone(model.bindingIr);
 	// Author-reviewed documents omit compiler extensions, including the bound itself.
 	for(const producer of reviewedIr.producers) producer.extensions = {};
 	for(const declaration of reviewedIr.declarations) declaration.source.extensions = {};
 	await saveLakeFile(reviewed.projectRoot, "reviewed.binding-ir.json", canonicalJson(reviewedIr));
-	await assert.rejects(() => component(reviewed, true), error => error.code === "native-refinements-unsupported"
-		&& /not yet supported with reviewed Binding IR/.test(error.message));
+	await assert.rejects(() => component(reviewed, true), error => error.code === "reviewed-ir-source-mismatch"
+		&& error.details.field.includes("lean-lang.org/refinements"));
 });
 
 // Arrays, lists and options of Fin are checked containers since VO #1427; other positions stay rejected.
@@ -234,7 +235,7 @@ const relocate = async (profile, consumer, packages, observation) => {
 		, installedFilesSha256: sha256(canonicalJson(receipt.files)) };
 };
 
-test("relocated source-free C and C++ packages check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST !== "1", timeout: 1_800_000 }, async t => {
+const checkInstalledFin = async (t, reviewed = false) => {
 	const environment = nativeFixtureEnvironment(["c", "cpp"]), reports = [], archives = [];
 	for(const attempt of [0, 1])
 	{
@@ -243,6 +244,8 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(nativeFinReviewedIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { c: { name: "native-fin", version: "1.0.0" }, cpp: { name: "native-fin", version: "1.0.0" } } }));
@@ -252,6 +255,11 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		// Test-only raw-ABI probe headers; installed consumers never receive them.
 		await saveLakeFile(join(consumer, "probe-headers"), "native_fin.h", await readFile(join(outputRoot, "native/c-binding/include/native_fin.h")));
@@ -273,7 +281,7 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;
 			const relocation = await relocate(profile, consumer, packages, observation);
 			reports.push({ profile
-				, path: "ordinary-source"
+				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
 				, ...relocation
 				, ...(dispatch ? { dispatch } : {})
@@ -282,6 +290,7 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 				, sourceRemovedBeforeInstallation: true });
 			await rm(join(consumer, `${profile}-relocated`), { recursive: true, force: true });
 		}
@@ -289,5 +298,9 @@ test("relocated source-free C and C++ packages check Fin bounds through public a
 	}
 	// Two clean authoring roots must produce byte-identical release archives.
 	assert.deepEqual(archives[1], archives[0]);
-	await saveLakeFile("build/native-fin", "native.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+	await saveLakeFile("build/native-fin", reviewed ? "native-reviewed.json" : "native.json", canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+};
+
+test("relocated source-free C and C++ packages check Fin bounds through public and raw adapters", { skip: process.env.LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST !== "1", timeout: 1_800_000 }, t => checkInstalledFin(t));
+
+test("independently reviewed C and C++ Fin packages preserve bounds through installed public and raw adapters", { skip: process.env.LEAN_BRIDGE_NATIVE_FIN_INSTALLED_TEST !== "1", timeout: 1_800_000 }, t => checkInstalledFin(t, true));
