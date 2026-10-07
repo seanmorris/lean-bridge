@@ -163,10 +163,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       ("predicate", obj [("kind", str "fin"), ("bound", str (toString bound))]),
       ("abi", ← abi e)]
   if e.isAppOfArity ``Subtype 2 then
-    if depth != 0 || copied then
+    -- Native packages check Subtype only at top-level sites; npm also keeps that rule today.
+    if depth != 0 || copied || !structural then
       reject e "Subtype refinements currently require a top-level parameter or result"
-    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" then
-      reject e "Subtype refinements are not implemented by the native-library profile"
     let some constructor := checked
       | reject e "Subtype refinements require a configured checked constructor"
     let constructorName := constructor.toName

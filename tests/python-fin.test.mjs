@@ -83,7 +83,7 @@ test("generated Python bound docs come only from checked refinement metadata", (
 		, { parameters: [null, null], result: null }
 		, { parameters: [null, fin("04"), null], result: null }
 		, { parameters: [null, { ...fin("4"), extra: true }, null], result: null }
-		, { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null }
+		, { parameters: [null, { kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }, null], result: null }
 		, { parameters: [fin("4"), null, null], result: fin("4") }
 	];
 	for(const value of malformed)
@@ -91,6 +91,9 @@ test("generated Python bound docs come only from checked refinement metadata", (
 		const changed = { ...label, source: { ...label.source, extensions: { ...label.source.extensions, "lean-lang.org/refinements": value } } };
 		assert.throws(() => pythonFinRefinements(changed), TypeError, JSON.stringify(value));
 	}
+	// A top-level Subtype is documented by its checked constructor.
+	const checked = { ...label, source: { ...label.source, extensions: { ...label.source.extensions, "lean-lang.org/refinements": { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null } } } };
+	assert.equal(pythonFinSummary(checked, ["arg0", "arg1", "arg2"]), "arg1 checked by Fins.check");
 });
 
 /**

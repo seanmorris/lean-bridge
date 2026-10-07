@@ -73,7 +73,12 @@ test("generated Rust bound docs come only from checked refinement metadata", () 
 	assert.doesNotMatch(files["README.md"], /fins_api::plain/);
 	const plain = corpusReviewedIr({ id: "plain" }, [{ name: "Plain.echo", parameters: ["nat"], result: "nat" }]);
 	assert.doesNotMatch(renderCopiedRustPackage(compileCopiedRustModel(plain), evidence, { name: "plain-api", version: "1.0.0" })["README.md"], /Lean Fin/);
+	// A top-level Subtype documents its checked constructor; one inside a container is refused.
 	declaration("plain").source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "subtype", constructor: "Fins.check" }], result: null };
+	const checked = renderCopiedRustPackage(compileCopiedRustModel(ir), evidence, { name: "fins-api", version: "1.0.0" });
+	assert.match(checked["README.md"], /value0 checked by Fins\.check|arg0 checked by Fins\.check/);
+	assert.match(checked["README.md"], /Lean Subtype parameters cross as their base value\./);
+	declaration("plain").source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }], result: null };
 	assert.throws(() => renderCopiedRustPackage(compileCopiedRustModel(ir), evidence, { name: "fins-api", version: "1.0.0" }), TypeError);
 });
 

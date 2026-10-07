@@ -23,10 +23,10 @@ export const nativeFinRefinements = declaration => {
 	assertRefinement(value.result, declaration.result.type);
 	// Only Fin, alone or inside arrays, lists and options, reaches native hosts; any
 	// other constraint must fail rather than vanish from the docs.
-	const supported = refinement => refinement === null || refinement.kind === "fin"
-		|| (["array", "list", "option"].includes(refinement.kind) && refinement.arguments.length === 1 && supported(refinement.arguments[0]));
-	if(![...value.parameters, value.result].every(supported))
-		throw new TypeError(`${declaration.id}: native packages document only Fin refinements at top level or inside arrays, lists and options`);
+	const supported = (refinement, top) => refinement === null || refinement.kind === "fin" || (top && refinement.kind === "subtype")
+		|| (["array", "list", "option"].includes(refinement.kind) && refinement.arguments.length === 1 && supported(refinement.arguments[0], false));
+	if(![...value.parameters, value.result].every(refinement => supported(refinement, true)))
+		throw new TypeError(`${declaration.id}: native packages document only top-level Subtype and Fin refinements at top level or inside arrays, lists and options`);
 	return value;
 };
 
@@ -37,9 +37,12 @@ export const nativeFinRefinements = declaration => {
  * @param refinement - Validated refinement tree.
  * @param path - Site name followed by the path so far.
  */
-export const nativeFinBoundPaths = (refinement, path) => refinement === null ? []
-	: refinement.kind === "fin" ? [`${path} < ${refinement.bound}`]
-		: nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`);
+export const nativeFinBoundPaths = (refinement, path) => {
+	if(refinement === null) return [];
+	if(refinement.kind === "subtype") return [`${path} checked by ${refinement.constructor}`];
+	if(refinement.kind === "fin") return [`${path} < ${refinement.bound}`];
+	return nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`);
+};
 
 /**
  * Summarize each checked bound for generated documentation.
@@ -70,4 +73,31 @@ export const nativeFinContainerNote = (declarations, packages) => {
 	return structural
 		? `Fin inside arrays, lists and options is checked element by element before Lean runs; an empty array or an absent option is valid even for Fin 0. Bounds below list every element as name[*] and a present option value as name?. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`
 		: `Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`;
+};
+
+/**
+ * README text for a package's checked sites: the host's Fin paragraph when any Fin
+ * bound exists (byte for byte as before), and a Subtype paragraph when any export
+ * carries an author-checked constructor.
+ *
+ * @param declarations - Binding IR declarations of the package's exports.
+ * @param finParagraph - The host's Fin paragraph, including its container note.
+ * @param packages - Host package noun, such as "Ruby gems".
+ */
+export const nativeRefinementReadme = (declarations, finParagraph, packages) => {
+	const kinds = new Set();
+	const walk = refinement => {
+		if(refinement === null) return;
+		if(refinement.kind === "fin" || refinement.kind === "subtype") kinds.add(refinement.kind);
+		else refinement.arguments.forEach(walk);
+	};
+	for(const declaration of declarations)
+	{
+		const value = nativeFinRefinements(declaration);
+		if(value) [...value.parameters, value.result].forEach(walk);
+	}
+	const parts = [];
+	if(kinds.has("fin")) parts.push(finParagraph);
+	if(kinds.has("subtype")) parts.push(`Lean Subtype parameters cross as their base value. The bundled native library runs the author's checked constructor, named below, before the export runs; a value the constructor rejects fails the call with the invalid-argument error naming the parameter and constructor, and the export receives the constructed value, which may differ from the input. Subtype results are the base value. Subtype inside containers, records, variants, callbacks or reviewed Binding IR is not supported in ${packages}.`);
+	return parts.join("\n\n");
 };

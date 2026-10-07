@@ -91,10 +91,22 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
 		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list or option of one");
-		closed(type.predicate, ["kind", "bound"], "refinement predicate");
-		if(type.predicate.kind !== "fin" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound)) fail("invalid Fin refinement");
-		recurse(type.base, true);
-		if(type.base.kind !== "primitive" || type.base.name !== "nat") fail("Fin refinements require a Nat base");
+		if(type.predicate?.kind === "subtype")
+		{
+			// An author-supplied checked constructor runs only at a top-level site over a primitive base.
+			if(depth !== 0 || copied) fail("Subtype refinements require a top-level native parameter or result");
+			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
+			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid Subtype refinement");
+			recurse(type.base, true);
+			if(type.base.kind !== "primitive") fail("Subtype refinements require a primitive base");
+		}
+		else
+		{
+			closed(type.predicate, ["kind", "bound"], "refinement predicate");
+			if(type.predicate.kind !== "fin" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound)) fail("invalid Fin refinement");
+			recurse(type.base, true);
+			if(type.base.kind !== "primitive" || type.base.name !== "nat") fail("Fin refinements require a Nat base");
+		}
 		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== type.base.abi[field])) fail("refinement representation differs from its base");
 	} else if(type.kind === "alias")
 	{

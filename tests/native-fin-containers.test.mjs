@@ -100,7 +100,7 @@ test("native builds still reject Fin in fields, callbacks, products and results,
 	const mixed = { c: finContainerTargets.c[1], cpan: { module: "LeanBridge::FinContainers", version: "1.000" } };
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinContainers"], targets: mixed }));
 	await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c", "cpan"], environment: finContainerEnvironment(["c", "perl"]) })
-		, error => error.code === "native-refinements-unsupported" && /checked Fin refinements inside arrays, lists and options are not implemented for cpan packages/.test(error.message)
+		, error => error.code === "native-refinements-unsupported" && /checked Fin refinements inside arrays, lists and options, and Subtype refinements, are not implemented for cpan packages/.test(error.message)
 			&& error.details?.target === "cpan");
 	await assert.rejects(() => access(outputRoot));
 });

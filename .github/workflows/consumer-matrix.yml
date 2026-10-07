@@ -1801,6 +1801,8 @@ jobs:
           test -s build/native-specializations/php-native.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/php-native.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/php-native.json
           test -s build/lists/php-native.json
           test -s build/type-corpus/php-native.json
           test -s build/type-corpus/reviewed-native-php-native.json
@@ -1877,6 +1879,7 @@ jobs:
             build/native-fin/php.json
             build/native-specializations/php-native.json
             build/native-fin-containers/php-native.json
+            build/native-subtype/php-native.json
             build/variants/php-native.json
             build/collections/php-native-conversions.json
             build/equality/php.json
@@ -2091,7 +2094,7 @@ jobs:
             wasm_result=failed
             wasm_executed=false
           fi
-          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows"
+          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows"
           node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows"
       - name: Upload PHP observations
         if: always()
@@ -2234,6 +2237,8 @@ jobs:
           test -s build/native-specializations/c-cpp.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/c-cpp.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/c-cpp.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
           test -s build/variants/cpp.json
           LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests/c-variants.test.mjs
@@ -2405,6 +2410,7 @@ jobs:
             build/native-fin/native.json
             build/native-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
+            build/native-subtype/c-cpp.json
             build/variants/cpp.json
             build/variants/c.json
             build/recursive/c-family.json
@@ -2470,6 +2476,8 @@ jobs:
           test -s build/native-specializations/python.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/python.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/python.json
           LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs
           test -s build/variants/python.json
           LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs
@@ -2545,6 +2553,7 @@ jobs:
             build/native-fin/python.json
             build/native-specializations/python.json
             build/native-fin-containers/python.json
+            build/native-subtype/python.json
             build/variants/python.json
             build/collections/python.json
             build/collections/python-docs.json
@@ -2641,6 +2650,8 @@ jobs:
           test -s build/native-specializations/rust.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/rust.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/rust.json
           LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs
           test -s build/variants/rust.json
           LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
@@ -2686,6 +2697,7 @@ jobs:
             build/native-fin/rust.json
             build/native-specializations/rust.json
             build/native-fin-containers/rust.json
+            build/native-subtype/rust.json
             build/variants/rust.json
             build/collections/rust-conversions.json
             build/recursive/rust-values.json
@@ -2711,6 +2723,7 @@ jobs:
               consumer_command="$consumer_command && npm run test:native-fin"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs"
@@ -2752,6 +2765,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"
@@ -2784,6 +2798,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_FIN_TEST=1 node --test tests/rust-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=rust node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=rust node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=rust node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 node --test tests/rust-copied-graph-values.test.mjs tests/rust-copied-graph-conversions.test.mjs"
@@ -2935,6 +2950,8 @@ jobs:
           test -s build/native-specializations/dotnet.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/dotnet.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/dotnet.json
           LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs
           test -s build/variants/dotnet.json
           LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
@@ -2977,6 +2994,7 @@ jobs:
             build/native-fin/dotnet.json
             build/native-specializations/dotnet.json
             build/native-fin-containers/dotnet.json
+            build/native-subtype/dotnet.json
             build/variants/dotnet.json
             build/collections/dotnet-conversions.json
             build/collections/dotnet.json
@@ -3154,6 +3172,8 @@ jobs:
           test -s build/native-specializations/java-kotlin.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/java-kotlin.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/java-kotlin.json
           LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
           test -s build/variants/jvm.json
           LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
@@ -3215,6 +3235,7 @@ jobs:
             build/native-fin/jvm.json
             build/native-specializations/java-kotlin.json
             build/native-fin-containers/java-kotlin.json
+            build/native-subtype/java-kotlin.json
             build/variants/jvm.json
             build/equality/jvm.json
             build/recursive/jvm-values.json
@@ -3327,6 +3348,8 @@ jobs:
           test -s build/native-specializations/ruby.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/ruby.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/ruby.json
           test -s build/variants/ruby.json
           test -s build/collections/ruby.json
           test -s build/type-corpus/ruby.json
@@ -3350,6 +3373,7 @@ jobs:
             build/native-fin/ruby.json
             build/native-specializations/ruby.json
             build/native-fin-containers/ruby.json
+            build/native-subtype/ruby.json
             build/variants/ruby.json
             build/collections/ruby.json
             build/recursive/ruby-values.json
@@ -3397,6 +3421,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_FIN_TEST=1 node --test tests/dotnet-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=dotnet node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=dotnet node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
@@ -3431,6 +3456,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=java,kotlin node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=java,kotlin node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs"
@@ -3462,6 +3488,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_FIN_TEST=1 node --test tests/ruby-fin.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=ruby node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=ruby node --test tests/native-subtype.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
@@ -3625,6 +3652,8 @@ jobs:
           test -s build/native-specializations/wit-wasi.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/wit-wasi.json
+          LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs
+          test -s build/native-subtype/wit-wasi.json
           LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs
           test -s build/variants/wit.json
           test -s build/variants/wit-conversions.json
@@ -3847,7 +3876,7 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages"
       - name: Upload WIT shared corpus evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -3868,6 +3897,7 @@ jobs:
             build/native-fin/wit.json
             build/native-specializations/wit-wasi.json
             build/native-fin-containers/wit-wasi.json
+            build/native-subtype/wit-wasi.json
             build/variants/wit.json
             build/variants/wit-conversions.json
             build/collections/wit.json

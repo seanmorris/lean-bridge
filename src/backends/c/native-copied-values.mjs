@@ -198,7 +198,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		// Every bound is checked on caller limbs before any Lean value is allocated,
 		// including each element reached through arrays, lists, options, products and results.
 		refinements.forEach((refinement, i) => {
-			if(!refinement) return;
+			if(!refinement || refinement.kind === "subtype") return;
 			let sites = 0;
 			const check = (site, type, value, indent) => {
 				if(type.kind === "alias") return check(site, type.target, value, indent);
@@ -226,10 +226,17 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			};
 			lines.push(...check(refinement, native.parameters[i].type, copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`, "  "));
 		});
+		// Author-checked constructors run only after every structural and Fin check, on a fresh
+		// conversion that the exported validator owns and releases; the call converts again.
+		refinements.forEach((refinement, i) => {
+			if(refinement?.kind !== "subtype") return;
+			const type = native.parameters[i].type, value = copy(type).aggregate ? fn.parameters[i].name : `&${fn.parameters[i].name}`;
+			lines.push(`  if (!${native.symbol}_refinement_${i}(${id(type)}_in(${value}))) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} was rejected by ${refinement.constructor}`)});`);
+		});
 		if(refinements.some(Boolean))
 		{
 			lines.push(`  lean_object *checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
-				, '  if (lean_is_scalar(checked)) return lb_invalid(error, "Lean rejected an argument outside its Fin bound");'
+				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(refinements.some(refinement => refinement?.kind === "subtype") && !refinements.some(refinement => refinement && refinement.kind !== "subtype") ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
 				, "  lean_object *boxed = lean_ctor_get(checked, 0);");
 			if(nativeObjectType(native.result)) lines.push("  lean_inc(boxed);");
 			lines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, "boxed")};`, "  lean_dec(checked);");

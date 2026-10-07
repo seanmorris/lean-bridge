@@ -202,7 +202,11 @@ test("WIT bound docs come only from checked refinement metadata and leave the WI
 	const plain = compileCopiedWitModel(unrefined, settings);
 	assert.equal(projection.wit, plain.wit); assert.equal(projection.wat, plain.wat);
 	assert.equal(witFinReadme(plain), "");
+	// A top-level Subtype documents its checked constructor; one inside a container is refused.
 	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null };
+	assert.match(witFinReadme(compileCopiedWitModel(ir, settings)), /checked by Fins\.check/);
+	assert.match(witFinReadme(compileCopiedWitModel(ir, settings)), /Lean Subtype parameters cross as their base value\./);
+	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }, null], result: null };
 	assert.throws(() => witFinReadme(compileCopiedWitModel(ir, settings)), TypeError);
 });
 

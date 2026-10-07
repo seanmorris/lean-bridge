@@ -133,12 +133,20 @@ const nativeRepresentation = type => {
  * @param declaration - Compiler-selected native declaration.
  */
 const nativeRefinements = declaration => {
-	const tree = type => {
-		if(type.kind === "refinement") return { kind: type.predicate.kind, bound: type.predicate.bound };
-		if(type.kind === "alias") return tree(type.target);
+	const tree = (type, top = true) => {
+		if(type.kind === "refinement")
+		{
+			if(type.predicate.kind === "subtype")
+			{
+				if(!top) throw Object.assign(new TypeError(`${declaration.name}: checked Subtype refinements inside containers are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+				return { kind: "subtype", constructor: type.predicate.constructor };
+			}
+			return { kind: type.predicate.kind, bound: type.predicate.bound };
+		}
+		if(type.kind === "alias") return tree(type.target, top);
 		if(["array", "list", "option"].includes(type.kind))
 		{
-			const element = tree(type.element);
+			const element = tree(type.element, false);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
 		}
 		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.
@@ -295,6 +303,12 @@ export const generateNativeLeanAdapters = model => {
 		if(!guards.length) emit(item.symbol, parameters, item.result, call);
 		else emit(item.symbol, parameters, nativeRefinedResult(item.result)
 			, componentRefinementGuards(guards, `_root_.Option.some (${call})`, "_root_.Option.none").replaceAll("\n", "\n  "));
+		// One validator per author-constructed parameter lets the C adapter name the rejected site before dispatch.
+		item.refinements.parameters.forEach((refinement, i) => {
+			if(refinement?.kind !== "subtype") return;
+			emit(`${item.symbol}_refinement_${i}`, [{ name: "value", type: item.parameters[i].type }], { kind: "primitive", name: "uint8", lean: "UInt8", abi: { cType: "uint8_t", box: "lean_box", unbox: "lean_unbox", heap: false } }
+				, `match _root_.${refinement.constructor} value with\n  | .some _ => 1\n  | .none => 0`);
+		});
 	}
 	for(const type of model.types)
 	{

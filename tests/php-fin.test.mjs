@@ -106,7 +106,13 @@ test("generated PHP bound docs come only from checked refinement metadata", () =
 	assert.doesNotMatch(api, /bounds:[^\n]*\n(?: \*[^\n]*\n)* \*\/\nfunction plain\(/);
 	assert.match(files["README.md"], /Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n\./);
 	assert.match(files["README.md"], /\n- LeanFins\\label: \$value1 < 4\n/);
+	// A top-level Subtype documents its checked constructor; one inside a container is refused.
 	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null };
+	const checked = renderCopiedPhpPackage(compileCopiedPhpModel(ir));
+	assert.match(checked["README.md"], /checked by Fins\.check/);
+	assert.match(checked["README.md"], /Lean Subtype parameters cross as their base value\./);
+	assert.doesNotMatch(checked["README.md"], /Lean Fin n parameters/);
+	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }, null], result: null };
 	assert.throws(() => renderCopiedPhpPackage(compileCopiedPhpModel(ir)), TypeError);
 });
 

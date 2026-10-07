@@ -58,7 +58,7 @@ test("native validation admits Fin at a top-level Nat site or inside its arrays,
 	validateNativeType({ kind: "option", element: fin("5"), abi: nat.abi });
 	assert.throws(() => validateNativeType({ kind: "tuple", arguments: [fin("5"), nat], abi: nat.abi }), /top-level/);
 	for(const bound of ["", "05", "-1", "1e3", 5]) assert.throws(() => validateNativeType(fin(bound)), /invalid Fin refinement/);
-	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "subtype", bound: "5" } }), /invalid Fin refinement/);
+	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "subtype", bound: "5" } }), /refinement predicate fields/);
 	assert.throws(() => validateNativeType({ ...fin("5"), predicate: { kind: "fin", bound: "5", extra: true } }), /invalid refinement predicate fields/);
 	const int = { ...nat, name: "int", lean: "Int" };
 	assert.throws(() => validateNativeType({ ...fin("5"), base: int }), /Nat base/);

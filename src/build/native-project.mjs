@@ -153,9 +153,9 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 				if(model.copiedGraph)
 				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);
-				// Perl XS checks only top-level scalar bounds; container bounds would otherwise be erased to Nat there.
-				const structural = targets.includes("cpan") ? model.exports.find(item => [...(item.refinements?.parameters ?? []), item.refinements?.result ?? null].some(refinement => refinement !== null && refinement.kind !== "fin")) : undefined;
-				if(structural) throw Object.assign(new TypeError(`${structural.name}: checked Fin refinements inside arrays, lists and options are not implemented for cpan packages`), { code: "native-refinements-unsupported", details: { declaration: structural.name, target: "cpan" } });
+				// Perl XS checks only top-level scalar Fin bounds; container bounds and checked constructors would otherwise be erased there.
+				const unchecked = targets.includes("cpan") ? model.exports.find(item => [...(item.refinements?.parameters ?? []), item.refinements?.result ?? null].some(refinement => refinement !== null && refinement.kind !== "fin")) : undefined;
+				if(unchecked) throw Object.assign(new TypeError(`${unchecked.name}: checked Fin refinements inside arrays, lists and options, and Subtype refinements, are not implemented for cpan packages`), { code: "native-refinements-unsupported", details: { declaration: unchecked.name, target: "cpan" } });
 				if(!cTargets.length) return;
 				const cSurface = compilePrimitiveCSurface(model.bindingIr, { structuredCallables: cTargets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)), variants: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);

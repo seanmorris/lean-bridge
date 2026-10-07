@@ -150,7 +150,13 @@ test("generated JVM bound docs come only from checked refinement metadata", () =
 	assert.doesNotMatch(api, /bounds:[^\n]*\n[^\n]*\n {4}public static [^\n]* plain\(/);
 	assert.match(files["README.md"], /Lean Fin n parameters and results are java\.math\.BigInteger values below n\./);
 	assert.match(files["README.md"], /\n- org\.leanbridge\.fins\.Api\.label: arg1 < 4\n/);
+	// A top-level Subtype documents its checked constructor; one inside a container is refused.
 	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null };
+	const checked = renderCopiedJvmPackage(compileCopiedJvmModel(ir));
+	assert.match(checked["README.md"], /arg1 checked by Fins\.check/);
+	assert.match(checked["README.md"], /Lean Subtype parameters cross as their base value\./);
+	assert.doesNotMatch(checked["README.md"], /Lean Fin n parameters/);
+	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }, null], result: null };
 	assert.throws(() => renderCopiedJvmPackage(compileCopiedJvmModel(ir)), TypeError);
 });
 

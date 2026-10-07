@@ -104,7 +104,13 @@ test("generated Ruby bound docs come only from checked refinement metadata", () 
 	assert.doesNotMatch(files["lib/lean_bridge/fins.rb"], /bounds: [^\n]*\n {4}def plain/);
 	assert.match(files["README.md"], /Lean Fin n parameters and results are exact Integer values below n\./);
 	assert.match(files["README.md"], /\n- LeanBridge::Fins\.label: arg1 < 4\n/);
+	// A top-level Subtype documents its checked constructor; one inside a container is refused.
 	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "subtype", constructor: "Fins.check" }, null], result: null };
+	const checked = renderCopiedRubyPackage(compileCopiedRubyModel(ir));
+	assert.match(checked["README.md"], /arg1 checked by Fins\.check/);
+	assert.match(checked["README.md"], /Lean Subtype parameters cross as their base value\./);
+	assert.doesNotMatch(checked["README.md"], /Lean Fin n parameters/);
+	label.source.extensions["lean-lang.org/refinements"] = { parameters: [null, { kind: "array", arguments: [{ kind: "subtype", constructor: "Fins.check" }] }, null], result: null };
 	assert.throws(() => renderCopiedRubyPackage(compileCopiedRubyModel(ir)), TypeError);
 });
 
