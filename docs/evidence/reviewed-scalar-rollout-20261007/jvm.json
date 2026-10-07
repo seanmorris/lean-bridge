@@ -1,0 +1,113 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "b791fb8a8009f56eb00bf531201c40c47f2cdc807d211f4bbec424f561f78bf8",
+    "archives/native-fin-1.0.0.jar": "83a20fbbb5451b5beb61c2492027a026a120068577ccef84d982986a4a1c7df2",
+    "archives/native-fin-1.0.0.pom": "518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "cd55186e62f34fdbcc8c2ae2ea06af81cbf2aed3629bd5882b10d09a1bbd453c",
+      "checks": 2023,
+      "compilerFreePath": true,
+      "consumerSha256": "3dce1114c690c84cb6d313fd973b66d27e5a910e677ef94fa829464f53598c14",
+      "dispatch": {
+        "observed": false,
+        "reason": "the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead"
+      },
+      "modelSha256": "85fea361e2d727add03435b15e72e330b66c00660971f59a2a1335e52989b1d4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51385480,
+              "path": "archives/native-fin-1.0.0.jar",
+              "sha256": "83a20fbbb5451b5beb61c2492027a026a120068577ccef84d982986a4a1c7df2"
+            },
+            {
+              "bytes": 620,
+              "path": "archives/native-fin-1.0.0.pom",
+              "sha256": "518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "50049670f4d7c3cda7741d708ca16b94f6a706faf273495607991ad62e691d44",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "cbb180b1cd1c626e5595faaa3eade999382fe7d58f3adc3973f41db9d2940eeb"
+    },
+    {
+      "bindingIrSha256": "cd55186e62f34fdbcc8c2ae2ea06af81cbf2aed3629bd5882b10d09a1bbd453c",
+      "checks": 2022,
+      "compilerFreePath": true,
+      "consumerSha256": "0da35207cc3d54eda693c509a88cbfdeb69d5e1ad3d7ca5eb1c0be64d9040368",
+      "dispatch": {
+        "observed": false,
+        "reason": "the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead"
+      },
+      "modelSha256": "85fea361e2d727add03435b15e72e330b66c00660971f59a2a1335e52989b1d4",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51385480,
+              "path": "archives/native-fin-1.0.0.jar",
+              "sha256": "83a20fbbb5451b5beb61c2492027a026a120068577ccef84d982986a4a1c7df2"
+            },
+            {
+              "bytes": 620,
+              "path": "archives/native-fin-1.0.0.pom",
+              "sha256": "518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "50049670f4d7c3cda7741d708ca16b94f6a706faf273495607991ad62e691d44",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "cbb180b1cd1c626e5595faaa3eade999382fe7d58f3adc3973f41db9d2940eeb"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

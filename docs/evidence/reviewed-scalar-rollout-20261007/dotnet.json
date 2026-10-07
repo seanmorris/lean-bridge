@@ -1,0 +1,56 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "d56d1e45c04fc0f45b05515c82779e334e763689f55c1094c5444d9777cdc653",
+    "archives/native-fin.1.0.0.nupkg": "a363849d72ce5ab4e43d2a625815d4b66fd9fc19ad974f5b26f7a6e5facb7aa5"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "e19f9194788ac568b135e27f6ae7040538fecc8344a433023d3c67fdbe86d0e2",
+      "checks": 2022,
+      "compilerFreePath": true,
+      "consumerSha256": "458bc71a4a12a0f68c930113be8df89764fab78d33c4017b1568fa766278ef76",
+      "dispatch": {
+        "observed": false,
+        "reason": "the CLR loads native libraries privately; identity with the instrumented C adapter is asserted instead"
+      },
+      "modelSha256": "b78ca66fb319cab185478d171b2819dfb934636714e810b1880d28c2d957411a",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51360654,
+              "path": "archives/native-fin.1.0.0.nupkg",
+              "sha256": "a363849d72ce5ab4e43d2a625815d4b66fd9fc19ad974f5b26f7a6e5facb7aa5"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "420e6bfc527a9795ffe0a9bf7709cde5298879ff59382ee04b82567f90b782e0",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "788b7ef7d055382a37f3922fd8a136d26a8e15152749de02e53b5c7f1179344c"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

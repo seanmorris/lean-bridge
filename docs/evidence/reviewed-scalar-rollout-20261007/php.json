@@ -1,0 +1,56 @@
+{
+  "archives": {
+    "archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip": "d5df0ad6b773a0b0e129474c2daa26f74d8d50aa82b0835d31c2c8f76aa65ead",
+    "archives/native-fin-1.0.0-c.tar.gz": "f15659e798975ce736fac6bbac2b8a0c2a563f6e723b3b3dae9aef6a2391e19f"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "5009f9c0564bfe52c9ff69887fee894f8e49c0635a2af8bfaa6c468c082a9804",
+      "checks": 2028,
+      "compilerFreePath": true,
+      "consumerSha256": "1783e3d8fb8d8e28df55b0abb371fc93977adb16e16af5d2774ef84a3d8e102c",
+      "dispatch": {
+        "observed": false,
+        "reason": "PHP FFI loads verified libraries privately; identity with the instrumented C adapter is asserted instead"
+      },
+      "modelSha256": "07fe6f337a4d3fa85b385da2e929f66d3bc7e99ed353ae12cabf5b7b73931b55",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51350812,
+              "path": "archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip",
+              "sha256": "d5df0ad6b773a0b0e129474c2daa26f74d8d50aa82b0835d31c2c8f76aa65ead"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "lean-bridge-fixtures/native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "php-native",
+      "receiptSha256": "203ee6384c6ef8261c4c78a31576f68a49801bb3fcde8618a153cdb5ffbe8501",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "fafe074caebc0ec3007a30aa1f7991f59e977e73f52fc7e2ddf2d73ddb4c9ed4"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

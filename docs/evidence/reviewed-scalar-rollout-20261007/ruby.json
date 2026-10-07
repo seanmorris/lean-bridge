@@ -1,0 +1,57 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "57c8c1ab611b5ec74963a083b903315112ad14c302235af70893aadce20dbd19",
+    "archives/native-fin-1.0.0-x86_64-linux.gem": "16412e1cd43865819b56463c4c1f77728155b62b75b4d3985abaec675a335887"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "b9544037f4047b3e64ef20c059d8902de38dd9569df7ebd95d55f67cf2edc22b",
+      "checks": 2029,
+      "compilerFreePath": true,
+      "consumerSha256": "40d6b24387d8e90fe082af78953519874c4a1201db68707edc98eabf736522f4",
+      "dispatch": {
+        "observed": false,
+        "reason": "RTLD_DEEPBIND loader isolates verified libraries from LD_PRELOAD interposition; identity with the instrumented C adapter is asserted instead"
+      },
+      "installedFilesSha256": "140428d2029b7f93b03d11af9a6f5c79aa29233ad76529de439ed386b1efd4e8",
+      "modelSha256": "273545fdcb28ae101a426b3d393dd416a4d9d1e547f089ac9e3e53f2e1c3aff5",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50083328,
+              "path": "archives/native-fin-1.0.0-x86_64-linux.gem",
+              "sha256": "16412e1cd43865819b56463c4c1f77728155b62b75b4d3985abaec675a335887"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "ruby",
+      "receiptSha256": "f0cf2d021559412be490358a330b1335247be2a2fe2d7fdbd8230283c486bf8e",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "ef74ce360c4ba6723a28c7a5acd5d1fcae1ec53ca9794f1df168cb4a24444b25"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

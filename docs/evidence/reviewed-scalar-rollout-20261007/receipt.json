@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "sourcePath": "reviewed-ir",
+  "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+      "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": null
+    }
+  },
+  "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/dotnet-fin.test.mjs tests/jvm-fin.test.mjs tests/ruby-fin.test.mjs tests/php-fin.test.mjs tests/wit-fin.test.mjs tests/perl-fin.test.mjs",
+  "reports": [
+    {
+      "id": "dotnet",
+      "path": "docs/evidence/reviewed-scalar-rollout-20261007/dotnet.json",
+      "sha256": "e0f009a0d5fee4446a6d708d7c1747136d6044db65b4e16d33355973728bef46",
+      "profiles": [
+        "dotnet"
+      ]
+    },
+    {
+      "id": "jvm",
+      "path": "docs/evidence/reviewed-scalar-rollout-20261007/jvm.json",
+      "sha256": "6f1e827fd1da45d697f52995788e0fd7673a1a5332c117ee11be83626c0445aa",
+      "profiles": [
+        "java",
+        "kotlin"
+      ]
+    },
+    {
+      "id": "php",
+      "path": "docs/evidence/reviewed-scalar-rollout-20261007/php.json",
+      "sha256": "4f5f7534816ce8479c34940916b15b1018dbc5bea093d4bc6c3bbf3d37dffb66",
+      "profiles": [
+        "php-native"
+      ]
+    },
+    {
+      "id": "ruby",
+      "path": "docs/evidence/reviewed-scalar-rollout-20261007/ruby.json",
+      "sha256": "a03b69e4b0965385d04337ea225539f14765c8fa8d7d2d3c9feecbc08cae4d70",
+      "profiles": [
+        "ruby"
+      ]
+    },
+    {
+      "id": "wit",
+      "path": "docs/evidence/reviewed-scalar-rollout-20261007/wit.json",
+      "sha256": "2844e489e534075d6213b05ba15013652adac43c413eeb9a91ff77c5d48dde45",
+      "profiles": [
+        "wit-wasi"
+      ]
+    }
+  ],
+  "log": {
+    "path": "docs/evidence/reviewed-scalar-rollout-20261007/installed.log",
+    "sha256": "5f7d8063dc4a39554f97f76e3bdf2661b3e44c68cc12ba5260cfbf04930f0bbc",
+    "passed": 5,
+    "failed": 1,
+    "skipped": 0
+  },
+  "failure": {
+    "profile": "perl",
+    "stage": "producer-runtime-install",
+    "message": "Package requires glibc 2.38 or later",
+    "cause": "The local invocation set the general native test floor but omitted the separate CPAN test-floor variable.",
+    "claim": "No successful Perl execution is included in this archive."
+  },
+  "scope": [
+    "Six host consumers across five passing installed gates: .NET, Java, Kotlin, native PHP, Ruby and WIT/WASI.",
+    "Two-root archive reproduction, independently authored reviewed inputs, and source-free installed execution.",
+    "Source dispatch is not measured in these privately loaded host libraries. Reports preserve observed:false and shared-library identity checks.",
+    "Local glibc-2.36 evidence does not establish the release-floor CI result.",
+    "No npm/browser, PHP-Wasm, reviewed Subtype, nominal-field or callback acceptance is inferred."
+  ]
+}
