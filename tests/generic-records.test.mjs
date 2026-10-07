@@ -27,6 +27,7 @@ import "./helpers/generic-record-specialization-source-history-tests.mjs";
 import "./helpers/generic-record-host-evidence-tests.mjs";
 import "./helpers/refinement-core-followup-source-history-tests.mjs";
 import "./helpers/reviewed-scalar-hosts-source-history-tests.mjs";
+import "./helpers/refinement-ci-followup-source-history-tests.mjs";
 import "./helpers/reviewed-scalar-hosts-tests.mjs";
 import "./helpers/reviewed-fin-host-evidence-tests.mjs";
 import "./helpers/generic-specialization-evidence-tests.mjs";

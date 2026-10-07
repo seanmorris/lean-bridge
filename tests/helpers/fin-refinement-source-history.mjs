@@ -54,6 +54,7 @@ import { genericRecordSpecializationChangedPaths } from "./generic-record-specia
 import { refinementCoreFollowupChangedPaths } from "./refinement-core-followup-source-history.mjs";
 import { perlFinArchiveChangedPaths } from "./perl-fin-archive-source-history.mjs";
 import { reviewedScalarHostsChangedPaths } from "./reviewed-scalar-hosts-source-history.mjs";
+import { refinementCiFollowupChangedPaths } from "./refinement-ci-followup-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -572,6 +573,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...refinementCoreFollowupChangedPaths
 	, ...perlFinArchiveChangedPaths
 	, ...reviewedScalarHostsChangedPaths
+	, ...refinementCiFollowupChangedPaths
 ])].sort());
 
 /**

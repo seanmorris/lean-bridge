@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "milestone": "refinement-ci-followup-v1",
+  "predecessorCommit": "06e8cb070fa8ce0a859cde5f13a601fe63f00d43",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "bceb93bec5007912408a181444880e3158c09c7b4cbdcd6d0d5a6f9a21a641f3",
+      "previousSha256": "c021948aefa084b28e03f76f3febeba3aa27cca37748a43ae4e84d41b00e66af",
+      "edits": [
+        {
+          "start": 1435907,
+          "previous": "          \"sha256\": \"5bafa2944a4734f98b8875de82df3aa4f711bd7528f9e90f59f36cc8c84daff2\"\n",
+          "current": "          \"sha256\": \"0d634665f7815e895792c7a0b36cbdb0f73ae3eb430648a205444239a52e1de6\"\n"
+        },
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"95dee007e46007e6999feaf48e5d29deb9495f52749f5442c842e7f1bcfb376c\"\n",
+          "current": "          \"sha256\": \"608c1897f145bdfc972bf52852518547b94ef5aa5483ce517c645dda1e3039e1\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"95dee007e46007e6999feaf48e5d29deb9495f52749f5442c842e7f1bcfb376c\"\n",
+          "current": "          \"sha256\": \"608c1897f145bdfc972bf52852518547b94ef5aa5483ce517c645dda1e3039e1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "608c1897f145bdfc972bf52852518547b94ef5aa5483ce517c645dda1e3039e1",
+      "previousSha256": "95dee007e46007e6999feaf48e5d29deb9495f52749f5442c842e7f1bcfb376c",
+      "edits": [
+        {
+          "start": 1758,
+          "previous": "",
+          "current": "import \"./helpers/refinement-ci-followup-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "7212c233953fd1efdeaab6bc1e38a36ac9e1775afe2fbb9106f77692684957bc",
+      "previousSha256": "d2dad01d064c901948456d6575cc2d2b38a1434c5ce63df93ebc931c6ab69b20",
+      "edits": [
+        {
+          "start": 4434,
+          "previous": "",
+          "current": "import { refinementCiFollowupChangedPaths } from \"./refinement-ci-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 39360,
+          "previous": "",
+          "current": "\t, ...refinementCiFollowupChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-ci-isolation.mjs",
+      "currentSha256": "ebe56ade7c4b40e430dd8666b6d7ba7183708549519e44ad76892f7374d3f36e",
+      "previousSha256": "e994a90f65669107670e393e4bfd0d9bd8aef20ead486b953c8c04fa70e30cec",
+      "edits": [
+        {
+          "start": 2018,
+          "previous": "\t, steps: Object.fromEntries(Object.entries({\n\t\tconsumer: \"success\"\n\t\t, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>\n\t\t\t[spec.ordinary, spec.corpus].map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n\t\t, ...overrides\n\t}).map(([id, outcome]) => [id, { outcome }]))\n",
+          "current": "\t, steps: { collection_python312: { outputs: { \"python-path\": \"/fixture/python312/bin/python3.12\" } }\n\t\t, ...Object.fromEntries(Object.entries({\n\t\t\tconsumer: \"success\"\n\t\t\t, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>\n\t\t\t\t[spec.ordinary, spec.corpus].map(id => [id, name === profile ? \"success\" : \"skipped\"])))\n\t\t\t, ...overrides\n\t\t}).map(([id, outcome]) => [id, { outcome }])) }\n"
+        },
+        {
+          "start": 2437,
+          "previous": "const evaluate = (expression, profile, overrides = {}) => runInNewContext(expression, context(profile, overrides), { timeout: 100 });\n",
+          "current": "// GitHub permits dashes in property names; JavaScript requires bracket access.\nconst evaluate = (expression, profile, overrides = {}) => runInNewContext(\n\texpression.replace(/\\.([A-Za-z_][A-Za-z0-9_]*-[A-Za-z0-9_-]+)/gu, (_, property) => `[${JSON.stringify(property)}]`)\n\t, context(profile, overrides), { timeout: 100 });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-contract-tests.mjs",
+      "currentSha256": "0d634665f7815e895792c7a0b36cbdb0f73ae3eb430648a205444239a52e1de6",
+      "previousSha256": "5bafa2944a4734f98b8875de82df3aa4f711bd7528f9e90f59f36cc8c84daff2",
+      "edits": [
+        {
+          "start": 142,
+          "previous": "",
+          "current": "import { readFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 217,
+          "previous": "",
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\n"
+        },
+        {
+          "start": 848,
+          "previous": "",
+          "current": "import { beforeCallbackFinSource } from \"./callback-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 7084,
+          "previous": "\tconst { document, irSchema, consumers } = await readTypeSurface();\n",
+          "current": "\tconst { irSchema, consumers } = await readTypeSurface();\n\t// Check this milestone's authenticated inventory, not the support added later.\n\tconst path = \"docs/type-surface.v1.json\";\n\tconst source = beforeCallbackFinSource(path, await readFile(path, \"utf8\"));\n\tassert.equal(sha256(source), \"63ad1461dd5ba00fe766618308441c7fc1fe3a8c2d19d80c8a091f4435a7e103\");\n\tconst document = JSON.parse(source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-scalar-hosts-source-history-tests.mjs",
+      "currentSha256": "ba4af14d0539aecc0dc3a22316c93f67830bbb3054319b5d8ca471dadc898cb8",
+      "previousSha256": "648352cc359c80afb503a8db1d37e1248b6d65f6d8603654f8d21c5eab794179",
+      "edits": [
+        {
+          "start": 346,
+          "previous": "",
+          "current": "import { beforeRefinementCiFollowupSource } from \"./refinement-ci-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 1032,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeRefinementCiFollowupSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1995,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeRefinementCiFollowupSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2891,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeRefinementCiFollowupSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-scalar-hosts-source-history.mjs",
+      "currentSha256": "db4e56634a7c7bfeaba2740a772d10330a03dceb31fecb89c82469793d3f5332",
+      "previousSha256": "09d6e264235bb0d8af8a53cea8774a4c8102865671254aa801940152c0a179f8",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeRefinementCiFollowupSource } from \"./refinement-ci-followup-source-history.mjs\";\n"
+        },
+        {
+          "start": 2318,
+          "previous": "",
+          "current": "\tsource = beforeRefinementCiFollowupSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-ci-isolation.test.mjs",
+      "currentSha256": "5c8015c898720237dd445967d880850eab796108675d1fb560d6ef3c65ae0e56",
+      "previousSha256": "663292a808d213137e8ed3c04ccb763f73d27a2d13b3706b21ad58855b488acc",
+      "edits": [
+        {
+          "start": 4494,
+          "previous": "",
+          "current": "\t\t\t\tif(profile === \"python\") assert.ok(row[\"--command\"].includes(\"LEAN_BRIDGE_PYTHON='/fixture/python312/bin/python3.12'\"));\n\t\t\t\telse assert.ok(!row[\"--command\"].includes(\"/fixture/python312/bin/python3.12\"));\n"
+        }
+      ]
+    }
+  ]
+}

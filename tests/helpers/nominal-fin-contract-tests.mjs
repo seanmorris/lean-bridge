@@ -4,7 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { sha256 } from "../../src/capsule/node.mjs";
 import { nominalRefinement } from "../../src/abi/refinements.mjs";
 import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
@@ -12,6 +14,7 @@ import { generateComponentRecursiveAdapters } from "../../src/build/component-re
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
 const fixture = () => {
@@ -97,7 +100,12 @@ test("nominal Fin constraints authenticate alias targets and exact variant branc
 });
 
 test("nominal Fin installed evidence promotes only the two ordinary Node field cells", async () => {
-	const { document, irSchema, consumers } = await readTypeSurface();
+	const { irSchema, consumers } = await readTypeSurface();
+	// Check this milestone's authenticated inventory, not the support added later.
+	const path = "docs/type-surface.v1.json";
+	const source = beforeCallbackFinSource(path, await readFile(path, "utf8"));
+	assert.equal(sha256(source), "63ad1461dd5ba00fe766618308441c7fc1fe3a8c2d19d80c8a091f4435a7e103");
+	const document = JSON.parse(source);
 	const cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin");
 	const fields = cells.filter(cell => cell.position === "field" && cell.stages.installedExecution.state === "passed");
 	assert.deepEqual(fields.map(cell => cell.profile).sort(), ["node-javascript", "node-typescript"]);

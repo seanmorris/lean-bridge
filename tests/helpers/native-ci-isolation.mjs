@@ -60,14 +60,18 @@ export const nativeCiCommands = step => {
 const context = (profile, overrides) => ({
 	always: () => true
 	, matrix: { profile, consumers: nativeCiProfiles[profile].consumers.join(" ") }
-	, steps: Object.fromEntries(Object.entries({
-		consumer: "success"
-		, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>
-			[spec.ordinary, spec.corpus].map(id => [id, name === profile ? "success" : "skipped"])))
-		, ...overrides
-	}).map(([id, outcome]) => [id, { outcome }]))
+	, steps: { collection_python312: { outputs: { "python-path": "/fixture/python312/bin/python3.12" } }
+		, ...Object.fromEntries(Object.entries({
+			consumer: "success"
+			, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>
+				[spec.ordinary, spec.corpus].map(id => [id, name === profile ? "success" : "skipped"])))
+			, ...overrides
+		}).map(([id, outcome]) => [id, { outcome }])) }
 });
-const evaluate = (expression, profile, overrides = {}) => runInNewContext(expression, context(profile, overrides), { timeout: 100 });
+// GitHub permits dashes in property names; JavaScript requires bracket access.
+const evaluate = (expression, profile, overrides = {}) => runInNewContext(
+	expression.replace(/\.([A-Za-z_][A-Za-z0-9_]*-[A-Za-z0-9_-]+)/gu, (_, property) => `[${JSON.stringify(property)}]`)
+	, context(profile, overrides), { timeout: 100 });
 
 /**
  * Render only the closed matrix and step expressions in the recording script.

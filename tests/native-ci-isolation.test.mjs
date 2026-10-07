@@ -75,6 +75,8 @@ test("native recording scripts emit only selected rows and reject every incomple
 				assert.equal(row["--output"], `build/consumer-ci/results/native-${profile}/${consumer}.json`);
 				assert.equal(row["--performance"], `build/consumer-ci/performance/${consumer}.json`);
 				assert.ok(row["--command"].startsWith("npm run test:consumer:native && "));
+				if(profile === "python") assert.ok(row["--command"].includes("LEAN_BRIDGE_PYTHON='/fixture/python312/bin/python3.12'"));
+				else assert.ok(!row["--command"].includes("/fixture/python312/bin/python3.12"));
 			}
 			++runs; rows += parsed.length;
 		}
