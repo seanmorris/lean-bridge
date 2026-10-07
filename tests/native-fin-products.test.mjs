@@ -21,6 +21,7 @@ import { finProductReviewedIr } from "./helpers/reviewed-fin-product-fixture.mjs
 import { validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import "./helpers/fin-products-source-history-tests.mjs";
+import "./helpers/fin-products-ci-source-history-tests.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -302,12 +303,16 @@ test("the independent product review passes reviewed admission, and changed boun
 	const review = finProductReviewedIr(), source = canonicalJson(review);
 	validateReviewedSource({ schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(review) });
 	const declaration = (ir, name) => ir.declarations.find(item => item.id === `lean:FinProducts.${name}`).source.extensions["lean-lang.org/refinements"];
+	const alias = ir => ir.types.find(item => item.id === "lean:FinProducts.DigitPair").source.extensions["lean-lang.org/nominal-refinements"];
+	// Each case names the extension where reconciliation must stop: declaration trees, or the alias's own bound.
+	const refinements = /source\.extensions\.lean-lang\.org\/refinements/u, nominal = /types\[\d+\]\.source\.extensions\.lean-lang\.org\/nominal-refinements/u;
 	const cases = [
-		["tightened component", ir => { declaration(ir, "first").parameters[0].arguments[0].bound = "9"; }]
-		, ["loosened branch", ir => { declaration(ir, "both").parameters[0].arguments[1].bound = "4"; }]
-		, ["swapped branches", ir => { declaration(ir, "both").parameters[0].arguments.reverse(); }]
-		, ["moved to the other component", ir => { declaration(ir, "second").parameters[0].arguments.reverse(); }]];
-	for(const [label, mutate] of cases) await t.test(label, async () => {
+		["tightened component", ir => { declaration(ir, "first").parameters[0].arguments[0].bound = "9"; }, refinements]
+		, ["loosened branch", ir => { declaration(ir, "both").parameters[0].arguments[1].bound = "4"; }, refinements]
+		, ["swapped branches", ir => { declaration(ir, "both").parameters[0].arguments.reverse(); }, refinements]
+		, ["moved to the other component", ir => { declaration(ir, "second").parameters[0].arguments.reverse(); }, refinements]
+		, ["tightened alias component", ir => { alias(ir).target.arguments[1].bound = "9"; }, nominal]];
+	for(const [label, mutate, field] of cases) await t.test(label, async () => {
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-product-reviewed-"));
 		t.after(() => rm(directory, { recursive: true, force: true }));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
@@ -317,7 +322,7 @@ test("the independent product review passes reviewed admission, and changed boun
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinProducts"], targets: Object.fromEntries([finProductTargets.c]) }));
 		await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: finProductEnvironment(["c"]) }), error => {
 			assert.equal(error.code, "reviewed-ir-source-mismatch", label);
-			assert.match(error.details.field, /source\.extensions\.lean-lang\.org\/refinements/u, label);
+			assert.match(error.details.field, field, label);
 			return true;
 		});
 		await assert.rejects(() => access(outputRoot), label);

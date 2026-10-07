@@ -1,0 +1,1018 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-products-ci-v1",
+  "predecessorCommit": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d",
+      "previousSha256": "2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664",
+      "edits": [
+        {
+          "start": 93589,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 93811,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-php-native.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/php-native.json\n          test -s build/native-fin-products/reviewed-php-native.json\n"
+        },
+        {
+          "start": 98663,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-php-native.json\n            build/native-fin-products/php-native.json\n            build/native-fin-products/reviewed-php-native.json\n"
+        },
+        {
+          "start": 111390,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows\"\n"
+        },
+        {
+          "start": 123863,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/c-cpp.json\n          test -s build/native-fin-products/reviewed-c-cpp.json\n"
+        },
+        {
+          "start": 134710,
+          "previous": "",
+          "current": "            build/native-fin-products/c-cpp.json\n            build/native-fin-products/reviewed-c-cpp.json\n"
+        },
+        {
+          "start": 139945,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/python.json\n          test -s build/native-fin-products/reviewed-python.json\n"
+        },
+        {
+          "start": 145317,
+          "previous": "",
+          "current": "            build/native-fin-products/python.json\n            build/native-fin-products/reviewed-python.json\n"
+        },
+        {
+          "start": 151553,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=rust node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/rust.json\n          test -s build/native-fin-products/reviewed-rust.json\n"
+        },
+        {
+          "start": 154580,
+          "previous": "",
+          "current": "            build/native-fin-products/rust.json\n            build/native-fin-products/reviewed-rust.json\n"
+        },
+        {
+          "start": 156492,
+          "previous": "",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 162373,
+          "previous": "",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=python node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 166834,
+          "previous": "",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=rust node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 176840,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 177050,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-dotnet.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/dotnet.json\n          test -s build/native-fin-products/reviewed-dotnet.json\n"
+        },
+        {
+          "start": 180275,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-dotnet.json\n            build/native-fin-products/dotnet.json\n            build/native-fin-products/reviewed-dotnet.json\n"
+        },
+        {
+          "start": 191295,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 191520,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-java-kotlin.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/java-kotlin.json\n          test -s build/native-fin-products/reviewed-java-kotlin.json\n"
+        },
+        {
+          "start": 195643,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-java-kotlin.json\n            build/native-fin-products/java-kotlin.json\n            build/native-fin-products/reviewed-java-kotlin.json\n"
+        },
+        {
+          "start": 203015,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 203219,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-ruby.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/ruby.json\n          test -s build/native-fin-products/reviewed-ruby.json\n"
+        },
+        {
+          "start": 204814,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-ruby.json\n            build/native-fin-products/ruby.json\n            build/native-fin-products/reviewed-ruby.json\n"
+        },
+        {
+          "start": 208941,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=dotnet node --test tests/native-fin-containers.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 214056,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=java,kotlin node --test tests/native-fin-containers.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=java,kotlin LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=java,kotlin node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 218842,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs\"\n",
+          "current": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=ruby node --test tests/native-fin-containers.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=ruby LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=ruby node --test tests/native-fin-products.test.mjs\"\n"
+        },
+        {
+          "start": 228795,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 229011,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-wit-wasi.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/wit-wasi.json\n          test -s build/native-fin-products/reviewed-wit-wasi.json\n"
+        },
+        {
+          "start": 242128,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages\"\n"
+        },
+        {
+          "start": 246486,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-wit-wasi.json\n            build/native-fin-products/wit-wasi.json\n            build/native-fin-products/reviewed-wit-wasi.json\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "currentSha256": "03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836",
+      "previousSha256": "c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719",
+      "edits": [
+        {
+          "start": 9225,
+          "previous": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=perl node --test tests/native-fin-containers.test.mjs tests/perl-fin-containers.test.mjs\n",
+          "current": "          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl node --test tests/native-fin-containers.test.mjs tests/perl-fin-containers.test.mjs\n"
+        },
+        {
+          "start": 9464,
+          "previous": "",
+          "current": "          test -s build/native-fin-containers/reviewed-perl.json\n          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=perl node --test tests/native-fin-products.test.mjs\n          test -s build/native-fin-products/perl.json\n          test -s build/native-fin-products/reviewed-perl.json\n"
+        },
+        {
+          "start": 13835,
+          "previous": "",
+          "current": "            build/native-fin-containers/reviewed-perl.json\n            build/native-fin-products/perl.json\n            build/native-fin-products/reviewed-perl.json\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a2ea5d36143eba29ac5507c0d449c7b53d43ccd3cf79631d5f1e8b5e23cf6691",
+      "previousSha256": "36b8f92b0de87d6dc8c06e59b40970587dda53e49d6196f998b77f385a404bb4",
+      "edits": [
+        {
+          "start": 54801,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 77359,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 94554,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 110855,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 125623,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 134905,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 144530,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 167914,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 180883,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 195778,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 208562,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 221782,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 230315,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 238745,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 247762,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 256136,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 266007,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 275416,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 285255,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 297390,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 307270,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 315988,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 325284,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 337967,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 347222,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 356505,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 365638,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 374497,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 381884,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 389808,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 400454,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 407351,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 414560,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 421658,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 431887,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 439631,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 446005,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 452168,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 458265,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 458430,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 464786,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 472452,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 481746,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 492968,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 502665,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 512270,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 523800,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 532365,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 543373,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 575258,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 581887,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 592146,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 601471,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 613019,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 621542,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 632492,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 664010,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 673229,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 680569,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 692852,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 699712,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 708740,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 722766,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 733808,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 747856,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 758602,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 770673,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 781961,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 790544,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 797002,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 805388,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 813196,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 813521,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 822978,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 823143,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 831571,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 843974,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 844139,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 899315,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1011377,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1057778,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1071618,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1074895,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1079012,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1082669,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1085610,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1088101,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1092712,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1095202,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1102368,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1107262,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1109425,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1114872,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1117677,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1125150,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 1127140,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1136846,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1144151,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1148733,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1151226,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1156604,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1159123,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1166569,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1170003,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1176683,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1182165,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1188444,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1205691,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1221005,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1237046,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1251284,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1269846,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1284270,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1284435,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 1304946,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1324071,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1324236,
+          "previous": "          \"sha256\": \"c5bb1460ae7098e679f16eac9116f391901370893c0ad9f580c198291dbeb719\"\n",
+          "current": "          \"sha256\": \"03bb020bcb2dc94c641772d6c4e4e8e3a767797914c5f74690c1024a74bda836\"\n"
+        },
+        {
+          "start": 1335792,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1350647,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1359089,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1373184,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1380980,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1392851,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1401053,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1416239,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1420833,
+          "previous": "          \"sha256\": \"47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81\"\n",
+          "current": "          \"sha256\": \"430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1\"\n"
+        },
+        {
+          "start": 1427867,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        },
+        {
+          "start": 1451013,
+          "previous": "          \"sha256\": \"2dc832af05f300ac9e4e031053bd099c4bc6d37d4a47224cd4fe2c0700ee5664\"\n",
+          "current": "          \"sha256\": \"cebf0faf8d93478c0738adad1cc6854cae1099098dd03c331b552d873706502d\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "430957bdec39ac0fc22bae27e15cdf0576b6f4afbbefa6c8bba4636fe5229ed1",
+      "previousSha256": "47044a19eb7bab2ffe9c40b9609f721a762c8ffc997624e0d6a74a719cc3ec81",
+      "edits": [
+        {
+          "start": 38763,
+          "previous": "  // Fin inside arrays, lists and options runs beside the specializations in every native shard.\n",
+          "current": "  // Fin inside arrays, lists and options, then inside products and Except values, runs on both routes\n  // beside the specializations in every native shard; each route requires and uploads its own report.\n"
+        },
+        {
+          "start": 39197,
+          "previous": "    const reviewed = [\"c,cpp\", \"python\", \"rust\"].includes(profiles);\n    const extra = reviewed ? ` LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=${profiles}` : \"\";\n    const command = `LEAN_BRIDGE_FIN_CONTAINER_PROFILES=${profiles}${extra} node --test tests/native-fin-containers.test.mjs`;\n    assert.ok(workflow.includes(`          ${command}\\n          test -s build/native-fin-containers/${report}.json\\n`), profiles);\n    assert.ok(workflow.includes(`            build/native-fin-containers/${report}.json\\n`), profiles);\n    assert.ok(workflow.includes(`consumer_command=\"$consumer_command && ${command}\"`) || workflow.includes(` && ${command} && `), profiles);\n    if(reviewed)\n",
+          "current": "    for(const [variable, test, directory] of [[\"FIN_CONTAINER\", \"native-fin-containers\", \"native-fin-containers\"], [\"FIN_PRODUCT\", \"native-fin-products\", \"native-fin-products\"]])\n"
+        },
+        {
+          "start": 39382,
+          "previous": "      assert.ok(workflow.includes(`          test -s build/native-fin-containers/${report}.json\\n          test -s build/native-fin-containers/reviewed-${report}.json\\n`), profiles);\n      assert.ok(workflow.includes(`            build/native-fin-containers/${report}.json\\n            build/native-fin-containers/reviewed-${report}.json\\n`), profiles);\n",
+          "current": "      const command = `LEAN_BRIDGE_${variable}_PROFILES=${profiles} LEAN_BRIDGE_REVIEWED_${variable}_PROFILES=${profiles} node --test tests/${test}.test.mjs`;\n      assert.ok(workflow.includes(`          ${command}\\n          test -s build/${directory}/${report}.json\\n          test -s build/${directory}/reviewed-${report}.json\\n`), `${profiles} ${test}`);\n      assert.ok(workflow.includes(`            build/${directory}/${report}.json\\n            build/${directory}/reviewed-${report}.json\\n`), `${profiles} ${test}`);\n      assert.ok(workflow.includes(`consumer_command=\"$consumer_command && ${command}\"`) || workflow.includes(` && ${command} && `), `${profiles} ${test}`);\n"
+        },
+        {
+          "start": 40069,
+          "previous": "",
+          "current": "    assert.ok(workflow.includes(`            build/native-fin-containers/reviewed-${report}.json\\n            build/native-fin-products/${report}.json\\n`), profiles);\n"
+        },
+        {
+          "start": 43033,
+          "previous": "  assert.ok(perlWorkflow.includes(\"          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=perl node --test tests/native-fin-containers.test.mjs tests/perl-fin-containers.test.mjs\\n          test -s build/native-fin-containers/perl.json\\n\"));\n",
+          "current": "  assert.ok(perlWorkflow.includes(\"          LEAN_BRIDGE_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl node --test tests/native-fin-containers.test.mjs tests/perl-fin-containers.test.mjs\\n          test -s build/native-fin-containers/perl.json\\n          test -s build/native-fin-containers/reviewed-perl.json\\n\"));\n  assert.ok(perlWorkflow.includes(\"          LEAN_BRIDGE_FIN_PRODUCT_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=perl node --test tests/native-fin-products.test.mjs\\n          test -s build/native-fin-products/perl.json\\n          test -s build/native-fin-products/reviewed-perl.json\\n\"));\n  assert.ok(perlWorkflow.includes(\"            build/native-fin-containers/perl.json\\n            build/native-fin-containers/reviewed-perl.json\\n            build/native-fin-products/perl.json\\n            build/native-fin-products/reviewed-perl.json\\n\"));\n"
+        },
+        {
+          "start": 48930,
+          "previous": "  assert.match(workflow, /build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet-reviewed\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/generic-records\\/specialized-dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet-reviewed\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/generic-records\\/specialized-dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-dotnet\\.json\\n\\s*build\\/native-fin-products\\/dotnet\\.json\\n\\s*build\\/native-fin-products\\/reviewed-dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 54599,
+          "previous": "",
+          "current": "    , \"build/native-fin-containers/reviewed-java-kotlin.json\"\n    , \"build/native-fin-products/java-kotlin.json\"\n    , \"build/native-fin-products/reviewed-java-kotlin.json\"\n"
+        },
+        {
+          "start": 57718,
+          "previous": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-fin-products\\/python\\.json\\n\\s*build\\/native-fin-products\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 63962,
+          "previous": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n  assert.match(workflow, /build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby-reviewed\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/generic-records\\/specialized-ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-fin-products\\/rust\\.json\\n\\s*build\\/native-fin-products\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n  assert.match(workflow, /build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby-reviewed\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/generic-records\\/specialized-ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-ruby\\.json\\n\\s*build\\/native-fin-products\\/ruby\\.json\\n\\s*build\\/native-fin-products\\/reviewed-ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 68280,
+          "previous": "  assert.match(workflow, /node --test tests\\/native-wit\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests\\/wit-callable-contract\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests\\/wit-callables\\.test\\.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests\\/wit-compounds\\.test\\.mjs tests\\/wit-compound-contract\\.test\\.mjs tests\\/wit-compound-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests\\/wit-lists\\.test\\.mjs tests\\/wit-list-contract\\.test\\.mjs tests\\/wit-list-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests\\/wit-aliases\\.test\\.mjs tests\\/wit-alias-contract\\.test\\.mjs tests\\/wit-alias-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests\\/wit-fin\\.test\\.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests\\/native-specializations\\.test\\.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests\\/generic-records\\.test\\.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi node --test tests\\/native-fin-containers\\.test\\.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests\\/native-subtype\\.test\\.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests\\/wit-variants\\.test\\.mjs tests\\/wit-variant-contract\\.test\\.mjs tests\\/wit-variant-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests\\/wit-collections\\.test\\.mjs tests\\/wit-collection-contract\\.test\\.mjs tests\\/wit-collection-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests\\/wit-copied-graph-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests\\/wit-copied-graph-native\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests\\/wit-host-evidence\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests\\/wit-host-packages\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests\\/wit-graph-composition\\.test\\.mjs && npm run test:type-corpus:wit-wasi/);\n",
+          "current": "  assert.match(workflow, /node --test tests\\/native-wit\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests\\/wit-callable-contract\\.test\\.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests\\/wit-callables\\.test\\.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests\\/wit-compounds\\.test\\.mjs tests\\/wit-compound-contract\\.test\\.mjs tests\\/wit-compound-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests\\/wit-lists\\.test\\.mjs tests\\/wit-list-contract\\.test\\.mjs tests\\/wit-list-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests\\/wit-aliases\\.test\\.mjs tests\\/wit-alias-contract\\.test\\.mjs tests\\/wit-alias-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests\\/wit-fin\\.test\\.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests\\/native-specializations\\.test\\.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests\\/generic-records\\.test\\.mjs && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests\\/native-fin-containers\\.test\\.mjs && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests\\/native-fin-products\\.test\\.mjs && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests\\/native-subtype\\.test\\.mjs && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests\\/wit-variants\\.test\\.mjs tests\\/wit-variant-contract\\.test\\.mjs tests\\/wit-variant-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests\\/wit-collections\\.test\\.mjs tests\\/wit-collection-contract\\.test\\.mjs tests\\/wit-collection-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests\\/wit-copied-graph-conversions\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests\\/wit-copied-graph-native\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests\\/wit-copied-graph-package\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests\\/wit-host-evidence\\.test\\.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests\\/wit-host-packages\\.test\\.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests\\/wit-graph-composition\\.test\\.mjs && npm run test:type-corpus:wit-wasi/);\n"
+        },
+        {
+          "start": 71033,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/wit-wasi\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-wit-wasi\\.json\\n\\s*build\\/char-native\\/wit-wasi\\.json\\n\\s*build\\/word-native\\/wit-wasi\\.json\\n\\s*build\\/callables\\/wit\\.json\\n\\s*build\\/compounds\\/wit\\.json\\n\\s*build\\/compounds\\/wit-conversions\\.json\\n\\s*build\\/lists\\/wit\\.json\\n\\s*build\\/lists\\/wit-conversions\\.json\\n\\s*build\\/aliases\\/wit\\.json\\n\\s*build\\/aliases\\/wit-conversions\\.json\\n\\s*build\\/native-fin\\/wit\\.json\\n\\s*build\\/native-fin\\/wit-reviewed\\.json\\n\\s*build\\/native-specializations\\/wit-wasi\\.json\\n\\s*build\\/generic-records\\/wit-wasi\\.json\\n\\s*build\\/generic-records\\/specialized-wit-wasi\\.json\\n\\s*build\\/native-fin-containers\\/wit-wasi\\.json\\n\\s*build\\/native-subtype\\/wit-wasi\\.json\\n\\s*build\\/variants\\/wit\\.json\\n\\s*build\\/variants\\/wit-conversions\\.json\\n\\s*build\\/collections\\/wit\\.json\\n\\s*build\\/collections\\/wit-conversions\\.json\\n\\s*build\\/recursive-wit\\/conversions\\.json\\n\\s*build\\/recursive-wit\\/native\\.json\\n\\s*build\\/recursive\\/wit-packages\\.json\\n\\s*build\\/recursive\\/wit-reproducibility\\.json\\n\\s*build\\/recursive-wit\\/host-hash\\.json\\n\\s*build\\/recursive-wit\\/host-isolation\\.json\\n\\s*build\\/recursive-wit\\/composition\\.json\\n\\s*build\\/recursive-wit\\/mixed-packages\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/wit-wasi\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-wit-wasi\\.json\\n\\s*build\\/char-native\\/wit-wasi\\.json\\n\\s*build\\/word-native\\/wit-wasi\\.json\\n\\s*build\\/callables\\/wit\\.json\\n\\s*build\\/compounds\\/wit\\.json\\n\\s*build\\/compounds\\/wit-conversions\\.json\\n\\s*build\\/lists\\/wit\\.json\\n\\s*build\\/lists\\/wit-conversions\\.json\\n\\s*build\\/aliases\\/wit\\.json\\n\\s*build\\/aliases\\/wit-conversions\\.json\\n\\s*build\\/native-fin\\/wit\\.json\\n\\s*build\\/native-fin\\/wit-reviewed\\.json\\n\\s*build\\/native-specializations\\/wit-wasi\\.json\\n\\s*build\\/generic-records\\/wit-wasi\\.json\\n\\s*build\\/generic-records\\/specialized-wit-wasi\\.json\\n\\s*build\\/native-fin-containers\\/wit-wasi\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-wit-wasi\\.json\\n\\s*build\\/native-fin-products\\/wit-wasi\\.json\\n\\s*build\\/native-fin-products\\/reviewed-wit-wasi\\.json\\n\\s*build\\/native-subtype\\/wit-wasi\\.json\\n\\s*build\\/variants\\/wit\\.json\\n\\s*build\\/variants\\/wit-conversions\\.json\\n\\s*build\\/collections\\/wit\\.json\\n\\s*build\\/collections\\/wit-conversions\\.json\\n\\s*build\\/recursive-wit\\/conversions\\.json\\n\\s*build\\/recursive-wit\\/native\\.json\\n\\s*build\\/recursive\\/wit-packages\\.json\\n\\s*build\\/recursive\\/wit-reproducibility\\.json\\n\\s*build\\/recursive-wit\\/host-hash\\.json\\n\\s*build\\/recursive-wit\\/host-isolation\\.json\\n\\s*build\\/recursive-wit\\/composition\\.json\\n\\s*build\\/recursive-wit\\/mixed-packages\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 73343,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-values\\.json\\n\\s*build\\/owned\\/php-values\\.json\\n\\s*build\\/owned-php-runtime\\/\\n\\s*build\\/owned-php-conversions\\/\\n\\s*build\\/owned-php-calls\\/\\n\\s*build\\/owned-php-packaging\\/\\n\\s*build\\/owned-php-transfers\\/\\n\\s*build\\/owned-php-transfer-packaging\\/\\n\\s*build\\/owned-php-borrows\\/\\n\\s*build\\/owned-php-borrow-packaging\\/\\n\\s*build\\/recursive\\/php-conversions\\.json\\n\\s*build\\/recursive\\/php-native\\.json\\n\\s*build\\/recursive\\/php-package-cold\\.json\\n\\s*build\\/recursive\\/php-packages\\.json\\n\\s*build\\/recursive\\/php-reproducibility\\.json\\n\\s*build\\/recursive\\/php-composition\\.json\\n\\s*build\\/recursive\\/php-conflicts\\.json\\n\\s*build\\/type-corpus\\/php-native\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-php-native\\.json\\n\\s*build\\/char-native\\/php-native\\.json\\n\\s*build\\/word-native\\/php-native\\.json\\n\\s*build\\/callables\\/php-native\\.json\\n\\s*build\\/structured-callables\\/php-native\\.json\\n\\s*build\\/recursive-callables\\/php-recursive\\.json\\n\\s*build\\/recursive-callables\\/php-mixed\\.json\\n\\s*build\\/compounds\\/php-native\\.json\\n\\s*build\\/lists\\/php-native\\.json\\n\\s*build\\/aliases\\/php-native\\.json\\n\\s*build\\/native-fin\\/php\\.json\\n\\s*build\\/native-fin\\/php-reviewed\\.json\\n\\s*build\\/native-specializations\\/php-native\\.json\\n\\s*build\\/generic-records\\/php-native\\.json\\n\\s*build\\/generic-records\\/specialized-php-native\\.json\\n\\s*build\\/native-fin-containers\\/php-native\\.json\\n\\s*build\\/native-subtype\\/php-native\\.json\\n\\s*build\\/variants\\/php-native\\.json\\n\\s*build\\/collections\\/php-native-conversions\\.json\\n\\s*build\\/equality\\/php\\.json\\n\\s*build\\/collections\\/php-native\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-values\\.json\\n\\s*build\\/owned\\/php-values\\.json\\n\\s*build\\/owned-php-runtime\\/\\n\\s*build\\/owned-php-conversions\\/\\n\\s*build\\/owned-php-calls\\/\\n\\s*build\\/owned-php-packaging\\/\\n\\s*build\\/owned-php-transfers\\/\\n\\s*build\\/owned-php-transfer-packaging\\/\\n\\s*build\\/owned-php-borrows\\/\\n\\s*build\\/owned-php-borrow-packaging\\/\\n\\s*build\\/recursive\\/php-conversions\\.json\\n\\s*build\\/recursive\\/php-native\\.json\\n\\s*build\\/recursive\\/php-package-cold\\.json\\n\\s*build\\/recursive\\/php-packages\\.json\\n\\s*build\\/recursive\\/php-reproducibility\\.json\\n\\s*build\\/recursive\\/php-composition\\.json\\n\\s*build\\/recursive\\/php-conflicts\\.json\\n\\s*build\\/type-corpus\\/php-native\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-php-native\\.json\\n\\s*build\\/char-native\\/php-native\\.json\\n\\s*build\\/word-native\\/php-native\\.json\\n\\s*build\\/callables\\/php-native\\.json\\n\\s*build\\/structured-callables\\/php-native\\.json\\n\\s*build\\/recursive-callables\\/php-recursive\\.json\\n\\s*build\\/recursive-callables\\/php-mixed\\.json\\n\\s*build\\/compounds\\/php-native\\.json\\n\\s*build\\/lists\\/php-native\\.json\\n\\s*build\\/aliases\\/php-native\\.json\\n\\s*build\\/native-fin\\/php\\.json\\n\\s*build\\/native-fin\\/php-reviewed\\.json\\n\\s*build\\/native-specializations\\/php-native\\.json\\n\\s*build\\/generic-records\\/php-native\\.json\\n\\s*build\\/generic-records\\/specialized-php-native\\.json\\n\\s*build\\/native-fin-containers\\/php-native\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-php-native\\.json\\n\\s*build\\/native-fin-products\\/php-native\\.json\\n\\s*build\\/native-fin-products\\/reviewed-php-native\\.json\\n\\s*build\\/native-subtype\\/php-native\\.json\\n\\s*build\\/variants\\/php-native\\.json\\n\\s*build\\/collections\\/php-native-conversions\\.json\\n\\s*build\\/equality\\/php\\.json\\n\\s*build\\/collections\\/php-native\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 83385,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/dotnet\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-dotnet\\.json\\n\\s*build\\/char-native\\/dotnet\\.json\\n\\s*build\\/word-native\\/dotnet\\.json\\n\\s*build\\/callables\\/dotnet\\.json\\n\\s*build\\/structured-callables\\/dotnet\\.json\\n\\s*build\\/recursive-callables\\/dotnet\\.json\\n\\s*build\\/compounds\\/dotnet\\.json\\n\\s*build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet-reviewed\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/generic-records\\/specialized-dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/dotnet\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-dotnet\\.json\\n\\s*build\\/char-native\\/dotnet\\.json\\n\\s*build\\/word-native\\/dotnet\\.json\\n\\s*build\\/callables\\/dotnet\\.json\\n\\s*build\\/structured-callables\\/dotnet\\.json\\n\\s*build\\/recursive-callables\\/dotnet\\.json\\n\\s*build\\/compounds\\/dotnet\\.json\\n\\s*build\\/lists\\/dotnet\\.json\\n\\s*build\\/aliases\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet\\.json\\n\\s*build\\/native-fin\\/dotnet-reviewed\\.json\\n\\s*build\\/native-specializations\\/dotnet\\.json\\n\\s*build\\/generic-records\\/dotnet\\.json\\n\\s*build\\/generic-records\\/specialized-dotnet\\.json\\n\\s*build\\/native-fin-containers\\/dotnet\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-dotnet\\.json\\n\\s*build\\/native-fin-products\\/dotnet\\.json\\n\\s*build\\/native-fin-products\\/reviewed-dotnet\\.json\\n\\s*build\\/native-subtype\\/dotnet\\.json\\n\\s*build\\/variants\\/dotnet\\.json\\n\\s*build\\/collections\\/dotnet-conversions\\.json\\n\\s*build\\/collections\\/dotnet\\.json\\n\\s*build\\/equality\\/dotnet\\.json\\n\\s*build\\/recursive\\/dotnet-values\\.json\\n\\s*build\\/recursive\\/dotnet-conversions\\.json\\n\\s*build\\/recursive\\/dotnet-native\\.json\\n\\s*build\\/recursive\\/dotnet-packages\\.json\\n\\s*build\\/recursive\\/dotnet-composition\\.json\\n\\s*build\\/recursive\\/dotnet-reproducibility\\.json\\n\\s*build\\/recursive\\/dotnet-conflicts\\.json\\n\\s*build\\/owned-dotnet-runtime\\/\\n\\s*build\\/owned-dotnet-layout\\/\\n\\s*build\\/owned-dotnet-values\\/\\n\\s*build\\/owned-dotnet-conversions\\/\\n\\s*build\\/owned-dotnet-callables\\/\\n\\s*build\\/owned-dotnet-callback-signatures\\/\\n\\s*build\\/owned-dotnet-loading\\/\\n\\s*build\\/owned-dotnet-packaging\\/\\n\\s*build\\/owned-dotnet-transfers\\/\\n\\s*build\\/owned-dotnet-transfer-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\/\\n\\s*build\\/owned-dotnet-borrow-packaging\\/\\n\\s*build\\/owned-dotnet-borrows\\.log\\n\\s*build\\/owned-dotnet-receivers\\/\\n\\s*build\\/owned-dotnet-receivers\\.log\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 86391,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/c-cpp\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-c-cpp\\.json\\n\\s*build\\/char-native\\/c-cpp\\.json\\n\\s*build\\/word-native\\/c-cpp\\.json\\n\\s*build\\/callables\\/c\\.json\\n\\s*build\\/structured-callables\\/c\\.json\\n\\s*build\\/closure-thread\\/installed\\.json\\n\\s*build\\/callables\\/cpp\\.json\\n\\s*build\\/structured-callables\\/cpp\\.json\\n\\s*build\\/native-recursive-callables\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/values\\.json\\n\\s*build\\/owned-aggregate-native\\/scalars\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c-scalars\\.json\\n\\s*build\\/owned-transfers\\/\\n\\s*build\\/owned-transfer-packaging\\/\\n\\s*build\\/owned-borrows\\/\\n\\s*build\\/owned-borrows-runtime\\.log\\n\\s*build\\/owned-borrows-installed\\.log\\n\\s*build\\/owned-receivers\\/\\n\\s*build\\/owned-receivers\\.log\\n\\s*build\\/owned-aggregate-native\\/reviewed-public-c\\.json\\n\\s*build\\/owned-c-packaging\\/\\n\\s*build\\/owned-host-callbacks\\/ordinary\\.json\\n\\s*build\\/owned-host-callbacks\\/reviewed\\.json\\n\\s*build\\/owned-host-packaging\\/ordinary\\.json\\n\\s*build\\/owned-host-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-runtime\\/\\n\\s*build\\/owned-cpp-callables\\/\\n\\s*build\\/owned-cpp-packaging\\/ordinary\\.json\\n\\s*build\\/owned-cpp-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-transfers\\/\\n\\s*build\\/owned-cpp-borrows\\/\\n\\s*build\\/owned-cpp-borrow-packaging\\/\\n\\s*build\\/owned-cpp-borrows\\.log\\n\\s*build\\/owned-cpp-receivers\\/\\n\\s*build\\/owned-cpp-receivers\\.log\\n\\s*build\\/owned-cpp-transfer-packaging\\/\\n\\s*build\\/recursive-callables\\/c\\.json\\n\\s*build\\/recursive-callables\\/cpp\\.json\\n\\s*build\\/recursive-callables\\/c-family-documentation\\.json\\n\\s*build\\/compounds\\/native\\.json\\n\\s*build\\/lists\\/native\\.json\\n\\s*build\\/collections\\/native\\.json\\n\\s*build\\/aliases\\/native\\.json\\n\\s*build\\/native-fin\\/native\\.json\\n\\s*build\\/native-fin\\/native-reviewed\\.json\\n\\s*build\\/native-specializations\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-subtype\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/specialized-c-cpp\\.json\\n\\s*build\\/variants\\/cpp\\.json\\n\\s*build\\/variants\\/c\\.json\\n\\s*build\\/recursive\\/c-family\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/c-cpp\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-c-cpp\\.json\\n\\s*build\\/char-native\\/c-cpp\\.json\\n\\s*build\\/word-native\\/c-cpp\\.json\\n\\s*build\\/callables\\/c\\.json\\n\\s*build\\/structured-callables\\/c\\.json\\n\\s*build\\/closure-thread\\/installed\\.json\\n\\s*build\\/callables\\/cpp\\.json\\n\\s*build\\/structured-callables\\/cpp\\.json\\n\\s*build\\/native-recursive-callables\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/values\\.json\\n\\s*build\\/owned-aggregate-native\\/scalars\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c-scalars\\.json\\n\\s*build\\/owned-transfers\\/\\n\\s*build\\/owned-transfer-packaging\\/\\n\\s*build\\/owned-borrows\\/\\n\\s*build\\/owned-borrows-runtime\\.log\\n\\s*build\\/owned-borrows-installed\\.log\\n\\s*build\\/owned-receivers\\/\\n\\s*build\\/owned-receivers\\.log\\n\\s*build\\/owned-aggregate-native\\/reviewed-public-c\\.json\\n\\s*build\\/owned-c-packaging\\/\\n\\s*build\\/owned-host-callbacks\\/ordinary\\.json\\n\\s*build\\/owned-host-callbacks\\/reviewed\\.json\\n\\s*build\\/owned-host-packaging\\/ordinary\\.json\\n\\s*build\\/owned-host-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-runtime\\/\\n\\s*build\\/owned-cpp-callables\\/\\n\\s*build\\/owned-cpp-packaging\\/ordinary\\.json\\n\\s*build\\/owned-cpp-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-transfers\\/\\n\\s*build\\/owned-cpp-borrows\\/\\n\\s*build\\/owned-cpp-borrow-packaging\\/\\n\\s*build\\/owned-cpp-borrows\\.log\\n\\s*build\\/owned-cpp-receivers\\/\\n\\s*build\\/owned-cpp-receivers\\.log\\n\\s*build\\/owned-cpp-transfer-packaging\\/\\n\\s*build\\/recursive-callables\\/c\\.json\\n\\s*build\\/recursive-callables\\/cpp\\.json\\n\\s*build\\/recursive-callables\\/c-family-documentation\\.json\\n\\s*build\\/compounds\\/native\\.json\\n\\s*build\\/lists\\/native\\.json\\n\\s*build\\/collections\\/native\\.json\\n\\s*build\\/aliases\\/native\\.json\\n\\s*build\\/native-fin\\/native\\.json\\n\\s*build\\/native-fin\\/native-reviewed\\.json\\n\\s*build\\/native-specializations\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-products\\/c-cpp\\.json\\n\\s*build\\/native-fin-products\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-subtype\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/specialized-c-cpp\\.json\\n\\s*build\\/variants\\/cpp\\.json\\n\\s*build\\/variants\\/c\\.json\\n\\s*build\\/recursive\\/c-family\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 90883,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/rust\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-rust\\.json\\n\\s*build\\/char-native\\/rust\\.json\\n\\s*build\\/word-native\\/rust\\.json\\n\\s*build\\/callables\\/rust\\.json\\n\\s*build\\/structured-callables\\/rust\\.json\\n\\s*build\\/recursive-callables\\/rust\\.json\\n\\s*build\\/owned-rust-runtime\\/\\n\\s*build\\/owned-rust-values\\/\\n\\s*build\\/owned-rust-transfers\\/\\n\\s*build\\/owned-rust-transfer-packaging\\/\\n\\s*build\\/owned-rust-borrows\\/\\n\\s*build\\/owned-rust-borrow-packaging\\/\\n\\s*build\\/owned-rust-borrows\\.log\\n\\s*build\\/owned-rust-receivers\\/\\n\\s*build\\/owned-rust-receivers\\.log\\n\\s*build\\/owned-rust-packaging\\/ordinary\\.json\\n\\s*build\\/owned-rust-packaging\\/reviewed\\.json\\n\\s*build\\/compounds\\/rust\\.json\\n\\s*build\\/lists\\/rust\\.json\\n\\s*build\\/aliases\\/rust\\.json\\n\\s*build\\/native-fin\\/rust\\.json\\n\\s*build\\/native-fin\\/rust-reviewed\\.json\\n\\s*build\\/native-specializations\\/rust\\.json\\n\\s*build\\/generic-records\\/rust\\.json\\n\\s*build\\/generic-records\\/specialized-rust\\.json\\n\\s*build\\/native-fin-containers\\/rust\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-rust\\.json\\n\\s*build\\/native-fin-products\\/rust\\.json\\n\\s*build\\/native-fin-products\\/reviewed-rust\\.json\\n\\s*build\\/native-subtype\\/rust\\.json\\n\\s*build\\/variants\\/rust\\.json\\n\\s*build\\/collections\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-values\\.json\\n\\s*build\\/recursive\\/rust-conversions\\.json\\n\\s*build\\/recursive\\/rust-native\\.json\\n\\s*build\\/recursive\\/rust-packages\\.json\\n\\s*build\\/collections\\/rust\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 96933,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/python\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-python\\.json\\n\\s*build\\/char-native\\/python\\.json\\n\\s*build\\/word-native\\/python\\.json\\n\\s*build\\/callables\\/python\\.json\\n\\s*build\\/structured-callables\\/python\\.json\\n\\s*build\\/recursive-callables\\/python\\.json\\n\\s*build\\/compounds\\/python\\.json\\n\\s*build\\/lists\\/python\\.json\\n\\s*build\\/aliases\\/python\\.json\\n\\s*build\\/native-fin\\/python\\.json\\n\\s*build\\/native-fin\\/python-reviewed\\.json\\n\\s*build\\/native-specializations\\/python\\.json\\n\\s*build\\/generic-records\\/python\\.json\\n\\s*build\\/generic-records\\/specialized-python\\.json\\n\\s*build\\/generic-records\\/python312\\.json\\n\\s*build\\/generic-records\\/specialized-python312\\.json\\n\\s*build\\/native-fin-containers\\/python\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-python\\.json\\n\\s*build\\/native-fin-products\\/python\\.json\\n\\s*build\\/native-fin-products\\/reviewed-python\\.json\\n\\s*build\\/native-subtype\\/python\\.json\\n\\s*build\\/variants\\/python\\.json\\n\\s*build\\/collections\\/python\\.json\\n\\s*build\\/collections\\/python-docs\\.json\\n\\s*build\\/recursive\\/python-values\\.json\\n\\s*build\\/recursive\\/python-conversions\\.json\\n\\s*build\\/recursive\\/python-native\\.json\\n\\s*build\\/recursive\\/python-packages\\.json\\n\\s*build\\/owned-python-runtime\\/\\n\\s*build\\/owned-python-values\\/\\n\\s*build\\/owned-python-transfers\\/\\n\\s*build\\/owned-python-transfer-packaging\\/\\n\\s*build\\/owned-python-borrows\\/\\n\\s*build\\/owned-python-borrow-packaging\\/\\n\\s*build\\/owned-python-borrows\\.log\\n\\s*build\\/owned-python-receivers\\/\\n\\s*build\\/owned-python-receivers\\.log\\n\\s*build\\/owned-python-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 99128,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/ruby\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-ruby\\.json\\n\\s*build\\/char-native\\/ruby\\.json\\n\\s*build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby-reviewed\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/generic-records\\/specialized-ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/ruby\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-ruby\\.json\\n\\s*build\\/char-native\\/ruby\\.json\\n\\s*build\\/word-native\\/ruby\\.json\\n\\s*build\\/callables\\/ruby\\.json\\n\\s*build\\/structured-callables\\/ruby\\.json\\n\\s*build\\/recursive-callables\\/ruby\\.json\\n\\s*build\\/compounds\\/ruby\\.json\\n\\s*build\\/lists\\/ruby\\.json\\n\\s*build\\/aliases\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby\\.json\\n\\s*build\\/native-fin\\/ruby-reviewed\\.json\\n\\s*build\\/native-specializations\\/ruby\\.json\\n\\s*build\\/generic-records\\/ruby\\.json\\n\\s*build\\/generic-records\\/specialized-ruby\\.json\\n\\s*build\\/native-fin-containers\\/ruby\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-ruby\\.json\\n\\s*build\\/native-fin-products\\/ruby\\.json\\n\\s*build\\/native-fin-products\\/reviewed-ruby\\.json\\n\\s*build\\/native-subtype\\/ruby\\.json\\n\\s*build\\/variants\\/ruby\\.json\\n\\s*build\\/collections\\/ruby\\.json\\n\\s*build\\/recursive\\/ruby-values\\.json\\n\\s*build\\/recursive\\/ruby-conversions\\.json\\n\\s*build\\/recursive\\/ruby-native\\.json\\n\\s*build\\/recursive\\/ruby-packages\\.json\\n\\s*build\\/owned-ruby-runtime\\/\\n\\s*build\\/owned-ruby-values\\/\\n\\s*build\\/owned-ruby-layout\\/\\n\\s*build\\/owned-ruby-conversions\\/\\n\\s*build\\/owned-ruby-gmp\\/\\n\\s*build\\/owned-ruby-loading\\/\\n\\s*build\\/owned-ruby-transfers\\/\\n\\s*build\\/owned-ruby-transfer-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\/\\n\\s*build\\/owned-ruby-borrow-packaging\\/\\n\\s*build\\/owned-ruby-borrows\\.log\\n\\s*build\\/owned-ruby-receivers\\/\\n\\s*build\\/owned-ruby-receivers\\.log\\n\\s*build\\/owned-ruby-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 103226,
+          "previous": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/native-fin\\/perl\\.json\\n\\s*build\\/native-fin\\/perl-reviewed\\.json\\n\\s*build\\/native-specializations\\/perl\\.json\\n\\s*build\\/generic-records\\/perl\\.json\\n\\s*build\\/generic-records\\/specialized-perl\\.json\\n\\s*build\\/native-fin-containers\\/perl\\.json\\n\\s*build\\/native-subtype\\/perl\\.json\\n\\s*build\\/perl-refinements\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(perlWorkflow, /path: \\|\\n\\s*build\\/type-corpus\\/perl\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-perl\\.json\\n\\s*build\\/char-native\\/perl\\.json\\n\\s*build\\/word-native\\/perl\\.json\\n\\s*build\\/callables\\/perl\\.json\\n\\s*build\\/structured-callables\\/perl\\.json\\n\\s*build\\/recursive-callables\\/perl\\.json\\n\\s*build\\/compounds\\/perl\\.json\\n\\s*build\\/lists\\/perl\\.json\\n\\s*build\\/collections\\/perl\\.json\\n\\s*build\\/aliases\\/perl\\.json\\n\\s*build\\/native-fin\\/perl\\.json\\n\\s*build\\/native-fin\\/perl-reviewed\\.json\\n\\s*build\\/native-specializations\\/perl\\.json\\n\\s*build\\/generic-records\\/perl\\.json\\n\\s*build\\/generic-records\\/specialized-perl\\.json\\n\\s*build\\/native-fin-containers\\/perl\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-perl\\.json\\n\\s*build\\/native-fin-products\\/perl\\.json\\n\\s*build\\/native-fin-products\\/reviewed-perl\\.json\\n\\s*build\\/native-subtype\\/perl\\.json\\n\\s*build\\/perl-refinements\\/perl\\.json\\n\\s*build\\/variants\\/perl\\.json\\n\\s*build\\/recursive\\/perl-values\\.json\\n\\s*build\\/recursive\\/perl-conversions\\.json\\n\\s*build\\/recursive\\/perl-native\\.json\\n\\s*build\\/recursive\\/perl-packages\\.json\\n\\s*build\\/recursive\\/perl-component-collision\\.json\\n\\s*build\\/recursive\\/perl-composition\\.json\\n\\s*build\\/recursive\\/perl-documentation\\.json\\n\\s*build\\/owned-perl-runtime\\/\\n\\s*build\\/owned-perl-conversions\\/\\n\\s*build\\/owned-perl-calls\\/\\n\\s*build\\/owned-perl-scalars\\/\\n\\s*build\\/owned-perl-loader\\/\\n\\s*build\\/owned-perl-package\\/\\n\\s*build\\/owned-perl-transfers\\/\\n\\s*build\\/owned-perl-transfer-packaging\\/\\n\\s*build\\/owned-perl-borrows\\/\\n\\s*build\\/owned-perl-borrow-packaging\\/\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "138dc9df4a7a9b882e9b4d6e40f0b2337640db6ca891191f3888a5ff9bf266d9",
+      "previousSha256": "66c4b0c5fb02f090828640b2a7e0fdd731d41c012ee52b32ba8045f4eb30fb42",
+      "edits": [
+        {
+          "start": 4890,
+          "previous": "",
+          "current": "import { finProductsCiChangedPaths } from \"./fin-products-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 39985,
+          "previous": "",
+          "current": "\t, ...finProductsCiChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-scalar-rollout-source-history-tests.mjs",
+      "currentSha256": "d8b2645bb4b5a83b62ec7cd3c08dfaaecbb6a31e12350028e05370c0f276c04f",
+      "previousSha256": "a8dfccbda4f178ceaf67198f212cecedb83e47184108e633f88f12dc238e26a8",
+      "edits": [
+        {
+          "start": 346,
+          "previous": "",
+          "current": "import { beforeFinProductsCiSource } from \"./fin-products-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 1030,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinProductsCiSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1996,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinProductsCiSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2889,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforeFinProductsCiSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-scalar-rollout-source-history.mjs",
+      "currentSha256": "5e21129d29c599f1e560bdde82c7e2532fffcb2a6b9c9fe02f2fe518f83ac819",
+      "previousSha256": "5ec69297c3396b1cc6a667ea71b94318d2453e94ee267651cd048b0675fd3c86",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforeFinProductsCiSource } from \"./fin-products-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 2620,
+          "previous": "",
+          "current": "\tsource = beforeFinProductsCiSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-products.test.mjs",
+      "currentSha256": "f3671fed5c4e554ad609f004718a2ee15513188466a1d3eb5478354761fa4603",
+      "previousSha256": "9a54d790594bd74c881b319fa7289212d7d20d899ac33e0279e8d8392e0b75b0",
+      "edits": [
+        {
+          "start": 1436,
+          "previous": "",
+          "current": "import \"./helpers/fin-products-ci-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 24779,
+          "previous": "",
+          "current": "\tconst alias = ir => ir.types.find(item => item.id === \"lean:FinProducts.DigitPair\").source.extensions[\"lean-lang.org/nominal-refinements\"];\n\t// Each case names the extension where reconciliation must stop: declaration trees, or the alias's own bound.\n\tconst refinements = /source\\.extensions\\.lean-lang\\.org\\/refinements/u, nominal = /types\\[\\d+\\]\\.source\\.extensions\\.lean-lang\\.org\\/nominal-refinements/u;\n"
+        },
+        {
+          "start": 25205,
+          "previous": "\t\t[\"tightened component\", ir => { declaration(ir, \"first\").parameters[0].arguments[0].bound = \"9\"; }]\n\t\t, [\"loosened branch\", ir => { declaration(ir, \"both\").parameters[0].arguments[1].bound = \"4\"; }]\n\t\t, [\"swapped branches\", ir => { declaration(ir, \"both\").parameters[0].arguments.reverse(); }]\n\t\t, [\"moved to the other component\", ir => { declaration(ir, \"second\").parameters[0].arguments.reverse(); }]];\n\tfor(const [label, mutate] of cases) await t.test(label, async () => {\n",
+          "current": "\t\t[\"tightened component\", ir => { declaration(ir, \"first\").parameters[0].arguments[0].bound = \"9\"; }, refinements]\n\t\t, [\"loosened branch\", ir => { declaration(ir, \"both\").parameters[0].arguments[1].bound = \"4\"; }, refinements]\n\t\t, [\"swapped branches\", ir => { declaration(ir, \"both\").parameters[0].arguments.reverse(); }, refinements]\n\t\t, [\"moved to the other component\", ir => { declaration(ir, \"second\").parameters[0].arguments.reverse(); }, refinements]\n\t\t, [\"tightened alias component\", ir => { alias(ir).target.arguments[1].bound = \"9\"; }, nominal]];\n\tfor(const [label, mutate, field] of cases) await t.test(label, async () => {\n"
+        },
+        {
+          "start": 26661,
+          "previous": "\t\t\tassert.match(error.details.field, /source\\.extensions\\.lean-lang\\.org\\/refinements/u, label);\n",
+          "current": "\t\t\tassert.match(error.details.field, field, label);\n"
+        }
+      ]
+    }
+  ]
+}
