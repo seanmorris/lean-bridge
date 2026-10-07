@@ -1,0 +1,135 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0-x86_64-linux.gem": "37e25f85b076a5382093a4450f9cff4c7c3e7b20306e872dda744b31100be5ac"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "36b97866a74fafcd5452eda5d82457afd750f3a6d3f6f28478f45a6bb90cff73",
+      "checks": 1021,
+      "compilerFreePath": true,
+      "consumerSha256": "5ed93b95395da55cda2b9035568d2e816ed40d01dc20f2cbf0c052dcd00e95c6",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "09a832ffa18f7386b551d0a1f87e4b87019c789a6e73b457c200426b4cf7368f",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50105856,
+              "path": "archives/genericrecords-1.0.0-x86_64-linux.gem",
+              "sha256": "37e25f85b076a5382093a4450f9cff4c7c3e7b20306e872dda744b31100be5ac"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "ruby",
+      "receiptSha256": "3099ce2b8784e233057ec00343963f61ced0b062cd5ecdcf6fa7d4694f291f8b",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "bbe2755ead1df9940832e3e069e6ca5404c61efa05acd342e2c20be99bddf58e"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

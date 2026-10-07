@@ -1,0 +1,176 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0.crate": "40769c261958d1190f53704f1fb1a984985b81baedb19bf3457ffee9f3199c55"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "43b18d5421223e93d04df5b65d469c242828929f862e434e8a8ddc02f251bd74",
+      "checks": 1013,
+      "compilerFreePath": true,
+      "consumerSha256": "3ad3f7766e48cb7b2cc45e9cf25cd0799cad933e2cb7090ee500eb6909d38a75",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "cd631987f32be5649081e59e10eeb5a803f1c00b66b0efebb31aabe69b51ae73",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51362399,
+              "path": "archives/genericrecords-1.0.0.crate",
+              "sha256": "40769c261958d1190f53704f1fb1a984985b81baedb19bf3457ffee9f3199c55"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "d8131a43c24039fd51fe7371a480e958fe67c5688ab4c496a65eb7d0e0456061",
+      "rustTypes": {
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 104,
+                "file": "invalid-alias.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "b685d75dd0c26b8c5fa0233d4e9d806529cd5a7f6d7972148e64a2b500347d15"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "E0308",
+                "column": 42,
+                "file": "invalid-field.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "c9dc0d33ebdfd10d9b9f40b7b28d4ff87a4cf90f96df648af5c30623cd68a845"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "E0063",
+                "column": 21,
+                "file": "invalid-missing.rs",
+                "line": 2
+              }
+            ],
+            "sourceSha256": "2cf7d3ecca07b638a9ba8c4d6d11c2cf2f6ec88abe70318e8c1971b4f73db4a9"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "05e493128be9bd9857bdde33a8f3191b6abe4f7683d3d9eda369ba35a0aee935"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

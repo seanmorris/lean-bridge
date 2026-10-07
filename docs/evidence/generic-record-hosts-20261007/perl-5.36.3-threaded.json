@@ -1,0 +1,160 @@
+{
+  "archives": {
+    "archives/LeanBridge-GenericRecords-1.000.tar.gz": "6990c89d041481a005cb349b865d2c47e34851942bb67e34863343ebb232c3e2",
+    "archives/LeanBridge-Runtime-0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831.tar.gz": "d491ea25c0225fdef41ad2296827915aca31298553cda95b16b1afd411064405"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "48b894dd8acdd525f95095174f6827a6701ecbf8cef6f896ce90bc38c8bc12cb",
+      "checks": 1025,
+      "compilerFreePath": true,
+      "consumerSha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "923f3afdae35f18a686178416e2922cb9bc767ed4c68d9df36cdce020b9c3f49",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 87088,
+              "path": "archives/LeanBridge-GenericRecords-1.000.tar.gz",
+              "sha256": "6990c89d041481a005cb349b865d2c47e34851942bb67e34863343ebb232c3e2"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-GenericRecords",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362388,
+              "path": "archives/LeanBridge-Runtime-0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831.tar.gz",
+              "sha256": "d491ea25c0225fdef41ad2296827915aca31298553cda95b16b1afd411064405"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpan",
+          "version": "0.0020546188969749577876866136751298699806140185791482016997238242061968986563706831"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "perl",
+      "receiptSha256": "ae3490b6c12b305015b9e2d77f7abd14986c2d407ff4561871dd2939e884b993",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1e4e86ee2ce0ece4136022d81b29c8f8f3341cc33654dea3c4ee92b16fb3ec4f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

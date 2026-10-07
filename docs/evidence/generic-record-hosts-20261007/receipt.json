@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1439,
+  "execution": "local",
+  "sourcePath": "ordinary-source",
+  "glibcMinimumVersion": "2.36",
+  "profiles": [
+    "dotnet",
+    "java",
+    "kotlin",
+    "perl",
+    "php-native",
+    "python",
+    "ruby",
+    "rust",
+    "wit-wasi"
+  ],
+  "fixture": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+  "scope": "Closed alias-named generic records through ten direct exports. These reports do not execute finite function specializations or the later namespace fixture.",
+  "reports": [
+    {
+      "id": "rust",
+      "path": "docs/evidence/generic-record-hosts-20261007/rust.json",
+      "revision": "e54ea9e8ad6ae02345abff719253e9156767daef",
+      "sha256": "e06cfe8042936f20a518c526eda924ad9243b71e60457568a3c80df85e22cfea",
+      "profiles": [
+        "rust"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/rust.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=rust taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "python",
+      "path": "docs/evidence/generic-record-hosts-20261007/python.json",
+      "revision": "e54ea9e8ad6ae02345abff719253e9156767daef",
+      "sha256": "f5881f66790c11a17a32f657d00a5c0687a696a5396de98dea1e50f9fed34468",
+      "profiles": [
+        "python"
+      ],
+      "runtime": "Python 3.11.2",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "ruby",
+      "path": "docs/evidence/generic-record-hosts-20261007/ruby.json",
+      "revision": "e54ea9e8ad6ae02345abff719253e9156767daef",
+      "sha256": "81f77b4156d9a68a0bc6ce8fbf3f57e23307d82213218a41c189e542695d9c90",
+      "profiles": [
+        "ruby"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/ruby.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=ruby taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "dotnet",
+      "path": "docs/evidence/generic-record-hosts-20261007/dotnet.json",
+      "revision": "e54ea9e8ad6ae02345abff719253e9156767daef",
+      "sha256": "ddb6ad9285e813f1c53fddbeca29b2154580b4ddbfa197ce454a14ae82eff7d9",
+      "profiles": [
+        "dotnet"
+      ],
+      "scope": "runtime-only",
+      "supersededBy": "managed-types",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/dotnet.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "managed-types",
+      "path": "docs/evidence/generic-record-hosts-20261007/managed-types.json",
+      "revision": "afabea275b25a0371e170d092e2a42187d446d8f",
+      "sha256": "272dd8d21bf71a23ff7da381346337f66424e4c794b5d629afe40312123da16f",
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/managed-types.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=dotnet,java,kotlin taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "python312",
+      "path": "docs/evidence/generic-record-hosts-20261007/python312.json",
+      "revision": "afabea275b25a0371e170d092e2a42187d446d8f",
+      "sha256": "f5881f66790c11a17a32f657d00a5c0687a696a5396de98dea1e50f9fed34468",
+      "profiles": [
+        "python"
+      ],
+      "runtime": "Python 3.12.14",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON=/app/.toolchains/python312/bin/python3.12 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/python312.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=python taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "perl-5.36.3-threaded",
+      "path": "docs/evidence/generic-record-hosts-20261007/perl-5.36.3-threaded.json",
+      "revision": "15687ed0530935514878dddda6f1a97a81a94bcf",
+      "sha256": "a0af2ab6b6c6d47f6a776b221af99e64a74c21191dc2cfd92ac04f2c75e6db17",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.36.3-threaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-threaded/bin/perl LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/perl-5.36.3-threaded.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "perl-5.36.3-unthreaded",
+      "path": "docs/evidence/generic-record-hosts-20261007/perl-5.36.3-unthreaded.json",
+      "revision": "15687ed0530935514878dddda6f1a97a81a94bcf",
+      "sha256": "08a7d2c38d991cd2c97845baf0fce04b1dfab6996e260c14dbcc262a7e0127bd",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.36.3-unthreaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.36.3-unthreaded/bin/perl LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/perl-5.36.3-unthreaded.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "perl-5.38.2-threaded",
+      "path": "docs/evidence/generic-record-hosts-20261007/perl-5.38.2-threaded.json",
+      "revision": "15687ed0530935514878dddda6f1a97a81a94bcf",
+      "sha256": "8565b743fc028ea4728956f2b137b0812398cd65671f70c2a4e245f6a18fdebc",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.38.2-threaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-threaded/bin/perl LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/perl-5.38.2-threaded.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "perl-5.38.2-unthreaded",
+      "path": "docs/evidence/generic-record-hosts-20261007/perl-5.38.2-unthreaded.json",
+      "revision": "15687ed0530935514878dddda6f1a97a81a94bcf",
+      "sha256": "6b04457cf51bcdbd3ea56abf6ac9dfbde71b943d81edeb5acc43a0aa12ab7023",
+      "profiles": [
+        "perl"
+      ],
+      "runtime": "5.38.2-unthreaded",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CORPUS_PERL=/app/.toolchains/perl/5.38.2-unthreaded/bin/perl LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/perl-5.38.2-unthreaded.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "php-native",
+      "path": "docs/evidence/generic-record-hosts-20261007/php-native.json",
+      "revision": "15687ed0530935514878dddda6f1a97a81a94bcf",
+      "sha256": "0e8c68b5a0fde8a04a4255030531deb4e83e126d4d2461b945dc484a012b3ea9",
+      "profiles": [
+        "php-native"
+      ],
+      "runtime": "PHP 8.2.33",
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP=/usr/bin/php LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/php-native.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    },
+    {
+      "id": "wit-wasi",
+      "path": "docs/evidence/generic-record-hosts-20261007/wit-wasi.json",
+      "revision": "758229f3cecac8599e869fe2ff06beecddcdeaab",
+      "sha256": "7ab31440a17c195608f40ee5cfd34d17340b974c21fc53eb645c111c121882fd",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_GENERIC_RECORD_REPORT=build/generic-records/wit-wasi.json LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi taskset -c 3 node --test --test-reporter=spec --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs"
+    }
+  ]
+}
