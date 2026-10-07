@@ -22,12 +22,17 @@ import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainer
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { observeFinContainerHostDispatch } from "./helpers/fin-container-host-dispatch.mjs";
+import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import "./helpers/fin-container-host-dispatch-tests.mjs";
 import "./helpers/container-host-dispatch-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
-assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin container profile");
-assert.ok(profiles.every(profile => Object.hasOwn(finContainerTargets, profile)), "Unknown or empty Fin container profile");
+const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
+for(const selection of [profiles, reviewedProfiles])
+{
+	assert.equal(new Set(selection).size, selection.length, "Duplicate Fin container profile");
+	assert.ok(selection.every(profile => Object.hasOwn(finContainerTargets, profile)), "Unknown or empty Fin container profile");
+}
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 const fixture = "tests/fixtures/onboarding/native-fin-containers";
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false } };
@@ -158,7 +163,7 @@ const observePerlDispatch = async (consumer, command, adapters) => {
 	return { columns: perlContainerDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl };
 };
 
-test("relocated source-free native packages check Fin inside arrays, lists and options", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => finContainerTargets[profile]));
 	const environment = finContainerEnvironment(profiles);
@@ -175,12 +180,19 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await cp(fixture, projectRoot, { recursive: true });
+		const reviewedSource = reviewed ? canonicalJson(finContainerReviewedIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinContainers"], targets }));
 		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		// The model keeps the whole checked tree beside the erased Nat transport.
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements ?? null])), finContainerRefinements);
 		for(const item of model.exports) for(const parameter of item.parameters) assert.ok(!JSON.stringify(parameter.type).includes('"refinement"'), item.name);
@@ -212,7 +224,7 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 				: profile === "perl" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
 					: ["python", "rust"].includes(profile) ? await observeFinContainerHostDispatch({ profile, consumer, command, packages, environment })
 						: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
-			reports.push({ profile, path: "ordinary-source"
+			reports.push({ profile, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
 				, dispatch
 				, packages
@@ -221,6 +233,7 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
 				, sourceRemovedBeforeInstallation: true });
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
@@ -228,6 +241,11 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 	}
 	// Two unrelated author roots produce byte-identical archives.
 	assert.deepEqual(archives[1], archives[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_FIN_CONTAINER_REPORT ?? `build/native-fin-containers/${profiles.join("-")}.json`);
+	const configuredReport = process.env[reviewed ? "LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_REPORT" : "LEAN_BRIDGE_FIN_CONTAINER_REPORT"];
+	const reportPath = resolve(configuredReport ?? `build/native-fin-containers/${reviewed ? "reviewed-" : ""}${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+};
+
+test("relocated source-free native packages check Fin inside arrays, lists and options", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledFinContainers(t, profiles));
+
+test("independently reviewed native packages check container and alias Fin bounds after source-free installation", { skip: !reviewedProfiles.length, timeout: 2_400_000 }, t => checkInstalledFinContainers(t, reviewedProfiles, true));

@@ -16,6 +16,7 @@ import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { callableReviewedIr } from "./callable-fixture.mjs";
 import { nativeMetadataFixture } from "./native-metadata.mjs";
 import { nativeFinReviewedIr } from "./reviewed-fin-fixture.mjs";
+import { finContainerReviewedIr } from "./reviewed-fin-container-fixture.mjs";
 
 const key = "lean-lang.org/refinements";
 const fin = bound => ({ kind: "fin", bound });
@@ -78,6 +79,20 @@ test("the independent installed Fin fixture supplies a valid reviewed selection"
 		exports: ["NativeFin.impossible", "NativeFin.label", "NativeFin.mirror", "NativeFin.only", "NativeFin.succHuge", "NativeFin.twice", "NativeFin.wrap"]
 		, arities: []
 	});
+});
+
+test("the independent container fixture keeps alias and structural constraints at distinct sites", () => {
+	const ir = finContainerReviewedIr();
+	validateReviewedSource(reviewInput(ir));
+	assert.equal(reviewedSourceSelection(reviewInput(ir)).exports.length, 8);
+	assert.deepEqual(ir.types.map(type => [type.id, type.kind]), [["lean:FinContainers.Digits", "alias"]]);
+	assert.deepEqual(ir.types[0].source.extensions["lean-lang.org/nominal-refinements"], { kind: "alias", target: wrap("array", fin("10")) });
+	const mirror = ir.declarations.find(declaration => declaration.name === "mirrorAll");
+	assert.equal(mirror.parameters[0].type.id, "lean:FinContainers.Digits");
+	assert.deepEqual(mirror.source.extensions, {});
+	const flatten = ir.declarations.find(declaration => declaration.name === "flatten");
+	assert.deepEqual(flatten.source.extensions[key], decision(null, wrap("option", wrap("list", fin("10")))));
+	assert.equal(flatten.parameters[0].type.arguments[0].id, "lean:FinContainers.Digits");
 });
 
 test("independently authored Fin bounds reconcile with exact native compiler decisions", () => {

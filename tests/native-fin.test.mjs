@@ -244,7 +244,8 @@ const checkInstalledFin = async (t, reviewed = false) => {
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/native-fin", projectRoot, { recursive: true });
-		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(nativeFinReviewedIr()));
+		const reviewedSource = reviewed ? canonicalJson(nativeFinReviewedIr()) : null;
+		if(reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", reviewedSource);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: ["NativeFin"]
 			, targets: { c: { name: "native-fin", version: "1.0.0" }, cpp: { name: "native-fin", version: "1.0.0" } } }));
@@ -254,6 +255,11 @@ const checkInstalledFin = async (t, reviewed = false) => {
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), nativeFinRefinements);
+		if(reviewed)
+		{
+			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
+			assert.equal(model.sourceIdentity.reviewedBindingIr.sourceSha256, sha256(reviewedSource));
+		}
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		// Test-only raw-ABI probe headers; installed consumers never receive them.
 		await saveLakeFile(join(consumer, "probe-headers"), "native_fin.h", await readFile(join(outputRoot, "native/c-binding/include/native_fin.h")));
