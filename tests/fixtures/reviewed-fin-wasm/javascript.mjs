@@ -12,6 +12,8 @@
  */
 export const executeCorpus = (request, api) => {
 	if(!["scalar", "structural"].includes(request.selection)) throw new Error("Unknown Fin selection");
+	// Scalar ABI 2 reports invalid arguments as 6; copied ABI 6 reports them as 5.
+	const rawBoundFailure = request.selection === "scalar" ? /failed \(6\)/u : /failed \(5\)/u;
 	let checks = 0, rejections = 0;
 	const check = (ok, label) => { if(!ok) throw new Error(`failed: ${label}`); checks++; };
 	const encode = value => JSON.stringify(value, (_, item) => typeof item === "bigint" ? `${item}n` : item);
@@ -39,7 +41,7 @@ export const executeCorpus = (request, api) => {
 		for(const input of invalid)
 		{
 			rejected(() => api[name](input), `${name} public bound`);
-			rejected(() => api.raw(name, [input]), `${name} raw bound`, input >= 0n ? /failed \(5\)/u : undefined);
+			rejected(() => api.raw(name, [input]), `${name} raw bound`, input >= 0n ? rawBoundFailure : undefined);
 			check(api.mirror(3n) === 6n && api.raw("mirror", [9n]) === 0n, `${name} recovery`);
 		}
 		for(const input of [3, "3", null, undefined, true])
@@ -53,7 +55,7 @@ export const executeCorpus = (request, api) => {
 	for(let round = 0; round < 32; round++)
 	{
 		rejected(() => api.label(prefix, 10n, suffix), "label public late bound");
-		rejected(() => api.raw("label", [prefix, 10n, suffix]), "label raw late bound", /failed \(5\)/u);
+		rejected(() => api.raw("label", [prefix, 10n, suffix]), "label raw late bound", rawBoundFailure);
 		check(api.label(prefix, 9n, suffix) === prefix + "9" + suffix
 			&& api.raw("label", [prefix, 0n, suffix]) === prefix + "0" + suffix, "label heap recovery");
 	}
