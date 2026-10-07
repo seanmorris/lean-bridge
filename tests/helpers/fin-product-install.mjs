@@ -46,7 +46,9 @@ export const finProductRefinements = Object.freeze({
  */
 export const installFinProductConsumer = options => installCopiedConsumer({ ...options, fixture: {
 	source: (profile, extension) => readFile(`tests/fixtures/fin-product-consumers/${profile}.${extension}`, "utf8")
-	// Fin keeps Nat's limb-list transport in WIT; products and results keep their WIT shapes.
-	, wit: [/first: func\([^)]*: tuple<[^>]+>\) -> tuple</, /both: func\([^)]*: result<[^>]+>\) -> /]
+	// Fin keeps Nat's limb-list transport in WIT; products and results keep their WIT shapes, and the alias pair keeps its name.
+	, wit: [/type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = tuple<\1, \1>;[^]*first: func\([^)]*: \2\) -> \2/
+		, /type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = result<\1, \1>;[^]*both: func\([^)]*: \2\) -> \1/
+		, /type digit = (bridge-value-\d+);[^]*type (bridge-alias-value-\d+) = tuple<digit, digit>;[^]*type digit-pair = \2;[^]*aliased: func\([^)]*: digit-pair\) -> digit-pair/]
 	, success: "fin-product-ok"
 } });
