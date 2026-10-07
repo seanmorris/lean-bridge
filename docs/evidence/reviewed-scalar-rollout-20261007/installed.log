@@ -1,0 +1,46 @@
+✔ independently reviewed Dotnet packages check scalar Fin through installed consumers (456013.300249ms)
+ℹ build 0: compiling the shared C library and NuGet package
+ℹ offline NuGet restore and build without producer files or Lean/C compilers
+ℹ build 1: compiling the shared C library and NuGet package
+✔ independently reviewed Jvm packages check scalar Fin through installed consumers (495058.431595ms)
+ℹ build 0: compiling the shared C library and Maven JAR
+ℹ offline java compilation and execution
+ℹ offline kotlin compilation and execution
+ℹ build 1: compiling the shared C library and Maven JAR
+✖ independently reviewed Perl packages check scalar Fin through installed consumers (89664.56376ms)
+ℹ build 0: compiling XS for 4 Perl ABIs
+✔ independently reviewed Php packages check scalar Fin through installed consumers (461683.50238ms)
+ℹ build 0: compiling the shared C library and Composer archive
+ℹ offline Composer installation without producer files or Lean/C compilers
+ℹ build 1: compiling the shared C library and Composer archive
+✔ independently reviewed Ruby packages check scalar Fin through installed consumers (448568.821376ms)
+ℹ build 0: compiling the shared C library and Ruby gem
+ℹ offline gem installation without producer files or compilers
+ℹ build 1: compiling the shared C library and Ruby gem
+✔ independently reviewed Wit packages check scalar Fin through installed consumers (695710.969689ms)
+ℹ build 0: compiling the shared C library and WIT/WASI host package
+ℹ offline installation, relocation and two compiler-free executions
+ℹ build 1: compiling the shared C library and WIT/WASI host package
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2650502.304526
+
+✖ failing tests:
+
+test at tests/perl-fin.test.mjs:251:1
+✖ independently reviewed Perl packages check scalar Fin through installed consumers (89664.56376ms)
+  Error [CanonicalBuildError]: /app/.toolchains/perl/5.36.3-threaded/bin/perl exited with status 29: {"command":"/app/.toolchains/perl/5.36.3-threaded/bin/perl","args":["Makefile.PL","INSTALL_BASE=/tmp/lean-bridge-perl-fin-author-3NSVrH/.lean-bridge-native-project-77p2DR/.build-runtime"],"stderr":"Package requires glibc 2.38 or later\n","stdout":""}
+      at ChildProcess.<anonymous> (file:///app/build/worktrees/generic-records-hosts-vo1439/src/build/process-runner.mjs:77:21)
+      at Object.onceWrapper (node:events:634:26)
+      at ChildProcess.emit (node:events:519:28)
+      at maybeClose (node:internal/child_process:1101:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:304:5) {
+    code: 'build-command-failed',
+    hint: null,
+    details: { command: '/app/.toolchains/perl/5.36.3-threaded/bin/perl', args: [ 'Makefile.PL', 'INSTALL_BASE=/tmp/lean-bridge-perl-fin-author-3NSVrH/.lean-bridge-native-project-77p2DR/.build-runtime' ], stderr: 'Package requires glibc 2.38 or later\n', stdout: '' }
+  }
