@@ -26,6 +26,7 @@ import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture
 import "./helpers/fin-container-host-dispatch-tests.mjs";
 import "./helpers/container-host-dispatch-source-history-tests.mjs";
 import "./helpers/perl-fin-archive-source-history-tests.mjs";
+import "./helpers/perl-fin-xs-audit-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
@@ -228,7 +229,7 @@ const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 			const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
 			const xs = await perlArchiveXs(join(handoff, archive), consumer);
 			assert.equal((xs.match(/is not below its Fin \d+ bound/g) ?? []).length, 7);
-			assert.match(xs, /"arg1 is not below its Fin 4 bound"/);
+			assert.match(xs, /croak\("%s\[%zu\] is not below its Fin 4 bound", "arg1", \(size_t\)k0\);/);
 			assert.match(xs, /lean_cstr_to_nat\("1180591620717411303424"\); int below = lean_nat_lt\(e0, bound\)/);
 		}
 		const dependencies = attempt === 0 && profiles.includes("rust")

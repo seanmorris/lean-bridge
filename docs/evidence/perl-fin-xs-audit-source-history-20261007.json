@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-fin-xs-audit-v1",
+  "predecessorCommit": "ea48a43c7008e10f2bf8fa7e3b7a28e2462396c9",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a0eaf714fa95a6478ffc78d54b026307702052f21498bcbcd06056d3d33fbea3",
+      "previousSha256": "bceb93bec5007912408a181444880e3158c09c7b4cbdcd6d0d5a6f9a21a641f3",
+      "edits": [
+        {
+          "start": 28846,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 39826,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1518415,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1522426,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1525932,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1529808,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1533287,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1536771,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        },
+        {
+          "start": 1540259,
+          "previous": "          \"sha256\": \"96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba\"\n",
+          "current": "          \"sha256\": \"b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "462e1be289e23c4e19422b66649bb2b683f28c959272703d157a9d28bb284412",
+      "previousSha256": "7212c233953fd1efdeaab6bc1e38a36ac9e1775afe2fbb9106f77692684957bc",
+      "edits": [
+        {
+          "start": 4530,
+          "previous": "",
+          "current": "import { perlFinXsAuditChangedPaths } from \"./perl-fin-xs-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 39484,
+          "previous": "",
+          "current": "\t, ...perlFinXsAuditChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-ci-followup-source-history-tests.mjs",
+      "currentSha256": "6763ee805b96b38b1e79e1380f9ad25de87245ca631a04329d123c7425b76016",
+      "previousSha256": "8b83bb52a10c53de342562241bf68bb002065e4869cc5da1f5f4bf2f1b1954fa",
+      "edits": [
+        {
+          "start": 265,
+          "previous": "",
+          "current": "import { beforePerlFinXsAuditSource } from \"./perl-fin-xs-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 1026,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePerlFinXsAuditSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 1987,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePerlFinXsAuditSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2879,
+          "previous": "\t\t\tconst bytes = await readFile(file.path, \"utf8\");\n",
+          "current": "\t\t\tconst bytes = beforePerlFinXsAuditSource(file.path, await readFile(file.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-ci-followup-source-history.mjs",
+      "currentSha256": "48c26ab558ab8e45cfc8c19d530b374aa15018182ad60e2c01fb906ddf12010e",
+      "previousSha256": "8f9a5874a8c3026f4ad475e00361631086cb5392d0b9d514fe71c664bac27452",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforePerlFinXsAuditSource } from \"./perl-fin-xs-audit-source-history.mjs\";\n"
+        },
+        {
+          "start": 2350,
+          "previous": "",
+          "current": "\tsource = beforePerlFinXsAuditSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "currentSha256": "b2e689052d47fa1bfb31cdbbb913636129f0af28623712bb6739e190d349c324",
+      "previousSha256": "96ed41db972861ad6a7e788c02a7cbe308e7b30cdaf70437c30614ad8eef6dba",
+      "edits": [
+        {
+          "start": 1946,
+          "previous": "",
+          "current": "import \"./helpers/perl-fin-xs-audit-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 17077,
+          "previous": "\t\t\tassert.match(xs, /\"arg1 is not below its Fin 4 bound\"/);\n",
+          "current": "\t\t\tassert.match(xs, /croak\\(\"%s\\[%zu\\] is not below its Fin 4 bound\", \"arg1\", \\(size_t\\)k0\\);/);\n"
+        }
+      ]
+    }
+  ]
+}

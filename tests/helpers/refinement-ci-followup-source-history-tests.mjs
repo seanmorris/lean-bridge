@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlFinXsAuditSource } from "./perl-fin-xs-audit-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementCiFollowupSource, refinementCiFollowupChangedPaths, refinementCiFollowupHistoryPath, reverseRefinementCiFollowupUpdate } from "./refinement-ci-followup-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("refinement CI follow-up authenticates each exact source predecessor", asyn
 	assert.deepEqual(record.updates.map(update => update.path), refinementCiFollowupChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePerlFinXsAuditSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseRefinementCiFollowupUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementCiFollowupSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRefinementCiFollowupSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("refinement CI follow-up authenticates each exact source predecessor", asyn
 });
 
 test("refinement CI follow-up changes current source pins without inventing installed evidence", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePerlFinXsAuditSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeRefinementCiFollowupSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -42,7 +43,7 @@ test("refinement CI follow-up changes current source pins without inventing inst
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(refinementCiFollowupChangedPaths.includes(file.path));
-			const bytes = await readFile(file.path, "utf8");
+			const bytes = beforePerlFinXsAuditSource(file.path, await readFile(file.path, "utf8"));
 			assert.equal(sha256(beforeRefinementCiFollowupSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

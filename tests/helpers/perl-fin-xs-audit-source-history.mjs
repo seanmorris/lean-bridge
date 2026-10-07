@@ -1,23 +1,19 @@
 /**
- * Preserve exact source predecessors of the Refinement CI follow-up change (#1435).
+ * Preserve exact source predecessors of the Perl Fin XS audit change (#1438).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePerlFinXsAuditSource } from "./perl-fin-xs-audit-source-history.mjs";
 
-export const refinementCiFollowupHistoryPath = "docs/evidence/refinement-ci-followup-source-history-20261007.json";
-export const refinementCiFollowupChangedPaths = [
+export const perlFinXsAuditHistoryPath = "docs/evidence/perl-fin-xs-audit-source-history-20261007.json";
+export const perlFinXsAuditChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "tests/generic-records.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-ci-isolation.mjs"
-	, "tests/helpers/nominal-fin-contract-tests.mjs"
-	, "tests/helpers/reviewed-scalar-hosts-source-history-tests.mjs"
-	, "tests/helpers/reviewed-scalar-hosts-source-history.mjs"
-	, "tests/native-ci-isolation.test.mjs"
+	, "tests/helpers/refinement-ci-followup-source-history-tests.mjs"
+	, "tests/helpers/refinement-ci-followup-source-history.mjs"
+	, "tests/native-fin-containers.test.mjs"
 ];
 let history;
 
@@ -27,8 +23,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseRefinementCiFollowupUpdate = (source, update) => {
-	assert.ok(refinementCiFollowupChangedPaths.includes(update.path));
+export const reversePerlFinXsAuditUpdate = (source, update) => {
+	assert.ok(perlFinXsAuditChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -48,18 +44,17 @@ export const reverseRefinementCiFollowupUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1435, stopping at an explicitly requested identity.
+ * Restore the source before #1438, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeRefinementCiFollowupSource = (path, source, expected) => {
-	source = beforePerlFinXsAuditSource(path, source, expected);
-	if(typeof source !== "string" || !refinementCiFollowupChangedPaths.includes(path)) return source;
+export const beforePerlFinXsAuditSource = (path, source, expected) => {
+	if(typeof source !== "string" || !perlFinXsAuditChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(refinementCiFollowupHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(perlFinXsAuditHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseRefinementCiFollowupUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePerlFinXsAuditUpdate(source, update) : source;
 };
