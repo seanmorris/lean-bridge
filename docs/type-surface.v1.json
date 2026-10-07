@@ -789,6 +789,322 @@
   ],
   "evidence": [
     {
+      "id": "python-fin-installed",
+      "kind": "installed",
+      "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
+      "command": "LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs",
+      "scope": "Ordinary-source Python wheels preserve closed literal Fin bounds at top-level parameters and results, including transparent aliases, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the wheel and C archives. Python 3.11 and 3.12 source-free offline consumers each pass 2032 checks and repeat them after relocation: exact int results, TypeError for bool and non-int values, ValueError for negative inputs, LeanBridgeError with status 1 for bound violations, unchanged caller data and 1000 rejection/recovery cycles. LD_PRELOAD counters in each Python process observe valid public calls reaching adapter and source, invalid public calls reaching neither and invalid raw adapter calls reaching only the adapter. The wheel and C archive from the same build bundle identical shared libraries.",
+      "files": [
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "d2cf52cf67bd8630a5fa172e63af02145606e19de03d174d8dac0387c7e64d8e"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b"
+        },
+        {
+          "path": "src/backends/native/fin-refinements.mjs",
+          "sha256": "8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin/NativeFin.lean",
+          "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5"
+        },
+        {
+          "path": "tests/python-fin.test.mjs",
+          "sha256": "4f67c5d17ebb86b48b5e5f281879f5a608092ff9dee1a8cd8509d2e73ccfc4c4"
+        },
+        {
+          "path": "tests/helpers/python-fin-consumers.mjs",
+          "sha256": "f4c682f45cab7168dd6fa3ee8f0ffcc84dced0d994fcc0c2af3e9d7b4202e5da"
+        },
+        {
+          "path": "tests/helpers/native-fin-count-interposer.mjs",
+          "sha256": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4"
+        },
+        {
+          "path": "src/backends/python/refinements.mjs",
+          "sha256": "1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af"
+        },
+        {
+          "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+          "sha256": "0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/native-fin.json",
+          "sha256": "9415a8c1d7fc3979c9e0b398fd090beb0bf88d06962a32e8d357a9695d7223a3"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/receipt.json",
+          "sha256": "c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/native-fin/archives/native-fin-1.0.0-c.tar.gz",
+          "sha256": "819560c98de2f456c403d70bd200bafb2da4b161d35de8246cec7d5051ec584d"
+        },
+        {
+          "path": "python/native-fin/archives/native_fin-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "481a4b485acde1f320782e5ac920ef61aa1b2fe334b61582de2916fd0ae34be1"
+        }
+      ]
+    },
+    {
+      "id": "native-specializations-python-installed",
+      "kind": "installed",
+      "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
+      "command": "LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs",
+      "scope": "Two clean roots reproduce a Python wheel containing ten configured specializations of four generic Lean declarations. The 2020 source-free offline consumer checks cover implicit and explicit type arguments, Lean-selected Inhabited and Add instances, UInt32, String, Nat, an Array UInt32 alias, concrete host errors and 1000 repeated calls. The open declarations are absent. This report does not establish positive generic-record support.",
+      "files": [
+        {
+          "path": "src/abi/generic-specialization.mjs",
+          "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-specializations/Specialized.lean",
+          "sha256": "a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693"
+        },
+        {
+          "path": "tests/helpers/native-specialization-install.mjs",
+          "sha256": "83f2fda3889463156fad10d3677466978bac9389c429e8a1c2e8ae30816b05e0"
+        },
+        {
+          "path": "tests/native-specializations.test.mjs",
+          "sha256": "731e4e911f3c1d9b34bcfc5ababaa1da19c60b0bfdb0552eaf09fcc96881250c"
+        },
+        {
+          "path": "tests/fixtures/specialization-consumers/python.py",
+          "sha256": "ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64"
+        },
+        {
+          "path": "src/backends/python/refinements.mjs",
+          "sha256": "1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6"
+        },
+        {
+          "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+          "sha256": "0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/native-specializations.json",
+          "sha256": "f756558f6db1a0096088d670d9b1e8733c3095fa7e6a862cc56c9c41054f59e6"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/receipt.json",
+          "sha256": "c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/native-specializations/archives/specialized-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "9688662d3c020cbf332592e3421aa502cf93738cefd5f236bee6723231def6eb"
+        }
+      ]
+    },
+    {
+      "id": "native-fin-containers-python-installed",
+      "kind": "installed",
+      "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
+      "command": "LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs",
+      "scope": "Two clean roots reproduce a Python wheel with Fin inside Array, List and Option at top-level parameters and results. The 2029 source-free offline consumer checks cover aliases, nested containers, empty Array (Fin 0), present option rejection, first/middle/last invalid elements, 2^70 bounds, late-argument rejection, unchanged caller data and 1000 rejection/recovery cycles. Errors retain the Python Nat conversion distinctions and LeanBridgeError status 1 naming the parameter and bound. This report does not measure dispatch in Python; the C package supplies separate dispatch observations.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "47910dcbdb768965366b19bc69249db127e32978bf662af7be5e40af2f5090e1"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "1bff50fb509fd72488d782e33dba23988a2577007364fbc0fe5d679e19b7c261"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66"
+        },
+        {
+          "path": "src/backends/native/fin-refinements.mjs",
+          "sha256": "8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+          "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+        },
+        {
+          "path": "tests/helpers/fin-container-install.mjs",
+          "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329"
+        },
+        {
+          "path": "tests/native-fin-containers.test.mjs",
+          "sha256": "b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb"
+        },
+        {
+          "path": "tests/fixtures/fin-container-consumers/python.py",
+          "sha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261"
+        },
+        {
+          "path": "src/backends/python/refinements.mjs",
+          "sha256": "1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6"
+        },
+        {
+          "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+          "sha256": "0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/native-fin-containers.json",
+          "sha256": "e841bc54120a060f3424f9441fb13edd9d630ea447e56fdeeb67cb658734d4ce"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/receipt.json",
+          "sha256": "c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/native-fin-containers/archives/fincontainers-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "27906adb4e980f4654a2c8ba36e26b74fb052cd703c46a6e373f4d73c0746c6c"
+        }
+      ]
+    },
+    {
+      "id": "native-subtype-python-installed",
+      "kind": "installed",
+      "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
+      "command": "LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs",
+      "scope": "Two clean roots reproduce a Python wheel with top-level checked Subtype parameters and results over String, Nat, Int and ByteArray. The 2017 source-free offline consumer checks cover Unicode and embedded NUL, 2^100, empty/odd/out-of-range rejection, late checked arguments, a result-only subtype, a normalizing constructor, a Fin bound checked before the constructor and 1000 rejection/recovery cycles. Rejection raises LeanBridgeError status 1 naming the parameter and constructor. This report does not measure Python dispatch or allocations; C provides separate probes.",
+      "files": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "47910dcbdb768965366b19bc69249db127e32978bf662af7be5e40af2f5090e1"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9"
+        },
+        {
+          "path": "src/build/component-refinements.mjs",
+          "sha256": "1bff50fb509fd72488d782e33dba23988a2577007364fbc0fe5d679e19b7c261"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66"
+        },
+        {
+          "path": "src/backends/native/fin-refinements.mjs",
+          "sha256": "8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+          "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+        },
+        {
+          "path": "tests/helpers/native-subtype-install.mjs",
+          "sha256": "de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841"
+        },
+        {
+          "path": "tests/native-subtype.test.mjs",
+          "sha256": "418ab6469bc96ea6d181879eb1a105356b1f2498f7a2eb2820fb459b2b647e75"
+        },
+        {
+          "path": "tests/fixtures/subtype-consumers/python.py",
+          "sha256": "194fa5dd9fb4e6b1bc58f46c0bd409444316dfaf8de84485081ee9c480e849a8"
+        },
+        {
+          "path": "src/backends/python/refinements.mjs",
+          "sha256": "1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6"
+        },
+        {
+          "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+          "sha256": "0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/native-subtype.json",
+          "sha256": "5320ade338b87e3b0591c6d72f58d6dd81226cc5540d793edf276fa3fa3fc965"
+        },
+        {
+          "path": "docs/evidence/python-refinements-20261007/receipt.json",
+          "sha256": "c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/native-subtype/archives/subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "e83db617cdc6a7ec02e320588a884c041220cec10982c3ed0ba8fa19515f28c3"
+        }
+      ]
+    },
+    {
       "id": "managed-recursive-installed",
       "kind": "installed",
       "revision": "62d98e0521425b4798737c5becbe3e95fbf076ae",
@@ -881,7 +1197,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -4884,7 +5200,7 @@
         },
         {
           "path": "docs/consume/python.md",
-          "sha256": "9a74f75a528bcdf3f934136146b9dd2a920a401aecc6694b72141ee28f2b2999"
+          "sha256": "6f1e6d87d0abd50c71e2300012383be8264c8b258a5de2654607046a60c48ac7"
         },
         {
           "path": "docs/evidence/python-collections-20260922.json",
@@ -14829,7 +15145,7 @@
         },
         {
           "path": "tests/component-array-contract.test.mjs",
-          "sha256": "8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8"
+          "sha256": "db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a"
         },
         {
           "path": "tests/component-arrays.test.mjs",
@@ -15266,7 +15582,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -15505,7 +15821,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -15704,7 +16020,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15971,7 +16287,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16178,7 +16494,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16397,7 +16713,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16600,7 +16916,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16739,7 +17055,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16878,7 +17194,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17005,7 +17321,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17124,7 +17440,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/documentation.test.mjs",
@@ -17543,7 +17859,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -21533,7 +21849,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -21661,7 +21977,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-recursive-acceptance.test.mjs",
@@ -21704,7 +22020,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -21812,7 +22128,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -21851,7 +22167,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -21967,7 +22283,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22006,7 +22322,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22130,7 +22446,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22169,7 +22485,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22281,7 +22597,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22320,7 +22636,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22444,7 +22760,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22483,7 +22799,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22647,7 +22963,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22710,7 +23026,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -22846,7 +23162,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -22957,7 +23273,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -23153,7 +23469,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -23324,7 +23640,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/word-evidence.test.mjs",
@@ -23515,7 +23831,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         }
       ],
       "artifacts": [
@@ -23706,7 +24022,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-callable-contract.test.mjs",
@@ -23993,7 +24309,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -24108,7 +24424,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -24748,7 +25064,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -24847,7 +25163,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -25439,7 +25755,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -25538,7 +25854,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -26190,7 +26506,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -26289,7 +26605,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -27089,7 +27405,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -27232,7 +27548,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -27676,7 +27992,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -27799,7 +28115,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -28163,7 +28479,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -28294,7 +28610,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -28594,7 +28910,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -28721,7 +29037,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -29057,7 +29373,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -29156,7 +29472,7 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752"
+          "sha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf"
         },
         {
           "path": "docs/lean/export-decisions.md",
@@ -29328,7 +29644,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6"
+          "sha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633"
         },
         {
           "path": "tests/wit-recursive-callable-evidence.test.mjs",
@@ -29644,7 +29960,7 @@
         },
         {
           "path": "tests/component-array-contract.test.mjs",
-          "sha256": "8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8"
+          "sha256": "db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a"
         }
       ],
       "artifacts": [
@@ -29779,7 +30095,7 @@
         },
         {
           "path": "tests/component-array-contract.test.mjs",
-          "sha256": "8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8"
+          "sha256": "db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a"
         },
         {
           "path": "tests/component-callable-contract.test.mjs",
@@ -31872,6 +32188,220 @@
   ],
   "observations": [
     {
+      "id": "native-fin-python-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "fin"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source Python parameters and results preserve closed Fin bounds, including aliases and nested Array/List/Option carriers. Installed consumers check endpoints, Fin 0, bounds wider than 64 bits, host errors, invalid elements and repeated recovery. Scalar Fin additionally has Python 3.11/3.12 relocation and dispatch observations.",
+      "hostTypes": {
+        "fin": {
+          "parameter": "Exact int below the declared bound; declared list/tuple and Some carriers for containers",
+          "result": "int below the bound; independent tuples and Some carriers for containers"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-fin-installed",
+            "native-fin-containers-python-installed"
+          ],
+          "note": "Fresh Lean metadata preserves literal bounds at top-level sites and through Array/List/Option edges."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-fin-installed",
+            "native-fin-containers-python-installed"
+          ],
+          "note": "Generated Python APIs retain exact int values and name checked bounds in docstrings, stubs and README."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-fin-installed",
+            "native-fin-containers-python-installed"
+          ],
+          "note": "C validates structure and Fin bounds before allocation; typed Lean adapters check again before constructing Fin."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-fin-installed",
+            "native-fin-containers-python-installed"
+          ],
+          "note": "Two independent builds reproduce the wheel; installed scalar tests also compare bundled C libraries and verify receipts."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-fin-installed",
+            "native-fin-containers-python-installed"
+          ],
+          "note": "Offline consumers run scalar checks on Python 3.11/3.12 and container checks in the CI Python environment. Only scalar tests measure dispatch in Python."
+        }
+      },
+      "limitations": [
+        "Closed natural literal bounds only, alone or inside Array, List and Option at top-level parameters/results.",
+        "Native record/variant fields, products, Except and callbacks are not admitted by this evidence.",
+        "Ordinary-source Python only; reviewed IR is not covered.",
+        "Container dispatch is measured separately in C; the planned Python/Rust container probes remain open."
+      ],
+      "conversionNotes": {
+        "fin": "Use exact int values, rejecting bool and other numeric coercions with TypeError; negative inputs keep ValueError. An out-of-bound value raises LeanBridgeError with status 1 naming its parameter and bound. Arrays/Lists accept list or tuple and return independent tuples; Option uses None or Some. Fin 0 allows empty containers but no present element."
+      }
+    },
+    {
+      "id": "native-specializations-python-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "generic",
+        "implicit",
+        "instance"
+      ],
+      "positions": [
+        "signature"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source Python wheels expose finite function specializations with compiler-resolved type arguments and instance dictionaries. Source-free consumers exercise scalar and Array UInt32 alias applications; open declarations stay absent.",
+      "hostTypes": {
+        "generic": {
+          "signature": "Concrete Python function for each configured specialization"
+        },
+        "implicit": {
+          "signature": "Concrete host signature with no runtime type argument"
+        },
+        "instance": {
+          "signature": "Concrete host signature with the Lean-selected instance dictionary erased"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-specializations-python-installed"
+          ],
+          "note": "Lean elaborates configured type applications and resolves following instance dictionaries."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-specializations-python-installed"
+          ],
+          "note": "Python exposes only concrete exported function names and annotations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-specializations-python-installed"
+          ],
+          "note": "The shared native adapter compiles each concrete application without runtime type or instance arguments."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-specializations-python-installed"
+          ],
+          "note": "Two clean roots reproduce the wheel and verify its package-set receipt."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-specializations-python-installed"
+          ],
+          "note": "The source-free offline Python consumer runs 2020 checks, including selected instance values and concrete host argument errors."
+        }
+      },
+      "limitations": [
+        "Finite configured function specializations only; open generic host dispatch is not generated.",
+        "One to eight leading type parameters and immediately following instance dictionaries.",
+        "Type arguments are closed constants or aliases. Positive generic-structure applications require the separate #1433 implementation and installed host rollout.",
+        "Ordinary-source Python only; reviewed IR is not covered."
+      ],
+      "conversionNotes": {
+        "generic": "Each configured application produces a monomorphic Python function. The open declaration is absent.",
+        "implicit": "Lean resolves configured type arguments at build time; Python passes no placeholder.",
+        "instance": "Lean selects the dictionary before native compilation; Python cannot replace it."
+      }
+    },
+    {
+      "id": "native-subtype-python-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "subtype"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Ordinary-source Python wheels accept top-level Subtype parameters/results over primitive bases with compiler-checked constructor contracts. The installed consumer checks rejection, normalization, result projection and recovery.",
+      "hostTypes": {
+        "subtype": {
+          "parameter": "Declared primitive base value checked by the named Lean constructor",
+          "result": "Constructed subtype projected to its primitive base value"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-subtype-python-installed"
+          ],
+          "note": "Lean verifies that each named constructor accepts the exact primitive base and returns Option of the exact subtype."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-subtype-python-installed"
+          ],
+          "note": "Python signatures use the base type; checked metadata retains the constructor name."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-subtype-python-installed"
+          ],
+          "note": "The C adapter checks all structural inputs and Fin bounds, then invokes validators before the guarded source call."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-subtype-python-installed"
+          ],
+          "note": "Two clean roots reproduce the wheel and verify its package-set receipt."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-subtype-python-installed"
+          ],
+          "note": "The source-free offline Python consumer runs 2017 checks. Dispatch and allocation measurements belong to the separate C probes."
+        }
+      },
+      "limitations": [
+        "Top-level primitive-base parameters/results only; no nested, nominal or callback Subtype positions.",
+        "A total named checked constructor is required; its normalized value reaches the exported function.",
+        "Ordinary-source Python only; reviewed IR is not covered.",
+        "This Python report does not measure allocation counts or dispatch."
+      ],
+      "conversionNotes": {
+        "subtype": "Pass the usual Python base value. A rejected constructor raises LeanBridgeError status 1 naming the parameter and constructor. A valid parameter runs the constructor in the validator and again in the typed adapter; results expose .val. Fin bounds are checked first."
+      }
+    },
+    {
       "id": "managed-recursive-dotnet-ordinary-source",
       "profiles": [
         "dotnet"
@@ -31905,7 +32435,7 @@
       "stages": {
         "analysis": {
           "state": "passed",
-          "evidence": [
+  "evidence": [
             "managed-recursive-installed"
           ],
           "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."

@@ -356,10 +356,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	// Checked Fin is promoted per host by its own receipt, at top-level parameters and results only.
-	const finEvidence = { rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
+	const finEvidence = { python: "python-fin-installed", rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
 	const fins = finEvidence ? ["fin"] : [];
 	// Finite specializations are signature-only cells, one receipt per build group.
-	const specializationEvidence = { rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
+	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
 	const subtypes = specializationEvidence ? ["subtype"] : [];
@@ -440,8 +440,8 @@ test("refinements, host null and erased proofs retain their individual value pos
 test("checked Subtype evidence promotes only top-level parameters and results", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	// Node (VO #1219), since VO #1428 the nine native profiles that share the C-family adapter, and since VO #1429 the three browser profiles.
-	const native = ["c", "cpp", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
+	// Node, ten installed C-family profiles including Python CI, and three browser profiles.
+	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
 	assert.equal(installed.length, 2 * (2 + native.length + browser.length));
 	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, ...browser].sort());
@@ -452,7 +452,9 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 		if(native.includes(cell.profile))
 		{
 			assert.match(cell.stages.installedExecution.evidence[0], /^native-subtype-[a-z-]+-installed$/u);
-			assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);
+			if(cell.profile === "python")
+				assert.equal(cell.hostType, cell.position === "parameter" ? "Declared primitive base value checked by the named Lean constructor" : "Constructed subtype projected to its primitive base value");
+			else assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);
 			continue;
 		}
 		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);

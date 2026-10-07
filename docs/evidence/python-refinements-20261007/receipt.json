@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "revision": "7f7bd65104050efddd328377389072f4c4272ac0",
+  "run": {
+    "id": 37619743751,
+    "jobId": 112786699026,
+    "url": "https://github.com/seanmorris/lean-bridge/actions/runs/37619743751/job/112786699026",
+    "jobConclusion": "success"
+  },
+  "artifact": {
+    "id": 11485363269,
+    "name": "type-corpus-python-7f7bd65104050efddd328377389072f4c4272ac0",
+    "bytes": 966230,
+    "sha256": "dcbccde413c2dfc0fc4ab3c8bf68b67a59f2f6ef1be36a8f2b80fe9b444069f8"
+  },
+  "reports": {
+    "native-fin": {
+      "path": "docs/evidence/python-refinements-20261007/native-fin.json",
+      "sha256": "9415a8c1d7fc3979c9e0b398fd090beb0bf88d06962a32e8d357a9695d7223a3"
+    },
+    "native-specializations": {
+      "path": "docs/evidence/python-refinements-20261007/native-specializations.json",
+      "sha256": "f756558f6db1a0096088d670d9b1e8733c3095fa7e6a862cc56c9c41054f59e6"
+    },
+    "native-fin-containers": {
+      "path": "docs/evidence/python-refinements-20261007/native-fin-containers.json",
+      "sha256": "e841bc54120a060f3424f9441fb13edd9d630ea447e56fdeeb67cb658734d4ce"
+    },
+    "native-subtype": {
+      "path": "docs/evidence/python-refinements-20261007/native-subtype.json",
+      "sha256": "5320ade338b87e3b0591c6d72f58d6dd81226cc5540d793edf276fa3fa3fc965"
+    }
+  },
+  "sources": {
+    "src/abi/generic-specialization.mjs": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9",
+    "src/analyze/NativeExports.lean": "e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b",
+    "src/analyze/native-metadata.mjs": "d2cf52cf67bd8630a5fa172e63af02145606e19de03d174d8dac0387c7e64d8e",
+    "src/analyze/native-types.mjs": "47910dcbdb768965366b19bc69249db127e32978bf662af7be5e40af2f5090e1",
+    "src/backends/c/native-copied-values.mjs": "03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66",
+    "src/backends/native/fin-refinements.mjs": "8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04",
+    "src/backends/python/copied-conversions.mjs": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+    "src/backends/python/copied-values.mjs": "2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5",
+    "src/backends/python/refinements.mjs": "1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af",
+    "src/build/component-refinements.mjs": "1bff50fb509fd72488d782e33dba23988a2577007364fbc0fe5d679e19b7c261",
+    "src/build/native-c-projection.mjs": "f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b",
+    "src/build/native-model.mjs": "4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f",
+    "src/build/native-project.mjs": "581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575",
+    "src/build/native-python-artifacts.mjs": "01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6",
+    "src/release/cpan-package.mjs": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9",
+    "src/release/package-set-receipt.mjs": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+    "tests/fixtures/fin-container-consumers/python.py": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+    "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+    "tests/fixtures/onboarding/native-fin/NativeFin.lean": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+    "tests/fixtures/onboarding/native-specializations/Specialized.lean": "a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693",
+    "tests/fixtures/onboarding/native-subtype/Subtypes.lean": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c",
+    "tests/fixtures/specialization-consumers/python.py": "ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64",
+    "tests/fixtures/subtype-consumers/python.py": "194fa5dd9fb4e6b1bc58f46c0bd409444316dfaf8de84485081ee9c480e849a8",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/fin-container-install.mjs": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+    "tests/helpers/native-fin-count-interposer.mjs": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4",
+    "tests/helpers/native-specialization-install.mjs": "83f2fda3889463156fad10d3677466978bac9389c429e8a1c2e8ae30816b05e0",
+    "tests/helpers/native-subtype-install.mjs": "de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841",
+    "tests/helpers/python-fin-consumers.mjs": "f4c682f45cab7168dd6fa3ee8f0ffcc84dced0d994fcc0c2af3e9d7b4202e5da",
+    "tests/native-fin-containers.test.mjs": "b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb",
+    "tests/native-specializations.test.mjs": "731e4e911f3c1d9b34bcfc5ababaa1da19c60b0bfdb0552eaf09fcc96881250c",
+    "tests/native-subtype.test.mjs": "418ab6469bc96ea6d181879eb1a105356b1f2498f7a2eb2820fb459b2b647e75",
+    "tests/python-fin.test.mjs": "4f67c5d17ebb86b48b5e5f281879f5a608092ff9dee1a8cd8509d2e73ccfc4c4"
+  }
+}

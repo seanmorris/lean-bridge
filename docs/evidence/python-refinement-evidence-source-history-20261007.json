@@ -1,0 +1,935 @@
+{
+  "schemaVersion": 1,
+  "milestone": "python-refinement-evidence-v1",
+  "predecessorCommit": "3cedfb9cc794f9f337f21a215a6dded2aca08c05",
+  "updates": [
+    {
+      "path": "docs/consume/python.md",
+      "currentSha256": "6f1e6d87d0abd50c71e2300012383be8264c8b258a5de2654607046a60c48ac7",
+      "previousSha256": "9a74f75a528bcdf3f934136146b9dd2a920a401aecc6694b72141ee28f2b2999",
+      "edits": [
+        {
+          "start": 32738,
+          "previous": "",
+          "current": "### Checked Lean values\n\nOrdinary-source packages map `Fin n` to exact Python `int` values below `n`, including elements of `Array`, `List` and `Option`. A negative input raises `ValueError`; `bool` and other non-`int` values raise `TypeError`. An input at or above the bound raises `LeanBridgeError` with status 1 and a message naming the parameter and bound. The generated docstrings and stubs list each bound. `Fin 0` has no valid element, but empty containers remain valid.\n\nA top-level `Subtype` uses its primitive base value. The package runs the author's checked Lean constructor; rejection raises `LeanBridgeError` with status 1 naming the parameter and constructor. A normalizing constructor can change the value passed to the export. See [authoring checked values](../lean/existing-package.md#export-a-checked-subtype).\n\nFinite function specializations become ordinary Python functions, such as `echo_nat`. Python passes neither type arguments nor instance dictionaries. The current installed checks cover scalar types and an `Array UInt32` alias; generic-record support remains separate work.\n\nThe [Python CI receipt](../evidence/python-refinements-20261007/receipt.json) records the installed checks. Scalar `Fin` ran on Python 3.11 and 3.12 with source-free installation, relocation and dispatch probes. Container `Fin` and `Subtype` have Python consumer checks; their dispatch probes currently run only in C. These observations cover ordinary-source parameters and results, not reviewed IR, refined fields or callbacks.\n\n"
+        },
+        {
+          "start": 49809,
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Fin n` | `Exact int below the declared bound; declared list/tuple and Some carriers for containers` (input); `int below the bound; independent tuples and Some carriers for containers` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Use exact int values, rejecting bool and other numeric coercions with TypeError; negative inputs keep ValueError. An out-of-bound value raises LeanBridgeError with status 1 naming its parameter and bound. Arrays/Lists accept list or tuple and return independent tuples; Option uses None or Some. Fin 0 allows empty containers but no present element. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | `Declared primitive base value checked by the named Lean constructor` (input); `Constructed subtype projected to its primitive base value` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Pass the usual Python base value. A rejected constructor raises LeanBridgeError status 1 naming the parameter and constructor. A valid parameter runs the constructor in the validator and again in the typed adapter; results expose .val. Fin bounds are checked first. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        },
+        {
+          "start": 52832,
+          "previous": "| `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Polymorphic exports` | `Concrete Python function for each configured specialization` (signature); `Named finite specializations` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Generator inspected | Each configured application produces a monomorphic Python function. The open declaration is absent. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean resolves configured type arguments at build time; Python passes no placeholder. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean selects the dictionary before native compilation; Python cannot replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf",
+      "previousSha256": "a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752",
+      "edits": [
+        {
+          "start": 26931,
+          "previous": "Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). Python wheels and CPAN packages have the same checks in their generated code, but their installed acceptance is not yet recorded. `Fin` is also checked inside `Array`, `List` and `Option` at top-level parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed; generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN packages generate the same element checks in XS, walking each converted array, List or option through the typed accessors before the guarded adapter or the exported function runs, and die with the failing element's path, such as `arg0[2]? is not below its Fin 10 bound`; their installed acceptance is not yet recorded. Checked `Subtype` constructors are run by the generated XS the same way. `Fin` inside products, `Except`, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages. See the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI](../evidence/native-fin-hosts-20261006.md). [Python wheels](../evidence/python-refinements-20261007/receipt.json) have installed scalar checks on Python 3.11 and 3.12, plus container and checked Subtype consumer checks. CPAN installed acceptance remains pending for its container and Subtype paths. `Fin` is also checked inside `Array`, `List` and `Option` at top-level parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed; generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN packages generate the same element checks in XS, walking each converted array, List or option through the typed accessors before the guarded adapter or the exported function runs, and die with the failing element's path, such as `arg0[2]? is not below its Fin 10 bound`; their installed acceptance is not yet recorded. Checked `Subtype` constructors are run by the generated XS the same way. `Fin` inside products, `Except`, records, variants, callbacks or reviewed Binding IR is not yet supported for native packages. See the [container checks](../evidence/native-fin-containers-20261006.md).\n"
+        },
+        {
+          "start": 29761,
+          "previous": "Ordinary-source npm packages accept top-level parameters and results over primitive bases, including heap-backed `Nat`, `Int`, `String`, and `ByteArray`. These exports can share a package with arrays, records, recursive values, callbacks, and returned closures. For example, an export may take a checked nonempty string alongside a callback; an empty string rejects before that callback runs. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Rejected inputs release decoded arguments and leave the runtime available for subsequent calls. Refinements inside fields, containers, or callback signatures, reviewed IR and browser packages remain unsupported.\n",
+          "current": "Ordinary-source npm packages accept top-level parameters and results over primitive bases, including heap-backed `Nat`, `Int`, `String`, and `ByteArray`. These exports can share a package with arrays, records, recursive values, callbacks, and returned closures. For example, an export may take a checked nonempty string alongside a callback; an empty string rejects before that callback runs. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Rejected inputs release decoded arguments and leave the runtime available for subsequent calls. Refinements inside fields, containers, or callback signatures and reviewed IR remain unsupported.\n"
+        },
+        {
+          "start": 33326,
+          "previous": "The npm column covers Node JavaScript and TypeScript, and, for top-level `Fin` and `Subtype` sites and structural `Fin` containers, Chromium, Firefox and WebKit pages, React effects and dedicated workers through the [browser acceptance](../evidence/npm-browser-refinements-20261007.md). In npm packages the compiled adapter entry fails a call with an out-of-bound top-level `Fin` or a rejected `Subtype` before the typed wrapper or the source runs, so a direct call through the package-internal runtime cannot obtain a default value; the generated JavaScript rejects the same inputs first ([scalar Fin rejection](../evidence/npm-scalar-fin-rejection-20261007.md)). Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Browser profiles are not audited for refinements. Python wheels and CPAN packages run the same installed checks as the other native hosts but are recorded only from CI; the `cpan` column's container and `Subtype` cells say so until that record exists.\n",
+          "current": "The npm column covers Node JavaScript and TypeScript, and, for top-level `Fin` and `Subtype` sites and structural `Fin` containers, Chromium, Firefox and WebKit pages, React effects and dedicated workers through the [browser acceptance](../evidence/npm-browser-refinements-20261007.md). In npm packages the compiled adapter entry fails a call with an out-of-bound top-level `Fin` or a rejected `Subtype` before the typed wrapper or the source runs, so a direct call through the package-internal runtime cannot obtain a default value; the generated JavaScript rejects the same inputs first ([scalar Fin rejection](../evidence/npm-scalar-fin-rejection-20261007.md)). Native rejections at the source name the declaration in the `native-elaboration-unsupported` diagnostic; readers without a checked adapter, including `php-wasm` and graph or owned transports, refuse refined metadata with `native-refinements-unsupported`; and a verified component built with refinements cannot be read by a consumer that does not declare checked support (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. The `cpan` column's container and `Subtype` cells remain pending their installed report.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d8891ed35ffeb77392d4c189b9f56bd5087e0c6e7f202fec51fc164a8bee69e9",
+      "previousSha256": "4db3ad7dd40311ccea31c8df4397cb5244cb2efe2922d1de04f0e853f42db074",
+      "edits": [
+        {
+          "start": 23178,
+          "previous": "",
+          "current": "    {\n      \"id\": \"python-fin-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"7f7bd65104050efddd328377389072f4c4272ac0\",\n      \"command\": \"LEAN_BRIDGE_PYTHON_FIN_TEST=1 node --test tests/python-fin.test.mjs\",\n      \"scope\": \"Ordinary-source Python wheels preserve closed literal Fin bounds at top-level parameters and results, including transparent aliases, Fin 0, Fin 1 and a 2^70 bound. Two clean roots reproduce the wheel and C archives. Python 3.11 and 3.12 source-free offline consumers each pass 2032 checks and repeat them after relocation: exact int results, TypeError for bool and non-int values, ValueError for negative inputs, LeanBridgeError with status 1 for bound violations, unchanged caller data and 1000 rejection/recovery cycles. LD_PRELOAD counters in each Python process observe valid public calls reaching adapter and source, invalid public calls reaching neither and invalid raw adapter calls reaching only the adapter. The wheel and C archive from the same build bundle identical shared libraries.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/native-metadata.mjs\",\n          \"sha256\": \"d2cf52cf67bd8630a5fa172e63af02145606e19de03d174d8dac0387c7e64d8e\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/native-c-projection.mjs\",\n          \"sha256\": \"f27a3eea8d7382a15a7b190eb330e028296a2f432da0333bee5d34bbb954ba5b\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin/NativeFin.lean\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"src/build/native-python-artifacts.mjs\",\n          \"sha256\": \"01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6\"\n        },\n        {\n          \"path\": \"src/backends/python/copied-values.mjs\",\n          \"sha256\": \"2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5\"\n        },\n        {\n          \"path\": \"tests/python-fin.test.mjs\",\n          \"sha256\": \"4f67c5d17ebb86b48b5e5f281879f5a608092ff9dee1a8cd8509d2e73ccfc4c4\"\n        },\n        {\n          \"path\": \"tests/helpers/python-fin-consumers.mjs\",\n          \"sha256\": \"f4c682f45cab7168dd6fa3ee8f0ffcc84dced0d994fcc0c2af3e9d7b4202e5da\"\n        },\n        {\n          \"path\": \"tests/helpers/native-fin-count-interposer.mjs\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        },\n        {\n          \"path\": \"src/backends/python/refinements.mjs\",\n          \"sha256\": \"1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af\"\n        },\n        {\n          \"path\": \"tests/helpers/python-refinement-evidence-tests.mjs\",\n          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/native-fin.json\",\n          \"sha256\": \"9415a8c1d7fc3979c9e0b398fd090beb0bf88d06962a32e8d357a9695d7223a3\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/receipt.json\",\n          \"sha256\": \"c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"python/native-fin/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"819560c98de2f456c403d70bd200bafb2da4b161d35de8246cec7d5051ec584d\"\n        },\n        {\n          \"path\": \"python/native-fin/archives/native_fin-1.0.0-py3-none-manylinux_2_38_x86_64.whl\",\n          \"sha256\": \"481a4b485acde1f320782e5ac920ef61aa1b2fe334b61582de2916fd0ae34be1\"\n        }\n      ]\n    },\n    {\n      \"id\": \"native-specializations-python-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"7f7bd65104050efddd328377389072f4c4272ac0\",\n      \"command\": \"LEAN_BRIDGE_SPECIALIZATION_PROFILES=python node --test tests/native-specializations.test.mjs\",\n      \"scope\": \"Two clean roots reproduce a Python wheel containing ten configured specializations of four generic Lean declarations. The 2020 source-free offline consumer checks cover implicit and explicit type arguments, Lean-selected Inhabited and Add instances, UInt32, String, Nat, an Array UInt32 alias, concrete host errors and 1000 repeated calls. The open declarations are absent. This report does not establish positive generic-record support.\",\n      \"files\": [\n        {\n          \"path\": \"src/abi/generic-specialization.mjs\",\n          \"sha256\": \"5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9\"\n        },\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-specializations/Specialized.lean\",\n          \"sha256\": \"a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693\"\n        },\n        {\n          \"path\": \"tests/helpers/native-specialization-install.mjs\",\n          \"sha256\": \"83f2fda3889463156fad10d3677466978bac9389c429e8a1c2e8ae30816b05e0\"\n        },\n        {\n          \"path\": \"tests/native-specializations.test.mjs\",\n          \"sha256\": \"731e4e911f3c1d9b34bcfc5ababaa1da19c60b0bfdb0552eaf09fcc96881250c\"\n        },\n        {\n          \"path\": \"tests/fixtures/specialization-consumers/python.py\",\n          \"sha256\": \"ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64\"\n        },\n        {\n          \"path\": \"src/backends/python/refinements.mjs\",\n          \"sha256\": \"1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af\"\n        },\n        {\n          \"path\": \"src/backends/python/copied-values.mjs\",\n          \"sha256\": \"2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5\"\n        },\n        {\n          \"path\": \"src/build/native-python-artifacts.mjs\",\n          \"sha256\": \"01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6\"\n        },\n        {\n          \"path\": \"tests/helpers/python-refinement-evidence-tests.mjs\",\n          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/native-specializations.json\",\n          \"sha256\": \"f756558f6db1a0096088d670d9b1e8733c3095fa7e6a862cc56c9c41054f59e6\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/receipt.json\",\n          \"sha256\": \"c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"python/native-specializations/archives/specialized-1.0.0-py3-none-manylinux_2_38_x86_64.whl\",\n          \"sha256\": \"9688662d3c020cbf332592e3421aa502cf93738cefd5f236bee6723231def6eb\"\n        }\n      ]\n    },\n    {\n      \"id\": \"native-fin-containers-python-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"7f7bd65104050efddd328377389072f4c4272ac0\",\n      \"command\": \"LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python node --test tests/native-fin-containers.test.mjs\",\n      \"scope\": \"Two clean roots reproduce a Python wheel with Fin inside Array, List and Option at top-level parameters and results. The 2029 source-free offline consumer checks cover aliases, nested containers, empty Array (Fin 0), present option rejection, first/middle/last invalid elements, 2^70 bounds, late-argument rejection, unchanged caller data and 1000 rejection/recovery cycles. Errors retain the Python Nat conversion distinctions and LeanBridgeError status 1 naming the parameter and bound. This report does not measure dispatch in Python; the C package supplies separate dispatch observations.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"47910dcbdb768965366b19bc69249db127e32978bf662af7be5e40af2f5090e1\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/build/component-refinements.mjs\",\n          \"sha256\": \"1bff50fb509fd72488d782e33dba23988a2577007364fbc0fe5d679e19b7c261\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-fin-containers/FinContainers.lean\",\n          \"sha256\": \"f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-container-install.mjs\",\n          \"sha256\": \"2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329\"\n        },\n        {\n          \"path\": \"tests/native-fin-containers.test.mjs\",\n          \"sha256\": \"b34d07d62307edf17ab32dac1527a0c01db34ec2ff96493c1ea3e6330f5c93cb\"\n        },\n        {\n          \"path\": \"tests/fixtures/fin-container-consumers/python.py\",\n          \"sha256\": \"ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261\"\n        },\n        {\n          \"path\": \"src/backends/python/refinements.mjs\",\n          \"sha256\": \"1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af\"\n        },\n        {\n          \"path\": \"src/backends/python/copied-values.mjs\",\n          \"sha256\": \"2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5\"\n        },\n        {\n          \"path\": \"src/build/native-python-artifacts.mjs\",\n          \"sha256\": \"01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6\"\n        },\n        {\n          \"path\": \"tests/helpers/python-refinement-evidence-tests.mjs\",\n          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/native-fin-containers.json\",\n          \"sha256\": \"e841bc54120a060f3424f9441fb13edd9d630ea447e56fdeeb67cb658734d4ce\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/receipt.json\",\n          \"sha256\": \"c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"python/native-fin-containers/archives/fincontainers-1.0.0-py3-none-manylinux_2_38_x86_64.whl\",\n          \"sha256\": \"27906adb4e980f4654a2c8ba36e26b74fb052cd703c46a6e373f4d73c0746c6c\"\n        }\n      ]\n    },\n    {\n      \"id\": \"native-subtype-python-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"7f7bd65104050efddd328377389072f4c4272ac0\",\n      \"command\": \"LEAN_BRIDGE_SUBTYPE_PROFILES=python node --test tests/native-subtype.test.mjs\",\n      \"scope\": \"Two clean roots reproduce a Python wheel with top-level checked Subtype parameters and results over String, Nat, Int and ByteArray. The 2017 source-free offline consumer checks cover Unicode and embedded NUL, 2^100, empty/odd/out-of-range rejection, late checked arguments, a result-only subtype, a normalizing constructor, a Fin bound checked before the constructor and 1000 rejection/recovery cycles. Rejection raises LeanBridgeError status 1 naming the parameter and constructor. This report does not measure Python dispatch or allocations; C provides separate probes.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"e50bb247f13dc9236c9f1e8987238f4b619fb7700151c1dc2ac423f68572309b\"\n        },\n        {\n          \"path\": \"src/analyze/native-types.mjs\",\n          \"sha256\": \"47910dcbdb768965366b19bc69249db127e32978bf662af7be5e40af2f5090e1\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"4459367961d8ab2006179b8cd0d3ebaf68fed193a703a0b852ac74d4e36cae1f\"\n        },\n        {\n          \"path\": \"src/build/native-project.mjs\",\n          \"sha256\": \"581ccc83619db5ec05a196b80afc3bc7917ba6184f06c8a021547f4baac08575\"\n        },\n        {\n          \"path\": \"src/release/cpan-package.mjs\",\n          \"sha256\": \"304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9\"\n        },\n        {\n          \"path\": \"src/build/component-refinements.mjs\",\n          \"sha256\": \"1bff50fb509fd72488d782e33dba23988a2577007364fbc0fe5d679e19b7c261\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"03fcd5a0c77b29732f3d84041b86da675b906cd0641238b183fc19d6f0ccef66\"\n        },\n        {\n          \"path\": \"src/backends/native/fin-refinements.mjs\",\n          \"sha256\": \"8db2e94f7fc1ddf9bb5bc5380c6ab0cf89ddd8787092819d3043f6d14cb3fb04\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-subtype/Subtypes.lean\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"tests/helpers/native-subtype-install.mjs\",\n          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n        },\n        {\n          \"path\": \"tests/native-subtype.test.mjs\",\n          \"sha256\": \"418ab6469bc96ea6d181879eb1a105356b1f2498f7a2eb2820fb459b2b647e75\"\n        },\n        {\n          \"path\": \"tests/fixtures/subtype-consumers/python.py\",\n          \"sha256\": \"194fa5dd9fb4e6b1bc58f46c0bd409444316dfaf8de84485081ee9c480e849a8\"\n        },\n        {\n          \"path\": \"src/backends/python/refinements.mjs\",\n          \"sha256\": \"1e5a11263293e07ade16d51e28c4b911a164a54e1f1ec72f449f73b30f7661af\"\n        },\n        {\n          \"path\": \"src/backends/python/copied-values.mjs\",\n          \"sha256\": \"2adb3a4d807e13b75fdfbfc475359ec5da4bd463acaf5d14b0c738063e610fc5\"\n        },\n        {\n          \"path\": \"src/build/native-python-artifacts.mjs\",\n          \"sha256\": \"01fa5c28acb7fdb67d85f00cd1f9f9e6e35344e25aaf2d65c3995d99bb7f99e6\"\n        },\n        {\n          \"path\": \"tests/helpers/python-refinement-evidence-tests.mjs\",\n          \"sha256\": \"0aab7307674948e7aac70c680a9038695b67517cdae5ecd61ef6d0ee662d7998\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/native-subtype.json\",\n          \"sha256\": \"5320ade338b87e3b0591c6d72f58d6dd81226cc5540d793edf276fa3fa3fc965\"\n        },\n        {\n          \"path\": \"docs/evidence/python-refinements-20261007/receipt.json\",\n          \"sha256\": \"c089361e537543159eb43fde04e6952be4995a8992e292d95af6b2c7bc56f86b\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"python/native-subtype/archives/subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl\",\n          \"sha256\": \"e83db617cdc6a7ec02e320588a884c041220cec10982c3ed0ba8fa19515f28c3\"\n        }\n      ]\n    },\n"
+        },
+        {
+          "start": 43471,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 223567,
+          "previous": "          \"sha256\": \"9a74f75a528bcdf3f934136146b9dd2a920a401aecc6694b72141ee28f2b2999\"\n",
+          "current": "          \"sha256\": \"6f1e6d87d0abd50c71e2300012383be8264c8b258a5de2654607046a60c48ac7\"\n"
+        },
+        {
+          "start": 677840,
+          "previous": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n",
+          "current": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n"
+        },
+        {
+          "start": 700295,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 714326,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 725701,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 739921,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 751375,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 763446,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 774734,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 783317,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 789775,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 798161,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 806138,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 829068,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1065235,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1070661,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1072824,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1077359,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1079425,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1084362,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1086533,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1091868,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1094027,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1098822,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1101083,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1106456,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1108684,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1115694,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1118965,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1124821,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1131298,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1139756,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1147803,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1156775,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1166166,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1179189,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1184757,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1212301,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1217300,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1242545,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1247579,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1275481,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1280546,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1314784,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1321956,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1341325,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1347804,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1363705,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1370484,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1383597,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1390176,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1405050,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1410661,
+          "previous": "          \"sha256\": \"a86ee6d0d483685d54b76b50c405c549f24c3f45e51571d00e2376968bfa8752\"\n",
+          "current": "          \"sha256\": \"8182247f244de840a08d616fa34d8b2015d35ba1baab084cc6baae82b43aedbf\"\n"
+        },
+        {
+          "start": 1418069,
+          "previous": "          \"sha256\": \"00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6\"\n",
+          "current": "          \"sha256\": \"f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633\"\n"
+        },
+        {
+          "start": 1433408,
+          "previous": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n",
+          "current": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n"
+        },
+        {
+          "start": 1439942,
+          "previous": "          \"sha256\": \"8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8\"\n",
+          "current": "          \"sha256\": \"db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a\"\n"
+        },
+        {
+          "start": 1552802,
+          "previous": "",
+          "current": "    {\n      \"id\": \"native-fin-python-ordinary-source\",\n      \"profiles\": [\n        \"python\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Python parameters and results preserve closed Fin bounds, including aliases and nested Array/List/Option carriers. Installed consumers check endpoints, Fin 0, bounds wider than 64 bits, host errors, invalid elements and repeated recovery. Scalar Fin additionally has Python 3.11/3.12 relocation and dispatch observations.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"Exact int below the declared bound; declared list/tuple and Some carriers for containers\",\n          \"result\": \"int below the bound; independent tuples and Some carriers for containers\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"python-fin-installed\",\n            \"native-fin-containers-python-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata preserves literal bounds at top-level sites and through Array/List/Option edges.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"python-fin-installed\",\n            \"native-fin-containers-python-installed\"\n          ],\n          \"note\": \"Generated Python APIs retain exact int values and name checked bounds in docstrings, stubs and README.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"python-fin-installed\",\n            \"native-fin-containers-python-installed\"\n          ],\n          \"note\": \"C validates structure and Fin bounds before allocation; typed Lean adapters check again before constructing Fin.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"python-fin-installed\",\n            \"native-fin-containers-python-installed\"\n          ],\n          \"note\": \"Two independent builds reproduce the wheel; installed scalar tests also compare bundled C libraries and verify receipts.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"python-fin-installed\",\n            \"native-fin-containers-python-installed\"\n          ],\n          \"note\": \"Offline consumers run scalar checks on Python 3.11/3.12 and container checks in the CI Python environment. Only scalar tests measure dispatch in Python.\"\n        }\n      },\n      \"limitations\": [\n        \"Closed natural literal bounds only, alone or inside Array, List and Option at top-level parameters/results.\",\n        \"Native record/variant fields, products, Except and callbacks are not admitted by this evidence.\",\n        \"Ordinary-source Python only; reviewed IR is not covered.\",\n        \"Container dispatch is measured separately in C; the planned Python/Rust container probes remain open.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Use exact int values, rejecting bool and other numeric coercions with TypeError; negative inputs keep ValueError. An out-of-bound value raises LeanBridgeError with status 1 naming its parameter and bound. Arrays/Lists accept list or tuple and return independent tuples; Option uses None or Some. Fin 0 allows empty containers but no present element.\"\n      }\n    },\n    {\n      \"id\": \"native-specializations-python-ordinary-source\",\n      \"profiles\": [\n        \"python\"\n      ],\n      \"shapes\": [\n        \"generic\",\n        \"implicit\",\n        \"instance\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Python wheels expose finite function specializations with compiler-resolved type arguments and instance dictionaries. Source-free consumers exercise scalar and Array UInt32 alias applications; open declarations stay absent.\",\n      \"hostTypes\": {\n        \"generic\": {\n          \"signature\": \"Concrete Python function for each configured specialization\"\n        },\n        \"implicit\": {\n          \"signature\": \"Concrete host signature with no runtime type argument\"\n        },\n        \"instance\": {\n          \"signature\": \"Concrete host signature with the Lean-selected instance dictionary erased\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-specializations-python-installed\"\n          ],\n          \"note\": \"Lean elaborates configured type applications and resolves following instance dictionaries.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-specializations-python-installed\"\n          ],\n          \"note\": \"Python exposes only concrete exported function names and annotations.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-specializations-python-installed\"\n          ],\n          \"note\": \"The shared native adapter compiles each concrete application without runtime type or instance arguments.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-specializations-python-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the wheel and verify its package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-specializations-python-installed\"\n          ],\n          \"note\": \"The source-free offline Python consumer runs 2020 checks, including selected instance values and concrete host argument errors.\"\n        }\n      },\n      \"limitations\": [\n        \"Finite configured function specializations only; open generic host dispatch is not generated.\",\n        \"One to eight leading type parameters and immediately following instance dictionaries.\",\n        \"Type arguments are closed constants or aliases. Positive generic-structure applications require the separate #1433 implementation and installed host rollout.\",\n        \"Ordinary-source Python only; reviewed IR is not covered.\"\n      ],\n      \"conversionNotes\": {\n        \"generic\": \"Each configured application produces a monomorphic Python function. The open declaration is absent.\",\n        \"implicit\": \"Lean resolves configured type arguments at build time; Python passes no placeholder.\",\n        \"instance\": \"Lean selects the dictionary before native compilation; Python cannot replace it.\"\n      }\n    },\n    {\n      \"id\": \"native-subtype-python-ordinary-source\",\n      \"profiles\": [\n        \"python\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source Python wheels accept top-level Subtype parameters/results over primitive bases with compiler-checked constructor contracts. The installed consumer checks rejection, normalization, result projection and recovery.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"Declared primitive base value checked by the named Lean constructor\",\n          \"result\": \"Constructed subtype projected to its primitive base value\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-subtype-python-installed\"\n          ],\n          \"note\": \"Lean verifies that each named constructor accepts the exact primitive base and returns Option of the exact subtype.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-subtype-python-installed\"\n          ],\n          \"note\": \"Python signatures use the base type; checked metadata retains the constructor name.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-subtype-python-installed\"\n          ],\n          \"note\": \"The C adapter checks all structural inputs and Fin bounds, then invokes validators before the guarded source call.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-subtype-python-installed\"\n          ],\n          \"note\": \"Two clean roots reproduce the wheel and verify its package-set receipt.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"native-subtype-python-installed\"\n          ],\n          \"note\": \"The source-free offline Python consumer runs 2017 checks. Dispatch and allocation measurements belong to the separate C probes.\"\n        }\n      },\n      \"limitations\": [\n        \"Top-level primitive-base parameters/results only; no nested, nominal or callback Subtype positions.\",\n        \"A total named checked constructor is required; its normalized value reaches the exported function.\",\n        \"Ordinary-source Python only; reviewed IR is not covered.\",\n        \"This Python report does not measure allocation counts or dispatch.\"\n      ],\n      \"conversionNotes\": {\n        \"subtype\": \"Pass the usual Python base value. A rejected constructor raises LeanBridgeError status 1 naming the parameter and constructor. A valid parameter runs the constructor in the validator and again in the typed adapter; results expose .val. Fin bounds are checked first.\"\n      }\n    },\n"
+        },
+        {
+          "start": 1564500,
+          "previous": "          \"evidence\": [\n",
+          "current": "  \"evidence\": [\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "currentSha256": "db0ee729566fce5e51f90579ca08f682ea49b877cce8b751d4145b5c170f276a",
+      "previousSha256": "8e2203917c065d9b379620830e0581871dd00ef20bde7c8ece4c4d916f1e99a8",
+      "edits": [
+        {
+          "start": 3799,
+          "previous": "",
+          "current": "import \"./helpers/python-refinement-evidence-tests.mjs\";\nimport \"./helpers/python-refinement-evidence-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-refinements-source-history-tests.mjs",
+      "currentSha256": "01b6bab19441dadc0408cdab33ef4eb9ad16c0ea146648547a4e0582a6fcbf7a",
+      "previousSha256": "1c3b93d2921d43c83f6f3995e1c9224d5bf08a5ac419b69b70bd7c2237e693b3",
+      "edits": [
+        {
+          "start": 838,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 5498,
+          "previous": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/combined-lineage-source-history-tests.mjs",
+      "currentSha256": "8f58db3681c21a8c28def921144a3c563adb4352a1587b4ddd8b3aca24ebb27d",
+      "previousSha256": "61af0dde44136de54046c1b56d0973b0261bdbfe69c808402929b4d80b8f0a6c",
+      "edits": [
+        {
+          "start": 2149,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4777,
+          "previous": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpan-cli-control-source-history-tests.mjs",
+      "currentSha256": "628015ef94eeae8a2ebe039df0b31418d766e8d9d83f83750986ffcffce33f81",
+      "previousSha256": "3db63eb8997fbec6756925fe72e29118c698988eec0b0d6ebd98704f83da4044",
+      "edits": [
+        {
+          "start": 2009,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4402,
+          "previous": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/diagnostic-followup-source-history-tests.mjs",
+      "currentSha256": "9c69c11431054ddf5ac7e70e73a28124c52fb0387a33cc0d6fa4c40f86baf105",
+      "previousSha256": "aae5c70b5d3491202a5c6539db7690d0facaddd5b10d0ee0a6bf56ad57be3ecc",
+      "edits": [
+        {
+          "start": 2148,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4874,
+          "previous": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-fin-source-history-tests.mjs",
+      "currentSha256": "5e7a84478040451741fb8b9d2022b800900094e2e6e571e4e2e4e3ec6a82eb50",
+      "previousSha256": "5e403355230be02c6ace281c1342beac4d39db47e7b75dca5879cbd2726852cb",
+      "edits": [
+        {
+          "start": 1711,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4018,
+          "previous": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-distribution-source-history-tests.mjs",
+      "currentSha256": "1c73afb557c9e13bd397a70d69dfcd35d3498a67a798d89b97f10bef0606fe7b",
+      "previousSha256": "7b7d66159cc50ce9498449aac54a89b8ef1491503dec6a672adb0bd34652d0d8",
+      "edits": [
+        {
+          "start": 1434,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3843,
+          "previous": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1eda33ecab82fe713fcd01708236b733c305afa0ac19c4773ab7c6a16321622f",
+      "previousSha256": "026059a804d17d4f42858d42141d99743120b773e44ba07875b0b19afee42ae5",
+      "edits": [
+        {
+          "start": 3210,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 37560,
+          "previous": "",
+          "current": "\t, ...pythonRefinementEvidenceChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/host-fin-evidence-source-history-tests.mjs",
+      "currentSha256": "6985637bed0c8d35992061e5ca9de44271e30104330c08e87f9a2f8bffe2248b",
+      "previousSha256": "c31c6f0ec702889628cd70a3b926a6230cbb66e47091d2259891d8d4da4299fd",
+      "edits": [
+        {
+          "start": 1287,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 5960,
+          "previous": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-fin-source-history-tests.mjs",
+      "currentSha256": "b2635950a7d242de5f036ac43167ad3af62198406240ecb8f272761f14474af1",
+      "previousSha256": "fb6779eeb56abb94d53dc2c55f6ff4f2c7b64b95e1ffb1d95854b38ab0908e8a",
+      "edits": [
+        {
+          "start": 1643,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3906,
+          "previous": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-containers-source-history-tests.mjs",
+      "currentSha256": "a0b638669fff6a41ef29fa308ff8924937f31a527aa2ece1441fdab19df5d58e",
+      "previousSha256": "8bcf0f043a9363e39fa4f761b2a498e27baceb8cd3e373bf4558e17cf97c19e2",
+      "edits": [
+        {
+          "start": 1091,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 6920,
+          "previous": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-source-history-tests.mjs",
+      "currentSha256": "147f5fe5b75b77faf1b2ff13999c88bf752de162bd69ab55704c761089392ec0",
+      "previousSha256": "3b6e82cb7020db111fafd07ed32e1def5cfe03bf1da75b0cff7d63953470f3bc",
+      "edits": [
+        {
+          "start": 2150,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 6039,
+          "previous": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-specializations-source-history-tests.mjs",
+      "currentSha256": "177286f72bca9ae67cf4550edc14af46bdbc2abdbf253a526c1525447034c85a",
+      "previousSha256": "5438f364cff22a3509c4987a7c399e8a169cc56cda6e1744e5bbca336b5ea278",
+      "edits": [
+        {
+          "start": 1192,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 6167,
+          "previous": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-source-history-tests.mjs",
+      "currentSha256": "f003e8abafa938cc36f28a14cc81cec199ed69c3beb3cb9e9063141c6d810e65",
+      "previousSha256": "2fefb2911bea6eb52b75d236704b825c3166b49203a4d5554a02e0873f722512",
+      "edits": [
+        {
+          "start": 1006,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 5960,
+          "previous": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs",
+      "currentSha256": "615c54a0c2d8cf36cb21f7dd3204aa9f079348283dbdf2838581752c35c40413",
+      "previousSha256": "04e431b746f19ebce783502f45ae6a85aaafd244b9826e6e4b90a2f2187683ca",
+      "edits": [
+        {
+          "start": 2147,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4956,
+          "previous": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-fin-source-history-tests.mjs",
+      "currentSha256": "433af8625a2c5a0f6388875f8df5a8e24051b299b74c3164c028469dc882f0da",
+      "previousSha256": "782ac42bf8501393cee1b468b8745b1f21aedf4069e62d8e9243697e0d1615b4",
+      "edits": [
+        {
+          "start": 1365,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3662,
+          "previous": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-indexed-errors-source-history-tests.mjs",
+      "currentSha256": "25ad2f668a3562da8a0087ccc18267b7ceebc82e422956c89e5ad0d2005854d1",
+      "previousSha256": "ab94192ea2ce5ac04a1b4c4a32068cc68df020c9624c6350e401cb0a0ea9a6ef",
+      "edits": [
+        {
+          "start": 668,
+          "previous": "",
+          "current": "import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2319,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforePerlIndexedErrorsSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePythonRefinementEvidenceSource(path, text)), previous = JSON.parse(beforePerlIndexedErrorsSource(path, text));\n"
+        },
+        {
+          "start": 3072,
+          "previous": "\t\t\tassert.ok(perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3421,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinements-source-history-tests.mjs",
+      "currentSha256": "51261c9daf46c6220f6f6bffa1661e70f7a834e362aa1cfd077df7f0603a2ffb",
+      "previousSha256": "828f9595cb0e682f6a54c96aaa01bc2c2b9cfc1a3140cedd57917d913e4e3a22",
+      "edits": [
+        {
+          "start": 569,
+          "previous": "",
+          "current": "import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2371,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforePerlRefinementsSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePythonRefinementEvidenceSource(path, text)), previous = JSON.parse(beforePerlRefinementsSource(path, text));\n"
+        },
+        {
+          "start": 3122,
+          "previous": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3520,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-fin-source-history-tests.mjs",
+      "currentSha256": "9827ac2f5a1af5b1a42d19451acfc25f748e1ed344540e2d5742e203164defd6",
+      "previousSha256": "207f842953becd2e4574c0c7ccaaa83759f732b16c8768956fd7406513cfe1a9",
+      "edits": [
+        {
+          "start": 1576,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3839,
+          "previous": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-fin-source-history-tests.mjs",
+      "currentSha256": "9d76cd4fa09b94977743587569934a081eb1e9b11d4d53b71248ab67ee78bcdb",
+      "previousSha256": "1e1b3fc80d9097b6df1cf907b3b55c9078925cd4458d4aa467bfd0a444f16377",
+      "edits": [
+        {
+          "start": 1925,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4238,
+          "previous": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-audit-source-history-tests.mjs",
+      "currentSha256": "b68073f8e9f3dbbffc0e92e896d2f2a988fc6c26b6816304bfab07d1f26ecbf6",
+      "previousSha256": "f6a79ef27c369d09d877f71b91f641dd79ce8916095ca26be5aa824b2b2f1365",
+      "edits": [
+        {
+          "start": 926,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3424,
+          "previous": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-ci-repair-source-history-tests.mjs",
+      "currentSha256": "d4a458710ccf7556715d45a8efc94fe84642ea468e13e0e9653de2f1e7bde5bb",
+      "previousSha256": "570bf5e922be0aa57c81aa61edbf6337bb7012c0ff9f6f4ead746c0b1a37765e",
+      "edits": [
+        {
+          "start": 550,
+          "previous": "",
+          "current": "import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 1101,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePythonRefinementEvidenceSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2217,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeRefinementCiRepairSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePythonRefinementEvidenceSource(path, text)), previous = JSON.parse(beforeRefinementCiRepairSource(path, text));\n"
+        },
+        {
+          "start": 2971,
+          "previous": "\t\t\tassert.ok(refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 3268,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-ci-repair-source-history.mjs",
+      "currentSha256": "c09f9377c9e7dd26fbc66fcbeec0bf025b4a11918aae65690e0747424f12b734",
+      "previousSha256": "e784d8ca947542c70b37aba3b387e9f7f509c30859a4fc76db919800dde70fa5",
+      "edits": [
+        {
+          "start": 229,
+          "previous": "",
+          "current": "import { beforePythonRefinementEvidenceSource } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3842,
+          "previous": "",
+          "current": "\tsource = beforePythonRefinementEvidenceSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-fin-source-history-tests.mjs",
+      "currentSha256": "60523293b0ddce9e7b11374446818acb9a2d13177604f6fcf052eaf391627b37",
+      "previousSha256": "d85bfcc537398e0b5be97e231fcb945160d3eb416bfc50e1021e067282c0c3d4",
+      "edits": [
+        {
+          "start": 1787,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4072,
+          "previous": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/runtime-receipt-source-history-tests.mjs",
+      "currentSha256": "152da7c22d0649fcafd847c9fb182dd3df2816324bb6586da2960f7b7ad7517f",
+      "previousSha256": "f1c384170d610980a7ac0e14c6fdc466af480a6eb37ab7dbbdefc3135a3ff1a8",
+      "edits": [
+        {
+          "start": 2087,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4487,
+          "previous": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-fin-source-history-tests.mjs",
+      "currentSha256": "55c454569f0118e0e944e554d4fca57b37923cce38f0e783343b10b9a1ef5776",
+      "previousSha256": "7ab27de1b93edab3d8a933b74c0596a738a55ad30f151327217d385815140cfd",
+      "edits": [
+        {
+          "start": 1854,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 4135,
+          "previous": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-source-history-tests.mjs",
+      "currentSha256": "42b418947a410b7716f54c9d47c5549e90eafee277378b64398d8202d7cbab96",
+      "previousSha256": "dfe3908a974d331e2aea2abd49dfc5fbf5887587f65961f0ab8152d014dc3c4a",
+      "edits": [
+        {
+          "start": 745,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 5945,
+          "previous": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-wording-source-history-tests.mjs",
+      "currentSha256": "810a005290f9fea72d569b93c5324ccbb24f56f697a41f0c9be98640fc6daafe",
+      "previousSha256": "c144ccf7bae28e0d33b105b95d5a8ea35bcc205b6b51105e3b98190b89a66a22",
+      "edits": [
+        {
+          "start": 654,
+          "previous": "",
+          "current": "import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 2479,
+          "previous": "\tconst current = JSON.parse(text), previous = JSON.parse(beforeScalarFinWordingSource(path, text));\n",
+          "current": "\tconst current = JSON.parse(beforePythonRefinementEvidenceSource(path, text)), previous = JSON.parse(beforeScalarFinWordingSource(path, text));\n"
+        },
+        {
+          "start": 3604,
+          "previous": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        },
+        {
+          "start": 4055,
+          "previous": "\t\t\tassert.equal(now.files[index].sha256, sha256(source));\n",
+          "current": "\t\t\tassert.equal(now.files[index].sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/test-profile-registration-source-history-tests.mjs",
+      "currentSha256": "133ade38431a22ce8c9beb84161c5a1b0cfe01753286939cb7fec18247bce392",
+      "previousSha256": "13fcc23c8ec84e08570f28236496c25d34606046519050f802d249bf520a5391",
+      "edits": [
+        {
+          "start": 2172,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 5063,
+          "previous": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-fin-source-history-tests.mjs",
+      "currentSha256": "b30b0f99d661c6092561ed426876ca9a5c278347ee299b4132134717c0ca8a96",
+      "previousSha256": "2f515c6f771ba07110b4926fced174acaa6e173bfb983326d874ac1a9a8232e7",
+      "edits": [
+        {
+          "start": 1518,
+          "previous": "",
+          "current": "import { pythonRefinementEvidenceChangedPaths } from \"./python-refinement-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 3799,
+          "previous": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n",
+          "current": "\t\t\tassert.ok(witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "f963024a79d680803c727bf60a9f4e6517e02d9c7e3146e40c59dab58a5d8633",
+      "previousSha256": "00d7604334e872161b1f79b2c6d41c318b709afd8a3cbb78bf985a56563d07c6",
+      "edits": [
+        {
+          "start": 23825,
+          "previous": "\tconst finEvidence = { rust: \"rust-fin-installed\", ruby: \"ruby-fin-installed\", dotnet: \"dotnet-fin-installed\", java: \"jvm-fin-installed\", kotlin: \"jvm-fin-installed\", \"php-native\": \"php-fin-installed\", \"wit-wasi\": \"wit-fin-installed\" }[profile];\n",
+          "current": "\tconst finEvidence = { python: \"python-fin-installed\", rust: \"rust-fin-installed\", ruby: \"ruby-fin-installed\", dotnet: \"dotnet-fin-installed\", java: \"jvm-fin-installed\", kotlin: \"jvm-fin-installed\", \"php-native\": \"php-fin-installed\", \"wit-wasi\": \"wit-fin-installed\" }[profile];\n"
+        },
+        {
+          "start": 24227,
+          "previous": "\tconst specializationEvidence = { rust: \"rust\", ruby: \"ruby\", dotnet: \"dotnet\", java: \"java-kotlin\", kotlin: \"java-kotlin\", \"php-native\": \"php-native\", \"wit-wasi\": \"wit-wasi\" }[profile];\n",
+          "current": "\tconst specializationEvidence = { python: \"python\", rust: \"rust\", ruby: \"ruby\", dotnet: \"dotnet\", java: \"java-kotlin\", kotlin: \"java-kotlin\", \"php-native\": \"php-native\", \"wit-wasi\": \"wit-wasi\" }[profile];\n"
+        },
+        {
+          "start": 30839,
+          "previous": "\t// Node (VO #1219), since VO #1428 the nine native profiles that share the C-family adapter, and since VO #1429 the three browser profiles.\n\tconst native = [\"c\", \"cpp\", \"rust\", \"ruby\", \"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"];\n",
+          "current": "\t// Node, ten installed C-family profiles including Python CI, and three browser profiles.\n\tconst native = [\"c\", \"cpp\", \"python\", \"rust\", \"ruby\", \"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"];\n"
+        },
+        {
+          "start": 31653,
+          "previous": "\t\t\tassert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);\n",
+          "current": "\t\t\tif(cell.profile === \"python\")\n\t\t\t\tassert.equal(cell.hostType, cell.position === \"parameter\" ? \"Declared primitive base value checked by the named Lean constructor\" : \"Constructed subtype projected to its primitive base value\");\n\t\t\telse assert.match(cell.hostType, /checked by the exported Lean validator|proof-backed Lean result/u);\n"
+        }
+      ]
+    }
+  ]
+}

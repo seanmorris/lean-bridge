@@ -1,0 +1,135 @@
+{
+  "archives": {
+    "archives/subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "e83db617cdc6a7ec02e320588a884c041220cec10982c3ed0ba8fa19515f28c3"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "a3ce57d3aea3bc4a961b517051c91957c126ae1a1cef423405c6c5707c8f61d1",
+      "checks": 2017,
+      "compilerFreePath": true,
+      "consumerSha256": "194fa5dd9fb4e6b1bc58f46c0bd409444316dfaf8de84485081ee9c480e849a8",
+      "dispatch": {
+        "observed": false,
+        "reason": "counted in the C package, whose adapter this host's bundled library shares"
+      },
+      "modelSha256": "8ce20928ff48475cff932a74ce2796e7713a51f8953e18916f2e60ed7520446a",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51365026,
+              "path": "archives/subtypes-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+              "sha256": "e83db617cdc6a7ec02e320588a884c041220cec10982c3ed0ba8fa19515f28c3"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "subtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "510cf1e4378d0252dbb6b22caa3e779b5d3f4ad7f6a49760a462261b4260eba3",
+      "refinements": {
+        "Subtypes.clamp": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedBounded",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.half": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.head": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedPayload",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.join": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            },
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        },
+        "Subtypes.mix": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedEven",
+              "kind": "subtype"
+            },
+            {
+              "bound": "10",
+              "kind": "fin"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.pad": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedEven",
+            "kind": "subtype"
+          }
+        },
+        "Subtypes.scale": {
+          "parameters": [
+            null,
+            {
+              "constructor": "Subtypes.checkedSmall",
+              "kind": "subtype"
+            }
+          ],
+          "result": null
+        },
+        "Subtypes.shout": {
+          "parameters": [
+            {
+              "constructor": "Subtypes.checkedWord",
+              "kind": "subtype"
+            }
+          ],
+          "result": {
+            "constructor": "Subtypes.checkedWord",
+            "kind": "subtype"
+          }
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "9f0e436722ddbf9963d5ab05b116188a8bbabc22c60942363de430cc754ff90f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

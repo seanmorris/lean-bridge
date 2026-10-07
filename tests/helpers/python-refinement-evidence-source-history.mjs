@@ -1,17 +1,17 @@
 /**
- * Preserve exact source predecessors of the Refinement CI repair (#1435).
+ * Preserve exact source predecessors of the Python refinement evidence (#1422).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePythonRefinementEvidenceSource } from "./python-refinement-evidence-source-history.mjs";
 
-export const refinementCiRepairHistoryPath = "docs/evidence/refinement-ci-repair-source-history-20261007.json";
-export const refinementCiRepairChangedPaths = [
-	"docs/type-surface.v1.json"
-	, "tests/browser-refinements.test.mjs"
+export const pythonRefinementEvidenceHistoryPath = "docs/evidence/python-refinement-evidence-source-history-20261007.json";
+export const pythonRefinementEvidenceChangedPaths = [
+	"docs/consume/python.md"
+	, "docs/lean/existing-package.md"
+	, "docs/type-surface.v1.json"
 	, "tests/component-array-contract.test.mjs"
 	, "tests/helpers/browser-refinements-source-history-tests.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
@@ -29,11 +29,12 @@ export const refinementCiRepairChangedPaths = [
 	, "tests/helpers/npm-fin-diagnostics-source-history-tests.mjs"
 	, "tests/helpers/perl-fin-source-history-tests.mjs"
 	, "tests/helpers/perl-indexed-errors-source-history-tests.mjs"
-	, "tests/helpers/perl-indexed-errors-source-history.mjs"
 	, "tests/helpers/perl-refinements-source-history-tests.mjs"
 	, "tests/helpers/php-fin-source-history-tests.mjs"
 	, "tests/helpers/python-fin-source-history-tests.mjs"
 	, "tests/helpers/refinement-audit-source-history-tests.mjs"
+	, "tests/helpers/refinement-ci-repair-source-history-tests.mjs"
+	, "tests/helpers/refinement-ci-repair-source-history.mjs"
 	, "tests/helpers/ruby-fin-source-history-tests.mjs"
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
 	, "tests/helpers/rust-fin-source-history-tests.mjs"
@@ -41,8 +42,7 @@ export const refinementCiRepairChangedPaths = [
 	, "tests/helpers/scalar-fin-wording-source-history-tests.mjs"
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/helpers/wit-fin-source-history-tests.mjs"
-	, "tests/rust-structured-callable-contract.test.mjs"
-	, "tests/scalar-fin-rejection.test.mjs"
+	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -52,8 +52,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseRefinementCiRepairUpdate = (source, update) => {
-	assert.ok(refinementCiRepairChangedPaths.includes(update.path));
+export const reversePythonRefinementEvidenceUpdate = (source, update) => {
+	assert.ok(pythonRefinementEvidenceChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -73,18 +73,17 @@ export const reverseRefinementCiRepairUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1435, stopping at an explicitly requested identity.
+ * Restore the source before #1422, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeRefinementCiRepairSource = (path, source, expected) => {
-	source = beforePythonRefinementEvidenceSource(path, source, expected);
-	if(typeof source !== "string" || !refinementCiRepairChangedPaths.includes(path)) return source;
+export const beforePythonRefinementEvidenceSource = (path, source, expected) => {
+	if(typeof source !== "string" || !pythonRefinementEvidenceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(refinementCiRepairHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(pythonRefinementEvidenceHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseRefinementCiRepairUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePythonRefinementEvidenceUpdate(source, update) : source;
 };

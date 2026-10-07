@@ -57,6 +57,8 @@ import "./helpers/scalar-fin-wording-source-history-tests.mjs";
 import "./helpers/perl-refinements-source-history-tests.mjs";
 import "./helpers/perl-indexed-errors-source-history-tests.mjs";
 import "./helpers/refinement-ci-repair-source-history-tests.mjs";
+import "./helpers/python-refinement-evidence-tests.mjs";
+import "./helpers/python-refinement-evidence-source-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);

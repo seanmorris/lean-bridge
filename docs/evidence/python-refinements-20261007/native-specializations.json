@@ -1,0 +1,55 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "9688662d3c020cbf332592e3421aa502cf93738cefd5f236bee6723231def6eb"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "15fa7ceb06af9b88048396d7ee1c4ec6928d21e441d0bf4b461dcfca966b5bcd",
+      "checks": 2020,
+      "compilerFreePath": true,
+      "consumerSha256": "ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "5b02cea65f3b45691f069c841745fab106d2e8fe10acb5f708f905a7c546f5cc",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51355478,
+              "path": "archives/specialized-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+              "sha256": "9688662d3c020cbf332592e3421aa502cf93738cefd5f236bee6723231def6eb"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "396b831a5212de60b0daed9606b8fc0c98ad4d436a74206937213c969bbcbea5",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4473538e9e945b8e26957cb0d5ffbc53416b7e66fa7f499497f0cf5eee8e645c"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

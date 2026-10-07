@@ -1,0 +1,416 @@
+{
+  "archives": {
+    "archives/native-fin-1.0.0-c.tar.gz": "819560c98de2f456c403d70bd200bafb2da4b161d35de8246cec7d5051ec584d",
+    "archives/native_fin-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "481a4b485acde1f320782e5ac920ef61aa1b2fe334b61582de2916fd0ae34be1"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "4e413fca62056dcda1698a695873527d6eb3e0d8788028afb415d8be03eab43a",
+      "checks": 2032,
+      "compilerFreePath": true,
+      "consumerSha256": "1a0d02c4546e18f33ba40dd3d5cb565d9340606a5324022a1441df79952545fc",
+      "dispatch": {
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label",
+          "lb_b703515a10173a97c2e27e46",
+          "lb_1d7e0c72a4d6e1cde32466e4",
+          "lb_9afacce322a81504ba9eb75b"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            "ok",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-mirror",
+            "ok",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-mirror",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-impossible",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-label",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-bool-mirror",
+            "TypeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-negative-mirror",
+            "ValueError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-label",
+            "ok",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror",
+            "1",
+            [
+              1,
+              0,
+              1,
+              2,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-impossible",
+            "1",
+            [
+              1,
+              0,
+              1,
+              2,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-valid-mirror",
+            "1",
+            [
+              2,
+              0,
+              1,
+              3,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror-large",
+            "1",
+            [
+              2,
+              0,
+              1,
+              4,
+              1,
+              1
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts",
+        "probeSha256": "33547051c9acbf61484f11119dec2cbeeda1ce56a12b28537492a04d20fd8876"
+      },
+      "installedFilesSha256": "c272031459df4bdf268eba05d134412bbdbd7811100dfc82bfc49a4dbab0114d",
+      "installedFilesUnchanged": true,
+      "modelSha256": "28d1c08bdc930afdc45d0088c6b94399d143b84a2e94b16b648e3d0fe7e154e6",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51350684,
+              "path": "archives/native_fin-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+              "sha256": "481a4b485acde1f320782e5ac920ef61aa1b2fe334b61582de2916fd0ae34be1"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "python": "3.11",
+      "receiptSha256": "795287a68ee76316ac492e974ec13aa52c5ff2b60d2ee2a8965a4355f7fae6ea",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "89c17555ebadc79b514639bd4d489062e818a0278383fd725e7557a2009905b2",
+        "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "427b642dab894cb3ec5b8b390fc93cec3eed2e9fb47a5c6c4dbd79817ce753ce"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "93ecbbc7390d1d5aadfe8a6ffcd9b12be7b4c62ddeef04f78be9ee8a6dda3a72"
+    },
+    {
+      "bindingIrSha256": "4e413fca62056dcda1698a695873527d6eb3e0d8788028afb415d8be03eab43a",
+      "checks": 2032,
+      "compilerFreePath": true,
+      "consumerSha256": "1a0d02c4546e18f33ba40dd3d5cb565d9340606a5324022a1441df79952545fc",
+      "dispatch": {
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label",
+          "lb_b703515a10173a97c2e27e46",
+          "lb_1d7e0c72a4d6e1cde32466e4",
+          "lb_9afacce322a81504ba9eb75b"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "start",
+            "ok",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-mirror",
+            "ok",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-mirror",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-impossible",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-invalid-label",
+            "LeanBridgeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-bool-mirror",
+            "TypeError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-negative-mirror",
+            "ValueError",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "public-valid-label",
+            "ok",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror",
+            "1",
+            [
+              1,
+              0,
+              1,
+              2,
+              0,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-impossible",
+            "1",
+            [
+              1,
+              0,
+              1,
+              2,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-valid-mirror",
+            "1",
+            [
+              2,
+              0,
+              1,
+              3,
+              1,
+              1
+            ]
+          ],
+          [
+            "raw-invalid-mirror-large",
+            "1",
+            [
+              2,
+              0,
+              1,
+              4,
+              1,
+              1
+            ]
+          ]
+        ],
+        "positiveControl": "valid public and raw calls increment source and adapter counts",
+        "probeSha256": "33547051c9acbf61484f11119dec2cbeeda1ce56a12b28537492a04d20fd8876"
+      },
+      "installedFilesSha256": "c272031459df4bdf268eba05d134412bbdbd7811100dfc82bfc49a4dbab0114d",
+      "installedFilesUnchanged": true,
+      "modelSha256": "28d1c08bdc930afdc45d0088c6b94399d143b84a2e94b16b648e3d0fe7e154e6",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51350684,
+              "path": "archives/native_fin-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+              "sha256": "481a4b485acde1f320782e5ac920ef61aa1b2fe334b61582de2916fd0ae34be1"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "python": "3.12",
+      "receiptSha256": "795287a68ee76316ac492e974ec13aa52c5ff2b60d2ee2a8965a4355f7fae6ea",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "89c17555ebadc79b514639bd4d489062e818a0278383fd725e7557a2009905b2",
+        "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "427b642dab894cb3ec5b8b390fc93cec3eed2e9fb47a5c6c4dbd79817ce753ce"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "93ecbbc7390d1d5aadfe8a6ffcd9b12be7b4c62ddeef04f78be9ee8a6dda3a72"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
