@@ -785,6 +785,7 @@ const profileManifest = Object.freeze({
 		, "php-fin"
 		, "wit-fin"
 		, "perl-fin"
+		, "perl-fin-containers"
 		, "native-specializations"
 		, "native-fin-containers"
 		, "native-subtype"

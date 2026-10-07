@@ -17,7 +17,8 @@ export const finContainerTargets = Object.freeze({ c: ["c", coordinate]
 	, kotlin: ["maven", { name: "org.leanbridge:fincontainers", version: "1.0.0" }]
 	, ruby: ["rubygems", coordinate]
 	, "php-native": ["php-native", { name: "example/fincontainers", version: "1.0.0" }]
-	, "wit-wasi": ["wit-wasi", coordinate] });
+	, "wit-wasi": ["wit-wasi", coordinate]
+	, perl: ["cpan", { module: "LeanBridge::FinContainers", version: "1.000" }] });
 
 const fin = bound => ({ kind: "fin", bound });
 const inside = (kind, child) => ({ kind, arguments: [child] });

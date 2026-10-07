@@ -18,13 +18,14 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { finContainerEnvironment, finContainerRefinements, finContainerTargets, installFinContainerConsumer } from "./helpers/fin-container-install.mjs";
 import { finContainerDispatchColumns, finContainerDispatchExpected, finContainerDispatchInterposer, finContainerDispatchProbe } from "./helpers/fin-container-dispatch.mjs";
+import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainerInterposer, perlContainerPrelude } from "./helpers/perl-fin-container-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin container profile");
 assert.ok(profiles.every(profile => Object.hasOwn(finContainerTargets, profile)), "Unknown or empty Fin container profile");
-const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c" };
+const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs", java: "java", kotlin: "kt", ruby: "rb", "php-native": "php", "wit-wasi": "c", perl: "pl" };
 const fixture = "tests/fixtures/onboarding/native-fin-containers";
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false } };
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -92,17 +93,8 @@ test("native builds still reject Fin in fields, callbacks, products and results,
 			, error => pattern.test(JSON.stringify({ message: error.message, details: error.details })), name);
 		await assert.rejects(() => access(outputRoot), name);
 	}
-	// Perl XS checks only scalar bounds; a mixed build with cpan fails before any package exists.
-	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-container-cpan-"));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
-	await cp(fixture, projectRoot, { recursive: true });
-	const mixed = { c: finContainerTargets.c[1], cpan: { module: "LeanBridge::FinContainers", version: "1.000" } };
-	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinContainers"], targets: mixed }));
-	await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c", "cpan"], environment: finContainerEnvironment(["c", "perl"]) })
-		, error => error.code === "native-refinements-unsupported" && /checked Fin refinements inside arrays, lists and options, and Subtype refinements, are not implemented for cpan packages/.test(error.message)
-			&& error.details?.target === "cpan");
-	await assert.rejects(() => access(outputRoot));
+	// Perl XS walks container bounds since VO #1431; the Perl profile below checks the archived XS, so a
+	// mixed build no longer belongs here, where the C job has no CPAN runtime.
 });
 
 /**
@@ -135,6 +127,34 @@ const observeDispatch = async (consumer, packages, leanPrefix) => {
 	return { columns: finContainerDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl };
 };
 
+/**
+ * Count adapter and source dispatch in the installed CPAN package. Perl code cannot call the
+ * typed adapter directly, so the direct-adapter column is observed in the C package probe.
+ *
+ * @param consumer - Consumer root containing the installed CPAN package.
+ * @param command - Selected Perl interpreter.
+ * @param adapters - Adapter symbol per Lean declaration, from the build's native model.
+ */
+const observePerlDispatch = async (consumer, command, adapters) => {
+	const installed = join(consumer, "perl"), library = join(installed, "installed/lib/perl5");
+	await saveLakeFile(installed, "interposer.c", perlContainerInterposer(adapters));
+	await runCopied("/usr/bin/cc", ["-std=gnu11", "-Wall", "-Wextra", "-Werror", "-Wno-strict-prototypes", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], installed
+		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
+	const observed = [];
+	for(const [step, code, expected] of perlContainerDispatchSteps)
+	{
+		const counts = join(installed, `counts-${step}.txt`);
+		const run = await runCopied(command, ["-e", perlContainerPrelude + code], installed
+			, { ...copiedCleanEnvironment, PERL5LIB: library, LD_PRELOAD: join(installed, "libdispatch.so"), FIN_CONTAINER_COUNTS: counts });
+		assert.equal(run.stderr, "", step);
+		const counted = (await readFile(counts, "utf8")).trim().split(" ").map(Number);
+		assert.deepEqual(counted, expected, step);
+		observed.push([step, counted]);
+	}
+	const positiveControl = "valid public calls increment the adapter and source counts; direct adapter calls are counted in the C package probe";
+	return { columns: perlContainerDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl };
+};
+
 test("relocated source-free native packages check Fin inside arrays, lists and options", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => finContainerTargets[profile]));
@@ -164,6 +184,15 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		if(profiles.includes("perl"))
+		{
+			// The archived XS carries one walker per refined parameter, each naming the parameter and the leaf bound.
+			const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
+			const xs = (await runCopied("/usr/bin/tar", ["-xOzf", join(handoff, archive), "--wildcards", "*/Component.xs"], consumer, copiedCleanEnvironment)).stdout;
+			assert.equal((xs.match(/is not below its Fin \d+ bound/g) ?? []).length, 7);
+			assert.match(xs, /"arg1 is not below its Fin 4 bound"/);
+			assert.match(xs, /lean_cstr_to_nat\("1180591620717411303424"\); int below = lean_nat_lt\(e0, bound\)/);
+		}
 		const dependencies = attempt === 0 && profiles.includes("rust")
 			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
 		// Install from prepared archives only. No author workspace or build staging remains.
@@ -174,11 +203,11 @@ test("relocated source-free native packages check Fin inside arrays, lists and o
 			t.diagnostic(`installing and checking ${profile}`);
 			const target = finContainerTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
-			const observation = await installFinContainerConsumer({ profile, consumer, handoff, packages, dependencies, environment });
+			const { command, ...observation } = await installFinContainerConsumer({ profile, consumer, handoff, packages, dependencies, environment });
 			// The interpreter path is machine-specific; the report keeps portable facts only.
-			delete observation.command;
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX)
-				: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
+				: profile === "perl" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
+					: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
 			reports.push({ profile, path: "ordinary-source"
 				, ...observation
 				, dispatch

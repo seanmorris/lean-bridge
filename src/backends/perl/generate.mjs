@@ -11,6 +11,7 @@ import { compileCopiedPerlGraphPackageModel, generateCopiedPerlGraphPackage } fr
 import { compileCallablePerlGraphPackageModel } from "./callable-graph-model.mjs";
 import { generateCallablePerlGraphPackage } from "./callable-graph-package.mjs";
 import { perlStringLiteral } from "./naming.mjs";
+import { nativeFinBoundPaths } from "../native/fin-refinements.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -230,17 +231,37 @@ const conversion = (model, type) => {
 // Bounds come from the compiler-checked native model, never from the erased Nat type.
 const perlFinBounds = item => {
 	if(!item.refinements) return null;
-	const parts = item.refinements.parameters.flatMap((refinement, index) => refinement ? [`${item.parameters[index].name} < ${refinement.bound}`] : []);
-	if(item.refinements.result) parts.push(`result < ${item.refinements.result.bound}`);
+	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, item.parameters[index].name));
+	parts.push(...nativeFinBoundPaths(item.refinements.result, "result"));
 	return parts.length ? parts.join("; ") : null;
 };
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
 // Compare a Lean Nat argument with its exact Fin bound before any Lean function runs.
 // The surrounding scope still owns every argument, so croak releases them all.
-const finGuard = ({ index, bound, name }) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(a${index}, bound); lean_dec(bound);
+const finLeaf = (value, bound, name) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);
       if (!below) croak("%s", ${q(`${name} is not below its Fin ${bound} bound`)}); }`;
+// Walk a converted argument along its refinement tree, borrowing every element: arrays are read
+// in place, a list is viewed through its scope-owned array, and an option is opened only when
+// present. A Fin 0 leaf is therefore rejected exactly when it is present. The message names the
+// parameter and the failing leaf's own bound, as the shared C adapter does.
+const finGuard = (type, refinement, value, name, depth = 0) => {
+	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth);
+	if(refinement.kind === "fin") return finLeaf(value, refinement.bound, name);
+	if(refinement.kind === "array" || refinement.kind === "list")
+	{
+		if(type.kind !== refinement.kind) throw new TypeError(`${name}: refinement does not match its ${type.kind} transport`);
+		const items = type.kind === "list" ? `items${depth}` : value, index = `k${depth}`, element = `e${depth}`;
+		return `{ ${type.kind === "list" ? `lean_inc(${value}); lean_object *${items} = ${keep(`lb_t${nativeTypeKey(type)}_to_array(${value})`)};` : ""}
+      for (size_t ${index} = 0; ${index} < lean_array_size(${items}); ++${index}) { lean_object *${element} = lean_array_get_core(${items}, ${index});
+      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1)} } }`;
+	}
+	if(refinement.kind === "option" && type.kind === "option")
+		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get0(${value})`)};
+      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1)} } }`;
+	throw new TypeError(`${name}: checked ${refinement.kind} refinements are not implemented for cpan packages`);
+};
 const publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {
-	const guards = (refinements?.parameters ?? []).flatMap((refinement, index) => refinement ? [{ index, bound: refinement.bound, name: names[index] }] : []);
+	const guards = (refinements?.parameters ?? []).flatMap((refinement, index) => refinement ? [finGuard(parameters[index], refinement, `a${index}`, names[index])] : []);
 	const invoke = `${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})`;
 	// A guarded adapter returns Option: none is a rejected bound, some holds the boxed result.
 	const call = guards.length ? `lean_object *checked = ${invoke};
@@ -270,7 +291,7 @@ ${name}(...)
     lbp_check_interpreter(aTHX);
     lbp_component_ready(aTHX);
     LBP_ENTER();
-    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards.map(finGuard)].join("\n    ")}
+    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
     ${call}
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}
@@ -452,7 +473,7 @@ _callback_${type.key}(...)
 		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
 		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
 	if(model.exports.some(perlFinBounds)) pm.push("=head1 BOUNDED INTEGERS", ""
-		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before any Lean function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.", "");
+		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before any Lean function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before any Lean function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function. Fin inside records, variants, callbacks or reviewed Binding IR, and checked constructors, are not supported in CPAN packages.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

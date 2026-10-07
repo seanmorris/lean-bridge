@@ -98,7 +98,7 @@ test("native builds reject Subtype outside top-level sites, without a constructo
 	const mixed = { c: nativeSubtypeTargets.c[1], cpan: { module: "LeanBridge::Subtypes", version: "1.000" } };
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Subtypes"], exports: Object.keys(nativeSubtypeContracts), contracts: nativeSubtypeContracts, targets: mixed }));
 	await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c", "cpan"], environment: nativeSubtypeEnvironment(["c", "perl"]) })
-		, error => error.code === "native-refinements-unsupported" && /Subtype refinements, are not implemented for cpan packages/.test(error.message) && error.details?.target === "cpan");
+		, error => error.code === "native-refinements-unsupported" && /checked Subtype refinements are not implemented for cpan packages/.test(error.message) && error.details?.target === "cpan");
 	await assert.rejects(() => access(outputRoot));
 });
 
