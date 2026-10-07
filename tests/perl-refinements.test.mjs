@@ -71,17 +71,17 @@ check(LeanBridge::PerlRefinements::tag($label, 9) eq 'row9', 'tag');
 check(rejected(sub { LeanBridge::PerlRefinements::tag($label, 10) }, 'arg1', $ctor) && $label eq 'row', 'tag late rejection');
 # Nested Fin 0: no present leaf is allowed; absent and empty shapes are valid.
 check(LeanBridge::PerlRefinements::count_absent([undef, undef])->bstr eq '2' && LeanBridge::PerlRefinements::count_absent([])->bstr eq '0', 'Array (Option (Fin 0)) with none');
-check(bound(sub { LeanBridge::PerlRefinements::count_absent([undef, some(n(0))]) }, 'arg0', '0'), 'Array (Option (Fin 0)) with a present leaf');
+check(bound(sub { LeanBridge::PerlRefinements::count_absent([undef, some(n(0))]) }, 'arg0[1]?', '0'), 'Array (Option (Fin 0)) with a present leaf');
 check(LeanBridge::PerlRefinements::empty_rows(undef)->bstr eq '7' && LeanBridge::PerlRefinements::empty_rows(some([]))->bstr eq '0', 'Option (Array (Fin 0)) with none and some []');
-check(bound(sub { LeanBridge::PerlRefinements::empty_rows(some([n(0)])) }, 'arg0', '0'), 'Option (Array (Fin 0)) with a present leaf');
+check(bound(sub { LeanBridge::PerlRefinements::empty_rows(some([n(0)])) }, 'arg0?[0]', '0'), 'Option (Array (Fin 0)) with a present leaf');
 check(LeanBridge::PerlRefinements::nested_empty([[], []])->bstr eq '2' && LeanBridge::PerlRefinements::nested_empty([])->bstr eq '0', 'nested empty arrays');
 my $rows = [[], [n(0)]];
-check(bound(sub { LeanBridge::PerlRefinements::nested_empty($rows) }, 'arg0', '0') && $rows->[1][0]->bstr eq '0', 'nested present leaf, caller data unchanged');
+check(bound(sub { LeanBridge::PerlRefinements::nested_empty($rows) }, 'arg0[1][0]', '0') && $rows->[1][0]->bstr eq '0', 'nested present leaf, caller data unchanged');
 check(LeanBridge::PerlRefinements::nested_digits([some(n(1)), undef, some(n(2))])->bstr eq '3', 'nested present digits');
-check(bound(sub { LeanBridge::PerlRefinements::nested_digits([some(n(1)), some(n(3))]) }, 'arg0', '3'), 'nested present invalid leaf');
+check(bound(sub { LeanBridge::PerlRefinements::nested_digits([some(n(1)), some(n(3))]) }, 'arg0[1]?', '3'), 'nested present invalid leaf');
 for my $i (0 .. 499) {
   die "invalid word accepted at $i\\n" unless rejected(sub { LeanBridge::PerlRefinements::twice(10 + $i % 7) }, 'arg0', $ctor);
-  die "invalid leaf accepted at $i\\n" unless bound(sub { LeanBridge::PerlRefinements::count_absent([some(n($i))]) }, 'arg0', '0');
+  die "invalid leaf accepted at $i\\n" unless bound(sub { LeanBridge::PerlRefinements::count_absent([some(n($i))]) }, 'arg0[0]?', '0');
   die "valid call failed at $i\\n" unless LeanBridge::PerlRefinements::twice($i % 10) == 2 * ($i % 10) && LeanBridge::PerlRefinements::count_absent([undef])->bstr eq '1';
 }
 $checks += 1500;
@@ -117,6 +117,8 @@ test("relocated source-free CPAN packages check an unboxed word subtype and nest
 		assert.equal((xs.match(/was rejected by PerlRefinements\.checkedDigit32"/g) ?? []).length, 2);
 		assert.doesNotMatch(xs.slice(xs.indexOf("\ntwice(...)"), xs.indexOf("XSRETURN(1);", xs.indexOf("\ntwice(...)"))), /lean_inc\(a0\)/);
 		assert.equal((xs.match(/lean_cstr_to_nat\("0"\)/g) ?? []).length, 3);
+		for(const message of ['"%s[%zu]? is not below its Fin 0 bound", "arg0", (size_t)k0', '"%s?[%zu] is not below its Fin 0 bound", "arg0", (size_t)k0', '"%s[%zu][%zu] is not below its Fin 0 bound", "arg0", (size_t)k0, (size_t)k1'])
+			assert.ok(xs.includes(`croak(${message})`), message);
 		await rm(author, { recursive: true, force: true });
 		if(attempt === 1) break;
 		for(const [index, perl] of perls.entries())

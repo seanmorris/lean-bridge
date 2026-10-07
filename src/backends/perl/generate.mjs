@@ -238,26 +238,34 @@ const perlFinBounds = item => {
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
 // Compare a Lean Nat argument with its exact Fin bound before the guarded adapter runs.
 // The surrounding scope still owns every argument, so croak releases them all.
-const finLeaf = (value, bound, name) => `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);
-      if (!below) croak("%s", ${q(`${name} is not below its Fin ${bound} bound`)}); }`;
+// A top-level scalar leaf keeps its literal message. Inside containers the message is assembled
+// only on rejection: the parameter name is the %s argument, every enclosing array or List level
+// contributes "[%zu]" and its size_t loop index in order, and every option level contributes "?".
+const finLeaf = (value, bound, name, path) => {
+	const message = path.format ? `croak(${[q(`%s${path.format} is not below its Fin ${bound} bound`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(", ")})`
+		: `croak("%s", ${q(`${name} is not below its Fin ${bound} bound`)})`;
+	return `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);
+      if (!below) ${message}; }`;
+};
 // Walk a converted argument along its refinement tree, borrowing every element: arrays are read
 // in place, a list is viewed through its scope-owned array, and an option is opened only when
 // present. A Fin 0 leaf is therefore rejected exactly when it is present. The message names the
-// parameter and the failing leaf's own bound, as the shared C adapter does.
-const finGuard = (type, refinement, value, name, depth = 0) => {
-	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth);
-	if(refinement.kind === "fin") return finLeaf(value, refinement.bound, name);
+// parameter, the failing element's path and the leaf's own bound.
+const finGuard = (type, refinement, value, name, depth = 0, path = { format: "", indices: [] }) => {
+	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth, path);
+	if(refinement.kind === "fin") return finLeaf(value, refinement.bound, name, path);
 	if(refinement.kind === "array" || refinement.kind === "list")
 	{
 		if(type.kind !== refinement.kind) throw new TypeError(`${name}: refinement does not match its ${type.kind} transport`);
 		const items = type.kind === "list" ? `items${depth}` : value, index = `k${depth}`, element = `e${depth}`;
+		const inner = { format: `${path.format}[%zu]`, indices: [...path.indices, index] };
 		return `{ ${type.kind === "list" ? `lean_inc(${value}); lean_object *${items} = ${keep(`lb_t${nativeTypeKey(type)}_to_array(${value})`)};` : ""}
       for (size_t ${index} = 0; ${index} < lean_array_size(${items}); ++${index}) { lean_object *${element} = lean_array_get_core(${items}, ${index});
-      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1)} } }`;
+      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1, inner)} } }`;
 	}
 	if(refinement.kind === "option" && type.kind === "option")
 		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get0(${value})`)};
-      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1)} } }`;
+      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1, { format: `${path.format}?`, indices: path.indices })} } }`;
 	throw new TypeError(`${name}: checked ${refinement.kind} refinements are not implemented for cpan packages`);
 };
 // Run the author's checked constructor through the exported validator after every bound passed,
@@ -484,7 +492,7 @@ _callback_${type.key}(...)
 		pm.push("=head1 CHECKED VALUES", ""
 			, "A Lean C<Subtype> parameter over a primitive base takes the plain base value: L<Math::BigInt> for C<Nat> and C<Int>, an ordinary integer for machine words, a text scalar for C<String> and an octet string for C<ByteArray>. The exported checked constructor named at each function runs on the argument after every Fin bound passed and before the guarded adapter or the exported function; a rejected value dies with a message naming the parameter and the constructor, and the function receives the constructed value. Results are projected to their base value after Lean returns. Each checked site is listed as C<arg0 checked by Module.constructor> at its function.", "");
 	if(model.exports.some(perlFinBounds)) pm.push("=head1 BOUNDED INTEGERS", ""
-		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.", "");
+		, "Lean C<Fin n> parameters and results are L<Math::BigInt> values below C<n>. Each argument is compared with its exact bound, including bounds wider than 64 bits, before the guarded adapter or the exported function runs. A value that is not a Math::BigInt, or a negative one, is rejected as for Nat; a value at or above its bound dies with a message naming the Lean parameter and bound. C<Fin 0> has no values, so every call to a function taking one dies. Results are Math::BigInt values below their declared bound. Inside arrays, Lists and options every present element is checked the same way before the guarded adapter or the exported function runs, so a C<Fin 0> element is rejected while an empty array or an undefined option is accepted; each checked path is listed as C<arg0[*]? < n> at its function, and a rejection names the failing element's own path and bound, such as C<arg0[2]? is not below its Fin 10 bound>. Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

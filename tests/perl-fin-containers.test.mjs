@@ -51,28 +51,35 @@ test("generated XS walks every container element against its exact bound before 
 	const { files, section } = generate();
 	// Arrays are read in place; the element is compared, never consumed, and the message names the parameter and leaf bound.
 	const mirror = section("mirrorAll");
-	assert.match(mirror, /for \(size_t k0 = 0; k0 < lean_array_size\(a0\); \+\+k0\) \{ lean_object \*e0 = lean_array_get_core\(a0, k0\);\s+\{ lean_object \*bound = lean_cstr_to_nat\("10"\); int below = lean_nat_lt\(e0, bound\); lean_dec\(bound\);\s+if \(!below\) croak\("%s", "values is not below its Fin 10 bound"\); \} \} \}/);
+	assert.match(mirror, /for \(size_t k0 = 0; k0 < lean_array_size\(a0\); \+\+k0\) \{ lean_object \*e0 = lean_array_get_core\(a0, k0\);\s+\{ lean_object \*bound = lean_cstr_to_nat\("10"\); int below = lean_nat_lt\(e0, bound\); lean_dec\(bound\);\s+if \(!below\) croak\("%s\[%zu\] is not below its Fin 10 bound", "values", \(size_t\)k0\); \} \} \}/);
 	assert.ok(mirror.indexOf("lean_array_size(a0)") < mirror.indexOf("lean_inc(a0)"));
 	assert.ok(mirror.indexOf("lean_inc(a0)") < mirror.indexOf("lean_object *checked = lb_mirrorAll(a0);"));
 	assert.match(mirror, /if \(lean_is_scalar\(checked\)\) croak\("Lean rejected an argument outside its Fin bound"\);/);
 	assert.doesNotMatch(mirror, /lean_dec\(e0\)|lean_inc\(e0\)/);
 	// A Fin 0 leaf is rejected whenever it is present; the empty array passes the loop untouched.
-	assert.match(section("countNone"), /lean_cstr_to_nat\("0"\); int below = lean_nat_lt\(e0, bound\)/);
+	assert.match(section("countNone"), /lean_cstr_to_nat\("0"\); int below = lean_nat_lt\(e0, bound\); lean_dec\(bound\);\s+if \(!below\) croak\("%s\[%zu\] is not below its Fin 0 bound", "values", \(size_t\)k0\);/);
 	// Lists are viewed through their scope-owned array; the list keeps its own reference.
 	const sum = section("sumHuge");
 	assert.match(sum, new RegExp(`lean_inc\\(a0\\); lean_object \\*items0 = lbp_keep\\(scope, lb_t${nativeTypeKey(huges)}_to_array\\(a0\\)\\);\\s+for \\(size_t k0 = 0; k0 < lean_array_size\\(items0\\); \\+\\+k0\\)`));
-	assert.match(sum, new RegExp(`lean_cstr_to_nat\\("${huge}"\\); int below = lean_nat_lt\\(e0, bound\\)`));
+	assert.match(sum, new RegExp(`lean_cstr_to_nat\\("${huge}"\\); int below = lean_nat_lt\\(e0, bound\\); lean_dec\\(bound\\);\\s+if \\(!below\\) croak\\("%s\\[%zu\\] is not below its Fin ${huge} bound", "values", \\(size_t\\)k0\\);`));
 	// Options are opened only when present, through the typed accessors the conversions use.
 	const option = section("orDefault");
 	assert.match(option, new RegExp(`lean_inc\\(a0\\); if \\(lb_t${nativeTypeKey(maybe)}_has\\(a0\\)\\) \\{ lean_inc\\(a0\\); lean_object \\*v0 = lbp_keep\\(scope, lb_t${nativeTypeKey(maybe)}_get0\\(a0\\)\\);\\s+\\{ lean_object \\*bound = lean_cstr_to_nat\\("1"\\); int below = lean_nat_lt\\(v0, bound\\)`));
+	// An option level adds "?" and no index; the leaf below the top-level option carries no %zu.
+	assert.match(option, /croak\("%s\? is not below its Fin 1 bound", "value"\);/);
 	// Nesting composes the same walkers with distinct names.
 	const present = section("present");
 	assert.match(present, new RegExp(`lean_array_get_core\\(a0, k0\\);\\s+\\{ lean_inc\\(e0\\); if \\(lb_t${nativeTypeKey(maybe)}_has\\(e0\\)\\) \\{ lean_inc\\(e0\\); lean_object \\*v1 = lbp_keep\\(scope, lb_t${nativeTypeKey(maybe)}_get0\\(e0\\)\\);\\s+\\{ lean_object \\*bound = lean_cstr_to_nat\\("10"\\); int below = lean_nat_lt\\(v1, bound\\)`));
+	assert.match(present, /croak\("%s\[%zu\]\? is not below its Fin 10 bound", "values", \(size_t\)k0\);/);
 	const flatten = section("flatten");
+	// Nested levels carry one index per enclosing array or List, in order.
+	assert.match(flatten, /croak\("%s\[%zu\]\[%zu\] is not below its Fin 10 bound", "rows", \(size_t\)k0, \(size_t\)k1\);/);
 	assert.match(flatten, new RegExp(`lb_t${nativeTypeKey(rows)}_to_array\\(a0\\)\\);\\s+for \\(size_t k0 = 0; k0 < lean_array_size\\(items0\\); \\+\\+k0\\) \\{ lean_object \\*e0 = lean_array_get_core\\(items0, k0\\);\\s+\\{ \\s*for \\(size_t k1 = 0; k1 < lean_array_size\\(e0\\); \\+\\+k1\\) \\{ lean_object \\*e1 = lean_array_get_core\\(e0, k1\\);`));
 	// A late refined argument is checked after the unrefined one converts, before either is retained.
 	const label = section("label");
-	assert.match(label, /"offsets is not below its Fin 4 bound"/);
+	assert.match(label, /croak\("%s\[%zu\] is not below its Fin 4 bound", "offsets", \(size_t\)k0\);/);
+	// Messages are assembled only on rejection: no format call precedes the comparison and no allocation joins the bound.
+	assert.doesNotMatch(files["Component.xs"], /snprintf|SvPVf|newSVpvf|sv_catpvf/);
 	assert.doesNotMatch(label, /lean_nat_lt\(a0|lean_array_size\(a0\)/);
 	assert.ok(label.indexOf("lean_array_size(a1)") < label.indexOf("lean_inc(a0)"));
 	// Result-only container refinements keep the direct call and project after Lean returns.
@@ -84,7 +91,7 @@ test("generated XS walks every container element against its exact bound before 
 	assert.match(pod, /=head2 present\n\n[^\n]+\n\nChecked Lean Fin bounds: values\[\*\]\? < 10; result\[\*\] < 10\.\n/);
 	assert.match(pod, /=head2 flatten\n\n[^\n]+\n\nChecked Lean Fin bounds: rows\[\*\]\[\*\] < 10\.\n/);
 	assert.match(pod, /=head2 orDefault\n\n[^\n]+\n\nChecked Lean Fin bounds: value\? < 1\.\n/);
-	assert.match(pod, /=head1 BOUNDED INTEGERS[^]*no present element|C<Fin 0> element is rejected while an empty array or an undefined option is accepted/);
+	assert.match(pod, /=head1 BOUNDED INTEGERS[^]*C<Fin 0> element is rejected while an empty array or an undefined option is accepted[^]*C<arg0\[2\]\? is not below its Fin 10 bound>/);
 });
 
 test("a checked constructor beside container bounds runs after every bound, through the exported validator", () => {
