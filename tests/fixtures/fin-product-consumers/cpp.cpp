@@ -31,8 +31,8 @@ int main() {
   CHECK(rejected([&] { api::wide(Pair{wide, 9}); }, "arg0 is not below its Fin 184467440737095516170 bound"));
   CHECK(rejected([&] { api::wide(Pair{wide - 1, 10}); }, "arg0 is not below its Fin 10 bound"));
   /* Option (Fin 0 × Nat): only none is valid. */
-  CHECK(api::never(std::nullopt) == 7);
-  CHECK(rejected([] { api::never(Pair{0, 0}); }, "arg0 is not below its Fin 0 bound"));
+  CHECK(api::absent_only(std::nullopt) == 7);
+  CHECK(rejected([] { api::absent_only(Pair{0, 0}); }, "arg0 is not below its Fin 0 bound"));
   /* Except String (Fin 10): the ok branch is bounded; an inactive branch is never read. */
   CHECK(api::ok_only(api::Ok<Nat>{9}) == 9);
   CHECK(rejected([] { api::ok_only(api::Ok<Nat>{10}); }, "arg0 is not below its Fin 10 bound"));

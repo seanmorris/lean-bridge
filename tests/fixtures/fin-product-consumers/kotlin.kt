@@ -28,8 +28,8 @@ fun main() {
     check(rejected("arg0", wide.toString()) { Api.wide(pair(wide, n(9))) }, "wide at bound")
     check(rejected("arg0", "10") { Api.wide(pair(wide.subtract(n(1)), n(10))) }, "wide second at bound")
     // Option (Fin 0 × Nat): only none is valid.
-    check(Api.never(Option.none()) == n(7), "never absent")
-    check(rejected("arg0", "0") { Api.never(Option.some(pair(n(0), n(0)))) }, "never present")
+    check(Api.absentOnly(Option.none()) == n(7), "absent only none")
+    check(rejected("arg0", "0") { Api.absentOnly(Option.some(pair(n(0), n(0)))) }, "absent only some")
     // Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
     check(Api.okOnly(Result.ok(n(9))) == n(9), "ok valid")
     check(rejected("arg0", "10") { Api.okOnly(Result.ok(n(10))) }, "ok at bound")

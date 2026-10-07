@@ -27,8 +27,8 @@ check(API.wide([wide - 1, 9]) == wide + 8, "wide valid")
 check(rejected("arg0", wide.to_s) { API.wide([wide, 9]) }, "wide at bound")
 check(rejected("arg0", "10") { API.wide([wide - 1, 10]) }, "wide second at bound")
 # Option (Fin 0 × Nat): only none is valid.
-check(API.never(nil) == 7, "never absent")
-check(rejected("arg0", "0") { API.never(Some.new([0, 0])) }, "never present")
+check(API.absent_only(nil) == 7, "absent only none")
+check(rejected("arg0", "0") { API.absent_only(Some.new([0, 0])) }, "absent only some")
 # Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
 check(API.ok_only(Ok.new(9)) == 9, "ok valid")
 check(rejected("arg0", "10") { API.ok_only(Ok.new(10)) }, "ok at bound")

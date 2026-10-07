@@ -28,8 +28,8 @@ check(api.wide((wide - 1, 9)) == wide + 8, 'wide valid')
 check(rejected(lambda: api.wide((wide, 9)), 'arg0', str(wide)), 'wide at bound')
 check(rejected(lambda: api.wide((wide - 1, 10)), 'arg0', '10'), 'wide second at bound')
 # Option (Fin 0 × Nat): only none is valid.
-check(api.never(None) == 7, 'never absent')
-check(rejected(lambda: api.never(Some((0, 0))), 'arg0', '0'), 'never present')
+check(api.absent_only(None) == 7, 'absent only none')
+check(rejected(lambda: api.absent_only(Some((0, 0))), 'arg0', '0'), 'absent only some')
 # Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
 check(api.ok_only(Ok(9)) == 9, 'ok valid')
 check(rejected(lambda: api.ok_only(Ok(10)), 'arg0', '10'), 'ok at bound')

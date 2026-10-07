@@ -34,8 +34,8 @@ final class Consumer {
         check(rejected(() -> Api.wide(pair(wide, n(9))), "arg0", wide.toString()), "wide at bound");
         check(rejected(() -> Api.wide(pair(wide.subtract(n(1)), n(10))), "arg0", "10"), "wide second at bound");
         // Option (Fin 0 × Nat): only none is valid.
-        check(Api.never(Option.none()).equals(n(7)), "never absent");
-        check(rejected(() -> Api.never(Option.some(pair(n(0), n(0)))), "arg0", "0"), "never present");
+        check(Api.absentOnly(Option.none()).equals(n(7)), "absent only none");
+        check(rejected(() -> Api.absentOnly(Option.some(pair(n(0), n(0)))), "arg0", "0"), "absent only some");
         // Except String (Fin 10): the ok branch is bounded; an inactive branch is never read.
         check(Api.okOnly(Result.ok(n(9))).equals(n(9)), "ok valid");
         check(rejected(() -> Api.okOnly(Result.ok(n(10))), "arg0", "10"), "ok at bound");

@@ -30,7 +30,7 @@ export const finProductRefinements = Object.freeze({
 	"FinProducts.first": { parameters: [pair(fin("10"), null)], result: pair(fin("10"), null) }
 	, "FinProducts.second": { parameters: [pair(null, fin("1"))], result: null }
 	, "FinProducts.wide": { parameters: [pair(fin(wide), fin("10"))], result: null }
-	, "FinProducts.never": { parameters: [{ kind: "option", arguments: [pair(fin("0"), null)] }], result: null }
+	, "FinProducts.absentOnly": { parameters: [{ kind: "option", arguments: [pair(fin("0"), null)] }], result: null }
 	, "FinProducts.okOnly": { parameters: [branches(fin("10"), null)], result: null }
 	, "FinProducts.errorOnly": { parameters: [branches(null, fin("5"))], result: null }
 	, "FinProducts.both": { parameters: [branches(fin("7"), fin("3"))], result: null }
