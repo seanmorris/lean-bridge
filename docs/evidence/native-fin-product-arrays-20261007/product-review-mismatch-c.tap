@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: the independent product review passes reviewed admission, and changed bounds are refused against fresh Lean
+    # Subtest: tightened component
+    ok 1 - tightened component
+      ---
+      duration_ms: 13633.51914
+      type: 'test'
+      ...
+    # Subtest: loosened branch
+    ok 2 - loosened branch
+      ---
+      duration_ms: 13554.73364
+      type: 'test'
+      ...
+    # Subtest: swapped branches
+    ok 3 - swapped branches
+      ---
+      duration_ms: 12939.203385
+      type: 'test'
+      ...
+    # Subtest: moved to the other component
+    ok 4 - moved to the other component
+      ---
+      duration_ms: 13337.367881
+      type: 'test'
+      ...
+    # Subtest: tightened alias component
+    ok 5 - tightened alias component
+      ---
+      duration_ms: 13606.94354
+      type: 'test'
+      ...
+    1..5
+ok 1 - the independent product review passes reviewed admission, and changed bounds are refused against fresh Lean
+  ---
+  duration_ms: 67114.728206
+  type: 'test'
+  ...
+1..1
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 67485.880926
+exit=0

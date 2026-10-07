@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1441,
+  "execution": "local",
+  "revision": "faac75b2b5ad0df25536c3e776ab1176e8731aed",
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+      "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": null,
+      "LEAN_BRIDGE_LAKE_ENGINE": null
+    }
+  },
+  "scope": {
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "shape": "Array (Fin 4 × Except (Fin 6) Nat)",
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "sourceDispatchObserved": false,
+    "rawAdapterDispatchObserved": false
+  },
+  "runs": [
+    {
+      "id": "ordinary-c-cpp",
+      "sourcePath": "ordinary-source",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=c,cpp taskset -c 0-2 node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-product-arrays.test.mjs",
+      "report": {
+        "path": "docs/evidence/native-fin-product-arrays-20261007/ordinary-c-cpp.json",
+        "sha256": "4d8f8a6f89a27472b4ba6c800838e52bae3e8737ef733e923dc5354408f2c969"
+      },
+      "log": {
+        "path": "docs/evidence/native-fin-product-arrays-20261007/ordinary-c-cpp.tap",
+        "sha256": "0d7575f8864a4c834463550a6a8f8a6ddf3398c3b13a4d3bd2317e49ce1b72c4",
+        "passed": 11,
+        "failed": 0,
+        "skipped": 2
+      }
+    },
+    {
+      "id": "reviewed-c-cpp",
+      "sourcePath": "reviewed-ir",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=c,cpp taskset -c 0-2 node --test --test-concurrency=1 --test-reporter=tap tests/native-fin-product-arrays.test.mjs",
+      "report": {
+        "path": "docs/evidence/native-fin-product-arrays-20261007/reviewed-c-cpp.json",
+        "sha256": "544a70f13b725572d452b4528f57cbfc775cc6947a74296bb7196bcaa4c01f52"
+      },
+      "log": {
+        "path": "docs/evidence/native-fin-product-arrays-20261007/reviewed-c-cpp.tap",
+        "sha256": "e300c12447c46589f6379983f6b4cf80b022506b7cfe2ef7e395cf0970091599",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 1
+      }
+    }
+  ],
+  "productReviewFollowup": {
+    "scope": "Five fresh-Lean mismatch checks for the earlier product fixture, including tightened alias component. This is not another installed consumer run.",
+    "command": "LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='changed bounds are refused against fresh Lean' tests/native-fin-products.test.mjs",
+    "log": {
+      "path": "docs/evidence/native-fin-product-arrays-20261007/product-review-mismatch-c.tap",
+      "sha256": "2e36482004fef311e9d3b839f764e1eca32ca2b408a970ef5ab143cd79bf8907",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "remaining": [
+    "Measured source and raw-adapter dispatch for the Array fixture; public rejection and source-code ordering tests do not measure dispatch.",
+    "Installed product and Array execution on the other native profiles, both Python floors and four CPAN ABIs.",
+    "Integrated hosted CI and supported release-floor acceptance.",
+    "No npm/browser, PHP-Wasm, refined nominal fields, callbacks or Subtype acceptance is inferred."
+  ]
+}

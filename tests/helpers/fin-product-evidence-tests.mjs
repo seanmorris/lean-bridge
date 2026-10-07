@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { finProductRefinements } from "./fin-product-install.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected } from "./fin-product-dispatch.mjs";
 import { finProductReviewedIr } from "./reviewed-fin-product-fixture.mjs";
+import "./fin-product-array-evidence-tests.mjs";
 
 const directory = "docs/evidence/native-fin-products-20261007";
 const identities = [
