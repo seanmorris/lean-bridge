@@ -1,5 +1,5 @@
 /**
- * Closed, alias-named generic records in installed npm packages and native C-family packages.
+ * Closed, alias-named generic records in installed npm and native packages.
  *
  * @file
  */
@@ -12,12 +12,24 @@ import { buildComponentNpmPackages } from "../../src/release/component-npm-packa
 import { verifyComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { installCopiedConsumer } from "./copied-fixture-install.mjs";
+import { checkGenericRecordRustTypes } from "./generic-record-rust.mjs";
+import { checkGenericRecordManagedTypes } from "./generic-record-managed-types.mjs";
 export { nativeFixtureEnvironment as genericRecordEnvironment } from "./copied-fixture-install.mjs";
 
 const fixture = "tests/fixtures/onboarding/generic-records";
 // The WIT host header and the C prefix both derive from this hyphen-free name.
 const coordinate = { name: "genericrecords", version: "1.0.0" };
-export const genericRecordTargets = Object.freeze({ c: ["c", coordinate], cpp: ["cpp", coordinate] });
+export const genericRecordTargets = Object.freeze({ c: ["c", coordinate]
+	, cpp: ["cpp", coordinate]
+	, python: ["pypi", coordinate]
+	, rust: ["cargo", coordinate]
+	, dotnet: ["nuget", { name: "GenericRecords.Api", version: "1.0.0" }]
+	, java: ["maven", { name: "org.leanbridge:genericrecords", version: "1.0.0" }]
+	, kotlin: ["maven", { name: "org.leanbridge:genericrecords", version: "1.0.0" }]
+	, ruby: ["rubygems", coordinate]
+	, perl: ["cpan", { module: "LeanBridge::GenericRecords", version: "1.000" }]
+	, "php-native": ["php-native", { name: "example/genericrecords", version: "1.0.0" }]
+	, "wit-wasi": ["wit-wasi", coordinate] });
 export const genericRecordExports = Object.freeze(["swapNamed", "bump", "shout", "again", "orZero", "total", "firstBoxes", "unpair", "retag", "relabel"].map(name => `GenericRecords.${name}`));
 const named = id => ({ kind: "named", id });
 const primitive = name => ({ kind: "primitive", name });
@@ -162,11 +174,22 @@ void again; void pair; void sum; void tagged; void marker;
 };
 
 /**
- * Install and exercise the native package through its generated C or C++ API.
+ * Install and exercise the native package through its generated public API.
  *
  * @param options - Verified archive handoff and selected consumer profile.
  */
-export const installGenericRecordConsumer = options => installCopiedConsumer({ ...options, fixture: {
-	source: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8")
-	, success: "generic-records-ok"
-} });
+export const installGenericRecordConsumer = async options => {
+	const observation = await installCopiedConsumer({ ...options, fixture: {
+		source: (profile, extension) => readFile(`tests/fixtures/generic-record-consumers/${profile}.${extension}`, "utf8")
+		// Each alias is its own WIT record with the structure's fields instantiated; two aliases of one application stay distinct.
+		, wit: [...["nat-box", "nat-box-again", "text-box", "word-pair", "maybe-box", "box-pair", "tagged-nat", "marker-tag"].map(name => new RegExp(`record ${name} \\{`))
+			, /bump: func\([^)]*: nat-box\) -> nat-box/
+			, /unpair: func\([^)]*: box-pair\) -> /
+			, /first-boxes: func\([^)]*\) -> option<list<nat-box>>/]
+		, success: "generic-records-ok"
+	} });
+	if(options.profile === "rust") return { ...observation, rustTypes: await checkGenericRecordRustTypes(options, observation) };
+	if(["dotnet", "java", "kotlin"].includes(options.profile))
+		return { ...observation, managedTypes: await checkGenericRecordManagedTypes(options, observation) };
+	return observation;
+};
