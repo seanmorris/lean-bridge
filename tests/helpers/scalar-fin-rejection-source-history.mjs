@@ -1,24 +1,34 @@
 /**
- * Preserve exact source predecessors of the Browser refinements (#1429).
+ * Preserve exact source predecessors of the Scalar Fin rejection (#1430).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeScalarFinRejectionSource } from "./scalar-fin-rejection-source-history.mjs";
 
-export const browserRefinementsHistoryPath = "docs/evidence/browser-refinements-source-history-20261007.json";
-export const browserRefinementsChangedPaths = [
+export const scalarFinRejectionHistoryPath = "docs/evidence/scalar-fin-rejection-source-history-20261007.json";
+export const scalarFinRejectionChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
 	, "docs/contributing/testing.md"
+	, "docs/evidence/npm-browser-refinements-20261007.md"
 	, "docs/javascript-typescript.md"
 	, "docs/lean/existing-package.md"
 	, "docs/type-surface.v1.json"
-	, "eslint.config.mjs"
 	, "src/adoption/test-profiles.mjs"
+	, "src/build/compiler-adapters.mjs"
+	, "src/build/component-callable-adapters.mjs"
+	, "src/build/component-copied-adapters.mjs"
+	, "src/build/component-record-adapters.mjs"
+	, "src/build/component-scalar-adapters.mjs"
+	, "tests/browser-refinements.test.mjs"
 	, "tests/component-array-contract.test.mjs"
+	, "tests/component-record-contract.test.mjs"
 	, "tests/documentation.test.mjs"
+	, "tests/fixtures/browser-refinements/javascript.mjs"
+	, "tests/helpers/browser-refinement-packages.mjs"
+	, "tests/helpers/browser-refinements-source-history-tests.mjs"
+	, "tests/helpers/browser-refinements-source-history.mjs"
 	, "tests/helpers/combined-lineage-source-history-tests.mjs"
 	, "tests/helpers/cpan-cli-control-source-history-tests.mjs"
 	, "tests/helpers/diagnostic-followup-source-history-tests.mjs"
@@ -36,13 +46,13 @@ export const browserRefinementsChangedPaths = [
 	, "tests/helpers/php-fin-source-history-tests.mjs"
 	, "tests/helpers/python-fin-source-history-tests.mjs"
 	, "tests/helpers/refinement-audit-source-history-tests.mjs"
-	, "tests/helpers/refinement-audit-source-history.mjs"
 	, "tests/helpers/ruby-fin-source-history-tests.mjs"
 	, "tests/helpers/runtime-receipt-source-history-tests.mjs"
 	, "tests/helpers/rust-fin-source-history-tests.mjs"
 	, "tests/helpers/test-profile-registration-source-history-tests.mjs"
 	, "tests/helpers/wit-fin-source-history-tests.mjs"
 	, "tests/type-surface.test.mjs"
+	, "tests/word-contract.test.mjs"
 ];
 let history;
 
@@ -52,8 +62,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseBrowserRefinementsUpdate = (source, update) => {
-	assert.ok(browserRefinementsChangedPaths.includes(update.path));
+export const reverseScalarFinRejectionUpdate = (source, update) => {
+	assert.ok(scalarFinRejectionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -73,18 +83,17 @@ export const reverseBrowserRefinementsUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before #1429, stopping at an explicitly requested identity.
+ * Restore the source before #1430, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeBrowserRefinementsSource = (path, source, expected) => {
-	source = beforeScalarFinRejectionSource(path, source, expected);
-	if(typeof source !== "string" || !browserRefinementsChangedPaths.includes(path)) return source;
+export const beforeScalarFinRejectionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !scalarFinRejectionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(browserRefinementsHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(scalarFinRejectionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseBrowserRefinementsUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseScalarFinRejectionUpdate(source, update) : source;
 };

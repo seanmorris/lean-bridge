@@ -24,6 +24,7 @@ import { nativeFinContainersChangedPaths } from "./native-fin-containers-source-
 import { nativeSubtypeChangedPaths } from "./native-subtype-source-history.mjs";
 import { refinementAuditChangedPaths } from "./refinement-audit-source-history.mjs";
 import { browserRefinementsChangedPaths } from "./browser-refinements-source-history.mjs";
+import { scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
 import { beforeRuntimeReceiptSource, runtimeReceiptChangedPaths
 	, runtimeReceiptHistoryPath, reverseRuntimeReceiptUpdate } from "./runtime-receipt-source-history.mjs";
 
@@ -59,7 +60,7 @@ test("Runtime receipt repair changes only evidence source pins, not support or a
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeRuntimeReceiptSource(file.path, source)));
 			assert.equal(now.files[index].sha256, sha256(beforeCpanCliControlSource(file.path, source)));

@@ -30,8 +30,26 @@ React effect lifecycle across the initial mount and two remounts was `{"cleanups
 55b497dadfaee3f7af9cb6a02f5c77075e72a86a5e6b4c93b08c64109b0f3378  browser-worker production
 ```
 
-## Not promoted
+## Repaired run
 
-A top-level scalar `Fin` export rejects a direct runtime call with a Lean `panic!` in the generated adapter (`src/build/compiler-adapters.mjs`), which prints the panic and returns the type's default value instead of failing the call: `runtime.call("lean:OnboardingSmall.mirror", [10n])` returns `0n` in Node and in every browser engine. The public API rejects the same input before dispatch, and the internal runtime is not in the package's export map, so this run requires direct-call failure only for the copied container and Subtype paths and does not claim compiled-Lean rejection for scalar `Fin` through the internal runtime. The Node scalar `Fin` evidence makes no direct-call claim either.
+The [scalar Fin rejection repair](npm-scalar-fin-rejection-20261007.md) (VO1430) made the compiled adapter entry fail a direct call with an out-of-bound top-level scalar `Fin`. The run above, on revision `b5a4d9f`, had excluded the scalar direct calls from its shared check script because that revision returned the default value for them; it stays here as the pre-repair record. The harness was rerun on the repaired revision `9743855` with the scalar direct calls restored and the permissive-runtime control extended to them, in the same twelve contexts: Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React strict and production, and dedicated workers each pass 130 checks and 131 package rejections, with the same React lifecycle counts, no foreign requests and the Wasm asset served from the bundle. Both builds produced:
+
+```text
+53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79  lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz
+a9595e15f2fed3dac890574ed16ef202066db11bf43b361ed8882cfb86a3d6fd  onboarding-small-1.0.0.tgz
+```
+
+Bundle digests of the repaired run:
+
+```text
+d6d0a1ce6a6284c534933940b7221e7be5b68b9bb0a4539b78f83adb4bbea66c  browser-javascript production
+bb1650b6a8984b216884a3fe0e0297bfe5bc9bbaa122435a1cdbc05e8d8c4920  browser-react production
+ee10a177e0cb619826e491da683a64418affbd785c977164669274908a6fd6d8  browser-react strict
+7e52d506b6cd1dfaf9ab47632799dfb85ae04e029fd185e078818f89cf61ccbb  browser-worker production
+```
+
+The receipt `npm-browser-refinements-installed` and the browser cells now cite the repaired revision and these archives.
+
+## Not promoted
 
 Nominal record and variant fields, callback positions and reviewed Binding IR are not browser-audited by this run; the Node cells record them separately. Only Chromium, Firefox and WebKit through Playwright are claimed. The report is `build/browser-refinements/report.json`, uploaded by the npm consumer job as part of `type-corpus-npm-<sha>`.

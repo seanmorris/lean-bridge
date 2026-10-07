@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeScalarFinRejectionSource, scalarFinRejectionChangedPaths } from "./scalar-fin-rejection-source-history.mjs";
 import { beforeBrowserRefinementsSource, browserRefinementsChangedPaths
 	, browserRefinementsHistoryPath, reverseBrowserRefinementsUpdate } from "./browser-refinements-source-history.mjs";
 
@@ -17,7 +18,7 @@ test("Browser refinements history authenticates exact predecessors and rejects u
 	assert.deepEqual(record.updates.map(item => item.path), browserRefinementsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeScalarFinRejectionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseBrowserRefinementsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeBrowserRefinementsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeBrowserRefinementsSource(update.path, source, update.currentSha256), source);
@@ -36,7 +37,7 @@ const acceptedRevision = "b5a4d9f1791388fe7557208ca4647d986c5905c1";
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Browser refinements evidence adds one receipt and one Fin and one Subtype browser cell, and changes no other claim", async () => {
 	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(text), previous = JSON.parse(beforeBrowserRefinementsSource(path, text));
+	const current = JSON.parse(beforeScalarFinRejectionSource(path, text)), previous = JSON.parse(beforeBrowserRefinementsSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), ["npm-browser-refinements-installed"]);
 	const cells = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -72,10 +73,10 @@ test("Browser refinements evidence adds one receipt and one Fin and one Subtype 
 		for(const [index, file] of entry.files.entries())
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
-			assert.ok(browserRefinementsChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			assert.ok(browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(file.sha256, sha256(beforeBrowserRefinementsSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(source));
+			assert.equal(now.files[index].sha256, sha256(beforeScalarFinRejectionSource(file.path, source)));
 			++refreshed;
 		}
 	}

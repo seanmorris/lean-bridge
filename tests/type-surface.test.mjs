@@ -476,6 +476,24 @@ test("browser Fin evidence promotes only top-level parameters and results from t
 	assert.match(evidence.scope, /Chromium [\d.]+, Firefox [\d.]+, WebKit [\d.]+ pages, React effects/u);
 });
 
+test("scalar Fin rejection evidence backs every npm Fin cell's generation and compilation claims", () => {
+	const evidence = document.evidence.find(entry => entry.id === "npm-scalar-fin-rejection-installed");
+	assert.equal(evidence.kind, "installed");
+	assert.match(evidence.scope, /scalar 2, callable 3, copied 4, record 5, compound 6, nominal 7/u);
+	assert.match(evidence.scope, /nothing reaches stderr/u);
+	assert.equal(evidence.artifacts.length, 7);
+	assert.ok(evidence.files.some(file => file.path === "src/build/component-scalar-adapters.mjs"));
+	// The browser receipt cites the same repaired revision, so no Fin claim points at the pre-repair artifacts.
+	assert.equal(document.evidence.find(entry => entry.id === "npm-browser-refinements-installed").revision, evidence.revision);
+	for(const id of ["npm-fin-refinements-ordinary-source", "npm-browser-fin-ordinary-source"])
+	{
+		const cell = document.observations.find(entry => entry.id === id);
+		for(const stage of ["generation", "compilation", "installedExecution"]) assert.ok(cell.stages[stage].evidence.includes(evidence.id), `${id} ${stage}`);
+		assert.match(cell.stages.compilation.note, /fails the call before the typed Lean wrapper or the source runs/u);
+		assert.doesNotMatch(cell.limitations.join("\n"), /panic/u);
+	}
+});
+
 test("unknown fields, versions, evidence states and unsafe paths fail closed", () => {
 	for(const change of [
 		value => { value.schemaVersion = 2; }
