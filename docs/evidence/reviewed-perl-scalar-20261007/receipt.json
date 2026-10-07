@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "revision": "f315e47b5f202a98b7398e1390188ebb3ba669ba",
+  "sourcePath": "reviewed-ir",
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "overrides": {
+      "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+      "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR": "2.36"
+    }
+  },
+  "report": {
+    "path": "docs/evidence/reviewed-perl-scalar-20261007/perl.json",
+    "sha256": "fd3d402aae575dff95e480890d49683c2cdaba6fd9aa79dd384b5934c2161c5a"
+  },
+  "log": {
+    "path": "docs/evidence/reviewed-perl-scalar-20261007/installed.txt",
+    "sha256": "4caf0c5209de673a045f523c74c6b68d5dfa31024e2448bea38b1cf6ee583293"
+  },
+  "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_FIN_TEST=1 LEAN_BRIDGE_PERLS='[\"/app/.toolchains/perl/5.36.3-threaded/bin/perl\",\"/app/.toolchains/perl/5.36.3-unthreaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-threaded/bin/perl\",\"/app/.toolchains/perl/5.38.2-unthreaded/bin/perl\"]' taskset -c 3 node --test --test-concurrency=1 --test-reporter=spec --test-name-pattern='independently reviewed' tests/perl-fin.test.mjs",
+  "scope": [
+    "Four pinned Perl ABIs each execute 2024 public checks, offline prebuilt installation, repeated execution and source-free delivery.",
+    "Two independent producer roots reproduce the original runtime and component CPAN archives.",
+    "Perl LD_PRELOAD probes measure source mirror/impossible/label dispatch: valid positive controls and invalid-only zero counts.",
+    "This rerun supplies the separate CPAN local floor override omitted in the earlier scalar rollout batch; the earlier failed log is retained unchanged.",
+    "Only local glibc-2.36 scalar Fin acceptance is recorded; container/product, Subtype and release-floor CI are separate."
+  ]
+}
