@@ -14,7 +14,10 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
-import { finProductEnvironment, finProductRefinements, finProductTargets, installFinProductConsumer } from "./helpers/fin-product-install.mjs";
+import { finProductEnvironment, finProductRefinements, finProductTargets, finProductWitPatterns, installFinProductConsumer } from "./helpers/fin-product-install.mjs";
+import { finProductCompilerModel } from "./helpers/fin-product-model.mjs";
+import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
+import "./helpers/fin-product-evidence-tests.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected, finProductDispatchInterposer, finProductDispatchProbe } from "./helpers/fin-product-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finProductReviewedIr } from "./helpers/reviewed-fin-product-fixture.mjs";
@@ -22,6 +25,7 @@ import { validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import "./helpers/fin-products-source-history-tests.mjs";
 import "./helpers/fin-products-ci-source-history-tests.mjs";
+import "./helpers/fin-products-floors-source-history-tests.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -114,6 +118,16 @@ test("generated host documentation lists product and Except bound paths", () => 
 		assert.match(readme, /arg0\.0 < 10; arg0\.1\.ok < 3; arg0\.1\.error < 2/u, host);
 		assert.doesNotMatch(readme, /products and Except values[^\n]*reviewed Binding IR is not supported/u, host);
 	}
+});
+
+test("the installed WIT patterns match the WIT generated from the fixture's compiler model", () => {
+	const model = finProductCompilerModel();
+	// Lean folds the bare-Fin Digit into its uses: DigitPair is the only nominal definition.
+	assert.deepEqual(model.bindingIr.types.map(type => type.id), ["lean:FinProducts.DigitPair"]);
+	assert.deepEqual(Object.fromEntries(model.exports.map(item => [`FinProducts.${item.name.split(".").at(-1)}`, item.refinements])), finProductRefinements);
+	const wit = compileCopiedWitModel(model.bindingIr).wit;
+	assert.doesNotMatch(wit, /type digit =/u);
+	for(const pattern of finProductWitPatterns) assert.match(wit, pattern);
 });
 
 test("C adapters compare both components and only the active branch on caller limbs before Lean runs", () => {

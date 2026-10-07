@@ -40,15 +40,21 @@ export const finProductRefinements = Object.freeze({
 	, "FinProducts.pairUp": { parameters: [null], result: pair(fin("10"), null) } });
 
 /**
+ * WIT shapes the installed component must print. Fin keeps Nat's limb-list transport; products and
+ * results keep their WIT shapes; DigitPair names the pair of limb lists directly, because an alias of
+ * a bare Fin folds into its uses and has no WIT type of its own.
+ */
+export const finProductWitPatterns = Object.freeze([/type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = tuple<\1, \1>;[^]*first: func\([^)]*: \2\) -> \2/
+	, /type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = result<\1, \1>;[^]*both: func\([^)]*: \2\) -> \1/
+	, /type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = tuple<\1, \1>;[^]*type digit-pair = \2;[^]*aliased: func\([^)]*: digit-pair\) -> digit-pair/]);
+
+/**
  * Install and exercise the product exports through public host APIs.
  *
  * @param options - Verified archive handoff and selected consumer profile.
  */
 export const installFinProductConsumer = options => installCopiedConsumer({ ...options, fixture: {
 	source: (profile, extension) => readFile(`tests/fixtures/fin-product-consumers/${profile}.${extension}`, "utf8")
-	// Fin keeps Nat's limb-list transport in WIT; products and results keep their WIT shapes, and the alias pair keeps its name.
-	, wit: [/type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = tuple<\1, \1>;[^]*first: func\([^)]*: \2\) -> \2/
-		, /type (bridge-value-\d+) = list<u32>;[^]*type (bridge-value-\d+) = result<\1, \1>;[^]*both: func\([^)]*: \2\) -> \1/
-		, /type digit = (bridge-value-\d+);[^]*type (bridge-alias-value-\d+) = tuple<digit, digit>;[^]*type digit-pair = \2;[^]*aliased: func\([^)]*: digit-pair\) -> digit-pair/]
+	, wit: finProductWitPatterns
 	, success: "fin-product-ok"
 } });
