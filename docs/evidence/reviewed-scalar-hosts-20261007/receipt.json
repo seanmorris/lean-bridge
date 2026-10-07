@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1438,
+  "execution": "local",
+  "glibcMinimumVersion": "2.36",
+  "sourcePath": "reviewed-ir",
+  "scope": "Independently authored scalar Fin metadata reconciled with fresh Lean bounds, through installed public and raw native adapters. These reports do not cover containers, products, Subtype, generic refinements or browser contexts.",
+  "reports": [
+    {
+      "id": "python",
+      "path": "docs/evidence/reviewed-scalar-hosts-20261007/python.json",
+      "revision": "c9ebbcec21b002abf7397fc96844ab3d777f8e61",
+      "sha256": "c27ad521e5762908ad1b0b95e4fdfeb2fe1f81d670f86e83da0815017b5b0c19",
+      "profiles": ["python"],
+      "runtimes": ["3.11", "3.12"],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON_FIN_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed Python wheels' tests/python-fin.test.mjs"
+    },
+    {
+      "id": "rust",
+      "path": "docs/evidence/reviewed-scalar-hosts-20261007/rust.json",
+      "revision": "c9ebbcec21b002abf7397fc96844ab3d777f8e61",
+      "sha256": "fd91e8d0bdd481cc45816ecb0536a3b88ee107c98192733456a6ec0d75ad35f8",
+      "profiles": ["rust"],
+      "reproduceCommand": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUST_FIN_TEST=1 taskset -c 3 node --test --test-reporter=spec --test-name-pattern='independently reviewed Rust crates' tests/rust-fin.test.mjs"
+    }
+  ]
+}
