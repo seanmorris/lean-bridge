@@ -58,6 +58,19 @@ export const createMetadataRequest = (request, context) => ({ ...request, metada
 	, invocationIdentitySha256: sha256(canonicalJson({ request, ...context }))
 } });
 
+// Whether a copied type, or any table definition it references, has a node of one of these kinds.
+const containsKind = (value, kinds, references, seen = new Set()) => {
+	if(!value || typeof value !== "object") return false;
+	if(Array.isArray(value)) return value.some(item => containsKind(item, kinds, references, seen));
+	if(kinds.includes(value.kind)) return true;
+	if(value.kind === "reference")
+	{
+		if(seen.has(value.name) || !references?.has(value.name)) return false;
+		seen.add(value.name);
+		return containsKind(references.get(value.name), kinds, references, seen);
+	}
+	return Object.entries(value).some(([key, child]) => key !== "abi" && key !== "predicate" && containsKind(child, kinds, references, seen));
+};
 /**
  * Validate the closed shared report and its binding to this exact compiler invocation.
  *
@@ -228,12 +241,11 @@ export const validateElaboratedMetadata = (report, request) => {
 							if(!text(type.provenance.structure) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.provenance.structure)
 								|| type.provenance.structure === type.name || !Array.isArray(type.provenance.arguments)
 								|| !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("Invalid component record provenance");
-							// Arguments are copied types validated like field types; identity, callback and
-							// refinement arguments never instantiate a record.
-							const argumentKind = value => value?.kind === "alias" ? argumentKind(value.target) : value?.kind;
+							// Arguments are copied types validated like field types; nothing inside one is an
+							// identity, a callback or a refinement, so no bound is lowered away with the argument.
 							for(const argument of type.provenance.arguments)
 							{
-								if(["resource", "callback", "refinement"].includes(argumentKind(argument))) fail("Component record provenance arguments cannot be resource, callback or refinement types");
+								if(containsKind(argument, ["resource", "callback", "refinement"], references)) fail("Component record provenance arguments cannot carry resource, callback or refinement types");
 								copied(argument, depth + 1, references, refinements);
 							}
 						}

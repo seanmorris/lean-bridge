@@ -16,6 +16,19 @@ const closed = (value, fields, label) => {
 		|| fields.some(key => !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key) ?? {}, "value"))) fail(`invalid ${label} fields`);
 };
 
+// Whether a copied type, or any table definition it references, has a node of one of these kinds.
+const containsKind = (value, kinds, references, seen = new Set()) => {
+	if(!value || typeof value !== "object") return false;
+	if(Array.isArray(value)) return value.some(item => containsKind(item, kinds, references, seen));
+	if(kinds.includes(value.kind)) return true;
+	if(value.kind === "reference")
+	{
+		if(seen.has(value.name) || !references?.has(value.name)) return false;
+		seen.add(value.name);
+		return containsKind(references.get(value.name), kinds, references, seen);
+	}
+	return Object.entries(value).some(([key, child]) => key !== "abi" && key !== "predicate" && containsKind(child, kinds, references, seen));
+};
 // Every type carries one checked C representation.
 const representation = type => {
 	closed(type.abi, ["cType", "box", "unbox", "heap"], "native representation");
@@ -137,12 +150,11 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				|| !type.constructor.startsWith(`${type.provenance.structure}.`)) fail("invalid record provenance");
 			if(!Array.isArray(type.provenance.arguments) || !type.provenance.arguments.length || type.provenance.arguments.length > 16) fail("invalid record provenance arguments");
 			// Arguments are copied types validated like field types: inline definitions in the inline form,
-			// references in the graph form. Identity, callback and refinement arguments never instantiate a record.
-			const argumentKind = value => value?.kind === "alias" ? argumentKind(value.target) : value?.kind;
+			// references in the graph form. Nothing inside an argument is an identity, a callback or a refinement.
 			for(const child of type.provenance.arguments)
 			{
 				recurse(child, true, false);
-				if(["resource", "callback", "refinement"].includes(argumentKind(child))) fail("record provenance arguments cannot be resource, callback or refinement types");
+				if(containsKind(child, ["resource", "callback", "refinement"], references)) fail("record provenance arguments cannot carry resource, callback or refinement types");
 			}
 		}
 		for(const field of type.fields)

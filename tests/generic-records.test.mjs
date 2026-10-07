@@ -48,6 +48,7 @@ const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap:
 const text = { kind: "primitive", name: "string", lean: "String", abi: heap };
 const record = (name, structure, args, fields) => ({ kind: "record", name, lean: name, constructor: `${structure ?? name}.mk`, ...(structure ? { provenance: { structure, arguments: args } } : {}), fields, abi: heap });
 const field = (name, type) => ({ name, projection: `Sample.Box.${name}`, type });
+const digit = { kind: "refinement", base: nat, predicate: { kind: "fin", bound: "10" }, abi: nat.abi };
 
 test("native types accept an alias-named instantiation with closed provenance and refuse malformed origins", () => {
 	const box = record("Sample.NatBox", "Sample.Box", [nat], [field("value", nat), field("count", nat)]);
@@ -73,7 +74,11 @@ test("native types accept an alias-named instantiation with closed provenance an
 		, ["an open container representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "option", element: nat, abi: { ...heap, extra: 1 } }] } }]
 		, ["an inconsistent container representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "list", element: nat, abi: { ...heap, box: "lean_box_uint32" } }] } }]
 		, ["a scalar tuple representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "tuple", arguments: [nat, nat], abi: { cType: "uint32_t", box: "lean_box_uint32", unbox: "lean_unbox_uint32", heap: true } }] } }]
-		, ["a missing primitive representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "primitive", name: "nat", lean: "Nat" }] } }]];
+		, ["a missing primitive representation", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "primitive", name: "nat", lean: "Nat" }] } }]
+		// A refinement anywhere inside an argument would lower away its bound.
+		, ["a refined argument inside an option", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "option", element: digit, abi: heap }] } }]
+		, ["a refined argument behind an alias", { ...box, provenance: { structure: "Sample.Box", arguments: [{ kind: "alias", name: "Sample.Digit", lean: "Sample.Digit", target: digit, abi: nat.abi }] } }]
+		, ["a refined field of a nominal argument", { ...box, provenance: { structure: "Sample.Box", arguments: [record("Sample.Digits", undefined, undefined, [field("value", { kind: "list", element: digit, abi: heap })])] } }]];
 	for(const [label, type] of invalid) assert.throws(() => validateNativeType(type), /native-library-v1/, label);
 	assert.equal(Object.keys(genericRecordInstantiations).length, 8);
 });
@@ -115,22 +120,62 @@ test("provenance arguments carry their definitions, dangling references and conf
 	assert.equal(model.document.types.find(type => type.id === "lean:Sample.NatBox").source.extensions["lean-lang.org/instantiation"].structure, "Sample.Box");
 });
 
+// Synthetic component-profile metadata: a phantom argument whose option carries a Fin bound.
+const componentTag = (bound, graph = false) => {
+	const input = { ...nativeMetadataFixture(), component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } };
+	const { metadata, sourceIdentity } = input;
+	metadata.profile = "component-scalars-v1"; sourceIdentity.request.profile = "component-scalars-v1"; sourceIdentity.request.metadata.profile = "component-scalars-v1";
+	const declaration = metadata.modules[0].declarations[0];
+	const fin = bound === null ? { kind: "primitive", name: "nat" } : { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound } };
+	const label = [{ name: "label", type: { kind: "primitive", name: "string" } }];
+	// Inline: the option of the bound is the argument. Graph: the argument references a table record whose field carries it.
+	const digitTag = { kind: "record", name: "Sample.DigitTag", provenance: { structure: "Sample.Tag", arguments: [{ kind: "reference", name: "Sample.Digits" }] }, fields: label };
+	const digits = { kind: "record", name: "Sample.Digits", fields: [{ name: "value", type: { kind: "list", element: fin } }] };
+	const tag = graph
+		? { kind: "graph", root: { kind: "reference", name: "Sample.DigitTag" }, types: [digitTag, digits] }
+		: { kind: "record", name: "Sample.DigitTag", provenance: { structure: "Sample.Tag", arguments: [{ kind: "option", element: fin }] }, fields: label };
+	declaration.projection.bindingShape = "pure-function";
+	declaration.projection.parameters[0].type = tag; declaration.projection.result = tag;
+	return { metadata, request: sourceIdentity.request };
+};
+
+test("component metadata refuses a refined provenance argument instead of lowering its bound away", () => {
+	// The same shapes without the bound lower, so only the refinement is refused.
+	for(const graph of [false, true])
+	{
+		const { metadata, request } = componentTag(null, graph);
+		const lowered = createElaboratedSemanticModel({ metadata, request, component: elaboratedComponent({ name: "Sample", version: "1.0.0" }), elaborationSha256: "9".repeat(64) });
+		assert.ok(lowered.document.types.some(type => type.id === "lean:Sample.DigitTag" && type.source.extensions["lean-lang.org/instantiation"]), String(graph));
+	}
+	for(const [bound, graph] of [["5", false], ["10", false], ["10", true]])
+	{
+		const { metadata, request } = componentTag(bound, graph);
+		assert.throws(() => createElaboratedSemanticModel({ metadata, request, component: elaboratedComponent({ name: "Sample", version: "1.0.0" }), elaborationSha256: "9".repeat(64) })
+			, /Component record provenance arguments cannot carry resource, callback or refinement types/u, `${bound} ${graph}`);
+	}
+});
+
 test("installed npm packages carry alias-named generic records with their instantiation provenance", { skip: !wasm, timeout: 3_600_000 }, async t => {
 	const observation = await checkGenericRecordNpmPackages(t, { fixture, build, runtimeRoot, engineRoot });
 	const reportPath = resolve(process.env.LEAN_BRIDGE_GENERIC_RECORD_NPM_REPORT ?? "build/generic-records/npm.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", ...observation }));
 });
 
-test("an unaliased instantiation stops an npm build with a classified hint", { skip: !wasm, timeout: 3_600_000 }, async t => {
-	const { directory, root } = await fixture(t);
-	await saveLakeFile(root, "OnboardingSmall.lean", await genericRecordSource("OnboardingSmall"));
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: ["OnboardingSmall.swap"] }));
-	const outputRoot = join(directory, "build");
-	await assert.rejects(() => build(root, outputRoot), error => {
-		assert.deepEqual(error.details?.hints, ["hint:OnboardingSmall.swap:unsupported-parameter-type"]);
-		return true;
+// A phantom argument that carries a Fin bound: the npm profile admits nested Fin, so only the argument rule refuses it.
+const refinedPhantom = "abbrev DigitTag := Tag (Option (Fin 10))\ndef digitTagged (value : DigitTag) : String := value.label";
+
+test("an unaliased instantiation and a refined phantom argument stop an npm build with a classified hint", { skip: !wasm, timeout: 3_600_000 }, async t => {
+	for(const [name, extra] of [["swap", ""], ["digitTagged", refinedPhantom]]) await t.test(name, async t => {
+		const { directory, root } = await fixture(t);
+		await saveLakeFile(root, "OnboardingSmall.lean", (await genericRecordSource("OnboardingSmall")).replace("end OnboardingSmall", `${extra}\nend OnboardingSmall`));
+		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [`OnboardingSmall.${name}`] }));
+		const outputRoot = join(directory, "build");
+		await assert.rejects(() => build(root, outputRoot), error => {
+			assert.deepEqual(error.details?.hints, [`hint:OnboardingSmall.${name}:unsupported-parameter-type`]);
+			return true;
+		});
+		await assert.rejects(() => access(join(outputRoot, "bundle")));
 	});
-	await assert.rejects(() => access(join(outputRoot, "bundle")));
 });
 
 test("generic structure instantiations are rejected at the Lean source unless an abbrev names a closed, copied application", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
@@ -139,7 +184,9 @@ test("generic structure instantiations are rejected at the Lean source unless an
 		, ["an unaliased application as an argument", ["nested"], "abbrev Nested := Box (Box Nat)\ndef nested (value : Nested) : Nat := value.value.value", /name this instantiation of a generic structure with an abbrev: GenericRecords\.Box Nat/]
 		, ["an inherited structure", ["named"], "structure Named (α : Type) extends Box α where\n  name : String\nabbrev NamedNat := Named Nat\ndef named (value : NamedNat) : Nat := value.value", /inherited generic records require a reviewed projection/]
 		, ["a field that depends on the value", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  ok : items.length < 10\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /generic record field ok depends on the record value/]
-		, ["a callback argument", ["applied"], "abbrev FnBox := Box (Nat → Nat)\ndef applied (value : FnBox) : Nat := value.value value.count", /callbacks inside copied values require a retention policy/]];
+		, ["a callback argument", ["applied"], "abbrev FnBox := Box (Nat → Nat)\ndef applied (value : FnBox) : Nat := value.value value.count", /callbacks inside copied values require a retention policy/]
+		// The native profile checks Fin only at structural positions, so the argument's bound is refused before the argument rule.
+		, ["a refined phantom argument", ["digitTagged"], refinedPhantom, /Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists and options/]];
 	for(const [label, names, extra, pattern] of cases) await t.test(label, async t => {
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-generic-records-reject-"));
 		t.after(() => rm(directory, { recursive: true, force: true }));

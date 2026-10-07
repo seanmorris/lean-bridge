@@ -136,6 +136,23 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
 
+/-- Whether a shape, or any definition it references, has a node of the given kind. -/
+partial def containsKind (types : Array Json) (value : Json) (kind : String) (seen : List String := []) : Bool :=
+  match value with
+  | .obj fields =>
+    if (value.getObjValAs? String "kind").toOption == some kind then true
+    else if (value.getObjValAs? String "kind").toOption == some "reference" then
+      match (value.getObjValAs? String "name").toOption with
+      | some name =>
+        if seen.contains name then false
+        else match types.find? (fun item => (item.getObjValAs? String "name").toOption == some name) with
+          | some type => containsKind types type kind (name :: seen)
+          | none => false
+      | none => false
+    else fields.toArray.any (fun (_, child) => containsKind types child kind seen)
+  | .arr values => values.any (fun child => containsKind types child kind seen)
+  | _ => false
+
 /-- Structures with their own mappings: never generic-record instantiations, however an alias spells them. -/
 def structuralConstructors : List Name := [``Array, ``Prod, ``Fin, ``Subtype]
 
@@ -266,9 +283,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           unless (← whnf (← inferType argument)).isSort do reject e "generic record arguments must be types"
           if ← isProp argument then reject e "generic record arguments cannot be propositions"
           let shape ← shapeTree request argument (aliasName :: seen) 0 true none containerFin false
-          let kind := (shape.getObjValAs? String "kind").toOption.getD ""
-          if ["resource", "callback", "refinement"].contains kind then
-            reject e s!"generic record arguments cannot be {kind} types"
+          -- An argument is a plain copied type throughout: no identity, callback or refinement
+          -- anywhere inside it, including the definitions it references.
+          for kind in ["resource", "callback", "refinement"] do
+            if containsKind (← get).types shape kind then
+              reject e s!"generic record arguments cannot carry {kind} types"
           arguments := arguments.push shape
         -- Field types come from Lean's own inference on a typed receiver, with the structure's
         -- universes and arguments instantiated; a field that depends on the receiver is rejected.
