@@ -35,7 +35,10 @@ const shapeCases = [
 const shape = { kind: "variant", definition: "FinRecords.Shape", cases: shapeCases };
 /** Checked refinement trees the native model must carry for every export. */
 const expected = {
-	tileSum: { parameters: [tile], result: null }
+	tileExcept: { parameters: [{ kind: "result", arguments: [tile, shape] }], result: null }
+	, tileList: { parameters: [{ kind: "list", arguments: [tile] }], result: null }
+	, tilePair: { parameters: [{ kind: "tuple", arguments: [tile, shape] }], result: null }
+	, tileSum: { parameters: [tile], result: null }
 	, tiles: { parameters: [{ kind: "array", arguments: [tile] }], result: null }
 	, bump: { parameters: [tile], result: tile }
 	, gateOpen: { parameters: [{ kind: "variant", definition: "FinRecords.Gate", cases: [{ name: "closed", fields: [], arguments: [] }, { name: "never", fields: ["value"], arguments: [fin("0")] }] }], result: null }
@@ -94,6 +97,10 @@ test("C adapters check record fields and only the active variant case on caller 
 	ordered(call("slot_count"), "if ((&arg0->maybe)->has_value) {", "(&(&arg0->maybe)->value)->data, (&(&arg0->maybe)->value)->length, NULL, 0)");
 	ordered(call("maybe_shape"), "if (arg0->has_value) {", "if ((&arg0->value)->kind == 0u) {", "(&(&arg0->value)->cases.circle.radius)->data");
 	ordered(call("tiles"), "for (size_t k2 = 0; k2 < arg0->length; ++k2) {", "(&(&arg0->data[k2])->digit)->data");
+	// Lists, products and Except values of refined records and variants compose with the same walk.
+	ordered(call("tile_list"), "for (size_t k2 = 0; k2 < arg0->length; ++k2) {", "(&(&arg0->data[k2])->digit)->data", "lean_object *checked = ");
+	ordered(call("tile_pair"), "(&(&arg0->fst)->digit)->data", "if ((&arg0->snd)->kind == 0u) {", "(&(&arg0->snd)->cases.circle.radius)->data", "lean_object *checked = ");
+	ordered(call("tile_except"), "if (arg0->is_ok) {", "(&(&arg0->ok)->digit)->data", "if (!arg0->is_ok) {", "if ((&arg0->error)->kind == 0u) {", "(&(&arg0->error)->cases.circle.radius)->data", "lean_object *checked = ");
 });
 
 test("Lean adapters pass refined records and variants as erased mirrors checked once before one source call", () => {
@@ -134,6 +141,9 @@ test("Perl XS walks record fields and the active case, naming each path", () => 
 	assert.match(body("gate_open"), /if \(t0 == 1u\) \{[^]*croak\("%s\.never\.value is not below its Fin 0 bound", "arg0"\)/u);
 	assert.match(body("slot_count"), /croak\("%s\.maybe\? is not below its Fin 0 bound", "arg0"\)/u);
 	assert.match(body("tiles"), /croak\("%s\[%zu\]\.digit is not below its Fin 5 bound", "arg0", \(size_t\)k0\)/u);
+	assert.match(body("tile_list"), /croak\("%s\[%zu\]\.digit is not below its Fin 5 bound", "arg0", \(size_t\)k0\)/u);
+	assert.match(body("tile_pair"), /croak\("%s\.0\.digit is not below its Fin 5 bound", "arg0"\)[^]*croak\("%s\.1\.circle\.radius is not below its Fin 10 bound", "arg0"\)/u);
+	assert.match(body("tile_except"), /croak\("%s\.ok\.digit is not below its Fin 5 bound", "arg0"\)[^]*croak\("%s\.error\.circle\.radius is not below its Fin 10 bound", "arg0"\)/u);
 	assert.match(files["lib/LeanBridge/FinRecords.pm"], /Checked Lean Fin bounds: arg0\.inner\.digit < 5; arg0\.tag < 3\./u);
 });
 
@@ -141,7 +151,7 @@ test("hosts reading only the Binding IR document record and variant bounds from 
 	const readme = generateCopiedRubyPackage(finRecordCompilerModel().bindingIr)["README.md"];
 	assert.match(readme, /Fin inside arrays, lists, options, products, Except values, records and variants is checked before Lean runs/u);
 	assert.match(readme, /a record field as name\.field and a field of the active variant case as name\.Case\.field\. Fin inside callbacks or generic record instantiations is not supported in Ruby gems\./u);
-	for(const line of ["nest_sum: arg0.inner.digit < 5; arg0.tag < 3", "maybe_shape: arg0?.circle.radius < 10", "bump: arg0.digit < 5; result.digit < 5", "make_shape: result.circle.radius < 10", "slot_count: arg0.maybe? < 0", "gate_open: arg0.never.value < 0", "tiles: arg0[*].digit < 5", "late_sum: arg0.digit < 5"])
+	for(const line of ["nest_sum: arg0.inner.digit < 5; arg0.tag < 3", "maybe_shape: arg0?.circle.radius < 10", "bump: arg0.digit < 5; result.digit < 5", "make_shape: result.circle.radius < 10", "slot_count: arg0.maybe? < 0", "gate_open: arg0.never.value < 0", "tiles: arg0[*].digit < 5", "late_sum: arg0.digit < 5", "tile_list: arg0[*].digit < 5", "tile_pair: arg0.0.digit < 5; arg0.1.circle.radius < 10", "tile_except: arg0.ok.digit < 5; arg0.error.circle.radius < 10"])
 		assert.ok(readme.includes(`.${line}\n`), line);
 });
 

@@ -1,5 +1,5 @@
 import lean_finrecords as api
-from lean_finrecords import Some, Tile, Nest, Late, Slot, ShapeCircle, ShapeLabel, ShapeEmpty, GateClosed, GateNever
+from lean_finrecords import Some, Ok, Err, Tile, Nest, Late, Slot, ShapeCircle, ShapeLabel, ShapeEmpty, GateClosed, GateNever
 
 checks = 0
 def check(value, label):
@@ -69,6 +69,34 @@ check(api.maybe_shape(None) == 99, 'maybe absent')
 check(api.maybe_shape(Some(ShapeCircle(3))) == 3, 'maybe present')
 maybe = Some(ShapeCircle(10))
 check(rejected(lambda: api.maybe_shape(maybe), 'arg0', '10') and maybe == Some(ShapeCircle(10)), 'maybe at bound')
+# List Tile: every element's fields; a rejected list is unchanged before the caller restores it.
+check(api.tile_list([]) == 0, 'tile list empty')
+check(api.tile_list(row) == 8, 'tile list valid')
+for k in range(3):
+    kept = row[k]
+    row[k] = Tile(5, kept.count)
+    before = fresh()
+    before[k] = Tile(5, before[k].count)
+    check(rejected(lambda: api.tile_list(row), 'arg0', '5') and row == before, 'tile list element ' + str(k))
+    row[k] = kept
+check(api.tile_list(row) == 8, 'tile list recovery')
+# Tile × Shape: both components; the inactive circle of a label is never read.
+check(api.tile_pair((Tile(4, 6), ShapeCircle(9))) == 19, 'pair valid')
+pair = (Tile(5, 6), ShapeCircle(9))
+check(rejected(lambda: api.tile_pair(pair), 'arg0', '5') and pair == (Tile(5, 6), ShapeCircle(9)), 'pair tile at bound')
+pair = (Tile(4, 6), ShapeCircle(10))
+check(rejected(lambda: api.tile_pair(pair), 'arg0', '10') and pair == (Tile(4, 6), ShapeCircle(10)), 'pair shape at bound')
+check(api.tile_pair((Tile(4, 6), ShapeCircle(9))) == 19, 'pair recovery')
+check(api.tile_pair((Tile(1, 1), ShapeLabel('ab'))) == 1004, 'pair label')
+# Except Shape Tile: the ok record or the error variant, only the active branch.
+check(api.tile_except(Ok(Tile(3, 4))) == 7, 'except ok')
+except_value = Ok(Tile(5, 4))
+check(rejected(lambda: api.tile_except(except_value), 'arg0', '5') and except_value == Ok(Tile(5, 4)), 'except ok at bound')
+check(api.tile_except(Err(ShapeCircle(9))) == 509, 'except error')
+except_value = Err(ShapeCircle(10))
+check(rejected(lambda: api.tile_except(except_value), 'arg0', '10') and except_value == Err(ShapeCircle(10)), 'except error at bound')
+check(api.tile_except(Err(ShapeLabel('x'))) == 1501, 'except label')
+check(api.tile_except(Ok(Tile(3, 4))) == 7, 'except recovery')
 # Results carrying bounds are produced by Lean and arrive below them.
 check(api.bump(Tile(4, 9)) == Tile(0, 10), 'bump')
 tile = Tile(5, 9)

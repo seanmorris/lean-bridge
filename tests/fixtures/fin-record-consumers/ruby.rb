@@ -1,6 +1,8 @@
 require "lean_bridge/finrecords"
 API = LeanBridge::Finrecords
 Some = API::Some
+Ok = API::Ok
+Err = API::Err
 Tile = API::Tile
 Nest = API::Nest
 Late = API::Late
@@ -76,6 +78,36 @@ check(API.maybe_shape(nil) == 99, "maybe absent")
 check(API.maybe_shape(Some.new(Shape::Circle.new(radius: 3))) == 3, "maybe present")
 maybe = Some.new(Shape::Circle.new(radius: 10))
 check(rejected("arg0", "10") { API.maybe_shape(maybe) } && maybe == Some.new(Shape::Circle.new(radius: 10)), "maybe at bound")
+# List Tile: every element's fields; a rejected list is unchanged before the caller restores it.
+check(API.tile_list([]) == 0, "tile list empty")
+check(API.tile_list(row) == 8, "tile list valid")
+3.times do |k|
+  kept = row[k]
+  row[k] = tile(5, kept.count)
+  before = fresh.()
+  before[k] = tile(5, before[k].count)
+  check(rejected("arg0", "5") { API.tile_list(row) } && row == before, "tile list element #{k}")
+  row[k] = kept
+end
+check(API.tile_list(row) == 8, "tile list recovery")
+# Tile × Shape: both components; the inactive circle of a label is never read.
+circle = ->(radius) { Shape::Circle.new(radius: radius) }
+check(API.tile_pair([tile(4, 6), circle.(9)]) == 19, "pair valid")
+pair = [tile(5, 6), circle.(9)]
+check(rejected("arg0", "5") { API.tile_pair(pair) } && pair == [tile(5, 6), circle.(9)], "pair tile at bound")
+pair = [tile(4, 6), circle.(10)]
+check(rejected("arg0", "10") { API.tile_pair(pair) } && pair == [tile(4, 6), circle.(10)], "pair shape at bound")
+check(API.tile_pair([tile(4, 6), circle.(9)]) == 19, "pair recovery")
+check(API.tile_pair([tile(1, 1), Shape::Label.new(text: "ab")]) == 1004, "pair label")
+# Except Shape Tile: the ok record or the error variant, only the active branch.
+check(API.tile_except(Ok.new(tile(3, 4))) == 7, "except ok")
+except = Ok.new(tile(5, 4))
+check(rejected("arg0", "5") { API.tile_except(except) } && except == Ok.new(tile(5, 4)), "except ok at bound")
+check(API.tile_except(Err.new(circle.(9))) == 509, "except error")
+except = Err.new(circle.(10))
+check(rejected("arg0", "10") { API.tile_except(except) } && except == Err.new(circle.(10)), "except error at bound")
+check(API.tile_except(Err.new(Shape::Label.new(text: "x"))) == 1501, "except label")
+check(API.tile_except(Ok.new(tile(3, 4))) == 7, "except recovery")
 # Results carrying bounds are produced by Lean and arrive below them.
 check(API.bump(tile(4, 9)) == tile(0, 10), "bump")
 t = tile(5, 9)

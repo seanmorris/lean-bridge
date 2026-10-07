@@ -6,6 +6,8 @@ my $checks = 0;
 sub check { die "failed: $_[1]\n" unless $_[0]; ++$checks; }
 sub n { Math::BigInt->new("$_[0]") }
 sub some { LeanBridge::FinRecords::Some->new($_[0]) }
+sub ok { LeanBridge::FinRecords::Ok->new($_[0]) }
+sub err { LeanBridge::FinRecords::Err->new($_[0]) }
 sub tile { LeanBridge::FinRecords::Tile->new(digit => (ref $_[0] ? $_[0] : n($_[0])), count => (ref $_[1] ? $_[1] : n($_[1]))) }
 sub nest { LeanBridge::FinRecords::Nest->new(inner => tile($_[0], $_[1]), tag => n($_[2])) }
 sub late { LeanBridge::FinRecords::Late->new(label => 'ab', items => [n(1), n(2)], digit => n($_[0])) }
@@ -54,6 +56,8 @@ check(dies(sub { LeanBridge::FinRecords::shape_size(bless({ radius => n(10) }, '
 check(dies(sub { LeanBridge::FinRecords::gate_open(undef) }), 'undefined variant');
 check(dies(sub { LeanBridge::FinRecords::tiles(tile(5, 0)) }), 'record instead of array');
 check(dies(sub { LeanBridge::FinRecords::late_sum(LeanBridge::FinRecords::Late->new(label => undef, items => [], digit => n(5))) }), 'undefined label');
+check(dies(sub { LeanBridge::FinRecords::tile_pair([tile(5, 0)]) }), 'short pair');
+check(dies(sub { LeanBridge::FinRecords::tile_except(bless({ value => tile(5, 0) }, 'PretendOk')) }), 'foreign Except class');
 # Tile: the digit is Fin 5; any count is valid.
 for my $d (0 .. 4) { check(LeanBridge::FinRecords::tile_sum(tile($d, 10))->bstr eq $d + 10, "tile $d"); }
 check(LeanBridge::FinRecords::tile_sum(tile(3, $huge->copy))->bstr eq $huge->copy->badd(3)->bstr, 'unbounded count');
@@ -79,18 +83,34 @@ check(LeanBridge::FinRecords::shape_size(LeanBridge::FinRecords::Shape::Empty->n
 # Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
 check(LeanBridge::FinRecords::gate_open(LeanBridge::FinRecords::Gate::Closed->new)->bstr eq '1', 'gate closed');
 check(refused(\&LeanBridge::FinRecords::gate_open, sub { LeanBridge::FinRecords::Gate::Never->new(value => n(0)) }, 'arg0.never.value', '0'), 'gate never');
-# Array Tile: every element; the path carries the failing index.
-my $tiles = row();
-check(LeanBridge::FinRecords::tiles([])->bstr eq '0', 'tiles empty');
-check(LeanBridge::FinRecords::tiles($tiles)->bstr eq '8', 'tiles valid');
-for my $k (0 .. 2) {
-  my $kept = $tiles->[$k]->{digit};
-  $tiles->[$k]->{digit} = n(5);
-  my $before = row(); $before->[$k]->{digit} = n(5);
-  check(rejected(sub { LeanBridge::FinRecords::tiles($tiles) }, "arg0[$k].digit", '5') && same($tiles, $before), "tiles element $k");
-  $tiles->[$k]->{digit} = $kept;
+# Array Tile and List Tile: every element's fields; the path carries the failing index.
+for my $case (['tiles', \&LeanBridge::FinRecords::tiles], ['list', \&LeanBridge::FinRecords::tile_list]) {
+  my ($label, $function) = @$case;
+  my $values = row();
+  check($function->([])->bstr eq '0', "$label empty");
+  check($function->($values)->bstr eq '8', "$label valid");
+  for my $k (0 .. 2) {
+    my $kept = $values->[$k]->{digit};
+    $values->[$k]->{digit} = n(5);
+    my $before = row(); $before->[$k]->{digit} = n(5);
+    check(rejected(sub { $function->($values) }, "arg0[$k].digit", '5') && same($values, $before), "$label element $k");
+    $values->[$k]->{digit} = $kept;
+  }
+  check($function->($values)->bstr eq '8', "$label recovery");
 }
-check(LeanBridge::FinRecords::tiles($tiles)->bstr eq '8', 'tiles recovery');
+# Tile × Shape: both components, each under its component index; the inactive circle of a label is never read.
+check(LeanBridge::FinRecords::tile_pair([tile(4, 6), circle(9)])->bstr eq '19', 'pair valid');
+check(refused(\&LeanBridge::FinRecords::tile_pair, sub { [tile(5, 6), circle(9)] }, 'arg0.0.digit', '5'), 'pair tile at bound');
+check(refused(\&LeanBridge::FinRecords::tile_pair, sub { [tile(4, 6), circle(10)] }, 'arg0.1.circle.radius', '10'), 'pair circle at bound');
+check(LeanBridge::FinRecords::tile_pair([tile(4, 6), circle(9)])->bstr eq '19', 'pair recovery');
+check(LeanBridge::FinRecords::tile_pair([tile(1, 1), LeanBridge::FinRecords::Shape::Label->new(text => 'ab')])->bstr eq '1004', 'pair label');
+# Except Shape Tile: the ok record or the error variant, only the active branch.
+check(LeanBridge::FinRecords::tile_except(ok(tile(3, 4)))->bstr eq '7', 'except ok');
+check(refused(\&LeanBridge::FinRecords::tile_except, sub { ok(tile(5, 4)) }, 'arg0.ok.digit', '5'), 'except ok at bound');
+check(LeanBridge::FinRecords::tile_except(err(circle(9)))->bstr eq '509', 'except error circle');
+check(refused(\&LeanBridge::FinRecords::tile_except, sub { err(circle(10)) }, 'arg0.error.circle.radius', '10'), 'except error at bound');
+check(LeanBridge::FinRecords::tile_except(err(LeanBridge::FinRecords::Shape::Label->new(text => 'x')))->bstr eq '1501', 'except error label');
+check(LeanBridge::FinRecords::tile_except(ok(tile(3, 4)))->bstr eq '7', 'except recovery');
 # Option Shape: absent, a valid present circle, then an invalid one.
 check(LeanBridge::FinRecords::maybe_shape(undef)->bstr eq '99', 'maybe absent');
 check(LeanBridge::FinRecords::maybe_shape(some(circle(3)))->bstr eq '3', 'maybe circle');

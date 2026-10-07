@@ -26,6 +26,9 @@ export const finRecordReviewedIr = () => {
 		, ["nestSum", nest, "nat"]
 		, ["shapeSize", shape, "nat"]
 		, ["slotCount", slot, "nat"]
+		, ["tileExcept", { result: [tile, shape] }, "nat"]
+		, ["tileList", { list: tile }, "nat"]
+		, ["tilePair", { tuple: [tile, shape] }, "nat"]
 		, ["tileSum", tile, "nat"]
 		, ["tiles", { array: tile }, "nat"]];
 	const ir = corpusReviewedIr({ id: "finrecords" }, signatures.map(([name, parameter, result]) => ({ name: `FinRecords.${name}`, parameters: [parameter], result })));

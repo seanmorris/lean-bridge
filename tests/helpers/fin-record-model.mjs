@@ -33,7 +33,10 @@ const shape = variant("Shape", [["circle", [["radius", fin("10")]]], ["label", [
 export { record as finRecordShape, nat as finRecordNat };
 /** Parameter and result shapes of every exported declaration, as the extractor reports them. */
 export const finRecordSignatures = {
-	tileSum: [tile, nat]
+	tileExcept: [{ kind: "result", arguments: [tile, shape], abi: heap }, nat]
+	, tileList: [{ kind: "list", element: tile, abi: heap }, nat]
+	, tilePair: [{ kind: "tuple", arguments: [tile, shape], abi: heap }, nat]
+	, tileSum: [tile, nat]
 	, tiles: [{ kind: "array", element: tile, abi: heap }, nat]
 	, bump: [tile, tile]
 	, gateOpen: [variant("Gate", [["closed", []], ["never", [["value", fin("0")]]]]), nat]

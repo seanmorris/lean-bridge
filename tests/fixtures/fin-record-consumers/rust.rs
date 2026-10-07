@@ -88,6 +88,44 @@ fn main() {
     maybe = Some(Shape::Circle { radius: n(10) });
     let before = Some(Shape::Circle { radius: n(10) });
     check!(rejected(api::maybe_shape(&maybe), "arg0", "10") && maybe == before);
+    // List Tile: every element's fields; a rejected list is unchanged before the caller restores it.
+    check!(api::tile_list(&[]).unwrap() == n(0));
+    check!(api::tile_list(&row).unwrap() == n(8));
+    for k in 0..row.len() {
+        let kept = row[k].digit.clone();
+        row[k].digit = n(5);
+        let mut before = fresh();
+        before[k].digit = n(5);
+        check!(rejected(api::tile_list(&row), "arg0", "5") && row == before);
+        row[k].digit = kept;
+    }
+    check!(api::tile_list(&row).unwrap() == n(8));
+    // Tile × Shape: both components; the inactive circle of a label is never read.
+    let mut pair = (tile(n(4), n(6)), Shape::Circle { radius: n(9) });
+    check!(api::tile_pair(&pair).unwrap() == n(19));
+    pair.0.digit = n(5);
+    let before = (tile(n(5), n(6)), Shape::Circle { radius: n(9) });
+    check!(rejected(api::tile_pair(&pair), "arg0", "5") && pair == before);
+    pair.0.digit = n(4);
+    pair.1 = Shape::Circle { radius: n(10) };
+    let before = (tile(n(4), n(6)), Shape::Circle { radius: n(10) });
+    check!(rejected(api::tile_pair(&pair), "arg0", "10") && pair == before);
+    pair.1 = Shape::Circle { radius: n(9) };
+    check!(api::tile_pair(&pair).unwrap() == n(19));
+    check!(api::tile_pair(&(tile(n(1), n(1)), Shape::Label { text: "ab".to_string() })).unwrap() == n(1004));
+    // Except Shape Tile: the ok record or the error variant, only the active branch.
+    let mut except: Result<Tile, Shape> = Ok(tile(n(3), n(4)));
+    check!(api::tile_except(&except).unwrap() == n(7));
+    except = Ok(tile(n(5), n(4)));
+    let before: Result<Tile, Shape> = Ok(tile(n(5), n(4)));
+    check!(rejected(api::tile_except(&except), "arg0", "5") && except == before);
+    check!(api::tile_except(&Err(Shape::Circle { radius: n(9) })).unwrap() == n(509));
+    except = Err(Shape::Circle { radius: n(10) });
+    let before: Result<Tile, Shape> = Err(Shape::Circle { radius: n(10) });
+    check!(rejected(api::tile_except(&except), "arg0", "10") && except == before);
+    check!(api::tile_except(&Err(Shape::Label { text: "x".to_string() })).unwrap() == n(1501));
+    except = Ok(tile(n(3), n(4)));
+    check!(api::tile_except(&except).unwrap() == n(7)); // Recovery after both rejections.
     // Results carrying bounds are produced by Lean and arrive below them.
     let mut t = tile(n(4), n(9));
     check!(api::bump(&t).unwrap() == tile(n(0), n(10)));

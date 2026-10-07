@@ -8,6 +8,8 @@ import org.leanbridge.finrecords.GateNever;
 import org.leanbridge.finrecords.Late;
 import org.leanbridge.finrecords.Nest;
 import org.leanbridge.finrecords.Option;
+import org.leanbridge.finrecords.Pair;
+import org.leanbridge.finrecords.Result;
 import org.leanbridge.finrecords.Shape;
 import org.leanbridge.finrecords.ShapeCircle;
 import org.leanbridge.finrecords.ShapeEmpty;
@@ -37,6 +39,22 @@ final class Consumer {
     static Tile tile(long digit, long count) { return tile(n(digit), n(count)); }
     static Late late(long digit) { return new Late("ab", new BigInteger[] { n(1), n(2) }, n(digit)); }
     static Tile[] row() { return new Tile[] { tile(0, 1), tile(4, 2), tile(1, 0) }; }
+    // Each element position in turn: the rejected sequence is compared with an independently
+    // built snapshot immediately after the rejection, then the caller restores the element.
+    static void sequence(Function<Tile[], BigInteger> call, String label) {
+        Tile[] values = row();
+        check(call.apply(new Tile[0]).equals(n(0)), label + " empty");
+        check(call.apply(values).equals(n(8)), label + " valid");
+        for (int k = 0; k < 3; k++) {
+            Tile kept = values[k];
+            values[k] = tile(n(5), kept.count());
+            Tile[] before = row();
+            before[k] = tile(n(5), kept.count());
+            check(rejected(() -> call.apply(values), "arg0", "5") && Objects.deepEquals(values, before), label + " element " + k);
+            values[k] = kept;
+        }
+        check(call.apply(values).equals(n(8)), label + " recovery");
+    }
     public static void main(String[] args) {
         BigInteger huge = BigInteger.ONE.shiftLeft(100);
         // Tile: the digit is Fin 5; any count is valid.
@@ -64,19 +82,22 @@ final class Consumer {
         // Gate: the never case holds Fin 0, so it is always rejected; the closed case is always valid.
         check(Api.gateOpen(new GateClosed()).equals(n(1)), "gate closed");
         check(refused(Api::gateOpen, () -> new GateNever(n(0)), "0"), "gate never");
-        // Array Tile: every element; the empty array is valid.
-        Tile[] tiles = row();
-        check(Api.tiles(new Tile[0]).equals(n(0)), "tiles empty");
-        check(Api.tiles(tiles).equals(n(8)), "tiles valid");
-        for (int k = 0; k < 3; k++) {
-            Tile kept = tiles[k];
-            tiles[k] = tile(n(5), kept.count());
-            Tile[] before = row();
-            before[k] = tile(n(5), kept.count());
-            check(rejected(() -> Api.tiles(tiles), "arg0", "5") && Objects.deepEquals(tiles, before), "tiles element " + k);
-            tiles[k] = kept;
-        }
-        check(Api.tiles(tiles).equals(n(8)), "tiles recovery");
+        // Array Tile and List Tile: every element's fields; the empty sequence is valid.
+        sequence(Api::tiles, "tiles");
+        sequence(Api::tileList, "list");
+        // Tile × Shape: both components; the inactive circle of a label is never read.
+        check(Api.tilePair(new Pair<>(tile(4, 6), new ShapeCircle(n(9)))).equals(n(19)), "pair valid");
+        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(5, 6), new ShapeCircle(n(9))), "5"), "pair tile at bound");
+        check(refused(Api::tilePair, () -> new Pair<Tile, Shape>(tile(4, 6), new ShapeCircle(n(10))), "10"), "pair circle at bound");
+        check(Api.tilePair(new Pair<>(tile(4, 6), new ShapeCircle(n(9)))).equals(n(19)), "pair recovery");
+        check(Api.tilePair(new Pair<>(tile(1, 1), new ShapeLabel("ab"))).equals(n(1004)), "pair label");
+        // Except Shape Tile: the ok record or the error variant, only the active branch.
+        check(Api.tileExcept(Result.ok(tile(3, 4))).equals(n(7)), "except ok");
+        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>ok(tile(5, 4)), "5"), "except ok at bound");
+        check(Api.tileExcept(Result.err(new ShapeCircle(n(9)))).equals(n(509)), "except error circle");
+        check(refused(Api::tileExcept, () -> Result.<Tile, Shape>err(new ShapeCircle(n(10))), "10"), "except error at bound");
+        check(Api.tileExcept(Result.err(new ShapeLabel("x"))).equals(n(1501)), "except error label");
+        check(Api.tileExcept(Result.ok(tile(3, 4))).equals(n(7)), "except recovery");
         // Option Shape: absent, a valid present circle, then an invalid one.
         check(Api.maybeShape(Option.none()).equals(n(99)), "maybe absent");
         check(Api.maybeShape(Option.some(new ShapeCircle(n(3)))).equals(n(3)), "maybe circle");
