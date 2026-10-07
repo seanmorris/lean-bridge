@@ -10,7 +10,13 @@ const fail = message => { throw Object.assign(new Error(message), { code: "inval
 const digest = value => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const name = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value);
 const names = value => Array.isArray(value) && value.every(name) && new Set(value).size === value.length;
-const containsGraph = (value, kind = "graph") => value !== null && typeof value === "object"
+/**
+ * Whether a type tree contains a node of the given kind at any depth.
+ *
+ * @param value - Native type or projection tree.
+ * @param kind - Node kind to find.
+ */
+export const containsGraph = (value, kind = "graph") => value !== null && typeof value === "object"
 	&& (value.kind === kind || Object.values(value).some(child => containsGraph(child, kind)));
 
 /**

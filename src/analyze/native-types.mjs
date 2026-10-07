@@ -23,7 +23,8 @@ const closed = (value, fields, label) => {
  * @param depth - Current recursive type-validation depth.
  * @param copied - Whether this position forbids retained identity.
  */
-export const validateNativeType = (type, depth = 0, copied = false) => validate(type, depth, copied);
+// A caller-supplied depth or copied position is never a top-level site, so a refinement there is rejected.
+export const validateNativeType = (type, depth = 0, copied = false) => validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied);
 
 /**
  * Admit ownership-aware metadata only with an independently authorized policy.
@@ -36,13 +37,15 @@ export const validateOwnedNativeType = (type, policy) => {
 	return validate(type, 0, false, undefined, policy);
 };
 
-const validate = (type, depth, copied, references, policy, owned = false) => {
+// `structural` stays true while only arrays, lists, options and aliases separate a
+// position from its top-level parameter or result.
+const validate = (type, depth, copied, references, policy, owned = false, structural = true) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	if(!Object.hasOwn(Object.getOwnPropertyDescriptor(type, "kind") ?? {}, "value")) fail("type kind must be a data field");
 	if(type.kind === "owned-graph")
 	{
 		if(!policy || references || copied) fail("owned aggregates require a separately authorized graph boundary");
-		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true));
+		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true, false));
 	}
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
 		, graph: ["kind", "root", "types", "abi"]
@@ -68,7 +71,7 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
 	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
 	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
-	const recurse = (child, copy = copied) => validate(child, depth + 1, copy, references, policy, owned);
+	const recurse = (child, copy = copied, inner = structural) => validate(child, depth + 1, copy, references, policy, owned, inner);
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
@@ -86,8 +89,8 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 		if(type.abi.cType === "size_t" && !["usize", "isize"].includes(type.name)) fail("size_t is not a fixed-width primitive representation");
 	} else if(type.kind === "refinement")
 	{
-		// Bounds stay decimal text; only top-level native sites have checked adapters.
-		if(depth !== 0 || copied || references) fail("Fin refinements require a top-level native parameter or result");
+		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
+		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list or option of one");
 		closed(type.predicate, ["kind", "bound"], "refinement predicate");
 		if(type.predicate.kind !== "fin" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound)) fail("invalid Fin refinement");
 		recurse(type.base, true);
@@ -102,7 +105,7 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 	else if(["result", "tuple"].includes(type.kind))
 	{
 		if(!Array.isArray(type.arguments) || type.arguments.length !== 2 || !Object.hasOwn(type.arguments, 0) || !Object.hasOwn(type.arguments, 1)) fail("native results and products require two arguments");
-		type.arguments.forEach(child => recurse(child, true));
+		type.arguments.forEach(child => recurse(child, true, false));
 	}
 	else if(type.kind === "record")
 	{
@@ -113,7 +116,7 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 			closed(field, ["name", "projection", "type"], "record field");
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
-			recurse(field.type, true);
+			recurse(field.type, true, false);
 		}
 	} else if(type.kind === "variant")
 	{
@@ -131,7 +134,7 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 				closed(field, ["name", "type"], "variant field");
 				if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name)
 					|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved variant field");
-				recurse(field.type, true);
+				recurse(field.type, true, false);
 			}
 		}
 	} else if(type.kind === "resource")
@@ -142,7 +145,7 @@ const validate = (type, depth, copied, references, policy, owned = false) => {
 	{
 		if(copied) fail("callbacks inside copied values require a retention policy");
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
-		type.parameters.forEach(parameter => recurse(parameter)); recurse(type.result);
+		type.parameters.forEach(parameter => recurse(parameter, copied, false)); recurse(type.result, copied, false);
 	} else fail(`unsupported type kind ${type.kind}`);
 	return type;
 };

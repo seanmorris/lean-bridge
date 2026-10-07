@@ -136,9 +136,11 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
 
+/-- `structural` stays true while only arrays, lists, options and aliases separate a
+position from its top-level parameter or result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
-    (containerFin : Bool := true) : ShapeM Json := do
+    (containerFin : Bool := true) (structural : Bool := true) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -147,9 +149,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
   if e.isAppOfArity ``Fin 1 then
     if (depth != 0 || copied) && !containerFin then
       reject e "Fin refinements require a top-level or structural-container parameter or result"
-    -- Native libraries check bounds only around top-level parameters and results.
-    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && (depth != 0 || copied) then
-      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters and results"
+    -- Native libraries check bounds around top-level parameters and results and inside
+    -- their structural containers; record and variant fields and callbacks stay unchecked.
+    if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && !structural then
+      reject e "Fin refinements are not implemented by the native-library profile outside top-level parameters, results and their arrays, lists and options"
     let bound ← whnf e.appArg!
     let .lit (.natVal bound) := bound
       | reject e "Fin refinements require a closed literal bound"
@@ -208,7 +211,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                 return ← nominalReference e name
               -- Alias spelling does not change the permitted refinement position.
               let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
@@ -248,7 +251,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin)])
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin false)])
       return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
     if let .inductInfo induct ← getConstInfo name then
@@ -288,7 +291,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin false)])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
@@ -296,15 +299,16 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       return ← rememberShape e name <| obj [("kind", str "variant"), ("name", str name.toString),
         ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
-    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin
-    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin
+    -- Products and results are not checked containers for native packages yet.
+    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin false
+    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin false
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     let result := e.isAppOfArity ``Except 2
     return obj [("kind", str (if result then "result" else "tuple")),
@@ -319,13 +323,13 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin)
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin false)
         result := rest
       | _ => break
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1) false none containerFin), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1) false none containerFin false), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has

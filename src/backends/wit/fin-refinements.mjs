@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { nativeFinSummary } from "../native/fin-refinements.mjs";
+import { nativeFinContainerNote, nativeFinSummary } from "../native/fin-refinements.mjs";
 
 /**
  * Describe each checked bound with its WIT export and parameter names.
@@ -16,5 +16,5 @@ export const witFinReadme = projection => {
 		const bounds = nativeFinSummary(fn.declaration, fn.parameters.map(parameter => parameter.witName));
 		return bounds ? [`- ${fn.witName}: ${bounds}`] : [];
 	});
-	return lines.length ? `\n## Bounded integers\n\nLean Fin n parameters and results use the Nat representation, list<u32> little-endian limbs, with values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; an argument at or above its bound fails the call with a Wasmtime error whose message names the Lean parameter and bound, leaving the result slot unchanged. Fin 0 has no values, so every call to an export taking one fails. Results are limb lists below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in WIT packages.\n\n${lines.join("\n")}\n` : "";
+	return lines.length ? `\n## Bounded integers\n\nLean Fin n parameters and results use the Nat representation, list<u32> little-endian limbs, with values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; an argument at or above its bound fails the call with a Wasmtime error whose message names the Lean parameter and bound, leaving the result slot unchanged. Fin 0 has no values, so every call to an export taking one fails. Results are limb lists below their declared bound. ${nativeFinContainerNote(projection.surface.functions.map(fn => fn.declaration), "WIT packages")}\n\n${lines.join("\n")}\n` : "";
 };

@@ -5,12 +5,12 @@
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateNativeType } from "../analyze/native-types.mjs";
-import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
+import { projectNativeMetadata, containsGraph } from "../analyze/native-metadata.mjs";
 import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
-import { componentRefinementGuards } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementGuards } from "./component-refinements.mjs";
 
 export { validateNativeType };
 
@@ -125,16 +125,30 @@ const nativeRepresentation = type => {
 };
 
 /**
- * Retain exact top-level Fin bounds beside the Nat transport. Only exports with a
- * checked adapter may carry them; callbacks keep their existing unchecked ABI.
+ * Retain exact Fin bounds beside the Nat transport, at top-level sites and inside
+ * their structural containers, as the same refinement trees the component adapters
+ * check. Only exports with a checked adapter may carry them; callbacks keep their
+ * existing unchecked ABI.
  *
  * @param declaration - Compiler-selected native declaration.
  */
 const nativeRefinements = declaration => {
+	const tree = type => {
+		if(type.kind === "refinement") return { kind: type.predicate.kind, bound: type.predicate.bound };
+		if(type.kind === "alias") return tree(type.target);
+		if(["array", "list", "option"].includes(type.kind))
+		{
+			const element = tree(type.element);
+			return element === null ? null : { kind: type.kind, arguments: [element] };
+		}
+		// Any other container would erase a bound the extractor admitted; refuse rather than drop it.
+		if(containsGraph(type, "refinement")) throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements inside ${type.kind} values are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+		return null;
+	};
 	const predicate = type => {
-		if(type.kind !== "refinement") return null;
-		validateNativeType(type);
-		return { kind: type.predicate.kind, bound: type.predicate.bound };
+		const value = tree(type);
+		if(value !== null) validateNativeType(type);
+		return value;
 	};
 	const value = { parameters: declaration.parameters.map(parameter => predicate(parameter.type)), result: predicate(declaration.result) };
 	if(value.result === null && value.parameters.every(item => item === null)) return null;
@@ -274,13 +288,13 @@ export const generateNativeLeanAdapters = model => {
 			emit(item.symbol, parameters, item.result, `${application} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
 			continue;
 		}
-		// The proof exists only inside the decidable branch; rejected inputs return none.
-		const call = `${application} ${item.parameters.map((_, i) => item.refinements.parameters[i] ? `⟨a${i}, _bridgeFin${i}⟩` : `a${i}`).join(" ")}`;
-		const value = item.refinements.result ? `(${call}).val` : call;
-		const guards = item.refinements.parameters.flatMap((refinement, i) => refinement ? [{ kind: "fin", bound: refinement.bound, proof: `_bridgeFin${i}`, value: `a${i}` }] : []);
-		if(!guards.length) emit(item.symbol, parameters, item.result, value);
+		// Every proof exists only inside a decidable branch; container elements are checked
+		// by the same conversions the component adapters use. Rejected inputs return none.
+		const source = { refinements: item.refinements, sourceDeclaration: item.name, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) };
+		const { call, guards } = componentRefinedCall(source, item.parameters.map((_, i) => `a${i}`), true);
+		if(!guards.length) emit(item.symbol, parameters, item.result, call);
 		else emit(item.symbol, parameters, nativeRefinedResult(item.result)
-			, componentRefinementGuards(guards, `_root_.Option.some (${value})`, "_root_.Option.none").replaceAll("\n", "\n  "));
+			, componentRefinementGuards(guards, `_root_.Option.some (${call})`, "_root_.Option.none").replaceAll("\n", "\n  "));
 	}
 	for(const type of model.types)
 	{

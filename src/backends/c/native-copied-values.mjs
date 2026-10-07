@@ -195,12 +195,36 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			lines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
 			return `${id(type)}_in(${value})`;
 		});
-		// Every bound is checked on caller limbs before any Lean value is allocated.
+		// Every bound is checked on caller limbs before any Lean value is allocated,
+		// including each element reached through arrays, lists, options, products and results.
 		refinements.forEach((refinement, i) => {
 			if(!refinement) return;
-			const limbs = finBoundLimbs(refinement.bound), value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
-			if(limbs.length) bounds.push(`static const uint32_t lb_fin_${fn.field}_${i}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
-			lines.push(`  if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? `lb_fin_${fn.field}_${i}` : "NULL"}, ${limbs.length})) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} is not below its Fin ${refinement.bound} bound`)});`);
+			let sites = 0;
+			const check = (site, type, value, indent) => {
+				if(type.kind === "alias") return check(site, type.target, value, indent);
+				if(site.kind === "fin")
+				{
+					// A top-level scalar keeps its historical constant name; nested sites are numbered.
+					const limbs = finBoundLimbs(site.bound), name = sites === 0 && refinement.kind === "fin" ? `lb_fin_${fn.field}_${i}` : `lb_fin_${fn.field}_${i}_${sites}`;
+					sites += 1;
+					if(limbs.length) bounds.push(`static const uint32_t ${name}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
+					// The message names the leaf that failed, with its own bound.
+					return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} is not below its Fin ${site.bound} bound`)});`];
+				}
+				const fields = copy(type).fields;
+				if(site.kind === "array" || site.kind === "list")
+				{
+					const index = `k${indent.length}`;
+					return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `), `${indent}}`];
+				}
+				const flag = { option: "has_value", result: "is_ok" }[site.kind];
+				return site.arguments.flatMap((child, index) => {
+					if(child === null) return [];
+					const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent);
+					return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
+				});
+			};
+			lines.push(...check(refinement, native.parameters[i].type, copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`, "  "));
 		});
 		if(refinements.some(Boolean))
 		{

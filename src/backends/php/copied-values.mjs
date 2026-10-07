@@ -13,7 +13,7 @@ import { phpValueMethods, phpValueSemantics, phpValueReadme } from "./copied-equ
 import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
 import { phpVariantClasses, phpVariantReadme } from "./copied-variants.mjs";
 import { phpValue, phpClosurePublic, phpCallableState, phpCallableRuntime, phpNativeCall } from "./callables.mjs";
-import { nativeFinSummary } from "../native/fin-refinements.mjs";
+import { nativeFinSummary, nativeFinContainerNote } from "../native/fin-refinements.mjs";
 
 /**
  * Render the public value API shared by the FFI and Zend transports.
@@ -118,7 +118,7 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
 	const finFunctions = model.surface.functions.filter(fn => finBounds(fn));
-	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. Fin inside containers, records, variants, callbacks or reviewed Binding IR is not supported in native PHP packages.\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.field}: ${finBounds(fn)}`).join("\n")}\n`;
+	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages")}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.field}: ${finBounds(fn)}`).join("\n")}\n`;
 	const structuredCallbacks = [...model.surface.callbacks.values()].some(({ type }) =>
 		[...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
 	if(structuredCallbacks)
