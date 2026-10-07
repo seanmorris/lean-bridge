@@ -63,7 +63,7 @@ test("the independent reviewed Wasm Fin selections keep scalar and structural si
 	assert.equal(reviewedFinWasmIr("scalar").declarations[0].source.extensions["lean-lang.org/refinements"].parameters[0].bound, "10");
 });
 
-const faithfulApi = () => {
+const faithfulApi = (selection = "structural") => {
 	const fin = bound => value => {
 		if(typeof value !== "bigint" || value < 0n || value >= bound) throw new RangeError("Fin bound");
 		return value;
@@ -93,14 +93,14 @@ const faithfulApi = () => {
 		try
 		{ return api[name](...args); }
 		catch
-		{ throw new Error("component call failed (5)"); }
+		{ throw new Error(`component call failed (${selection === "scalar" ? 6 : 5})`); }
 	} };
 };
 
 test("the shared Fin consumer rejects permissive public or raw substitutes", () => {
 	for(const selection of ["scalar", "structural"])
 	{
-		const request = { module: "reviewed-fin", selection }, api = faithfulApi();
+		const request = { module: "reviewed-fin", selection }, api = faithfulApi(selection);
 		const observed = executeCorpus(request, api);
 		assert.deepEqual({ checks: observed.checks, rejections: observed.rejections }, reviewedFinWasmExpected[selection]);
 		assert.equal(observed.module, request.module);
@@ -121,6 +121,8 @@ test("the shared Fin consumer rejects permissive public or raw substitutes", () 
 			{ throw new Error("unrelated transport failure"); }
 		};
 		assert.throws(() => executeCorpus(request, { ...api, raw: wrongFailure }), /wrong rejection: mirror raw bound/u);
+		const wrongAbi = faithfulApi(selection === "scalar" ? "structural" : "scalar");
+		assert.throws(() => executeCorpus(request, wrongAbi), /wrong rejection: mirror raw bound/u);
 		if(selection === "structural")
 		{
 			assert.throws(() => executeCorpus(request, { ...api, empty: values => values }), /accepted: empty public bound/u);
