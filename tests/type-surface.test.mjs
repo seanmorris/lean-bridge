@@ -453,13 +453,17 @@ test("refinements, host null and erased proofs retain their individual value pos
 test("checked Subtype evidence promotes only top-level parameters and results", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	// Node, ten installed C-family profiles including Python CI, and three browser profiles.
+	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
+	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
+	// Ordinary Node, ten native profiles and three browsers; reviewed C/C++ and Node.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
-	assert.equal(installed.length, 2 * (2 + native.length + browser.length));
+	assert.equal(ordinary.length, 2 * (2 + native.length + browser.length));
+	assert.equal(reviewed.length, 8);
+	assert.equal(installed.length, ordinary.length + reviewed.length);
 	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, ...browser].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
-	for(const cell of installed)
+	for(const cell of ordinary)
 	{
 		assert.equal(cell.path, "ordinary-source");
 		if(native.includes(cell.profile))
@@ -472,6 +476,14 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 		}
 		assert.deepEqual(cell.stages.installedExecution.evidence, [browser.includes(cell.profile) ? "npm-browser-refinements-installed" : "npm-subtype-refinements-installed"]);
 		assert.match(cell.hostType, /declared primitive/u);
+	}
+	assert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), ["c", "cpp", "node-javascript", "node-typescript"]);
+	for(const cell of reviewed)
+	{
+		const native = ["c", "cpp"].includes(cell.profile);
+		assert.deepEqual(cell.stages.installedExecution.evidence, [`reviewed-subtype-${native ? "c-cpp" : "npm"}-installed`]);
+		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
+		assert.match(cell.hostType, native ? /checked by the exported Lean validator|proof-backed Lean result/u : /declared primitive/u);
 	}
 });
 

@@ -1,0 +1,994 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-api-promotion-v1",
+  "predecessorCommit": "72c5e27e62bf5676c29a24174cad7ff35b39c447",
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2",
+      "previousSha256": "144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66",
+      "edits": [
+        {
+          "start": 27900,
+          "previous": "",
+          "current": "\t\t, \"reviewed-api-promotion\"\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/c.md",
+      "currentSha256": "4bb90a34e45902ed9b72abb2d07d053460c971f9cff8f9c1f4b21cafcd2d24d6",
+      "previousSha256": "9951c3637e0de1c574510237d59ed4765a893a23dbcf727cc08d3721b33575a7",
+      "edits": [
+        {
+          "start": 54283,
+          "previous": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        },
+        {
+          "start": 56547,
+          "previous": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature); `Concrete host function for each reviewed finite specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Reviewed packages select finite applications from the authored Binding IR. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "currentSha256": "df8b18e4caaf221d059918ae322b18ce691dd8abc3ccd43b0731427ca2dbfcdd",
+      "previousSha256": "3ffa8848304038d43d8b9d34e502cbf5b061eaecbb8638b061081cdcc0bbd9eb",
+      "edits": [
+        {
+          "start": 45590,
+          "previous": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch` (input); `the base value projected from the proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Values cross as their base. The exported validator and the adapter each run the author's checked constructor independently; the export receives the constructed value. Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        },
+        {
+          "start": 47782,
+          "previous": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Not audited | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Polymorphic exports` | `Concrete function; generated struct per alias-named record (GMP integers in C, cpp_int in C++)` (signature); `Concrete host function for each reviewed finite specialization` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Each configured type application becomes a distinct monomorphic host function. The unspecialized Lean declaration is absent. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Reviewed packages select finite applications from the authored Binding IR. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | `Concrete host signature with no runtime type argument` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | `Concrete host signature with the Lean-selected instance dictionary erased` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "57e741f49a7af9898b82ff5fa94dca09098d090b9e0bc5f025d1101bb44012e6",
+      "previousSha256": "61581a896f6ef5c982cf4bfc6ecdafbbc25ce1c1eb808d3c6f79e746c74c6327",
+      "edits": [
+        {
+          "start": 35254,
+          "previous": "| `Subtype / {x // p x}` | `host type of the declared primitive, checked by the compiled Lean constructor before dispatch` (input); `host type of the declared primitive, projected from a proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Node JavaScript / TypeScript: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; heap-backed inputs are retained for validation and all decoded objects are released if validation rejects. Results are projected through .val after Lean returns.; Browser / React / Worker: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "current": "| `Subtype / {x // p x}` | `host type of the declared primitive, checked by the compiled Lean constructor before dispatch` (input); `host type of the declared primitive, projected from a proof-backed Lean result` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result); Not audited (field, callback input, callback result); Browser / React / Worker: Not audited | Node JavaScript / TypeScript: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; heap-backed inputs are retained for validation and all decoded objects are released if validation rejects. Results are projected through .val after Lean returns. Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input.; Browser / React / Worker: The host uses the base primitive representation. Compiled Lean validates inputs and constructs the proof-carrying subtype before the source call; results are projected through .val after Lean returns. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n"
+        },
+        {
+          "start": 37889,
+          "previous": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Named finite specializations` (signature); Browser / React / Worker: `Named finite specializations` (signature) | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Generator inspected | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | Node JavaScript / TypeScript: `Concrete host signature with no runtime type argument` (signature); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Not audited | Node JavaScript / TypeScript: Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Node JavaScript / TypeScript: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Not audited | Node JavaScript / TypeScript: Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Polymorphic exports` | Node JavaScript / TypeScript: `Concrete function; named readonly interface per alias-named record` (signature); `Concrete host function for each reviewed finite specialization` (signature); Browser / React / Worker: `Named finite specializations` (signature) | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Generator inspected | Node JavaScript / TypeScript: Each configured type application becomes a distinct monomorphic export. The unspecialized Lean declaration is absent from the package. An alias-named instantiation is one monomorphic host record type per alias; no type argument crosses at runtime. Name a closed generic structure application with an abbrev to get a host record with instantiated fields. Configured functions over these records, List aliases and Option aliases use ordinary concrete signatures. Reviewed packages select finite applications from the authored Binding IR. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | Node JavaScript / TypeScript: `Concrete host signature with no runtime type argument` (signature); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited | Node JavaScript / TypeScript: Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any. Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | Node JavaScript / TypeScript: `Concrete host signature with the Lean-selected instance dictionary erased` (signature); Browser / React / Worker: No host mapping recorded | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited. Reviewed IR: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Not audited | Node JavaScript / TypeScript: Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary. Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "dcc594486b05bb95a57b38c8376f82e898570c7ce7ec4f0f1859222e6949c739",
+      "previousSha256": "3af37f72e709ecb9dd3137c6a51a0a4f0c45850b887f6ef03675da6eed2330d9",
+      "edits": [
+        {
+          "start": 3663,
+          "previous": "| Checked Subtype | Top-level primitive-base parameters and results for Node, browser, C, C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI. | The [reviewed Subtype archive](reviewed-subtype-20261008/receipt.json) records C 2033 checks, C++ 2026 checks, and npm 2036 checks with 2024 rejections and strict TypeScript. It preserves both earlier failed attempts. | Promote only these reviewed hosts. Other reviewed native hosts, browser execution and ordinary Perl CI remain separate. Nested and nominal Subtype positions are not admitted. |\n| Finite function specializations | Ordinary source: Node JavaScript/strict TypeScript and all eleven native profiles. The shared specialized-record fixture includes Python 3.11/3.12 and four Perl ABIs. | The [specialized-record receipt](generic-record-specializations-20261007/receipt.json) is cited by `generic-record-specialized-*-installed` evidence. The [reviewed-specialization archive](reviewed-specializations-20261008/receipt.json) adds independently authored C/C++ and npm/strict TypeScript observations: ten specializations and one ordinary export, two-root reproduction and source-free offline installation. | Promote the reviewed observations for these three hosts; execute the remaining reviewed hosts and integrated CI. |\n",
+          "current": "| Checked Subtype | Ordinary top-level primitive-base parameters and results for Node, browser, C, C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI. Reviewed C/C++ and Node JavaScript/strict TypeScript now cite the [Subtype archive](reviewed-subtype-20261008/receipt.json): C 2033 checks, C++ 2026, npm 2036 checks and 2024 rejections. | None for these reviewed reports; the archive also preserves both failed attempts. | Other reviewed native hosts, browser execution and ordinary Perl CI remain separate. Nested and nominal Subtype positions are not admitted. |\n| Finite function specializations | Ordinary source: Node JavaScript/strict TypeScript and all eleven native profiles, including Python 3.11/3.12 and four Perl ABIs for specialized records. Reviewed C/C++ and Node JavaScript/strict TypeScript cite the [reviewed-specialization archive](reviewed-specializations-20261008/receipt.json): ten finite specializations and one ordinary export, two-root reproduction and source-free offline installation. | None for these reviewed reports. | Execute remaining reviewed hosts and browser contexts. The finite-function reports do not establish generic-record instantiation or integrated CI acceptance. |\n"
+        },
+        {
+          "start": 5790,
+          "previous": "| Reviewed-IR refinements and constructed generics | Fin parameters and results across all native profiles and the five npm profiles. C/C++ also have product and nonrecursive nominal-field observations. Each promotion cites its original reports; hosts do not inherit another host's dispatch counters. | Reviewed [finite-specialization](reviewed-specializations-20261008/receipt.json) and [Subtype](reviewed-subtype-20261008/receipt.json) C/C++ and npm observations are archived. | Generic-record instantiations and composed specializations are integrated; archive their completed C/C++ and npm runs, then promote exact observed cells. Reviewed field execution on other hosts remains separate. |\n",
+          "current": "| Reviewed-IR refinements and constructed generics | Fin parameters and results across all native profiles and the five npm profiles; C/C++ product and nonrecursive nominal fields. C/C++ and Node additionally have reviewed finite-function specialization and top-level Subtype observations. Every cell cites its original report and exact host/position scope. | None for reviewed finite-specialization and Subtype reports. | Generic-record instantiations and composed specializations are integrated; archive their completed C/C++ and npm runs, then promote exact observed cells. Reviewed field execution on other hosts remains separate. |\n"
+        },
+        {
+          "start": 18371,
+          "previous": "| Reviewed-IR Subtype, specializations and generic instantiations | Codex integration and Subtype (#1444) | Finite-specialization and Subtype C/C++ and npm/strict TypeScript reports are archived. Archive the completed generic-record/composed-specialization reports and promote only observed hosts and positions. The stronger generic-record npm run at `111ec13` deletes source/build roots before installing under a compiler-free PATH; older renamed-root runs do not establish that isolation. Configuration overrides remain forbidden. |\n",
+          "current": "| Reviewed-IR Subtype, specializations and generic instantiations | Codex integration and Subtype (#1444) | Reviewed finite-function specialization and Subtype observations are promoted for C/C++ and Node JavaScript/TypeScript only. Archive the completed generic-record/composed-specialization reports and promote only observed hosts and positions. The stronger generic-record npm run at `111ec13` deletes source/build roots before installing under a compiler-free PATH; older renamed-root runs do not establish that isolation. Configuration overrides remain forbidden. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-promotion-tests.mjs",
+      "currentSha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f",
+      "previousSha256": "b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b",
+      "edits": [
+        {
+          "start": 538,
+          "previous": "",
+          "current": "import { beforeReviewedApiPromotionSource } from \"./reviewed-api-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 836,
+          "previous": "",
+          "current": "const readPromotedSurface = async () => {\n\tconst result = await readTypeSurface();\n\tresult.document = JSON.parse(beforeReviewedApiPromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(result.document, null, 2) + \"\\n\"));\n\treturn result;\n};\n\n"
+        },
+        {
+          "start": 1279,
+          "previous": "\tconst { document } = await readTypeSurface();\n",
+          "current": "\tconst { document } = await readPromotedSurface();\n"
+        },
+        {
+          "start": 2338,
+          "previous": "\t\tfor(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t\tfor(const file of entry.files) assert.equal(sha256(beforeReviewedApiPromotionSource(file.path, await readFile(file.path, \"utf8\"), file.sha256)), file.sha256, file.path);\n"
+        },
+        {
+          "start": 3057,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05",
+      "previousSha256": "76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554",
+      "edits": [
+        {
+          "start": 31448,
+          "previous": "\t// Node, ten installed C-family profiles including Python CI, and three browser profiles.\n",
+          "current": "\tconst ordinary = installed.filter(cell => cell.path === \"ordinary-source\");\n\tconst reviewed = installed.filter(cell => cell.path === \"reviewed-ir\");\n\t// Ordinary Node, ten native profiles and three browsers; reviewed C/C++ and Node.\n"
+        },
+        {
+          "start": 31868,
+          "previous": "\tassert.equal(installed.length, 2 * (2 + native.length + browser.length));\n",
+          "current": "\tassert.equal(ordinary.length, 2 * (2 + native.length + browser.length));\n\tassert.equal(reviewed.length, 8);\n\tassert.equal(installed.length, ordinary.length + reviewed.length);\n"
+        },
+        {
+          "start": 32288,
+          "previous": "\tfor(const cell of installed)\n",
+          "current": "\tfor(const cell of ordinary)\n"
+        },
+        {
+          "start": 33087,
+          "previous": "",
+          "current": "\tassert.deepEqual([...new Set(reviewed.map(cell => cell.profile))].sort(), [\"c\", \"cpp\", \"node-javascript\", \"node-typescript\"]);\n\tfor(const cell of reviewed)\n\t{\n\t\tconst native = [\"c\", \"cpp\"].includes(cell.profile);\n\t\tassert.deepEqual(cell.stages.installedExecution.evidence, [`reviewed-subtype-${native ? \"c-cpp\" : \"npm\"}-installed`]);\n\t\tfor(const stage of Object.values(cell.stages)) assert.equal(stage.state, \"passed\");\n\t\tassert.match(cell.hostType, native ? /checked by the exported Lean validator|proof-backed Lean result/u : /declared primitive/u);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c4deb504e00e4033bab178f08fc457e626446562c09fff16c57db597fbdf7231",
+      "previousSha256": "9d31d0346e203ea44b53840f5f063b9745732af534b48995c5c91889dce0029a",
+      "edits": [
+        {
+          "start": 8318,
+          "previous": "",
+          "current": "import { reviewedApiPromotionChangedPaths } from \"./reviewed-api-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 44823,
+          "previous": "",
+          "current": "\t, ...reviewedApiPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-archive-source-history.mjs",
+      "currentSha256": "bb7c7b91e18c426bd2c4bfb981d3a58687e755f1540455d2ff78dcde38b5caf1",
+      "previousSha256": "a3ee45eb14782ee2a5e2ec9b378e2a18bdcb75135fb06d88867a6a09bc5c1e6b",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeReviewedApiPromotionSource } from \"./reviewed-api-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2344,
+          "previous": "",
+          "current": "\tsource = beforeReviewedApiPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-archive-source-history-tests.mjs",
+      "currentSha256": "d17a0e8e29402f3d6eaf91a8eb2f7898cfa4120849b1aefa5397116113cd2940",
+      "previousSha256": "118135d27660ac854035f492d21e2fc091dc09a57690c459ddc71ddd10806038",
+      "edits": [
+        {
+          "start": 354,
+          "previous": "",
+          "current": "import { beforeReviewedApiPromotionSource } from \"./reviewed-api-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 1060,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeReviewedApiPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "9aa106972392fd0acdf5d49fa192e1eb8253b3c690b2779ec676265b40f05bbf",
+      "previousSha256": "4a06bc9dfe8934590ca6e37a67ee4961b28942ea9e5cb6c85b1c8f5758c9436b",
+      "edits": [
+        {
+          "start": 50371,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 56639,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 79197,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 96400,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 112693,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 145343,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 168572,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 181538,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 196437,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 209370,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 222589,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 231127,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 239558,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 248572,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 256283,
+          "previous": "          \"sha256\": \"9951c3637e0de1c574510237d59ed4765a893a23dbcf727cc08d3721b33575a7\"\n",
+          "current": "          \"sha256\": \"4bb90a34e45902ed9b72abb2d07d053460c971f9cff8f9c1f4b21cafcd2d24d6\"\n"
+        },
+        {
+          "start": 256432,
+          "previous": "          \"sha256\": \"3ffa8848304038d43d8b9d34e502cbf5b061eaecbb8638b061081cdcc0bbd9eb\"\n",
+          "current": "          \"sha256\": \"df8b18e4caaf221d059918ae322b18ce691dd8abc3ccd43b0731427ca2dbfcdd\"\n"
+        },
+        {
+          "start": 257238,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 266813,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 275914,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 285763,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 297902,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 307936,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 316488,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 325782,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 338471,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 347722,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 357009,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 366132,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 374995,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 382380,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 390314,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 400964,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 407849,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 415058,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 422154,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 433013,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 440129,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 446507,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 452670,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 459429,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 466271,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 473113,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 482417,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 493651,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 503340,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 512933,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 524463,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 533026,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 544040,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 576570,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 582566,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 592829,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 602142,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 613690,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 622211,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 633167,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 682583,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 692685,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 699545,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 707195,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 707517,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 721226,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 721548,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 732601,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 732761,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 746821,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 746981,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 758275,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 758435,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 770346,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 770506,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 781634,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 781794,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 790217,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 790377,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 796675,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 796835,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 805061,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 805221,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 813038,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 813356,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 825328,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 835968,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 844466,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 899984,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1015559,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1072761,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1077561,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1080505,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1084259,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1086955,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1091262,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1094215,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1098768,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1101560,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1105722,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1108613,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1113356,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1116214,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1122594,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1126494,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1131721,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1139656,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1146656,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1149914,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1154703,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1157800,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1163675,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1168537,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1173066,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1178797,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1186089,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1193216,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1219201,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1225760,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1249445,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1256042,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1282381,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1289005,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1321684,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1330231,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1348225,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1355783,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1370605,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1378320,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1390497,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1398012,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1411950,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1418655,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1424969,
+          "previous": "          \"sha256\": \"76893168fb5f7208ead6b90b5e81a9e439f4fb76e6e8103982b886503419b554\"\n",
+          "current": "          \"sha256\": \"9047d3d3d4c0e9d557fa7c86e1c9e879b760a9c07d3e735896fde3028b252d05\"\n"
+        },
+        {
+          "start": 1451173,
+          "previous": "          \"sha256\": \"144ea02318225460abe70dc323f34d898f79d1d8f278e01abcce52bc5eef4c66\"\n",
+          "current": "          \"sha256\": \"eec62623f1bdb17ec00d34987f56f56e2a96ce64ec19df8d705145fbab0afdb2\"\n"
+        },
+        {
+          "start": 1684551,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1688305,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1691978,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1695492,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1699168,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1702899,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1706525,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1710077,
+          "previous": "          \"sha256\": \"b02dfc2ba77096fca27b1a0f34986876e7d525313b741e1f0b6df96eecbfdf8b\"\n",
+          "current": "          \"sha256\": \"46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f\"\n"
+        },
+        {
+          "start": 1711177,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"reviewed-subtype-c-cpp-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"145c0f93aaef8d39ccc134c13bedf166822b35b7\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_SUBTYPE_PROFILES=c,cpp node --test --test-concurrency=1 tests/reviewed-subtype-installed.test.mjs\",\n      \"scope\": \"c, cpp: Twelve independently reviewed exports with top-level primitive-base Subtype parameters/results, two specializations of one generic choosing different constructors, normalization, rejection/recovery and a zero-argument refined result. Two-root reproducibility, source/build removal, offline installation and a compiler-free consumer path. Local native glibc 2.36 acceptance does not establish another floor or hosted CI. Browser, other-host and dispatch-counter coverage is not inferred.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-subtypes.mjs\",\n          \"sha256\": \"c3777a8e29de8eb601698d7e35674343f659f3e91e97d11fc8a2e3c4c9556db9\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"770e83cd1348808616b406fbbc1ba05e6acb9e7560ba94a1ecdac3077113815c\"\n        },\n        {\n          \"path\": \"src/build/component-refinements.mjs\",\n          \"sha256\": \"08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11\"\n        },\n        {\n          \"path\": \"src/build/compiler-adapters.mjs\",\n          \"sha256\": \"2159630ec3ec47351890170579b1385c9884556b1d27aeabb441296e64324c04\"\n        },\n        {\n          \"path\": \"src/build/lean-component-compiler.mjs\",\n          \"sha256\": \"5c154dcbb8ee1816b98e0e7dafe91218c9048addae880d2d387bb707e18df078\"\n        },\n        {\n          \"path\": \"src/release/component-npm-package.mjs\",\n          \"sha256\": \"f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4\"\n        },\n        {\n          \"path\": \"tests/reviewed-subtype-installed.test.mjs\",\n          \"sha256\": \"255ab8fbb45161cd7ba41d3fa50483f086ce1d61551848acb4066ca1bc011631\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-installed-fixture.mjs\",\n          \"sha256\": \"81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-fixture.mjs\",\n          \"sha256\": \"98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-npm-tests.mjs\",\n          \"sha256\": \"8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b\"\n        },\n        {\n          \"path\": \"tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"tests/helpers/native-subtype-install.mjs\",\n          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-subtype/Subtypes.lean\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"tests/fixtures/subtype-consumers/c.c\",\n          \"sha256\": \"5cb1d652567ca46ed50a79ed436d1d771650d8290b181afc68fc92e2464f970a\"\n        },\n        {\n          \"path\": \"tests/fixtures/subtype-consumers/cpp.cpp\",\n          \"sha256\": \"5ff52ef94eb1209e65bc5e2d70ba2668535167f2404129cf000b9b5d5aad11d6\"\n        },\n        {\n          \"path\": \"tests/fixtures/reviewed-subtype-consumers/javascript.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-20261008/receipt.json\",\n          \"sha256\": \"9c14cc972f8404ec417ec499f4fe5450b13d5368100aeff8f8f7842817b4a146\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-20261008/c-cpp.json\",\n          \"sha256\": \"5c18618283df36687bc2da3bc08ce89dd978ef78715dcac4b7c219b9528a0031\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-evidence-tests.mjs\",\n          \"sha256\": \"898c044288755c2eb7f681b40a74d76188634fd9bf99472f9d51e54f05981a7f\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-references.mjs\",\n          \"sha256\": \"1232b00ffe85a4b19fc17933738419ee3c39f695a7dcc0a5fb09a02430ac4062\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-tests.mjs\",\n          \"sha256\": \"47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"reviewed-subtype-c-cpp-installed/archives/subtypes-1.0.0-c.tar.gz\",\n          \"sha256\": \"078b78ca5ba150aa3668a98b5a4b6fc7f31138dc4ec491067e07d3a15b83d085\"\n        },\n        {\n          \"path\": \"reviewed-subtype-c-cpp-installed/archives/subtypes-1.0.0-cpp.tar.gz\",\n          \"sha256\": \"0478ce9256c7035f1984d5ab1904d8eb61dd9c5137e19d9adf2395ceade56d31\"\n        }\n      ]\n    },\n    {\n      \"id\": \"reviewed-subtype-npm-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"145c0f93aaef8d39ccc134c13bedf166822b35b7\",\n      \"command\": \"LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/absolute/path/to/pinned-runtime LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST=1 node --test --test-concurrency=1 tests/reviewed-subtype-installed.test.mjs\",\n      \"scope\": \"node-javascript, node-typescript: Twelve independently reviewed exports with top-level primitive-base Subtype parameters/results, two specializations of one generic choosing different constructors, normalization, rejection/recovery and a zero-argument refined result. Two-root reproducibility, source/build removal, offline installation and a compiler-free consumer path. Local native glibc 2.36 acceptance does not establish another floor or hosted CI. Browser, other-host and dispatch-counter coverage is not inferred.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-subtypes.mjs\",\n          \"sha256\": \"c3777a8e29de8eb601698d7e35674343f659f3e91e97d11fc8a2e3c4c9556db9\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-refinements.mjs\",\n          \"sha256\": \"bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d\"\n        },\n        {\n          \"path\": \"src/backends/c/native-copied-values.mjs\",\n          \"sha256\": \"770e83cd1348808616b406fbbc1ba05e6acb9e7560ba94a1ecdac3077113815c\"\n        },\n        {\n          \"path\": \"src/build/component-refinements.mjs\",\n          \"sha256\": \"08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11\"\n        },\n        {\n          \"path\": \"src/build/compiler-adapters.mjs\",\n          \"sha256\": \"2159630ec3ec47351890170579b1385c9884556b1d27aeabb441296e64324c04\"\n        },\n        {\n          \"path\": \"src/build/lean-component-compiler.mjs\",\n          \"sha256\": \"5c154dcbb8ee1816b98e0e7dafe91218c9048addae880d2d387bb707e18df078\"\n        },\n        {\n          \"path\": \"src/release/component-npm-package.mjs\",\n          \"sha256\": \"f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4\"\n        },\n        {\n          \"path\": \"tests/reviewed-subtype-installed.test.mjs\",\n          \"sha256\": \"255ab8fbb45161cd7ba41d3fa50483f086ce1d61551848acb4066ca1bc011631\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-installed-fixture.mjs\",\n          \"sha256\": \"81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-fixture.mjs\",\n          \"sha256\": \"98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-npm-tests.mjs\",\n          \"sha256\": \"8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b\"\n        },\n        {\n          \"path\": \"tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"tests/helpers/native-subtype-install.mjs\",\n          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-subtype/Subtypes.lean\",\n          \"sha256\": \"bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c\"\n        },\n        {\n          \"path\": \"tests/fixtures/subtype-consumers/c.c\",\n          \"sha256\": \"5cb1d652567ca46ed50a79ed436d1d771650d8290b181afc68fc92e2464f970a\"\n        },\n        {\n          \"path\": \"tests/fixtures/subtype-consumers/cpp.cpp\",\n          \"sha256\": \"5ff52ef94eb1209e65bc5e2d70ba2668535167f2404129cf000b9b5d5aad11d6\"\n        },\n        {\n          \"path\": \"tests/fixtures/reviewed-subtype-consumers/javascript.mjs\",\n          \"sha256\": \"89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-20261008/receipt.json\",\n          \"sha256\": \"9c14cc972f8404ec417ec499f4fe5450b13d5368100aeff8f8f7842817b4a146\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-subtype-20261008/npm.json\",\n          \"sha256\": \"ea492029860f23e89a95f92fa73e881c8f57adab787417b658086b2eaa92bb6b\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-subtype-evidence-tests.mjs\",\n          \"sha256\": \"898c044288755c2eb7f681b40a74d76188634fd9bf99472f9d51e54f05981a7f\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-references.mjs\",\n          \"sha256\": \"1232b00ffe85a4b19fc17933738419ee3c39f695a7dcc0a5fb09a02430ac4062\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-tests.mjs\",\n          \"sha256\": \"47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"reviewed-subtype-npm-installed/subtypes-1.0.0.tgz\",\n          \"sha256\": \"e486b2fb084ba4337bdcbc1833a83b4598ca5799994abb051f688301335d4758\"\n        },\n        {\n          \"path\": \"reviewed-subtype-npm-installed/lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz\",\n          \"sha256\": \"adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0\"\n        }\n      ]\n    },\n    {\n      \"id\": \"reviewed-finite-specializations-c-cpp-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"fc8dbefc5a365b3b19c797ff95067656603c69b5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=c,cpp node --test --test-concurrency=1 tests/reviewed-specializations.test.mjs\",\n      \"scope\": \"c, cpp: Ten independently reviewed finite function specializations and one ordinary export, closed primitive and alias arguments, and compiler-selected instance dictionaries. Open generic declarations remain absent. Two-root reproducibility, source/build removal, offline installation and a compiler-free consumer path. Local native glibc 2.36 acceptance does not establish another floor or hosted CI. Browser, other-host and dispatch-counter coverage is not inferred.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d\"\n        },\n        {\n          \"path\": \"src/release/component-npm-package.mjs\",\n          \"sha256\": \"f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4\"\n        },\n        {\n          \"path\": \"tests/reviewed-specializations.test.mjs\",\n          \"sha256\": \"a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-native-specialization-fixture.mjs\",\n          \"sha256\": \"141fb8e9be5ea58f5ead4be6189efc3476cecaf7e06ef73d2166757577f33a56\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-specializations/Specialized.lean\",\n          \"sha256\": \"a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693\"\n        },\n        {\n          \"path\": \"tests/fixtures/specialization-consumers/c.c\",\n          \"sha256\": \"56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9\"\n        },\n        {\n          \"path\": \"tests/fixtures/specialization-consumers/cpp.cpp\",\n          \"sha256\": \"f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-specializations-20261008/receipt.json\",\n          \"sha256\": \"ef9f5dfa718558abfc3080b8c518b12f740daf04acb1590d717d9459443be84e\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-specializations-20261008/c-cpp.json\",\n          \"sha256\": \"f3e558803ec2e7b3dd28b0c740bef82fc02922604a90c723e4bc21e1c2356c83\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-specialization-evidence-tests.mjs\",\n          \"sha256\": \"3e5bfc4fc430247ac8fdcf41b5a8739e583b734efc91f8da8f0f5b62f71c6e81\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-references.mjs\",\n          \"sha256\": \"1232b00ffe85a4b19fc17933738419ee3c39f695a7dcc0a5fb09a02430ac4062\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-tests.mjs\",\n          \"sha256\": \"47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"reviewed-finite-specializations-c-cpp-installed/archives/specialized-1.0.0-c.tar.gz\",\n          \"sha256\": \"ddc10090434abf833e86556bdd32d367a98a9a9db75fc63d2b614f2b8b7e02d2\"\n        },\n        {\n          \"path\": \"reviewed-finite-specializations-c-cpp-installed/archives/specialized-1.0.0-cpp.tar.gz\",\n          \"sha256\": \"42f14990373b9212e009c2f47a41f90640aa5cde819d2bc57b954f8132d33118\"\n        }\n      ]\n    },\n    {\n      \"id\": \"reviewed-finite-specializations-npm-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"fc8dbefc5a365b3b19c797ff95067656603c69b5\",\n      \"command\": \"LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/absolute/path/to/pinned-runtime LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_TEST=1 node --test --test-concurrency=1 tests/reviewed-specializations.test.mjs\",\n      \"scope\": \"node-javascript, node-typescript: Ten independently reviewed finite function specializations and one ordinary export, closed primitive and alias arguments, and compiler-selected instance dictionaries. Open generic declarations remain absent. Two-root reproducibility, source/build removal, offline installation and a compiler-free consumer path. Local native glibc 2.36 acceptance does not establish another floor or hosted CI. Browser, other-host and dispatch-counter coverage is not inferred.\",\n      \"files\": [\n        {\n          \"path\": \"src/analyze/NativeExports.lean\",\n          \"sha256\": \"a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455\"\n        },\n        {\n          \"path\": \"src/analyze/reviewed-source.mjs\",\n          \"sha256\": \"aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e\"\n        },\n        {\n          \"path\": \"src/build/native-model.mjs\",\n          \"sha256\": \"0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d\"\n        },\n        {\n          \"path\": \"src/release/component-npm-package.mjs\",\n          \"sha256\": \"f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4\"\n        },\n        {\n          \"path\": \"tests/reviewed-specializations.test.mjs\",\n          \"sha256\": \"a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-native-specialization-fixture.mjs\",\n          \"sha256\": \"141fb8e9be5ea58f5ead4be6189efc3476cecaf7e06ef73d2166757577f33a56\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-reviewed-ir.mjs\",\n          \"sha256\": \"621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7\"\n        },\n        {\n          \"path\": \"tests/helpers/copied-fixture-install.mjs\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"tests/fixtures/onboarding/native-specializations/Specialized.lean\",\n          \"sha256\": \"a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693\"\n        },\n        {\n          \"path\": \"tests/fixtures/specialization-consumers/c.c\",\n          \"sha256\": \"56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9\"\n        },\n        {\n          \"path\": \"tests/fixtures/specialization-consumers/cpp.cpp\",\n          \"sha256\": \"f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-specializations-20261008/receipt.json\",\n          \"sha256\": \"ef9f5dfa718558abfc3080b8c518b12f740daf04acb1590d717d9459443be84e\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-specializations-20261008/npm.json\",\n          \"sha256\": \"c5a7210773ab98b1a9b895741d6ab587fe4120856aa5a3b27b98b35f9dc2a799\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-specialization-evidence-tests.mjs\",\n          \"sha256\": \"3e5bfc4fc430247ac8fdcf41b5a8739e583b734efc91f8da8f0f5b62f71c6e81\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-references.mjs\",\n          \"sha256\": \"1232b00ffe85a4b19fc17933738419ee3c39f695a7dcc0a5fb09a02430ac4062\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-api-promotion-tests.mjs\",\n          \"sha256\": \"47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"reviewed-finite-specializations-npm-installed/specialized-1.0.0.tgz\",\n          \"sha256\": \"ec42bdf8b7ea8b8aa5c346ac9bc8f1d88b18573c0231d83213e753dc3b296260\"\n        },\n        {\n          \"path\": \"reviewed-finite-specializations-npm-installed/lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz\",\n          \"sha256\": \"53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79\"\n        }\n      ]\n"
+        },
+        {
+          "start": 3225391,
+          "previous": "      \"id\": \"ordinary-compiler-node-javascript-3\",\n",
+          "current": "      \"id\": \"ordinary-compiler-node-javascript-3\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\",\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\"\n      ],\n      \"shapes\": [\n        \"io\",\n        \"eio\",\n        \"task\",\n        \"iterator\",\n        \"async-iterator\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"The ordinary npm compiler does not admit the compound or identity positions listed here.\",\n      \"hostTypes\": {\n        \"io\": {\n          \"signature\": null\n        },\n        \"eio\": {\n          \"signature\": null\n        },\n        \"task\": {\n          \"signature\": null\n        },\n        \"iterator\": {\n          \"signature\": null\n        },\n        \"async-iterator\": {\n          \"signature\": null\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"unreviewed\",\n          \"evidence\": [],\n          \"note\": \"No type-specific execution evidence is recorded for this stage and position.\"\n        },\n        \"generation\": {\n          \"state\": \"unreviewed\",\n          \"evidence\": [],\n          \"note\": \"No type-specific execution evidence is recorded for this stage and position.\"\n        },\n        \"compilation\": {\n          \"state\": \"rejected\",\n          \"evidence\": [\n            \"npm-source-pipeline\"\n          ],\n          \"note\": \"The ordinary component signature guard does not compile this runtime type or callable shape.\"\n        },\n        \"packaging\": {\n          \"state\": \"unreviewed\",\n          \"evidence\": [],\n          \"note\": \"No type-specific execution evidence is recorded for this stage and position.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"unreviewed\",\n          \"evidence\": [],\n          \"note\": \"No type-specific execution evidence is recorded for this stage and position.\"\n        }\n      },\n      \"limitations\": [\n        \"Proof-only declarations require elaborator-guided erasure, not a runtime proof value.\",\n        \"Reviewed IR profiles are audited separately.\"\n      ]\n    },\n    {\n      \"id\": \"javascript-delivery\",\n"
+        },
+        {
+          "start": 3227695,
+          "previous": "        \"io\",\n        \"eio\",\n",
+          "current": ""
+        },
+        {
+          "start": 3227731,
+          "previous": "        \"async-iterator\"\n",
+          "current": "        \"async-iterator\",\n        \"optional-parameter\"\n"
+        },
+        {
+          "start": 3227845,
+          "previous": "      \"path\": \"ordinary-source\",\n      \"scope\": \"The ordinary npm compiler does not admit the compound or identity positions listed here.\",\n",
+          "current": "      \"path\": \"reviewed-ir\",\n      \"scope\": \"Reviewed-IR delivery and finite-specialization adapters are gated by their feature contracts.\",\n"
+        },
+        {
+          "start": 3228007,
+          "previous": "        \"io\": {\n          \"signature\": null\n        },\n        \"eio\": {\n          \"signature\": null\n        },\n",
+          "current": ""
+        },
+        {
+          "start": 3228025,
+          "previous": "          \"signature\": null\n",
+          "current": "          \"signature\": \"Promise<T>\"\n"
+        },
+        {
+          "start": 3228094,
+          "previous": "          \"signature\": null\n",
+          "current": "          \"signature\": \"Iterator<T>\"\n"
+        },
+        {
+          "start": 3228170,
+          "previous": "          \"signature\": null\n",
+          "current": "          \"signature\": \"AsyncIterator<T>\"\n        },\n        \"optional-parameter\": {\n          \"signature\": \"Optional argument with declared default\"\n"
+        },
+        {
+          "start": 3228570,
+          "previous": "",
+          "current": "          \"state\": \"inspected\",\n          \"evidence\": [\n            \"javascript-mapping-audit\"\n          ],\n          \"note\": \"Reviewed-IR delivery and finite-specialization adapters are gated by their feature contracts.\"\n        },\n        \"compilation\": {\n"
+        },
+        {
+          "start": 3228995,
+          "previous": "        \"compilation\": {\n          \"state\": \"rejected\",\n          \"evidence\": [\n            \"npm-source-pipeline\"\n          ],\n          \"note\": \"The ordinary component signature guard does not compile this runtime type or callable shape.\"\n        },\n",
+          "current": ""
+        },
+        {
+          "start": 3229415,
+          "previous": "        \"Proof-only declarations require elaborator-guided erasure, not a runtime proof value.\",\n        \"Reviewed IR profiles are audited separately.\"\n",
+          "current": "        \"Delivery syntax does not establish a compiled Lean Task/IO adapter or installed async acceptance.\"\n"
+        },
+        {
+          "start": 3229544,
+          "previous": "      \"id\": \"javascript-delivery\",\n",
+          "current": "      \"id\": \"javascript-reviewed-browser-generic-unverified\",\n"
+        },
+        {
+          "start": 3229626,
+          "previous": "        \"node-javascript\",\n        \"node-typescript\",\n",
+          "current": ""
+        },
+        {
+          "start": 3229733,
+          "previous": "        \"task\",\n        \"iterator\",\n        \"async-iterator\",\n        \"generic\",\n        \"optional-parameter\"\n",
+          "current": "        \"generic\"\n"
+        },
+        {
+          "start": 3229972,
+          "previous": "        \"task\": {\n          \"signature\": \"Promise<T>\"\n        },\n        \"iterator\": {\n          \"signature\": \"Iterator<T>\"\n        },\n        \"async-iterator\": {\n          \"signature\": \"AsyncIterator<T>\"\n        },\n",
+          "current": ""
+        },
+        {
+          "start": 3230047,
+          "previous": "        },\n        \"optional-parameter\": {\n          \"signature\": \"Optional argument with declared default\"\n",
+          "current": ""
+        },
+        {
+          "start": 4083066,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"reviewed-subtype-c-cpp-reviewed-ir\",\n      \"profiles\": [\n        \"c\",\n        \"cpp\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Twelve independently reviewed exports with top-level primitive-base Subtype parameters/results, two specializations of one generic choosing different constructors, normalization, rejection/recovery and a zero-argument refined result.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch\",\n          \"result\": \"the base value projected from the proof-backed Lean result\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-c-cpp-installed\"\n          ],\n          \"note\": \"Independently reviewed author decisions reconcile with fresh Lean elaboration, including exact source identity and compiled signatures.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-c-cpp-installed\"\n          ],\n          \"note\": \"Concrete host signatures preserve each chosen constructor or finite application; the host supplies no proof or type argument.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-c-cpp-installed\"\n          ],\n          \"note\": \"Typed Lean adapters compile the authorized decision. Checked constructors validate Subtype input before the source export runs.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-c-cpp-installed\"\n          ],\n          \"note\": \"Two unrelated author roots reproduce the original archives before source-free offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-c-cpp-installed\"\n          ],\n          \"note\": \"The exact archived C/C++ or Node JavaScript and strict TypeScript consumer executes the prepared package. Dispatch counters are not measured.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named C/C++ or Node JavaScript/TypeScript profiles. Browser and other native-host execution remain separate.\",\n        \"Top-level primitive-base Subtype only; nested, nominal-field and callback Subtype positions are not promoted.\",\n        \"Original local producer revisions and artifact hashes remain authoritative; no integrated CI, additional runtime-floor or measured-dispatch claim is added.\"\n      ],\n      \"conversionNotes\": {\n        \"subtype\": \"Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input.\"\n      }\n    },\n    {\n      \"id\": \"reviewed-subtype-npm-reviewed-ir\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Twelve independently reviewed exports with top-level primitive-base Subtype parameters/results, two specializations of one generic choosing different constructors, normalization, rejection/recovery and a zero-argument refined result.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"parameter\": \"host type of the declared primitive, checked by the compiled Lean constructor before dispatch\",\n          \"result\": \"host type of the declared primitive, projected from a proof-backed Lean result\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-npm-installed\"\n          ],\n          \"note\": \"Independently reviewed author decisions reconcile with fresh Lean elaboration, including exact source identity and compiled signatures.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-npm-installed\"\n          ],\n          \"note\": \"Concrete host signatures preserve each chosen constructor or finite application; the host supplies no proof or type argument.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-npm-installed\"\n          ],\n          \"note\": \"Typed Lean adapters compile the authorized decision. Checked constructors validate Subtype input before the source export runs.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-npm-installed\"\n          ],\n          \"note\": \"Two unrelated author roots reproduce the original archives before source-free offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-subtype-npm-installed\"\n          ],\n          \"note\": \"The exact archived C/C++ or Node JavaScript and strict TypeScript consumer executes the prepared package. Dispatch counters are not measured.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named C/C++ or Node JavaScript/TypeScript profiles. Browser and other native-host execution remain separate.\",\n        \"Top-level primitive-base Subtype only; nested, nominal-field and callback Subtype positions are not promoted.\",\n        \"Original local producer revisions and artifact hashes remain authoritative; no integrated CI, additional runtime-floor or measured-dispatch claim is added.\"\n      ],\n      \"conversionNotes\": {\n        \"subtype\": \"Reviewed Binding IR selects the checked constructor, including normalizing constructors that preserve the caller's input.\"\n      }\n    },\n    {\n      \"id\": \"reviewed-finite-specializations-c-cpp-reviewed-ir\",\n      \"profiles\": [\n        \"c\",\n        \"cpp\"\n      ],\n      \"shapes\": [\n        \"generic\",\n        \"implicit\",\n        \"instance\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Ten independently reviewed finite function specializations and one ordinary export, closed primitive and alias arguments, and compiler-selected instance dictionaries. Open generic declarations remain absent.\",\n      \"hostTypes\": {\n        \"generic\": {\n          \"signature\": \"Concrete host function for each reviewed finite specialization\"\n        },\n        \"implicit\": {\n          \"signature\": \"Concrete host signature with no runtime type argument\"\n        },\n        \"instance\": {\n          \"signature\": \"Concrete host signature with the Lean-selected instance dictionary erased\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-c-cpp-installed\"\n          ],\n          \"note\": \"Independently reviewed author decisions reconcile with fresh Lean elaboration, including exact source identity and compiled signatures.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-c-cpp-installed\"\n          ],\n          \"note\": \"Concrete host signatures preserve each chosen constructor or finite application; the host supplies no proof or type argument.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-c-cpp-installed\"\n          ],\n          \"note\": \"Typed Lean adapters compile the authorized decision. Checked constructors validate Subtype input before the source export runs.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-c-cpp-installed\"\n          ],\n          \"note\": \"Two unrelated author roots reproduce the original archives before source-free offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-c-cpp-installed\"\n          ],\n          \"note\": \"The exact archived C/C++ or Node JavaScript and strict TypeScript consumer executes the prepared package. Dispatch counters are not measured.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named C/C++ or Node JavaScript/TypeScript profiles. Browser and other native-host execution remain separate.\",\n        \"Only closed finite function specializations. Open generic dispatch, generic-record instantiation, recursive, inherited and dependent generic structures are not promoted by these reports.\",\n        \"Original local producer revisions and artifact hashes remain authoritative; no integrated CI, additional runtime-floor or measured-dispatch claim is added.\"\n      ],\n      \"conversionNotes\": {\n        \"generic\": \"Reviewed packages select finite applications from the authored Binding IR.\",\n        \"implicit\": \"Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value.\",\n        \"instance\": \"Lean synthesizes the selected dictionary before native compilation. The host cannot provide or replace it.\"\n      }\n    },\n    {\n      \"id\": \"reviewed-finite-specializations-npm-reviewed-ir\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\"\n      ],\n      \"shapes\": [\n        \"generic\",\n        \"implicit\",\n        \"instance\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Ten independently reviewed finite function specializations and one ordinary export, closed primitive and alias arguments, and compiler-selected instance dictionaries. Open generic declarations remain absent.\",\n      \"hostTypes\": {\n        \"generic\": {\n          \"signature\": \"Concrete host function for each reviewed finite specialization\"\n        },\n        \"implicit\": {\n          \"signature\": \"Concrete host signature with no runtime type argument\"\n        },\n        \"instance\": {\n          \"signature\": \"Concrete host signature with the Lean-selected instance dictionary erased\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-npm-installed\"\n          ],\n          \"note\": \"Independently reviewed author decisions reconcile with fresh Lean elaboration, including exact source identity and compiled signatures.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-npm-installed\"\n          ],\n          \"note\": \"Concrete host signatures preserve each chosen constructor or finite application; the host supplies no proof or type argument.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-npm-installed\"\n          ],\n          \"note\": \"Typed Lean adapters compile the authorized decision. Checked constructors validate Subtype input before the source export runs.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-npm-installed\"\n          ],\n          \"note\": \"Two unrelated author roots reproduce the original archives before source-free offline installation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"reviewed-finite-specializations-npm-installed\"\n          ],\n          \"note\": \"The exact archived C/C++ or Node JavaScript and strict TypeScript consumer executes the prepared package. Dispatch counters are not measured.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named C/C++ or Node JavaScript/TypeScript profiles. Browser and other native-host execution remain separate.\",\n        \"Only closed finite function specializations. Open generic dispatch, generic-record instantiation, recursive, inherited and dependent generic structures are not promoted by these reports.\",\n        \"Original local producer revisions and artifact hashes remain authoritative; no integrated CI, additional runtime-floor or measured-dispatch claim is added.\"\n      ],\n      \"conversionNotes\": {\n        \"generic\": \"Reviewed packages select finite applications from the authored Binding IR.\",\n        \"implicit\": \"Lean elaboration supplies configured type arguments. They have no host runtime representation and are not replaced with null or any.\",\n        \"instance\": \"Lean synthesizes the selected dictionary before compilation. The host receives the resulting concrete callable and cannot substitute a dictionary.\"\n      }\n"
+        }
+      ]
+    }
+  ]
+}

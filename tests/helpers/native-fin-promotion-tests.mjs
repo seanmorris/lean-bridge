@@ -10,15 +10,22 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { nativeFinPromotionReferences } from "./native-fin-promotion-references.mjs";
 import { beforeNativeFinPromotionSource } from "./native-fin-promotion-source-history.mjs";
+import { beforeReviewedApiPromotionSource } from "./reviewed-api-promotion-source-history.mjs";
 import "./native-fin-promotion-source-history-tests.mjs";
 import "./fin-product-evidence-tests.mjs";
 import "./fin-product-array-dispatch-evidence-tests.mjs";
 import "./fin-record-evidence-tests.mjs";
 
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeReviewedApiPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
+
 test("native Fin promotion retains all eight original reports and artifact identities", async () => {
 	const references = await nativeFinPromotionReferences();
 	assert.equal(references.length, 8);
-	const { document } = await readTypeSurface();
+	const { document } = await readPromotedSurface();
 	const previous = JSON.parse(beforeNativeFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	for(const reference of references)
@@ -31,7 +38,7 @@ test("native Fin promotion retains all eight original reports and artifact ident
 		assert.ok(entry.files.some(file => file.path === reference.reportPath && file.sha256 === reference.reportSha256));
 		assert.ok(entry.files.some(file => file.path === reference.receiptPath));
 		assert.ok(entry.files.some(file => file.path === reference.validator));
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeReviewedApiPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
 		if(reference.kind === "products")
 		{
 			assert.match(entry.scope, /not an execution of the renamed absentOnly fixture/u);
@@ -43,7 +50,7 @@ test("native Fin promotion retains all eight original reports and artifact ident
 });
 
 test("native Fin promotion changes four field cells and supplements eight structural cells only", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const { document, ...contracts } = await readPromotedSurface();
 	const previous = JSON.parse(beforeNativeFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const references = await nativeFinPromotionReferences();
 	const added = document.observations.slice(previous.observations.length);

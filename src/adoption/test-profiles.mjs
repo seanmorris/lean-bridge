@@ -809,6 +809,7 @@ const profileManifest = Object.freeze({
 		, "native-subtype"
 		, "reviewed-subtype-installed"
 		, "reviewed-subtype-evidence"
+		, "reviewed-api-promotion"
 		, "native-refinement-boundaries"
 		, "cpp-variants"
 		, "c-variants"
