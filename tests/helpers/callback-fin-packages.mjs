@@ -131,6 +131,12 @@ assert.throws(() => raw("scalar", [3n]), /failed \\(5\\)/);
 assert.equal(api.scalar(2n), 2n);
 `;
 
+/** Each package's source, exports and closure arities; the browser acceptance reuses them unchanged. */
+export const callbackFinCases = Object.freeze({
+	scalar: { source: scalarSource, names: ["three", "five", "closure", "emptyInput", "twice", "emptyArray", "emptyOption", "nested"], arities: { "OnboardingSmall.closure": 1, "OnboardingSmall.emptyInput": 1 } }
+	, nominal: { source: nominalSource, names: ["packet", "digits", "tree", "choice", "packetClosure", "scalar"], arities: { "OnboardingSmall.packetClosure": 1 } }
+});
+
 /**
  * Accept only the compiler's uninhabited callback-result rejection, in process or
  * decoded from the engine boundary; any other child failure or message is rejected.
@@ -151,10 +157,9 @@ export const isUninhabitedCallbackResult = error => error?.code === "uninhabited
  * @param options.engineRoot - Checkout containing the TypeScript compiler.
  */
 export const checkCallbackFinPackages = async (t, { fixture, build, runtimeRoot, engineRoot }) => {
-	for(const [profile, source, check, names, arities] of [
-		["scalar", scalarSource, scalarCheck, ["three", "five", "closure", "emptyInput", "twice", "emptyArray", "emptyOption", "nested"], { "OnboardingSmall.closure": 1, "OnboardingSmall.emptyInput": 1 }]
-		, ["nominal", nominalSource, nominalCheck, ["packet", "digits", "tree", "choice", "packetClosure", "scalar"], { "OnboardingSmall.packetClosure": 1 }]
-	]) {
+	for(const [profile, check] of [["scalar", scalarCheck], ["nominal", nominalCheck]])
+	{
+		const { source, names, arities } = callbackFinCases[profile];
 		const { directory, root } = await fixture(t);
 		await saveLakeFile(root, "OnboardingSmall.lean", source);
 		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: names.map(name => `OnboardingSmall.${name}`), arities }));

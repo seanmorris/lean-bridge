@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1445,
+  "execution": "local",
+  "revision": "72b7e21853d44d5c718e659b12acb746db2c359d",
+  "producerEngine": "local",
+  "scope": {
+    "sourcePath": "ordinary-source",
+    "profiles": [
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "executions": 12,
+    "checksPerExecution": 409,
+    "rejectionsPerExecution": 894,
+    "exports": 14,
+    "reviewedContracts": false,
+    "nativeHostReplies": false,
+    "dispatch": "not measured"
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/browser-callback-fin.test.mjs",
+      "sha256": "41eb7e25bb08945300fd223b4f40355e591a13921a9e8f2b426ba02967b4da24"
+    },
+    {
+      "path": "tests/helpers/browser-callback-fin.mjs",
+      "sha256": "15a2818bfa146bdee8d42f966c574115cb14f1128e8aef73c1ead619709e35e8"
+    },
+    {
+      "path": "tests/fixtures/browser-callback-fin/javascript.mjs",
+      "sha256": "953dcf1c7e0d1a070dc633d1b30c35f360cbbaf4b41b0c1eec94aec585c9dfcd"
+    },
+    {
+      "path": "tests/helpers/callback-fin-packages.mjs",
+      "sha256": "6e062c3f22a8fd8375938f3bf07f6d6266beaf670f1cad1662f46ecd231cc4e9"
+    },
+    {
+      "path": "tests/helpers/component-package-handoff.mjs",
+      "sha256": "c1a65cb670e3baee1f2bf602a665c0cabbd8c811edfd2dc650e6718ce14a6fbc"
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser.mjs",
+      "sha256": "7776bd4bfe99ed21fa2faf98b19aedc36d4e713f013831806329d6dd10e5c1d9"
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser-build.mjs",
+      "sha256": "9e6618c2653b6700a61a3591db9f2fc3b5718f8362aa1e64dca923c82665f852"
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "9f0f4466daeb2292f51ae1063e06b46f7687829183657ae824682a6e06359c3a"
+    },
+    {
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "sha256": "37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c"
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "sha256": "fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0"
+    }
+  ],
+  "identities": {
+    "bindingIrSha256": "dc56199c694de986e148f5cd105693227bc1bb501df4d495263f6016ecc237d2",
+    "componentIdentitySha256": "12640d3321c792da40046aa4c85e3fa435ef6de44a9cd8e76be4a3f355ccf795",
+    "receiptSha256": "74e67e83b863a014333127b1b60b7bc4b8290583c2eee2c7a5e5f4f2c71d104d",
+    "archives": {
+      "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79",
+      "onboarding-small-1.0.0.tgz": "df3e10b5fd3bb2815f228e711076a4131cd8cd13c1622939ef9598bd282271de"
+    }
+  },
+  "report": {
+    "path": "docs/evidence/browser-callback-fin-20261008/ordinary.json",
+    "sha256": "e5451a21af08ad66365eb0b47db47abbc294ebe934a5743541d55ea694c44c5f"
+  },
+  "log": {
+    "path": "docs/evidence/browser-callback-fin-20261008/ordinary.tap",
+    "sha256": "1fc6ca854833f0659b659012c5434b065f1afe9a5a08e021018da1733f3d8363",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "queue": {
+    "path": "docs/evidence/browser-callback-fin-20261008/ordinary.queue",
+    "sha256": "46364d0fe4b84c3d5dca06fa72a8d8c7f19636288adadaa4e4bae0d758b3ffbf"
+  },
+  "remaining": [
+    "Reviewed browser callback contracts need their own installed executions.",
+    "Native host-produced refined replies remain refused pending a type-preserving failure design.",
+    "This browser fixture does not instrument public-entry, adapter or source dispatch counters.",
+    "CI on the integrated revision remains separate from this local run."
+  ]
+}

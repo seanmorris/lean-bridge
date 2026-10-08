@@ -1,0 +1,36 @@
+TAP version 13
+# Subtest: the shared browser callback checks count the Node cases and fail on any weaker package
+ok 1 - the shared browser callback checks count the Node cases and fail on any weaker package
+  ---
+  duration_ms: 25.326716
+  type: 'test'
+  ...
+# Subtest: the browser package reuses both Node callback packages unchanged in one module
+ok 2 - the browser package reuses both Node callback packages unchanged in one module
+  ---
+  duration_ms: 0.834625
+  type: 'test'
+  ...
+# Subtest: each browser observation must carry the pinned counts from its own realm
+ok 3 - each browser observation must carry the pinned counts from its own realm
+  ---
+  duration_ms: 7.276628
+  type: 'test'
+  ...
+# Subtest: installed npm Fin callbacks run in browser pages, React effects and dedicated workers
+ok 4 - installed npm Fin callbacks run in browser pages, React effects and dedicated workers
+  ---
+  duration_ms: 236084.258268
+  type: 'test'
+  ...
+# Browser callback Fin archives: {\\n  "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79",\\n  "onboarding-small-1.0.0.tgz": "df3e10b5fd3bb2815f228e711076a4131cd8cd13c1622939ef9598bd282271de"\\n}
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 236803.379386
+exit=0
