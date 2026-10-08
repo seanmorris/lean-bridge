@@ -15,6 +15,7 @@ import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells } from "./helpers/historical-type-surface-cells.mjs";
 import { beforeCheckedRecordPromotionSource } from "./helpers/checked-record-promotion-source-history.mjs";
+import { beforeCallbackFinPromotionSource } from "./helpers/callback-fin-promotion-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -50,12 +51,14 @@ const observationFixture = () => {
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
 	const previous = JSON.parse(beforeCheckedRecordPromotionSource(file, await readFile(file, "utf8")));
+	// Compare shape introduction at its own inventory epoch; later callback observations are separate.
+	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(file, await readFile(file, "utf8")));
 	const unchanged = clone(previous);
 	assert.equal(previous.shapes.length, 48);
 	assert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);
 	const historical = historicalTypeSurfaceCells(previous, contracts);
 	assert.deepEqual(previous, unchanged);
-	assert.deepEqual(historical, typeSurfaceCells(document, contracts).filter(cell => cell.shape !== "checked-record"));
+	assert.deepEqual(historical, typeSurfaceCells(withCheckedRecords, contracts).filter(cell => cell.shape !== "checked-record"));
 	assert.deepEqual(historicalTypeSurfaceCells(document, contracts), typeSurfaceCells(document, contracts));
 	const missing = clone(previous);
 	missing.shapes = missing.shapes.filter(shape => shape.id !== "fin");

@@ -112,6 +112,7 @@ import { finNativeBatchPromotionChangedPaths } from "./fin-native-batch-promotio
 import { phpShardChangedPaths } from "./php-shard-source-history.mjs";
 import { checkedRecordPromotionChangedPaths } from "./checked-record-promotion-source-history.mjs";
 import { copiedGraphRepairChangedPaths } from "./copied-graph-repair-source-history.mjs";
+import { callbackFinPromotionChangedPaths } from "./callback-fin-promotion-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -688,6 +689,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpShardChangedPaths
 	, ...checkedRecordPromotionChangedPaths
 	, ...copiedGraphRepairChangedPaths
+	, ...callbackFinPromotionChangedPaths
 ])].sort());
 
 /**

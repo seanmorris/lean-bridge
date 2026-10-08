@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCallbackFinPromotionSource } from "./callback-fin-promotion-source-history.mjs";
 
 export const copiedGraphRepairHistoryPath = "docs/evidence/copied-graph-repair-source-history-20261008.json";
 export const copiedGraphRepairChangedPaths = [
@@ -96,6 +97,7 @@ export const reverseCopiedGraphRepairUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCopiedGraphRepairSource = (path, source, expected) => {
+	source = beforeCallbackFinPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !copiedGraphRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

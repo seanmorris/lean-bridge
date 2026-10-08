@@ -1,0 +1,9 @@
+revision=f9cda046e0b624bd847fe41d521b9cb9f84f21a3
+start=2026-10-08T04:55:58Z free=4778MiB node=v22.23.3 cpu=3 concurrency=1 queue=c-cpp,npm-r1,npm-r2 build/lean-runtime=/app/build/lean-runtime
+start c-cpp 2026-10-08T04:55:58Z pattern=^independently reviewed C and C env=LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_REPORT=/app/build/vo1445-reviewed-callback-fin-c-cpp-f9cda04.json
+end c-cpp 2026-10-08T05:02:26Z exit=0
+start npm-r1 2026-10-08T05:02:26Z pattern=^an independently reviewed npm package installs R1 env=LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_REPORT=/app/build/vo1445-reviewed-callback-fin-npm-r1-f9cda04.json LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_R2_NPM_REPORT=/app/build/vo1445-reviewed-callback-fin-npm-r2-f9cda04.json
+end npm-r1 2026-10-08T05:03:31Z exit=0
+start npm-r2 2026-10-08T05:03:31Z pattern=^an independently reviewed npm package installs R2 env=LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_REPORT=/app/build/vo1445-reviewed-callback-fin-npm-r1-f9cda04.json LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_R2_NPM_REPORT=/app/build/vo1445-reviewed-callback-fin-npm-r2-f9cda04.json
+end npm-r2 2026-10-08T05:04:45Z exit=0
+all steps passed 2026-10-08T05:04:45Z

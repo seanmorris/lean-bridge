@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1445
+  ],
+  "execution": "local",
+  "revision": "f9cda046e0b624bd847fe41d521b9cb9f84f21a3",
+  "scope": {
+    "hosts": [
+      "c",
+      "cpp",
+      "node-javascript",
+      "node-typescript"
+    ],
+    "sourcePath": "reviewed-source",
+    "nativeReview": "R1",
+    "npmReviews": [
+      "R1",
+      "R2"
+    ],
+    "checkedBounds": [
+      "3",
+      "5",
+      "10"
+    ],
+    "nativeHostProducedRefinedReplies": false,
+    "npmHostProducedRefinedReplies": "R2 only",
+    "slice": "The ReviewedCallbacks fixture's leased-closure arguments, Lean-produced results and arguments to host callbacks; R2 additionally exercises a scalar Fin 3 host reply through npm. This archive does not establish other hosts, recursive callbacks, Subtype, Fin 0 or bounds wider than a machine word.",
+    "dispatch": "not measured",
+    "hostedCi": false,
+    "binaryArchivesRetained": false,
+    "typescript": "Strict declaration checking with skipLibCheck false; runtime behavior uses the same Node consumer, not an independent TypeScript runtime."
+  },
+  "producerEnvironment": {
+    "node": "v22.23.3",
+    "cpu": 3,
+    "concurrency": 1,
+    "measurementSource": "The original queue records the Node version, CPU, concurrency and environment settings.",
+    "nativeGlibcFloor": {
+      "override": "2.36",
+      "declaredMinimum": "2.36",
+      "measuredHostGlibc": "not measured"
+    },
+    "unmeasuredVersions": [
+      "host glibc",
+      "Lean executable",
+      "C compiler",
+      "C++ compiler",
+      "npm",
+      "TypeScript"
+    ],
+    "toolchainDeclaration": {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/lean-toolchain",
+      "value": "leanprover/lean4:v4.32.2"
+    },
+    "nativeRuntimeRoot": "/app/build/lean-runtime",
+    "npmRuntimeRoot": "/app/build/lean-link-spike/lazy"
+  },
+  "runner": "The original aggregate TAP and queue record three sequential node:test selections; no separate runner source is retained.",
+  "sourceIdentityScope": "Selected compiler, adapter, harness, caller and fixture source files, not a complete dependency closure. npm analyzed input trees are independently reconstructed from the fixture plus the harness-generated configuration and review. No native input-tree reconstruction is claimed.",
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "9f0f4466daeb2292f51ae1063e06b46f7687829183657ae824682a6e06359c3a"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "68494bee28ec301b8092c92134ce9fe7553ad2e9836bc38a3e29769539abe8ef"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807"
+    },
+    {
+      "path": "src/analyze/callback-signature.mjs",
+      "sha256": "8fa38ae4186f67fd8cca4c4545cbc4872b569ddd178d704a943074d7896419dd"
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "sha256": "8ffc5e95e938cd7885b5c5b5ef9b17906a805117e709f484de301f2fd1246e72"
+    },
+    {
+      "path": "src/analyze/lean-project.mjs",
+      "sha256": "810ba5b9adf3b9af61763b8ed9fdc8eb0b4fa491bd53f287439536be63df3695"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "sha256": "546c4339664edf1ef0480e493f31a0d561fd0d0de80a06ba22cfebffe76fdb9d"
+    },
+    {
+      "path": "src/build/component-recursive-lean.mjs",
+      "sha256": "09758fa8d0f5ae66de0f66a26bee2794e8136862c418045cd64c4f7b8401b52c"
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+    },
+    {
+      "path": "src/build/component-callable-adapters.mjs",
+      "sha256": "fcdd5be193e6eb137a5c3d649216cc7b6da111dc2e98750c8ce65a06ecda8879"
+    },
+    {
+      "path": "src/backends/c/native-callables.mjs",
+      "sha256": "0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675"
+    },
+    {
+      "path": "src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "path": "tests/reviewed-callback-fin.test.mjs",
+      "sha256": "1186c157586424bb54534bc88a53fb7b2a0eb8f006b769a2cb81648230f2d794"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-fixture.mjs",
+      "sha256": "29cee4a01cd4d7fa9abf8a4d2ffa3d18507aa368b6811ff1c72029d68822b781"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "sha256": "455c4016f6c9d013d868319039c5e1e5ab827200c339027ed1c7b21a1dadb18b"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/fixtures/reviewed-callback-fin-consumers/c.c",
+      "sha256": "666a08d09baf8cc753f8fede7372c822362ae418ebf207d65edb2fd5d86a3fae"
+    },
+    {
+      "path": "tests/fixtures/reviewed-callback-fin-consumers/cpp.cpp",
+      "sha256": "070523091415b8ef00adfa788cab0ade3a703b094bfb4b36610c38c15648bbd5"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/ReviewedCallbacks.lean",
+      "sha256": "86bf340d6072fc538e1c020b24194cea0a668f8839c58fe141c4fd722c07a1cd"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/lakefile.toml",
+      "sha256": "cadbb31efb733aff3760ddfe3d4a1813ba503e4e446998c3a457472a0e3496dd"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-callback-fin/package.json",
+      "sha256": "7ea341b4a43d658b7c85c828a61b86ffee0d6370d8b13b4db753976b78357b8f"
+    }
+  ],
+  "reconstructed": {
+    "nativeCallers": {
+      "c": "88ed7fd6c6b869705a4719e6d75c7f43cdf9e048da1793f4d3a7de458ef2ff0b",
+      "cpp": "070523091415b8ef00adfa788cab0ade3a703b094bfb4b36610c38c15648bbd5"
+    },
+    "npmCallers": {
+      "r1": "d60a7871263eaf932f7f205f8b7f65206041db9f59c9361bb0c8b3416ba79e18",
+      "r2": "dfb98f6c319b8755265cc118df01712622a40fdbfbae1e991bfe26a8d3822edb",
+      "typescript": "28f9a0dc1f90034ff29942c665ebe58d9ccc4576d9962ceda893c3a57dc97ac0",
+      "scope": "Derived from the pinned harness; the original npm reports do not record caller hashes."
+    },
+    "npmInputTrees": {
+      "r1": {
+        "inputs": [
+          {
+            "path": "api.binding-ir.json",
+            "sha256": "4dba9813f6b740b40b95f1c7bfb2dd2ed46d8db64eba4d200011424dd70c4c67"
+          },
+          {
+            "path": "lakefile.toml",
+            "sha256": "cadbb31efb733aff3760ddfe3d4a1813ba503e4e446998c3a457472a0e3496dd"
+          },
+          {
+            "path": "lean-bridge.exports.json",
+            "sha256": "8cfe23ad11141bf4f321e76e410384a724502691aa0d958490060656b802b4b5"
+          },
+          {
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7ea341b4a43d658b7c85c828a61b86ffee0d6370d8b13b4db753976b78357b8f"
+          },
+          {
+            "path": "ReviewedCallbacks.lean",
+            "sha256": "86bf340d6072fc538e1c020b24194cea0a668f8839c58fe141c4fd722c07a1cd"
+          }
+        ],
+        "sha256": "e206d7e0b71f9bd077548320796a336abd3c21886f912882fd022721184e3130"
+      },
+      "r2": {
+        "inputs": [
+          {
+            "path": "api.binding-ir.json",
+            "sha256": "e918ead3c6867341d18f0face2392cda39b8bfa5da2b9d3ea830d197e061bf07"
+          },
+          {
+            "path": "lakefile.toml",
+            "sha256": "cadbb31efb733aff3760ddfe3d4a1813ba503e4e446998c3a457472a0e3496dd"
+          },
+          {
+            "path": "lean-bridge.exports.json",
+            "sha256": "8cfe23ad11141bf4f321e76e410384a724502691aa0d958490060656b802b4b5"
+          },
+          {
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7ea341b4a43d658b7c85c828a61b86ffee0d6370d8b13b4db753976b78357b8f"
+          },
+          {
+            "path": "ReviewedCallbacks.lean",
+            "sha256": "86bf340d6072fc538e1c020b24194cea0a668f8839c58fe141c4fd722c07a1cd"
+          }
+        ],
+        "sha256": "01a79577b550ff5b74fdbb5c9dbf81520ec155350c8863c748f9bc2b8fbf1b1c"
+      }
+    }
+  },
+  "runs": [
+    {
+      "id": "c-cpp",
+      "report": {
+        "path": "docs/evidence/reviewed-callback-fin-20261008/c-cpp.json",
+        "originalPath": "build/vo1445-reviewed-callback-fin-c-cpp-f9cda04.json",
+        "bytes": 3098,
+        "sha256": "1a5bcc37b01ceacbf265a62175adc1ffd8e05be504560fd21fb91fb8d37b1fed"
+      },
+      "identities": {
+        "archives": {
+          "archives/reviewedcallbacks-1.0.0-c.tar.gz": "17bf4c1b6b82e393d500fe0234c67147c503a0d76fe504873ee07183926755af",
+          "archives/reviewedcallbacks-1.0.0-cpp.tar.gz": "c4304f6e931e41a73a6b1505bacb4577653c470c5dd907e95d3e728c3bdc9aeb"
+        },
+        "consumers": [
+          {
+            "profile": "c",
+            "bindingIrSha256": "948742bd68cea23e8741784e5a1365b4cb83d7fdea66a4ad963274758a2c8711",
+            "modelSha256": "534da6c94c24360a4c1e7f4ad7776875476706829388f8e2a7dd6f37a315195c",
+            "receiptSha256": "2acedbdca68daee09494f8d8aa4ec42d8807407e0072359843a6ecf4d7fa2967",
+            "packages": [
+              {
+                "artifacts": [
+                  {
+                    "bytes": 53856575,
+                    "path": "archives/reviewedcallbacks-1.0.0-c.tar.gz",
+                    "sha256": "17bf4c1b6b82e393d500fe0234c67147c503a0d76fe504873ee07183926755af"
+                  }
+                ],
+                "ecosystem": "c",
+                "name": "reviewedcallbacks",
+                "profile": "native-library-v1",
+                "requires": [],
+                "role": "component",
+                "runtimeDelivery": "embedded",
+                "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+                "target": "c",
+                "version": "1.0.0"
+              }
+            ]
+          },
+          {
+            "profile": "cpp",
+            "bindingIrSha256": "948742bd68cea23e8741784e5a1365b4cb83d7fdea66a4ad963274758a2c8711",
+            "modelSha256": "534da6c94c24360a4c1e7f4ad7776875476706829388f8e2a7dd6f37a315195c",
+            "receiptSha256": "2acedbdca68daee09494f8d8aa4ec42d8807407e0072359843a6ecf4d7fa2967",
+            "packages": [
+              {
+                "artifacts": [
+                  {
+                    "bytes": 51786810,
+                    "path": "archives/reviewedcallbacks-1.0.0-cpp.tar.gz",
+                    "sha256": "c4304f6e931e41a73a6b1505bacb4577653c470c5dd907e95d3e728c3bdc9aeb"
+                  }
+                ],
+                "ecosystem": "cpp",
+                "name": "reviewedcallbacks",
+                "profile": "native-library-v1",
+                "requires": [],
+                "role": "component",
+                "runtimeDelivery": "embedded",
+                "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+                "target": "cpp",
+                "version": "1.0.0"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "npm-r1",
+      "report": {
+        "path": "docs/evidence/reviewed-callback-fin-20261008/npm-r1.json",
+        "originalPath": "build/vo1445-reviewed-callback-fin-npm-r1-f9cda04.json",
+        "bytes": 2233,
+        "sha256": "e8840fe72af7d690a623d1d4547a7fb477bd52c5933687c0fa010cd56c54c8ef"
+      },
+      "identities": {
+        "receipt": {
+          "bindingIrSha256": "c320ba20ab98cfe6fa099762f8caa4d311b667d95b49d31645feb9923bafa7ed",
+          "component": {
+            "id": "reviewedcallbacks@1.0.0",
+            "name": "reviewedcallbacks",
+            "version": "1.0.0"
+          },
+          "componentArtifactSha256": "1f8126ee6134de6e499f759e050300dea3452ee788831294669486e44e950042",
+          "componentBundleSha256": "4a42cc7b19b75c25a062da8bd2a5af76e1e850efdca7fcd6fce2f6e2148ac78a",
+          "componentIdentitySha256": "3fc35c12a459f180e7e259bf3b5fd296d7d58ad49f732c720d550647bad39807",
+          "kind": "lean-bridge-component-package-receipt",
+          "package": {
+            "archive": "reviewedcallbacks-1.0.0.tgz",
+            "package": "reviewedcallbacks@1.0.0",
+            "sha256": "1808fa113ce570f1c8903f22426e8b74a94348a910967838d7fca1e3778d5edc"
+          },
+          "policies": {
+            "componentCompiledOnce": true,
+            "nativeCallablesOnly": true,
+            "runtimeBinaryInComponent": false,
+            "runtimeShared": true
+          },
+          "provenanceSha256": "8025442f74695a4b7e9124e132229b5b7c688b0355e78a8826ff8e104abe5ec3",
+          "runtime": {
+            "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+            "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+            "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+          },
+          "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "e206d7e0b71f9bd077548320796a336abd3c21886f912882fd022721184e3130"
+          },
+          "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+        },
+        "receiptSha256": "1219d98b18664d92091b1c27e2757ec764b718fc36d2568f6ae0bc9ff3985f2d"
+      }
+    },
+    {
+      "id": "npm-r2",
+      "report": {
+        "path": "docs/evidence/reviewed-callback-fin-20261008/npm-r2.json",
+        "originalPath": "build/vo1445-reviewed-callback-fin-npm-r2-f9cda04.json",
+        "bytes": 2233,
+        "sha256": "d115e621640798fbcc57131b192f9eb465b44ab9b2a3bb004357f9874061e93c"
+      },
+      "identities": {
+        "receipt": {
+          "bindingIrSha256": "bb14c3356c6e945eca32c610355000a27a8a594bdbe60e8b453c37516c3d9be2",
+          "component": {
+            "id": "reviewedcallbacks@1.0.0",
+            "name": "reviewedcallbacks",
+            "version": "1.0.0"
+          },
+          "componentArtifactSha256": "1b54be57a1eaa24d085a9d34d9fed8880daa28b63230edd81ecbffc57db9329f",
+          "componentBundleSha256": "b51b35c6323201f98134b9cfe0110a07f644c79a1bc70a03412218e992fc7f44",
+          "componentIdentitySha256": "9762cc57511e2e1b2453c9bc08b22824c5f92ebe4e87ea3e886cc1ceed05333f",
+          "kind": "lean-bridge-component-package-receipt",
+          "package": {
+            "archive": "reviewedcallbacks-1.0.0.tgz",
+            "package": "reviewedcallbacks@1.0.0",
+            "sha256": "fa17f210d3611a55cba80563a4b47e50a43e97b780b38fe5d81e9e8004eeb45b"
+          },
+          "policies": {
+            "componentCompiledOnce": true,
+            "nativeCallablesOnly": true,
+            "runtimeBinaryInComponent": false,
+            "runtimeShared": true
+          },
+          "provenanceSha256": "96cbe462e9b4395e92238024935e02ab4a626ac947d3ae15862e289f3d216f46",
+          "runtime": {
+            "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+            "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+            "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+          },
+          "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+          "schemaVersion": 1,
+          "source": {
+            "treeSha256": "01a79577b550ff5b74fdbb5c9dbf81520ec155350c8863c748f9bc2b8fbf1b1c"
+          },
+          "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+        },
+        "receiptSha256": "0af4170cdf8cc25339faa2713ee7b214b80951eb0db71a5a0d5d9fd2ee549319"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-callback-fin-20261008/c-cpp.json",
+      "originalPath": "build/vo1445-reviewed-callback-fin-c-cpp-f9cda04.json",
+      "bytes": 3098,
+      "sha256": "1a5bcc37b01ceacbf265a62175adc1ffd8e05be504560fd21fb91fb8d37b1fed"
+    },
+    {
+      "path": "docs/evidence/reviewed-callback-fin-20261008/npm-r1.json",
+      "originalPath": "build/vo1445-reviewed-callback-fin-npm-r1-f9cda04.json",
+      "bytes": 2233,
+      "sha256": "e8840fe72af7d690a623d1d4547a7fb477bd52c5933687c0fa010cd56c54c8ef"
+    },
+    {
+      "path": "docs/evidence/reviewed-callback-fin-20261008/npm-r2.json",
+      "originalPath": "build/vo1445-reviewed-callback-fin-npm-r2-f9cda04.json",
+      "bytes": 2233,
+      "sha256": "d115e621640798fbcc57131b192f9eb465b44ab9b2a3bb004357f9874061e93c"
+    },
+    {
+      "path": "docs/evidence/reviewed-callback-fin-20261008/original.tap",
+      "originalPath": "build/vo1445-reviewed-callback-fin-f9cda04.tap",
+      "bytes": 1488,
+      "sha256": "1fb8b536cd41c7aae857a4c201a38931eae1eecd61ccb73adfb6943eed594da9"
+    },
+    {
+      "path": "docs/evidence/reviewed-callback-fin-20261008/original.queue",
+      "originalPath": "build/vo1445-reviewed-callback-fin-f9cda04.queue",
+      "bytes": 1448,
+      "sha256": "b5e686cfac8e32c3d32d035ca61390e3eea361666bc1ce76b3e678d547aa152e"
+    }
+  ]
+}

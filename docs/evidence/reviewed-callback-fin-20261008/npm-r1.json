@@ -1,0 +1,54 @@
+{
+  "dispatch": "not measured",
+  "observed": {
+    "checks": 19,
+    "rejections": 18
+  },
+  "path": "reviewed-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "c320ba20ab98cfe6fa099762f8caa4d311b667d95b49d31645feb9923bafa7ed",
+    "component": {
+      "id": "reviewedcallbacks@1.0.0",
+      "name": "reviewedcallbacks",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "1f8126ee6134de6e499f759e050300dea3452ee788831294669486e44e950042",
+    "componentBundleSha256": "4a42cc7b19b75c25a062da8bd2a5af76e1e850efdca7fcd6fce2f6e2148ac78a",
+    "componentIdentitySha256": "3fc35c12a459f180e7e259bf3b5fd296d7d58ad49f732c720d550647bad39807",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "reviewedcallbacks-1.0.0.tgz",
+      "package": "reviewedcallbacks@1.0.0",
+      "sha256": "1808fa113ce570f1c8903f22426e8b74a94348a910967838d7fca1e3778d5edc"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "8025442f74695a4b7e9124e132229b5b7c688b0355e78a8826ff8e104abe5ec3",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "e206d7e0b71f9bd077548320796a336abd3c21886f912882fd022721184e3130"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "1219d98b18664d92091b1c27e2757ec764b718fc36d2568f6ae0bc9ff3985f2d",
+  "reproducible": true,
+  "review": "R1",
+  "reviewedBindingIrSha256": "83d623f2e6b3c21a69ad7b03d81867e0cf5a6342c5ce3f773a9e7fe7d5fee7db",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "skipLibCheck": false,
+    "strict": true
+  }
+}

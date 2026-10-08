@@ -11,9 +11,16 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { historicalTypeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { checkedRecordPromotionReferences } from "./checked-record-promotion-references.mjs";
 import { beforeCheckedRecordPromotionSource } from "./checked-record-promotion-source-history.mjs";
+import { beforeCallbackFinPromotionSource } from "./callback-fin-promotion-source-history.mjs";
 import "./checked-record-promotion-source-history-tests.mjs";
 
 const previousSurface = async () => JSON.parse(beforeCheckedRecordPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeCallbackFinPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
 
 /**
  * Check the complete new observation set, including every excluded position and source route.
@@ -49,7 +56,7 @@ const assertPromotion = (document, previous, references) => {
 };
 
 test("checked-record promotion preserves six archived selections and their measured runtime boundaries", async () => {
-	const references = await checkedRecordPromotionReferences(), { document } = await readTypeSurface(), previous = await previousSurface();
+	const references = await checkedRecordPromotionReferences(), { document } = await readPromotedSurface(), previous = await previousSurface();
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	assert.deepEqual(references.map(item => item.checks), [{ c: 2020, cpp: 2018 }, { c: 2020, cpp: 2018 }, { c: 1001, cpp: 1001 }, { npm: 1011 }, { npm: 1011 }, { npm: 1001 }]);
 	for(const reference of references)
@@ -58,7 +65,7 @@ test("checked-record promotion preserves six archived selections and their measu
 		assert.equal(entry.revision, reference.revision); assert.equal(entry.kind, "installed");
 		assert.equal(entry.command, reference.command); assert.match(entry.command, /taskset -c 3 node --test/u);
 		assert.ok(entry.scope.includes(reference.environment)); assert.ok(entry.scope.includes(reference.dispatch));
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeCallbackFinPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
 		assert.deepEqual(entry.artifacts, reference.artifacts.map(file => ({ ...file, path: `${reference.id}/${file.path}` })));
 		for(const file of [reference.report, ...reference.executionFiles]) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256));
 		assert.match(entry.scope, /No reconstructed analyzed-tree claim/u);
@@ -68,7 +75,7 @@ test("checked-record promotion preserves six archived selections and their measu
 });
 
 test("checked-record promotion adds sixteen cells without borrowing proof, dependent or browser coverage", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await previousSurface(), references = await checkedRecordPromotionReferences();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await previousSurface(), references = await checkedRecordPromotionReferences();
 	assertPromotion(document, previous, references);
 	const cells = typeSurfaceCells(document, contracts), old = historicalTypeSurfaceCells(previous, contracts);
 	const byId = new Map(cells.map(cell => [cell.id, cell]));

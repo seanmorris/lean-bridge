@@ -1,0 +1,80 @@
+{
+  "archives": {
+    "archives/reviewedcallbacks-1.0.0-c.tar.gz": "17bf4c1b6b82e393d500fe0234c67147c503a0d76fe504873ee07183926755af",
+    "archives/reviewedcallbacks-1.0.0-cpp.tar.gz": "c4304f6e931e41a73a6b1505bacb4577653c470c5dd907e95d3e728c3bdc9aeb"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "948742bd68cea23e8741784e5a1365b4cb83d7fdea66a4ad963274758a2c8711",
+      "checks": 266,
+      "compilerFreePath": true,
+      "consumerSha256": "88ed7fd6c6b869705a4719e6d75c7f43cdf9e048da1793f4d3a7de458ef2ff0b",
+      "dispatch": "not measured",
+      "modelSha256": "534da6c94c24360a4c1e7f4ad7776875476706829388f8e2a7dd6f37a315195c",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53856575,
+              "path": "archives/reviewedcallbacks-1.0.0-c.tar.gz",
+              "sha256": "17bf4c1b6b82e393d500fe0234c67147c503a0d76fe504873ee07183926755af"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "reviewedcallbacks",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "c",
+      "receiptSha256": "2acedbdca68daee09494f8d8aa4ec42d8807407e0072359843a6ecf4d7fa2967",
+      "review": "R1",
+      "reviewedBindingIrSha256": "83d623f2e6b3c21a69ad7b03d81867e0cf5a6342c5ce3f773a9e7fe7d5fee7db",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "948742bd68cea23e8741784e5a1365b4cb83d7fdea66a4ad963274758a2c8711",
+      "checks": 260,
+      "compilerFreePath": true,
+      "consumerSha256": "070523091415b8ef00adfa788cab0ade3a703b094bfb4b36610c38c15648bbd5",
+      "dispatch": "not measured",
+      "modelSha256": "534da6c94c24360a4c1e7f4ad7776875476706829388f8e2a7dd6f37a315195c",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51786810,
+              "path": "archives/reviewedcallbacks-1.0.0-cpp.tar.gz",
+              "sha256": "c4304f6e931e41a73a6b1505bacb4577653c470c5dd907e95d3e728c3bdc9aeb"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "reviewedcallbacks",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "cpp",
+      "receiptSha256": "2acedbdca68daee09494f8d8aa4ec42d8807407e0072359843a6ecf4d7fa2967",
+      "review": "R1",
+      "reviewedBindingIrSha256": "83d623f2e6b3c21a69ad7b03d81867e0cf5a6342c5ce3f773a9e7fe7d5fee7db",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}
