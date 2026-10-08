@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -383,44 +383,72 @@ api.chooseWord(1, 1);
 void word; void nat; void text; void chosen;
 `;
 
+// Consumers see only the copied handoff and a compiler-free PATH holding Node.
+const clean = { PATH: "/unavailable", CC: "/unavailable/compiler", CXX: "/unavailable/compiler", LEAN_BRIDGE_LEAN: "/unavailable/lean", LEAN_BRIDGE_RUNTIME_ROOT: "/unavailable/runtime", NODE_PATH: "" };
+const consumerRun = (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs: 300_000 });
+
 test("an independently reviewed npm package installs the chosen specializations for Node and strict TypeScript", { skip: !npm, timeout: 3_600_000 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-specialization-npm-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
-	const roots = [join(directory, "project"), join(directory, "moved")], releases = [];
+	const producers = join(directory, "producers"), roots = [join(producers, "project"), join(producers, "relocated")], releases = [], facts = [];
 	for(const [index, projectRoot] of roots.entries())
 	{
 		await cp(fixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Specialized"] }));
 		await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(reviewedNativeSpecializationIr()));
-		const before = await lakeInputState(projectRoot), outputRoot = join(directory, `build-${index}`);
+		const before = await lakeInputState(projectRoot), outputRoot = join(producers, `build-${index}`);
 		await buildCanonicalProject({ projectRoot, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() })
 			.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
-		const ir = JSON.parse(await readFile(join(outputRoot, "bundle/binding/binding-ir.json"), "utf8")), decisions = reviewedDecisions();
+		const irBytes = await readFile(join(outputRoot, "bundle/binding/binding-ir.json")), ir = JSON.parse(irBytes), decisions = reviewedDecisions();
 		for(const item of ir.declarations) assert.deepEqual(item.source.extensions[key], decisions[item.id.slice("lean:".length)], item.id);
-		releases.push(await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
-		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
+		facts.push({ bindingIrSha256: hashBindingIr(ir), bindingIrFileSha256: sha256(irBytes) });
+		const release = await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(producers, `npm-${index}`) });
+		await verifyComponentPackageReceipt({ receiptPath: join(release.output, "component-package-receipt.json") });
+		assert.equal(release.report.bindingIrSha256, facts[index].bindingIrSha256);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
+		releases.push(release);
 	}
-	// Two author roots produce byte-identical archives and the same public names.
-	assert.deepEqual(releases[0].report, releases[1].report);
-	const archiveSha256 = sha256(await readFile(releases[0].componentArchive));
-	assert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));
-	for(const root of roots) await rename(root, `${root}-unavailable`);
-	const consumer = join(directory, "consumer"); await mkdir(consumer);
-	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
-	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
+	// Two author roots produce the same IR, receipt and archive bytes.
+	assert.deepEqual(facts[1], facts[0]);
+	assert.deepEqual(releases[1].report, releases[0].report);
+	for(const name of ["componentArchive", "runtimeArchive"]) assert.deepEqual(await readFile(releases[1][name]), await readFile(releases[0][name]));
+	const reproducible = true;
+	// Hand over only the release; then remove every author root and build output.
+	const receipt = releases[0].report, handoff = join(directory, "handoff");
+	await mkdir(handoff);
+	for(const name of [receipt.package.archive, receipt.runtime.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
+		await cp(join(releases[0].output, name), join(handoff, name));
+	await rm(producers, { recursive: true, force: true });
+	await assert.rejects(lstat(producers), { code: "ENOENT" });
+	const sourceRemovedBeforeInstallation = true;
+	await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+	const consumer = join(directory, "consumer"), bin = join(consumer, "bin");
+	await mkdir(bin, { recursive: true });
+	await symlink(process.execPath, join(bin, "node"));
+	await saveLakeFile(consumer, "package.json", canonicalJson({ private: true, type: "module" }));
+	for(const name of ["user.npmrc", "global.npmrc"]) await saveLakeFile(consumer, name, "");
+	const npmCli = await realpath(join(process.execPath, "../../bin/npm")), env = { ...clean, PATH: bin };
+	const configuration = ["--userconfig", join(consumer, "user.npmrc"), "--globalconfig", join(consumer, "global.npmrc"), "--cache", join(consumer, "empty-cache")];
+	const archives = [join(handoff, receipt.runtime.archive), join(handoff, receipt.package.archive)];
+	await consumerRun(process.execPath, [npmCli, "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...configuration, ...archives], consumer, env);
 	await saveLakeFile(consumer, "index.mjs", nodeConsumer);
-	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
+	const run = await consumerRun(process.execPath, ["index.mjs"], consumer, env).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout.trim());
 	assert.deepEqual(result, { checks: 6, rejections: 3 });
+	// The TypeScript compiler is a consumer-side tool; neither the bridge nor Lean runs here.
 	await saveLakeFile(consumer, "index.mts", typescript);
-	await processBuildRunner.capture({ command: process.execPath, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], cwd: consumer })
+	const compiler = join(engineRoot, "node_modules/typescript/lib/tsc.js");
+	await consumerRun(process.execPath, [compiler, "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], consumer, env)
 		.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_REPORT ?? "build/reviewed-specializations/npm.json");
-	const identities = { archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), reviewedBindingIrSha256: hashBindingIr(reviewedNativeSpecializationIr()) };
-	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", ...identities, ...result, strictTypeScript: true }));
+	const receiptSha256 = sha256(await readFile(join(handoff, "component-package-receipt.json")));
+	const identities = { ...facts[0], reviewedBindingIrSha256: hashBindingIr(reviewedNativeSpecializationIr()), receipt, receiptSha256 };
+	const declarations = await readFile(join(consumer, "node_modules/specialized/index.d.ts"));
+	const typescriptFacts = { strict: true, skipLibCheck: false, sourceSha256: sha256(typescript), declarationsSha256: sha256(declarations) };
+	const flags = { independentBuilds: 2, reproducible, sourceRemovedBeforeInstallation, compilerFreePath: true, offlineInstall: true };
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", ...identities, ...flags, ...result, typescript: typescriptFacts }));
 });
 
 test("CI runs the reviewed C/C++ and npm specialization gates against fresh Lean and keeps both reports", async () => {
