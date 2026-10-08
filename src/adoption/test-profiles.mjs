@@ -800,6 +800,7 @@ const profileManifest = Object.freeze({
 		, "php-wasm-fin"
 		, "php-wasm-generic-records"
 		, "native-subtype"
+		, "reviewed-subtype-installed"
 		, "native-refinement-boundaries"
 		, "cpp-variants"
 		, "c-variants"

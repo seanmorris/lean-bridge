@@ -85,6 +85,7 @@ import { reviewedCallbackFinAdmissionChangedPaths } from "./reviewed-callback-fi
 import { nativeFinCallbackArchiveChangedPaths } from "./native-fin-callback-archive-source-history.mjs";
 import { closureHistoryCiRepairChangedPaths } from "./closure-history-ci-repair-source-history.mjs";
 import { reviewedNpmSnapshotChangedPaths } from "./reviewed-npm-snapshot-source-history.mjs";
+import { reviewedSubtypeHarnessChangedPaths } from "./reviewed-subtype-harness-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -634,6 +635,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeFinCallbackArchiveChangedPaths
 	, ...closureHistoryCiRepairChangedPaths
 	, ...reviewedNpmSnapshotChangedPaths
+	, ...reviewedSubtypeHarnessChangedPaths
 ])].sort());
 
 /**

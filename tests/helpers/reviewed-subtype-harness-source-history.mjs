@@ -1,22 +1,19 @@
 /**
- * Preserve exact source predecessors of the Reviewed npm snapshot verification change (#1220).
+ * Preserve exact source predecessors of the Reviewed Subtype harness change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedSubtypeHarnessSource } from "./reviewed-subtype-harness-source-history.mjs";
 
-export const reviewedNpmSnapshotHistoryPath = "docs/evidence/reviewed-npm-snapshot-source-history-20261008.json";
-export const reviewedNpmSnapshotChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
-	, "src/adoption/test-profiles.mjs"
-	, "src/release/component-npm-package.mjs"
+export const reviewedSubtypeHarnessHistoryPath = "docs/evidence/reviewed-subtype-harness-source-history-20261008.json";
+export const reviewedSubtypeHarnessChangedPaths = [
+	"src/adoption/test-profiles.mjs"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/closure-history-ci-repair-source-history.mjs"
-	, "tests/helpers/closure-history-ci-repair-source-history-tests.mjs"
+	, "tests/helpers/reviewed-npm-snapshot-source-history.mjs"
+	, "tests/helpers/reviewed-npm-snapshot-source-history-tests.mjs"
 ];
 let history;
 
@@ -26,8 +23,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedNpmSnapshotUpdate = (source, update) => {
-	assert.ok(reviewedNpmSnapshotChangedPaths.includes(update.path));
+export const reverseReviewedSubtypeHarnessUpdate = (source, update) => {
+	assert.ok(reviewedSubtypeHarnessChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,12 +50,11 @@ export const reverseReviewedNpmSnapshotUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedNpmSnapshotSource = (path, source, expected) => {
-	source = beforeReviewedSubtypeHarnessSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedNpmSnapshotChangedPaths.includes(path)) return source;
+export const beforeReviewedSubtypeHarnessSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedSubtypeHarnessChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedNpmSnapshotHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedSubtypeHarnessHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedNpmSnapshotUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedSubtypeHarnessUpdate(source, update) : source;
 };
