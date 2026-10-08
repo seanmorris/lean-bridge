@@ -115,6 +115,7 @@ import { copiedGraphRepairChangedPaths } from "./copied-graph-repair-source-hist
 import { callbackFinPromotionChangedPaths } from "./callback-fin-promotion-source-history.mjs";
 import { phpWasmReviewedFinChangedPaths } from "./php-wasm-reviewed-fin-source-history.mjs";
 import { reviewedPhpWasmFinArchiveChangedPaths } from "./reviewed-php-wasm-fin-archive-source-history.mjs";
+import { nativeConsumerCiRepairChangedPaths } from "./native-consumer-ci-repair-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -694,6 +695,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackFinPromotionChangedPaths
 	, ...phpWasmReviewedFinChangedPaths
 	, ...reviewedPhpWasmFinArchiveChangedPaths
+	, ...nativeConsumerCiRepairChangedPaths
 ])].sort());
 
 /**

@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-consumer-ci-repair-v1",
+  "predecessorCommit": "38ea95ab086fb2a9b961d75ca6b06e78b7e7fc10",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "1517167bedd7adb4a89994588c3269121053542c30cd3d5184923adfcc646170",
+      "previousSha256": "f4101011598d7ac9902ede7ba4261ec38e3ed555092779cdfd621f8da4b30349",
+      "edits": [
+        {
+          "start": 36267,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1462953,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1473977,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1476606,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1479595,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1482187,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1484797,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        },
+        {
+          "start": 1487387,
+          "previous": "          \"sha256\": \"f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051\"\n",
+          "current": "          \"sha256\": \"54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-specializations.test.mjs",
+      "currentSha256": "54568bfe58059d8c641b711f154c6b3e2e9373510c1174a631d3c2bb40ee7985",
+      "previousSha256": "f19b969c75c34b2c5c577dd9ae7732156844e578f1583628c5c59df433fa9051",
+      "edits": [
+        {
+          "start": 965,
+          "previous": "",
+          "current": "import \"./helpers/native-consumer-ci-repair-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 4814,
+          "previous": "\t// Arguments travel like field types: the alias inline, with its own target.\n",
+          "current": "\t// Provenance retains the alias, while native fields use its checked target representation.\n"
+        },
+        {
+          "start": 5115,
+          "previous": "\tassert.deepEqual(record.fields.map(field => [field.name, field.type.kind === \"alias\" ? field.type.name : field.type.name]), [[\"first\", \"Specialized.Word\"], [\"second\", \"string\"]]);\n",
+          "current": "\tassert.deepEqual(record.fields.map(field => [field.name, field.type.kind, field.type.name]), [[\"first\", \"primitive\", \"uint32\"], [\"second\", \"primitive\", \"string\"]]);\n\t// The public Binding IR must still name the alias and carry its exact definition.\n\tconst irRecord = model.bindingIr.types.find(type => type.id === \"lean:Specialized.WordPair\");\n\tassert.equal(irRecord.kind, \"record\");\n\tassert.deepEqual(irRecord.fields.map(field => [field.name, field.type]), [\n\t\t[\"first\", { kind: \"named\", id: \"lean:Specialized.Word\" }]\n\t\t, [\"second\", { kind: \"primitive\", name: \"string\" }]\n\t]);\n\tconst alias = model.bindingIr.types.find(type => type.id === \"lean:Specialized.Word\");\n\tassert.equal(alias.kind, \"alias\");\n\tassert.deepEqual(alias.target, { kind: \"primitive\", name: \"uint32\" });\n\tassert.deepEqual(irRecord.source.extensions[\"lean-lang.org/instantiation\"], {\n\t\tstructure: \"Specialized.Pair\"\n\t\t, arguments: [{ kind: \"named\", id: \"lean:Specialized.Word\" }, { kind: \"primitive\", name: \"string\" }]\n\t});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-refinements.test.mjs",
+      "currentSha256": "a4c95ebbc175a3e1f687b2f49bc13c930bece97988bcc129e4501ed5cea22e5b",
+      "previousSha256": "434cf92b4c29dd2008fd0a44dc01ebfe7db3ed298b60faba724da214389bf9c3",
+      "edits": [
+        {
+          "start": 822,
+          "previous": "",
+          "current": "import { readArchivedSubtypeXs } from \"./helpers/native-subtype-install.mjs\";\nimport { generatePerlBindingPackage } from \"../src/backends/perl/generate.mjs\";\nimport { createNativeModel, nativeTypeKey } from \"../src/build/native-model.mjs\";\nimport { nativeMetadataFixture } from \"./helpers/native-metadata.mjs\";\n"
+        },
+        {
+          "start": 6868,
+          "previous": "",
+          "current": "test(\"an array below an option reports the array's own index at its Fin 0 leaf\", () => {\n\tconst base = createNativeModel({ component: { id: \"sample@1.0.0\", name: \"sample\", version: \"1.0.0\" }, moduleName: \"LeanBridge::Sample\", ...nativeMetadataFixture() });\n\tconst heap = { cType: \"lean_object*\", box: \"lean_box\", unbox: \"lean_unbox\", heap: true };\n\tconst nat = { kind: \"primitive\", name: \"nat\", lean: \"Nat\", abi: { ...heap, heap: false } };\n\tconst array = { kind: \"array\", element: nat, abi: heap }, option = { kind: \"option\", element: array, abi: heap };\n\tconst model = { ...base, types: [nat, array, option].map(type => ({ ...type, key: nativeTypeKey(type) }))\n\t\t, exports: [{ ...base.exports[0]\n\t\t\t, parameters: [{ name: \"arg0\", type: option }], result: nat\n\t\t\t, refinements: perlRefinementRefinements[\"PerlRefinements.emptyRows\"] }] };\n\tconst receipt = { library: \"libcomponent_test.so\", nativeLibrary: { sha256: \"b\".repeat(64) }, runtimeIdentity: \"c\".repeat(64), initializer: \"initialize_Sample\" };\n\tconst xs = generatePerlBindingPackage(model, receipt)[\"Component.xs\"];\n\t// The option consumes depth zero but adds no index. Its array is at depth one.\n\tassert.match(xs, /for \\(size_t k1 = 0; k1 < lean_array_size\\(v0\\); \\+\\+k1\\) \\{ lean_object \\*e1 = lean_array_get_core\\(v0, k1\\);/u);\n\tassert.match(xs, /lean_cstr_to_nat\\(\"0\"\\); int below = lean_nat_lt\\(e1, bound\\);/u);\n\tassert.ok(xs.includes('croak(\"%s?[%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k1)'));\n\tassert.ok(!xs.includes('croak(\"%s?[%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0)'));\n});\n\ntest(\"Perl refinement XS inspection preserves the compiler-free consumer PATH\", { skip: process.platform !== \"linux\" }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-perl-refinements-xs-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst archive = join(root, \"example.tar.gz\"), source = \"MODULE = Example PACKAGE = Example\\n/* refinement audit */\\n\";\n\tawait saveLakeFile(root, \"Example/Component.xs\", source);\n\tawait runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-cf\", archive, \"Example/Component.xs\"], root, copiedCleanEnvironment);\n\tawait assert.rejects(() => runCopied(\"/usr/bin/tar\", [\"-xOzf\", archive, \"--wildcards\", \"*/Component.xs\"], root, copiedCleanEnvironment), error => {\n\t\tassert.equal(error.code, \"build-command-failed\");\n\t\tassert.match(error.details.stderr, /gzip: Cannot exec: No such file or directory/u);\n\t\treturn true;\n\t});\n\tassert.equal(await readArchivedSubtypeXs(archive, root), source);\n});\n\n"
+        },
+        {
+          "start": 11699,
+          "previous": "\t\tconst xs = (await runCopied(\"/usr/bin/tar\", [\"-xOzf\", join(handoff, archive), \"--wildcards\", \"*/Component.xs\"], consumerRoot, copiedCleanEnvironment)).stdout;\n",
+          "current": "\t\tconst xs = await readArchivedSubtypeXs(join(handoff, archive), consumerRoot);\n"
+        },
+        {
+          "start": 12083,
+          "previous": "\t\tfor(const message of ['\"%s[%zu]? is not below its Fin 0 bound\", \"arg0\", (size_t)k0', '\"%s?[%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0', '\"%s[%zu][%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0, (size_t)k1'])\n",
+          "current": "\t\tfor(const message of ['\"%s[%zu]? is not below its Fin 0 bound\", \"arg0\", (size_t)k0', '\"%s?[%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k1', '\"%s[%zu][%zu] is not below its Fin 0 bound\", \"arg0\", (size_t)k0, (size_t)k1'])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "56be041c8d8e53f68171f82c2eeef1a0e472850d5eeeeb573ccc5c3c690b717c",
+      "previousSha256": "a9f048f2b5442e79d96b2082af0aa92dde839a0644708bc4ef169d9d14a2d744",
+      "edits": [
+        {
+          "start": 10261,
+          "previous": "",
+          "current": "import { nativeConsumerCiRepairChangedPaths } from \"./native-consumer-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 47551,
+          "previous": "",
+          "current": "\t, ...nativeConsumerCiRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-php-wasm-fin-archive-source-history.mjs",
+      "currentSha256": "0a483eb2e72975a9620d3965509138d4414d29b2e269d75c3cb94b8d5b3948fe",
+      "previousSha256": "3341500792787c07985b528c5c2c6b3af1a04a43a4dce8ce21b4dd43897e3c89",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforeNativeConsumerCiRepairSource } from \"./native-consumer-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2309,
+          "previous": "",
+          "current": "\tsource = beforeNativeConsumerCiRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-php-wasm-fin-archive-source-history-tests.mjs",
+      "currentSha256": "a8099d1793897ebae240e952f2eb7dd9127abb7fb8ff928c2f6135c17bb87efa",
+      "previousSha256": "12e0d1f7048bc2348ae7cf590c3e8d655e7fc44d406ad8a879057fecea8d9386",
+      "edits": [
+        {
+          "start": 359,
+          "previous": "",
+          "current": "import { beforeNativeConsumerCiRepairSource } from \"./native-consumer-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1098,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeConsumerCiRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2091,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeNativeConsumerCiRepairSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

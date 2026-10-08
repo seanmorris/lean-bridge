@@ -14,6 +14,10 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { readArchivedSubtypeXs } from "./helpers/native-subtype-install.mjs";
+import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
+import { createNativeModel, nativeTypeKey } from "../src/build/native-model.mjs";
+import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null, refinement: "reject" };
@@ -88,6 +92,38 @@ $checks += 1500;
 print "perl-refinements-ok:$checks\\n";
 `;
 
+test("an array below an option reports the array's own index at its Fin 0 leaf", () => {
+	const base = createNativeModel({ component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }, moduleName: "LeanBridge::Sample", ...nativeMetadataFixture() });
+	const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap: false } };
+	const array = { kind: "array", element: nat, abi: heap }, option = { kind: "option", element: array, abi: heap };
+	const model = { ...base, types: [nat, array, option].map(type => ({ ...type, key: nativeTypeKey(type) }))
+		, exports: [{ ...base.exports[0]
+			, parameters: [{ name: "arg0", type: option }], result: nat
+			, refinements: perlRefinementRefinements["PerlRefinements.emptyRows"] }] };
+	const receipt = { library: "libcomponent_test.so", nativeLibrary: { sha256: "b".repeat(64) }, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
+	const xs = generatePerlBindingPackage(model, receipt)["Component.xs"];
+	// The option consumes depth zero but adds no index. Its array is at depth one.
+	assert.match(xs, /for \(size_t k1 = 0; k1 < lean_array_size\(v0\); \+\+k1\) \{ lean_object \*e1 = lean_array_get_core\(v0, k1\);/u);
+	assert.match(xs, /lean_cstr_to_nat\("0"\); int below = lean_nat_lt\(e1, bound\);/u);
+	assert.ok(xs.includes('croak("%s?[%zu] is not below its Fin 0 bound", "arg0", (size_t)k1)'));
+	assert.ok(!xs.includes('croak("%s?[%zu] is not below its Fin 0 bound", "arg0", (size_t)k0)'));
+});
+
+test("Perl refinement XS inspection preserves the compiler-free consumer PATH", { skip: process.platform !== "linux" }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-refinements-xs-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const archive = join(root, "example.tar.gz"), source = "MODULE = Example PACKAGE = Example\n/* refinement audit */\n";
+	await saveLakeFile(root, "Example/Component.xs", source);
+	await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-cf", archive, "Example/Component.xs"], root, copiedCleanEnvironment);
+	await assert.rejects(() => runCopied("/usr/bin/tar", ["-xOzf", archive, "--wildcards", "*/Component.xs"], root, copiedCleanEnvironment), error => {
+		assert.equal(error.code, "build-command-failed");
+		assert.match(error.details.stderr, /gzip: Cannot exec: No such file or directory/u);
+		return true;
+	});
+	assert.equal(await readArchivedSubtypeXs(archive, root), source);
+});
+
 test("relocated source-free CPAN packages check an unboxed word subtype and nested Fin 0 shapes", { skip: process.env.LEAN_BRIDGE_PERL_REFINEMENT_TEST !== "1", timeout: 2_400_000 }, async t => {
 	const environment = nativeFixtureEnvironment(["perl"]);
 	const perls = JSON.parse(process.env.LEAN_BRIDGE_PERLS ?? environment.LEAN_BRIDGE_PERLS);
@@ -113,11 +149,11 @@ test("relocated source-free CPAN packages check an unboxed word subtype and nest
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		// The archived XS passes the word by value to its validator and walks every nested shape.
 		const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
-		const xs = (await runCopied("/usr/bin/tar", ["-xOzf", join(handoff, archive), "--wildcards", "*/Component.xs"], consumerRoot, copiedCleanEnvironment)).stdout;
+		const xs = await readArchivedSubtypeXs(join(handoff, archive), consumerRoot);
 		assert.equal((xs.match(/was rejected by PerlRefinements\.checkedDigit32"/g) ?? []).length, 2);
 		assert.doesNotMatch(xs.slice(xs.indexOf("\ntwice(...)"), xs.indexOf("XSRETURN(1);", xs.indexOf("\ntwice(...)"))), /lean_inc\(a0\)/);
 		assert.equal((xs.match(/lean_cstr_to_nat\("0"\)/g) ?? []).length, 3);
-		for(const message of ['"%s[%zu]? is not below its Fin 0 bound", "arg0", (size_t)k0', '"%s?[%zu] is not below its Fin 0 bound", "arg0", (size_t)k0', '"%s[%zu][%zu] is not below its Fin 0 bound", "arg0", (size_t)k0, (size_t)k1'])
+		for(const message of ['"%s[%zu]? is not below its Fin 0 bound", "arg0", (size_t)k0', '"%s?[%zu] is not below its Fin 0 bound", "arg0", (size_t)k1', '"%s[%zu][%zu] is not below its Fin 0 bound", "arg0", (size_t)k0, (size_t)k1'])
 			assert.ok(xs.includes(`croak(${message})`), message);
 		await rm(author, { recursive: true, force: true });
 		if(attempt === 1) break;

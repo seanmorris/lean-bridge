@@ -16,6 +16,7 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installSpecializationConsumer, nativeSpecializationEnvironment, nativeSpecializations
 	, nativeSpecializationSignatures, nativeSpecializationTargets } from "./helpers/native-specialization-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
+import "./helpers/native-consumer-ci-repair-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SPECIALIZATION_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate specialization profile");
@@ -62,9 +63,23 @@ test("native builds admit a generic structure instantiation named by an alias, w
 	// The alias is the record's identity; the structure and its resolved arguments are its provenance.
 	assert.equal(record.name, "Specialized.WordPair"); assert.equal(record.lean, "Specialized.WordPair"); assert.equal(record.constructor, "Specialized.Pair.mk");
 	assert.equal(record.provenance.structure, "Specialized.Pair");
-	// Arguments travel like field types: the alias inline, with its own target.
+	// Provenance retains the alias, while native fields use its checked target representation.
 	assert.deepEqual(record.provenance.arguments.map(argument => `${argument.kind}:${argument.name}${argument.target ? `=${argument.target.name}` : ""}`), ["alias:Specialized.Word=uint32", "primitive:string"]);
-	assert.deepEqual(record.fields.map(field => [field.name, field.type.kind === "alias" ? field.type.name : field.type.name]), [["first", "Specialized.Word"], ["second", "string"]]);
+	assert.deepEqual(record.fields.map(field => [field.name, field.type.kind, field.type.name]), [["first", "primitive", "uint32"], ["second", "primitive", "string"]]);
+	// The public Binding IR must still name the alias and carry its exact definition.
+	const irRecord = model.bindingIr.types.find(type => type.id === "lean:Specialized.WordPair");
+	assert.equal(irRecord.kind, "record");
+	assert.deepEqual(irRecord.fields.map(field => [field.name, field.type]), [
+		["first", { kind: "named", id: "lean:Specialized.Word" }]
+		, ["second", { kind: "primitive", name: "string" }]
+	]);
+	const alias = model.bindingIr.types.find(type => type.id === "lean:Specialized.Word");
+	assert.equal(alias.kind, "alias");
+	assert.deepEqual(alias.target, { kind: "primitive", name: "uint32" });
+	assert.deepEqual(irRecord.source.extensions["lean-lang.org/instantiation"], {
+		structure: "Specialized.Pair"
+		, arguments: [{ kind: "named", id: "lean:Specialized.Word" }, { kind: "primitive", name: "string" }]
+	});
 	assert.equal(model.exports.find(item => item.name === "Specialized.echoPair").result.name, "Specialized.WordPair");
 });
 
