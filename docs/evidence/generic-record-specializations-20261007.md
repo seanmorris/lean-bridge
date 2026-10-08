@@ -31,7 +31,7 @@ Each alias retains its name and origin. Host assignability follows the host lang
 
 Each native run builds in two unrelated author roots, compares archive bytes, verifies the package-set receipt, removes the author sources and installs offline with a compiler-free consumer PATH. The reports record the source tree, Binding IR, model, package receipt and exact composed consumer hashes. Native runs used a local glibc floor of 2.36; these reports do not establish the CI distribution floor.
 
-The npm test independently checks two-root archive equality, source-free installation, Node execution and strict TypeScript compilation. Its original report contains check counts, archive hashes and the nine specialization selections. It does not contain the native report's per-stage installation flags.
+The original npm test checks two-root archive equality, offline installation, Node execution and strict TypeScript compilation. It renames the source directories but retains them and the build staging, and it does not remove compilers from PATH. Its report contains check counts, archive hashes and the nine specialization selections; it does not establish deletion-before-install or compiler-free isolation. The strengthened npm harness removes those inputs and records isolation separately. A later run must supply that evidence.
 
 ## Remaining coverage
 

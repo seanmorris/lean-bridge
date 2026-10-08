@@ -4,9 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, readFile, rename } from "node:fs/promises";
+import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildComponentNpmPackages } from "../../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
@@ -121,12 +123,15 @@ console.log(JSON.stringify({ checks, rejections }));
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param options.engineRoot - Checkout containing the TypeScript compiler.
  * @param options.specialized - Optional additional source, configured exports and public caller checks.
+ * @param options.review - Optional reviewed Binding IR that supplies every export decision instead.
  */
-export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized }) => {
+export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized, review }) => {
 	const { directory, root } = await project(t);
 	await saveLakeFile(root, "OnboardingSmall.lean", specialized ? await specialized.source("OnboardingSmall") : await genericRecordSource("OnboardingSmall"));
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")), ...specialized?.configuration("OnboardingSmall") }));
-	const moved = join(directory, "moved"), releases = [];
+	const exports = review ? {} : { exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")), ...specialized?.configuration("OnboardingSmall") };
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], ...exports }));
+	if(review) await saveLakeFile(root, "api.binding-ir.json", canonicalJson(review));
+	const moved = join(directory, "moved"), releases = [], facts = [];
 	await cp(root, moved, { recursive: true });
 	for(const [index, projectRoot] of [root, moved].entries())
 	{
@@ -134,21 +139,43 @@ export const checkGenericRecordNpmPackages = async (t, { fixture: project, build
 		await build(projectRoot, outputRoot).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 		const plan = JSON.parse(await readFile(join(outputRoot, "bundle/locks/compiler-adapters.json"), "utf8"));
 		assert.equal(plan.privateAbi.version, 7, "alias-named records with an Option field select the nominal ABI");
-		(specialized?.assertIr ?? assertGenericRecordIr)(JSON.parse(await readFile(join(outputRoot, "bundle/binding/binding-ir.json"), "utf8")), "OnboardingSmall");
+		const irBytes = await readFile(join(outputRoot, "bundle/binding/binding-ir.json")), ir = JSON.parse(irBytes);
+		(specialized?.assertIr ?? assertGenericRecordIr)(ir, "OnboardingSmall");
+		facts.push({ bindingIrSha256: hashBindingIr(ir), bindingIrFileSha256: sha256(irBytes) });
 		releases.push(await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
 		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
+		assert.equal(releases[index].report.bindingIrSha256, facts[index].bindingIrSha256);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 	}
 	assert.deepEqual(releases[0].report, releases[1].report);
+	assert.deepEqual(facts[0], facts[1]);
 	const archiveSha256 = sha256(await readFile(releases[0].componentArchive));
 	assert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));
-	await rename(root, join(directory, "source-unavailable"));
-	await rename(moved, join(directory, "moved-unavailable"));
-	const consumer = join(directory, "consumer"); await mkdir(consumer);
+	const runtimeArchiveSha256 = sha256(await readFile(releases[0].runtimeArchive));
+	assert.equal(runtimeArchiveSha256, sha256(await readFile(releases[1].runtimeArchive)));
+	const receipt = releases[0].report;
+	const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-generic-record-consumer-"));
+	t.after(() => rm(consumer, { recursive: true, force: true }));
+	const handoff = join(consumer, "handoff"), bin = join(consumer, "bin");
+	await mkdir(handoff);
+	for(const name of [receipt.package.archive, receipt.runtime.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
+		await cp(join(releases[0].output, name), join(handoff, name));
+	// The fixture owns this temporary directory. Delete both author roots and all build staging.
+	await rm(directory, { recursive: true, force: true });
+	await assert.rejects(lstat(directory), { code: "ENOENT" });
+	await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+	await mkdir(bin);
+	await symlink(process.execPath, join(bin, "node"));
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
-	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
-	await saveLakeFile(consumer, "index.mjs", specialized ? await specialized.nodeConsumer() : genericRecordNodeConsumer());
-	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
+	for(const name of ["user.npmrc", "global.npmrc"]) await saveLakeFile(consumer, name, "");
+	const npmCli = await realpath(join(process.execPath, "../../bin/npm"));
+	const env = { PATH: bin, CC: "/unavailable/compiler", CXX: "/unavailable/compiler", LEAN_BRIDGE_LEAN: "/unavailable/lean", LEAN_BRIDGE_RUNTIME_ROOT: "/unavailable/runtime", NODE_PATH: "" };
+	const execute = args => processBuildRunner.capture({ command: process.execPath, args, cwd: consumer, env, timeoutMs: 300_000 })
+		.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
+	await execute([npmCli, "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--userconfig", join(consumer, "user.npmrc"), "--globalconfig", join(consumer, "global.npmrc"), "--cache", join(consumer, "empty-cache"), join(handoff, receipt.runtime.archive), join(handoff, receipt.package.archive)]);
+	const script = specialized ? await specialized.nodeConsumer() : genericRecordNodeConsumer();
+	await saveLakeFile(consumer, "index.mjs", script);
+	const run = await execute(["index.mjs"]);
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout.trim());
 	assert.deepEqual(result, specialized?.expectedNodeResult ?? { checks: 1010, rejections: 1005 });
@@ -156,7 +183,7 @@ export const checkGenericRecordNpmPackages = async (t, { fixture: project, build
 	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
 	for(const name of Object.keys(genericRecordInstantiations).filter(name => name !== "Boxes")) assert.match(declarations, new RegExp(`export interface ${name} \\{`), name);
 	assert.match(declarations, /export type Boxes = ReadonlyArray<NatBox>;/);
-	await saveLakeFile(consumer, "index.mts", `import * as api from "onboarding-small";
+	const typescript = `import * as api from "onboarding-small";
 const box: api.NatBox = api.bump({ value: 1n, count: 2n });
 const again: api.NatBoxAgain = api.again({ value: 1n, count: 2n });
 const boxes: api.Boxes = [box, { value: 0n, count: 0n }];
@@ -169,9 +196,17 @@ api.bump({ value: 1, count: 2n });
 // @ts-expect-error Every field is required.
 api.shout({ value: "x" });
 void again; void pair; void sum; void tagged; void marker;${specialized?.typescript ?? ""}
-`);
-	await processBuildRunner.capture({ command: process.execPath, args: [join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
-	return { archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), abi: 7, ...result };
+`;
+	await saveLakeFile(consumer, "index.mts", typescript);
+	await execute([join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]);
+	return { archiveSha256, runtimeArchiveSha256, abi: 7
+		, ...facts[0], ...result, receipt
+		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
+		, consumerSha256: sha256(script)
+		, typescript: { strict: true, skipLibCheck: false, sourceSha256: sha256(typescript), declarationsSha256: sha256(declarations) }
+		, reproducible: true, independentBuilds: 2
+		, sourceRemovedBeforeInstallation: true
+		, offlineInstall: true, compilerFreePath: true, dispatch: "not measured" };
 };
 
 /**

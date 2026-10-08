@@ -1,22 +1,28 @@
 /**
- * Preserve exact source predecessors of the Reviewed specialization archive change (#1220).
+ * Preserve exact source predecessors of the Reviewed generic instantiation change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedInstantiationSource } from "./reviewed-instantiation-source-history.mjs";
 
-export const reviewedSpecializationArchiveHistoryPath = "docs/evidence/reviewed-specialization-archive-source-history-20261008.json";
-export const reviewedSpecializationArchiveChangedPaths = [
-	"docs/lean/existing-package.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "tests/reviewed-specializations.test.mjs"
+export const reviewedInstantiationHistoryPath = "docs/evidence/reviewed-instantiation-source-history-20261008.json";
+export const reviewedInstantiationChangedPaths = [
+	"config/checked-javascript.json"
+	, "config/cli-package.v1.json"
+	, "nix/component-engine-source-boundary.json"
+	, "nix/perl-engine-source-boundary.json"
+	, "package.json"
+	, "src/adoption/test-profiles.mjs"
+	, "src/analyze/reviewed-source.mjs"
+	, "tests/helpers/generic-record-packages.mjs"
+	, "docs/lean/existing-package.md"
+	, "docs/evidence/generic-record-specializations-20261007.md"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-callback-harness-source-history.mjs"
-	, "tests/helpers/reviewed-callback-harness-source-history-tests.mjs"
+	, "tests/helpers/reviewed-specialization-archive-source-history.mjs"
+	, "tests/helpers/reviewed-specialization-archive-source-history-tests.mjs"
 ];
 let history;
 
@@ -26,8 +32,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedSpecializationArchiveUpdate = (source, update) => {
-	assert.ok(reviewedSpecializationArchiveChangedPaths.includes(update.path));
+export const reverseReviewedInstantiationUpdate = (source, update) => {
+	assert.ok(reviewedInstantiationChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,12 +59,11 @@ export const reverseReviewedSpecializationArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedSpecializationArchiveSource = (path, source, expected) => {
-	source = beforeReviewedInstantiationSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedSpecializationArchiveChangedPaths.includes(path)) return source;
+export const beforeReviewedInstantiationSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedInstantiationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedSpecializationArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedInstantiationHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedSpecializationArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedInstantiationUpdate(source, update) : source;
 };

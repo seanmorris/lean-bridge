@@ -83,6 +83,19 @@ This example describes `Shop.keep {α : Type} (value : α) : α` with `α` fixed
 
 The same [name and count rules](#export-concrete-specializations) apply as for ordinary configuration. Keep `specializations` out of the accompanying configuration: the review owns those decisions. The [installed reviewed-specialization checks](../evidence/reviewed-specializations-20261008/receipt.json) cover ten specializations and one ordinary export in C, C++ and npm with strict TypeScript. Each run reproduces the archives in two author roots, removes the author files and installs offline. Reviewed generic-record instantiations and checked Subtype constructors have separate acceptance tests.
 
+For an alias of a closed generic record, put its origin in the record type's `source.extensions["lean-lang.org/instantiation"]`:
+
+```json
+{
+  "structure": "Shop.Box",
+  "arguments": [{ "kind": "primitive", "name": "nat" }]
+}
+```
+
+This describes `abbrev NatBox := Box Nat` when `Shop.Box` is a generic structure. Keep the record's identity as `lean:Shop.NatBox` and describe its concrete fields. The builder compares the origin, argument order, field types and alias identity with fresh Lean metadata. The origin does not select a compilation or supply executable Lean text. A review can combine these records with finite function specializations.
+
+Each origin has one to sixteen closed arguments, with nesting at most 32. Arguments may be copied primitives, containers or named aliases, records and variants from the review. This admission rejects recursive origins, resources, callbacks and refinements reachable from the arguments or record fields. Phantom arguments still participate in validation even when no field uses them. See the [independent review and acceptance tests](../../tests/reviewed-instantiations.test.mjs) for direct records, namespaced aliases and specialized exports.
+
 Native targets and PHP-Wasm accept reviewed pure copied primitives, arrays and immutable records. Native targets include C, C++, .NET, Java/Kotlin, Perl, native PHP, Python, Ruby, Rust and WIT/WASI. All targets support nineteen primitives, including `Char`, `USize` and `ISize`. Platform integers use the compiled target's width: 32 bits for npm/PHP-Wasm and 64 bits for native/WIT packages. Native and PHP-Wasm also support these primitives in copied arrays and record fields; npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also support nested arrays, acyclic copied records, tagged Option/Except values and nested binary products. npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also support `List` on both source paths. Documentation and argument names may differ from the compiler's defaults and are retained in the generated Binding IR. Host export names must match.
 
 All seventeen consumer profiles also compile reviewed synchronous callbacks and returned Lean closures whose arguments and result use these nineteen primitives. The callback contract must specify repeated invocation (`many`), same-agent re-entry, deferred self-disposal, value delivery, and the native callback failure policy. Host callbacks are borrowed for the call; returned closures carry explicit leases. The review's outer parameter count determines the arity of an export returning a closure. Do not duplicate that decision in the configuration. The compiler checks both the outer export and the remaining callable signature before linking. See the installed checks for [npm](../evidence/npm-callables-20260919.md), [C++](../evidence/cpp-callables-20260919.md), [C](../evidence/c-callables-20260918.md), [Perl](../evidence/perl-callables-20260918.md), [Python](../evidence/python-callables-20260918.md), [Ruby](../evidence/ruby-callables-20260919.md) and [Rust](../evidence/rust-callables-20260919.md).
