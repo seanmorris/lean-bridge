@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "milestone": "callback-coverage-repair-v1",
+  "predecessorCommit": "d59313d0ed9ec3501757af762d6761b12384ba0e",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc",
+      "previousSha256": "28960adde98a5ed77adf1ca7f680abada42397814894d84021a51c42b860fc9b",
+      "edits": [
+        {
+          "start": 1436407,
+          "previous": "          \"sha256\": \"0b540d5712432bb6d5bb974d7549d5f678044adf132638e0a3027318e22d1c03\"\n",
+          "current": "          \"sha256\": \"d1fc2698201b89755e96c50a2d7c7cb4e20f4e952a546925770429f5afbb1258\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-contract-tests.mjs",
+      "currentSha256": "d1fc2698201b89755e96c50a2d7c7cb4e20f4e952a546925770429f5afbb1258",
+      "previousSha256": "0b540d5712432bb6d5bb974d7549d5f678044adf132638e0a3027318e22d1c03",
+      "edits": [
+        {
+          "start": 1009,
+          "previous": "",
+          "current": "import \"./callback-coverage-repair-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 8401,
+          "previous": "test(\"Fin callback evidence promotes only four ordinary-source Node cells\", async () => {\n\tconst { document, irSchema, consumers } = await readTypeSurface();\n\tconst cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === \"fin\" && cell.position.startsWith(\"callback-\") && cell.stages.installedExecution.state === \"passed\");\n\tassert.equal(cells.length, 4);\n\tassert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), [\"node-javascript\", \"node-typescript\"]);\n",
+          "current": "const callbackFinCoverage = [\n\t[[\"node-javascript\", \"node-typescript\"], \"ordinary-source\", [\"npm-callback-fin-installed\"]]\n\t, [[\"node-javascript\", \"node-typescript\"], \"reviewed-ir\", [\"reviewed-callback-fin-npm-r1-installed\", \"reviewed-callback-fin-npm-r2-installed\"]]\n\t, [[\"browser-javascript\", \"browser-react\", \"browser-worker\"], \"ordinary-source\", [\"browser-callback-fin-ordinary-installed\"]]\n\t, [[\"c\", \"cpp\"], \"ordinary-source\", [\"native-callback-fin-ordinary-installed\"]]\n\t, [[\"c\", \"cpp\"], \"reviewed-ir\", [\"reviewed-callback-fin-c-cpp-installed\"]]\n];\n\n/**\n * Check each observed host, source route, position and stage against the recorded evidence.\n *\n * @param cells - Installed callback-Fin cells from the current inventory.\n */\nconst assertCallbackFinCoverage = cells => {\n\tconst expected = new Map(callbackFinCoverage.flatMap(([profiles, path, evidence]) => profiles.flatMap(profile =>\n\t\t[\"callback-parameter\", \"callback-result\"].map(position => [`${profile}/fin/${path}/${position}`, evidence]))));\n\tassert.deepEqual(cells.map(cell => cell.id).sort(), [...expected.keys()].sort());\n"
+        },
+        {
+          "start": 9521,
+          "previous": "\t\tassert.equal(cell.path, \"ordinary-source\");\n\t\tfor(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, [\"npm-callback-fin-installed\"]);\n",
+          "current": "\t\tassert.equal(cell.id, `${cell.profile}/${cell.shape}/${cell.path}/${cell.position}`);\n\t\tfor(const stage of Object.values(cell.stages))\n\t\t{\n\t\t\tassert.equal(stage.state, \"passed\", cell.id);\n\t\t\tassert.deepEqual(stage.evidence, expected.get(cell.id), cell.id);\n\t\t}\n\t}\n};\n\nconst installedCallbackFinCells = async () => {\n\tconst { document, irSchema, consumers } = await readTypeSurface();\n\treturn typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === \"fin\" && cell.position.startsWith(\"callback-\") && cell.stages.installedExecution.state === \"passed\");\n};\n\ntest(\"Fin callback evidence matches every promoted host, source path, position and evidence set\", async () => {\n\tassertCallbackFinCoverage(await installedCallbackFinCells());\n});\n\ntest(\"callback Fin coverage rejects missing cells, extra hosts and evidence borrowed from another route\", async () => {\n\tconst cells = await installedCallbackFinCells();\n\tconst mutations = [\n\t\tchanged => { changed.pop(); }\n\t\t, changed => { changed.push(structuredClone(changed[0])); }\n\t\t, changed => { changed[0].profile = \"php-native\"; }\n\t\t, changed => { changed[0].path = \"reviewed-ir\"; }\n\t\t, changed => { changed[0].position = \"field\"; }\n\t\t, changed => { changed[0].stages.compilation.state = \"unreviewed\"; }\n\t\t, changed => { changed[0].stages.installedExecution.evidence = [\"native-callback-fin-ordinary-installed\"]; }\n\t\t, changed => { changed.find(cell => cell.id === \"c/fin/reviewed-ir/callback-result\").stages.installedExecution.evidence = [\"native-callback-fin-ordinary-installed\"]; }\n\t];\n\tfor(const mutate of mutations)\n\t{\n\t\tconst changed = structuredClone(cells); mutate(changed);\n\t\tassert.throws(() => assertCallbackFinCoverage(changed), assert.AssertionError);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "3cbe17e4216abd60cf5ff922e5d89b9bf6b1998ff3c65538d632729c64300a3d",
+      "previousSha256": "5b3b6c2b6937c5162335036d32735c6e5ca4c53c0f5e3b3d33ba9ff8599b2a4b",
+      "edits": [
+        {
+          "start": 10541,
+          "previous": "",
+          "current": "import { callbackCoverageRepairChangedPaths } from \"./callback-coverage-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 47942,
+          "previous": "",
+          "current": "\t, ...callbackCoverageRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-reply-source-history.mjs",
+      "currentSha256": "53aab26bc4decff214021147cf2120e15cb52a126690ad7a13a7bfa51d4a847b",
+      "previousSha256": "9eab4ebc25e32ecc569dbe703dc6ca5574d885520647dd3bff274d64f5e16dd4",
+      "edits": [
+        {
+          "start": 247,
+          "previous": "",
+          "current": "import { beforeCallbackCoverageRepairSource } from \"./callback-coverage-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2771,
+          "previous": "",
+          "current": "\tsource = beforeCallbackCoverageRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-reply-source-history-tests.mjs",
+      "currentSha256": "ae9be6fab7387ee9352e5dcd9b1238cd8aaaf0f661a75ab16d175be6a741098e",
+      "previousSha256": "f4408fb3aef7232ea0523ce68d82fe6608693afdd4d869fbbaa294da62072520",
+      "edits": [
+        {
+          "start": 519,
+          "previous": "",
+          "current": "import { beforeCallbackCoverageRepairSource } from \"./callback-coverage-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1177,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCallbackCoverageRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2103,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeCallbackCoverageRepairSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2678,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeCallbackCoverageRepairSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

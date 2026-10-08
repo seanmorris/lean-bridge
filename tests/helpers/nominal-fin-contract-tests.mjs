@@ -16,6 +16,7 @@ import { assertJsonSchema } from "./json-schema.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
+import "./callback-coverage-repair-source-history-tests.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
 const fixture = () => {
@@ -119,14 +120,58 @@ test("nominal Fin installed evidence promotes only the two ordinary Node field c
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
-test("Fin callback evidence promotes only four ordinary-source Node cells", async () => {
-	const { document, irSchema, consumers } = await readTypeSurface();
-	const cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin" && cell.position.startsWith("callback-") && cell.stages.installedExecution.state === "passed");
-	assert.equal(cells.length, 4);
-	assert.deepEqual([...new Set(cells.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript"]);
+const callbackFinCoverage = [
+	[["node-javascript", "node-typescript"], "ordinary-source", ["npm-callback-fin-installed"]]
+	, [["node-javascript", "node-typescript"], "reviewed-ir", ["reviewed-callback-fin-npm-r1-installed", "reviewed-callback-fin-npm-r2-installed"]]
+	, [["browser-javascript", "browser-react", "browser-worker"], "ordinary-source", ["browser-callback-fin-ordinary-installed"]]
+	, [["c", "cpp"], "ordinary-source", ["native-callback-fin-ordinary-installed"]]
+	, [["c", "cpp"], "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
+];
+
+/**
+ * Check each observed host, source route, position and stage against the recorded evidence.
+ *
+ * @param cells - Installed callback-Fin cells from the current inventory.
+ */
+const assertCallbackFinCoverage = cells => {
+	const expected = new Map(callbackFinCoverage.flatMap(([profiles, path, evidence]) => profiles.flatMap(profile =>
+		["callback-parameter", "callback-result"].map(position => [`${profile}/fin/${path}/${position}`, evidence]))));
+	assert.deepEqual(cells.map(cell => cell.id).sort(), [...expected.keys()].sort());
 	for(const cell of cells)
 	{
-		assert.equal(cell.path, "ordinary-source");
-		for(const stage of Object.values(cell.stages)) assert.deepEqual(stage.evidence, ["npm-callback-fin-installed"]);
+		assert.equal(cell.id, `${cell.profile}/${cell.shape}/${cell.path}/${cell.position}`);
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed", cell.id);
+			assert.deepEqual(stage.evidence, expected.get(cell.id), cell.id);
+		}
+	}
+};
+
+const installedCallbackFinCells = async () => {
+	const { document, irSchema, consumers } = await readTypeSurface();
+	return typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin" && cell.position.startsWith("callback-") && cell.stages.installedExecution.state === "passed");
+};
+
+test("Fin callback evidence matches every promoted host, source path, position and evidence set", async () => {
+	assertCallbackFinCoverage(await installedCallbackFinCells());
+});
+
+test("callback Fin coverage rejects missing cells, extra hosts and evidence borrowed from another route", async () => {
+	const cells = await installedCallbackFinCells();
+	const mutations = [
+		changed => { changed.pop(); }
+		, changed => { changed.push(structuredClone(changed[0])); }
+		, changed => { changed[0].profile = "php-native"; }
+		, changed => { changed[0].path = "reviewed-ir"; }
+		, changed => { changed[0].position = "field"; }
+		, changed => { changed[0].stages.compilation.state = "unreviewed"; }
+		, changed => { changed[0].stages.installedExecution.evidence = ["native-callback-fin-ordinary-installed"]; }
+		, changed => { changed.find(cell => cell.id === "c/fin/reviewed-ir/callback-result").stages.installedExecution.evidence = ["native-callback-fin-ordinary-installed"]; }
+	];
+	for(const mutate of mutations)
+	{
+		const changed = structuredClone(cells); mutate(changed);
+		assert.throws(() => assertCallbackFinCoverage(changed), assert.AssertionError);
 	}
 });

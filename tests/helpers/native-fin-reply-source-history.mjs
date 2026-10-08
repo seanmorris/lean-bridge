@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCallbackCoverageRepairSource } from "./callback-coverage-repair-source-history.mjs";
 
 export const nativeFinReplyHistoryPath = "docs/evidence/native-fin-reply-source-history-20261008.json";
 export const nativeFinReplyChangedPaths = [
@@ -66,6 +67,7 @@ export const reverseNativeFinReplyUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeFinReplySource = (path, source, expected) => {
+	source = beforeCallbackCoverageRepairSource(path, source, expected);
 	if(typeof source !== "string" || !nativeFinReplyChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
