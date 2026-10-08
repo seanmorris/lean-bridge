@@ -20,7 +20,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installCopiedConsumer } from "./helpers/copied-fixture-install.mjs";
 import { nativeSubtypeEnvironment, nativeSubtypeTargets } from "./helpers/native-subtype-install.mjs";
-import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource, reviewedSubtypeNativeConsumer } from "./helpers/reviewed-subtype-installed-fixture.mjs";
+import { assertReviewedSubtypeDiagnostics, relabelReviewedSubtypeDiagnostics, reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource, reviewedSubtypeNativeConsumer } from "./helpers/reviewed-subtype-installed-fixture.mjs";
 import "./helpers/reviewed-subtype-harness-source-history-tests.mjs";
 import "./helpers/subtype-fixture-link-source-history-tests.mjs";
 import "./helpers/reviewed-subtype-npm-tests.mjs";
@@ -57,6 +57,45 @@ test("an independent Subtype review keeps distinct constructor choices and a zer
 		for(const name of ["byte", "first_even", "second_even", "zero_even"]) assert.ok(source.includes(name));
 		assert.ok(source.includes("checks += 2000;"), "retain all original recovery cases");
 	}
+});
+
+test("reviewed C and C++ consumers expect each parameter diagnostic under its reviewed name and keep the original corpus", async () => {
+	const marker = "  checks += 2000;\n";
+	const ordinary = /"arg(\d+) (was rejected by [\w.]+|is not below its Fin \d+ bound)"/gu;
+	const recovery = { c: 'if (!rejected(subtypes_half(in, result, &error), &error, "value0 was rejected by Subtypes.checkedEven"))'
+		, cpp: 'if (!rejected([i] { api::half(2 * i + 1); }, "value0 was rejected by Subtypes.checkedEven")' };
+	for(const [profile, extension, originalLabels, reviewedLabels] of [["c", "c", 12, 14], ["cpp", "cpp", 11, 13]])
+	{
+		const original = await readFile(`tests/fixtures/subtype-consumers/${profile}.${extension}`, "utf8");
+		const source = await reviewedSubtypeNativeConsumer(profile);
+		// The original corpus keeps its ordinary labels; the reviewed consumer carries none of them.
+		assert.equal([...original.matchAll(ordinary)].length, originalLabels, profile);
+		assert.equal([...source.matchAll(ordinary)].length, 0, profile);
+		assert.equal(assertReviewedSubtypeDiagnostics(source, profile), reviewedLabels, profile);
+		// Mapping the reviewed names back gives the original bytes around the supplemental cases.
+		const back = source.replace(/"value(\d+) (was rejected by [\w.]+|is not below its Fin \d+ bound)"/gu, '"arg$1 $2"');
+		const [before, after] = original.split(marker);
+		assert.ok(back.startsWith(before) && back.endsWith(marker + after), profile);
+		assert.ok(source.includes(recovery[profile]) && source.includes(marker), `${profile} keeps the recovery cases`);
+		// A stale, misplaced or mismatched label fails before any package is built.
+		const line = profile === "c" ? "subtypes_shout(&empty" : "api::shout(\"\")";
+		const edit = (from, to) => source.split("\n").map(text => text.includes(line) ? text.replace(from, to) : text).join("\n");
+		const controls = [
+			["stale ordinary label", source.replace("value0 was rejected by Subtypes.checkedWord", "arg0 was rejected by Subtypes.checkedWord"), /stale or unreviewed diagnostic label/u]
+			, ["another parameter", edit("value0 was", "value1 was"), /stale or unreviewed diagnostic label/u]
+			, ["wrong constructor", edit("Subtypes.checkedWord", "Subtypes.checkedEven"), /"value0 was rejected by Subtypes\.checkedEven"\n/u]
+			, ["wrong Fin bound", source.replaceAll("value1 is not below its Fin 10 bound", "value1 is not below its Fin 11 bound"), /"value1 is not below its Fin 11 bound"\n/u]];
+		for(const [label, altered, pattern] of controls) assert.throws(() => assertReviewedSubtypeDiagnostics(altered, profile), pattern, `${profile} ${label}`);
+	}
+	// The labels follow the review: a renamed reviewed parameter is the expected name, and an unreviewed export refuses.
+	const renamed = reviewedSubtypeInstalledIr();
+	renamed.declarations.find(item => item.id === "lean:Subtypes.shout").parameters[0].name = "word";
+	assert.equal(relabelReviewedSubtypeDiagnostics('CHECK(rejected([] { api::shout(""); }, "arg0 was rejected by Subtypes.checkedWord"));', "cpp", renamed)
+		, 'CHECK(rejected([] { api::shout(""); }, "word was rejected by Subtypes.checkedWord"));');
+	const missing = reviewedSubtypeInstalledIr();
+	missing.declarations = missing.declarations.filter(item => item.id !== "lean:Subtypes.shout");
+	assert.throws(() => relabelReviewedSubtypeDiagnostics('api::shout(""); "arg0 was rejected by Subtypes.checkedWord"', "cpp", missing), /lean:Subtypes\.shout is not reviewed/u);
+	assert.throws(() => relabelReviewedSubtypeDiagnostics('api::shout("") + api::half(1); "arg0 was rejected by Subtypes.checkedWord"', "cpp"), /one export call per expected diagnostic/u);
 });
 
 test("fresh Lean compiles the reviewed zero-argument Subtype result and both generic constructor choices", {

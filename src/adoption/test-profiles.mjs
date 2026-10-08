@@ -233,6 +233,7 @@ const profileManifest = Object.freeze({
 		, "generic-records"
 		, "inherited-records"
 		, "generic-inheritance"
+		, "generic-inheritance-installed"
 		, "generic-records-browser"
 		, "browser-callback-fin"
 		, "browser-callback-fin-evidence"
