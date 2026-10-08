@@ -40,6 +40,13 @@ test("the installed result parser accepts only the fixed check count and a forke
 	for(const [profile, stdout] of rejected) assert.throws(() => parseFinReplyResult(profile, stdout), assert.AssertionError, stdout);
 });
 
+test("the C consumer spells no module-qualified type name, so the installed module path cannot break it", async () => {
+	const source = await readFile("tests/fixtures/fin-reply-consumers/c.c", "utf8");
+	// Option-of-record names embed the Lean module path; the harness passes that one as TILE_REPLY.
+	assert.deepEqual(source.match(/\bfinreplies_[a-z0-9_]*lean_[a-z0-9_]*/gu) ?? [], []);
+	assert.match(source, /\bTILE_REPLY \*reply\b/u);
+});
+
 test("relocated source-free C and C++ packages check every host reply bound and recover", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => finReplyTargets[profile]));

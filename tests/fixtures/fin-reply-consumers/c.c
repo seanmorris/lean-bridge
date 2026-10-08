@@ -7,7 +7,8 @@
 #include <unistd.h>
 
 /* Installed C acceptance for host callback replies with Fin bounds (VO #1453). The harness defines
-   HOST_<export> from the installed header's callback names. Every reply shape is exercised at n - 1,
+   HOST_<export> from the installed header's callback names, and TILE_REPLY, whose name embeds the
+   module path. Every reply shape is exercised at n - 1,
    n and n + 1, with rejected leaves first, middle and last, inactive branches, malformed
    discriminants, a host error, suppression of later host calls, an untouched caller output,
    exact-once release of host-owned spans and recovery by a fresh call. */
@@ -123,7 +124,7 @@ static finreplies_status late_host(void *context, mpz_srcptr arg0, finreplies_tr
   return FINREPLIES_STATUS_OK;
 }
 /* Option Tile: "none" or "<digit>:<count>". */
-static finreplies_status tile_host(void *context, mpz_srcptr arg0, finreplies_option_lean_sample_tile_value *reply, finreplies_error *error) {
+static finreplies_status tile_host(void *context, mpz_srcptr arg0, TILE_REPLY *reply, finreplies_error *error) {
   (void)arg0; (void)error; host_state *state = context; ++state->calls;
   if (strcmp(state->reply, "none") == 0) return FINREPLIES_STATUS_OK;
   char digit[32]; snprintf(digit, sizeof digit, "%.*s", (int)(strchr(state->reply, ':') - state->reply), state->reply);
