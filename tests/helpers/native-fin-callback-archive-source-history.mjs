@@ -1,24 +1,21 @@
 /**
- * Preserve exact source predecessors of the Reviewed callback Fin admission change (#1220).
+ * Preserve exact source predecessors of the Native callback Fin archive change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNativeFinCallbackArchiveSource } from "./native-fin-callback-archive-source-history.mjs";
 
-export const reviewedCallbackFinAdmissionHistoryPath = "docs/evidence/reviewed-callback-fin-admission-source-history-20261008.json";
-export const reviewedCallbackFinAdmissionChangedPaths = [
-	"src/analyze/reviewed-source.mjs"
-	, "src/analyze/reviewed-refinements.mjs"
-	, "tests/reviewed-callables.test.mjs"
+export const nativeFinCallbackArchiveHistoryPath = "docs/evidence/native-fin-callback-archive-source-history-20261008.json";
+export const nativeFinCallbackArchiveChangedPaths = [
+	"tests/native-fin-callbacks.test.mjs"
 	, "docs/lean/existing-package.md"
 	, "docs/evidence/refinement-closure-audit-20261007.md"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/callback-code-ci-repair-source-history.mjs"
-	, "tests/helpers/callback-code-ci-repair-source-history-tests.mjs"
+	, "tests/helpers/reviewed-callback-fin-admission-source-history.mjs"
+	, "tests/helpers/reviewed-callback-fin-admission-source-history-tests.mjs"
 ];
 let history;
 
@@ -28,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedCallbackFinAdmissionUpdate = (source, update) => {
-	assert.ok(reviewedCallbackFinAdmissionChangedPaths.includes(update.path));
+export const reverseNativeFinCallbackArchiveUpdate = (source, update) => {
+	assert.ok(nativeFinCallbackArchiveChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +52,11 @@ export const reverseReviewedCallbackFinAdmissionUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedCallbackFinAdmissionSource = (path, source, expected) => {
-	source = beforeNativeFinCallbackArchiveSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedCallbackFinAdmissionChangedPaths.includes(path)) return source;
+export const beforeNativeFinCallbackArchiveSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeFinCallbackArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedCallbackFinAdmissionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeFinCallbackArchiveHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedCallbackFinAdmissionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeFinCallbackArchiveUpdate(source, update) : source;
 };

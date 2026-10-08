@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-fin-callback-archive-v1",
+  "predecessorCommit": "ee5d63b32b14c32edf4eba713303362de96a1edd",
+  "updates": [
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "bebade695af5b0ffd775defc1e6d8a72c43ef143294902ee7bd33092c411154e",
+      "previousSha256": "80dfd0ffe65d3723ddb7cfd752df240cfd6c34b659fde7ed2137c6f08fcac9fd",
+      "edits": [
+        {
+          "start": 289,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-callback-evidence-tests.mjs\";\nimport \"./helpers/native-fin-callback-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487",
+      "previousSha256": "a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb",
+      "edits": [
+        {
+          "start": 39479,
+          "previous": "| `Fin n` in callbacks and closures | Node installed; browser pending | C/C++ safe directions generated; installed pending | Rejected | Rejected | Bounds validated; fresh-Lean and installed acceptance pending |\n",
+          "current": "| `Fin n` in callbacks and closures | Node installed; browser pending | C/C++ safe directions installed; other hosts pending | Rejected | Rejected | Bounds validated; fresh-Lean and installed acceptance pending |\n"
+        },
+        {
+          "start": 42109,
+          "previous": "C and C++ generators check `Fin` arguments of a returned Lean closure before invoking it, including bounds inside structural containers, plain records and variants. They also preserve bounded values that Lean produces as closure results or host-callback arguments. A returned closure rejects an argument at or above its bound with `INVALID_ARGUMENT`; C++ throws `Error`. The Lean adapter independently constructs each `Fin` from a decidable proof and returns `none` on rejection. It never substitutes a default. `Fin 0` rejects every value. A host callback returning a refined value remains unsupported, as do nested callbacks and a refined ordinary argument beside a callback. Other native targets require their own adapters. Fresh Lean adapter checks cover these directions; the C/C++ installed package gate remains pending.\n",
+          "current": "C and C++ packages check `Fin` arguments of a returned Lean closure before invoking it, including bounds inside structural containers, plain records and variants. They also preserve bounded values that Lean produces as closure results or host-callback arguments. A returned closure rejects an argument at or above its bound with `INVALID_ARGUMENT`; C++ throws `Error`. The Lean adapter independently constructs each `Fin` from a decidable proof and returns `none` on rejection. It never substitutes a default. `Fin 0` rejects every value. A host callback returning a refined value remains unsupported, as do nested callbacks and a refined ordinary argument beside a callback. Other native targets require their own adapters.\n\nThe [ordinary-source C/C++ installed run](../evidence/native-fin-callbacks-20261008/receipt.json) records 297 C checks and 283 C++ checks against source-free, offline installations, with byte-identical packages from two author roots. C dispatch counters distinguish the public lease entry, checked Lean adapter and source body: a rejected public call enters the public function but not the adapter or source; a rejected direct adapter call enters the adapter but not the source. Valid and recovery calls advance the corresponding counters. C++ dispatch was not measured. This local run uses glibc 2.36; reviewed contracts, other native hosts and release-floor acceptance remain separate.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "eac58914cd41231bff7d1aa7fcdd9a8171e7172307da63893736fccf7e207010",
+      "previousSha256": "cfaaa9b00b47604fe62cae48704f805b21a0122289beeca1e5aba064c2eaca45",
+      "edits": [
+        {
+          "start": 2731,
+          "previous": "| Fin callback positions | Ordinary-source Node JavaScript/TypeScript. | None. | C/C++ generators admit checked arguments of returned Lean closures and bounded values produced by Lean. Independent fresh Lean tests compile the adapters, including record/variant mirrors, and reject host-produced refined replies. Installed ABI/lifetime and dispatch acceptance remains pending. Other native hosts and reviewed callbacks remain separate; browser parameter/result evidence does not cover callbacks. |\n",
+          "current": "| Fin callback positions | Ordinary-source Node JavaScript/TypeScript; C/C++ safe native directions, with 297 C checks and 283 C++ checks. | The [C/C++ archive](native-fin-callbacks-20261008/receipt.json) preserves the original source-free installed run and separate C public-entry, checked-adapter and source-body counters. | Native host-produced refined replies remain refused. C++ dispatch was not measured; other native hosts, reviewed callbacks and browser callbacks need separate acceptance. The local C/C++ run uses glibc 2.36 and does not establish release-floor acceptance. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "2edd5e92f3309bff4133ab65ed74a2afbd174cfe6868e447f510357effc34802",
+      "previousSha256": "66cd699c8cf62c887b2c1fcbf85b7196b59083634d54901501254c4164c07a77",
+      "edits": [
+        {
+          "start": 1072135,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1079724,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1086325,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1093433,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1100927,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1107983,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1115584,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1125865,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1138198,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1191657,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1224200,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1254479,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1287446,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1328856,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1354704,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1377384,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1397076,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        },
+        {
+          "start": 1417561,
+          "previous": "          \"sha256\": \"a7599173cb581c7f8a7ae3479e42c8b21d5f8c1323403b57a6f817a5f0f48ffb\"\n",
+          "current": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2a250fcbd54cebc9a755f8ad1dc34be4d1a8cf261390907a7d983ef3334e0fb1",
+      "previousSha256": "a5ef7a16a407c82c9748fba51b81eee69cbbd158b254a424b49b9403df005f41",
+      "edits": [
+        {
+          "start": 7120,
+          "previous": "",
+          "current": "import { nativeFinCallbackArchiveChangedPaths } from \"./native-fin-callback-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 43143,
+          "previous": "",
+          "current": "\t, ...nativeFinCallbackArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-admission-source-history.mjs",
+      "currentSha256": "a3458253512156269069c64c9de02c6d549772326ebee1cf8995859a6712c033",
+      "previousSha256": "00aac8bd82136d09d9ae8f90942f98bd5d1542b9257450677cb8e05217faa7a1",
+      "edits": [
+        {
+          "start": 248,
+          "previous": "",
+          "current": "import { beforeNativeFinCallbackArchiveSource } from \"./native-fin-callback-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2471,
+          "previous": "",
+          "current": "\tsource = beforeNativeFinCallbackArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-admission-source-history-tests.mjs",
+      "currentSha256": "278740ada8630023c1b85a72f407e5a58c2518dea0912ab026da487215edcd91",
+      "previousSha256": "519bed21ea24d810cd3c95508aedb2d1ae06fbc8aa6490046151d42d343b33fc",
+      "edits": [
+        {
+          "start": 280,
+          "previous": "",
+          "current": "import { beforeNativeFinCallbackArchiveSource } from \"./native-fin-callback-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1126,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeFinCallbackArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

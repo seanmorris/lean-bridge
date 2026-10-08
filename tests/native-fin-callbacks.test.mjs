@@ -6,6 +6,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/native-fin-callback-evidence-tests.mjs";
+import "./helpers/native-fin-callback-archive-source-history-tests.mjs";
 import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";

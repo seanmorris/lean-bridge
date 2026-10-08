@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1445,
+  "execution": "local",
+  "revision": "722e9fc190aebb5419fe1da7e5919dc833209442",
+  "scope": {
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "sourcePath": "ordinary-source",
+    "exports": 14,
+    "directions": [
+      "host arguments to returned Lean closures",
+      "Lean-produced closure results",
+      "Lean-produced host callback arguments"
+    ],
+    "shapes": [
+      "scalar Fin including zero and wide bounds",
+      "Array, List, Option, pairs and active Except branches",
+      "plain record and variant fields"
+    ],
+    "hostProducedRefinedReplies": false,
+    "reviewedContracts": false,
+    "otherNativeHosts": false,
+    "dispatch": {
+      "c": "public lease entry, checked adapter and source body measured separately",
+      "cpp": "not measured"
+    }
+  },
+  "producerEnvironment": {
+    "nodeVersion": "v22.23.3",
+    "glibcFloor": "2.36",
+    "cpu": 3,
+    "concurrency": 1
+  },
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "9f0f4466daeb2292f51ae1063e06b46f7687829183657ae824682a6e06359c3a"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "bebf6cb490043a04c374579f5206a87c55283707024f199770c01f06a005af4a"
+    },
+    {
+      "path": "src/backends/c/native-callables.mjs",
+      "sha256": "0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675"
+    },
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "sha256": "bb2e14b1e71fb2201260efd9548804d932dc2bd3dda389a0257b90c2b075fa50"
+    },
+    {
+      "path": "tests/helpers/fin-callback-install.mjs",
+      "sha256": "167cc340be4700ffbaaa536ccc12f2abbfac2c01a33cb92b81e56614ac08c24a"
+    },
+    {
+      "path": "tests/helpers/fin-callback-dispatch.mjs",
+      "sha256": "b230c333f25d84d90c67c93dd29bf41f2cf63472fbd7c5c03a5f374396626630"
+    },
+    {
+      "path": "tests/helpers/fin-callback-model.mjs",
+      "sha256": "013ed83466422104146aa5b376c962e1f2aaa911dabf3befc24bebcecef6f68a"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-callbacks/FinCallbacks.lean",
+      "sha256": "32f94fc752b2afa92b202c75a6650587449ab7e9ad77104603c61db10749e240"
+    },
+    {
+      "path": "tests/fixtures/fin-callback-consumers/c.c",
+      "sha256": "3dad818dc1abe4aefd423f633df1f7aa5350c8cf100350c1475e5721ac2af61f"
+    },
+    {
+      "path": "tests/fixtures/fin-callback-consumers/cpp.cpp",
+      "sha256": "efd5eba65cf5c0ca40ed77d442d4cbef5740633a4e94d17a9e1e116162896398"
+    }
+  ],
+  "report": {
+    "path": "docs/evidence/native-fin-callbacks-20261008/ordinary.json",
+    "sha256": "d2baf3ddf5de3d4ea652b4faf28581421fede772a722b1fbe974d08aff466f7c"
+  },
+  "log": {
+    "path": "docs/evidence/native-fin-callbacks-20261008/ordinary.tap",
+    "sha256": "b64f39a26908236dff69551c9c41516f79535fe90469ce20defaab74bd075ca4",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "queue": {
+    "path": "docs/evidence/native-fin-callbacks-20261008/queue.log",
+    "sha256": "234f7a9cc83aa4256615a66275e7792feec39332e68eb3fca604d05e2dec12f8"
+  },
+  "remaining": [
+    "Reviewed callback contracts and other native hosts require separate installed acceptance.",
+    "Native host-produced refined replies still require a safe failure design.",
+    "Hosted CI and supported release-floor acceptance are separate from this local glibc 2.36 run.",
+    "No C++ adapter/source dispatch counters are inferred from C's interposer."
+  ]
+}
