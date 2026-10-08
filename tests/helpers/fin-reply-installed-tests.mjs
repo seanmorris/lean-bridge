@@ -58,6 +58,26 @@ test("each installed fixture demands its exact check count and keeps the consume
 	assert.throws(() => finReplyFixture("cpp", {}).parseResult("fork-status 5 0\nfin-reply-ok cpp 81\n"), assert.AssertionError);
 });
 
+test("a failure after a successful consumer process keeps its exact output; a process failure keeps the runner's", async () => {
+	const stdout = "fork-status 5 0\nfin-reply-ok c 81\n", options = { profile: "c" };
+	// Success: the fixture's exact count reaches the helper and the parsed observation returns.
+	const ok = await installFinReplyConsumer(options, {}, async ({ fixture }) => ({ checks: fixture.expectedChecks, result: fixture.parseResult(stdout) }));
+	assert.deepEqual(ok, { checks: 81, result: { checks: 81, forkStatus: 5, forkHostCalls: 0 } });
+	// A later assertion after parsing carries the parsed stdout; its own message is unchanged.
+	const later = await installFinReplyConsumer(options, {}, async ({ fixture }) => { fixture.parseResult(stdout); assert.equal(80, fixture.expectedChecks); }).catch(error => error);
+	assert.ok(later instanceof assert.AssertionError);
+	assert.equal(later.details.stdout, stdout);
+	assert.match(later.message, /80 !== 81/u);
+	// The helper's empty-stderr assertion yields the exact stderr, before any parsing.
+	const noisy = await installFinReplyConsumer(options, {}, async () => { assert.equal("warning: x\n", ""); }).catch(error => error);
+	assert.deepEqual(noisy.details, { stderr: "warning: x\n" });
+	// A process failure keeps the runner's details untouched.
+	const runner = Object.assign(new Error("/usr/bin/cc exited with status 1"), { code: "build-command-failed", details: { command: "/usr/bin/cc", args: [], stdout: "", stderr: "boom" } });
+	const failed = await installFinReplyConsumer(options, {}, async () => { throw runner; }).catch(error => error);
+	assert.equal(failed, runner);
+	assert.deepEqual(failed.details, { command: "/usr/bin/cc", args: [], stdout: "", stderr: "boom" });
+});
+
 test("the C consumer spells no module-qualified type name, so the installed module path cannot break it", async () => {
 	const source = await readFile("tests/fixtures/fin-reply-consumers/c.c", "utf8");
 	// Option-of-record names embed the Lean module path; the harness passes that one as TILE_REPLY.

@@ -88,19 +88,26 @@ export const finReplyFixture = (profile, names, seen = {}) => ({
 });
 
 /**
- * Install and exercise every checked host reply through the public C or C++ API. A failure after the
- * consumer ran carries its stdout, so the stage record shows what the consumer printed.
+ * Install and exercise every checked host reply through the public C or C++ API. A process failure keeps
+ * the runner's own details (exit status, output). A failure after a successful process gains its exact
+ * output: the stdout the parser saw, or the stderr the shared helper refused through
+ * `assert.equal(result.stderr, "")`. The shared helper and its thresholds are unchanged.
  *
  * @param options - Verified archive handoff and selected consumer profile.
  * @param names - Generated host callback names from the installed Binding IR.
+ * @param install - Shared installed-consumer helper; replaceable only by tests.
  */
-export const installFinReplyConsumer = async (options, names) => {
+export const installFinReplyConsumer = async (options, names, install = installCopiedConsumer) => {
 	const seen = {};
 	try
-	{ return await installCopiedConsumer({ ...options, fixture: finReplyFixture(options.profile, names, seen) }); }
+	{ return await install({ ...options, fixture: finReplyFixture(options.profile, names, seen) }); }
 	catch(error)
 	{
-		if(seen.stdout !== undefined) error.details = { ...error.details, stdout: error.details?.stdout ?? seen.stdout };
+		if(error instanceof assert.AssertionError)
+		{
+			const stderr = error.expected === "" && typeof error.actual === "string" ? { stderr: error.actual } : {};
+			if(seen.stdout !== undefined || stderr.stderr !== undefined) error.details = { ...error.details, ...seen, ...stderr };
+		}
 		throw error;
 	}
 };
