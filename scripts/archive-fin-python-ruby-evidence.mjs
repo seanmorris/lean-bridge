@@ -10,19 +10,27 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { assertFinPythonRubyExecution, assertFinPythonRubyReport, finPythonRubyDirectory, finPythonRubyIdentities, finPythonRubyRevision, finPythonRubyRuntimes, finPythonRubySourcePaths, finPythonRubySteps } from "../tests/helpers/fin-python-ruby-evidence.mjs";
 
 const receipt = {
-	schemaVersion: 1, planNodes: [1441, 1442], execution: "local"
+	schemaVersion: 2, planNodes: [1441, 1442], execution: "local"
 	, revision: finPythonRubyRevision
+	, priorReceipt: { path: `${finPythonRubyDirectory}/receipt.json`
+		, sha256: "af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e"
+		, reason: "Distinguish measured interpreter versions from declared host glibc and the configured Lean path." }
 	, scope: { profiles: ["python", "ruby"]
 		, sourcePaths: ["ordinary-source", "reviewed-ir"]
 		, families: ["product", "product-array", "record"], dispatchObserved: false
 		, hostedCi: false, binaryArchivesRetained: false }
-	, producerEnvironment: { nodeVersion: "v22.23.2", hostGlibcVersion: "2.36"
+	, producerEnvironment: { nodeVersion: "v22.23.2"
+		, nodeVersionSource: "runner process.version"
+		, declaredHostGlibcVersion: "2.36", hostGlibcVersionMeasured: false
 		, nativeGlibcFloor: "2.36", cpu: 3, concurrency: 1, minimumFreeMiB: 2048
-		, leanToolchain: "leanprover/lean4:v4.32.2"
+		, configuredLeanToolchain: "leanprover/lean4:v4.32.2"
+		, leanVersionMeasured: false
 		, leanThreads: 1, ompThreads: 1, makeJobs: 1 }
+	, sourceIdentityScope: "Selected compiler, installer, fixture and consumer files, not a complete dependency closure; runners checked the recorded Git revision and a clean tracked tree before each selection."
 	, sourceFiles: finPythonRubySourcePaths.map(path => ({ path, sha256: sha256(execFileSync("git", ["show", `${finPythonRubyRevision}:${path}`], { maxBuffer: 8 * 1024 * 1024 })) }))
 	, runtimes: [], runs: [], artifacts: []
 };
+assert.equal(sha256(await readFile(receipt.priorReceipt.path)), receipt.priorReceipt.sha256);
 const pending = [];
 const collect = async (original, name, digest) => {
 	const bytes = await readFile(original);
@@ -38,7 +46,10 @@ for(const runtime of finPythonRubyRuntimes)
 	const queue = await collect(`${prefix}-72c5e27.queue`, `${runtime.id}.queue`, runtime.queue);
 	const runner = await collect(`${prefix}-queue-72c5e27.mjs`, `${runtime.id}.runner.mjs.txt`, runtime.runner);
 	assertFinPythonRubyExecution(runtime, await readFile(queue.originalPath, "utf8"), await readFile(tap.originalPath, "utf8"));
-	receipt.runtimes.push({ id: runtime.id, profile: runtime.profile, version: runtime.version, tap, queue, runner });
+	receipt.runtimes.push({ id: runtime.id, profile: runtime.profile
+		, version: runtime.version
+		, versionSource: "runner invoked the configured interpreter with --version before the selections; the installer used that executable"
+		, versionPrintedByConsumer: false, tap, queue, runner });
 	for(const [index, step] of finPythonRubySteps.entries())
 	{
 		const report = await collect(`${prefix}-${step.id}-72c5e27.json`, `${runtime.id}-${step.id}.json`, runtime.reports[index]);
@@ -52,7 +63,7 @@ for(const runtime of finPythonRubyRuntimes)
 }
 // Check every source and report before writing. Refuse different existing evidence; allow exact reruns.
 await mkdir(finPythonRubyDirectory, { recursive: true });
-pending.push({ reference: { path: `${finPythonRubyDirectory}/receipt.json` }, bytes: Buffer.from(JSON.stringify(receipt, null, 2) + "\n") });
+pending.push({ reference: { path: `${finPythonRubyDirectory}/receipt-v2.json` }, bytes: Buffer.from(JSON.stringify(receipt, null, 2) + "\n") });
 for(const { reference, bytes } of pending)
 {
 	try

@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-runtime-provenance-v1",
+  "predecessorCommit": "88ace76f238d188f7e8061d5e56d991b44139a0f",
+  "updates": [
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "a2c559cd7321c6426cca21db96d2931551d17547bd9de6c1b500e1742c3253ad",
+      "previousSha256": "a4891ff98f800e88ee77ddc47d35f633866fdad7c1811a146b42a9a1cc8ce43e",
+      "edits": [
+        {
+          "start": 1512,
+          "previous": "| Fin inside products and Except | Ordinary and reviewed C/C++ parameter/result observations cite the original [product reports](native-fin-products-20261007/receipt.json), [Array-of-product reports](native-fin-product-arrays-20261007/receipt.json) and separate [Array dispatch runs](native-fin-product-array-dispatch-20261007/receipt.json). | The [Python/Ruby archive](fin-python-ruby-20261008/receipt.json) retains ordinary/reviewed products and Arrays of products on Python 3.11.16, Python 3.12.14 and Ruby 3.3.12. Each Python product run executes 2038 checks and each Array run 2014; Ruby executes 2039 and 2010. | VO #1441: promote these exact Python/Ruby observations, then execute the remaining native hosts and four Perl ABIs. C measures source and raw-adapter dispatch for `rows`; C++, Python, Ruby and `reversed` do not have independent counters in these reports. |\n| Fin nominal fields | Ordinary-source Node JavaScript/TypeScript, including the recorded alias and finite recursive cases. Ordinary and reviewed C/C++ cite the expanded [record reports](native-fin-records-20261007/receipt.json) from `3ece09f`, including Array/List/Option/Prod/Except compositions. C executes 2064 checks and C++ 2053; only C measures dispatch. | The [Python/Ruby archive](fin-python-ruby-20261008/receipt.json) adds ordinary/reviewed record and variant fields on both Python floors and Ruby 3.3.12, with 2053 checks and all 13 exports per run. | VO #1442: promote only these observed field cells, then finish remaining native hosts, four Perl ABIs and browser field acceptance. These nonrecursive, nongeneric native fixtures do not extend npm's recursive coverage to native packages. |\n",
+          "current": "| Fin inside products and Except | Ordinary and reviewed C/C++ parameter/result observations cite the original [product reports](native-fin-products-20261007/receipt.json), [Array-of-product reports](native-fin-product-arrays-20261007/receipt.json) and separate [Array dispatch runs](native-fin-product-array-dispatch-20261007/receipt.json). | The [Python/Ruby archive](fin-python-ruby-20261008/receipt-v2.json) retains ordinary/reviewed products and Arrays of products on Python 3.11.16, Python 3.12.14 and Ruby 3.3.12. Each Python product run executes 2038 checks and each Array run 2014; Ruby executes 2039 and 2010. | VO #1441: promote these exact Python/Ruby observations, then execute the remaining native hosts and four Perl ABIs. C measures source and raw-adapter dispatch for `rows`; C++, Python, Ruby and `reversed` do not have independent counters in these reports. |\n| Fin nominal fields | Ordinary-source Node JavaScript/TypeScript, including the recorded alias and finite recursive cases. Ordinary and reviewed C/C++ cite the expanded [record reports](native-fin-records-20261007/receipt.json) from `3ece09f`, including Array/List/Option/Prod/Except compositions. C executes 2064 checks and C++ 2053; only C measures dispatch. | The [Python/Ruby archive](fin-python-ruby-20261008/receipt-v2.json) adds ordinary/reviewed record and variant fields on both Python floors and Ruby 3.3.12, with 2053 checks and all 13 exports per run. | VO #1442: promote only these observed field cells, then finish remaining native hosts, four Perl ABIs and browser field acceptance. These nonrecursive, nongeneric native fixtures do not extend npm's recursive coverage to native packages. |\n"
+        },
+        {
+          "start": 10706,
+          "previous": "The [Python/Ruby archive](fin-python-ruby-20261008/receipt.json) preserves 18 reports from frozen producer `72c5e27`, plus each runtime's original runner, TAP output and queue. All six selected tests per runtime passed without failures or skips. Two independent author roots reproduced the packages, followed by source/build deletion and compiler-free offline installation. Both Python versions produced identical JSON, so the separate execution logs establish which interpreter ran. These local runs used Node 22.23.2 and an explicit glibc minimum of 2.36. Package hashes are retained; the binary archives themselves are not. Dispatch and hosted CI remain unmeasured. The [archive tests](../../tests/fin-python-ruby-evidence.test.mjs) authenticate exact caller bytes, refinement trees, reviewed decisions, package identities and runtime-specific execution records; inventory promotion remains separate.\n",
+          "current": "The [Python/Ruby archive](fin-python-ruby-20261008/receipt-v2.json) preserves 18 reports from frozen producer `72c5e27`, plus each runtime's original runner, TAP output and queue. All six selected tests per runtime passed without failures or skips. Two independent author roots reproduced the packages, followed by source/build deletion and compiler-free offline installation. Both Python versions produced identical JSON. Each runner recorded the version of its configured interpreter before the selections; the installer used that executable. The consumers did not print their versions. The runners recorded Node 22.23.2 and configured a glibc minimum of 2.36. Their retained logs declare a 2.36 host and select a Lean 4.32.2 path, but do not measure either version. The corrected receipt records that distinction and retains the [first receipt](fin-python-ruby-20261008/receipt.json) unchanged. Its selected source pins are not a complete dependency closure. Package hashes are retained; the binary archives themselves are not. Dispatch and hosted CI remain unmeasured. The [archive tests](../../tests/fin-python-ruby-evidence.test.mjs) authenticate exact caller bytes, refinement trees, reviewed decisions, package identities and runtime-specific execution records; inventory promotion remains separate.\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/archive-fin-python-ruby-evidence.mjs",
+      "currentSha256": "6d94ab702706edb1f49bceff9d8c216b4fd9e5e993c0dd0e26b513a03fd152e8",
+      "previousSha256": "9d0dcc23170c6d87761d66ad98da50f2eeb157aaf49b49c7f52a6fbc33a1b28e",
+      "edits": [
+        {
+          "start": 590,
+          "previous": "\tschemaVersion: 1, planNodes: [1441, 1442], execution: \"local\"\n",
+          "current": "\tschemaVersion: 2, planNodes: [1441, 1442], execution: \"local\"\n"
+        },
+        {
+          "start": 688,
+          "previous": "",
+          "current": "\t, priorReceipt: { path: `${finPythonRubyDirectory}/receipt.json`\n\t\t, sha256: \"af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e\"\n\t\t, reason: \"Distinguish measured interpreter versions from declared host glibc and the configured Lean path.\" }\n"
+        },
+        {
+          "start": 1170,
+          "previous": "\t, producerEnvironment: { nodeVersion: \"v22.23.2\", hostGlibcVersion: \"2.36\"\n",
+          "current": "\t, producerEnvironment: { nodeVersion: \"v22.23.2\"\n\t\t, nodeVersionSource: \"runner process.version\"\n\t\t, declaredHostGlibcVersion: \"2.36\", hostGlibcVersionMeasured: false\n"
+        },
+        {
+          "start": 1413,
+          "previous": "\t\t, leanToolchain: \"leanprover/lean4:v4.32.2\"\n",
+          "current": "\t\t, configuredLeanToolchain: \"leanprover/lean4:v4.32.2\"\n\t\t, leanVersionMeasured: false\n"
+        },
+        {
+          "start": 1549,
+          "previous": "",
+          "current": "\t, sourceIdentityScope: \"Selected compiler, installer, fixture and consumer files, not a complete dependency closure; runners checked the recorded Git revision and a clean tracked tree before each selection.\"\n"
+        },
+        {
+          "start": 1982,
+          "previous": "",
+          "current": "assert.equal(sha256(await readFile(receipt.priorReceipt.path)), receipt.priorReceipt.sha256);\n"
+        },
+        {
+          "start": 2968,
+          "previous": "\treceipt.runtimes.push({ id: runtime.id, profile: runtime.profile, version: runtime.version, tap, queue, runner });\n",
+          "current": "\treceipt.runtimes.push({ id: runtime.id, profile: runtime.profile\n\t\t, version: runtime.version\n\t\t, versionSource: \"runner invoked the configured interpreter with --version before the selections; the installer used that executable\"\n\t\t, versionPrintedByConsumer: false, tap, queue, runner });\n"
+        },
+        {
+          "start": 3954,
+          "previous": "pending.push({ reference: { path: `${finPythonRubyDirectory}/receipt.json` }, bytes: Buffer.from(JSON.stringify(receipt, null, 2) + \"\\n\") });\n",
+          "current": "pending.push({ reference: { path: `${finPythonRubyDirectory}/receipt-v2.json` }, bytes: Buffer.from(JSON.stringify(receipt, null, 2) + \"\\n\") });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-python-ruby-evidence.test.mjs",
+      "currentSha256": "144f6a629933576cb49d5d53b1cb23dee1e0f5b15b6dffeeda216156d4d7901d",
+      "previousSha256": "c353f4797a8f618455e4a316a68bf32a83f6af2c383ddb4d1532d7a55df909e6",
+      "edits": [
+        {
+          "start": 667,
+          "previous": "",
+          "current": "import \"./helpers/fin-runtime-provenance-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 766,
+          "previous": "\tconst bytes = await readFile(`${finPythonRubyDirectory}/receipt.json`);\n\tassert.equal(sha256(bytes), \"af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e\");\n",
+          "current": "\tconst bytes = await readFile(`${finPythonRubyDirectory}/receipt-v2.json`);\n\tassert.equal(sha256(bytes), \"bf9d9e50056cf76630820935709134a7e4033f45721d380d4af2febe5e82dd98\");\n"
+        },
+        {
+          "start": 1323,
+          "previous": "\tassert.equal(record.schemaVersion, 1); assert.deepEqual(record.planNodes, [1441, 1442]);\n",
+          "current": "\tassert.equal(record.schemaVersion, 2); assert.deepEqual(record.planNodes, [1441, 1442]);\n"
+        },
+        {
+          "start": 1829,
+          "previous": "\t\t, hostGlibcVersion: \"2.36\", nativeGlibcFloor: \"2.36\"\n",
+          "current": "\t\t, nodeVersionSource: \"runner process.version\"\n\t\t, declaredHostGlibcVersion: \"2.36\", hostGlibcVersionMeasured: false\n\t\t, nativeGlibcFloor: \"2.36\"\n"
+        },
+        {
+          "start": 2025,
+          "previous": "\t\t, leanToolchain: \"leanprover/lean4:v4.32.2\"\n",
+          "current": "\t\t, configuredLeanToolchain: \"leanprover/lean4:v4.32.2\"\n\t\t, leanVersionMeasured: false\n"
+        },
+        {
+          "start": 2163,
+          "previous": "",
+          "current": "\tassert.equal(Object.hasOwn(record.producerEnvironment, \"hostGlibcVersion\"), false);\n\tassert.equal(Object.hasOwn(record.producerEnvironment, \"leanToolchain\"), false);\n\tassert.equal(record.priorReceipt.path, `${finPythonRubyDirectory}/receipt.json`);\n\tassert.equal(record.priorReceipt.sha256, \"af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e\");\n\tconst previous = await readFile(record.priorReceipt.path);\n\tassert.equal(sha256(previous), record.priorReceipt.sha256);\n\tfor(const key of [\"artifacts\", \"sourceFiles\", \"runs\", \"scope\", \"revision\"])\n\t\tassert.deepEqual(record[key], JSON.parse(previous)[key], key);\n\tassert.match(record.sourceIdentityScope, /not a complete dependency closure/u);\n"
+        },
+        {
+          "start": 4836,
+          "previous": "",
+          "current": "\t\tassert.equal(execution.versionSource, \"runner invoked the configured interpreter with --version before the selections; the installer used that executable\");\n\t\tassert.equal(execution.versionPrintedByConsumer, false);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-archive-source-history.mjs",
+      "currentSha256": "762528a581033b7c0d712406297ce104cf17c9628d7f57c53e2eb80c61b2169d",
+      "previousSha256": "4bb29ecb98e3eba513424b47e1d9d1b501519a7bb2ca366ca442f3f824c54800",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforeFinRuntimeProvenanceSource } from \"./fin-runtime-provenance-source-history.mjs\";\n"
+        },
+        {
+          "start": 2291,
+          "previous": "",
+          "current": "\tsource = beforeFinRuntimeProvenanceSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-archive-source-history-tests.mjs",
+      "currentSha256": "98bfd57c4e30c87312641006dc874b6ef489442e6dbc30f4f442047f00fbaaa4",
+      "previousSha256": "6b2f37ff60d559ee19d5eb7174fe21d4bd7923a3d4c09d744569cf5e5985a954",
+      "edits": [
+        {
+          "start": 353,
+          "previous": "",
+          "current": "import { beforeFinRuntimeProvenanceSource } from \"./fin-runtime-provenance-source-history.mjs\";\n"
+        },
+        {
+          "start": 1045,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinRuntimeProvenanceSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "339afeb98fdf48e7d308def16d0c3b570c4d138ef17548b8d68fb2a407afdea9",
+      "previousSha256": "e36d72a1581262cbc97edd43a7fd04c480b5c13ad64663f89721d949e2e5c3a9",
+      "edits": [
+        {
+          "start": 8893,
+          "previous": "",
+          "current": "import { finRuntimeProvenanceChangedPaths } from \"./fin-runtime-provenance-source-history.mjs\";\n"
+        },
+        {
+          "start": 45631,
+          "previous": "",
+          "current": "\t, ...finRuntimeProvenanceChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

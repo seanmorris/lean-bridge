@@ -10,10 +10,11 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { assertFinPythonRubyExecution, assertFinPythonRubyReport, finPythonRubyDirectory, finPythonRubyRevision, finPythonRubyRuntimes, finPythonRubySourcePaths, finPythonRubySteps } from "./helpers/fin-python-ruby-evidence.mjs";
 import "./helpers/fin-python-ruby-archive-source-history-tests.mjs";
+import "./helpers/fin-runtime-provenance-source-history-tests.mjs";
 
 const receipt = async () => {
-	const bytes = await readFile(`${finPythonRubyDirectory}/receipt.json`);
-	assert.equal(sha256(bytes), "af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e");
+	const bytes = await readFile(`${finPythonRubyDirectory}/receipt-v2.json`);
+	assert.equal(sha256(bytes), "bf9d9e50056cf76630820935709134a7e4033f45721d380d4af2febe5e82dd98");
 	return JSON.parse(bytes);
 };
 const readOriginal = async reference => {
@@ -25,17 +26,29 @@ const readOriginal = async reference => {
 
 test("Python/Ruby evidence authenticates all 18 original reports and all 27 artifacts", async () => {
 	const record = await receipt();
-	assert.equal(record.schemaVersion, 1); assert.deepEqual(record.planNodes, [1441, 1442]);
+	assert.equal(record.schemaVersion, 2); assert.deepEqual(record.planNodes, [1441, 1442]);
 	assert.equal(record.execution, "local"); assert.equal(record.revision, finPythonRubyRevision);
 	assert.deepEqual(record.scope, { profiles: ["python", "ruby"]
 		, sourcePaths: ["ordinary-source", "reviewed-ir"]
 		, families: ["product", "product-array", "record"]
 		, dispatchObserved: false, hostedCi: false, binaryArchivesRetained: false });
 	assert.deepEqual(record.producerEnvironment, { nodeVersion: "v22.23.2"
-		, hostGlibcVersion: "2.36", nativeGlibcFloor: "2.36"
+		, nodeVersionSource: "runner process.version"
+		, declaredHostGlibcVersion: "2.36", hostGlibcVersionMeasured: false
+		, nativeGlibcFloor: "2.36"
 		, cpu: 3, concurrency: 1, minimumFreeMiB: 2048
-		, leanToolchain: "leanprover/lean4:v4.32.2"
+		, configuredLeanToolchain: "leanprover/lean4:v4.32.2"
+		, leanVersionMeasured: false
 		, leanThreads: 1, ompThreads: 1, makeJobs: 1 });
+	assert.equal(Object.hasOwn(record.producerEnvironment, "hostGlibcVersion"), false);
+	assert.equal(Object.hasOwn(record.producerEnvironment, "leanToolchain"), false);
+	assert.equal(record.priorReceipt.path, `${finPythonRubyDirectory}/receipt.json`);
+	assert.equal(record.priorReceipt.sha256, "af9106519066576db0d8806b369d011d4bb1150c2fe9051ba44d1fc8eba88e3e");
+	const previous = await readFile(record.priorReceipt.path);
+	assert.equal(sha256(previous), record.priorReceipt.sha256);
+	for(const key of ["artifacts", "sourceFiles", "runs", "scope", "revision"])
+		assert.deepEqual(record[key], JSON.parse(previous)[key], key);
+	assert.match(record.sourceIdentityScope, /not a complete dependency closure/u);
 	assert.deepEqual(record.sourceFiles.map(file => file.path), finPythonRubySourcePaths);
 	for(const source of record.sourceFiles)
 		assert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path), source.sha256)), source.sha256, source.path);
@@ -69,6 +82,8 @@ test("each Python floor and Ruby version retains its actual interpreter log and 
 	{
 		const execution = record.runtimes.find(item => item.id === runtime.id);
 		assert.equal(execution.version, runtime.version); assert.equal(execution.profile, runtime.profile);
+		assert.equal(execution.versionSource, "runner invoked the configured interpreter with --version before the selections; the installer used that executable");
+		assert.equal(execution.versionPrintedByConsumer, false);
 		for(const kind of ["tap", "queue", "runner"])
 		{
 			assert.equal(execution[kind].sha256, runtime[kind]);

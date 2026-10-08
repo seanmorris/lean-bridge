@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinRuntimeProvenanceSource } from "./fin-runtime-provenance-source-history.mjs";
 import { beforeFinPythonRubyArchiveSource, finPythonRubyArchiveChangedPaths, finPythonRubyArchiveHistoryPath, reverseFinPythonRubyArchiveUpdate } from "./fin-python-ruby-archive-source-history.mjs";
 
 test("Python/Ruby Fin archive authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Python/Ruby Fin archive authenticates each exact source predecessor", asyn
 	assert.deepEqual(record.updates.map(update => update.path), finPythonRubyArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinRuntimeProvenanceSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinPythonRubyArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinPythonRubyArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinPythonRubyArchiveSource(update.path, source, update.currentSha256), source);

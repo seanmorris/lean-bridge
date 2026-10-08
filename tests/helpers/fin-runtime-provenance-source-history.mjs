@@ -1,21 +1,20 @@
 /**
- * Preserve exact source predecessors of the Python/Ruby Fin archive change (#1220).
+ * Preserve exact source predecessors of the Fin runtime provenance change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinRuntimeProvenanceSource } from "./fin-runtime-provenance-source-history.mjs";
 
-export const finPythonRubyArchiveHistoryPath = "docs/evidence/fin-python-ruby-archive-source-history-20261008.json";
-export const finPythonRubyArchiveChangedPaths = [
+export const finRuntimeProvenanceHistoryPath = "docs/evidence/fin-runtime-provenance-source-history-20261008.json";
+export const finRuntimeProvenanceChangedPaths = [
 	"docs/evidence/refinement-closure-audit-20261007.md"
-	, "src/adoption/test-profiles.mjs"
+	, "scripts/archive-fin-python-ruby-evidence.mjs"
+	, "tests/fin-python-ruby-evidence.test.mjs"
+	, "tests/helpers/fin-python-ruby-archive-source-history.mjs"
+	, "tests/helpers/fin-python-ruby-archive-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/checked-record-admission-source-history.mjs"
-	, "tests/helpers/checked-record-admission-source-history-tests.mjs"
-	, "docs/type-surface.v1.json"
 ];
 let history;
 
@@ -25,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinPythonRubyArchiveUpdate = (source, update) => {
-	assert.ok(finPythonRubyArchiveChangedPaths.includes(update.path));
+export const reverseFinRuntimeProvenanceUpdate = (source, update) => {
+	assert.ok(finRuntimeProvenanceChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -52,12 +51,11 @@ export const reverseFinPythonRubyArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinPythonRubyArchiveSource = (path, source, expected) => {
-	source = beforeFinRuntimeProvenanceSource(path, source, expected);
-	if(typeof source !== "string" || !finPythonRubyArchiveChangedPaths.includes(path)) return source;
+export const beforeFinRuntimeProvenanceSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finRuntimeProvenanceChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finPythonRubyArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finRuntimeProvenanceHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinPythonRubyArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinRuntimeProvenanceUpdate(source, update) : source;
 };
