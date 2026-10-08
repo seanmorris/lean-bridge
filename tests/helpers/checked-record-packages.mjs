@@ -96,6 +96,13 @@ void width; void data; void rest;
 `;
 
 /**
+ * Strict TypeScript caller bytes for a route.
+ *
+ * @param resultOnly - The result-only package's caller.
+ */
+export const checkedRecordTypescript = (resultOnly = false) => resultOnly ? resultOnlyTypescript : typescript;
+
+/**
  * Build the npm package from two clean roots, delete both, install offline under a Node-only PATH and
  * run the Node and strict TypeScript consumers.
  *
@@ -176,7 +183,7 @@ export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, eng
 	const interfaces = [["Interval", ["lo: bigint", "hi: bigint"]], ["Triple", ["data: ReadonlyArray<bigint>"]], ["Percent", ["value: bigint"]]].filter(([name]) => !resultOnly || name === "Triple");
 	for(const [name, fields] of interfaces)
 		assert.match(declarations, new RegExp(`export interface ${name} \\{\\s*${fields.map(field => `readonly ${field};`).join("\\s*")}\\s*\\}`), name);
-	const source = resultOnly ? resultOnlyTypescript : typescript;
+	const source = checkedRecordTypescript(resultOnly);
 	await saveLakeFile(consumer, "index.mts", source);
 	await execute([join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]);
 	return { archiveSha256, runtimeArchiveSha256
@@ -191,6 +198,7 @@ export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, eng
 };
 
 const reportKeys = ["route", "path", "reproducible", "independentBuilds"];
+const digest = value => typeof value === "string" && /^[0-9a-f]{64}$/u.test(value);
 /**
  * Refuse a checked-record acceptance report that drops a required claim or contradicts itself.
  *
@@ -204,5 +212,22 @@ export const assertCheckedRecordReport = report => {
 	assert.equal(report.independentBuilds, 2);
 	const installs = report.reports ?? [report];
 	assert.ok(installs.length > 0 && installs.every(item => item.sourceRemovedBeforeInstallation === true), "an install ran with its source present");
+	for(const item of installs)
+	{
+		assert.ok(item.offlineInstall === true && item.compilerFreePath === true, "an install was not offline or reached a compiler");
+		assert.ok(item.receiptTamperRefused === true, "a tampered receipt was not refused");
+		assert.ok(digest(item.receiptSha256) && digest(item.consumerSha256), "an install lacks its receipt or consumer bytes");
+	}
+	// An npm report runs on one install and binds the exact Node and strict TypeScript caller bytes.
+	if(!report.reports)
+	{
+		const resultOnly = report.route === "result-only";
+		assert.equal(report.consumerSha256, sha256(resultOnly ? checkedRecordResultOnlyConsumer() : checkedRecordNodeConsumer()), "Node caller bytes differ");
+		assert.deepEqual([report.checks, report.rejections], resultOnly ? [1001, 0] : [1011, 1009], "consumer counts differ");
+		const { strict, skipLibCheck, sourceSha256, declarationsSha256 } = report.typescript ?? {};
+		assert.ok(strict === true && skipLibCheck === false, "TypeScript was not strict with library checks");
+		assert.equal(sourceSha256, sha256(checkedRecordTypescript(resultOnly)), "TypeScript caller bytes differ");
+		assert.ok(digest(declarationsSha256) && digest(report.archiveSha256) && digest(report.runtimeArchiveSha256), "an npm report lacks its declaration or archive bytes");
+	}
 	assert.ok(report.route === "reviewed" ? typeof report.reviewedBindingIrSha256 === "string" && !report.contracts : report.contracts && !report.reviewedBindingIrSha256, "route evidence mismatch");
 };

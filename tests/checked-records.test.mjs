@@ -35,7 +35,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
-import { assertCheckedRecordReport, checkCheckedRecordNpmPackages } from "./helpers/checked-record-packages.mjs";
+import { assertCheckedRecordReport, checkCheckedRecordNpmPackages, checkedRecordNodeConsumer, checkedRecordResultOnlyConsumer, checkedRecordTypescript } from "./helpers/checked-record-packages.mjs";
 import { checkedRecordDispatchColumns, checkedRecordDispatchExpected, checkedRecordDispatchInterposer, checkedRecordDispatchProbe } from "./helpers/checked-record-dispatch.mjs";
 import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
@@ -178,11 +178,20 @@ test("private recursive descriptors bind erased proof names and refuse other com
 });
 
 test("installed checked-record reports and reviewed consumers refuse contradictory or unreviewed evidence", async () => {
-	const install = { profile: "c", sourceRemovedBeforeInstallation: true };
+	const hash = "0".repeat(64);
+	const install = { profile: "c", sourceRemovedBeforeInstallation: true, offlineInstall: true, compilerFreePath: true, receiptTamperRefused: true, receiptSha256: hash, consumerSha256: hash };
+	const npmInstall = (resultOnly = false) => {
+		const consumerSha256 = sha256(resultOnly ? checkedRecordResultOnlyConsumer() : checkedRecordNodeConsumer());
+		const typescript = { strict: true, skipLibCheck: false, sourceSha256: sha256(checkedRecordTypescript(resultOnly)), declarationsSha256: hash };
+		const [checks, rejections] = resultOnly ? [1001, 0] : [1011, 1009];
+		return { ...install, profile: undefined, consumerSha256, checks, rejections, archiveSha256: hash, runtimeArchiveSha256: hash, typescript };
+	};
 	const valid = [{ route: "ordinary", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, reports: [install] }
-		, { route: "reviewed", path: "reviewed-source", reproducible: true, independentBuilds: 2, reviewedBindingIrSha256: "0".repeat(64), reports: [install] }
-		, { route: "result-only", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, sourceRemovedBeforeInstallation: true }];
+		, { route: "reviewed", path: "reviewed-source", reproducible: true, independentBuilds: 2, reviewedBindingIrSha256: hash, reports: [install] }
+		, { route: "result-only", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, ...npmInstall(true) }
+		, { route: "ordinary", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, ...npmInstall() }];
 	for(const report of valid) assertCheckedRecordReport(report);
+	const npm = valid[3];
 	const mutants = [
 		["not reproducible", { ...valid[0], reproducible: false }]
 		, ["one build", { ...valid[0], independentBuilds: 1 }]
@@ -191,7 +200,24 @@ test("installed checked-record reports and reviewed consumers refuse contradicto
 		, ["reviewed route with contracts", { ...valid[1], contracts: {} }]
 		, ["ordinary route without contracts", { ...valid[0], contracts: undefined }]
 		, ["reviewed path on an ordinary route", { ...valid[0], path: "reviewed-source" }]
-		, ["an unknown route", { ...valid[0], route: "graph" }]];
+		, ["an unknown route", { ...valid[0], route: "graph" }]
+		, ["an online install", { ...valid[0], reports: [{ ...install, offlineInstall: false }] }]
+		, ["a compiler on the install path", { ...valid[0], reports: [{ ...install, compilerFreePath: false }] }]
+		, ["an unrefused tampered receipt", { ...valid[0], reports: [{ ...install, receiptTamperRefused: undefined }] }]
+		, ["no receipt bytes", { ...valid[0], reports: [{ ...install, receiptSha256: undefined }] }]
+		, ["no consumer bytes", { ...valid[0], reports: [{ ...install, consumerSha256: "consumer" }] }]
+		, ["an npm source present at install", { ...npm, sourceRemovedBeforeInstallation: false }]
+		, ["another Node caller", { ...npm, consumerSha256: hash }]
+		, ["the result-only caller on the ordinary route", { ...npm, consumerSha256: valid[2].consumerSha256 }]
+		, ["fewer checks", { ...npm, checks: 1010 }]
+		, ["no rejections", { ...npm, rejections: 0 }]
+		, ["no TypeScript", { ...npm, typescript: undefined }]
+		, ["non-strict TypeScript", { ...npm, typescript: { ...npm.typescript, strict: false } }]
+		, ["skipped library checks", { ...npm, typescript: { ...npm.typescript, skipLibCheck: true } }]
+		, ["another TypeScript caller", { ...npm, typescript: { ...npm.typescript, sourceSha256: valid[2].typescript.sourceSha256 } }]
+		, ["no declaration bytes", { ...npm, typescript: { ...npm.typescript, declarationsSha256: undefined } }]
+		, ["no package archive bytes", { ...npm, archiveSha256: undefined }]
+		, ["no runtime archive bytes", { ...npm, runtimeArchiveSha256: "" }]];
 	for(const [label, report] of mutants) assert.throws(() => assertCheckedRecordReport(report), assert.AssertionError, label);
 	// The reviewed consumers name each checked parameter by the review, and only reviewed sites relabel.
 	for(const [profile, extension] of [["c", "c"], ["cpp", "cpp"]])
@@ -517,7 +543,7 @@ const checkNativeRoute = async (t, { route, contracts, review, source, dispatch 
 			delete observation.command;
 			if(dispatch && profile === "c") dispatched = await observeDispatch(consumer, packages, make);
 			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
-			reports.push({ profile, path: route === "reviewed" ? "reviewed-source" : "ordinary-source", ...observation, packages, ...identities[0], receiptSha256, sourceRemovedBeforeInstallation: true });
+			reports.push({ profile, path: route === "reviewed" ? "reviewed-source" : "ordinary-source", ...observation, packages, ...identities[0], receiptSha256, receiptTamperRefused: true, sourceRemovedBeforeInstallation: true });
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
