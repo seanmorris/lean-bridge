@@ -97,6 +97,7 @@ import { reviewedSubtypeArchiveChangedPaths } from "./reviewed-subtype-archive-s
 import { reviewedApiPromotionChangedPaths } from "./reviewed-api-promotion-source-history.mjs";
 import { subtypeAliasPositionChangedPaths } from "./subtype-alias-position-source-history.mjs";
 import { finCallbackDiagnosticChangedPaths } from "./fin-callback-diagnostic-source-history.mjs";
+import { subtypeXsArchiveChangedPaths } from "./subtype-xs-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -658,6 +659,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedApiPromotionChangedPaths
 	, ...subtypeAliasPositionChangedPaths
 	, ...finCallbackDiagnosticChangedPaths
+	, ...subtypeXsArchiveChangedPaths
 ])].sort());
 
 /**

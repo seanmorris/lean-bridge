@@ -16,12 +16,13 @@ import { nativeFinBoundPaths } from "../src/backends/native/fin-refinements.mjs"
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { installNativeSubtypeConsumer, nativeSubtypeContracts, nativeSubtypeEnvironment, nativeSubtypeRefinements, nativeSubtypeTargets } from "./helpers/native-subtype-install.mjs";
+import { installNativeSubtypeConsumer, nativeSubtypeContracts, nativeSubtypeEnvironment, nativeSubtypeRefinements, nativeSubtypeTargets, readArchivedSubtypeXs } from "./helpers/native-subtype-install.mjs";
 import { nativeSubtypeDispatchColumns, nativeSubtypeDispatchExpected, nativeSubtypeDispatchInterposer, nativeSubtypeDispatchProbe } from "./helpers/native-subtype-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterposer, perlSubtypePrelude } from "./helpers/perl-subtype-dispatch.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import "./helpers/subtype-alias-position-source-history-tests.mjs";
+import "./helpers/subtype-xs-archive-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
@@ -31,6 +32,21 @@ const fixture = "tests/fixtures/onboarding/native-subtype";
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false } };
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const container = (kind, element) => ({ kind, element, abi: heap });
+
+test("archived Subtype XS remains readable without a PATH-provided decompressor", { skip: process.platform !== "linux" }, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-subtype-xs-archive-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const archive = join(directory, "example.tar.gz"), source = "MODULE = Example PACKAGE = Example\n/* exact archived XS bytes */\n";
+	await saveLakeFile(directory, "Example/Component.xs", source);
+	await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-cf", archive, "Example/Component.xs"], directory, copiedCleanEnvironment);
+	// The original command really fails in this environment; do not restore PATH to pass the test.
+	await assert.rejects(() => runCopied("/usr/bin/tar", ["-xOzf", archive, "--wildcards", "*/Component.xs"], directory, copiedCleanEnvironment), error => {
+		assert.equal(error.code, "build-command-failed");
+		assert.match(error.details.stderr, /gzip: Cannot exec: No such file or directory/u);
+		return true;
+	});
+	assert.equal(await readArchivedSubtypeXs(archive, directory), source);
+});
 
 test("native types admit Subtype only at a top-level site over a primitive base", () => {
 	const text = { kind: "primitive", name: "string", lean: "String", abi: { ...heap } };
@@ -206,7 +222,7 @@ test("relocated source-free native packages run author-checked constructors at e
 		{
 			// The archived XS calls one exported validator per checked parameter, after the Fin bound and before the adapter.
 			const archive = receipt.packages.find(pkg => pkg.target === "cpan" && pkg.role === "component").artifacts[0].path;
-			const xs = (await runCopied("/usr/bin/tar", ["-xOzf", join(handoff, archive), "--wildcards", "*/Component.xs"], consumer, copiedCleanEnvironment)).stdout;
+			const xs = await readArchivedSubtypeXs(join(handoff, archive), consumer);
 			assert.equal((xs.match(/was rejected by Subtypes\.checked\w+"/g) ?? []).length, 8);
 			const mix = xs.slice(xs.indexOf("\nmix(...)"), xs.indexOf("XSRETURN(1);", xs.indexOf("\nmix(...)")));
 			assert.ok(mix.indexOf("is not below its Fin 10 bound") < mix.indexOf("_refinement_0(a0)") && mix.indexOf("_refinement_0(a0)") < mix.indexOf("lean_object *checked = "));

@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "milestone": "subtype-xs-archive-v1",
+  "predecessorCommit": "18ad14bb574c1e434fd6d2e2810885ead34007e6",
+  "updates": [
+    {
+      "path": "tests/native-subtype.test.mjs",
+      "currentSha256": "fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977",
+      "previousSha256": "69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f",
+      "edits": [
+        {
+          "start": 922,
+          "previous": "import { installNativeSubtypeConsumer, nativeSubtypeContracts, nativeSubtypeEnvironment, nativeSubtypeRefinements, nativeSubtypeTargets } from \"./helpers/native-subtype-install.mjs\";\n",
+          "current": "import { installNativeSubtypeConsumer, nativeSubtypeContracts, nativeSubtypeEnvironment, nativeSubtypeRefinements, nativeSubtypeTargets, readArchivedSubtypeXs } from \"./helpers/native-subtype-install.mjs\";\n"
+        },
+        {
+          "start": 1695,
+          "previous": "",
+          "current": "import \"./helpers/subtype-xs-archive-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2585,
+          "previous": "",
+          "current": "test(\"archived Subtype XS remains readable without a PATH-provided decompressor\", { skip: process.platform !== \"linux\" }, async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-subtype-xs-archive-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst archive = join(directory, \"example.tar.gz\"), source = \"MODULE = Example PACKAGE = Example\\n/* exact archived XS bytes */\\n\";\n\tawait saveLakeFile(directory, \"Example/Component.xs\", source);\n\tawait runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-cf\", archive, \"Example/Component.xs\"], directory, copiedCleanEnvironment);\n\t// The original command really fails in this environment; do not restore PATH to pass the test.\n\tawait assert.rejects(() => runCopied(\"/usr/bin/tar\", [\"-xOzf\", archive, \"--wildcards\", \"*/Component.xs\"], directory, copiedCleanEnvironment), error => {\n\t\tassert.equal(error.code, \"build-command-failed\");\n\t\tassert.match(error.details.stderr, /gzip: Cannot exec: No such file or directory/u);\n\t\treturn true;\n\t});\n\tassert.equal(await readArchivedSubtypeXs(archive, directory), source);\n});\n\n"
+        },
+        {
+          "start": 18925,
+          "previous": "\t\t\tconst xs = (await runCopied(\"/usr/bin/tar\", [\"-xOzf\", join(handoff, archive), \"--wildcards\", \"*/Component.xs\"], consumer, copiedCleanEnvironment)).stdout;\n",
+          "current": "\t\t\tconst xs = await readArchivedSubtypeXs(join(handoff, archive), consumer);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-subtype-install.mjs",
+      "currentSha256": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8",
+      "previousSha256": "de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841",
+      "edits": [
+        {
+          "start": 143,
+          "previous": "import { installCopiedConsumer } from \"./copied-fixture-install.mjs\";\n",
+          "current": "import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from \"./copied-fixture-install.mjs\";\n"
+        },
+        {
+          "start": 349,
+          "previous": "",
+          "current": "\n/**\n * Inspect the archived XS without giving the installed-consumer environment a tool search path.\n *\n * @param archive - Verified CPAN archive path.\n * @param consumer - Isolated consumer working directory.\n */\nexport const readArchivedSubtypeXs = async (archive, consumer) =>\n\t(await runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-xOf\", archive, \"--wildcards\", \"*/Component.xs\"], consumer, copiedCleanEnvironment)).stdout;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "82401e2c56f5c115058b2facffabfc52ed3d92d642c8b6e3e633e4b62a24da44",
+      "previousSha256": "876ea90cda4c3df124b518554cf4ac3a0eb727b358678b81807ea1f9e35c91c5",
+      "edits": [
+        {
+          "start": 8608,
+          "previous": "",
+          "current": "import { subtypeXsArchiveChangedPaths } from \"./subtype-xs-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 45223,
+          "previous": "",
+          "current": "\t, ...subtypeXsArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-callback-diagnostic-source-history.mjs",
+      "currentSha256": "7295d21ba271c4f8eee5d52748c84b80ebc8f8208a63d3ff63293ba5f77c1529",
+      "previousSha256": "728b1a120d1630e5c0cfacad133d2a3d3b21932232456fb3e6cdf13ebd60eac5",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import { beforeSubtypeXsArchiveSource } from \"./subtype-xs-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2223,
+          "previous": "",
+          "current": "\tsource = beforeSubtypeXsArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-callback-diagnostic-source-history-tests.mjs",
+      "currentSha256": "303524d4cca61563512d72256dc2ed6da226bc2b3c103610eabe82737ad0f3c0",
+      "previousSha256": "8fa43e9f89929bdf2def97f841aad7a8c7844dd3c2d58d35a75c2a27a58b0bf9",
+      "edits": [
+        {
+          "start": 353,
+          "previous": "",
+          "current": "import { beforeSubtypeXsArchiveSource } from \"./subtype-xs-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1043,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeSubtypeXsArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "8d92ca578883009ae8fb7934200855bc82fdec055bfda1f947fdfc1d344bac32",
+      "previousSha256": "68bd931914040761a1a555160341fd482c2ebd91ec9e230a55fa13033294ddb6",
+      "edits": [
+        {
+          "start": 43824,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 43983,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1544279,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1544438,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1548411,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1548570,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1552055,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1552214,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1556051,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1556210,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1559668,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1559827,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1563290,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1563449,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1566916,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1567075,
+          "previous": "          \"sha256\": \"69657e48838faa665607d6a30f575478e14f644188338e4ddb6b331c197f032f\"\n",
+          "current": "          \"sha256\": \"fb1dc8bb6861fcb9c33daa477228be356b07120e0744dd2c01e2a62d9e2da977\"\n"
+        },
+        {
+          "start": 1714613,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        },
+        {
+          "start": 1720392,
+          "previous": "          \"sha256\": \"de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841\"\n",
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n"
+        }
+      ]
+    }
+  ]
+}

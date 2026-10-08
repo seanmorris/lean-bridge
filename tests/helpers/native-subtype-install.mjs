@@ -4,8 +4,17 @@
  * @file
  */
 import { readFile } from "node:fs/promises";
-import { installCopiedConsumer } from "./copied-fixture-install.mjs";
+import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copied-fixture-install.mjs";
 export { nativeFixtureEnvironment as nativeSubtypeEnvironment } from "./copied-fixture-install.mjs";
+
+/**
+ * Inspect the archived XS without giving the installed-consumer environment a tool search path.
+ *
+ * @param archive - Verified CPAN archive path.
+ * @param consumer - Isolated consumer working directory.
+ */
+export const readArchivedSubtypeXs = async (archive, consumer) =>
+	(await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xOf", archive, "--wildcards", "*/Component.xs"], consumer, copiedCleanEnvironment)).stdout;
 // The WIT host header and its C prefix both derive from this hyphen-free name.
 const coordinate = { name: "subtypes", version: "1.0.0" };
 export const nativeSubtypeTargets = Object.freeze({ c: ["c", coordinate]

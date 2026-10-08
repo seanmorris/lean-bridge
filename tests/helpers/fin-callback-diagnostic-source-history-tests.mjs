@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeSubtypeXsArchiveSource } from "./subtype-xs-archive-source-history.mjs";
 import { beforeFinCallbackDiagnosticSource, finCallbackDiagnosticChangedPaths, finCallbackDiagnosticHistoryPath, reverseFinCallbackDiagnosticUpdate } from "./fin-callback-diagnostic-source-history.mjs";
 
 test("Fin callback diagnostic authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Fin callback diagnostic authenticates each exact source predecessor", asyn
 	assert.deepEqual(record.updates.map(update => update.path), finCallbackDiagnosticChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeSubtypeXsArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinCallbackDiagnosticUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinCallbackDiagnosticSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinCallbackDiagnosticSource(update.path, source, update.currentSha256), source);

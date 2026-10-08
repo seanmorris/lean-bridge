@@ -1,19 +1,19 @@
 /**
- * Preserve exact source predecessors of the Fin callback diagnostic change (#1220).
+ * Preserve exact source predecessors of the Subtype XS archive change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeSubtypeXsArchiveSource } from "./subtype-xs-archive-source-history.mjs";
 
-export const finCallbackDiagnosticHistoryPath = "docs/evidence/fin-callback-diagnostic-source-history-20261008.json";
-export const finCallbackDiagnosticChangedPaths = [
-	"tests/native-fin.test.mjs"
+export const subtypeXsArchiveHistoryPath = "docs/evidence/subtype-xs-archive-source-history-20261008.json";
+export const subtypeXsArchiveChangedPaths = [
+	"tests/native-subtype.test.mjs"
+	, "tests/helpers/native-subtype-install.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/subtype-alias-position-source-history.mjs"
-	, "tests/helpers/subtype-alias-position-source-history-tests.mjs"
+	, "tests/helpers/fin-callback-diagnostic-source-history.mjs"
+	, "tests/helpers/fin-callback-diagnostic-source-history-tests.mjs"
 	, "docs/type-surface.v1.json"
 ];
 let history;
@@ -24,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinCallbackDiagnosticUpdate = (source, update) => {
-	assert.ok(finCallbackDiagnosticChangedPaths.includes(update.path));
+export const reverseSubtypeXsArchiveUpdate = (source, update) => {
+	assert.ok(subtypeXsArchiveChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +51,11 @@ export const reverseFinCallbackDiagnosticUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinCallbackDiagnosticSource = (path, source, expected) => {
-	source = beforeSubtypeXsArchiveSource(path, source, expected);
-	if(typeof source !== "string" || !finCallbackDiagnosticChangedPaths.includes(path)) return source;
+export const beforeSubtypeXsArchiveSource = (path, source, expected) => {
+	if(typeof source !== "string" || !subtypeXsArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finCallbackDiagnosticHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(subtypeXsArchiveHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinCallbackDiagnosticUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseSubtypeXsArchiveUpdate(source, update) : source;
 };
