@@ -6,6 +6,8 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
+import "./helpers/reviewed-callback-fin-guards.mjs";
+import "./helpers/reviewed-callback-fin-admission-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { reconcileReviewedSource, reviewedSourceSelection, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { assertComponentSignature } from "../src/abi/component-scalars.mjs";

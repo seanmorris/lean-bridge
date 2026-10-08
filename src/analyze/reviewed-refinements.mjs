@@ -3,13 +3,27 @@
  *
  * @file
  */
-import { assertRefinement, nominalRefinement } from "../abi/refinements.mjs";
+import { assertRefinement, callbackDefinitionRefinement, nominalRefinement } from "../abi/refinements.mjs";
 
 // Run only after the shared validator has checked tree shape and depth.
 const finOnly = refinement => {
 	if(refinement === null || refinement.kind === "fin") return;
 	if(refinement.kind === "subtype") throw new TypeError("Reviewed Subtype decisions require a checked constructor selection");
 	refinement.arguments.forEach(finOnly);
+};
+
+/**
+ * Validate a callback's nonempty Fin trees against its erased signature.
+ * Checked constructors are not available inside a callback contract.
+ *
+ * @param definition - Reviewed callback with an authored refinement extension.
+ */
+export const assertReviewedFinCallback = definition => {
+	if(definition.kind !== "callback") throw new TypeError("Expected a reviewed callback");
+	const refinement = callbackDefinitionRefinement(definition);
+	if(refinement === null) throw new TypeError("Expected a reviewed callback refinement");
+	refinement.parameters.forEach(finOnly);
+	finOnly(refinement.result);
 };
 
 /**

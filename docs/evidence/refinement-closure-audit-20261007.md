@@ -54,6 +54,8 @@ A changed review can legitimately select another well-typed constructor or speci
 
 VO #1444 connects [constructor-decision mapping](../../src/analyze/reviewed-subtypes.mjs) to analysis, build and target recompilation, and includes the module in the CLI and Nix source boundaries. It derives contracts only for top-level primitive Subtype leaves, preserves other sites in mixed signatures and adds no selection for Fin-only exports. Specializations of one generic use their distinct public export names, so each can choose its own constructor. Fresh Lean checks exact input/output types, the selected source closure and constructor safety; a different valid normalizing constructor changes the compiled API and invocation identity. Installed C/C++ and npm/strict TypeScript acceptance remains pending.
 
+VO #1445 now admits reviewed callback Fin trees and includes them in the callback identity using the compiler's signature function. Synthetic controls check nonempty trees, scalar and container bounds, unchanged unrefined identities, nominal field comparisons and forged or rehashed decisions. They do not establish fresh-Lean or installed reviewed callback acceptance. Bounds remain absent from the compiler selection request; the native host-reply refusal and callback Subtype refusal remain unchanged.
+
 ## Remaining rows and owners
 
 | Row | Owner | Next task or decision |

@@ -11,8 +11,9 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
-import { assertReviewedRefinements, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
+import { assertReviewedRefinements, assertReviewedFinCallback, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
 import { reviewedSubtypeContracts } from "./reviewed-subtypes.mjs";
+import { callbackSemanticSignature } from "./callback-signature.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -90,12 +91,12 @@ const checkReview = document => {
 			: !leanName(item.source.declaration) || item.id !== `lean:${specialization?.name ?? item.source.declaration}`, `${item.id}.source.declaration`);
 		if(specialization !== undefined) checkSpecialization(item, specialization);
 		// Aliases, records and variants carry their bounds on the definition, as compiled metadata does.
-		const refinementKey = declaration ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
+		const refinementKey = declaration || item.kind === "callback" ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
 		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey && (!declaration || key !== specializationKey)), `${item.id}.source.extensions`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
-			{ (declaration ? assertReviewedRefinements : assertReviewedFinNominal)(item, item.source.extensions[refinementKey]); }
+			{ (declaration ? assertReviewedRefinements : item.kind === "callback" ? assertReviewedFinCallback : assertReviewedFinNominal)(item, item.source.extensions[refinementKey]); }
 			catch
 			{ unsupported("Reviewed refinement decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
 		}
@@ -123,7 +124,10 @@ const checkReview = document => {
 		if(definition.kind === "callback")
 		{
 			const callable = definition.callable;
-			const signature = { parameters: callable.parameters.map(parameter => parameter.type), result: callable.result.type };
+			// Match compiler identity exactly: an authored bound is part of the callback, not a selection hint.
+			const signature = { ...callbackSemanticSignature(callable)
+				, ...(Object.hasOwn(definition.source.extensions, "lean-lang.org/refinements")
+					? { refinements: definition.source.extensions["lean-lang.org/refinements"] } : {}) };
 			const name = `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 			source(definition, name);
 			reject(definition.representation !== "identity" || definition.mutability !== "immutable"

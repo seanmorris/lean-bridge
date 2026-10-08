@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeReviewedCallbackFinAdmissionSource } from "./reviewed-callback-fin-admission-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCallbackCodeCiRepairSource, callbackCodeCiRepairChangedPaths, callbackCodeCiRepairHistoryPath, reverseCallbackCodeCiRepairUpdate } from "./callback-code-ci-repair-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Callback error-code and CI repair authenticates each exact source predeces
 	assert.deepEqual(record.updates.map(update => update.path), callbackCodeCiRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedCallbackFinAdmissionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCallbackCodeCiRepairUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackCodeCiRepairSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCallbackCodeCiRepairSource(update.path, source, update.currentSha256), source);

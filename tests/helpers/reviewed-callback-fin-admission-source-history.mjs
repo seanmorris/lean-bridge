@@ -1,25 +1,23 @@
 /**
- * Preserve exact source predecessors of the Callback error-code and CI repair change (#1220).
+ * Preserve exact source predecessors of the Reviewed callback Fin admission change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedCallbackFinAdmissionSource } from "./reviewed-callback-fin-admission-source-history.mjs";
 
-export const callbackCodeCiRepairHistoryPath = "docs/evidence/callback-code-ci-repair-source-history-20261008.json";
-export const callbackCodeCiRepairChangedPaths = [
-	"src/backends/c/native-callables.mjs"
-	, "tests/c-callable-contract.test.mjs"
-	, "tests/native-fin-callbacks.test.mjs"
-	, "tests/generic-records.test.mjs"
-	, "tests/closure-thread-contract.test.mjs"
-	, "tests/helpers/closure-thread-registry.mjs"
+export const reviewedCallbackFinAdmissionHistoryPath = "docs/evidence/reviewed-callback-fin-admission-source-history-20261008.json";
+export const reviewedCallbackFinAdmissionChangedPaths = [
+	"src/analyze/reviewed-source.mjs"
+	, "src/analyze/reviewed-refinements.mjs"
+	, "tests/reviewed-callables.test.mjs"
+	, "docs/lean/existing-package.md"
+	, "docs/evidence/refinement-closure-audit-20261007.md"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-subtype-admission-source-history.mjs"
-	, "tests/helpers/reviewed-subtype-admission-source-history-tests.mjs"
+	, "tests/helpers/callback-code-ci-repair-source-history.mjs"
+	, "tests/helpers/callback-code-ci-repair-source-history-tests.mjs"
 ];
 let history;
 
@@ -29,8 +27,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseCallbackCodeCiRepairUpdate = (source, update) => {
-	assert.ok(callbackCodeCiRepairChangedPaths.includes(update.path));
+export const reverseReviewedCallbackFinAdmissionUpdate = (source, update) => {
+	assert.ok(reviewedCallbackFinAdmissionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -56,12 +54,11 @@ export const reverseCallbackCodeCiRepairUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeCallbackCodeCiRepairSource = (path, source, expected) => {
-	source = beforeReviewedCallbackFinAdmissionSource(path, source, expected);
-	if(typeof source !== "string" || !callbackCodeCiRepairChangedPaths.includes(path)) return source;
+export const beforeReviewedCallbackFinAdmissionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedCallbackFinAdmissionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(callbackCodeCiRepairHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedCallbackFinAdmissionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseCallbackCodeCiRepairUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedCallbackFinAdmissionUpdate(source, update) : source;
 };
