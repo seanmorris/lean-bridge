@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/reviewed-subtype-build-tests.mjs";
 import { lstat, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";

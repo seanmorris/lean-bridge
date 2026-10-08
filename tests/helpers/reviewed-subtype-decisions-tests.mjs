@@ -8,16 +8,22 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createMetadataRequest } from "../../src/analyze/elaborated-metadata.mjs";
 import { reviewedSubtypeContracts } from "../../src/analyze/reviewed-subtypes.mjs";
-import { validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
+import { reconcileReviewedSource, reviewedSourceSelection, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import "./reviewed-subtype-decisions-source-history-tests.mjs";
+import "./reviewed-subtype-admission-source-history-tests.mjs";
 
 const key = "lean-lang.org/refinements";
 const subtype = constructor => ({ kind: "subtype", constructor });
 const fin = bound => ({ kind: "fin", bound });
 const plain = { ownership: "copy", lifetime: null };
 const checked = constructor => ({ ...plain, refinement: { constructor } });
+const reviewInput = ir => {
+	const source = canonicalJson(ir);
+	return { schemaVersion: 1, path: "api.binding-ir.json", source
+		, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) };
+};
 const document = (parameters = ["string"], result = "string", decision = {
 	parameters: [subtype("Checks.word")], result: subtype("Checks.word")
 }) => {
@@ -108,10 +114,60 @@ test("derived constructor selections retain the existing 128-export contract bou
 	assert.throws(() => reviewedSubtypeContracts(ir), /at most 128/u);
 });
 
-test("decision mapping alone does not enable reviewed Subtype build admission", () => {
-	const ir = document(), source = canonicalJson(ir);
-	assert.throws(() => validateReviewedSource({
-		schemaVersion: 1, path: "api.binding-ir.json", source
-		, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir)
-	}), { code: "reviewed-ir-build-unsupported" });
+test("reviewed primitive Subtype decisions select their constructors for fresh compilation", () => {
+	for(const type of ["nat", "int", "string", "bytes", "uint8", "uint32", "uint64", "bool", "float32", "float64"])
+	{
+		const ir = document([type], type), review = reviewInput(ir);
+		validateReviewedSource(review);
+		assert.deepEqual(reviewedSourceSelection(review), {
+			exports: ["Checks.echo"], arities: []
+			, contracts: { "Checks.echo": { parameters: [checked("Checks.word")], result: checked("Checks.word") } }
+		});
+	}
+});
+
+test("specializations of one generic select independent constructors by public export name", () => {
+	const ir = corpusReviewedIr({ id: "checked" }, ["first", "second"].map(name => ({ name: `Checks.${name}`, parameters: ["nat"], result: "nat" })));
+	for(const item of ir.declarations)
+	{
+		item.source.declaration = "Checks.echo";
+		item.source.extensions["lean-lang.org/specialization"] = {
+			name: `Checks.${item.name}`, declaration: "Checks.echo"
+			, types: ["Checks.Even"], application: "@Checks.echo.{0} Checks.Even"
+		};
+		item.source.extensions[key] = { parameters: [subtype(`Checks.${item.name}Constructor`)], result: subtype(`Checks.${item.name}Constructor`) };
+	}
+	const selection = reviewedSourceSelection(reviewInput(ir));
+	assert.deepEqual(selection.exports, ["Checks.first", "Checks.second"]);
+	assert.deepEqual(Object.keys(selection.contracts), ["Checks.first", "Checks.second"]);
+	for(const name of ["first", "second"]) assert.deepEqual(selection.contracts[`Checks.${name}`], {
+		parameters: [checked(`Checks.${name}Constructor`)]
+		, result: checked(`Checks.${name}Constructor`)
+	});
+	assert.equal(selection.specializations.length, 2);
+});
+
+test("review reconciliation authenticates constructor selection and compiled constraints separately", () => {
+	const ir = document(), review = reviewInput(ir), selection = reviewedSourceSelection(review);
+	const configuration = canonicalJson({ schemaVersion: 1, modules: ["Checks"] });
+	const identity = { request: { ...selection, modules: ["Checks"], exportModules: ["Checks"], resources: [] }
+		, exportConfigurationSource: configuration
+		, exportConfigurationSha256: sha256(configuration) };
+	assert.deepEqual(reconcileReviewedSource(review, ir, identity), ir);
+	for(const mutate of [
+		request => { delete request.contracts; }
+		, request => { request.contracts["Checks.echo"].parameters[0].refinement.constructor = "Checks.other"; }
+		, request => { request.contracts["Checks.echo"].result.refinement.constructor = "Checks.other"; }
+		, request => { request.contracts["Checks.other"] = request.contracts["Checks.echo"]; }
+	]) {
+		const changed = structuredClone(identity); mutate(changed.request);
+		assert.throws(() => reconcileReviewedSource(review, ir, changed), { code: "reviewed-ir-source-mismatch" });
+	}
+	const compiled = structuredClone(ir);
+	compiled.declarations[0].source.extensions[key].result.constructor = "Checks.other";
+	assert.throws(() => reconcileReviewedSource(review, compiled, identity), error => {
+		assert.equal(error.code, "reviewed-ir-source-mismatch");
+		assert.match(error.details.field, /result.constructor$/u);
+		return true;
+	});
 });

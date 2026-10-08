@@ -20,7 +20,7 @@ jobs:
   reviewed-ir-admission:
     name: Reviewed IR admission corpus
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -38,7 +38,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           npm run test:type-corpus:reviewed
-          LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 node --test tests/reviewed-source-build.test.mjs
+          LEAN_BRIDGE_REVIEWED_SUBTYPE_LEAN_TEST=1 LEAN_BRIDGE_REVIEWED_SOURCE_TEST=1 node --test tests/reviewed-source-build.test.mjs
       - name: Preserve reviewed admission evidence
         if: always()
         uses: actions/upload-artifact@v7

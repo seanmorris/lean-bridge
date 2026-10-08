@@ -9,7 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { createMetadataRequest } from "../../src/analyze/elaborated-metadata.mjs";
-import { assertReviewedFin } from "../../src/analyze/reviewed-refinements.mjs";
+import { assertReviewedRefinements } from "../../src/analyze/reviewed-refinements.mjs";
 import { reviewedSourceSelection, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
 import { createNativeModel } from "../../src/build/native-model.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
@@ -161,7 +161,6 @@ test("malformed reviewed constraints fail before selecting compiler exports", ()
 	const invalid = [
 		null, [], {}, { parameters: [fin("10")] }, { ...decision(), extra: true }
 		, { parameters: [], result: fin("10") }, decision(null, null)
-		, decision({ kind: "subtype", constructor: "Sample.checked" })
 		, decision({ ...fin("10"), evidence: "forged" })
 		, decision(wrap("option", null)), decision(wrap("option", fin("10")))
 		, ...["", "01", "-1", "1.0", "1e3", 10].map(bound => decision(fin(bound)))];
@@ -176,8 +175,8 @@ test("malformed reviewed constraints fail before selecting compiler exports", ()
 test("reviewed Fin validation bounds nesting and retains partial product decisions", () => {
 	const tree = count => Array.from({ length: count }).reduce(value => wrap("option", value), fin("10"));
 	const type = count => Array.from({ length: count }).reduce(value => ({ kind: "apply", constructor: "option", arguments: [value] }), { kind: "primitive", name: "nat" });
-	for(const depth of [0, 1, 32]) assertReviewedFin({ parameters: [{ type: type(depth) }], result: { type: type(depth) } }, decision(tree(depth)));
-	assert.throws(() => assertReviewedFin({ parameters: [{ type: type(33) }], result: { type: type(33) } }, decision(tree(33))));
+	for(const depth of [0, 1, 32]) assertReviewedRefinements({ parameters: [{ type: type(depth) }], result: { type: type(depth) } }, decision(tree(depth)));
+	assert.throws(() => assertReviewedRefinements({ parameters: [{ type: type(33) }], result: { type: type(33) } }, decision(tree(33))));
 	for(const kind of ["tuple", "result"])
 	{
 		const ir = document({ [kind]: ["nat", "string"] }, decision({ kind, arguments: [fin("10"), null] }));
@@ -228,5 +227,5 @@ test("Fin admission does not authorize compiler evidence or nominal and callable
 		assert.throws(() => validateReviewedSource(reviewInput(ir)), { code: "reviewed-ir-build-unsupported" });
 	}
 	const subtype = { kind: "refinement", base: nat, predicate: { kind: "subtype", constructor: "Sample.checked" }, abi: nat.abi };
-	assert.throws(() => createNativeModel(nativeFixture(document(), subtype), { refinements: true }), { code: "native-refinements-unsupported" });
+	assert.throws(() => createNativeModel(nativeFixture(document(), subtype), { refinements: true }), { code: "reviewed-ir-source-mismatch" });
 });

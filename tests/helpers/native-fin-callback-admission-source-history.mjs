@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedSubtypeAdmissionSource } from "./reviewed-subtype-admission-source-history.mjs";
 
 export const nativeFinCallbackAdmissionHistoryPath = "docs/evidence/native-fin-callback-admission-source-history-20261008.json";
 export const nativeFinCallbackAdmissionChangedPaths = [
@@ -69,6 +70,7 @@ export const reverseNativeFinCallbackAdmissionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeFinCallbackAdmissionSource = (path, source, expected) => {
+	source = beforeReviewedSubtypeAdmissionSource(path, source, expected);
 	if(typeof source !== "string" || !nativeFinCallbackAdmissionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

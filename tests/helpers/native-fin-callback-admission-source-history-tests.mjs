@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeAdmissionSource } from "./reviewed-subtype-admission-source-history.mjs";
 import { beforeNativeFinCallbackAdmissionSource, nativeFinCallbackAdmissionChangedPaths, nativeFinCallbackAdmissionHistoryPath, reverseNativeFinCallbackAdmissionUpdate } from "./native-fin-callback-admission-source-history.mjs";
 
 test("Native Fin callback admission authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Native Fin callback admission authenticates each exact source predecessor"
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinCallbackAdmissionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedSubtypeAdmissionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinCallbackAdmissionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinCallbackAdmissionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinCallbackAdmissionSource(update.path, source, update.currentSha256), source);

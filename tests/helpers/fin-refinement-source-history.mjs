@@ -79,6 +79,7 @@ import { phpWasmFinArchiveChangedPaths } from "./php-wasm-fin-archive-source-his
 import { genericRecordBrowserArchiveChangedPaths } from "./generic-record-browser-archive-source-history.mjs";
 import { reviewedSpecializationCiHotfixChangedPaths } from "./reviewed-specialization-ci-hotfix-source-history.mjs";
 import { nativeFinCallbackAdmissionChangedPaths } from "./native-fin-callback-admission-source-history.mjs";
+import { reviewedSubtypeAdmissionChangedPaths } from "./reviewed-subtype-admission-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -622,6 +623,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...genericRecordBrowserArchiveChangedPaths
 	, ...reviewedSpecializationCiHotfixChangedPaths
 	, ...nativeFinCallbackAdmissionChangedPaths
+	, ...reviewedSubtypeAdmissionChangedPaths
 ])].sort());
 
 /**

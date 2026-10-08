@@ -1,5 +1,5 @@
 /**
- * Validate authored Fin decisions before comparing them with compiler facts.
+ * Validate authored refinement decisions before comparing them with compiler facts.
  *
  * @file
  */
@@ -13,23 +13,20 @@ const finOnly = refinement => {
 };
 
 /**
- * Admit only nonempty Fin trees matching a declaration's erased signature.
- * Bounds here express the requested API; fresh Lean metadata must match them.
+ * Admit nonempty Fin trees and primitive top-level Subtype decisions matching
+ * a declaration's erased signature. Fresh Lean metadata must match the bounds
+ * and checked constructors selected by the review.
  *
  * @param declaration - Reviewed function and its transport signature.
  * @param value - Authored parameter/result constraints.
  */
-export const assertReviewedFin = (declaration, value) => {
-	const fail = () => { throw new TypeError("Invalid reviewed Fin decision"); };
+export const assertReviewedRefinements = (declaration, value) => {
+	const fail = () => { throw new TypeError("Invalid reviewed refinement decision"); };
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
-	const check = (refinement, type) => {
-		assertRefinement(refinement, type);
-		finOnly(refinement);
-	};
-	for(const [index, refinement] of value.parameters.entries()) check(refinement, declaration.parameters[index].type);
-	check(value.result, declaration.result.type);
+	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, declaration.parameters[index].type);
+	assertRefinement(value.result, declaration.result.type);
 	if(value.result === null && value.parameters.every(refinement => refinement === null)) fail();
 };
 

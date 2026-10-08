@@ -11,7 +11,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
-import { assertReviewedFin, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
+import { assertReviewedRefinements, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
+import { reviewedSubtypeContracts } from "./reviewed-subtypes.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -94,9 +95,9 @@ const checkReview = document => {
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
-			{ (declaration ? assertReviewedFin : assertReviewedFinNominal)(item, item.source.extensions[refinementKey]); }
+			{ (declaration ? assertReviewedRefinements : assertReviewedFinNominal)(item, item.source.extensions[refinementKey]); }
 			catch
-			{ unsupported("Reviewed Fin decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
+			{ unsupported("Reviewed refinement decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
 		}
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
@@ -172,6 +173,10 @@ const checkReview = document => {
 		site(declaration.result, `${declaration.id}.result`, true);
 	}
 	reviewedSpecializations(document);
+	try
+	{ reviewedSubtypeContracts(document); }
+	catch(error)
+	{ unsupported(`Reviewed Subtype constructor decisions are invalid: ${error.message}`, { path: "declarations.source.extensions.lean-lang.org/refinements" }); }
 	return document;
 };
 
@@ -211,11 +216,13 @@ export const reviewedSourceSelection = review => {
 	const document = validateReviewedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
 	const specializations = reviewedSpecializations(document);
+	const contracts = reviewedSubtypeContracts(document);
 	return { exports: document.declarations.map(exportName).sort()
 		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
 			.map(item => [exportName(item), item.parameters.length]).sort(([a], [b]) => a.localeCompare(b))
 		// Only the closed choice reaches Lean; fresh elaboration computes the application.
-		, ...specializations.length ? { specializations } : {} };
+		, ...specializations.length ? { specializations } : {}
+		, ...contracts ? { contracts } : {} };
 };
 
 /**
@@ -308,7 +315,9 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(ordered(config.modules), ordered(request.exportModules))
 		|| !same(ordered(request.exports), selection.exports)
-		|| request.resources.length || !same(request.arities, selection.arities) || !same(request.specializations ?? null, selection.specializations ?? null) || request.contracts !== undefined)
+		|| request.resources.length || !same(request.arities, selection.arities)
+		|| !same(request.specializations ?? null, selection.specializations ?? null)
+		|| !same(request.contracts ?? null, selection.contracts ?? null))
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = reviewedContractDifference(document, compiled);
 	if(field)

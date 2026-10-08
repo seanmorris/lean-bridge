@@ -238,7 +238,7 @@ export const compileLeanComponentSources = async ({
 			const reviewedBindingIr = elaborated ? await readReviewedSource(join(inputs, "source"), sourceInventory) : null;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
 			const reviewedSelection = reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr) : null;
-			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedSelection?.exports ?? configuration.exports ?? [], resources: [], arities: reviewedSelection?.arities ?? Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)), ...compilerExportSelection(configuration), ...(reviewedSelection?.specializations ? { specializations: reviewedSelection.specializations } : {}) }
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedSelection?.exports ?? configuration.exports ?? [], resources: [], arities: reviewedSelection?.arities ?? Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)), ...compilerExportSelection(configuration), ...(reviewedSelection?.contracts ? { contracts: reviewedSelection.contracts } : {}), ...(reviewedSelection?.specializations ? { specializations: reviewedSelection.specializations } : {}) }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
 			const interfaces = [];
 			if(rich)

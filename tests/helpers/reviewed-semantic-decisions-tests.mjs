@@ -1,5 +1,5 @@
 /**
- * Review comparison preserves checked decisions without admitting new review inputs.
+ * Review comparison preserves checked decisions without granting compiler evidence.
  *
  * @file
  */
@@ -104,12 +104,14 @@ test("source locations, producer facts, theorem references and public annotation
 	assert.deepEqual(compiled.declarations[0].source.extensions["lean-lang.org/theorem-references"], ["Decisions.proof"]);
 });
 
-test("semantic comparison does not authorize author-supplied refinement or compiler evidence", () => {
+test("semantic comparison does not authorize misplaced decisions or compiler evidence", () => {
 	for(const [suffix, decision] of [...decisions, ["theorem-references", ["Decisions.forgedProof"]]])
 	{
 		const document = input();
 		document.declarations[0].source.extensions[`lean-lang.org/${suffix}`] = decision;
-		assert.throws(() => validateReviewedSource(reviewInput(document)), { code: "reviewed-ir-build-unsupported" });
+		if(suffix === "refinements" && decision.parameters[0]?.kind === "subtype")
+			assert.doesNotThrow(() => validateReviewedSource(reviewInput(document)));
+		else assert.throws(() => validateReviewedSource(reviewInput(document)), { code: "reviewed-ir-build-unsupported" });
 	}
 });
 
