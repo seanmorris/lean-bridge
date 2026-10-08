@@ -269,8 +269,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					for(const parameter of type.parameters) copied(parameter, 0, undefined, "fin-only");
 					copied(type.result, 0, undefined, "fin-only");
 				};
-				const nativeType = type => {
-					if(request.ownedAggregates === undefined) validateNativeType(type);
+				const nativeType = (type, site) => {
+					if(request.ownedAggregates === undefined) validateNativeType(type, 0, false, site);
 					else validateOwnedNativeType(type, request.ownedAggregates);
 					const check = value => {
 						if(["graph", "owned-graph"].includes(value.kind))
@@ -290,9 +290,9 @@ export const validateElaboratedMetadata = (report, request) => {
 				projection.parameters.forEach((parameter, index) => {
 					closed(parameter, ["name", "type"]);
 					if(parameter.name !== declaration.parameters[index].name) fail("Runtime binder differs from the elaborated binder");
-					validateType(parameter.type);
+					validateType(parameter.type, "parameter");
 				});
-				validateType(projection.result);
+				validateType(projection.result, "result");
 				// Every record provenance reference must name a nominal definition this declaration carries:
 				// an inline definition, including one only a provenance argument carries, or a table entry.
 				const defined = new Set(), provenance = [];

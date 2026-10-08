@@ -4,7 +4,7 @@
  * @file
  */
 import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault } from "../../build/native-model.mjs";
-import { nativeCReference } from "./native-copied-values.mjs";
+import { finRefinementWalk, nativeCReference } from "./native-copied-values.mjs";
 
 /**
  * Detach generated allocation owners while exposing borrowed nested values.
@@ -103,6 +103,14 @@ export const generateNativeCallables = (model, surface) => {
 		bindings.set(nativeTypeKey(type), direct ? [direct, ...matches.filter(value => value !== direct)] : matches);
 	}
 	const callback = type => bindings.get(nativeTypeKey(type))[0];
+	// A public closure slot calls the native type its export actually leases: a closure with checked
+	// arguments must never be reachable through the unchecked call of the same representation.
+	const leased = new Map(surface.functions.flatMap(fn => {
+		const native = model.exports.find(item => `lean:${item.name}` === fn.declaration.id);
+		return native.result.kind === "callback" ? [[fn.declaration.result.type.id, nativeTypeKey(native.result)]] : [];
+	}));
+	const leases = type => bindings.get(nativeTypeKey(type)).filter(cb => leased.has(cb.type.id) ? leased.get(cb.type.id) === nativeTypeKey(type) : !type.checked);
+	const leaseBounds = [];
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";
 	const structured = types.some(type => [...type.parameters, type.result].some(value => value.kind !== "primitive"));
@@ -269,6 +277,14 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 				: `${copy(type).aggregate ? `!${name} || ` : ""}!${id(type)}_check(${copy(type).aggregate ? name : `&${name}`}, &_lb_frame->budget)`;
 			lines.push(`  if (${invalid}) { lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid C argument or 16 MiB call limit exceeded"); goto done; }`);
 		}
+		// Every bound of a checked closure is compared on caller limbs before Lean runs.
+		for(const [index, refinement] of (leaseType?.checked ?? []).entries())
+		{
+			if(refinement === null) continue;
+			const { name, type } = parameters[index];
+			const reject = message => `{ lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, ${message}); goto done; }`;
+			lines.push(...finRefinementWalk({ refinement, type, value: copy(type).aggregate ? name : `(&${name})`, constant: `lb_fin_lease_${nativeTypeKey(leaseType)}_${index}`, label: `arg${index}`, copy, bounds: leaseBounds, reject }));
+		}
 		for(const { name, type, callbackId } of hostArgs)
 		{
 			const key = nativeTypeKey(type);
@@ -280,8 +296,22 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 		}
 		const args = parameters.map(({ name, type }) => type.kind === "callback" ? `lb_t${nativeTypeKey(type)}_wrap(_lb_token_${name})` : `${id(type)}_in(${copy(type).aggregate ? name : `&${name}`})`);
 		if(leaseType) args.unshift("_lb_closure");
-		lines.push(`  ${nativeCType(result)} _lb_value = ${symbol}(${args.join(", ") || "lean_box(0)"});`);
-		if(leaseType) lines.push("  _lb_closure = NULL; /* Consumed by the checked Lean call. */");
+		if(leaseType?.checked)
+		{
+			// The checked closure rebuilds each Fin from its decidable proof; none means Lean refused it.
+			const unboxed = nativeObjectType(result) ? "_lb_boxed" : `(${nativeCType(result)})${result.abi.unbox}(_lb_boxed)`;
+			lines.push(`  lean_object *_lb_checked = ${symbol}(${args.join(", ")});`
+				, "  _lb_closure = NULL; /* Consumed by the checked Lean call. */"
+				, `  ${nativeCType(result)} _lb_value = ${nativeObjectType(result) ? "lean_box(0)" : "0"};`
+				, `  if (lean_is_scalar(_lb_checked)) lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Lean rejected an argument outside its Fin bound");`
+				, `  else { lean_object *_lb_boxed = lean_ctor_get(_lb_checked, 0);${nativeObjectType(result) ? " lean_inc(_lb_boxed);" : ""} _lb_value = ${unboxed}; }`
+				, "  lean_dec(_lb_checked);");
+		}
+		else
+		{
+			lines.push(`  ${nativeCType(result)} _lb_value = ${symbol}(${args.join(", ") || "lean_box(0)"});`);
+			if(leaseType) lines.push("  _lb_closure = NULL; /* Consumed by the checked Lean call. */");
+		}
 		for(const { name } of hostArgs) lines.push(`  if (lb_native_callback_wrong_thread(_lb_token_${name})) lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Wrong-thread host callback");`);
 		lines.push("  lb_observe(_lb_frame);");
 		if(result.kind === "callback") lines.push(`  if (_lb_frame->status == ${m}_STATUS_OK) {`
@@ -321,10 +351,12 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 		const key = nativeTypeKey(type);
 		const parameters = type.parameters.map((type, i) => ({ name: `value${i}`, type }));
 		const args = parameters.map(({ name, type }) => `${copy(type).aggregate ? "const " : ""}${copy(type).name}${copy(type).aggregate ? " *" : " "}${name}`);
+		if(!leases(type).length) continue;
 		source.push(render(`static ${p}_status lb_owned_${key}(void *context, uintptr_t self, ${[...args, ...(!unit(type.result) ? [`${copy(type.result).name} *out`] : []), `${p}_error *error`].join(", ")}) {`, parameters, type.result, `lb_t${key}_call`, type));
 		source.push(`static void lb_dispose_${key}(void *context, uintptr_t value) { (void)context; lb_lease_drop(value, ${JSON.stringify(`${model.component.id}:callback:${key}`)}); }`);
-		for(const cb of bindings.get(key))
+		for(const cb of leases(type))
 			vtable.push(`  .${cb.field}_call = lb_owned_${key}, .${cb.field}_dispose = lb_dispose_${key},`);
 	}
+	if(leaseBounds.length) source.unshift(leaseBounds.join("\n"));
 	return { source: source.join("\n\n"), vtable: vtable.join("\n") };
 };

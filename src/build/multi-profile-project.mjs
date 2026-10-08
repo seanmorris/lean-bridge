@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readExportConfiguration, assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { sourceApiIdentity } from "../analyze/semantic-model.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
-import { buildNativeProject, supportsNativeCallbackResultTargets, supportsNativeRefinementTargets } from "./native-project.mjs";
+import { buildNativeProject, supportsNativeCallbackRefinementTargets, supportsNativeCallbackResultTargets, supportsNativeRefinementTargets } from "./native-project.mjs";
 import { createCompiledNativeModel } from "./native-graph-model.mjs";
 import { verifyNativeFiles } from "./native-artifacts.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
@@ -180,7 +180,8 @@ export const buildMultiProfileProject = async ({
 				, ownedHostCallbacks: ownedGraphs, ownedInputTransfers: ownedGraphs
 				, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs
 				, ownedCallbackResultAnchors: ownedGraphs && supportsNativeCallbackResultTargets(nativeTargets)
-				, nativeRefinements: supportsNativeRefinementTargets(nativeTargets) });
+				, nativeRefinements: supportsNativeRefinementTargets(nativeTargets)
+				, nativeCallbackRefinements: supportsNativeCallbackRefinementTargets(nativeTargets) });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}

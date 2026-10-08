@@ -2477,6 +2477,8 @@ jobs:
           LEAN_BRIDGE_FIN_RECORD_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=c,cpp node --test tests/native-fin-records.test.mjs
           test -s build/native-fin-records/c-cpp.json
           test -s build/native-fin-records/reviewed-c-cpp.json
+          LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-callbacks.test.mjs
+          test -s build/native-fin-callbacks/c-cpp.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/c-cpp.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
@@ -2662,6 +2664,7 @@ jobs:
             build/native-fin-product-arrays/reviewed-c-cpp.json
             build/native-fin-records/c-cpp.json
             build/native-fin-records/reviewed-c-cpp.json
+            build/native-fin-callbacks/c-cpp.json
             build/native-subtype/c-cpp.json
             build/generic-records/c-cpp.json
             build/generic-records/specialized-c-cpp.json

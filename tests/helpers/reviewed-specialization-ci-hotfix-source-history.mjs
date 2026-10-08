@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeFinCallbackAdmissionSource } from "./native-fin-callback-admission-source-history.mjs";
 
 export const reviewedSpecializationCiHotfixHistoryPath = "docs/evidence/reviewed-specialization-ci-hotfix-source-history-20261008.json";
 export const reviewedSpecializationCiHotfixChangedPaths = [
@@ -52,6 +53,7 @@ export const reverseReviewedSpecializationCiHotfixUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSpecializationCiHotfixSource = (path, source, expected) => {
+	source = beforeNativeFinCallbackAdmissionSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSpecializationCiHotfixChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

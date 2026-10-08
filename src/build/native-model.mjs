@@ -41,7 +41,8 @@ const absoluteLeanType = (type, mirrors = new Set()) => {
 	if(type.kind === "option") return `(_root_.Option ${inner(type.element)})`;
 	if(type.kind === "result") return `(_root_.Except ${inner(type.arguments[1])} ${inner(type.arguments[0])})`;
 	if(type.kind === "tuple") return `(_root_.Prod ${type.arguments.map(inner).join(" ")})`;
-	if(type.kind === "callback") return `(${[...type.parameters, type.result].map(inner).join(" → ")})`;
+	// A leased closure with checked arguments carries its rejection as none, never as a default.
+	if(type.kind === "callback") return `(${[...type.parameters, type.checked ? { kind: "option", element: type.result } : type.result].map(inner).join(" → ")})`;
 	if(["record", "variant"].includes(type.kind) && mirrors.has(type.lean)) return erasedMirror(type.lean);
 	return `_root_.${type.lean}`;
 };
@@ -132,13 +133,30 @@ const nativeRepresentation = type => {
 /**
  * Retain exact Fin bounds beside the Nat transport, at top-level sites and inside
  * their structural containers, as the same refinement trees the component adapters
- * check. Only exports with a checked adapter may carry them; callbacks keep their
- * existing unchecked ABI.
+ * check. Only exports with a checked adapter may carry them. A callback carries a tree
+ * only in its safe directions: the arguments of a Lean closure leased to the host, which
+ * are checked before it runs, and values Lean produces for the host. A host callback's
+ * result would reach running Lean before any check, so it is refused.
  *
  * @param declaration - Compiler-selected native declaration.
+ * @param callbacks - Whether the selected packages check Fin in callbacks (C and C++).
  */
-const nativeRefinements = declaration => {
-	const tree = (type, top = true) => {
+const nativeRefinements = (declaration, callbacks = false) => {
+	const unsupported = message => Object.assign(new TypeError(`${declaration.name}: ${message}`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+	const tree = (type, top = true, site = undefined) => {
+		if(type.kind === "callback")
+		{
+			if(site === undefined)
+			{
+				if(containsGraph(type, "refinement")) throw unsupported("checked Fin refinements inside nested callbacks are not supported by native packages");
+				return null;
+			}
+			const parameters = type.parameters.map(child => tree(child, false)), result = tree(type.result, false);
+			if(parameters.every(child => child === null) && result === null) return null;
+			if(site === "parameter" && result !== null) throw unsupported("Fin refinements in a host callback result are refused: the host produces the value while Lean runs");
+			if(!callbacks) throw unsupported("checked Fin refinements in callbacks are implemented only for C and C++ packages");
+			return { kind: "callback", parameters, result };
+		}
 		if(type.kind === "refinement")
 		{
 			if(type.predicate.kind === "subtype")
@@ -177,15 +195,17 @@ const nativeRefinements = declaration => {
 		if(containsGraph(type, "refinement")) throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements inside ${type.kind} values are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
 		return null;
 	};
-	const predicate = type => {
-		const value = tree(type);
-		if(value !== null) validateNativeType(type);
+	const predicate = (type, site) => {
+		const value = tree(type, true, site);
+		if(value !== null) validateNativeType(type, 0, false, site);
 		return value;
 	};
-	const value = { parameters: declaration.parameters.map(parameter => predicate(parameter.type)), result: predicate(declaration.result) };
+	const value = { parameters: declaration.parameters.map(parameter => predicate(parameter.type, "parameter")), result: predicate(declaration.result, "result") };
 	if(value.result === null && value.parameters.every(item => item === null)) return null;
-	if([...declaration.parameters.map(parameter => parameter.type), declaration.result].some(type => type.kind === "callback"))
-		throw Object.assign(new TypeError(`${declaration.name}: checked Fin refinements cannot share a native export with callbacks`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+	// Bounds on ordinary sites still need the Option-returning export adapter, which callbacks do not share yet.
+	const sites = [...declaration.parameters.map(parameter => parameter.type), declaration.result];
+	if(sites.some(type => type.kind === "callback") && [...value.parameters, value.result].some(item => item !== null && item.kind !== "callback"))
+		throw unsupported("checked Fin refinements cannot share a native export with callbacks");
 	return value;
 };
 
@@ -201,12 +221,16 @@ const nativeRefinements = declaration => {
  * @param pointerBits - Fixed target pointer width.
  * @param root1 - Explicit consumer capabilities for this model.
  * @param root1.refinements - Admit checked top-level Fin sites for C-family adapters.
+ * @param root1.callbackRefinements - Admit Fin in a leased closure's arguments and in values Lean gives the host (C and C++).
  */
-const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }, profile, pointerBits, { refinements: admitRefinements = false } = {}) => {
+const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }, profile, pointerBits, { refinements: admitRefinements = false, callbackRefinements = false } = {}) => {
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { refinements: admitRefinements });
 	const allTypes = new Map();
 	const visit = type => {
-		validateNativeType(type);
+		// A leased closure's checked trees distinguish its key; the representation itself is validated.
+		const { checked, ...shape } = type;
+		void checked;
+		validateNativeType(shape);
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
@@ -235,9 +259,13 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		for(const type of allTypes.values()) if(type.kind === "record" && type.provenance) type.provenance.arguments.forEach(argument => resolve(argument, type.name));
 	};
 	const checked = elaborated.declarations.map(source => {
-		const refinements = nativeRefinements(source);
+		const refinements = nativeRefinements(source, callbackRefinements);
 		const parameters = source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) }));
-		const declaration = { ...source, parameters, result: nativeRepresentation(source.result), ...(refinements ? { refinements } : {}) };
+		// A leased closure whose arguments are checked is a different native type: its key, lease
+		// kind and Lean carrier differ from an unchecked closure with the same representation.
+		const leased = refinements?.result?.kind === "callback" && refinements.result.parameters.some(item => item !== null)
+			? { checked: refinements.result.parameters } : {};
+		const declaration = { ...source, parameters, result: { ...nativeRepresentation(source.result), ...leased }, ...(refinements ? { refinements } : {}) };
 		if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
 		declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); });
 		visit(declaration.result);
@@ -320,8 +348,17 @@ export const nativeRefinedResult = result => ({ kind: "option", element: result
 	, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } });
 
 /**
+ * List a refinement tree's children: a callback keeps them as parameters and result, a variant
+ * in its cases, and every other node as arguments.
+ *
+ * @param tree - Validated native refinement tree.
+ */
+const refinementChildren = tree => tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments)
+	: tree.kind === "callback" ? [...tree.parameters, tree.result] : tree.arguments ?? [];
+
+/**
  * Collect the Lean names of records and variants whose fields carry checked Fin bounds,
- * from every export's refinement trees.
+ * from every export's refinement trees, including those inside callbacks.
  *
  * @param model - Compiler-checked native model.
  */
@@ -330,7 +367,7 @@ const nativeErasedMirrors = model => {
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind)) names.add(tree.definition);
-		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
 	return names;
@@ -347,7 +384,7 @@ const renderErasedMirrors = (model, mirrors) => {
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind) && !trees.has(tree.definition)) trees.set(tree.definition, tree);
-		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
 	const lines = [], done = new Set();
@@ -375,6 +412,33 @@ const renderErasedMirrors = (model, mirrors) => {
 			, ...type.cases.map((branch, i) => `  | ${pattern(branch)} => ${mirror}.«${branch.name}» ${branch.fields.map((_, j) => convert(tree.cases[i].arguments[j], `a${j}`, false)).join(" ")}`), "");
 	}
 	return lines;
+};
+
+/**
+ * Call an export whose only bounds sit in callbacks. A host callback receives the values
+ * Lean produces, erased to their transport; a leased closure checks every argument and
+ * builds each Fin from its decidable proof before the source closure runs, returning none
+ * instead of any substitute, and erases the values Lean returns to the host.
+ *
+ * @param item - Native export whose refinement trees are callbacks or null.
+ * @param application - Source application of the exported declaration.
+ */
+const nativeCallbackRefinedCall = (item, application) => {
+	const binders = count => Array.from({ length: count }, (_, i) => `_bridgeArg${i}`);
+	const args = item.parameters.map((parameter, i) => {
+		const tree = item.refinements.parameters[i];
+		if(tree === null) return `a${i}`;
+		const names = binders(tree.parameters.length);
+		return `(fun ${names.join(" ")} => a${i} ${names.map((name, k) => componentRefinementConversion(tree.parameters[k], name, false)).join(" ")})`;
+	});
+	const call = `${application} ${args.join(" ")}`;
+	const tree = item.refinements.result;
+	if(tree === null) return call;
+	const names = binders(tree.parameters.length);
+	const closure = { refinements: { parameters: tree.parameters, result: tree.result }, sourceApplication: "_bridgeClosure" };
+	const { call: inner, guards } = componentRefinedCall(closure, names);
+	const body = guards.length ? componentRefinementGuards(guards, `_root_.Option.some (${inner})`, "_root_.Option.none") : inner;
+	return `(let _bridgeClosure := ${call}; fun ${names.join(" ")} =>\n    ${body.replaceAll("\n", "\n    ")})`;
 };
 
 /**
@@ -409,6 +473,11 @@ export const generateNativeLeanAdapters = model => {
 		if(!item.refinements)
 		{
 			emit(item.symbol, parameters, item.result, `${application} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
+			continue;
+		}
+		if([...item.refinements.parameters, item.refinements.result].every(tree => tree === null || tree.kind === "callback"))
+		{
+			emit(item.symbol, parameters, item.result, nativeCallbackRefinedCall(item, application));
 			continue;
 		}
 		// Every proof exists only inside a decidable branch; container elements are checked
@@ -481,7 +550,11 @@ export const generateNativeLeanAdapters = model => {
 		{
 			const parameters = type.parameters.map((parameter, i) => ({ name: `value${i}`, type: parameter }));
 			const arguments_ = parameters.map(parameter => parameter.name).join(" ");
-			emit(`lb_t${type.key}_call`, [{ name: "closure", type }, ...parameters], type.result, `closure ${arguments_}`);
+			// A checked closure answers none for an argument outside its bound; its C caller reports it.
+			const answer = type.checked ? { kind: "option", element: type.result, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } } : type.result;
+			emit(`lb_t${type.key}_call`, [{ name: "closure", type }, ...parameters], answer, `closure ${arguments_}`);
+			// Only a leased closure is checked, and the host never supplies one, so it has no trampoline.
+			if(type.checked) continue;
 			// No Perl symbol or Perl interpreter pointer enters the compiled component.
 			// A synchronous callback uses a private C trampoline installed by XS.
 			lines.push(`@[extern "lb_t${type.key}_invoke"]`, `opaque invoke_${type.key} (token : _root_.USize) ${parameters.map(p => `(${p.name} : ${absoluteLeanType(p.type, mirrors)})`).join(" ")} : ${absoluteLeanType(type.result, mirrors)} := ${callbackLeanDefault(type.result, mirrors)}`, "");
