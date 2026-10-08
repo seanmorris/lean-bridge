@@ -33,10 +33,11 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { assertJsonSchema, jsonSchemaErrors } from "./helpers/json-schema.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
-import { checkCheckedRecordNpmPackages } from "./helpers/checked-record-packages.mjs";
-import { checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
+import { assertCheckedRecordReport, checkCheckedRecordNpmPackages } from "./helpers/checked-record-packages.mjs";
+import { checkedRecordDispatchColumns, checkedRecordDispatchExpected, checkedRecordDispatchInterposer, checkedRecordDispatchProbe } from "./helpers/checked-record-dispatch.mjs";
+import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
 const lean = process.env.LEAN_BRIDGE_CHECKED_RECORD_LEAN_TEST === "1";
 const module = "CheckedRecords";
@@ -174,6 +175,35 @@ test("private recursive descriptors bind erased proof names and refuse other com
 	const graph = types => snapshotComponentCopiedGraph({ schemaVersion: 1, root: { kind: "primitive", name: "unit" }, types });
 	const interval = definitions.find(item => item.id === `lean:${module}.Interval`);
 	for(const erased of [[], ["ordered", "ordered"], ["lo"], [7]]) assert.throws(() => graph([{ ...interval, erased }]), TypeError, JSON.stringify(erased));
+});
+
+test("installed checked-record reports and reviewed consumers refuse contradictory or unreviewed evidence", async () => {
+	const install = { profile: "c", sourceRemovedBeforeInstallation: true };
+	const valid = [{ route: "ordinary", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, reports: [install] }
+		, { route: "reviewed", path: "reviewed-source", reproducible: true, independentBuilds: 2, reviewedBindingIrSha256: "0".repeat(64), reports: [install] }
+		, { route: "result-only", path: "ordinary-source", reproducible: true, independentBuilds: 2, contracts: {}, sourceRemovedBeforeInstallation: true }];
+	for(const report of valid) assertCheckedRecordReport(report);
+	const mutants = [
+		["not reproducible", { ...valid[0], reproducible: false }]
+		, ["one build", { ...valid[0], independentBuilds: 1 }]
+		, ["source present at install", { ...valid[0], reports: [{ ...install, sourceRemovedBeforeInstallation: false }] }]
+		, ["no installs", { ...valid[0], reports: [] }]
+		, ["reviewed route with contracts", { ...valid[1], contracts: {} }]
+		, ["ordinary route without contracts", { ...valid[0], contracts: undefined }]
+		, ["reviewed path on an ordinary route", { ...valid[0], path: "reviewed-source" }]
+		, ["an unknown route", { ...valid[0], route: "graph" }]];
+	for(const [label, report] of mutants) assert.throws(() => assertCheckedRecordReport(report), assert.AssertionError, label);
+	// The reviewed consumers name each checked parameter by the review, and only reviewed sites relabel.
+	for(const [profile, extension] of [["c", "c"], ["cpp", "cpp"]])
+	{
+		const source = await readFile(`tests/fixtures/checked-record-consumers/${profile}.${extension}`, "utf8");
+		const relabeled = relabelCheckedRecordDiagnostics(source, profile);
+		assert.equal([...relabeled.matchAll(/"value\d+ was rejected by /gu)].length, [...source.matchAll(/"arg\d+ was rejected by /gu)].length, profile);
+		assert.equal(relabeled.replace(/"value(\d+) was rejected by /gu, '"arg$1 was rejected by '), source, profile);
+	}
+	const line = name => `CHECK(rejected(checkedrecords_${name}, &error, "arg0 was rejected by CheckedRecords.mkInterval"));`;
+	for(const [label, text] of [["a wrong constructor", line("total(&t, out")], ["an unknown export", line("missing(&t, out")], ["two calls", `${line("width(&a, out")} checkedrecords_span(&a, &b, out, &error);`]])
+		assert.throws(() => relabelCheckedRecordDiagnostics(text, "c"), TypeError, label);
 });
 
 /**
@@ -384,29 +414,96 @@ assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Checked-re
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate checked-record profile");
 const coordinate = { name: "checkedrecords", version: "1.0.0" };
 const targets = { c: ["c", coordinate], cpp: ["cpp", coordinate] };
+const resultOnly = { [`${module}.repeated`]: checkedRecordContracts()[`${module}.repeated`] };
 
-test("relocated source-free C and C++ packages build checked records only through each site's constructor", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+/**
+ * A tampered copy of a verified receipt must fail verification: one artifact digest changes.
+ *
+ * @param handoff - Directory holding the verified receipt and its artifacts.
+ * @param receiptName - Receipt filename.
+ * @param verify - Receipt verifier.
+ */
+const assertTamperedReceipt = async (handoff, receiptName, verify) => {
+	const tampered = `${handoff}-tampered`;
+	await cp(handoff, tampered, { recursive: true });
+	const receipt = JSON.parse(await readFile(join(tampered, receiptName), "utf8"));
+	const artifact = receipt.packages?.[0]?.artifacts?.[0] ?? receipt.package;
+	artifact.sha256 = artifact.sha256.replace(/^./u, value => value === "0" ? "1" : "0");
+	await writeFile(join(tampered, receiptName), canonicalJson(receipt));
+	await assert.rejects(() => verify({ receiptPath: join(tampered, receiptName) }));
+	await rm(tampered, { recursive: true, force: true });
+};
+
+/**
+ * Count real dispatch in the installed C package with a test-only interposer: public refusals reach
+ * neither the adapter nor the source, and direct adapter calls still refuse inside Lean.
+ *
+ * @param consumer - Consumer root containing the installed C package.
+ * @param packages - Installed C packages.
+ * @param make - Exported symbol of the Interval payload-mirror constructor.
+ */
+const observeDispatch = async (consumer, packages, make) => {
+	const root = join(consumer, "c"), pkg = packages.find(item => item.role === "component");
+	const installed = join(root, `${pkg.name}-${pkg.version}-c`), lib = join(installed, "lib");
+	const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
+	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(lib, "pkgconfig"), PKG_CONFIG_PATH: "" };
+	const strict = ["-std=c11", "-Wall", "-Wextra", "-Werror"];
+	await saveLakeFile(root, "interposer.c", checkedRecordDispatchInterposer());
+	await saveLakeFile(root, "probe.c", checkedRecordDispatchProbe(make));
+	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], root, compile);
+	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", receipt.pkgConfig], root, compile)).stdout.trim().split(/\s+/u);
+	await runCopied("/usr/bin/cc", [...strict, "-isystem", join(leanPrefix, "include"), "probe.c", ...flags, "-lleanshared", "-o", "probe"], root, compile);
+	const run = await runCopied(join(root, "probe"), [], root, { ...copiedCleanEnvironment, LD_PRELOAD: join(root, "libdispatch.so") });
+	assert.equal(run.stderr, "");
+	const observed = run.stdout.trim().split("\n").map(line => {
+		const [step, status, ...counts] = line.split(" ");
+		return [step, Number(status), counts.map(Number)];
+	});
+	assert.deepEqual(observed, checkedRecordDispatchExpected);
+	const positiveControl = "valid public and raw calls increment constructor, pre-validator, adapter and source counts";
+	const unmeasured = ["C++ dispatch (it calls the same C entries)", "resident memory"];
+	return { columns: checkedRecordDispatchColumns, observed, interposer: "LD_PRELOAD", positiveControl, unmeasured };
+};
+
+/**
+ * Build a route from two independent author roots, delete each root after its handoff copy, install
+ * the first handoff's C and C++ packages offline and run the consumers.
+ *
+ * @param t - Test context.
+ * @param options - Route selection.
+ * @param options.route - "ordinary", "reviewed" or "result-only".
+ * @param options.contracts - Export contracts for configured routes.
+ * @param options.review - Independent review for the reviewed route.
+ * @param options.source - Consumer source by profile and extension.
+ * @param options.dispatch - Also count C dispatch through the interposer.
+ */
+const checkNativeRoute = async (t, { route, contracts, review, source, dispatch = false }) => {
 	const reports = [], archives = [], identities = [];
 	const selected = Object.fromEntries(profiles.map(profile => targets[profile]));
 	const environment = nativeFixtureEnvironment(profiles);
-	const contracts = checkedRecordContracts();
+	let dispatched = null;
 	for(const attempt of [0, 1])
 	{
-		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-author-"));
-		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-consumer-"));
+		const directory = await mkdtemp(join(tmpdir(), `lean-bridge-checked-record-${route}-author-`));
+		const consumer = await mkdtemp(join(tmpdir(), `lean-bridge-checked-record-${route}-consumer-`));
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await cp(checkedRecordFixture, projectRoot, { recursive: true });
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [module], exports: Object.keys(contracts), contracts, targets: selected }));
-		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(review ? { schemaVersion: 1, modules: [module], targets: selected }
+			: { schemaVersion: 1, modules: [module], exports: Object.keys(contracts), contracts, targets: selected }));
+		if(review) await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(review));
+		t.diagnostic(`${route} build ${attempt}: ${profiles.join(", ")}`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(selected), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
 		});
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
-		assert.equal(reviewedContractDifference(checkedRecordReview(), model.bindingIr), null);
+		// The expected contract is the independent review, never the generated model.
+		if(route !== "result-only") assert.equal(reviewedContractDifference(checkedRecordReview(), model.bindingIr), null);
 		identities.push({ bindingIrSha256: built.bindingIrSha256, modelBindingIrSha256: hashBindingIr(model.bindingIr), modelSha256: sha256(canonicalJson(model)) });
+		const make = `lb_t${model.types.find(type => type.kind === "record" && type.lean === `${module}.Interval`)?.key}_make`;
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		await assertTamperedReceipt(handoff, "package-set-receipt.json", verifyPackageSetReceipt);
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		// Install from prepared archives only. No author workspace or build staging remains.
 		await rm(directory, { recursive: true, force: true });
@@ -414,13 +511,13 @@ test("relocated source-free C and C++ packages build checked records only throug
 		if(attempt === 1) break;
 		for(const profile of profiles)
 		{
-			t.diagnostic(`installing and checking ${profile}`);
+			t.diagnostic(`${route}: installing and checking ${profile}`);
 			const packages = receipt.packages.filter(pkg => pkg.target === targets[profile][0]);
-			const source = (name, extension) => readFile(`tests/fixtures/checked-record-consumers/${name}.${extension}`, "utf8");
 			const observation = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture: { source, wit: [], success: "checked-record-ok" } });
 			delete observation.command;
+			if(dispatch && profile === "c") dispatched = await observeDispatch(consumer, packages, make);
 			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
-			reports.push({ profile, path: "ordinary-source", ...observation, packages, ...identities[0], receiptSha256, sourceRemovedBeforeInstallation: true });
+			reports.push({ profile, path: route === "reviewed" ? "reviewed-source" : "ordinary-source", ...observation, packages, ...identities[0], receiptSha256, sourceRemovedBeforeInstallation: true });
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
@@ -428,18 +525,59 @@ test("relocated source-free C and C++ packages build checked records only throug
 	// Two independent author roots give byte-identical archives and the same model.
 	assert.deepEqual(archives[1], archives[0]);
 	assert.deepEqual(identities[1], identities[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_CHECKED_RECORD_REPORT ?? `build/checked-records/${profiles.join("-")}.json`);
-	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, contracts, reports, archives: archives[0], reproducible: true, independentBuilds: 2 }));
+	return { route, reports, archives: archives[0], reproducible: true, independentBuilds: 2, ...(dispatched ? { dispatch: dispatched } : {}) };
+};
+const nativeReport = async (variable, name, report) => {
+	const reportPath = resolve(process.env[variable] ?? `build/checked-records/${name}-${profiles.join("-")}.json`);
+	assertCheckedRecordReport(report);
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, ...report }));
+};
+const nativeSource = prefix => (name, extension) => readFile(`tests/fixtures/checked-record-consumers/${prefix}${name}.${extension}`, "utf8");
+
+test("relocated source-free C and C++ packages build checked records only through each site's constructor", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const report = await checkNativeRoute(t, { route: "ordinary", contracts: checkedRecordContracts(), source: nativeSource(""), dispatch: profiles.includes("c") });
+	await nativeReport("LEAN_BRIDGE_CHECKED_RECORD_REPORT", "ordinary", { ...report, contracts: checkedRecordContracts() });
+});
+
+test("independently reviewed C and C++ packages name each checked parameter by its reviewed name", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const review = checkedRecordReview();
+	const source = async (name, extension) => relabelCheckedRecordDiagnostics(await nativeSource("")(name, extension), name, review);
+	const report = await checkNativeRoute(t, { route: "reviewed", review, source });
+	await nativeReport("LEAN_BRIDGE_CHECKED_RECORD_REVIEWED_REPORT", "reviewed", { ...report, reviewedBindingIrSha256: hashBindingIr(review) });
+});
+
+test("a relocated C and C++ package whose only checked record is a Lean-produced result returns its payload", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const report = await checkNativeRoute(t, { route: "result-only", contracts: resultOnly, source: nativeSource("result-only-") });
+	await nativeReport("LEAN_BRIDGE_CHECKED_RECORD_RESULT_ONLY_REPORT", "result-only", { ...report, contracts: resultOnly });
 });
 
 const npm = process.env.LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST === "1";
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
-
-test("a relocated source-free npm package builds checked records only through each site's constructor", { skip: !npm, timeout: 3_600_000 }, async t => {
+const npmBuild = () => {
 	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
 	// Only the Nix command transport is substituted: the locked engine when configured, else the pinned local engine.
-	const build = (projectRoot, outputRoot) => buildCanonicalProject({ projectRoot, outputRoot, engineRoot: process.cwd(), environment, targets: ["npm"], runner: refinementEngineTransport() });
-	const observation = await checkCheckedRecordNpmPackages(t, { build, runtimeRoot, engineRoot: process.cwd() });
-	const reportPath = resolve(process.env.LEAN_BRIDGE_CHECKED_RECORD_NPM_REPORT ?? "build/checked-records/npm.json");
-	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "ordinary-source", contracts: checkedRecordContracts("OnboardingSmall"), ...observation }));
+	return (projectRoot, outputRoot) => buildCanonicalProject({ projectRoot, outputRoot, engineRoot: process.cwd(), environment, targets: ["npm"], runner: refinementEngineTransport() });
+};
+const npmReport = async (variable, name, report) => {
+	const reportPath = resolve(process.env[variable] ?? `build/checked-records/${name}.json`);
+	assertCheckedRecordReport(report);
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", ...report }));
+};
+
+test("a relocated source-free npm package builds checked records only through each site's constructor", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const contracts = checkedRecordContracts("OnboardingSmall");
+	const observation = await checkCheckedRecordNpmPackages(t, { build: npmBuild(), runtimeRoot, engineRoot: process.cwd(), contracts });
+	await npmReport("LEAN_BRIDGE_CHECKED_RECORD_NPM_REPORT", "npm", { route: "ordinary", path: "ordinary-source", contracts, ...observation });
+});
+
+test("an independently reviewed npm package builds checked records only through each site's constructor", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const review = checkedRecordReview({ module: "OnboardingSmall", component: "onboarding-small" });
+	const observation = await checkCheckedRecordNpmPackages(t, { build: npmBuild(), runtimeRoot, engineRoot: process.cwd(), review });
+	await npmReport("LEAN_BRIDGE_CHECKED_RECORD_REVIEWED_NPM_REPORT", "reviewed-npm", { route: "reviewed", path: "reviewed-source", reviewedBindingIrSha256: hashBindingIr(review), ...observation });
+});
+
+test("a relocated npm package whose only checked record is a Lean-produced result returns its payload", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const contracts = { "OnboardingSmall.repeated": checkedRecordContracts("OnboardingSmall")["OnboardingSmall.repeated"] };
+	const observation = await checkCheckedRecordNpmPackages(t, { build: npmBuild(), runtimeRoot, engineRoot: process.cwd(), contracts, resultOnly: true });
+	await npmReport("LEAN_BRIDGE_CHECKED_RECORD_RESULT_ONLY_NPM_REPORT", "result-only-npm", { route: "result-only", path: "ordinary-source", contracts, ...observation });
 });

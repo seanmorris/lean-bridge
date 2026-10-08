@@ -172,3 +172,29 @@ const refusals = {
  */
 export const checkedRecordRefusals = (module = "CheckedRecords") => Object.fromEntries(Object.entries(refusals).map(([name, [parameters, pattern, result]]) => [`${module}.${name}`
 	, { contract: { parameters: parameters.map(constructor => constructor ? site(`${module}.${constructor}`) : plain), result: result ? site(`${module}.${result}`) : plain }, pattern }]));
+
+const diagnostic = /"arg(\d+) was rejected by ([\w.]+)"/gu;
+const calls = { c: /\bcheckedrecords_([a-z_]+)\(/gu, cpp: /\bapi::([a-z_]+)\(/gu };
+
+/**
+ * Relabel the ordinary consumer's expected diagnostics with the reviewed parameter names. Each label
+ * is checked against the review: the line calls exactly one export, and the reviewed parameter at that
+ * position selects the named checked constructor. Every other byte stays.
+ *
+ * @param source - Ordinary consumer source.
+ * @param profile - C or C++ consumer.
+ * @param review - Independent reviewed Binding IR.
+ */
+export const relabelCheckedRecordDiagnostics = (source, profile, review = checkedRecordReview()) => {
+	const relabel = line => line.replace(diagnostic, (text, position, constructor) => {
+		const names = [...new Set([...line.matchAll(calls[profile])].map(match => match[1]))];
+		if(names.length !== 1) throw new TypeError(`one export call per expected diagnostic: ${line}`);
+		const id = `lean:CheckedRecords.${names[0].replace(/_([a-z])/gu, (_, letter) => letter.toUpperCase())}`;
+		const declaration = review.declarations.find(item => item.id === id);
+		const parameter = declaration?.parameters[Number(position)];
+		const refinement = declaration?.source.extensions[refinementsKey]?.parameters[Number(position)];
+		if(!parameter || refinement?.kind !== "checked-record" || refinement.constructor !== constructor) throw new TypeError(`unreviewed diagnostic: ${text}`);
+		return JSON.stringify(`${parameter.name} was rejected by ${constructor}`);
+	});
+	return source.split("\n").map(relabel).join("\n");
+};

@@ -14,7 +14,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildComponentNpmPackages } from "../../src/release/component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
-import { checkedRecordContracts, checkedRecordFixture } from "./checked-record-fixture.mjs";
+import { checkedRecordFixture } from "./checked-record-fixture.mjs";
 
 /**
  * Read the fixture source under another module name, for the npm author project.
@@ -61,6 +61,26 @@ for(let i = 0n; i < 1000n; i++) {
 console.log(JSON.stringify({ checks, rejections }));
 `;
 
+/** Node consumer for a package whose only checked record is a Lean-produced result. */
+export const checkedRecordResultOnlyConsumer = () => `import * as api from "onboarding-small";
+let checks = 0;
+const check = (ok, label) => { if(!ok) throw new Error("failed: " + label); checks++; };
+for(let i = 0n; i < 1000n; i++) {
+  const value = api.repeated(i);
+  check(Object.keys(value).join() === "data" && value.data.length === 3 && value.data.every(item => item === i), "round");
+}
+check(api.repeated(2n ** 80n).data[2] === 2n ** 80n, "Nat precision");
+console.log(JSON.stringify({ checks, rejections: 0 }));
+`;
+
+const resultOnlyTypescript = `import * as api from "onboarding-small";
+const triple: api.Triple = api.repeated(4n);
+const data: ReadonlyArray<bigint> = triple.data;
+// @ts-expect-error The Lean-produced record carries no proof field.
+const proof: boolean = triple.sized;
+void data; void proof;
+`;
+
 const typescript = `import * as api from "onboarding-small";
 const interval: api.Interval = { lo: 1n, hi: 2n };
 const width: bigint = api.width(interval) + api.span(interval, interval);
@@ -84,22 +104,26 @@ void width; void data; void rest;
  * @param options.build - Builds the canonical project for npm.
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param options.engineRoot - Checkout containing the TypeScript compiler.
+ * @param options.contracts - Export contracts for a configured package.
+ * @param options.review - Independent reviewed Binding IR instead of contracts.
+ * @param options.resultOnly - The package's only checked record is a Lean-produced result.
  */
-export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, engineRoot }) => {
+export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, engineRoot, contracts, review, resultOnly = false }) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-npm-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const root = join(directory, "project"), moved = join(directory, "moved"), releases = [], facts = [];
-	const contracts = checkedRecordContracts("OnboardingSmall");
 	await cp("tests/fixtures/documentation/lean-author", root, { recursive: true });
 	await saveLakeFile(root, "OnboardingSmall.lean", await checkedRecordSource("OnboardingSmall"));
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: Object.keys(contracts), contracts }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson(review ? { schemaVersion: 1, modules: ["OnboardingSmall"] }
+		: { schemaVersion: 1, modules: ["OnboardingSmall"], exports: Object.keys(contracts), contracts }));
+	if(review) await saveLakeFile(root, "api.binding-ir.json", canonicalJson(review));
 	await cp(root, moved, { recursive: true });
 	for(const [index, projectRoot] of [root, moved].entries())
 	{
 		const before = await lakeInputState(projectRoot), outputRoot = join(directory, `build-${index}`);
 		await build(projectRoot, outputRoot).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 		const irBytes = await readFile(join(outputRoot, "bundle/binding/binding-ir.json")), ir = JSON.parse(irBytes);
-		const erased = [["Interval", ["ordered"]], ["Percent", ["above", "below"]], ["Triple", ["sized"]]].map(([name, fields]) => [`lean:OnboardingSmall.${name}`, { fields }]);
+		const erased = (resultOnly ? [["Triple", ["sized"]]] : [["Interval", ["ordered"]], ["Percent", ["above", "below"]], ["Triple", ["sized"]]]).map(([name, fields]) => [`lean:OnboardingSmall.${name}`, { fields }]);
 		assert.deepEqual(ir.types.map(type => [type.id, type.source.extensions["lean-lang.org/erased-proofs"]]), erased);
 		facts.push({ bindingIrSha256: hashBindingIr(ir), bindingIrFileSha256: sha256(irBytes) });
 		releases.push(await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
@@ -124,6 +148,14 @@ export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, eng
 	await rm(directory, { recursive: true, force: true });
 	await assert.rejects(lstat(directory), { code: "ENOENT" });
 	await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+	// A tampered copy of the receipt is refused before anything is installed.
+	const tampered = join(consumer, "tampered");
+	await cp(handoff, tampered, { recursive: true });
+	const forged = JSON.parse(await readFile(join(tampered, "component-package-receipt.json"), "utf8"));
+	forged.package.sha256 = forged.package.sha256.replace(/^./u, value => value === "0" ? "1" : "0");
+	await saveLakeFile(tampered, "component-package-receipt.json", canonicalJson(forged));
+	await assert.rejects(() => verifyComponentPackageReceipt({ receiptPath: join(tampered, "component-package-receipt.json") }));
+	await rm(tampered, { recursive: true, force: true });
 	await mkdir(bin);
 	await symlink(process.execPath, join(bin, "node"));
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
@@ -133,24 +165,44 @@ export const checkCheckedRecordNpmPackages = async (t, { build, runtimeRoot, eng
 	const execute = args => processBuildRunner.capture({ command: process.execPath, args, cwd: consumer, env, timeoutMs: 300_000 })
 		.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 	await execute([npmCli, "install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--userconfig", join(consumer, "user.npmrc"), "--globalconfig", join(consumer, "global.npmrc"), "--cache", join(consumer, "empty-cache"), join(handoff, receipt.runtime.archive), join(handoff, receipt.package.archive)]);
-	const script = checkedRecordNodeConsumer();
+	const script = resultOnly ? checkedRecordResultOnlyConsumer() : checkedRecordNodeConsumer();
 	await saveLakeFile(consumer, "index.mjs", script);
 	const run = await execute(["index.mjs"]);
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout.trim());
-	assert.deepEqual(result, { checks: 1011, rejections: 1009 });
+	assert.deepEqual(result, resultOnly ? { checks: 1001, rejections: 0 } : { checks: 1011, rejections: 1009 });
 	// Strict TypeScript sees payload-only interfaces: no proof field exists in any host type.
 	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
-	for(const [name, fields] of [["Interval", ["lo: bigint", "hi: bigint"]], ["Triple", ["data: ReadonlyArray<bigint>"]], ["Percent", ["value: bigint"]]])
+	const interfaces = [["Interval", ["lo: bigint", "hi: bigint"]], ["Triple", ["data: ReadonlyArray<bigint>"]], ["Percent", ["value: bigint"]]].filter(([name]) => !resultOnly || name === "Triple");
+	for(const [name, fields] of interfaces)
 		assert.match(declarations, new RegExp(`export interface ${name} \\{\\s*${fields.map(field => `readonly ${field};`).join("\\s*")}\\s*\\}`), name);
-	await saveLakeFile(consumer, "index.mts", typescript);
+	const source = resultOnly ? resultOnlyTypescript : typescript;
+	await saveLakeFile(consumer, "index.mts", source);
 	await execute([join(engineRoot, "node_modules/typescript/lib/tsc.js"), "--strict", "--noEmit", "--skipLibCheck", "false", "--target", "ES2022", "--lib", "ES2022,ESNext.Disposable", "--module", "NodeNext", "--moduleResolution", "NodeNext", "index.mts"]);
 	return { archiveSha256, runtimeArchiveSha256
 		, ...facts[0], ...result, receipt
 		, receiptSha256: sha256(await readFile(join(handoff, "component-package-receipt.json")))
 		, consumerSha256: sha256(script)
-		, typescript: { strict: true, skipLibCheck: false, sourceSha256: sha256(typescript), declarationsSha256: sha256(declarations) }
+		, typescript: { strict: true, skipLibCheck: false, sourceSha256: sha256(source), declarationsSha256: sha256(declarations) }
+		, receiptTamperRefused: true
 		, reproducible: true, independentBuilds: 2
 		, sourceRemovedBeforeInstallation: true
 		, offlineInstall: true, compilerFreePath: true, dispatch: "not measured" };
+};
+
+const reportKeys = ["route", "path", "reproducible", "independentBuilds"];
+/**
+ * Refuse a checked-record acceptance report that drops a required claim or contradicts itself.
+ *
+ * @param report - Report about to be written.
+ */
+export const assertCheckedRecordReport = report => {
+	for(const key of reportKeys) assert.ok(Object.hasOwn(report, key), `report lacks ${key}`);
+	assert.ok(["ordinary", "reviewed", "result-only"].includes(report.route), "unknown route");
+	assert.equal(report.path, report.route === "reviewed" ? "reviewed-source" : "ordinary-source");
+	assert.equal(report.reproducible, true);
+	assert.equal(report.independentBuilds, 2);
+	const installs = report.reports ?? [report];
+	assert.ok(installs.length > 0 && installs.every(item => item.sourceRemovedBeforeInstallation === true), "an install ran with its source present");
+	assert.ok(report.route === "reviewed" ? typeof report.reviewedBindingIrSha256 === "string" && !report.contracts : report.contracts && !report.reviewedBindingIrSha256, "route evidence mismatch");
 };
