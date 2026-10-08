@@ -89,11 +89,14 @@ export const componentRecordDefinitions = (ir, nominal = false) => ir.types.map(
 			return { kind: "alias", id: type.id, target: type.target };
 		}
 		if(type.target !== null || (type.kind === "record" ? type.cases.length : type.fields.length)) invalid("unsupported nominal semantics");
-		return type.kind === "record" ? { kind: "record", id: type.id, fields: fields(type.fields) }
+		// A checked record's erased proof names are part of its private identity; only the recursive
+		// graph ABI, whose generated carriers hold payload mirrors, admits them.
+		const erased = type.kind === "record" ? type.source?.extensions?.["lean-lang.org/erased-proofs"]?.fields : undefined;
+		return type.kind === "record" ? { kind: "record", id: type.id, fields: fields(type.fields), ...(erased ? { erased: [...erased] } : {}) }
 			: { kind: "variant", id: type.id, cases: type.cases.map(item => ({ name: item.name, fields: fields(item.fields) })) };
 	}
 	if(type.kind !== "record" || type.representation !== "copied" || type.mutability !== "immutable"
-		|| type.typeParameters.length || type.target !== null || type.resource !== null || type.callable !== null
+		|| Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs") || type.typeParameters.length || type.target !== null || type.resource !== null || type.callable !== null
 		|| type.cases.length || type.host !== null || type.fields.some(field => field.mutability !== "immutable")) invalid("unsupported record semantics");
 	return { id: type.id, fields: type.fields.map(field => ({ name: field.name, type: field.type })) };
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);

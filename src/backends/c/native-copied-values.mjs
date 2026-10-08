@@ -252,23 +252,25 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		// Every bound is checked on caller limbs before any Lean value is allocated,
 		// including each element reached through arrays, lists, options, products, results,
 		// record fields and the active variant case.
+		const constructed = refinement => ["subtype", "checked-record"].includes(refinement?.kind);
 		refinements.forEach((refinement, i) => {
-			if(!refinement || refinement.kind === "subtype") return;
+			if(!refinement || constructed(refinement)) return;
 			const value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
 			const reject = message => `return lb_invalid(error, ${message});`;
 			lines.push(...finRefinementWalk({ refinement, type: native.parameters[i].type, value, constant: `lb_fin_${fn.field}_${i}`, label: fn.parameters[i].name, copy, bounds, reject }));
 		});
 		// Author-checked constructors run only after every structural and Fin check, on a fresh
 		// conversion that the exported validator owns and releases; the call converts again.
+		// A checked record's conversion builds only its payload mirror; the constructor builds the record.
 		refinements.forEach((refinement, i) => {
-			if(refinement?.kind !== "subtype") return;
+			if(!constructed(refinement)) return;
 			const type = native.parameters[i].type, value = copy(type).aggregate ? fn.parameters[i].name : `&${fn.parameters[i].name}`;
 			lines.push(`  if (!${native.symbol}_refinement_${i}(${id(type)}_in(${value}))) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} was rejected by ${refinement.constructor}`)});`);
 		});
 		if(refinements.some(Boolean))
 		{
 			lines.push(`  lean_object *checked = ${native.symbol}(${args.join(", ") || "lean_box(0)"});`
-				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(refinements.some(refinement => refinement?.kind === "subtype") && !refinements.some(refinement => refinement && refinement.kind !== "subtype") ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
+				, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(refinements.some(constructed) && !refinements.some(refinement => refinement && !constructed(refinement)) ? "Lean rejected an argument outside its checked refinement" : "Lean rejected an argument outside its Fin bound")});`
 				, "  lean_object *boxed = lean_ctor_get(checked, 0);");
 			if(nativeObjectType(native.result)) lines.push("  lean_inc(boxed);");
 			lines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, "boxed")};`, "  lean_dec(checked);");

@@ -12,9 +12,11 @@ const exportName = item => item.source.extensions["lean-lang.org/specialization"
 const fail = () => { throw new TypeError("Invalid reviewed Subtype constructor decision"); };
 const contractSite = (site, refinement) => {
 	assertRefinement(refinement, site.type);
-	if(refinement?.kind === "subtype" && (site.ownership !== "copy" || site.lifetime !== null)) fail();
+	// A Subtype or checked-record constructor is selected per site, over a copied value.
+	const constructed = ["subtype", "checked-record"].includes(refinement?.kind);
+	if(constructed && (site.ownership !== "copy" || site.lifetime !== null)) fail();
 	return { ownership: site.ownership, lifetime: structuredClone(site.lifetime)
-		, ...(refinement?.kind === "subtype" ? { refinement: { constructor: refinement.constructor } } : {}) };
+		, ...(constructed ? { refinement: { constructor: refinement.constructor } } : {}) };
 };
 
 /**

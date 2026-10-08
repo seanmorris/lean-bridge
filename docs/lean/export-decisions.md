@@ -44,6 +44,8 @@ WIT/WASI exposes [typed receiver-first functions](../publish/wit-wasi.md#export-
 Callback-result anchors are available for C, C++, Rust, Python, Ruby, C# and npm;
 the other targets remain in development.
 
+For a record whose proofs relate its fields, use a [checked constructor over the payload fields](existing-package.md#export-a-record-with-proof-fields). The host supplies no proof. The compiler's C/C++ and npm mapping uses a proof-free carrier, checks the constructor before dispatch and erases proofs from Lean-produced results. Closed `Nat` indices stay in type metadata. Installed acceptance for this mapping is pending.
+
 ## Check each consumer representation
 
 | Consumer | Conversion table | Package guide |

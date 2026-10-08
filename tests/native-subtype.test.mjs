@@ -23,6 +23,7 @@ import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterp
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import "./helpers/subtype-alias-position-source-history-tests.mjs";
 import "./helpers/subtype-xs-archive-source-history-tests.mjs";
+import "./helpers/checked-record-admission-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");

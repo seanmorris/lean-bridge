@@ -162,8 +162,12 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			const constrained = constraints && (constraints.kind === "alias" ? constraints.target !== null
 				: (constraints.kind === "record" ? constraints.fields : constraints.cases.flat()).some(value => value !== null));
 			if(constrained) definition.source.extensions["lean-lang.org/nominal-refinements"] = constraints;
+			// A value index stays local to the instantiation provenance; it is never a host type.
 			if(type.kind === "record" && type.provenance)
-				definition.source.extensions["lean-lang.org/instantiation"] = { structure: type.provenance.structure, arguments: type.provenance.arguments.map(argument => reference(argument)) };
+				definition.source.extensions["lean-lang.org/instantiation"] = { structure: type.provenance.structure
+					, arguments: type.provenance.arguments.map(argument => argument.kind === "value" ? { kind: "value", type: reference(argument.type), value: argument.value } : reference(argument)) };
+			// Proof fields are named, never carried: only a site's checked constructor builds them.
+			if(type.kind === "record" && type.erased) definition.source.extensions["lean-lang.org/erased-proofs"] = { fields: [...type.erased] };
 			if(constrainedCallback) definition.source.extensions["lean-lang.org/refinements"] = callbackRefinements;
 		}
 		return { kind: "named", id };

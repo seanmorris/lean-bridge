@@ -1269,6 +1269,10 @@ jobs:
           LEAN_BRIDGE_REVIEWED_NPM_PACKAGING_TEST=1 node --test --test-concurrency=1 tests/reviewed-npm-packaging.test.mjs
           LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_TEST=1 node --test --test-name-pattern='independently reviewed npm package' tests/reviewed-specializations.test.mjs
           test -s build/reviewed-specializations/npm.json
+          LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST=1 node --test --test-concurrency=1 --test-name-pattern='npm package' tests/checked-records.test.mjs
+          test -s build/checked-records/npm.json
+          test -s build/checked-records/reviewed-npm.json
+          test -s build/checked-records/result-only-npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
       - name: Preserve reviewed specialization npm observations
         if: always()
@@ -1276,6 +1280,17 @@ jobs:
         with:
           name: reviewed-specializations-npm-${{ github.sha }}
           path: build/reviewed-specializations/npm.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve checked-record npm observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: checked-records-npm-${{ github.sha }}
+          path: |
+            build/checked-records/npm.json
+            build/checked-records/reviewed-npm.json
+            build/checked-records/result-only-npm.json
           if-no-files-found: error
           retention-days: 30
       - name: Check ordinary and reviewed Fin packages in Node, TypeScript and browsers
@@ -2485,6 +2500,10 @@ jobs:
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
           test -s build/generic-records/c-cpp.json
           test -s build/generic-records/specialized-c-cpp.json
+          LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp node --test --test-concurrency=1 --test-name-pattern='C and C' tests/checked-records.test.mjs
+          test -s build/checked-records/ordinary-c-cpp.json
+          test -s build/checked-records/reviewed-c-cpp.json
+          test -s build/checked-records/result-only-c-cpp.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
           test -s build/variants/cpp.json
           LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests/c-variants.test.mjs
@@ -2669,6 +2688,9 @@ jobs:
             build/native-subtype/c-cpp.json
             build/generic-records/c-cpp.json
             build/generic-records/specialized-c-cpp.json
+            build/checked-records/ordinary-c-cpp.json
+            build/checked-records/reviewed-c-cpp.json
+            build/checked-records/result-only-c-cpp.json
             build/variants/cpp.json
             build/variants/c.json
             build/recursive/c-family.json
@@ -3057,6 +3079,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=c,cpp node --test tests/native-fin-product-arrays.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=c,cpp node --test tests/native-fin-records.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp node --test --test-concurrency=1 --test-name-pattern='C and C' tests/checked-records.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs"

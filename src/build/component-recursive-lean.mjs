@@ -7,7 +7,7 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
-import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
+import { checkedRecordVia, componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
 const key = type => sha256(identity(type)).slice(0, 20);
@@ -58,8 +58,12 @@ export const componentRecursiveTypes = abi => {
 export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefinements = []) => {
 	const types = componentRecursiveTypes(abi), definitions = new Map(abi.types.map(type => [type.id, type]));
 	const constraints = new Map(nominalRefinements.map(entry => [entry.id, entry.refinement]));
+	// A checked record crosses as its payload mirror: carriers build and read only the mirror, and
+	// each site's constructor alone builds the source record from it.
+	const checkedRecords = new Map(abi.types.filter(type => type.kind === "record" && type.erased).map(type => [type.id, type]));
+	const mirror = type => type.kind === "named" && checkedRecords.has(type.id) ? `LbErased.${type.id.slice(5)}` : null;
 	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
-	const carrier = type => `(_root_.Array ${sourceType(type)})`;
+	const carrier = type => `(_root_.Array ${mirror(type) ?? sourceType(type)})`;
 	const lines = [
 		"def carrierValue {α : Type} (value : _root_.Array α) : _root_.Option α :="
 		, "  if bound : 0 < value.size then"
@@ -83,6 +87,25 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		, `  loop ${componentRecursiveLimits.valueNodes + 1} values #[]`, ""
 	];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), ...body.map(line => `  ${line}`), ")"];
+	const sites = exports.map(item => {
+		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
+		if(!signature) throw new TypeError("Missing recursive export signature");
+		const parameters = (item.refinements?.parameters ?? signature.parameters.map(() => null)).map((refinement, index) => refinement?.kind === "checked-record"
+			? { ...refinement, definition: signature.parameters[index].id.slice(5) } : refinement);
+		const result = mirror(signature.result) ? { kind: "checked-record", definition: signature.result.id.slice(5), constructor: null } : item.refinements?.result ?? null;
+		const refinements = parameters.some(Boolean) || result ? { parameters, result } : undefined;
+		return { ...item, parameters: item.parameters.map((parameter, index) => mirror(signature.parameters[index]) ? { ...parameter, leanType: mirror(signature.parameters[index]) } : parameter)
+			, ...refinements ? { refinements } : {} };
+	});
+	for(const [id, type] of checkedRecords)
+	{
+		const name = `LbErased.${id.slice(5)}`, source = `_root_.${id.slice(5)}`, payload = type.fields.map(field => `value.«${field.name}»`).join(" ");
+		lines.push(`structure ${name} where`, ...type.fields.map(field => `  «${field.name}» : ${mirror(field.type) ?? sourceType(field.type)}`), ""
+			, `def ${name}.erase (value : ${source}) : ${name} :=`, `  ${name}.mk ${payload}`, "");
+		const constructors = new Set(sites.flatMap(item => item.refinements?.parameters.filter(refinement => refinement?.kind === "checked-record" && refinement.definition === id.slice(5)).map(refinement => refinement.constructor) ?? []));
+		for(const constructor of [...constructors].sort())
+			lines.push(`def ${name}.${checkedRecordVia(constructor)} (value : ${name}) : _root_.Option ${source} :=`, `  _root_.${constructor} ${payload}`, "");
+	}
 	for(const type of types.filter(type => type.kind !== "primitive"))
 	{
 		const symbol = componentRecursiveHelper(abi, type), hash = key(type);
@@ -108,7 +131,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		}
 		if(definition?.kind === "record")
 		{
-			make("make", definition.fields.map(field => field.type), `({ ${definition.fields.map((field, index) => `«${field.name}» := a${index}`).join(", ")} } : ${sourceType(type)})`, refinement?.fields);
+			make("make", definition.fields.map(field => field.type), `({ ${definition.fields.map((field, index) => `«${field.name}» := a${index}`).join(", ")} } : ${mirror(type) ?? sourceType(type)})`, refinement?.fields);
 			definition.fields.forEach((item, index) => field(`field${index}`, item.type, [`pure ${project(`value.«${item.name}»`, refinement?.fields[index])}`]));
 			continue;
 		}
@@ -151,11 +174,10 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			field(`field${index}`, child, ["match value with", `| .${name} child => pure child`, "| _ => .none"]);
 		});
 	}
-	for(const item of exports)
+	for(const item of sites)
 	{
 		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
-		if(!signature) throw new TypeError("Missing recursive export signature");
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const refined = componentRefinedCall(item, names, true);

@@ -12,6 +12,7 @@ import { packageReference } from "../scripts/generate-reference-docs.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { componentNpmIdentity } from "../src/release/component-package-receipt.mjs";
+import { checkedRecordContracts } from "./helpers/checked-record-fixture.mjs";
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -124,6 +125,26 @@ test("export contract examples validate and distinguish implemented decisions fr
 	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");
 	for(const code of ["export-contract-mismatch", "unused-export-contract", "contracts-require-elaboration"])
 		assert.ok(diagnostics.includes(`\`${code}\``));
+});
+
+test("checked-record guidance uses the tested payload and per-site constructor contract", async () => {
+	const document = await readFile("docs/lean/existing-package.md", "utf8");
+	const section = document.split("### Export a record with proof fields\n")[1].split("### Export a checked Subtype\n")[0];
+	const blocks = fences(section);
+	const configuration = JSON.parse(blocks.find(block => block.language === "json").source);
+	validateExportConfiguration(configuration);
+	assert.deepEqual(configuration.modules, ["CheckedRecords"]);
+	assert.deepEqual(configuration.exports, ["CheckedRecords.width"]);
+	assert.deepEqual(configuration.contracts, { "CheckedRecords.width": checkedRecordContracts()["CheckedRecords.width"] });
+	const example = blocks.find(block => block.language === "lean").source;
+	const source = await readFile("tests/fixtures/onboarding/checked-records/CheckedRecords.lean", "utf8");
+	for(const declaration of example.trim().split("\n\n")) assert.ok(source.includes(declaration), declaration);
+	assert.match(section, /Installed-package acceptance for this mapping is pending/);
+	assert.match(section, /exact names, order and types/);
+	assert.match(section, /result already has its proofs/);
+	assert.match(section, /private ABI 8/);
+	assert.match(section, /Configuration contracts cannot override a review/);
+	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
 });
 
 test("the installed-package example uses npm and a runnable JavaScript file", async () => {

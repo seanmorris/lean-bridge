@@ -182,7 +182,7 @@ def bump (value : NatBox) : NatBox := ⟨value.value + 1, value.count + 1⟩
 
 The alias is the record's name in every host: npm declares `interface NatBox`, C declares `library_nat_box`, C++ declares `struct NatBox`. Lean instantiates each field's type and the constructor at the alias's arguments and universes. `Box Nat` and `Box String` under two aliases have different fields. Two aliases of the same application, such as `NatBox` and `NatBoxAgain`, keep separate names and the same layout. Host assignability follows the host language: TypeScript interfaces with the same fields are interchangeable. The Binding IR records each alias's origin as the `lean-lang.org/instantiation` extension, including the structure and resolved arguments.
 
-An application that is not named by an alias, in a signature or as an argument of another instantiation (`Box (Box Nat)` needs an alias for the inner box), stops the build with `name this instantiation of a generic structure with an abbrev`. Inherited structures, fields whose type depends on the value or is a proof, propositions as arguments, and arguments that carry a resource, a callback or a refinement anywhere inside them (`Box (Fin 10)`, `Tag (Option (Fin 10))`, or a record whose field is refined) are rejected at the source. An argument that no field carries (a phantom parameter) is admitted: the package still carries the nominal type it names, reachable only through the instantiation. Generic variants still require a [specialization](#export-concrete-specializations), and refined fields inside an instantiated record follow the [refinement matrix](#refinement-support-by-target).
+An application that is not named by an alias, in a signature or as an argument of another instantiation (`Box (Box Nat)` needs an alias for the inner box), stops the build with `name this instantiation of a generic structure with an abbrev`. Fields whose runtime type depends on a value, propositions as arguments, and arguments that carry a resource, a callback or a refinement anywhere inside them (`Box (Fin 10)`, `Tag (Option (Fin 10))`, or a record whose field is refined) are rejected at the source. [Inherited records](#export-inherited-records) preserve parent subobjects. [Checked records](#export-a-record-with-proof-fields) have a separate constructor-checked mapping for erased proof fields and closed `Nat` indices. An argument that no field carries (a phantom parameter) is admitted: the package still carries the nominal type it names, reachable only through the instantiation. Generic variants still require a [specialization](#export-concrete-specializations), and refined fields inside an instantiated record follow the [refinement matrix](#refinement-support-by-target).
 
 The [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options.
 
@@ -216,7 +216,7 @@ The `NatChild` boundary shape has `toBase : NatBase` and `count : Nat`. In JavaS
 
 Parent discovery considers public, safe, universe-free aliases in the project's compiled modules and imported captured dependencies. It excludes unimported modules. No matching alias, or several aliases for the same parent, produces a source diagnostic. A field whose type explicitly names an alias needs no discovery and keeps that identity even when another equal alias exists.
 
-The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent fields, proof fields and recursive generic records remain unsupported. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.
+The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent runtime fields and recursive generic records remain unsupported. Proof-bearing records require the separate [checked-record mapping](#export-a-record-with-proof-fields); inheritance acceptance does not establish that combination. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.
 
 ### Declare export contracts
 
@@ -344,6 +344,56 @@ Installed checks cover [C and C++](../evidence/native-fin-20261005.md) and [Rust
 
 Native generators also check `Fin` inside pairs, `Except`, plain record and variant fields, and combinations of those shapes with containers. [Product](../evidence/native-fin-products-20261007/receipt.json), [Array-of-product](../evidence/native-fin-product-arrays-20261007/receipt.json) and [nominal-field](../evidence/native-fin-records-20261007/receipt.json) packages have ordinary and reviewed C/C++ installed results. Other native hosts await installed acceptance for these signatures. Refined generic, recursive and callback-bearing nominal types remain rejected. Native callbacks with refined signatures are not yet supported. See the target matrix below for reviewed Binding IR and PHP-Wasm status.
 
+### Export a record with proof fields
+
+The compiler has a checked-record mapping for C, C++ and npm. Installed-package acceptance for this mapping is pending. The [fixture](../../tests/fixtures/onboarding/checked-records/CheckedRecords.lean) and [checks](../../tests/checked-records.test.mjs) cover records whose proofs constrain their payload fields:
+
+```lean
+namespace CheckedRecords
+
+structure Interval where
+  lo : Nat
+  hi : Nat
+  ordered : lo ≤ hi
+
+def mkInterval (lo hi : Nat) : Option Interval :=
+  if h : lo ≤ hi then some ⟨lo, hi, h⟩ else none
+
+def width (value : Interval) : Nat := value.hi - value.lo
+
+end CheckedRecords
+```
+
+Select a checked constructor at each input site in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["CheckedRecords"],
+  "exports": ["CheckedRecords.width"],
+  "contracts": {
+    "CheckedRecords.width": {
+      "parameters": [{
+        "ownership": "copy",
+        "lifetime": null,
+        "refinement": { "constructor": "CheckedRecords.mkInterval" }
+      }],
+      "result": { "ownership": "copy", "lifetime": null }
+    }
+  }
+}
+```
+
+The constructor must take the payload fields by their exact names, order and types, then return `Option` of the exact record. Lean checks its safety and selected-module dependencies. A constructor can normalize accepted values. Selecting different constructors for two parameters of the same record changes each parameter's behavior.
+
+The host passes only payload fields, such as `{ lo: 3n, hi: 10n }` in JavaScript. The private adapter receives a typed payload mirror without the `ordered` proof. It calls `mkInterval` before calling `width`; `none` rejects the call. It never constructs an unchecked `Interval` or supplies a substitute proof. Native public validation and the adapter each own a fresh conversion. A Lean-produced result already has its proofs, so the adapter returns only its payload and needs no constructor selection at that result site.
+
+Closed natural-number indices use aliases such as `abbrev Triple := Sized 3`, where `Sized` stores `data : Array Nat` and a proof `data.size = n`. A checked constructor takes `data` and returns `Option Triple`. The host record has only `data`; the index `3` remains in authenticated type metadata. A package can export only `Nat → Triple` without having a checked input anywhere.
+
+For a reviewed API, record erased proof names in the type's `lean-lang.org/erased-proofs` extension, and select `{ "kind": "checked-record", "constructor": "CheckedRecords.mkInterval" }` in the declaration's parameter refinement. A closed `Nat` index appears as `{ "kind": "value", "type": { "kind": "primitive", "name": "nat" }, "value": "3" }` in `lean-lang.org/instantiation`. The [independent review fixture](../../tests/helpers/checked-record-fixture.mjs) shows the complete form. Fresh Lean must reproduce the payload layout, erased names, indices and selected constructor. Configuration contracts cannot override a review.
+
+This mapping currently requires a nonempty, closed copied payload at a top-level parameter or result. Nested checked records, value-dependent runtime fields, recursive checked records, other index kinds, callbacks and other target packages remain unsupported. npm uses private ABI 8 for its proof-free carriers. Those implementation checks do not establish installed C/C++ or JavaScript/TypeScript acceptance.
+
 ### Export a checked Subtype
 
 For a top-level `Subtype` parameter or result, provide a total Lean function that checks a host value and returns the exact subtype:
@@ -401,7 +451,7 @@ In a schema-3 reviewed API, describe a `Subtype` with its primitive transport ty
 }
 ```
 
-Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. Installed reviewed Subtype checks are still pending.
+Keep `lean-bridge.exports.json` limited to modules and target package settings. The review supplies each constructor; configuration `contracts` cannot override it. Analysis, build and target recompilation retain the same selection, and fresh Lean checks the constructor and exported signature. A specialization uses its public export name, so two specializations of one generic can choose different constructors. Changing to another valid constructor is an API change, including when it normalizes accepted inputs. [Installed reviewed Subtype checks](../evidence/reviewed-subtype-20261008/receipt.json) cover C, C++ and Node JavaScript/strict TypeScript. Other reviewed hosts and browser profiles remain pending.
 
 #### Refinement support by target
 
@@ -415,8 +465,9 @@ Keep `lean-bridge.exports.json` limited to modules and target package settings. 
 | `Fin n` inside `Array` of pairs and `Except` | Generated; separate installed run pending | C/C++ installed | Generated; pending | Generated; pending | C/C++ installed; other hosts pending |
 | `Fin n` in record or variant fields | Node installed; browser pending | C/C++ installed; other hosts pending | Generated; pending | Installed | C/C++ installed; other native hosts pending |
 | `Fin n` in callbacks and closures | Node installed; browser pending | C/C++ safe directions installed; other hosts pending | Rejected | Rejected | Bounds validated; fresh-Lean and installed acceptance pending |
-| `Subtype` parameter or result over a primitive | Installed | Installed | Generated; installed acceptance pending | Rejected | Constructors selected and checked; installed acceptance pending |
+| `Subtype` parameter or result over a primitive | Installed | Installed | Generated; installed acceptance pending | Rejected | C/C++ and Node installed; other profiles pending |
 | `Subtype` elsewhere, or without a checked constructor | Rejected at the source | Rejected at the source | Rejected | Rejected | Rejected |
+| Record with erased proof fields and a checked input constructor | Generated; installed acceptance pending | C/C++ generated; other hosts rejected | Rejected | Rejected | C/C++ and npm generated; installed acceptance pending |
 
 Reviewed `Fin` signatures describe the erased `Nat` transport and exact bounds in `source.extensions["lean-lang.org/refinements"]`. Aliases, records and variants keep their field constraints in `lean-lang.org/nominal-refinements`. Fresh Lean metadata must match every constraint, including nested bounds and parameter/result positions. A missing, invented or changed bound fails with `reviewed-ir-source-mismatch`. Reviewed parameter names remain in host error messages.
 

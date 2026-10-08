@@ -88,11 +88,20 @@ export const snapshotComponentCopiedGraph = descriptor => {
 		charge(0);
 		const kind = dataKind(value);
 		if(!["alias", "record", "variant"].includes(kind)) invalid("identity and unknown nominal kinds require another representation");
-		closed(value, ["kind", "id", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases"]);
+		closed(value, ["kind", "id", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...kind === "record" && Object.hasOwn(value, "erased") ? ["erased"] : []]);
 		if(typeof value.id !== "string" || !nominal.test(value.id) || ids.has(value.id)) invalid("invalid or duplicate nominal identity");
 		ids.add(value.id);
 		if(kind === "alias") return Object.freeze({ kind, id: value.id, target: reference(value.target) });
-		if(kind === "record") return Object.freeze({ kind, id: value.id, fields: fields(value.fields) });
+		if(kind === "record")
+		{
+			if(!Object.hasOwn(value, "erased")) return Object.freeze({ kind, id: value.id, fields: fields(value.fields) });
+			// Erased proof fields are named once, never carried, and disjoint from the payload.
+			dense(value.erased, 1024);
+			const payload = fields(value.fields);
+			if(!value.erased.length || !payload.length || new Set(value.erased).size !== value.erased.length
+				|| value.erased.some(item => typeof item !== "string" || !name.test(item) || payload.some(field => field.name === item))) invalid("invalid erased proof fields");
+			return Object.freeze({ kind, id: value.id, fields: payload, erased: Object.freeze([...value.erased]) });
+		}
 		dense(value.cases, 1024);
 		if(!value.cases.length) invalid("variants require a constructor");
 		const names = new Set();

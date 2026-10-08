@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordAdmissionSource } from "./checked-record-admission-source-history.mjs";
 
 export const subtypeXsArchiveHistoryPath = "docs/evidence/subtype-xs-archive-source-history-20261008.json";
 export const subtypeXsArchiveChangedPaths = [
@@ -52,6 +53,7 @@ export const reverseSubtypeXsArchiveUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeSubtypeXsArchiveSource = (path, source, expected) => {
+	source = beforeCheckedRecordAdmissionSource(path, source, expected);
 	if(typeof source !== "string" || !subtypeXsArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

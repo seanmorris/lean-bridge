@@ -103,6 +103,13 @@
             "kind": { "const": "subtype" },
             "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
           }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+          "properties": {
+            "kind": { "const": "checked-record" },
+            "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+          }
         }
       ]
     },

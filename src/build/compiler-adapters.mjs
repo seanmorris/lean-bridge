@@ -125,7 +125,7 @@ const validateRefinement = (value, path, leanType, depth = 0) => {
 		return;
 	}
 	exactKeys(value, ["kind", "constructor"], path);
-	if(value.kind !== "subtype" || typeof value.constructor !== "string"
+	if(!["subtype", "checked-record"].includes(value.kind) || (value.kind === "checked-record" && depth !== 0) || typeof value.constructor !== "string"
 		|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor))
 		fail("invalid-compiler-adapter-plan", `${path} must name a checked Subtype constructor`);
 };
@@ -283,6 +283,8 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 		const value = declaration.source.extensions["lean-lang.org/refinements"];
 		return value === undefined ? [] : [...value.parameters, value.result].filter(refinement => refinement?.kind === "subtype");
 	});
+	if(document.declarations.some(declaration => [...declaration.source.extensions["lean-lang.org/refinements"]?.parameters ?? []].some(refinement => refinement?.kind === "checked-record")) && privateAbi.version !== componentRecursiveAbi)
+		fail("unsupported-checked-record", `Checked records require the recursive copied graph ABI, not private ABI ${privateAbi.version}`);
 	if(subtypeRefinements.length && ![2, 3, componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi, componentStructuredCallableAbi].includes(privateAbi.version))
 		fail("unsupported-subtype-refinement", `Checked Subtype constructors do not support private ABI ${privateAbi.version}`);
 	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");

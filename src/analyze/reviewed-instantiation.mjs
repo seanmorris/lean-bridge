@@ -60,7 +60,17 @@ export const assertReviewedInstantiation = (definition, value, types) => {
 		if(depth + heights.get(target.id) > 32) refuse(path, "type nesting exceeds 32");
 		return heights.get(target.id);
 	};
-	value.arguments.forEach((argument, index) => reach(argument, `${base}.arguments[${index}]`, 0, "an instantiation argument cannot reach a Fin bound"));
+	value.arguments.forEach((argument, index) => {
+		// A value index is provenance only: a closed Nat literal, never a host type.
+		if(argument?.kind === "value")
+		{
+			if(!keys(argument, ["kind", "type", "value"]) || !keys(argument.type, ["kind", "name"]) || argument.type.kind !== "primitive"
+				|| argument.type.name !== "nat" || typeof argument.value !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(argument.value))
+				refuse(`${base}.arguments[${index}]`, "a value argument is a closed Nat literal");
+			return;
+		}
+		reach(argument, `${base}.arguments[${index}]`, 0, "an instantiation argument cannot reach a Fin bound");
+	});
 	// Field types were checked as reviewed types; a bound hidden behind a named field remains.
 	for(const field of definition.fields) reach(field.type, `${definition.id}.${field.name}.type`, 0, "an instantiated generic record has no refined fields");
 };

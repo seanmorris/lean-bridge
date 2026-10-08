@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordAdmissionSource } from "./checked-record-admission-source-history.mjs";
 import { beforeSubtypeXsArchiveSource, subtypeXsArchiveChangedPaths, subtypeXsArchiveHistoryPath, reverseSubtypeXsArchiveUpdate } from "./subtype-xs-archive-source-history.mjs";
 
 test("Subtype XS archive authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Subtype XS archive authenticates each exact source predecessor", async () 
 	assert.deepEqual(record.updates.map(update => update.path), subtypeXsArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCheckedRecordAdmissionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseSubtypeXsArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeXsArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeXsArchiveSource(update.path, source, update.currentSha256), source);

@@ -9,6 +9,7 @@ import { assertRefinement, callbackDefinitionRefinement, nominalRefinement } fro
 const finOnly = refinement => {
 	if(refinement === null || refinement.kind === "fin") return;
 	if(refinement.kind === "subtype") throw new TypeError("Reviewed Subtype decisions require a checked constructor selection");
+	if(refinement.kind === "checked-record") throw new TypeError("Reviewed checked records cross only at top-level sites");
 	refinement.arguments.forEach(finOnly);
 };
 
