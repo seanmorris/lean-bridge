@@ -37,3 +37,18 @@ export const assertJsonSchema = async (name, value) => {
 	assert.ok(validate, `Missing JSON schema: ${name}`);
 	assert.equal(validate(value), true, `${name}: ${JSON.stringify(validate.errors)}`);
 };
+
+/**
+ * Report a document's schema errors, or null when it is valid, for malformed-shape controls.
+ *
+ * @param reference - Schema filename without the .schema.json suffix, optionally followed by a JSON pointer fragment.
+ * @param value - JSON document or fragment.
+ */
+export const jsonSchemaErrors = async (reference, value) => {
+	validatorPromise ??= loadValidator();
+	const validator = await validatorPromise;
+	const [name, fragment] = reference.split("#");
+	const validate = validator.getSchema(`${new URL(`${name}.schema.json`, schemaRoot).href}${fragment === undefined ? "" : `#${fragment}`}`);
+	assert.ok(validate, `Missing JSON schema: ${reference}`);
+	return validate(value) ? null : validate.errors;
+};

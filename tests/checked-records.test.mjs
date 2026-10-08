@@ -28,6 +28,7 @@ import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.m
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
+import { assertJsonSchema, jsonSchemaErrors } from "./helpers/json-schema.mjs";
 import { checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
 const lean = process.env.LEAN_BRIDGE_CHECKED_RECORD_LEAN_TEST === "1";
@@ -105,6 +106,46 @@ test("native metadata keeps erased proofs at top-level sites and value indices i
 	for(const [label, check] of refused) assert.throws(check, TypeError, label);
 });
 
+test("published metadata schemas admit erased proofs, value indices and checked-record sites exactly", async () => {
+	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const nativeNat = { kind: "primitive", name: "nat", lean: "Nat", abi };
+	const data = { name: "data", projection: `${module}.Sized.data`, type: { kind: "array", element: nativeNat, abi } };
+	const native = { kind: "record"
+		, name: `${module}.Triple`
+		, lean: `${module}.Triple`
+		, constructor: `${module}.Sized.mk`
+		, provenance: { structure: `${module}.Sized`, arguments: [{ kind: "value", type: nativeNat, value: "3" }] }
+		, fields: [data]
+		, erased: ["sized"]
+		, abi };
+	const nativeSite = { kind: "refinement", base: native, predicate: { kind: "checked-record", constructor: `${module}.mkTriple` }, abi };
+	const nat = { kind: "primitive", name: "nat" };
+	const component = { kind: "record"
+		, name: `${module}.Triple`
+		, provenance: { structure: `${module}.Sized`, arguments: [{ kind: "value", type: nat, value: "3" }] }
+		, fields: [{ name: "data", type: { kind: "array", element: nat } }]
+		, erased: ["sized"] };
+	const componentSite = { kind: "refinement", base: component, predicate: { kind: "checked-record", constructor: `${module}.mkTriple` } };
+	const copied = "elaborated-export-metadata#/$defs/copiedType";
+	for(const [reference, value] of [["native-metadata-type", native], ["native-metadata-type", nativeSite], [copied, component], [copied, componentSite]])
+		assert.equal(await jsonSchemaErrors(reference, value), null, `${reference} ${value.kind}`);
+	const malformed = [
+		["native-metadata-type", { ...native, erased: [] }, "no erased names"]
+		, ["native-metadata-type", { ...native, erased: ["sized", "sized"] }, "a duplicate erased name"]
+		, ["native-metadata-type", { ...native, erased: ["1sized"] }, "an erased name that is not an identifier"]
+		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: nativeNat, value: "03" }] } }, "a non-decimal index"]
+		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: { ...nativeNat, name: "int", lean: "Int" }, value: "3" }] } }, "an Int index"]
+		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: nativeNat, value: "3", bound: "3" }] } }, "an extra index key"]
+		, ["native-metadata-type", { ...nativeSite, predicate: { ...nativeSite.predicate, bound: "3" } }, "an extra predicate key"]
+		, ["native-metadata-type", { ...nativeSite, predicate: { kind: "checked", constructor: `${module}.mkTriple` } }, "an unknown predicate kind"]
+		, [copied, { ...componentSite, base: nat }, "a checked-record predicate over a scalar"]
+		, [copied, { ...componentSite, base: { ...component, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
+		, [copied, { ...component, erased: [] }, "no erased names"]
+		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: nat, value: "-3" }] } }, "a negative index"]
+		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: { kind: "primitive", name: "string" }, value: "3" }] } }, "a String index"]];
+	for(const [reference, value, label] of malformed) assert.notEqual(await jsonSchemaErrors(reference, JSON.parse(JSON.stringify(value))), null, `${reference}: ${label}`);
+});
+
 test("private recursive descriptors bind erased proof names and refuse other component ABIs", () => {
 	const review = checkedRecordReview();
 	const definitions = componentRecordDefinitions(review, true);
@@ -148,7 +189,7 @@ const nativeModel = async (t, { extra = "", contracts = checkedRecordContracts()
 		, receiptName: "native-component.json"
 		, createModel: input => createCompiledNativeModel(input, { nativeRefinements: true })
 		, createAdapters: generateCompiledNativeLeanAdapters
-		, compileComponent: async ({ model, adapters }) => { captured = { model, adapters }; throw Object.assign(new Error("stop before C"), { code: "stop-before-c" }); } };
+		, compileComponent: async ({ model, adapters, metadata }) => { captured = { model, adapters, metadata }; throw Object.assign(new Error("stop before C"), { code: "stop-before-c" }); } };
 	await assert.rejects(() => buildElaboratedComponent(options), error => {
 		if(error.code !== "stop-before-c") throw error;
 		return true;
@@ -158,7 +199,8 @@ const nativeModel = async (t, { extra = "", contracts = checkedRecordContracts()
 const exportNamed = (model, name) => model.exports.find(item => item.name === `${module}.${name}`);
 
 test("fresh Lean compiles native C and C++ mirror adapters for checked records", { skip: !lean, timeout: 900_000 }, async t => {
-	const { model, adapters } = await nativeModel(t);
+	const { model, adapters, metadata } = await nativeModel(t);
+	await assertJsonSchema("elaborated-export-metadata", metadata);
 	// The public contract restates exactly what the independent review states.
 	assert.equal(reviewedContractDifference(checkedRecordReview(), model.bindingIr), null);
 	const source = adapters.leanSource;
@@ -252,14 +294,19 @@ test("every refused checked-record site reports its own diagnostic", { skip: !le
 	for(const [name, { pattern }] of Object.entries(refusals)) assert.match(projections.get(name) ?? JSON.stringify(details), pattern, name);
 });
 
-test("npm recursive-ABI adapters carry checked-record mirrors and compile with fresh Lean", { skip: !lean, timeout: 900_000 }, async t => {
+/**
+ * Elaborate a fixture copy in the component profile, build the Lake entry engine's npm plan from
+ * it, generate the compiler adapters and compile the generated module with fresh Lean.
+ *
+ * @param t - Test context.
+ * @param contracts - Export contracts; their keys are the selected exports.
+ */
+const npmAdapters = async (t, contracts) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-npm-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const projectRoot = join(directory, "project");
 	await cp(checkedRecordFixture, projectRoot, { recursive: true });
-	const contracts = checkedRecordContracts();
 	await writeFile(join(projectRoot, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, modules: [module], exports: Object.keys(contracts), contracts }));
-	// The component profile elaborates with fresh Lean, then the ordinary npm plan is built from it.
 	const intent = await prepareLakeEntryIntent({ projectRoot });
 	const workspace = await resolveLakeBuildWorkspace({ snapshot: intent.lakeSnapshot, modules: intent.document.modules.map(entry => entry.module), leanPrefix });
 	let analysis;
@@ -267,22 +314,50 @@ test("npm recursive-ABI adapters carry checked-record mirrors and compile with f
 	{ analysis = await elaborateLakeEntryModules({ inventory: await inspectLeanProject(projectRoot), entries: intent.document.modules, workspace, leanPrefix, engineRoot: process.cwd() }); }
 	finally
 	{ await workspace.dispose(); }
-	assert.equal(reviewedContractDifference(checkedRecordReview(), analysis.bindingIr.document), null);
+	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
 	// The same plan the Lake entry engine builds from this analysis and its captured snapshot.
 	const graph = JSON.parse(await readFile("poc/lean-link-spike/graph-lock.json", "utf8"));
 	const componentPlan = createComponentBuildPlan({ analysis, runtime: graph.runtime, targets: ["npm"], lakeSnapshotSha256: intent.lakeSnapshot.sha256 });
 	const { plan, files } = generateCompilerAdapters({ analysis, componentPlan });
-	assert.equal(plan.privateAbi.version, 8);
-	assert.deepEqual(plan.privateAbi.types.map(item => [item.id, item.erased]), [[`lean:${module}.Interval`, ["ordered"]], [`lean:${module}.Percent`, ["above", "below"]], [`lean:${module}.Triple`, ["sized"]]]);
 	const source = files["LeanBridgeGenerated.lean"];
 	// No carrier holds a source record, and no source record is constructed.
 	assert.doesNotMatch(source, /_root_\.CheckedRecords\.(Interval|Sized|Bounded|Triple|Percent)\.mk|_root_\.Array _root_\.CheckedRecords\.(Interval|Triple|Percent)/u);
-	assert.match(source, /\(_root_\.Array LbErased\.CheckedRecords\.Triple\)\) : \(_root_\.Array LbErased\.CheckedRecords\.Triple\) :=\n {2}carrierResult \(do/u);
-	assert.match(source, /_root_\.CheckedRecords\.repeated a0; \(LbErased\.CheckedRecords\.Triple\.erase/u);
 	// Lean compiles the generated module with the fixture it imports.
 	const fixture = await readFile(join(checkedRecordFixture, "CheckedRecords.lean"), "utf8");
 	await writeFile(join(directory, "Generated.lean"), `${fixture}\n${source.replace(/^import CheckedRecords$/mu, "")}`);
 	const run = await processBuildRunner.capture({ command: join(leanPrefix, "bin/lean"), args: ["-c", join(directory, "Generated.c"), "Generated.lean"], cwd: directory, timeoutMs: 600_000 });
 	assert.equal(run.stderr, "");
-	assert.match(await readFile(join(directory, "Generated.c"), "utf8"), new RegExp(`LEAN_EXPORT lean_object\\* ${plan.exports.find(item => item.sourceDeclaration === `${module}.span`).symbol}_lean\\(lean_object\\*, lean_object\\*\\)`, "u"));
+	return { analysis, plan, source, generatedC: await readFile(join(directory, "Generated.c"), "utf8") };
+};
+
+test("npm recursive-ABI adapters carry checked-record mirrors and compile with fresh Lean", { skip: !lean, timeout: 900_000 }, async t => {
+	const { analysis, plan, source, generatedC } = await npmAdapters(t, checkedRecordContracts());
+	assert.equal(reviewedContractDifference(checkedRecordReview(), analysis.bindingIr.document), null);
+	assert.equal(plan.privateAbi.version, 8);
+	assert.deepEqual(plan.privateAbi.types.map(item => [item.id, item.erased]), [[`lean:${module}.Interval`, ["ordered"]], [`lean:${module}.Percent`, ["above", "below"]], [`lean:${module}.Triple`, ["sized"]]]);
+	assert.match(source, /\(_root_\.Array LbErased\.CheckedRecords\.Triple\)\) : \(_root_\.Array LbErased\.CheckedRecords\.Triple\) :=\n {2}carrierResult \(do/u);
+	assert.match(source, /_root_\.CheckedRecords\.repeated a0; \(LbErased\.CheckedRecords\.Triple\.erase/u);
+	assert.match(generatedC, new RegExp(`LEAN_EXPORT lean_object\\* ${plan.exports.find(item => item.sourceDeclaration === `${module}.span`).symbol}_lean\\(lean_object\\*, lean_object\\*\\)`, "u"));
+});
+
+test("a package whose only checked record is a Lean-produced result still registers and erases its mirror", { skip: !lean, timeout: 1_800_000 }, async t => {
+	// Nat -> Triple alone: no checked parameter, no constructor and no refinement extension anywhere.
+	const contracts = { [`${module}.repeated`]: checkedRecordContracts()[`${module}.repeated`] };
+	const { model, adapters, metadata } = await nativeModel(t, { contracts });
+	await assertJsonSchema("elaborated-export-metadata", metadata);
+	assert.deepEqual(model.exports.map(item => [item.name, item.refinements]), [[`${module}.repeated`
+		, { parameters: [null], result: { kind: "checked-record", definition: `${module}.Triple`, constructor: null, fields: ["data"] } }]]);
+	assert.equal(model.bindingIr.declarations[0].source.extensions[refinementsKey], undefined);
+	assert.deepEqual(model.bindingIr.types.map(type => [type.id, type.source.extensions[erasedProofsKey]]), [[`lean:${module}.Triple`, { fields: ["sized"] }]]);
+	const native = adapters.leanSource;
+	assert.match(native, /structure LbErased\.CheckedRecords\.Triple where\n {2}«data» : \(_root_\.Array _root_\.Nat\)/u);
+	assert.match(native, new RegExp(`def f_${model.exports[0].symbol} \\(a0 : _root_\\.Nat\\) : LbErased\\.CheckedRecords\\.Triple :=\\n {2}\\(let _bridgeResult := _root_\\.CheckedRecords\\.repeated a0; \\(LbErased\\.CheckedRecords\\.Triple\\.erase`, "u"));
+	assert.doesNotMatch(native, /via_[0-9a-f]{16}|_refinement_|_root_\.CheckedRecords\.Sized\.mk|⟨/u);
+	const { plan, source } = await npmAdapters(t, contracts);
+	assert.equal(plan.privateAbi.version, 8);
+	assert.deepEqual(plan.privateAbi.types.map(item => [item.id, item.erased]), [[`lean:${module}.Triple`, ["sized"]]]);
+	assert.equal(plan.exports[0].refinements ?? null, null);
+	assert.match(source, /structure LbErased\.CheckedRecords\.Triple where/u);
+	assert.match(source, /: \(_root_\.Array LbErased\.CheckedRecords\.Triple\) :=\n {2}carrierResult \(do\n {4}let a0 ← carrierValue a0\n {4}pure \(\(let _bridgeResult := _root_\.CheckedRecords\.repeated a0; \(LbErased\.CheckedRecords\.Triple\.erase/u);
+	assert.doesNotMatch(source, /via_[0-9a-f]{16}|_refinement_/u);
 });
