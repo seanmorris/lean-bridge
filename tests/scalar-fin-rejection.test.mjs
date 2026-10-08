@@ -42,10 +42,10 @@ test("installed scalar Fin rejects through the public API and the internal runti
 const sourceEntry = enabled && process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY === "1";
 
 test("installed scalar Fin rejections never enter the Lean source on any private ABI", { skip: !sourceEntry, timeout: 3_600_000 }, async t => {
-	const observations = [];
-	for(const abi of scalarFinRejectionAbis) observations.push(await checkScalarFinRejection(t, { fixture, build, runtimeRoot }, abi, scalarFinSourceEntryProbe));
+	const observations = [], reportPath = resolve(process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY_REPORT ?? "build/scalar-fin-source-entry/report.json");
+	const probe = scalarFinSourceEntryProbe(join(dirname(reportPath), "calls"));
+	for(const abi of scalarFinRejectionAbis) observations.push(await checkScalarFinRejection(t, { fixture, build, runtimeRoot }, abi, probe));
 	assert.deepEqual(observations.map(item => item.privateAbi), [2, 3, 4, 5, 6, 7]);
 	for(const item of observations) assert.ok(item.checks > 100 && item.rejections > 2000 && item.sourceEntry.rejected === item.rejections, item.abi);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY_REPORT ?? "build/scalar-fin-source-entry/report.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, instrumentation: sourceEntryInstrumentation, observations }));
 });

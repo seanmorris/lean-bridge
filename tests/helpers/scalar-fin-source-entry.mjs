@@ -8,6 +8,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 export const sourceEntryMarker = "lean-bridge-source-entry";
@@ -47,17 +49,28 @@ export const instrumentSourceEntryLean = lean => {
 const measured = `import * as published from "onboarding-small";
 import { runtime } from "./node_modules/onboarding-small/internal/runtime.mjs";
 const sourceEntryCalls = [];
-let sourceEntryNext = 0;
+let sourceEntryNext = 0, sourceEntryCase = null;
 // Begin and end share the stderr stream that Lean's dbgTrace writes, so each marker falls inside its call.
 const measure = (name, kind, call) => {
   const id = sourceEntryNext++;
   console.error("${sourceEntryBegin} " + id);
   let outcome = 1;
-  try { return call(); } catch (error) { outcome = 0; throw error; } finally { console.error("${sourceEntryEnd} " + id); sourceEntryCalls.push([id, name, kind, outcome]); }
+  try { return call(); } catch (error) { outcome = 0; throw error; } finally { console.error("${sourceEntryEnd} " + id); sourceEntryCalls.push([id, name, kind, outcome, sourceEntryCase]); sourceEntryCase = null; }
 };
 const api = new Proxy(published, { get: (target, key) => typeof target[key] === "function" ? (...args) => measure(String(key), "public", () => target[key](...args)) : target[key] });
 const raw = (name, args) => measure(name, "raw", () => runtime.call("lean:OnboardingSmall." + name, args));
 `;
+
+const rejectedCase = `  try { call(); } catch(error) { if(message && error.message !== message) throw new Error(label + ": " + error.message); rejections++; return; }
+`;
+/** Late rejections: the second argument fails after the first passed. Each label names one exact call of the consumer. */
+export const sourceEntryLateCases = Object.freeze({
+	"pair raw late": "rejected(() => raw(\"pair\", [2n, 4n]), \"pair raw late\", failure);"
+	, "pair public late": "rejected(() => api.pair(2n, 4n), \"pair public late\");"
+	, "mix raw late Fin": "rejected(() => raw(\"mix\", [\"ab\", 10n]), \"mix raw late Fin\", failure);"
+	, "mix public late Fin": "rejected(() => api.mix(\"ab\", 10n), \"mix public late Fin\");"
+	, "mix cycle late Fin": "rejected(() => raw(\"mix\", [\"x\".repeat(4096), 10n]), \"mix cycle late Fin\", failure);"
+});
 
 /**
  * Route every public and raw call of the uninstrumented consumer through the bracketing recorder, add
@@ -77,6 +90,10 @@ for (const value of [${outOfRange.join(", ")}]) {
   check(raw("${sourceEntryControl}", [value]) === value, "${sourceEntryControl} raw " + value);
 }
 `;
+	// Each rejected() case labels the single call it wraps, so late rejections are identified by case, not by export.
+	probe = replaceOnce(probe, rejectedCase, `  sourceEntryCase = label;
+  try { call(); } catch(error) { if(message && error.message !== message) throw new Error(label + ": " + error.message); rejections++; return; } finally { sourceEntryCase = null; }
+`);
 	const report = `console.log(JSON.stringify({ abi: ${JSON.stringify(abi)}, checks, rejections }));\n`;
 	probe = replaceOnce(probe, report, `${controls}console.log(JSON.stringify({ abi: ${JSON.stringify(abi)}, checks, rejections, calls: sourceEntryCalls }));\n`);
 	return probe;
@@ -87,7 +104,8 @@ for (const value of [${outOfRange.join(", ")}]) {
  * each successful call, none for each rejected call and nothing else on stderr.
  *
  * @param stderr - Consumer stderr.
- * @param calls - The consumer's [id, export, kind, outcome] records, outcome 1 for success.
+ * @param calls - The consumer's [id, export, kind, outcome, case] records: outcome 1 for success, and the
+ * label of the rejected() case that wrapped the call, otherwise null.
  * @param names - Exports that may appear in a marker.
  */
 export const accountSourceEntry = (stderr, calls, names) => {
@@ -124,10 +142,12 @@ export const accountSourceEntry = (stderr, calls, names) => {
 	const exports = {};
 	for(const [index, record] of calls.entries())
 	{
-		assert.equal(record.length, 4);
-		const [id, name, kind, outcome] = record;
+		assert.equal(record.length, 5);
+		const [id, name, kind, outcome, label] = record;
 		assert.equal(id, index); assert.ok(names.includes(name), name);
 		assert.ok(["public", "raw"].includes(kind), kind); assert.ok([0, 1].includes(outcome));
+		// Only a call inside rejected() carries a case, and such a call must have been rejected.
+		assert.ok(label === null || typeof label === "string" && !outcome, `call ${id} case ${label}`);
 		assert.deepEqual(segments[index].markers, outcome ? [name] : [], `${kind} ${name} call ${id} ${outcome ? "succeeded" : "was rejected"}`);
 		exports[name] ??= { entered: 0, rejected: 0 };
 		exports[name][outcome ? "entered" : "rejected"]++;
@@ -152,21 +172,43 @@ export const checkSourceEntry = (stderr, result, inputs) => {
 	}
 	assert.ok(exports.tenth.entered > 0); assert.equal(exports.tenth.rejected ?? 0, 0);
 	assert.deepEqual(exports[sourceEntryControl], { entered: outOfRange.length * 2, rejected: 0 });
-	// Late rejection: the second argument fails after the first passed, in both pair and mix.
-	assert.ok(result.calls.some(([, name, kind, outcome]) => name === "pair" && kind === "raw" && !outcome));
-	assert.ok(result.calls.some(([, name, kind, outcome]) => name === "mix" && kind === "raw" && !outcome));
+	// Each late case ran, on its own export and route, and was rejected without entering the source.
+	for(const [label, line] of Object.entries(sourceEntryLateCases))
+	{
+		assert.ok(inputs.consumer.includes(line), label);
+		const [name, kind] = [label.split(" ")[0], label.includes(" public ") ? "public" : "raw"];
+		const cases = result.calls.filter(record => record[4] === label);
+		assert.ok(cases.length > 0, `late case ${label} ran`);
+		for(const record of cases) assert.deepEqual(record.slice(1, 4), [name, kind, 0], label);
+	}
 	// Recovery: a mirror call enters its source right after a rejected mirror call.
-	assert.ok(result.calls.some(([, name, , outcome], index) => name === "mirror" && outcome && result.calls[index - 1]?.[1] === "mirror" && !result.calls[index - 1][3]));
+	assert.ok(result.calls.some(([, name, , outcome], index) => name === "mirror" && outcome && result.calls[index - 1]?.[1] === "mirror" && !result.calls[index - 1][3]), "mirror recovers");
 	const calls = result.calls.length, entered = result.calls.filter(record => record[3]).length;
 	return { instrumentation: sourceEntryInstrumentation, leanSha256: sha256(inputs.lean), consumerSha256: sha256(inputs.consumer), calls, entered, rejected: calls - entered, exports };
 };
 
-/** The probe the rejection harness accepts: instrument its inputs, then account for every call. */
-export const scalarFinSourceEntryProbe = Object.freeze({
+/**
+ * The probe the rejection harness accepts. It instruments the inputs, keeps each run's exact consumer
+ * output (or its failure) before any accounting, and accounts for every call.
+ *
+ * @param directory - Where each ABI's original consumer output is kept beside the report.
+ */
+export const scalarFinSourceEntryProbe = directory => Object.freeze({
 	instrument: (inputs, abi) => ({
 		lean: instrumentSourceEntryLean(inputs.lean)
 		, names: [...inputs.names, sourceEntryControl]
 		, consumer: instrumentSourceEntryConsumer(inputs.consumer, abi)
 	})
+	, retain: async (abi, files) => {
+		await mkdir(directory, { recursive: true });
+		const retained = {};
+		for(const [suffix, text] of Object.entries(files))
+		{
+			const path = join(directory, `${abi}.${suffix}`);
+			await writeFile(path, text, { flag: "wx" });
+			retained[suffix] = { path, sha256: sha256(text), bytes: Buffer.byteLength(text) };
+		}
+		return retained;
+	}
 	, check: checkSourceEntry
 });

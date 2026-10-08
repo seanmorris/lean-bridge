@@ -129,7 +129,8 @@ export const scalarFinRejectionInputs = (abi, probe = null) => {
  * @param options.build - Builds the canonical project for npm.
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param abi - One of scalar, callable or copied.
- * @param probe - Optional source-entry probe; it instruments the inputs, builds one root and accounts for stderr.
+ * @param probe - Optional source-entry probe; it instruments the inputs, builds one root, keeps the consumer's
+ * exact output and accounts for every call.
  */
 export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }, abi, probe = null) => {
 	const { version } = abis[abi], inputs = scalarFinRejectionInputs(abi, probe), names = inputs.names;
@@ -175,13 +176,18 @@ export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
 	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
 	await saveLakeFile(consumer, "index.mjs", inputs.consumer);
-	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
+	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(async error => {
+		if(probe) await probe.retain(abi, { "failure.json": JSON.stringify({ message: error.message, details: error.details ?? null }, null, 2) + "\n" });
+		assert.fail(`${error.message}: ${JSON.stringify(error.details)}`);
+	});
 	if(!probe) assert.equal(run.stderr, "", "no Lean panic or other diagnostic reaches stderr");
+	// The probe keeps the exact output before parsing or accounting, so a failed run can be re-accounted.
+	const retained = probe ? await probe.retain(abi, { "stderr.txt": run.stderr, "stdout.json": run.stdout }) : null;
 	const result = JSON.parse(run.stdout.trim());
 	assert.equal(result.abi, abi);
 	const runtimeArchiveSha256 = sha256(await readFile(releases[0].runtimeArchive));
 	if(!probe) return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...result };
 	// The per-call records stay in the probe's accounting; the observation keeps the consumer's counts.
 	const counts = Object.fromEntries(Object.entries(result).filter(([key]) => key !== "calls"));
-	return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...counts, sourceEntry: probe.check(run.stderr, result, inputs) };
+	return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...counts, sourceEntry: { ...probe.check(run.stderr, result, inputs), retained } };
 };
