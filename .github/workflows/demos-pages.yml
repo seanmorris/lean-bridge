@@ -45,8 +45,12 @@ jobs:
         run: git diff --exit-code -- demos
       - name: Assemble the static site
         run: npm run demos:site
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
       - name: Install browser audit engines
-        run: npx playwright install --with-deps chromium firefox webkit
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Audit the assembled gallery in three browser engines
         env:
           DEMO_BROWSERS: chromium,firefox,webkit

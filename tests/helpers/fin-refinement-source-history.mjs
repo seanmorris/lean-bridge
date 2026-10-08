@@ -104,6 +104,7 @@ import { finRuntimeProvenanceChangedPaths } from "./fin-runtime-provenance-sourc
 import { finPythonRubyPromotionChangedPaths } from "./fin-python-ruby-promotion-source-history.mjs";
 import { finPythonRubyHostNotesChangedPaths } from "./fin-python-ruby-host-notes-source-history.mjs";
 import { finRecordWitFormatChangedPaths } from "./fin-record-wit-format-source-history.mjs";
+import { browserInstallChangedPaths } from "./browser-install-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -672,6 +673,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finPythonRubyPromotionChangedPaths
 	, ...finPythonRubyHostNotesChangedPaths
 	, ...finRecordWitFormatChangedPaths
+	, ...browserInstallChangedPaths
 ])].sort());
 
 /**

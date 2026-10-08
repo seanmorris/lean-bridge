@@ -34,7 +34,9 @@ export const assertOwnedRustCallbackResultCi = (workflow, manifest) => {
 	assert.match(job, /bash scripts\/bootstrap-toolchains\.sh/u);
 	assert.match(job, /bash scripts\/bootstrap-rust-ci\.sh/u);
 	assert.match(job, /bash scripts\/build-lean-link-spike\.sh/u);
-	assert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);
+	// The combined package is checked in all three engines; a slow apt mirror gets a bounded second attempt.
+	const browsers = job.split("      - name: Install all callback browser engines\n")[1]?.split("      - name: ")[0];
+	assert.equal(browsers, "        timeout-minutes: 20\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n");
 	const step = job.split("      - name: Verify Rust callback-result lifetimes\n")[1]?.split("      - name: ")[0];
 	assert.ok(step); assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(step, /^ {8}shell: bash$/mu);

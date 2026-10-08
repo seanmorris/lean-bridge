@@ -78,7 +78,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(prepare, /^ {10}npm ci --ignore-scripts$/mu);
 	const browsers = requiredStep(job, "Install owned npm browser engines");
 	assert.doesNotMatch(browsers, /^ {8}(?:if|continue-on-error):/mu);
-	assert.equal(browsers.trim(), "timeout-minutes: 20\n        run: npx playwright install --with-deps chromium firefox webkit");
+	assert.equal(browsers.trim(), "timeout-minutes: 20\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit");
 	for(const dependency of ["build-essential", "cmake", "jq", "libgmp-dev", "libuv1-dev", "ripgrep", "zstd"])
 		assert.ok(dependencies.split("\n").some(line => line.includes("apt-get install") && line.split(" ").includes(dependency)), dependency);
 	const buildName = "Build the production runtime with the shared ownership broker";

@@ -123,7 +123,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh
       - name: Install owned npm browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the production runtime with the shared ownership broker
         shell: bash
         run: |
@@ -312,7 +312,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh
       - name: Install all JavaScript browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the production runtime for receiver packages
         shell: bash
         run: |
@@ -420,7 +420,7 @@ jobs:
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -571,7 +571,7 @@ jobs:
           node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -714,7 +714,7 @@ jobs:
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -841,7 +841,7 @@ jobs:
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -934,7 +934,7 @@ jobs:
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -1012,7 +1012,7 @@ jobs:
           bash scripts/bootstrap-rust-ci.sh
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -1085,7 +1085,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -1158,7 +1158,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh
       - name: Install all callback browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the callback shared runtime
         shell: bash
         run: |
@@ -1238,7 +1238,7 @@ jobs:
         timeout-minutes: 1
       - name: Install documentation browser engines
         timeout-minutes: 20
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Install archive acceptance tools
         timeout-minutes: 20
         run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep

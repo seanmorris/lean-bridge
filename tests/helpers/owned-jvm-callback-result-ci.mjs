@@ -55,7 +55,7 @@ export const assertOwnedJvmCallbackResultCi = (workflow, manifest) => {
 		, "dotnet-version: '8.0.424'", "kotlin-compiler-2.2.0.zip"
 		, "bash scripts/bootstrap-toolchains.sh", "bash scripts/bootstrap-rust-ci.sh"
 		, "bash scripts/build-lean-link-spike.sh"
-		, "npx playwright install --with-deps chromium firefox webkit"])
+		, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"])
 		assert.ok(job.includes(setup), setup);
 	const runtime = job.split("      - name: Verify JVM callback-result lifetimes and installed consumers\n")[1]?.split("      - name: ")[0];
 	const evidence = job.split("      - name: Reconstruct JVM callback execution evidence\n")[1]?.split("      - name: ")[0];

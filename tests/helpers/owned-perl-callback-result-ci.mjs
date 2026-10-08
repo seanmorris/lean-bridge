@@ -38,8 +38,7 @@ const setup = ["java-version: '22.0.2'", "python-version: \"3.11\""
 	, "python-version: \"3.12\"", "ruby-version: '3.3.12'"
 	, "dotnet-version: '8.0.424'", "kotlin-compiler-2.2.0.zip"
 	, "bash scripts/bootstrap-toolchains.sh", "bash scripts/bootstrap-rust-ci.sh"
-	, "bash scripts/build-lean-link-spike.sh"
-	, "npx playwright install --with-deps chromium firefox webkit"];
+	, "bash scripts/build-lean-link-spike.sh"];
 
 /**
  * Reject optional execution, narrowed matrices, missing reports and skipped tests.
@@ -63,7 +62,10 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = fal
 	assert.match(job, /^ {4}timeout-minutes: 240$/mu);
 	const environment = workflow.split(/^jobs:\n/mu)[0] + job;
 	assert.doesNotMatch(environment, /LEAN_BRIDGE_(?:CORPUS_PERL|PERLS|OWNED_PERL_CALLBACK_RESULT_\w*REPORTS)\b/u);
-	for(const value of [...tools, ...setup]) assert.ok(job.includes(value), value);
+	// The hash-checked archived workflow predates the bounded installer; current CI must use it.
+	const browsers = legacy ? "npx playwright install --with-deps chromium firefox webkit"
+		: "bash scripts/install-playwright-browsers.sh chromium firefox webkit";
+	for(const value of [...tools, ...setup, browsers]) assert.ok(job.includes(value), value);
 	const abi = job.split("      - name: Build every pinned Perl ABI\n")[1]?.split("      - name: ")[0];
 	assert.ok(abi); assert.doesNotMatch(abi, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(abi, /^ {8}shell: bash$/mu);

@@ -26,7 +26,7 @@ export const assertOwnedJavaScriptReceiverCi = (workflow, manifest) => {
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
 	assert.match(job, /^ {4}timeout-minutes: 150$/mu);
 	assert.match(job, /sudo apt-get install -y [^\n]*\bripgrep\b/u);
-	assert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);
+	assert.match(job, /bash scripts\/install-playwright-browsers\.sh chromium firefox webkit/u);
 	assert.match(job, /bash scripts\/bootstrap-toolchains\.sh/u);
 	assert.match(job, /bash scripts\/build-lean-link-spike\.sh/u);
 	const step = job.split("      - name: Verify JavaScript receiver packages\n")[1]?.split("      - name: ")[0];

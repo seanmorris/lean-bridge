@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeBrowserInstallSource } from "./browser-install-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinRecordWitFormatSource, finRecordWitFormatChangedPaths, finRecordWitFormatHistoryPath, reverseFinRecordWitFormatUpdate } from "./fin-record-wit-format-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Fin record WIT formatting authenticates each exact source predecessor", as
 	assert.deepEqual(record.updates.map(update => update.path), finRecordWitFormatChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeBrowserInstallSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinRecordWitFormatUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinRecordWitFormatSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinRecordWitFormatSource(update.path, source, update.currentSha256), source);

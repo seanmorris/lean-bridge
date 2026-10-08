@@ -42,7 +42,7 @@ export const assertOwnedDotnetCallbackResultCi = (workflow, manifest) => {
 		assert.ok(job.includes(dependency), dependency);
 	for(const command of ["bash scripts/bootstrap-toolchains.sh"
 		, "bash scripts/bootstrap-rust-ci.sh", "bash scripts/build-lean-link-spike.sh"
-		, "npx playwright install --with-deps chromium firefox webkit"])
+		, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"])
 		assert.ok(job.includes(command), command);
 	const runtime = job.split("      - name: Verify .NET callback-result lifetimes\n")[1]?.split("      - name: ")[0];
 	const evidence = job.split("      - name: Reconstruct .NET callback execution evidence\n")[1]?.split("      - name: ")[0];

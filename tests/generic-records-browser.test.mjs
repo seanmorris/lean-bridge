@@ -144,7 +144,7 @@ test("CI runs the browser generic-record gate in all three engines and keeps its
 	const position = workflow.indexOf("id: generic_record_browser\n"), job = workflow.lastIndexOf("\n  node-consumers:\n", position);
 	assert.ok(job > 0);
 	assert.doesNotMatch(workflow.slice(job + "\n  node-consumers:\n".length, position), /^ {2}[a-z][\w-]*:$/mu, "the step belongs to the node-consumers job");
-	for(const prerequisite of ["npx playwright install --with-deps chromium firefox webkit", "nix build .#component-build-engine --out-link build/locked-lake-engine"])
+	for(const prerequisite of ["bash scripts/install-playwright-browsers.sh chromium firefox webkit", "nix build .#component-build-engine --out-link build/locked-lake-engine"])
 		assert.ok(workflow.lastIndexOf(prerequisite, position) > job, prerequisite);
 });
 

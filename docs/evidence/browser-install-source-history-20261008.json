@@ -1,0 +1,790 @@
+{
+  "schemaVersion": 1,
+  "milestone": "browser-install-v1",
+  "predecessorCommit": "738d41764dcaa3f689a628ea18f7c292b2f2e8bd",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b6f53d89d85b5c72e4f0d86baf649e3ee0e9c2590395932b901bef38bd60af40",
+      "previousSha256": "497caa6a1b0ff8e0791a575550c70cd7970abe2e5a8060bbf852b0ff4274d30b",
+      "edits": [
+        {
+          "start": 77359,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 94554,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 110855,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 125623,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 134905,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 144530,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 167914,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 180883,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 195778,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 208562,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 221782,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 230315,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 238745,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 247762,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 256136,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 275416,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 285255,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 297390,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 315988,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 325284,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 337967,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 347222,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 356505,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 365638,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 374497,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 381884,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 389808,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 400454,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 414560,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 421658,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 431887,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 439631,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 446005,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 452168,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 458265,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 464786,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 472452,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 481746,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 492968,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 502665,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 523800,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 532365,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 543373,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 575258,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 581887,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 592146,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 613019,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 621542,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 632492,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 664010,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 673229,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 680569,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 692852,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 699712,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 708740,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 722766,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 733808,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 747856,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 758602,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 770673,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 781961,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 790544,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 797002,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 805388,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 822978,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 843974,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 899315,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1011377,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1071618,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1079012,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1085610,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1092712,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1107262,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1114872,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1136846,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1148733,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1156604,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1166569,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1176683,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1188444,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1221005,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1251284,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1284270,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1324071,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1350647,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1373184,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1392851,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1416239,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1427867,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        },
+        {
+          "start": 1451013,
+          "previous": "          \"sha256\": \"84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5\"\n",
+          "current": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23",
+      "previousSha256": "84fa8cfaa851236b3a1314d0c1fd7dfd20c98918ba0675ca7833e7c7b9f101d5",
+      "edits": [
+        {
+          "start": 4071,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 13729,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 19185,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 27278,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 34850,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 41665,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 46431,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 50292,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 53691,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 57084,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 61036,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/demos-pages.yml",
+      "currentSha256": "be82a65a42074bcc7ca184eb5ac5229279e7bb602fbc44b88639219ae4dc9294",
+      "previousSha256": "4b73594d2c0efa4992258713f73644df04d5422615a1f8a6c5ab77e7d8e72e6e",
+      "edits": [
+        {
+          "start": 1324,
+          "previous": "",
+          "current": "      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n"
+        },
+        {
+          "start": 1477,
+          "previous": "        run: npx playwright install --with-deps chromium firefox webkit\n",
+          "current": "        timeout-minutes: 20\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records-browser.test.mjs",
+      "currentSha256": "1685ccea9c05fc9a01aa0c9bb01d8b10f9ab37c0a006d792aee68c50389f42eb",
+      "previousSha256": "59904b3e68ffb48d17a3058c87ee99c8543452df2dbd6553bd4c0b0af8bc8198",
+      "edits": [
+        {
+          "start": 12879,
+          "previous": "\tfor(const prerequisite of [\"npx playwright install --with-deps chromium firefox webkit\", \"nix build .#component-build-engine --out-link build/locked-lake-engine\"])\n",
+          "current": "\tfor(const prerequisite of [\"bash scripts/install-playwright-browsers.sh chromium firefox webkit\", \"nix build .#component-build-engine --out-link build/locked-lake-engine\"])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/bounded-apt-tests.mjs",
+      "currentSha256": "5c1df26e7d0c32d2b2aa887ed59bf949b398df1051f1240c74bb246a9bcf3d43",
+      "previousSha256": "e6c658828cfb39637ed0bca0b970d6a8211e30a1689a8fb504317c5d1c7bdd59",
+      "edits": [
+        {
+          "start": 149,
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "current": "import { execFile, spawn } from \"node:child_process\";\nimport { chmod, cp, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\n"
+        },
+        {
+          "start": 397,
+          "previous": "",
+          "current": "import { promisify } from \"node:util\";\nimport \"./browser-install-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 538,
+          "previous": "const network = /\\bapt-get\\s+(?:update|install)\\b|\\bplaywright\\s+install[^\\n]*--with-deps/u;\n",
+          "current": "const network = /\\bapt-get\\s+(?:update|install)\\b|\\bplaywright\\s+install[^\\n]*--with-deps|\\binstall-playwright-browsers\\.sh\\b/u;\n"
+        },
+        {
+          "start": 3236,
+          "previous": "",
+          "current": "      - name: Install browsers with a mirror fallback\n        timeout-minutes: 20\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\n"
+        },
+        {
+          "start": 3402,
+          "previous": "\tassert.equal(assertBoundedAptWorkflow(source), 2);\n",
+          "current": "\tassert.equal(assertBoundedAptWorkflow(source), 3);\n"
+        },
+        {
+          "start": 3838,
+          "previous": "",
+          "current": "\t\t, [\"        timeout-minutes: 20\\n        run: bash\", \"        run: bash\"]\n"
+        },
+        {
+          "start": 4363,
+          "previous": "",
+          "current": "\nconst engines = [\"chromium\", \"firefox\", \"webkit\"];\nconst installer = \"bash scripts/install-playwright-browsers.sh chromium firefox webkit\";\n// Every workflow step that installs all three engines, by file, job and step name.\nexport const browserInstallSites = Object.freeze([\n\t[\".github/workflows/consumer-matrix.yml\", \"owned-javascript-wasm\", \"Install owned npm browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-javascript-receivers\", \"Install all JavaScript browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-dotnet-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-perl-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-jvm-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-ruby-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-python-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-rust-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-cpp-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"owned-callback-results\", \"Install all callback browser engines\"]\n\t, [\".github/workflows/consumer-matrix.yml\", \"node-consumers\", \"Install documentation browser engines\"]\n\t, [\".github/workflows/demos-pages.yml\", \"build\", \"Install browser audit engines\"]]);\n\n/**\n * Return one job's text from a two-space-indented workflow.\n *\n * @param source - Workflow text.\n * @param job - Job key.\n */\nconst workflowJob = (source, job) => source.split(`\\n  ${job}:\\n`)[1]?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0];\n\ntest(\"every three-engine browser step uses the bounded installer within 20 minutes\", async () => {\n\tconst sources = new Map();\n\tfor(const [path] of browserInstallSites) if(!sources.has(path)) sources.set(path, await readFile(path, \"utf8\"));\n\tfor(const [path, job, name] of browserInstallSites)\n\t{\n\t\tconst text = workflowJob(sources.get(path), job);\n\t\tassert.ok(text, `${path} ${job}`);\n\t\tconst step = text.split(`      - name: ${name}\\n`)[1]?.split(\"      - name: \")[0];\n\t\tassert.equal(step, `        timeout-minutes: 20\\n        run: ${installer}\\n`, `${path} ${job}`);\n\t}\n\tfor(const [path, source] of sources)\n\t{\n\t\t// No three-engine step escapes the list or keeps an unbounded Playwright dependency install.\n\t\tassert.equal(source.split(installer).length - 1, browserInstallSites.filter(site => site[0] === path).length, path);\n\t\tassert.doesNotMatch(source, /playwright install --with-deps chromium firefox webkit/u, path);\n\t\tassert.doesNotMatch(source, /LEAN_BRIDGE_PLAYWRIGHT_LIMITS|LEAN_BRIDGE_APT_MIRRORS/u, path);\n\t}\n\tassertBoundedAptWorkflow(sources.get(\".github/workflows/demos-pages.yml\"));\n\tconst source = await readFile(\"scripts/install-playwright-browsers.sh\", \"utf8\");\n\tconst limits = source.match(/LEAN_BRIDGE_PLAYWRIGHT_LIMITS:-(\\d+) (\\d+) (\\d+) (\\d+) (\\d+) (\\d+)\\}/u).slice(1).map(Number);\n\tconst [first, second, grace, recover, browsers, verify] = limits;\n\tassert.deepEqual(limits, [300, 360 - 30, 30, 120, 180, 60]);\n\t// A supervised phase lasts at most its limit, its grace and five seconds of SIGKILL drain. Recovery\n\t// uses a 10-second grace; the mirror read and write are 10 seconds plus 2 each.\n\tconst supervised = (limit, wait) => limit + wait + 5;\n\tconst total = supervised(first, grace) + supervised(recover, 10) + 12 + 12 + supervised(second, grace) + supervised(browsers, grace) + verify + 5;\n\tassert.equal(total, 1139);\n\tassert.ok(total < 20 * 60);\n\tassert.doesNotMatch(source, /\\bpkill\\b|\\bkillall\\b|\\|\\| true|continue-on-error|--dry-run|--foreground/u);\n\t// Every privileged command is non-interactive, so recovery cannot wait for a password.\n\tconst commands = source.split(\"\\n\").filter(line => !line.trimStart().startsWith(\"#\")).join(\"\\n\");\n\tassert.deepEqual(commands.match(/\\bsudo\\b(?! -n )[^\\n]*/gu), null);\n});\n\n/**\n * Report whether a process is executing; a zombie or a vanished pid is not.\n *\n * @param pid - Process id.\n */\nconst executing = async pid => {\n\tconst stat = await readFile(`/proc/${pid}/stat`, \"utf8\").catch(() => null);\n\treturn stat !== null && stat.slice(stat.lastIndexOf(\") \") + 2, stat.lastIndexOf(\") \") + 3) !== \"Z\";\n};\n\n/**\n * Poll a stopped process for up to three seconds before deciding it still executes.\n *\n * @param pid - Process id.\n */\nconst stillExecuting = async pid => {\n\tfor(let attempt = 0; attempt < 30; attempt++)\n\t{\n\t\tif(!await executing(pid)) return false;\n\t\tawait new Promise(resolve => setTimeout(resolve, 100));\n\t}\n\treturn true;\n};\n\n/**\n * Run the installer from a temporary copy whose Playwright package is a recording stub.\n *\n * @param t - Test context.\n * @param options - Stub behaviour.\n * @param options.plan - One action per Playwright CLI call: an exit status, \"hang\" or \"stubborn\".\n * @param options.mirrors - Initial mirror list text, or null for a missing list.\n * @param options.installed - Engines whose browser file exists afterwards.\n * @param options.executable - Engines whose browser file is executable.\n * @param options.engines - Requested engines.\n * @param options.limits - Phase limits passed to the installer.\n */\nconst runBrowserInstaller = async (t, { plan, mirrors = \"http://azure.archive.ubuntu.com/ubuntu/\\tpriority:1\\nhttps://archive.ubuntu.com/ubuntu/\\tpriority:2\\nhttps://security.ubuntu.com/ubuntu/\\tpriority:3\\n\", installed = engines, executable = installed, engines: requested = engines, limits = \"2 3 1 5 5 5\" }) => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-browser-installer-\"));\n\tconst unrelated = spawn(\"sleep\", [\"300\"], { stdio: \"ignore\" });\n\tt.after(async () => {\n\t\tunrelated.kill(\"SIGKILL\");\n\t\tfor(const name of [\"grandchild\"])\n\t\t{\n\t\t\tconst pid = Number(await readFile(join(root, name), \"utf8\").catch(() => \"0\"));\n\t\t\tif(pid && await executing(pid)) process.kill(pid, \"SIGKILL\");\n\t\t}\n\t\tawait rm(root, { recursive: true, force: true });\n\t});\n\tconst bin = join(root, \"bin\"), playwright = join(root, \"node_modules/playwright\"), log = join(root, \"calls\");\n\tfor(const directory of [bin, playwright, join(root, \"scripts\"), join(root, \"browsers\")]) await mkdir(directory, { recursive: true });\n\tawait cp(\"scripts/install-playwright-browsers.sh\", join(root, \"scripts/install-playwright-browsers.sh\"));\n\tawait cp(\"scripts/verify-playwright-browsers.mjs\", join(root, \"scripts/verify-playwright-browsers.mjs\"));\n\tawait writeFile(join(playwright, \"package.json\"), '{\"name\":\"playwright\",\"type\":\"module\",\"exports\":\"./index.js\"}');\n\tawait writeFile(join(playwright, \"index.js\"), engines.map(name => `export const ${name} = { executablePath: () => ${JSON.stringify(join(root, \"browsers\", name))} };`).join(\"\\n\"));\n\t// Each CLI call takes the next planned action. \"hang\" leaves an ordinary grandchild in the attempt's\n\t// group; \"stubborn\" leaves one that ignores SIGTERM while the CLI itself still dies on SIGTERM.\n\tconst modes = Object.fromEntries(installed.map(name => [name, executable.includes(name) ? 0o755 : 0o644]));\n\tawait writeFile(join(playwright, \"cli.js\"), `import { appendFileSync, readFileSync, writeFileSync } from \"node:fs\";\nimport { spawn } from \"node:child_process\";\nconst count = ${JSON.stringify(join(root, \"count\"))}, plan = ${JSON.stringify(plan)};\nconst index = Number(readFileSync(count, \"utf8\")); writeFileSync(count, String(index + 1));\nappendFileSync(${JSON.stringify(log)}, \"playwright \" + process.argv.slice(2).join(\" \") + \"\\\\n\");\nconst action = plan[index];\nif(action === \"hang\" || action === \"stubborn\")\n{\n\tconst command = action === \"hang\" ? [\"sleep\", [\"300\"]] : [\"bash\", [\"-c\", \"trap '' TERM; exec sleep 300\"]];\n\tconst child = spawn(...command, { stdio: \"ignore\" });\n\twriteFileSync(${JSON.stringify(join(root, \"grandchild\"))}, String(child.pid));\n\tsetInterval(() => {}, 1000);\n}\nelse\n{\n\tif(action === 0) for(const [name, mode] of Object.entries(${JSON.stringify(modes)})) writeFileSync(${JSON.stringify(join(root, \"browsers\"))} + \"/\" + name, \"\", { mode });\n\tprocess.exit(action);\n}\n`);\n\tawait writeFile(join(root, \"count\"), \"0\");\n\tfor(const [name, body] of [[\"sudo\", `echo \"sudo $*\" >> \"${log}\"\\n[ \"$1\" = -n ] || exit 97\\nshift\\nexec \"$@\"`], [\"dpkg\", `echo \"dpkg $*\" >> \"${log}\"`]])\n\t{\n\t\tawait writeFile(join(bin, name), `#!/bin/bash\\n${body}\\n`);\n\t\tawait chmod(join(bin, name), 0o755);\n\t}\n\tconst list = join(root, \"apt-mirrors.txt\");\n\tif(mirrors !== null) await writeFile(list, mirrors);\n\tconst env = { PATH: `${bin}:${dirname(process.execPath)}:/usr/bin:/bin`, LEAN_BRIDGE_APT_MIRRORS: list, LEAN_BRIDGE_PLAYWRIGHT_LIMITS: limits };\n\tconst script = join(root, \"scripts/install-playwright-browsers.sh\");\n\tconst result = await promisify(execFile)(\"/bin/bash\", [script, ...requested], { env })\n\t\t.then(value => ({ code: 0, ...value }), error => ({ code: error.code, stdout: error.stdout, stderr: error.stderr }));\n\tconst read = path => readFile(path, \"utf8\").catch(() => null);\n\tconst grandchild = Number(await read(join(root, \"grandchild\")));\n\tconst calls = ((await read(log)) ?? \"\").trim().split(\"\\n\").filter(Boolean);\n\tconst grandchildExecuting = grandchild ? await stillExecuting(grandchild) : null;\n\tconst unrelatedExecuting = await executing(unrelated.pid);\n\treturn { ...result, calls, script, mirrors: await read(list), grandchildExecuting, unrelatedExecuting };\n};\nconst supervisedDeps = (run, limit) => `sudo -n /bin/bash ${run.script} --supervise ${limit} 1 ${process.execPath} ${dirname(dirname(run.script))}/node_modules/playwright/cli.js install-deps chromium firefox webkit`;\n\ntest(\"browser phase deadlines include slow polling rather than counting sleeps\", { timeout: 15000 }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-browser-deadline-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\t// Slow only the supervisor's polling. The supervised command uses an absolute executable.\n\tconst sleeper = join(root, \"sleep\");\n\tawait writeFile(sleeper, '#!/bin/bash\\nexec /bin/sleep 0.5\\n', { mode: 0o755 });\n\tconst start = performance.now();\n\tconst result = await promisify(execFile)(\"/bin/bash\", [\"scripts/install-playwright-browsers.sh\", \"--supervise\", \"1\", \"1\", \"/bin/sleep\", \"10\"], {\n\t\tenv: { PATH: `${root}:/usr/bin:/bin` }\n\t}).then(() => ({ code: 0 }), error => ({ code: error.code }));\n\tassert.equal(result.code, 124);\n\tassert.ok(performance.now() - start < 4000, \"a one-second phase must not wait for ten slow polls\");\n});\n\ntest(\"the browser installer succeeds once without touching recovery or the mirror list\", async t => {\n\tconst run = await runBrowserInstaller(t, { plan: [0, 0] });\n\tassert.equal(run.code, 0, run.stderr);\n\tassert.deepEqual(run.calls, [supervisedDeps(run, 2), \"playwright install-deps chromium firefox webkit\", \"playwright install chromium firefox webkit\"]);\n\tassert.match(run.mirrors, /^http:\\/\\/azure\\.archive\\.ubuntu\\.com\\/ubuntu\\/\\tpriority:1\\n/u);\n\tassert.match(run.stdout, /chromium: .*\\nfirefox: .*\\nwebkit: /u);\n});\n\nfor(const action of [\"hang\", \"stubborn\"])\n{\n\ttest(`a ${action} dependency attempt leaves no running descendant, spares other processes, recovers dpkg and prefers the archive`, async t => {\n\t\tconst run = await runBrowserInstaller(t, { plan: [action, 0, 0] });\n\t\tassert.equal(run.code, 0, run.stderr);\n\t\tassert.equal(run.grandchildExecuting, false, \"every member of the timed-out attempt stopped\");\n\t\tassert.equal(run.unrelatedExecuting, true, \"an unrelated process survives\");\n\t\tconst dependencies = \"playwright install-deps chromium firefox webkit\";\n\t\tconst recovery = `sudo -n /bin/bash ${run.script} --supervise 5 10 dpkg --configure -a`;\n\t\tconst mirror = `sudo -n timeout --kill-after=2 10 tee ${dirname(dirname(run.script))}/apt-mirrors.txt`;\n\t\tconst browsers = \"playwright install chromium firefox webkit\";\n\t\tconst expected = [supervisedDeps(run, 2), dependencies, recovery, \"dpkg --configure -a\", mirror, supervisedDeps(run, 3), dependencies, browsers];\n\t\tassert.deepEqual(run.calls, expected);\n\t\tassert.equal(run.mirrors, \"https://archive.ubuntu.com/ubuntu/\\tpriority:1\\nhttp://azure.archive.ubuntu.com/ubuntu/\\tpriority:2\\nhttps://security.ubuntu.com/ubuntu/\\tpriority:3\\n\");\n\t\tassert.match(run.stdout, /::warning::Playwright dependency installation attempt 1 exited with 124/u);\n\t});\n}\n\ntest(\"the browser installer fails after two dependency failures and never installs browsers\", async t => {\n\tconst run = await runBrowserInstaller(t, { plan: [1, 100] });\n\tassert.equal(run.code, 1);\n\tassert.match(run.stdout, /::error::Playwright dependency installation failed: attempt 1 exited with 1, attempt 2 with 100/u);\n\tassert.ok(!run.calls.includes(\"playwright install chromium firefox webkit\"));\n});\n\ntest(\"missing or unexpected mirror lists are reported and left unchanged\", async t => {\n\tconst missing = await runBrowserInstaller(t, { plan: [1, 0, 0], mirrors: null });\n\tassert.equal(missing.code, 0, missing.stderr);\n\tassert.equal(missing.mirrors, null);\n\tassert.match(missing.stdout, /::warning::.*apt-mirrors\\.txt is missing; the second attempt keeps the configured apt sources/u);\n\tconst unexpected = [[\"deb http://azure.archive.ubuntu.com/ubuntu noble main\\n\", \"has an unexpected entry\"]\n\t\t, [\"http://azure.archive.ubuntu.com/ubuntu/\\tpriority:1\\tarch:amd64\\n\", \"has an unexpected entry\"]\n\t\t, [\"http://azure.archive.ubuntu.com/ubuntu/\\tpriority:1\\n\", \"names no archive.ubuntu.com mirror\"]];\n\tfor(const [mirrors, message] of unexpected)\n\t{\n\t\tconst run = await runBrowserInstaller(t, { plan: [1, 0, 0], mirrors });\n\t\tassert.equal(run.code, 0, run.stderr);\n\t\tassert.equal(run.mirrors, mirrors);\n\t\tassert.ok(run.stdout.includes(message), message);\n\t\tassert.ok(!run.calls.some(call => call.includes(\" tee \")));\n\t}\n});\n\ntest(\"the browser installer refuses missing or non-executable browsers, unknown engines and invalid limits\", async t => {\n\tconst missing = await runBrowserInstaller(t, { plan: [0, 0], installed: [\"chromium\", \"firefox\"] });\n\tassert.notEqual(missing.code, 0);\n\tassert.match(missing.stderr, /webkit has no executable browser at /u);\n\tconst plain = await runBrowserInstaller(t, { plan: [0, 0], executable: [\"chromium\", \"firefox\"] });\n\tassert.notEqual(plain.code, 0);\n\tassert.match(plain.stderr, /webkit has no executable browser at /u);\n\tconst unknown = await runBrowserInstaller(t, { plan: [0, 0], engines: [\"chromium\", \"opera\"] });\n\tassert.equal(unknown.code, 2);\n\tassert.deepEqual(unknown.calls, []);\n\tfor(const limits of [\"0 3 1 5 5 5\", \"-2 3 1 5 5 5\", \"2 x 1 5 5 5\", \"2 3 1 5 5\", \"2 3 1 5 5 5 7\", \"02 3 1 5 5 5\"])\n\t{\n\t\tconst run = await runBrowserInstaller(t, { plan: [0, 0], limits });\n\t\tassert.equal(run.code, 2, limits);\n\t\tassert.match(run.stderr, /Playwright phase limit/u, limits);\n\t\tassert.deepEqual(run.calls, [], limits);\n\t}\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-callback-result-ci.mjs",
+      "currentSha256": "350ebcf8d30c4806e9028eb6b36c629c09f1552e50c6c953bae113d46204164a",
+      "previousSha256": "a34eb5ce31a90519bb93cda3ff2d5549c204e69d664426a466542256f13eb814",
+      "edits": [
+        {
+          "start": 1922,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\tassert.match(job, /bash scripts\\/install-playwright-browsers\\.sh chromium firefox webkit/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-cpp-callback-result-ci.mjs",
+      "currentSha256": "6a65f393313581eee1bda11a0951d3a33a0f7ef3549850348cef4ed69dd8d28d",
+      "previousSha256": "bcf1723289a3090d5e65898f51c92127078535005b6d966aeae530c324f18d61",
+      "edits": [
+        {
+          "start": 1719,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\tassert.match(job, /bash scripts\\/install-playwright-browsers\\.sh chromium firefox webkit/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-callback-result-ci.mjs",
+      "currentSha256": "c985f1c9a635513910a469319f8d05b47376f9fe91aeff370e0928417d68bb0a",
+      "previousSha256": "6e903b55118ac52278236eb6c9f90ebc84428243620fac23ee28ed2857706ee6",
+      "edits": [
+        {
+          "start": 2680,
+          "previous": "\t\t, \"npx playwright install --with-deps chromium firefox webkit\"])\n",
+          "current": "\t\t, \"bash scripts/install-playwright-browsers.sh chromium firefox webkit\"])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-javascript-receiver-ci.mjs",
+      "currentSha256": "a1a6d9e019555764138b5a05b436cb5f9f6a656e662308dda3e6c9e6348d9eb0",
+      "previousSha256": "40cf16ecb14ddba7c97b236a9e97e4566a46621e41537d4312f10452ef3a839c",
+      "edits": [
+        {
+          "start": 1845,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\tassert.match(job, /bash scripts\\/install-playwright-browsers\\.sh chromium firefox webkit/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "currentSha256": "f49ba5c4383c0bf62436124e13734c0157261a662309cf7f83fac53fb2d0eeb6",
+      "previousSha256": "2553372c51d5896683ab2c7edbd7abdd3d30713165c9f1af76bb6396acabea0d",
+      "edits": [
+        {
+          "start": 5012,
+          "previous": "\tassert.equal(browsers.trim(), \"timeout-minutes: 20\\n        run: npx playwright install --with-deps chromium firefox webkit\");\n",
+          "current": "\tassert.equal(browsers.trim(), \"timeout-minutes: 20\\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-callback-result-ci.mjs",
+      "currentSha256": "1330ee83debc2d48854d9b05e221773be29d93b0aafea2494ac1383e9c69e077",
+      "previousSha256": "6dd6e300b5db83543bbc38153dfe47be85457dce326a312e49674f8b14ce250e",
+      "edits": [
+        {
+          "start": 3296,
+          "previous": "\t\t, \"npx playwright install --with-deps chromium firefox webkit\"])\n",
+          "current": "\t\t, \"bash scripts/install-playwright-browsers.sh chromium firefox webkit\"])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-ci.mjs",
+      "currentSha256": "f25e77b8683f118e30a3dcdfbd1a35dfa20ffae954a8d968191e9e941e285234",
+      "previousSha256": "41e9fbf34d062dea5c88677fab5eccfabf26bbd0db3c0644b3b04928720bd9ad",
+      "edits": [
+        {
+          "start": 2343,
+          "previous": "\t, \"bash scripts/build-lean-link-spike.sh\"\n\t, \"npx playwright install --with-deps chromium firefox webkit\"];\n",
+          "current": "\t, \"bash scripts/build-lean-link-spike.sh\"];\n"
+        },
+        {
+          "start": 3987,
+          "previous": "\tfor(const value of [...tools, ...setup]) assert.ok(job.includes(value), value);\n",
+          "current": "\t// The hash-checked archived workflow predates the bounded installer; current CI must use it.\n\tconst browsers = legacy ? \"npx playwright install --with-deps chromium firefox webkit\"\n\t\t: \"bash scripts/install-playwright-browsers.sh chromium firefox webkit\";\n\tfor(const value of [...tools, ...setup, browsers]) assert.ok(job.includes(value), value);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-ci-tests.mjs",
+      "currentSha256": "8433ba30acefc16ce58012b15057a4e45ed051f7bd003c17f13182447b58d8fd",
+      "previousSha256": "61028b9f226a8b5c79a6afaa394b7d8591146ba2ed22677d636091dcd013514d",
+      "edits": [
+        {
+          "start": 738,
+          "previous": "",
+          "current": "\tassert.throws(() => assertOwnedPerlCallbackResultCi(workflow.replaceAll(\n\t\t\"bash scripts/install-playwright-browsers.sh chromium firefox webkit\"\n\t\t, \"npx playwright install --with-deps chromium firefox webkit\"), manifest));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-python-callback-result-ci.mjs",
+      "currentSha256": "a92482b4daeeb070d3b194fe29892d170368195f1c95ce9e9bf10510b852ba8a",
+      "previousSha256": "0e203244b33b5e00028c3ca7bfcb87bc50b2fe747263d02c3a3cffdffbcc221b",
+      "edits": [
+        {
+          "start": 1900,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\tassert.match(job, /bash scripts\\/install-playwright-browsers\\.sh chromium firefox webkit/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-callback-result-ci.mjs",
+      "currentSha256": "03b30c13114d4e424c72ddd27e04835eb5f09b316f27afd642ab7724b6c31c10",
+      "previousSha256": "f294dc8f357e4757a5b14c761bdda54ec098f267d32058842be56fc8dcb93ae0",
+      "edits": [
+        {
+          "start": 1855,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\tassert.match(job, /bash scripts\\/install-playwright-browsers\\.sh chromium firefox webkit/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-rust-callback-result-ci.mjs",
+      "currentSha256": "9bef9242c1ed91b5e48acfb51b796d50bf4fd1490c6656f8a192ee41faa03566",
+      "previousSha256": "fdad782421e8810f0ee465e5002823739edb0e52727a9a219da668e22dc1bee6",
+      "edits": [
+        {
+          "start": 1819,
+          "previous": "\tassert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);\n",
+          "current": "\t// The combined package is checked in all three engines; a slow apt mirror gets a bounded second attempt.\n\tconst browsers = job.split(\"      - name: Install all callback browser engines\\n\")[1]?.split(\"      - name: \")[0];\n\tassert.equal(browsers, \"        timeout-minutes: 20\\n        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit\\n\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-wit-format-source-history.mjs",
+      "currentSha256": "2437d3f24a110d4fb18b6d55537aef9ec8119668519b9fc680cb25a3408fe512",
+      "previousSha256": "d29bd050c052b0ccd86965bcc28f97ed5ba3ab66857f30ca6ffc15454b89baff",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeBrowserInstallSource } from \"./browser-install-source-history.mjs\";\n"
+        },
+        {
+          "start": 2310,
+          "previous": "",
+          "current": "\tsource = beforeBrowserInstallSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-wit-format-source-history-tests.mjs",
+      "currentSha256": "7b986b598dcb169bf759bbd952a6d5ae17b94e197d2716d5255492e0083d751a",
+      "previousSha256": "d91239d42471b395fc3d979d34e1363e672ca57ee5c7d03d2cd5fb651b7e8121",
+      "edits": [
+        {
+          "start": 274,
+          "previous": "",
+          "current": "import { beforeBrowserInstallSource } from \"./browser-install-source-history.mjs\";\n"
+        },
+        {
+          "start": 1022,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeBrowserInstallSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "6000d4e9bda44b74b274af878bee36bac015e6e518d25b0cd8f4eb2bebb71627",
+      "previousSha256": "9191bcb11d4cbe3727ba08529d1300951b85fa5c0c2aabadf73ee42aabe167d1",
+      "edits": [
+        {
+          "start": 9285,
+          "previous": "",
+          "current": "import { browserInstallChangedPaths } from \"./browser-install-source-history.mjs\";\n"
+        },
+        {
+          "start": 46168,
+          "previous": "",
+          "current": "\t, ...browserInstallChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

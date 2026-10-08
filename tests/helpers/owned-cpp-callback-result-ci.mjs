@@ -32,7 +32,7 @@ export const assertOwnedCppCallbackResultCi = (workflow, manifest) => {
 	assert.match(job, /sudo apt-get install -y [^\n]*\bm4\b[^\n]*\bripgrep\b/u);
 	assert.match(job, /bash scripts\/bootstrap-toolchains\.sh/u);
 	assert.match(job, /bash scripts\/build-lean-link-spike\.sh/u);
-	assert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);
+	assert.match(job, /bash scripts\/install-playwright-browsers\.sh chromium firefox webkit/u);
 	const step = job.split("      - name: Verify C++ callback-result lifetimes\n")[1]?.split("      - name: ")[0];
 	assert.ok(step); assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(step, /^ {8}shell: bash$/mu);

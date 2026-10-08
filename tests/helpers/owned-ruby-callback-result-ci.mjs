@@ -36,7 +36,7 @@ export const assertOwnedRubyCallbackResultCi = (workflow, manifest) => {
 	assert.match(job, /bash scripts\/bootstrap-toolchains\.sh/u);
 	assert.match(job, /bash scripts\/bootstrap-rust-ci\.sh/u);
 	assert.match(job, /bash scripts\/build-lean-link-spike\.sh/u);
-	assert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);
+	assert.match(job, /bash scripts\/install-playwright-browsers\.sh chromium firefox webkit/u);
 	for(const [id, version] of [["callback_python311", "3.11"], ["callback_python312", "3.12"]])
 		assert.ok(job.includes(`        id: ${id}\n        uses: actions/setup-python@v7\n        with:\n          python-version: "${version}"\n`));
 	for(const dependency of ["mypy==2.3.1", "typing_extensions==4.6.0", "typing_extensions==4.16.0"])

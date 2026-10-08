@@ -14,6 +14,9 @@ test("CI requires four-ABI Perl callback execution and reconstructed reports", a
 	assert.deepEqual(assertOwnedPerlCallbackResultCi(workflow, manifest), {
 		tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true
 	});
+	assert.throws(() => assertOwnedPerlCallbackResultCi(workflow.replaceAll(
+		"bash scripts/install-playwright-browsers.sh chromium firefox webkit"
+		, "npx playwright install --with-deps chromium firefox webkit"), manifest));
 	for(const line of [
 		...ownedPerlCallbackResultReports.map(path => "          test -s " + path)
 		, ...["results", "evidence"].flatMap(kind => [
