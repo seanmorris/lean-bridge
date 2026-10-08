@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-fin-archive-v1",
+  "predecessorCommit": "fc8dbefc5a365b3b19c797ff95067656603c69b5",
+  "updates": [
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "ed05f48857e13fabf5fa77711e3d9f57340a0d2eb74b5feb503999b231dbb504",
+      "previousSha256": "94e9b4ab92ed72ce43de0d9089adc1fdaf990b2ee40ce684850e04ef7c0e2221",
+      "edits": [
+        {
+          "start": 1463,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-fin-evidence-tests.mjs\";\nimport \"./helpers/php-wasm-fin-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd",
+      "previousSha256": "4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440",
+      "edits": [
+        {
+          "start": 32193,
+          "previous": "Native generators also check `Fin` inside pairs, `Except`, plain record and variant fields, and combinations of those shapes with containers. [Product](../evidence/native-fin-products-20261007/receipt.json) and [Array-of-product](../evidence/native-fin-product-arrays-20261007/receipt.json) packages have ordinary and reviewed C/C++ installed results. Other native hosts and nominal-field packages await installed acceptance. Refined generic, recursive and callback-bearing nominal types remain rejected. Native callbacks with refined signatures are not yet supported. See the target matrix below for reviewed Binding IR and PHP-Wasm status.\n",
+          "current": "Native generators also check `Fin` inside pairs, `Except`, plain record and variant fields, and combinations of those shapes with containers. [Product](../evidence/native-fin-products-20261007/receipt.json), [Array-of-product](../evidence/native-fin-product-arrays-20261007/receipt.json) and [nominal-field](../evidence/native-fin-records-20261007/receipt.json) packages have ordinary and reviewed C/C++ installed results. Other native hosts await installed acceptance for these signatures. Refined generic, recursive and callback-bearing nominal types remain rejected. Native callbacks with refined signatures are not yet supported. See the target matrix below for reviewed Binding IR and PHP-Wasm status.\n"
+        },
+        {
+          "start": 37295,
+          "previous": "| `Fin n` inside pairs and `Except` | Installed | C/C++ installed; other hosts pending | Generated; pending | Generated; pending | Installed: npm, browser and C/C++; other hosts pending |\n| `Fin n` inside `Array` of pairs and `Except` | Generated; separate installed run pending | C/C++ installed; dispatch observation pending | Generated; pending | Generated; pending | C/C++ installed; other hosts pending |\n| `Fin n` in record or variant fields | Node installed; browser pending | Generated; pending | Generated; pending | Generated; pending | Native admitted; installed acceptance pending |\n",
+          "current": "| `Fin n` inside pairs and `Except` | Installed | C/C++ installed; other hosts pending | Generated; pending | Installed | Installed: npm, browser and C/C++; other hosts pending |\n| `Fin n` inside `Array` of pairs and `Except` | Generated; separate installed run pending | C/C++ installed | Generated; pending | Generated; pending | C/C++ installed; other hosts pending |\n| `Fin n` in record or variant fields | Node installed; browser pending | C/C++ installed; other hosts pending | Generated; pending | Installed | C/C++ installed; other native hosts pending |\n"
+        },
+        {
+          "start": 38741,
+          "previous": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. C and Perl reports include dispatch counters; C++ and private host libraries do not imply separate counters. Reviewed nominal fields are admitted but await installed acceptance. Reviewed `Subtype` constructors and callbacks remain rejected.\n",
+          "current": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. C and Perl reports include dispatch counters; C++ and private host libraries do not imply separate counters. Reviewed nominal fields have C/C++ installed acceptance; the other native hosts remain pending. Reviewed `Subtype` constructors and callbacks remain rejected.\n\nThe [ordinary PHP-Wasm Fin run](../evidence/php-wasm-fin-20261008/receipt.json) covers pairs, `Except`, record and variant fields, and their tested container combinations. Both complete fixtures run in twelve modes: Node embedded and Composer installations plus Chromium bundles, each with startup/lazy loading and weak/strict PHP callers. The product fixture performs 2039 checks per execution and the record fixture 2053. Packages reproduce across two author roots and run after removal of source/build files. Fin 0 rejection, active-branch checks, caller immutability and recovery remain in the callers. These runs do not measure source dispatch or establish reviewed PHP-Wasm contracts, checked Subtype or callback refinements.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "e8010e49a80798e6b49159c9ce85fa655b7f0ff5e2a8cfdfdbd3d6555ddcdcf3",
+      "previousSha256": "0bfae3775ba8d434ef3eddbfbbbea1c021a2a67e90e6e88b6128f4ce2e2dc139",
+      "edits": [
+        {
+          "start": 1072135,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1079724,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1086325,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1093433,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1100927,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1107983,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1115584,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1125865,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1138198,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1191657,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1224200,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1254479,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1287446,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1328856,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1354704,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1377384,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1397076,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        },
+        {
+          "start": 1417561,
+          "previous": "          \"sha256\": \"4df0255efdb8fc9cf36353a79b8017cfa2f86dfcc322bbf851d6776011f35440\"\n",
+          "current": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "849657e66262e27a3f4412b5dee346bcab7851c1707d445a49a750c03c3f5606",
+      "previousSha256": "5012fd8d66b0b1197d0452a40cdd2283b90c26a40bf137ecd32d1d22b04d6299",
+      "edits": [
+        {
+          "start": 6378,
+          "previous": "",
+          "current": "import { phpWasmFinArchiveChangedPaths } from \"./php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 42082,
+          "previous": "",
+          "current": "\t, ...phpWasmFinArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-specialization-admission-source-history.mjs",
+      "currentSha256": "77a4f824c25665b681bb9eee97b94cb477a705f939fdfad2d6221817679910ef",
+      "previousSha256": "f43ff192ab4eb0ecf409b3d2c32fa3223cba1b7394bd5faf737eefc4e77d1ff1",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "",
+          "current": "import { beforePhpWasmFinArchiveSource } from \"./php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2579,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmFinArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-specialization-admission-source-history-tests.mjs",
+      "currentSha256": "3d3896836c1f4fd9441f5305fa7fe85e60cdebda16ce6b33155beb8412c20c5b",
+      "previousSha256": "097bc5a6660bbbb2d65a3d9b07ee08fe967ac1343cf337c8135c8a125750e97d",
+      "edits": [
+        {
+          "start": 289,
+          "previous": "",
+          "current": "import { beforePhpWasmFinArchiveSource } from \"./php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1150,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePhpWasmFinArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

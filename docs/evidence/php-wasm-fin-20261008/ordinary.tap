@@ -1,0 +1,93 @@
+TAP version 13
+# Subtest: PHP-Wasm Fin admission authenticates each exact source predecessor
+ok 1 - PHP-Wasm Fin admission authenticates each exact source predecessor
+  ---
+  duration_ms: 603.075661
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+ok 2 - PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+  ---
+  duration_ms: 1048.658328
+  type: 'test'
+  ...
+# Subtest: plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+ok 3 - plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+  ---
+  duration_ms: 230.754937
+  type: 'test'
+  ...
+# Subtest: every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run
+ok 4 - every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run
+  ---
+  duration_ms: 334.44388
+  type: 'test'
+  ...
+# Subtest: the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+ok 5 - the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+  ---
+  duration_ms: 68.235025
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused
+ok 6 - PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused
+  ---
+  duration_ms: 184.325656
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+ok 7 - PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+  ---
+  duration_ms: 43.714997
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+ok 8 - PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+  ---
+  duration_ms: 21.994753
+  type: 'test'
+  ...
+# Subtest: relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+ok 9 - relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+  ---
+  duration_ms: 1449952.238692
+  type: 'test'
+  ...
+# fin-products build 0: wasm32
+# fin-products build 1: wasm32
+# fin-products: PHP-Wasm Node embedded/startup/weak
+# fin-products: PHP-Wasm Node embedded/startup/strict
+# fin-products: PHP-Wasm Node embedded/lazy/weak
+# fin-products: PHP-Wasm Node embedded/lazy/strict
+# fin-products: PHP-Wasm Node composer/startup/weak
+# fin-products: PHP-Wasm Node composer/startup/strict
+# fin-products: PHP-Wasm Node composer/lazy/weak
+# fin-products: PHP-Wasm Node composer/lazy/strict
+# fin-products: PHP-Wasm Chromium bundled/startup/weak
+# fin-products: PHP-Wasm Chromium bundled/startup/strict
+# fin-products: PHP-Wasm Chromium bundled/lazy/weak
+# fin-products: PHP-Wasm Chromium bundled/lazy/strict
+# fin-records build 0: wasm32
+# fin-records build 1: wasm32
+# fin-records: PHP-Wasm Node embedded/startup/weak
+# fin-records: PHP-Wasm Node embedded/startup/strict
+# fin-records: PHP-Wasm Node embedded/lazy/weak
+# fin-records: PHP-Wasm Node embedded/lazy/strict
+# fin-records: PHP-Wasm Node composer/startup/weak
+# fin-records: PHP-Wasm Node composer/startup/strict
+# fin-records: PHP-Wasm Node composer/lazy/weak
+# fin-records: PHP-Wasm Node composer/lazy/strict
+# fin-records: PHP-Wasm Chromium bundled/startup/weak
+# fin-records: PHP-Wasm Chromium bundled/startup/strict
+# fin-records: PHP-Wasm Chromium bundled/lazy/weak
+# fin-records: PHP-Wasm Chromium bundled/lazy/strict
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1456508.999767
+exit=0

@@ -1,27 +1,20 @@
 /**
- * Preserve exact source predecessors of the Reviewed finite-specialization admission change (#1220).
+ * Preserve exact source predecessors of the PHP-Wasm Fin archive change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePhpWasmFinArchiveSource } from "./php-wasm-fin-archive-source-history.mjs";
 
-export const reviewedSpecializationAdmissionHistoryPath = "docs/evidence/reviewed-specialization-admission-source-history-20261008.json";
-export const reviewedSpecializationAdmissionChangedPaths = [
-	".github/workflows/consumer-matrix.yml"
-	, "src/adoption/test-profiles.mjs"
-	, "src/analyze/project-analysis.mjs"
-	, "src/analyze/reviewed-source.mjs"
-	, "src/build/elaborated-component.mjs"
-	, "src/build/lean-component-compiler.mjs"
+export const phpWasmFinArchiveHistoryPath = "docs/evidence/php-wasm-fin-archive-source-history-20261008.json";
+export const phpWasmFinArchiveChangedPaths = [
+	"tests/php-wasm-fin.test.mjs"
 	, "docs/lean/existing-package.md"
-	, "docs/lean/export-decisions.md"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/generic-record-browser-source-history.mjs"
-	, "tests/helpers/generic-record-browser-source-history-tests.mjs"
+	, "tests/helpers/reviewed-specialization-admission-source-history.mjs"
+	, "tests/helpers/reviewed-specialization-admission-source-history-tests.mjs"
 ];
 let history;
 
@@ -31,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedSpecializationAdmissionUpdate = (source, update) => {
-	assert.ok(reviewedSpecializationAdmissionChangedPaths.includes(update.path));
+export const reversePhpWasmFinArchiveUpdate = (source, update) => {
+	assert.ok(phpWasmFinArchiveChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -58,12 +51,11 @@ export const reverseReviewedSpecializationAdmissionUpdate = (source, update) => 
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedSpecializationAdmissionSource = (path, source, expected) => {
-	source = beforePhpWasmFinArchiveSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedSpecializationAdmissionChangedPaths.includes(path)) return source;
+export const beforePhpWasmFinArchiveSource = (path, source, expected) => {
+	if(typeof source !== "string" || !phpWasmFinArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedSpecializationAdmissionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(phpWasmFinArchiveHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedSpecializationAdmissionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePhpWasmFinArchiveUpdate(source, update) : source;
 };

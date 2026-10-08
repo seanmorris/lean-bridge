@@ -21,6 +21,8 @@ import { finRecordCompilerInput, finRecordNat, finRecordSignatures } from "./hel
 import { finProductCompilerInput, finProductSignatures } from "./helpers/fin-product-model.mjs";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import "./helpers/php-wasm-fin-source-history-tests.mjs";
+import "./helpers/php-wasm-fin-evidence-tests.mjs";
+import "./helpers/php-wasm-fin-archive-source-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);

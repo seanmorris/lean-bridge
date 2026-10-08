@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1443,
+  "execution": "local",
+  "revision": "c391e58a1fcfa9a3c137f1ca4b4fb8a49fc77dda",
+  "scope": {
+    "profile": "php-wasm",
+    "sourcePath": "ordinary-source",
+    "fixtures": [
+      {
+        "name": "products",
+        "exports": 11,
+        "executions": 12,
+        "checksPerExecution": 2039
+      },
+      {
+        "name": "records",
+        "exports": 13,
+        "executions": 12,
+        "checksPerExecution": 2053
+      }
+    ],
+    "dispatch": "not measured",
+    "reviewedContracts": false,
+    "subtype": false
+  },
+  "producerEnvironment": {
+    "pins": {
+      "emscriptenCommit": "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
+      "emscriptenVersion": "3.1.68",
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+      "phpCommit": "0454901ed1518cfb42bc77ac91728591b58c3e6e",
+      "phpVersion": "8.4.1",
+      "phpWasmCommit": "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89",
+      "phpWasmVersion": "0.1.0"
+    },
+    "nodeVersion": "v22.23.3",
+    "browserVersion": "154.0.8037.57"
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "sha256": "94e9b4ab92ed72ce43de0d9089adc1fdaf990b2ee40ce684850e04ef7c0e2221"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "sha256": "39f64dbf4616a101a9ff37704ff9f93b0666297d638b7fdd157edb0e3625d93e"
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/php-native.php",
+      "sha256": "dd8bd573c6045588c78b9895607052bce302a14e3084e60a683b6eaa6e3be357"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/php-native.php",
+      "sha256": "1223817f66d548279646bd14d66f939ea544c7756f908ec75284ba5e851a4127"
+    }
+  ],
+  "report": {
+    "path": "docs/evidence/php-wasm-fin-20261008/ordinary.json",
+    "sha256": "67dafe06c7c826269c3fb678117b9bf14da12b261f5c9484e695cfe1a1f87046"
+  },
+  "log": {
+    "path": "docs/evidence/php-wasm-fin-20261008/ordinary.tap",
+    "sha256": "b91f61f8e39c4507fcfeb3aebd651af0bf64c4bfe01c79e0fc4cbd062fe5e20e",
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0
+  },
+  "queue": {
+    "path": "docs/evidence/php-wasm-fin-20261008/queue.log",
+    "sha256": "8755ea80be555fd82e966bdec4cac772fd3b15749f06f1776b9bb627f8ffc644"
+  },
+  "previousFailedAttempt": {
+    "receipt": "docs/evidence/php-wasm-generic-records-20261007/receipt.json",
+    "logSha256": "aec1e77a67dfa643c96048fac6232ffb23b7491640b8cdc47aa6347abadd749a",
+    "reason": "The earlier product fixture used the reserved PHP function name never; this run keeps the complete Fin 0 case as absentOnly."
+  },
+  "remaining": [
+    "Inventory promotion must cite the exact observed positions and ordinary source path.",
+    "Source and checked-adapter dispatch are not measured by these runs.",
+    "Reviewed contracts, Subtype, graph, owned and callable refinement paths need separate acceptance.",
+    "Hosted CI and supported release-floor acceptance remain separate from this local producer."
+  ]
+}
