@@ -632,7 +632,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(wasiJob, /npm run test:owned-wit-borrows/);
   const phpJob = workflow.match(/^ {2}php-consumers:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(phpJob);
-  assert.match(phpJob, /^ {4}timeout-minutes: 360$/m);
+  assert.match(phpJob, /^ {4}timeout-minutes: 240$/m);
+  const phpWasmJob = workflow.match(/^ {2}php-wasm-consumers:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(phpWasmJob);
+  assert.match(phpWasmJob, /^ {4}timeout-minutes: 330$/m);
   assert.doesNotMatch(phpJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   const phpMultiProfileJob = workflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(phpMultiProfileJob);
@@ -1125,7 +1128,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 17);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 18);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);

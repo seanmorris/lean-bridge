@@ -54,17 +54,22 @@ test("PHP-Wasm host bootstrap checks prerequisites before modifying compiler inp
 	assert.match((await execute("/bin/bash", [bootstrap, "--check-prerequisites"], { env })).stdout, /prerequisites are available/);
 	await assert.rejects(execute("/bin/bash", [bootstrap, "--unknown"], { env }), error => error.code === 2);
 	assert.deepEqual((await readdir(scratch)).sort(), [...commands, "dirname"].sort());
-	const workflow = (await readFile(".github/workflows/consumer-matrix.yml", "utf8")).split("    name: Native PHP and PHP-Wasm\n")[1].split("\n  native-consumers:")[0];
-	// The packages install in their own bounded apt step; the check step that follows only verifies them.
-	const step = name => workflow.split(`      - name: ${name}\n`)[1].split("      - name:")[0];
-	const packages = step("Install apt dependencies for Install native PHP and PHP-Wasm host build tools");
-	const preparation = step("Install native PHP and PHP-Wasm host build tools");
-	assert.match(packages, /^ {8}timeout-minutes: \d+$/mu);
-	assert.match(preparation, /bootstrap-php-wasm-ci\.sh --check-prerequisites/);
-	for(const command of commands.filter(name => !["git", "npm", "make"].includes(name)))
-		assert.ok(packages.includes(command === "libtoolize" ? "libtool" : command), command);
-	assert.ok(workflow.indexOf("Install apt dependencies for Install native PHP") < workflow.indexOf("--check-prerequisites"));
-	assert.ok(workflow.indexOf("--check-prerequisites") < workflow.indexOf("id: ordinary_php"));
+	const matrix = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	// Both the native PHP and PHP-Wasm jobs prepare the same host tools before their first PHP step.
+	for(const [name, first] of [["Native PHP", "id: ordinary_php"], ["PHP-Wasm", "id: consumer"]])
+	{
+		const workflow = matrix.split(`    name: ${name}\n`)[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+		// The packages install in their own bounded apt step; the check step that follows only verifies them.
+		const step = title => workflow.split(`      - name: ${title}\n`)[1].split("      - name:")[0];
+		const packages = step("Install apt dependencies for Install native PHP and PHP-Wasm host build tools");
+		const preparation = step("Install native PHP and PHP-Wasm host build tools");
+		assert.match(packages, /^ {8}timeout-minutes: \d+$/mu);
+		assert.match(preparation, /bootstrap-php-wasm-ci\.sh --check-prerequisites/);
+		for(const command of commands.filter(item => !["git", "npm", "make"].includes(item)))
+			assert.ok(packages.includes(command === "libtoolize" ? "libtool" : command), command);
+		assert.ok(workflow.indexOf("Install apt dependencies for Install native PHP") < workflow.indexOf("--check-prerequisites"));
+		assert.ok(workflow.indexOf("--check-prerequisites") < workflow.indexOf(first), name);
+	}
 });
 
 test("the filtered Perl engine retains package-set assembly without checkout imports", async t => {

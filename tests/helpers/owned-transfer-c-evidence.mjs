@@ -76,7 +76,10 @@ export const assertOwnedTransferCCi = source => {
 		assert.ok(source.includes(`          test -s build/owned-transfers/${path}.json\n`));
 	assert.ok(source.includes("            build/owned-transfers/\n"));
 	const php = source.match(/^ {2}php-consumers:\n[\s\S]*?(?=^ {2}native-consumers:)/mu)?.[0];
-	assert.ok(php?.includes("    timeout-minutes: 360\n"));
+	// Native PHP and PHP-Wasm run as separately bounded jobs (#1450).
+	assert.ok(php?.includes("  php-consumers:\n    name: Native PHP\n    runs-on: ubuntu-24.04\n"));
+	assert.ok(php.includes("  php-wasm-consumers:\n    name: PHP-Wasm\n    runs-on: ubuntu-24.04\n"));
+	assert.ok(php.includes("    timeout-minutes: 240\n") && php.includes("    timeout-minutes: 330\n"));
 	for(const name of ["Compare installed PHP-Wasm packages with the shared Lean corpus"
 		, "Combine PHP-Wasm with native PHP and JavaScript from one captured API"
 		, "Enforce PHP support"])

@@ -50,7 +50,9 @@ export const assertOwnedWasm32Ci = workflow => {
 	const observation = workflow.split("\n").find(line => line.includes("record --consumer php-wasm"));
 	assert.ok(observation.includes(ownedWasm32Commands.wasm));
 	assert.ok(workflow.includes('[ "${{ steps.type_corpus_php_wasm.outcome }}" != success ]; then\n            wasm_result=failed'));
-	const enforcement = workflow.split("      - name: Enforce PHP support\n")[1]?.split("\n\n")[0];
+	// The PHP-Wasm job enforces its own corpus outcome.
+	const wasmJob = workflow.split("\n  php-wasm-consumers:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+	const enforcement = wasmJob?.split("      - name: Enforce PHP support\n")[1]?.split("\n\n")[0];
 	assert.ok(enforcement?.includes("steps.type_corpus_php_wasm.outcome != 'success'"));
 };
 

@@ -8,6 +8,7 @@ import { runInNewContext } from "node:vm";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedTransferC } from "./owned-transfer-c-history.mjs";
 import { beforePhpWasmCallbackResultAcceptance } from "./php-wasm-callback-result-acceptance-history.mjs";
+import { beforePhpShardSource } from "./php-shard-source-history.mjs";
 
 export const nativeCiProfiles = {
 	"c-family": {
@@ -91,6 +92,8 @@ export const nativeCiRecordScript = (workflow, profile, overrides = {}) => nativ
  * @param baseline - Captured command/step hashes from the pre-split revision.
  */
 export const assertNativeCiIsolation = (workflow, baseline) => {
+	// Rewind the exact PHP split before older layout-specific peeling.
+	workflow = beforePhpShardSource(".github/workflows/consumer-matrix.yml", workflow);
 	// The transfer receipt authenticates its added gates separately. Rewind only
 	// that exact full-file transition when checking the original shard commands.
 	// Peel the authenticated PHP-Wasm integration and its successor CI layout
