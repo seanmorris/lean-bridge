@@ -1,20 +1,21 @@
 /**
- * Preserve exact source predecessors of the Closure history CI repair change (#1220).
+ * Preserve exact source predecessors of the Reviewed npm snapshot verification change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedNpmSnapshotSource } from "./reviewed-npm-snapshot-source-history.mjs";
 
-export const closureHistoryCiRepairHistoryPath = "docs/evidence/closure-history-ci-repair-source-history-20261008.json";
-export const closureHistoryCiRepairChangedPaths = [
-	"tests/helpers/closure-thread-evidence.mjs"
-	, "tests/closure-thread-evidence.test.mjs"
+export const reviewedNpmSnapshotHistoryPath = "docs/evidence/reviewed-npm-snapshot-source-history-20261008.json";
+export const reviewedNpmSnapshotChangedPaths = [
+	".github/workflows/consumer-matrix.yml"
+	, "src/adoption/test-profiles.mjs"
+	, "src/release/component-npm-package.mjs"
+	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-fin-callback-archive-source-history.mjs"
-	, "tests/helpers/native-fin-callback-archive-source-history-tests.mjs"
+	, "tests/helpers/closure-history-ci-repair-source-history.mjs"
+	, "tests/helpers/closure-history-ci-repair-source-history-tests.mjs"
 ];
 let history;
 
@@ -24,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseClosureHistoryCiRepairUpdate = (source, update) => {
-	assert.ok(closureHistoryCiRepairChangedPaths.includes(update.path));
+export const reverseReviewedNpmSnapshotUpdate = (source, update) => {
+	assert.ok(reviewedNpmSnapshotChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +52,11 @@ export const reverseClosureHistoryCiRepairUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeClosureHistoryCiRepairSource = (path, source, expected) => {
-	source = beforeReviewedNpmSnapshotSource(path, source, expected);
-	if(typeof source !== "string" || !closureHistoryCiRepairChangedPaths.includes(path)) return source;
+export const beforeReviewedNpmSnapshotSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedNpmSnapshotChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(closureHistoryCiRepairHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedNpmSnapshotHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseClosureHistoryCiRepairUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedNpmSnapshotUpdate(source, update) : source;
 };

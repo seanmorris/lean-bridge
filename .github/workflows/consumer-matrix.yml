@@ -1266,6 +1266,7 @@ jobs:
           node --test tests/generic-records.test.mjs
           test -s build/generic-records/npm.json
           test -s build/generic-records/specialized-npm.json
+          LEAN_BRIDGE_REVIEWED_NPM_PACKAGING_TEST=1 node --test --test-concurrency=1 tests/reviewed-npm-packaging.test.mjs
           LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_TEST=1 node --test --test-name-pattern='independently reviewed npm package' tests/reviewed-specializations.test.mjs
           test -s build/reviewed-specializations/npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
