@@ -246,6 +246,19 @@ test("C and C++ READMEs document only the callable bounds a package admits, and 
 	assert.equal(source.split("${copiedGuide}${graph ? \"\" : nativeCallbackFinGuide(model, target)}\\n\\n${exports.join").length, 2);
 });
 
+const replyHeap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+const replySubtype = { kind: "refinement", base: finCallbackNat, predicate: { kind: "subtype", constructor: "Sample.checkedDigit" }, abi: finCallbackNat.abi };
+const replyField = name => ({ name, projection: `Sample.Interval.${name}`, type: finCallbackNat });
+const replyInterval = {
+	kind: "record"
+	, name: "Sample.Interval"
+	, lean: "Sample.Interval"
+	, constructor: "Sample.Interval.mk"
+	, fields: [replyField("lo"), replyField("hi")]
+	, erased: ["ordered"]
+	, abi: replyHeap
+};
+
 test("host replies without a Fin-free failure value, nested callbacks, mixed bounds and packages without callback checks stay refused", () => {
 	const { nat, scaler } = { nat: finCallbackNat, scaler: finCallbackSignatures.scaler };
 	const refused = [
@@ -255,9 +268,16 @@ test("host replies without a Fin-free failure value, nested callbacks, mixed bou
 		, ["an ordinary bound beside a callback", { mixed: [finCallbackBound("5"), finCallback([finCallbackBound("10")], nat)] }, true, /checked Fin refinements cannot share a native export with callbacks/u]
 		, ["a package set beyond C and C++", { scaler }, false, /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/u]
 		// A record's field is structural wherever the record appears, so the host-reply rule is the model's.
-		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]];
+		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]
+		// Subtype and checked records are refused by native type validation before any reply rule applies.
+		, ["a host callback's Subtype result", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]
+		, ["a host callback's optional Subtype result", { reply: [finCallback([nat], { kind: "option", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]
+		, ["a host callback's checked-record result", { reply: [finCallback([nat], replyInterval), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]
+		, ["a host callback's optional checked-record result", { reply: [finCallback([nat], { kind: "option", element: replyInterval, abi: replyHeap }), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]];
 	for(const [label, signatures, callbacks, pattern] of refused)
 		assert.throws(() => finCallbackCompilerModel(signatures, callbacks), error => pattern.test(error.message), label);
+	// The same reply position admits a contained Fin, so each refusal above comes from its own type.
+	assert.ok(finCallbackCompilerModel({ reply: [finCallback([nat], { kind: "option", element: finCallbackBound("5"), abi: replyHeap }), nat] }, true).exports[0].parameters[0].type.reply);
 	// Callback shapes without any bound keep their unchecked representation and entries.
 	const plain = finCallbackCompilerModel({ scaler: [nat, finCallback([nat], nat)], visit: [finCallback([nat], nat), nat] });
 	assert.ok(plain.exports.every(item => item.refinements === undefined && item.result.checked === undefined));
@@ -479,6 +499,44 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 		const source = `namespace FinCallbacks\n${definition}\nend FinCallbacks\n`;
 		await assert.rejects(() => elaborate(t, { exports: [`FinCallbacks.${name}`] }, source)
 			, error => /a host callback result needs a Fin-free failure value: scalar Fin, a Fin in its selected default, Subtype and checked records are refused/u.test(JSON.stringify(error.details ?? error.message)), name);
+	}
+	// Extraction itself refuses a Subtype or checked record inside a host reply. Its diagnostic names the
+	// rejected type for the one selected export; a checked constructor configured on the callback
+	// parameter never reaches the reply.
+	const interval = "structure Interval where\n  lo : Nat\n  hi : Nat\n  ordered : lo ≤ hi\ndef mkInterval (lo hi : Nat) : Option Interval := if ordered : lo ≤ hi then some ⟨lo, hi, ordered⟩ else none\n";
+	const site = refinement => ({ ownership: "copy", lifetime: null, ...refinement });
+	const configured = { "FinCallbacks.replyConfigured": { parameters: [site({ refinement: { constructor: "FinCallbacks.mkInterval" } })], result: site({}) } };
+	const extracted = [
+		{
+			name: "replySubtype"
+			, definition: "def replySubtype (host : Nat → Option { n : Nat // n < 5 }) : Nat := match host 0 with | none => 0 | some value => value.val"
+			, configuration: {}
+			, pattern: /Subtype refinements currently require a top-level parameter or result: /u
+		}
+		, {
+			name: "replyInterval"
+			, definition: `${interval}def replyInterval (host : Nat → Option Interval) : Nat := match host 0 with | none => 0 | some value => value.hi`
+			, configuration: {}
+			, pattern: /checked records currently require a top-level parameter or result: [^"]*Interval/u
+		}
+		, {
+			name: "replyConfigured"
+			, definition: `${interval}def replyConfigured (host : Nat → Interval) : Nat := (host 0).hi`
+			, configuration: { contracts: configured }
+			, pattern: /checked records currently require a top-level parameter or result: [^"]*Interval/u
+		}
+	];
+	for(const { name, definition, configuration, pattern } of extracted)
+	{
+		const source = `namespace FinCallbacks\n${definition}\nend FinCallbacks\n`;
+		await assert.rejects(() => elaborate(t, { exports: [`FinCallbacks.${name}`], ...configuration }, source), error => {
+			assert.ok(error.message.includes(`"declaration":"FinCallbacks.${name}"`), `${name}: ${error.message}`);
+			assert.ok(error.message.includes("\"reason\":\"unsupported-native-type\""), `${name}: ${error.message}`);
+			assert.match(error.message, pattern, name);
+			// The refusal is extraction's own, not the model's later reply rule.
+			assert.doesNotMatch(error.message, /a host callback result needs a Fin-free failure value/u, name);
+			return true;
+		}, name);
 	}
 	// The ok branch's empty array stands in for a refused reply, so extraction and the model admit it.
 	const source = "namespace FinCallbacks\ndef replies (host : Nat → Except String (Array (Fin 5))) : Nat := match host 0 with | .ok values => values.size | .error _ => 0\nend FinCallbacks\n";
