@@ -1,0 +1,1215 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-product-historical-fixture-reference",
+  "sourceRevision": "758c979e2151864fd6b044b648714cdd99c03fe8",
+  "note": "Pre-rename contract and consumer identities used to verify the original product reports. This reference is not another installed execution.",
+  "sources": [
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "e66ddf299459b71da7816bcdd891d4c26b49875ef927a1bc2827d46ebb4f7fa7"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "92e795d40ae8e85367ba4f73dacf02c5691296ea20819174f145d07ea0d4e72c"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/c.c",
+      "sha256": "d6c02a05e3b13fa13613911260f269747941486a3b044b86bd41a2651cea7fe9"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/cpp.cpp",
+      "sha256": "3c4e2fc5ece0cc03c9d51ae1340d44d7bdc75216941126c1897b6acfb468a620"
+    }
+  ],
+  "refinements": {
+    "FinProducts.first": {
+      "parameters": [
+        {
+          "kind": "tuple",
+          "arguments": [
+            {
+              "kind": "fin",
+              "bound": "10"
+            },
+            null
+          ]
+        }
+      ],
+      "result": {
+        "kind": "tuple",
+        "arguments": [
+          {
+            "kind": "fin",
+            "bound": "10"
+          },
+          null
+        ]
+      }
+    },
+    "FinProducts.second": {
+      "parameters": [
+        {
+          "kind": "tuple",
+          "arguments": [
+            null,
+            {
+              "kind": "fin",
+              "bound": "1"
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.wide": {
+      "parameters": [
+        {
+          "kind": "tuple",
+          "arguments": [
+            {
+              "kind": "fin",
+              "bound": "184467440737095516170"
+            },
+            {
+              "kind": "fin",
+              "bound": "10"
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.never": {
+      "parameters": [
+        {
+          "kind": "option",
+          "arguments": [
+            {
+              "kind": "tuple",
+              "arguments": [
+                {
+                  "kind": "fin",
+                  "bound": "0"
+                },
+                null
+              ]
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.okOnly": {
+      "parameters": [
+        {
+          "kind": "result",
+          "arguments": [
+            {
+              "kind": "fin",
+              "bound": "10"
+            },
+            null
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.errorOnly": {
+      "parameters": [
+        {
+          "kind": "result",
+          "arguments": [
+            null,
+            {
+              "kind": "fin",
+              "bound": "5"
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.both": {
+      "parameters": [
+        {
+          "kind": "result",
+          "arguments": [
+            {
+              "kind": "fin",
+              "bound": "7"
+            },
+            {
+              "kind": "fin",
+              "bound": "3"
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.nested": {
+      "parameters": [
+        {
+          "kind": "list",
+          "arguments": [
+            {
+              "kind": "option",
+              "arguments": [
+                {
+                  "kind": "tuple",
+                  "arguments": [
+                    {
+                      "kind": "fin",
+                      "bound": "3"
+                    },
+                    {
+                      "kind": "result",
+                      "arguments": [
+                        null,
+                        {
+                          "kind": "fin",
+                          "bound": "2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "result": null
+    },
+    "FinProducts.aliased": {
+      "parameters": [
+        {
+          "kind": "tuple",
+          "arguments": [
+            {
+              "kind": "fin",
+              "bound": "10"
+            },
+            {
+              "kind": "fin",
+              "bound": "10"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "kind": "tuple",
+        "arguments": [
+          {
+            "kind": "fin",
+            "bound": "10"
+          },
+          {
+            "kind": "fin",
+            "bound": "10"
+          }
+        ]
+      }
+    },
+    "FinProducts.produce": {
+      "parameters": [
+        null
+      ],
+      "result": {
+        "kind": "result",
+        "arguments": [
+          null,
+          {
+            "kind": "fin",
+            "bound": "10"
+          }
+        ]
+      }
+    },
+    "FinProducts.pairUp": {
+      "parameters": [
+        null
+      ],
+      "result": {
+        "kind": "tuple",
+        "arguments": [
+          {
+            "kind": "fin",
+            "bound": "10"
+          },
+          null
+        ]
+      }
+    }
+  },
+  "reviewedIr": {
+    "schemaVersion": 3,
+    "component": {
+      "id": "finproducts@1.0.0",
+      "name": "finproducts",
+      "version": "1.0.0"
+    },
+    "producers": [
+      {
+        "id": "corpusReview",
+        "adapter": "independent-corpus-contract",
+        "adapterVersion": 1,
+        "tool": "Corpus contract review",
+        "toolVersion": "1",
+        "extensions": {}
+      }
+    ],
+    "types": [
+      {
+        "id": "lean:FinProducts.DigitPair",
+        "name": "DigitPair",
+        "kind": "alias",
+        "representation": "copied",
+        "mutability": "immutable",
+        "typeParameters": [],
+        "fields": [],
+        "target": {
+          "kind": "apply",
+          "constructor": "tuple",
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ]
+        },
+        "resource": null,
+        "callable": null,
+        "cases": [],
+        "host": null,
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.DigitPair",
+          "extensions": {
+            "lean-lang.org/nominal-refinements": {
+              "kind": "alias",
+              "target": {
+                "kind": "tuple",
+                "arguments": [
+                  {
+                    "kind": "fin",
+                    "bound": "10"
+                  },
+                  {
+                    "kind": "fin",
+                    "bound": "10"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "assurance": []
+      }
+    ],
+    "declarations": [
+      {
+        "id": "lean:FinProducts.first",
+        "name": "first",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.first",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "tuple",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "apply",
+            "constructor": "tuple",
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ]
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.first",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "tuple",
+                  "arguments": [
+                    {
+                      "kind": "fin",
+                      "bound": "10"
+                    },
+                    null
+                  ]
+                }
+              ],
+              "result": {
+                "kind": "tuple",
+                "arguments": [
+                  {
+                    "kind": "fin",
+                    "bound": "10"
+                  },
+                  null
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.second",
+        "name": "second",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.second",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "tuple",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.second",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "tuple",
+                  "arguments": [
+                    null,
+                    {
+                      "kind": "fin",
+                      "bound": "1"
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.wide",
+        "name": "wide",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.wide",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "tuple",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.wide",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "tuple",
+                  "arguments": [
+                    {
+                      "kind": "fin",
+                      "bound": "184467440737095516170"
+                    },
+                    {
+                      "kind": "fin",
+                      "bound": "10"
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.never",
+        "name": "never",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.never",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "option",
+              "arguments": [
+                {
+                  "kind": "apply",
+                  "constructor": "tuple",
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    },
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ]
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.never",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "option",
+                  "arguments": [
+                    {
+                      "kind": "tuple",
+                      "arguments": [
+                        {
+                          "kind": "fin",
+                          "bound": "0"
+                        },
+                        null
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.okOnly",
+        "name": "okOnly",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.okOnly",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "result",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.okOnly",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "result",
+                  "arguments": [
+                    {
+                      "kind": "fin",
+                      "bound": "10"
+                    },
+                    null
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.errorOnly",
+        "name": "errorOnly",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.errorOnly",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "result",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.errorOnly",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "result",
+                  "arguments": [
+                    null,
+                    {
+                      "kind": "fin",
+                      "bound": "5"
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.both",
+        "name": "both",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.both",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "result",
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.both",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "result",
+                  "arguments": [
+                    {
+                      "kind": "fin",
+                      "bound": "7"
+                    },
+                    {
+                      "kind": "fin",
+                      "bound": "3"
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.nested",
+        "name": "nested",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.nested",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "apply",
+              "constructor": "list",
+              "arguments": [
+                {
+                  "kind": "apply",
+                  "constructor": "option",
+                  "arguments": [
+                    {
+                      "kind": "apply",
+                      "constructor": "tuple",
+                      "arguments": [
+                        {
+                          "kind": "primitive",
+                          "name": "nat"
+                        },
+                        {
+                          "kind": "apply",
+                          "constructor": "result",
+                          "arguments": [
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            },
+                            {
+                              "kind": "primitive",
+                              "name": "nat"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.nested",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                {
+                  "kind": "list",
+                  "arguments": [
+                    {
+                      "kind": "option",
+                      "arguments": [
+                        {
+                          "kind": "tuple",
+                          "arguments": [
+                            {
+                              "kind": "fin",
+                              "bound": "3"
+                            },
+                            {
+                              "kind": "result",
+                              "arguments": [
+                                null,
+                                {
+                                  "kind": "fin",
+                                  "bound": "2"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "result": null
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.aliased",
+        "name": "aliased",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.aliased",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "named",
+              "id": "lean:FinProducts.DigitPair"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "named",
+            "id": "lean:FinProducts.DigitPair"
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.aliased",
+          "extensions": {}
+        }
+      },
+      {
+        "id": "lean:FinProducts.produce",
+        "name": "produce",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.produce",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "apply",
+            "constructor": "result",
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "string"
+              },
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ]
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.produce",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "kind": "result",
+                "arguments": [
+                  null,
+                  {
+                    "kind": "fin",
+                    "bound": "10"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "lean:FinProducts.pairUp",
+        "name": "pairUp",
+        "kind": "function",
+        "owner": null,
+        "overloadKey": "FinProducts.pairUp",
+        "typeParameters": [],
+        "receiver": null,
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "apply",
+            "constructor": "tuple",
+            "arguments": [
+              {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              {
+                "kind": "primitive",
+                "name": "nat"
+              }
+            ]
+          },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "mutability": "immutable",
+        "effects": [],
+        "failure": {
+          "mode": "none",
+          "errors": [],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value",
+        "capabilities": [],
+        "assurance": [],
+        "documentation": {
+          "summary": "Independent corpus contract.",
+          "details": ""
+        },
+        "source": {
+          "producer": "corpusReview",
+          "declaration": "FinProducts.pairUp",
+          "extensions": {
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "kind": "tuple",
+                "arguments": [
+                  {
+                    "kind": "fin",
+                    "bound": "10"
+                  },
+                  null
+                ]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "capabilities": [],
+    "assurance": [],
+    "documentation": {
+      "summary": "Independent corpus contract.",
+      "details": ""
+    }
+  }
+}

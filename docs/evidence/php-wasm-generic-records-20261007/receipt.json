@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1220,
+  "execution": "local",
+  "revision": "d40fd3bbb25728fcacb4ca50b88ded8610aae19a",
+  "scope": {
+    "profile": "php-wasm",
+    "sourcePath": "ordinary-source",
+    "kind": "closed alias-named generic records",
+    "executions": 12,
+    "checksPerExecution": 1021,
+    "dispatch": "not measured",
+    "finiteFunctionSpecializations": false
+  },
+  "producerEnvironment": {
+    "platform": "Debian 12",
+    "hostGlibcVersion": "2.36",
+    "nativeTestGlibcFloor": "2.36",
+    "phpSource": "/app/build/php-wasm-sdk/php8.4-src",
+    "phpHost": "/app/build/php-wasm-host/node_modules/php-wasm",
+    "phpEmsdk": "/app/.toolchains/emsdk-php-wasm",
+    "leanRuntime": "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser-php-wasm-3.1.68-clean",
+    "unset": [
+      "LEAN_BRIDGE_PHP_INPUTS",
+      "LEAN_BRIDGE_PHP_COPIED_RUNTIME",
+      "LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME"
+    ],
+    "pins": {
+      "emscriptenCommit": "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
+      "emscriptenVersion": "3.1.68",
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+      "phpCommit": "0454901ed1518cfb42bc77ac91728591b58c3e6e",
+      "phpVersion": "8.4.1",
+      "phpWasmCommit": "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89",
+      "phpWasmVersion": "0.1.0"
+    }
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f"
+    },
+    {
+      "path": "tests/fixtures/generic-record-consumers/php-native.php",
+      "sha256": "f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "sha256": "39f64dbf4616a101a9ff37704ff9f93b0666297d638b7fdd157edb0e3625d93e"
+    },
+    {
+      "path": "tests/php-wasm-generic-records.test.mjs",
+      "sha256": "be73dfd1fc02736cc3087d88a3344bbb993ed1fe0e0d3924e4f1df151731ed23"
+    }
+  ],
+  "report": {
+    "path": "docs/evidence/php-wasm-generic-records-20261007/ordinary.json",
+    "sha256": "dd842951dfd63c631cf04951dbe11c7540a17c307cb745895e1f2617e79aacd4"
+  },
+  "log": {
+    "path": "docs/evidence/php-wasm-generic-records-20261007/ordinary.tap",
+    "sha256": "c1b8ceb08c17c321250b7e1d20359d2f7eaa1a749242ed2956333834e0aca161",
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "failedFinAttempt": {
+    "revision": "d40fd3bbb25728fcacb4ca50b88ded8610aae19a",
+    "stage": "package generation before installation",
+    "cause": "FinProducts.never uses a reserved PHP function name; native PHP also rejects it.",
+    "reportProduced": false,
+    "log": {
+      "path": "docs/evidence/php-wasm-generic-records-20261007/fin-reserved-name-failure.tap",
+      "sha256": "aec1e77a67dfa643c96048fac6232ffb23b7491640b8cdc47aa6347abadd749a",
+      "passed": 7,
+      "failed": 1,
+      "skipped": 0
+    },
+    "reproduceCommand": "env -u LEAN_BRIDGE_PHP_INPUTS -u LEAN_BRIDGE_PHP_COPIED_RUNTIME -u LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME LEAN_BRIDGE_PHP_LEAN_RUNTIME=/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser-php-wasm-3.1.68-clean LEAN_BRIDGE_PHP_SOURCE=/app/build/php-wasm-sdk/php8.4-src LEAN_BRIDGE_PHP_WASM_HOST=/app/build/php-wasm-host/node_modules/php-wasm LEAN_BRIDGE_PHP_EMSDK=/app/.toolchains/emsdk-php-wasm LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/php-wasm-fin.test.mjs"
+  },
+  "remaining": [
+    "Checked Fin acceptance requires the renamed full fixture and another installed run.",
+    "Reviewed generic contracts, finite function specializations and Array-valued generic fields are not established by this report.",
+    "Recursive, indexed, inherited and refined generic records remain separate original #1220 requirements.",
+    "Source and adapter dispatch are not measured.",
+    "Hosted integrated CI and supported release-floor acceptance remain separate."
+  ],
+  "reproduceCommand": "env -u LEAN_BRIDGE_PHP_INPUTS -u LEAN_BRIDGE_PHP_COPIED_RUNTIME -u LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME LEAN_BRIDGE_PHP_LEAN_RUNTIME=/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser-php-wasm-3.1.68-clean LEAN_BRIDGE_PHP_SOURCE=/app/build/php-wasm-sdk/php8.4-src LEAN_BRIDGE_PHP_WASM_HOST=/app/build/php-wasm-host/node_modules/php-wasm LEAN_BRIDGE_PHP_EMSDK=/app/.toolchains/emsdk-php-wasm LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_REPORT=build/vo1220-php-wasm-generic-records.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/php-wasm-generic-records.test.mjs"
+}

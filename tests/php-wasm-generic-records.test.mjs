@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
+import "./helpers/php-wasm-generic-record-evidence-tests.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { createNativeModel, createPhpWasmCopiedModel } from "../src/build/native-model.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";

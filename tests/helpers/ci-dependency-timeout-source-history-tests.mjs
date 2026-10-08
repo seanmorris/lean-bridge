@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinProductPhpNameSource } from "./fin-product-php-name-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCiDependencyTimeoutSource, ciDependencyTimeoutChangedPaths, ciDependencyTimeoutHistoryPath, reverseCiDependencyTimeoutUpdate } from "./ci-dependency-timeout-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("CI dependency timeout authenticates each exact source predecessor", async 
 	assert.deepEqual(record.updates.map(update => update.path), ciDependencyTimeoutChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinProductPhpNameSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCiDependencyTimeoutUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCiDependencyTimeoutSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCiDependencyTimeoutSource(update.path, source, update.currentSha256), source);

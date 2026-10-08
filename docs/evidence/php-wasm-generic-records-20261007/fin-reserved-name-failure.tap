@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: PHP-Wasm Fin admission authenticates each exact source predecessor
+ok 1 - PHP-Wasm Fin admission authenticates each exact source predecessor
+  ---
+  duration_ms: 265.611417
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+ok 2 - PHP-Wasm Fin admission changes current source pins without inventing installed evidence
+  ---
+  duration_ms: 516.744762
+  type: 'test'
+  ...
+# Subtest: plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+ok 3 - plain copied PHP-Wasm models carry the native Fin trees and the same Lean guards
+  ---
+  duration_ms: 104.499642
+  type: 'test'
+  ...
+# Subtest: the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+ok 4 - the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean
+  ---
+  duration_ms: 34.487433
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused
+ok 5 - PHP-Wasm keeps checked Subtype, callables, graph and owned packages refused
+  ---
+  duration_ms: 48.819026
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+ok 6 - PHP-Wasm packages document each checked path, and packages without bounds document nothing new
+  ---
+  duration_ms: 25.744234
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+ok 7 - PHP-Wasm callers are the native PHP Fin consumers with only loading and reporting changed
+  ---
+  duration_ms: 5.157627
+  type: 'test'
+  ...
+# Subtest: relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+not ok 8 - relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)
+  ---
+  duration_ms: 117062.416545
+  type: 'test'
+  location: '/app/build/worktrees/producer-d40fd3b/tests/php-wasm-fin.test.mjs:127:1'
+  failureType: 'testCodeFailure'
+  error: 'root/FinProducts.lean:19:0: lean:FinProducts.never: PHP function name is reserved or duplicated: never: {"declaration":"lean:FinProducts.never","source":{"endColumn":103,"endLine":20,"path":"root/FinProducts.lean","startColumn":0,"startLine":19}}'
+  code: 'unsupported-php-signature'
+  name: 'CanonicalBuildError'
+  stack: |-
+    buildPhpWasmProject (file:///app/build/worktrees/producer-d40fd3b/src/build/php-wasm-project.mjs:126:9)
+    async checkInstalledPhpWasmFixture (file:///app/build/worktrees/producer-d40fd3b/tests/helpers/php-wasm-fin-fixtures.mjs:103:17)
+    async TestContext.<anonymous> (file:///app/build/worktrees/producer-d40fd3b/tests/php-wasm-fin.test.mjs:134:30)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# fin-products build 0: wasm32
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 119342.329812
+exit=1

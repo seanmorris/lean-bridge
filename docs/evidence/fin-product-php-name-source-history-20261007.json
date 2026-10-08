@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-product-php-name-v1",
+  "predecessorCommit": "758c979e2151864fd6b044b648714cdd99c03fe8",
+  "updates": [
+    {
+      "path": "tests/fixtures/fin-product-consumers/c.c",
+      "currentSha256": "7a6a0e1572a3bf08ffdfa11e6bacd924b8fe25c25d2495ec964eb75f681ff7bf",
+      "previousSha256": "d6c02a05e3b13fa13613911260f269747941486a3b044b86bd41a2651cea7fe9",
+      "edits": [
+        {
+          "start": 3007,
+          "previous": "  finproducts_option_tuple_nat_nat_value never; finproducts_option_tuple_nat_nat_value_init(&never);\n  CHECK(OK(finproducts_never(&never, count, &error)) && is_small(count, 7));\n  never.has_value = 1;\n  CHECK(rejected(finproducts_never(&never, count, &error), &error, \"arg0 is not below its Fin 0 bound\"));\n  finproducts_option_tuple_nat_nat_value_clear(&never);\n",
+          "current": "  finproducts_option_tuple_nat_nat_value absent; finproducts_option_tuple_nat_nat_value_init(&absent);\n  CHECK(OK(finproducts_absent_only(&absent, count, &error)) && is_small(count, 7));\n  absent.has_value = 1;\n  CHECK(rejected(finproducts_absent_only(&absent, count, &error), &error, \"arg0 is not below its Fin 0 bound\"));\n  finproducts_option_tuple_nat_nat_value_clear(&absent);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/cpp.cpp",
+      "currentSha256": "12b16efc1afac62af89472775b06e1d298281ac208fec5037c438b81777df470",
+      "previousSha256": "3c4e2fc5ece0cc03c9d51ae1340d44d7bdc75216941126c1897b6acfb468a620",
+      "edits": [
+        {
+          "start": 1786,
+          "previous": "  CHECK(api::never(std::nullopt) == 7);\n  CHECK(rejected([] { api::never(Pair{0, 0}); }, \"arg0 is not below its Fin 0 bound\"));\n",
+          "current": "  CHECK(api::absent_only(std::nullopt) == 7);\n  CHECK(rejected([] { api::absent_only(Pair{0, 0}); }, \"arg0 is not below its Fin 0 bound\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/dotnet.cs",
+      "currentSha256": "159548728bc33045887e9835082c0a001a187cd0096f8accffc3d69998e1aa75",
+      "previousSha256": "4ec8cff4696fa6c89f0648ee3efb6bb63b6298680da806ffe8d9ac7bf36d28c6",
+      "edits": [
+        {
+          "start": 1701,
+          "previous": "        Check(Api.Never(Option<(BigInteger, BigInteger)>.None) == 7, \"never absent\");\n        Check(Rejected(() => Api.Never(Option<(BigInteger, BigInteger)>.Some((N(0), N(0)))), \"arg0\", \"0\"), \"never present\");\n",
+          "current": "        Check(Api.AbsentOnly(Option<(BigInteger, BigInteger)>.None) == 7, \"absent only none\");\n        Check(Rejected(() => Api.AbsentOnly(Option<(BigInteger, BigInteger)>.Some((N(0), N(0)))), \"arg0\", \"0\"), \"absent only some\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/java.java",
+      "currentSha256": "2876d6d28187b637a6c2e5b438d33524eb57477a1d93b307e91dc632dd1b3fa6",
+      "previousSha256": "5dd9e31fb96e4d75976c2d3d8cdece8ebb8620c67da2b0d83286bc03600f3e19",
+      "edits": [
+        {
+          "start": 2464,
+          "previous": "        check(Api.never(Option.none()).equals(n(7)), \"never absent\");\n        check(rejected(() -> Api.never(Option.some(pair(n(0), n(0)))), \"arg0\", \"0\"), \"never present\");\n",
+          "current": "        check(Api.absentOnly(Option.none()).equals(n(7)), \"absent only none\");\n        check(rejected(() -> Api.absentOnly(Option.some(pair(n(0), n(0)))), \"arg0\", \"0\"), \"absent only some\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/kotlin.kt",
+      "currentSha256": "881c61ef0fe41b03bfcfe7edaf30f76f9336d8702bc40b309cd0c994101c9140",
+      "previousSha256": "45fc3e37251221c84525dfc624a8489d9b2c47b3d03e034deb6c336d0b918fdf",
+      "edits": [
+        {
+          "start": 2019,
+          "previous": "    check(Api.never(Option.none()) == n(7), \"never absent\")\n    check(rejected(\"arg0\", \"0\") { Api.never(Option.some(pair(n(0), n(0)))) }, \"never present\")\n",
+          "current": "    check(Api.absentOnly(Option.none()) == n(7), \"absent only none\")\n    check(rejected(\"arg0\", \"0\") { Api.absentOnly(Option.some(pair(n(0), n(0)))) }, \"absent only some\")\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/perl.pl",
+      "currentSha256": "5290c1441784232e305daf273951ef5eaa8bb664bd700469b31b21fd429caeb0",
+      "previousSha256": "5b739aa345d357fb5b4ceacc49daeffbbe6ebe84be8c55f70ca6fd3bdb6b43fe",
+      "edits": [
+        {
+          "start": 2693,
+          "previous": "check(LeanBridge::FinProducts::never(undef)->bstr eq '7', 'never absent');\ncheck(rejected(sub { LeanBridge::FinProducts::never(some([n(0), n(0)])) }, 'arg0?.0', '0'), 'never present');\n",
+          "current": "check(LeanBridge::FinProducts::absent_only(undef)->bstr eq '7', 'absent only none');\ncheck(rejected(sub { LeanBridge::FinProducts::absent_only(some([n(0), n(0)])) }, 'arg0?.0', '0'), 'absent only some');\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/php-native.php",
+      "currentSha256": "dd8bd573c6045588c78b9895607052bce302a14e3084e60a683b6eaa6e3be357",
+      "previousSha256": "01855925b6a0e9a13f27a0dcbad5279fcb58d1e4de6df4006b58eb67aa0c641b",
+      "edits": [
+        {
+          "start": 143,
+          "previous": "use function LeanFinproducts\\{first, second, wide, never, ok_only, error_only, both, nested, aliased, produce, pair_up};\n",
+          "current": "use function LeanFinproducts\\{first, second, wide, absent_only, ok_only, error_only, both, nested, aliased, produce, pair_up};\n"
+        },
+        {
+          "start": 1846,
+          "previous": "check(never(null)->isEqualTo(7), 'never absent');\ncheck(rejected(fn() => never(new Some([n(0), n(0)])), 'arg0', '0'), 'never present');\n",
+          "current": "check(absent_only(null)->isEqualTo(7), 'absent only none');\ncheck(rejected(fn() => absent_only(new Some([n(0), n(0)])), 'arg0', '0'), 'absent only some');\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/python.py",
+      "currentSha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf",
+      "previousSha256": "45fcd67b4b4918e45f43463569752e7f754fc73cf626ab265f8ccd460bc2639f",
+      "edits": [
+        {
+          "start": 1290,
+          "previous": "check(api.never(None) == 7, 'never absent')\ncheck(rejected(lambda: api.never(Some((0, 0))), 'arg0', '0'), 'never present')\n",
+          "current": "check(api.absent_only(None) == 7, 'absent only none')\ncheck(rejected(lambda: api.absent_only(Some((0, 0))), 'arg0', '0'), 'absent only some')\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/ruby.rb",
+      "currentSha256": "b85aed48e93055f5d44f1fc30945dd4e5d9a714428006a06b8e1d62145e61b79",
+      "previousSha256": "121c5d3155d54c4b446a7541ec1f29b786246f2c54399cb6f31d3a7b94ea30aa",
+      "edits": [
+        {
+          "start": 1169,
+          "previous": "check(API.never(nil) == 7, \"never absent\")\ncheck(rejected(\"arg0\", \"0\") { API.never(Some.new([0, 0])) }, \"never present\")\n",
+          "current": "check(API.absent_only(nil) == 7, \"absent only none\")\ncheck(rejected(\"arg0\", \"0\") { API.absent_only(Some.new([0, 0])) }, \"absent only some\")\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/rust.rs",
+      "currentSha256": "d7a38902630abe1d34d08798f64945a1b486ee41c8b7d54b5094674de262a5df",
+      "previousSha256": "96905edefda1823edc61f87eafd48372f45dc4a4e603f9b17b13498d7da7c2b1",
+      "edits": [
+        {
+          "start": 1370,
+          "previous": "    check!(api::never(&None).unwrap() == n(7));\n    check!(rejected(api::never(&Some((n(0), n(0)))), \"arg0\", \"0\"));\n",
+          "current": "    check!(api::absent_only(&None).unwrap() == n(7));\n    check!(rejected(api::absent_only(&Some((n(0), n(0)))), \"arg0\", \"0\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/wit-wasi.c",
+      "currentSha256": "0983c46d5b02eb328d20476aea1344c0ce3e4c9f2918917dba1629a765f1bf13",
+      "previousSha256": "0d6dfd7431d8f8e874094c68beae88fe69209ea361bca3d8bc1dd26a57aaa12b",
+      "edits": [
+        {
+          "start": 4520,
+          "previous": "  arg = none(); out = call(\"never\", &arg); CHECK(is_nat(&out, 7)); clear(&out);\n  arg = some(pair(nat(0), nat(0))); CHECK(rejected(\"never\", &arg, \"arg0 is not below its Fin 0 bound\"));\n",
+          "current": "  arg = none(); out = call(\"absent-only\", &arg); CHECK(is_nat(&out, 7)); clear(&out);\n  arg = some(pair(nat(0), nat(0))); CHECK(rejected(\"absent-only\", &arg, \"arg0 is not below its Fin 0 bound\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "currentSha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220",
+      "previousSha256": "fc128507dfeca643c39b48b7323074b2d49953bd7d07277c4b7294add8d2945b",
+      "edits": [
+        {
+          "start": 735,
+          "previous": "def never (value : Option (Fin 0 × Nat)) : Nat := match value with | none => 7 | some (f, _) => f.elim0\n",
+          "current": "def absentOnly (value : Option (Fin 0 × Nat)) : Nat := match value with | none => 7 | some (f, _) => f.elim0\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ci-dependency-timeout-source-history-tests.mjs",
+      "currentSha256": "270a89fd15d10b96066d39c0aefdc99f96a07054ccf7951e2a05788e80a83f4c",
+      "previousSha256": "3d51c41d9dd5aa4e914b48946a42570b1c38a35f0c7b4d541fe0f613f80336a0",
+      "edits": [
+        {
+          "start": 270,
+          "previous": "",
+          "current": "import { beforeFinProductPhpNameSource } from \"./fin-product-php-name-source-history.mjs\";\n"
+        },
+        {
+          "start": 1028,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinProductPhpNameSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ci-dependency-timeout-source-history.mjs",
+      "currentSha256": "cf1ddbe68fbb76577542a142089b3b8770388f88223493bf239a81afbc558a73",
+      "previousSha256": "416d6a90ac4b76bd6e8375a3535df288415825a8a950de2e55ffd40c78c7aa11",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforeFinProductPhpNameSource } from \"./fin-product-php-name-source-history.mjs\";\n"
+        },
+        {
+          "start": 2352,
+          "previous": "",
+          "current": "\tsource = beforeFinProductPhpNameSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-product-evidence-tests.mjs",
+      "currentSha256": "90a2964bd874b2e1101e3f4fa5e6490310e54429ae7d3abfe618edfb8f1f3a94",
+      "previousSha256": "a9abe7bfcbf4bae73644a550bf769dbad56e3d5928f07b89ab6f970a47dc7f0d",
+      "edits": [
+        {
+          "start": 522,
+          "previous": "",
+          "current": "import { beforeFinProductPhpNameSource } from \"./fin-product-php-name-source-history.mjs\";\nimport \"./fin-product-php-name-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 785,
+          "previous": "",
+          "current": "const historicalFixture = async () => {\n\tconst bytes = await readFile(`${directory}/original-fixture-reference.json`);\n\tassert.equal(sha256(bytes), \"30f9ea54757ad3de0842e8b4bc8ff28f6d2a31837bcda8c342510e249979a713\");\n\tconst fixture = JSON.parse(bytes);\n\tassert.equal(fixture.kind, \"fin-product-historical-fixture-reference\");\n\tassert.equal(fixture.sourceRevision, \"758c979e2151864fd6b044b648714cdd99c03fe8\");\n\tassert.equal(fixture.sources.length, 4);\n\tfor(const source of fixture.sources)\n\t\tassert.equal(sha256(beforeFinProductPhpNameSource(source.path, await readFile(source.path, \"utf8\"), source.sha256)), source.sha256, source.path);\n\treturn fixture;\n};\n"
+        },
+        {
+          "start": 1884,
+          "previous": "",
+          "current": "\tconst fixture = await historicalFixture();\n"
+        },
+        {
+          "start": 3538,
+          "previous": "\t\t\tassert.deepEqual(item.refinements, finProductRefinements);\n\t\t\tconst source = await readFile(`tests/fixtures/fin-product-consumers/${item.profile}.${item.profile === \"c\" ? \"c\" : \"cpp\"}`);\n",
+          "current": "\t\t\tassert.deepEqual(item.refinements, fixture.refinements);\n\t\t\tconst consumerPath = `tests/fixtures/fin-product-consumers/${item.profile}.${item.profile === \"c\" ? \"c\" : \"cpp\"}`;\n\t\t\tconst source = beforeFinProductPhpNameSource(consumerPath, await readFile(consumerPath, \"utf8\"), item.consumerSha256);\n"
+        },
+        {
+          "start": 4390,
+          "previous": "\t\t\t\tassert.equal(item.reviewedSourceSha256, sha256(canonicalJson(finProductReviewedIr())));\n",
+          "current": "\t\t\t\tassert.equal(item.reviewedSourceSha256, sha256(canonicalJson(fixture.reviewedIr)));\n"
+        },
+        {
+          "start": 5081,
+          "previous": "",
+          "current": "test(\"PHP-safe product names preserve every original bound and independently reviewed site\", async () => {\n\tconst fixture = await historicalFixture();\n\tconst renamed = Object.fromEntries(Object.entries(fixture.refinements).map(([name, value]) =>\n\t\t[name === \"FinProducts.never\" ? \"FinProducts.absentOnly\" : name, value]));\n\tassert.deepEqual(finProductRefinements, renamed);\n\tconst current = finProductReviewedIr(), previous = fixture.reviewedIr;\n\tconst declaration = current.declarations.find(item => item.id === \"lean:FinProducts.absentOnly\");\n\tconst original = previous.declarations.find(item => item.id === \"lean:FinProducts.never\");\n\tassert.ok(declaration); assert.ok(original);\n\tassert.equal(declaration.overloadKey, \"FinProducts.absentOnly\");\n\tdeclaration.id = original.id; declaration.name = original.name;\n\tdeclaration.overloadKey = original.overloadKey;\n\tdeclaration.source.declaration = original.source.declaration;\n\tconst order = document => ({ ...document, declarations: document.declarations.toSorted((a, b) => a.id.localeCompare(b.id)) });\n\tassert.deepEqual(order(current), order(previous));\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "currentSha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640",
+      "previousSha256": "e66ddf299459b71da7816bcdd891d4c26b49875ef927a1bc2827d46ebb4f7fa7",
+      "edits": [
+        {
+          "start": 1765,
+          "previous": "\t, \"FinProducts.never\": { parameters: [{ kind: \"option\", arguments: [pair(fin(\"0\"), null)] }], result: null }\n",
+          "current": "\t, \"FinProducts.absentOnly\": { parameters: [{ kind: \"option\", arguments: [pair(fin(\"0\"), null)] }], result: null }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-product-model.mjs",
+      "currentSha256": "558cc968bd61b5d16ee72b1b07791f8026ff3d24f98b8637a2e8efdde3c82528",
+      "previousSha256": "deb4c59ab71c489446417dd98100fe480a6257f0f8c08861667cc55629656d0c",
+      "edits": [
+        {
+          "start": 1425,
+          "previous": "\taliased: [digitPair, digitPair]\n",
+          "current": "\tabsentOnly: [option(pair(fin(\"0\"), nat)), nat]\n\t, aliased: [digitPair, digitPair]\n"
+        },
+        {
+          "start": 1725,
+          "previous": "\t, never: [option(pair(fin(\"0\"), nat)), nat]\n",
+          "current": ""
+        },
+        {
+          "start": 1956,
+          "previous": "",
+          "current": "export { signatures as finProductSignatures };\n"
+        },
+        {
+          "start": 2101,
+          "previous": "export const finProductCompilerModel = () => {\n",
+          "current": "export const finProductCompilerModel = () => createNativeModel(finProductCompilerInput(), { refinements: true });\n\n/**\n * Compiler-shaped model input for the fixture's exports, for any native model reader.\n *\n * @param shapes - Exported shapes; the fixture's by default.\n */\nexport const finProductCompilerInput = (shapes = signatures) => {\n"
+        },
+        {
+          "start": 2553,
+          "previous": "\tmodule.declarations = Object.entries(signatures).map(([name, [parameter, result]]) => ({ ...structuredClone(template), identity: `Sample.${name}`\n",
+          "current": "\tmodule.declarations = Object.entries(shapes).sort(([a], [b]) => a < b ? -1 : 1).map(([name, [parameter, result]]) => ({ ...structuredClone(template), identity: `Sample.${name}`\n"
+        },
+        {
+          "start": 3549,
+          "previous": "\treturn createNativeModel({ ...input, component: { id: \"finproducts@1.0.0\", name: \"finproducts\", version: \"1.0.0\" } }, { refinements: true });\n",
+          "current": "\treturn { ...input, component: { id: \"finproducts@1.0.0\", name: \"finproducts\", version: \"1.0.0\" } };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "9df29a1e141230ff0513f48b4368d3f003bf8d0cf188d1efce637dd99d8b8aa2",
+      "previousSha256": "be99201f4d967ede15ffbdf5d230216c577aa10c67a68a2192934738ea937eb9",
+      "edits": [
+        {
+          "start": 5698,
+          "previous": "",
+          "current": "import { finProductPhpNameChangedPaths } from \"./fin-product-php-name-source-history.mjs\";\n"
+        },
+        {
+          "start": 41125,
+          "previous": "",
+          "current": "\t, ...finProductPhpNameChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "currentSha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368",
+      "previousSha256": "92e795d40ae8e85367ba4f73dacf02c5691296ea20819174f145d07ea0d4e72c",
+      "edits": [
+        {
+          "start": 1414,
+          "previous": "\t\t, [\"never\", [{ option: nats }], \"nat\", [{ kind: \"option\", arguments: [pair(fin(\"0\"), null)] }], null]\n",
+          "current": "\t\t, [\"absentOnly\", [{ option: nats }], \"nat\", [{ kind: \"option\", arguments: [pair(fin(\"0\"), null)] }], null]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "94e9b4ab92ed72ce43de0d9089adc1fdaf990b2ee40ce684850e04ef7c0e2221",
+      "previousSha256": "acfbdab629f1e76ade53d1c4f3a4d5bd111f275d41dcbc30427702641de58394",
+      "edits": [
+        {
+          "start": 1118,
+          "previous": "import { finRecordCompilerInput, finRecordNat } from \"./helpers/fin-record-model.mjs\";\n",
+          "current": "import { finRecordCompilerInput, finRecordNat, finRecordSignatures } from \"./helpers/fin-record-model.mjs\";\nimport { finProductCompilerInput, finProductSignatures } from \"./helpers/fin-product-model.mjs\";\nimport { generateCopiedPhpPackage } from \"../src/backends/php/copied-values.mjs\";\n"
+        },
+        {
+          "start": 2616,
+          "previous": "",
+          "current": "test(\"every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run\", async () => {\n\t// FinProducts once exported never, a PHP keyword; both PHP targets refused it only after a full Lean build.\n\tconst fixtures = [[\"products\", phpWasmFinFixtures.products, finProductSignatures, finProductCompilerInput]\n\t\t, [\"records\", phpWasmFinFixtures.records, finRecordSignatures, finRecordCompilerInput]];\n\tfor(const [label, fixture, signatures, compilerInput] of fixtures)\n\t{\n\t\t// The compiler-shaped model names exactly the declarations of the Lean fixture.\n\t\tconst source = await readFile(`${fixture.root}/${fixture.module}.lean`, \"utf8\");\n\t\tassert.deepEqual([...source.matchAll(/^(?:@\\[noinline\\] )?def (\\w+) /gmu)].map(match => match[1]).sort(), Object.keys(signatures).sort(), label);\n\t\tconst input = compilerInput();\n\t\tgenerateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr);\n\t\tcompileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });\n\t}\n\t// The same input under a reserved name is refused by both targets, so the check above can fail.\n\tconst reserved = { ...finProductSignatures, never: finProductSignatures.absentOnly };\n\tdelete reserved.absentOnly;\n\tconst input = finProductCompilerInput(reserved);\n\tassert.throws(() => generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: never/u);\n\tassert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true }), /PHP function name is reserved or duplicated: never/u);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-generic-records.test.mjs",
+      "currentSha256": "9cd3f1cdf62309c63e144972045b6dc6930b49d184605961c4215e47516b0b25",
+      "previousSha256": "be73dfd1fc02736cc3087d88a3344bbb993ed1fe0e0d3924e4f1df151731ed23",
+      "edits": [
+        {
+          "start": 213,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-generic-record-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

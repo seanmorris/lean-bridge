@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinProductPhpNameSource } from "./fin-product-php-name-source-history.mjs";
 
 export const ciDependencyTimeoutHistoryPath = "docs/evidence/ci-dependency-timeout-source-history-20261007.json";
 export const ciDependencyTimeoutChangedPaths = [
@@ -53,6 +54,7 @@ export const reverseCiDependencyTimeoutUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCiDependencyTimeoutSource = (path, source, expected) => {
+	source = beforeFinProductPhpNameSource(path, source, expected);
 	if(typeof source !== "string" || !ciDependencyTimeoutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

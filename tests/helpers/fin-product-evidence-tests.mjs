@@ -10,9 +10,22 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { finProductRefinements } from "./fin-product-install.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected } from "./fin-product-dispatch.mjs";
 import { finProductReviewedIr } from "./reviewed-fin-product-fixture.mjs";
+import { beforeFinProductPhpNameSource } from "./fin-product-php-name-source-history.mjs";
+import "./fin-product-php-name-source-history-tests.mjs";
 import "./fin-product-array-evidence-tests.mjs";
 
 const directory = "docs/evidence/native-fin-products-20261007";
+const historicalFixture = async () => {
+	const bytes = await readFile(`${directory}/original-fixture-reference.json`);
+	assert.equal(sha256(bytes), "30f9ea54757ad3de0842e8b4bc8ff28f6d2a31837bcda8c342510e249979a713");
+	const fixture = JSON.parse(bytes);
+	assert.equal(fixture.kind, "fin-product-historical-fixture-reference");
+	assert.equal(fixture.sourceRevision, "758c979e2151864fd6b044b648714cdd99c03fe8");
+	assert.equal(fixture.sources.length, 4);
+	for(const source of fixture.sources)
+		assert.equal(sha256(beforeFinProductPhpNameSource(source.path, await readFile(source.path, "utf8"), source.sha256)), source.sha256, source.path);
+	return fixture;
+};
 const identities = [
 	["ordinary-c-cpp", "ordinary-source"
 		, "92e4e933606fe3afcd12c388430303a83b6626a5"
@@ -22,6 +35,7 @@ const identities = [
 		, "714b72fd99614290cc3fe12f3b57411b0ead08d4679e6ba6fd1fe3286e79e14f"]];
 
 test("C/C++ product archives bind both source paths to exact bounds and measured dispatch", async () => {
+	const fixture = await historicalFixture();
 	const receipt = JSON.parse(await readFile(`${directory}/receipt.json`, "utf8"));
 	assert.equal(receipt.schemaVersion, 1);
 	assert.equal(receipt.planNode, 1441);
@@ -51,8 +65,9 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 		{
 			assert.equal(item.path, path);
 			assert.equal(item.checks, item.profile === "c" ? 2038 : 2039);
-			assert.deepEqual(item.refinements, finProductRefinements);
-			const source = await readFile(`tests/fixtures/fin-product-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`);
+			assert.deepEqual(item.refinements, fixture.refinements);
+			const consumerPath = `tests/fixtures/fin-product-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`;
+			const source = beforeFinProductPhpNameSource(consumerPath, await readFile(consumerPath, "utf8"), item.consumerSha256);
 			assert.equal(item.consumerSha256, sha256(source));
 			for(const flag of ["sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreePath"])
 				assert.equal(item[flag], true, flag);
@@ -64,7 +79,7 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 				assert.ok(artifact.bytes > 0);
 			}
 			if(path === "reviewed-ir")
-				assert.equal(item.reviewedSourceSha256, sha256(canonicalJson(finProductReviewedIr())));
+				assert.equal(item.reviewedSourceSha256, sha256(canonicalJson(fixture.reviewedIr)));
 			else assert.equal(Object.hasOwn(item, "reviewedSourceSha256"), false);
 			if(item.profile === "c")
 			{
@@ -78,6 +93,23 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 		for(const key of ["bindingIrSha256", "sourceTreeSha256", "modelSha256", "receiptSha256"])
 			assert.equal(c[key], cpp[key], key);
 	}
+});
+
+test("PHP-safe product names preserve every original bound and independently reviewed site", async () => {
+	const fixture = await historicalFixture();
+	const renamed = Object.fromEntries(Object.entries(fixture.refinements).map(([name, value]) =>
+		[name === "FinProducts.never" ? "FinProducts.absentOnly" : name, value]));
+	assert.deepEqual(finProductRefinements, renamed);
+	const current = finProductReviewedIr(), previous = fixture.reviewedIr;
+	const declaration = current.declarations.find(item => item.id === "lean:FinProducts.absentOnly");
+	const original = previous.declarations.find(item => item.id === "lean:FinProducts.never");
+	assert.ok(declaration); assert.ok(original);
+	assert.equal(declaration.overloadKey, "FinProducts.absentOnly");
+	declaration.id = original.id; declaration.name = original.name;
+	declaration.overloadKey = original.overloadKey;
+	declaration.source.declaration = original.source.declaration;
+	const order = document => ({ ...document, declarations: document.declarations.toSorted((a, b) => a.id.localeCompare(b.id)) });
+	assert.deepEqual(order(current), order(previous));
 });
 
 test("product logs retain the failed baseline review and the corrected run with four mismatches", async () => {
