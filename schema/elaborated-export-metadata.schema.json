@@ -375,6 +375,8 @@
           } }
         },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "fields"],
+          "if": { "required": ["erased"] },
+          "then": { "properties": { "fields": { "minItems": 1 } } },
           "properties": {
             "kind": { "const": "record" }, "name": { "type": "string", "minLength": 1 },
             "provenance": {

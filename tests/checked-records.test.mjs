@@ -134,7 +134,10 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, erased: ["sized"] };
 	const componentSite = { kind: "refinement", base: component, predicate: { kind: "checked-record", constructor: `${module}.mkTriple` } };
 	const copied = "elaborated-export-metadata#/$defs/copiedType";
-	for(const [reference, value] of [["native-metadata-type", native], ["native-metadata-type", nativeSite], [copied, component], [copied, componentSite]])
+	const finSite = { kind: "refinement", base: nativeNat, predicate: { kind: "fin", bound: "10" }, abi };
+	const subtypeSite = { kind: "refinement", base: { ...nativeNat, name: "string", lean: "String" }, predicate: { kind: "subtype", constructor: `${module}.checkedWord` }, abi };
+	const valid = [["native-metadata-type", native], ["native-metadata-type", nativeSite], ["native-metadata-type", finSite], ["native-metadata-type", subtypeSite], [copied, component], [copied, componentSite]];
+	for(const [reference, value] of valid)
 		assert.equal(await jsonSchemaErrors(reference, value), null, `${reference} ${value.kind}`);
 	const malformed = [
 		["native-metadata-type", { ...native, erased: [] }, "no erased names"]
@@ -149,7 +152,14 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, [copied, { ...componentSite, base: { ...component, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
 		, [copied, { ...component, erased: [] }, "no erased names"]
 		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: nat, value: "-3" }] } }, "a negative index"]
-		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: { kind: "primitive", name: "string" }, value: "3" }] } }, "a String index"]];
+		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: { kind: "primitive", name: "string" }, value: "3" }] } }, "a String index"]
+		// Each predicate keeps its own base: Fin over Nat, Subtype over a primitive, checked-record over a record with erased proofs.
+		, ["native-metadata-type", { ...nativeSite, base: nativeNat }, "a checked-record predicate over Nat"]
+		, ["native-metadata-type", { ...nativeSite, base: { ...native, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
+		, ["native-metadata-type", { kind: "refinement", base: { ...nativeNat, name: "string", lean: "String" }, predicate: { kind: "fin", bound: "10" }, abi }, "a Fin predicate over String"]
+		, ["native-metadata-type", { kind: "refinement", base: native, predicate: { kind: "subtype", constructor: `${module}.mkTriple` }, abi }, "a Subtype predicate over a record"]
+		, ["native-metadata-type", { ...native, fields: [] }, "erased proofs without a payload"]
+		, [copied, { ...component, fields: [] }, "erased proofs without a payload"]];
 	for(const [reference, value, label] of malformed) assert.notEqual(await jsonSchemaErrors(reference, JSON.parse(JSON.stringify(value))), null, `${reference}: ${label}`);
 });
 

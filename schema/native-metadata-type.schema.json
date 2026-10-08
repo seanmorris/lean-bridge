@@ -159,6 +159,8 @@
         "fields",
         "abi"
       ],
+      "if": { "required": ["erased"] },
+      "then": { "properties": { "fields": { "minItems": 1 } } },
       "properties": {
         "kind": {
           "const": "record"
@@ -283,19 +285,41 @@
       "required": ["kind", "base", "predicate", "abi"],
       "properties": {
         "kind": { "const": "refinement" },
-        "base": { "$ref": "#" },
-        "predicate": { "oneOf": [
-          { "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
-            "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } },
-          { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
-            "properties": { "kind": { "enum": ["subtype", "checked-record"] },
-              "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" } } }
-        ] },
+        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" }, "name": { "const": "nat" } } }] },
+        "predicate": { "type": "object", "additionalProperties": false, "required": ["kind", "bound"],
+          "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "base", "predicate", "abi"],
+      "properties": {
+        "kind": { "const": "refinement" },
+        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" } } }] },
+        "predicate": { "$ref": "#/$defs/constructorPredicate", "properties": { "kind": { "const": "subtype" } } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "base", "predicate", "abi"],
+      "properties": {
+        "kind": { "const": "refinement" },
+        "base": { "allOf": [{ "$ref": "#" }, { "required": ["erased"], "properties": { "kind": { "const": "record" } } }] },
+        "predicate": { "$ref": "#/$defs/constructorPredicate", "properties": { "kind": { "const": "checked-record" } } },
         "abi": { "$ref": "#/$defs/abi" }
       }
     }
   ],
   "$defs": {
+    "constructorPredicate": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
+      "properties": {
+        "kind": { "enum": ["subtype", "checked-record"] },
+        "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" }
+      }
+    },
     "valueArgument": {
       "type": "object", "additionalProperties": false, "required": ["kind", "type", "value"],
       "properties": {
