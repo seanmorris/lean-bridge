@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-specialization-archive-v1",
+  "predecessorCommit": "f9cda046e0b624bd847fe41d521b9cb9f84f21a3",
+  "updates": [
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f",
+      "previousSha256": "f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487",
+      "edits": [
+        {
+          "start": 8916,
+          "previous": "The same [name and count rules](#export-concrete-specializations) apply as for ordinary configuration. Keep `specializations` out of the accompanying configuration: the review owns those decisions. This admission has source-reconciliation tests; independently authored C/C++ and npm/strict TypeScript installed gates are prepared but have not run. Reviewed generic-record instantiations and checked Subtype constructors remain separate work.\n",
+          "current": "The same [name and count rules](#export-concrete-specializations) apply as for ordinary configuration. Keep `specializations` out of the accompanying configuration: the review owns those decisions. The [installed reviewed-specialization checks](../evidence/reviewed-specializations-20261008/receipt.json) cover ten specializations and one ordinary export in C, C++ and npm with strict TypeScript. Each run reproduces the archives in two author roots, removes the author files and installs offline. Reviewed generic-record instantiations and checked Subtype constructors have separate acceptance tests.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "85bfd2e28845833f6b725830cee007100b62646c6dd5b4abc878c95bac882aff",
+      "previousSha256": "eac58914cd41231bff7d1aa7fcdd9a8171e7172307da63893736fccf7e207010",
+      "edits": [
+        {
+          "start": 3660,
+          "previous": "| Finite function specializations | Ordinary source: Node JavaScript/strict TypeScript and all eleven native profiles. The shared specialized-record fixture includes Python 3.11/3.12 and four Perl ABIs. | The [specialized-record receipt](generic-record-specializations-20261007/receipt.json) is now cited by `generic-record-specialized-*-installed` evidence. | CI on the integrated revision. Schema-3 reviewed finite specializations are admitted with exact fresh reconciliation; C/C++ and npm installed gates await execution. |\n",
+          "current": "| Finite function specializations | Ordinary source: Node JavaScript/strict TypeScript and all eleven native profiles. The shared specialized-record fixture includes Python 3.11/3.12 and four Perl ABIs. | The [specialized-record receipt](generic-record-specializations-20261007/receipt.json) is cited by `generic-record-specialized-*-installed` evidence. The [reviewed-specialization archive](reviewed-specializations-20261008/receipt.json) adds independently authored C/C++ and npm/strict TypeScript observations: ten specializations and one ordinary export, two-root reproduction and source-free offline installation. | Promote the reviewed observations for these three hosts; execute the remaining reviewed hosts and integrated CI. |\n"
+        },
+        {
+          "start": 5296,
+          "previous": "| Reviewed-IR refinements and constructed generics | Fin parameters and results across all native profiles and the five npm profiles. C/C++ also have product and nonrecursive nominal-field observations. Each promotion cites its original reports; hosts do not inherit another host's dispatch counters. | None for the promoted Fin reports. | Reviewed finite specializations await installed acceptance. Subtype constructors and generic-structure instantiations are not admitted. Reviewed field execution on other hosts remains separate. |\n",
+          "current": "| Reviewed-IR refinements and constructed generics | Fin parameters and results across all native profiles and the five npm profiles. C/C++ also have product and nonrecursive nominal-field observations. Each promotion cites its original reports; hosts do not inherit another host's dispatch counters. | Reviewed finite-specialization C/C++ and npm observations are [archived](reviewed-specializations-20261008/receipt.json). | Reviewed Subtype constructor selection is compiled and checked by fresh Lean; installed acceptance is pending. Generic-structure instantiation integration and reviewed field execution on other hosts remain separate. |\n"
+        },
+        {
+          "start": 17239,
+          "previous": "| Reviewed-IR Subtype, specializations and generic instantiations | Codex integration and Subtype (#1444) | Claude's finite-specialization admission and corrected source-free npm handoff are integrated; installed C/C++ and npm/strict TypeScript gates await execution. Subtype constructor decisions now pass through compilation using validated public export names. Complete installed C/C++ and npm/strict TypeScript checks, including target recompilation. Configuration overrides remain forbidden. |\n",
+          "current": "| Reviewed-IR Subtype, specializations and generic instantiations | Codex integration and Subtype (#1444) | Finite-specialization C/C++ and npm/strict TypeScript execution passed on `fc8dbef`; the original reports are archived. Promote only those observed hosts. Subtype constructor decisions pass through compilation using validated public export names; complete its installed C/C++ and npm/strict TypeScript checks, including target recompilation. Generic-structure instantiation integration remains pending. Configuration overrides remain forbidden. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-specializations.test.mjs",
+      "currentSha256": "a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353",
+      "previousSha256": "58ac989a05df705c023ab67f0bb88eb1813af72669317ae117b7af2456d338e7",
+      "edits": [
+        {
+          "start": 172,
+          "previous": "",
+          "current": "import \"./helpers/reviewed-specialization-evidence-tests.mjs\";\nimport \"./helpers/reviewed-specialization-archive-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 7005,
+          "previous": "\tassert.match(section, /installed gates are prepared but have not run/u);\n",
+          "current": "\tassert.match(section, /evidence\\/reviewed-specializations-20261008\\/receipt\\.json/u);\n\tassert.match(section, /cover ten specializations and one ordinary export in C, C\\+\\+ and npm with strict TypeScript/u);\n\tassert.match(section, /reproduces the archives in two author roots, removes the author files and installs offline/u);\n\tassert.doesNotMatch(section, /installed gates are prepared but have not run/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b365231af2a9a770667256b7e2626f494c887b3efdcc275e8fe5d05986dadc6b",
+      "previousSha256": "cdde2cca05e4b05437fd55befa4f773eb051aea4439eb8fd58fa84db9d7382c1",
+      "edits": [
+        {
+          "start": 1072135,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1079724,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1086325,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1093433,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1100927,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1107983,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1115584,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1125865,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1138198,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1191657,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1224200,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1254479,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1287446,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1328856,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1354704,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1377384,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1397076,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        },
+        {
+          "start": 1417561,
+          "previous": "          \"sha256\": \"f51b85a7ff8588a31ad23a8206f23e106f15badb0221eca7e233ba4ed53b6487\"\n",
+          "current": "          \"sha256\": \"dec9f4d5933b19458fc7cc2c1f0b71adf8c202daab85ad2697786183b31eed2f\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "23ae4093ddd1d99ab0c2fad232c422299d87f052a97cd823b80abfe755ebdd83",
+      "previousSha256": "67d84f4fbc078859613274f0ba9f76141ac8d723871071d66e2d9da3b9ff99d0",
+      "edits": [
+        {
+          "start": 7622,
+          "previous": "",
+          "current": "import { reviewedSpecializationArchiveChangedPaths } from \"./reviewed-specialization-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 43859,
+          "previous": "",
+          "current": "\t, ...reviewedSpecializationArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-harness-source-history.mjs",
+      "currentSha256": "ae3c761ad0e29c4cc76a6c894d03e43250a8fefae3ab6cbdd4c7527e1b27562a",
+      "previousSha256": "d6f20efe597f5a80830bfee479c2a53d713d31642406044ae1536a1c05029c03",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "",
+          "current": "import { beforeReviewedSpecializationArchiveSource } from \"./reviewed-specialization-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2272,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSpecializationArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-harness-source-history-tests.mjs",
+      "currentSha256": "e0956a4101213da0637918a2e08d1e520967b97bff8d66f8c53182e94342a43d",
+      "previousSha256": "f238f3424dddc0c88261504fbd759aad44ed35f4f22e9d822c591696d2c08b83",
+      "edits": [
+        {
+          "start": 355,
+          "previous": "",
+          "current": "import { beforeReviewedSpecializationArchiveSource } from \"./reviewed-specialization-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1087,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeReviewedSpecializationArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

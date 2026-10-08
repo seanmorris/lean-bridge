@@ -1,0 +1,76 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0-c.tar.gz": "ddc10090434abf833e86556bdd32d367a98a9a9db75fc63d2b614f2b8b7e02d2",
+    "archives/specialized-1.0.0-cpp.tar.gz": "42f14990373b9212e009c2f47a41f90640aa5cde819d2bc57b954f8132d33118"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "3619fdc64271ef26d35c9bfa2df706b6112677ac34cd298226c0b6be13b0abcf",
+      "checks": 2016,
+      "compilerFreePath": true,
+      "consumerSha256": "56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9",
+      "modelSha256": "a0b5bfe6292666ff42cd1e1eaf5248ff2d96e1804765f1c968d9196f58d27427",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53828386,
+              "path": "archives/specialized-1.0.0-c.tar.gz",
+              "sha256": "ddc10090434abf833e86556bdd32d367a98a9a9db75fc63d2b614f2b8b7e02d2"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "c",
+      "receiptSha256": "677ee541f8f4ff1dd6cac151921b73cb267a44e52a7c09a847be90a494d28536",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "3619fdc64271ef26d35c9bfa2df706b6112677ac34cd298226c0b6be13b0abcf",
+      "checks": 2011,
+      "compilerFreePath": true,
+      "consumerSha256": "f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d",
+      "modelSha256": "a0b5bfe6292666ff42cd1e1eaf5248ff2d96e1804765f1c968d9196f58d27427",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51762731,
+              "path": "archives/specialized-1.0.0-cpp.tar.gz",
+              "sha256": "42f14990373b9212e009c2f47a41f90640aa5cde819d2bc57b954f8132d33118"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "cpp",
+      "receiptSha256": "677ee541f8f4ff1dd6cac151921b73cb267a44e52a7c09a847be90a494d28536",
+      "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

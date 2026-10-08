@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: Reviewed finite-specialization admission authenticates each exact source predecessor
+ok 1 - Reviewed finite-specialization admission authenticates each exact source predecessor
+  ---
+  duration_ms: 131.558501
+  type: 'test'
+  ...
+# Subtest: a review selects closed specializations beside ordinary exports, never their application text
+ok 2 - a review selects closed specializations beside ordinary exports, never their application text
+  ---
+  duration_ms: 45.749639
+  type: 'test'
+  ...
+# Subtest: the author recipe names the independently reviewed specialization and its compiled application
+ok 3 - the author recipe names the independently reviewed specialization and its compiled application
+  ---
+  duration_ms: 4.871411
+  type: 'test'
+  ...
+# Subtest: malformed, extra, colliding and indirect specialization decisions are refused before compilation
+ok 4 - malformed, extra, colliding and indirect specialization decisions are refused before compilation
+  ---
+  duration_ms: 74.172015
+  type: 'test'
+  ...
+# Subtest: the export configuration's count limit applies to reviewed specializations
+ok 5 - the export configuration's count limit applies to reviewed specializations
+  ---
+  duration_ms: 86.727323
+  type: 'test'
+  ...
+# Subtest: fresh Lean decides the application, and closed arguments must match the authorized selection
+ok 6 - fresh Lean decides the application, and closed arguments must match the authorized selection
+  ---
+  duration_ms: 28.172587
+  type: 'test'
+  ...
+# Subtest: a review that chooses another valid specialization is an API change, refused only against the authenticated review
+ok 7 - a review that chooses another valid specialization is an API change, refused only against the authenticated review
+  ---
+  duration_ms: 4.323918
+  type: 'test'
+  ...
+# Subtest: a reviewed project specializes generics through fresh Lean, with stable public names after relocation
+ok 8 - a reviewed project specializes generics through fresh Lean, with stable public names after relocation
+  ---
+  duration_ms: 35820.436064
+  type: 'test'
+  ...
+# Subtest: fresh Lean contradictions stop a reviewed specialization at the exact decision
+    # Subtest: changed source closure
+    ok 1 - changed source closure
+      ---
+      duration_ms: 14358.012062
+      type: 'test'
+      ...
+    # Subtest: application text the compiler never printed
+    ok 2 - application text the compiler never printed
+      ---
+      duration_ms: 15778.694757
+      type: 'test'
+      ...
+    # Subtest: closed argument that disagrees with the reviewed signature
+    ok 3 - closed argument that disagrees with the reviewed signature
+      ---
+      duration_ms: 14158.239411
+      type: 'test'
+      ...
+    # Subtest: specialization name that collides with a source declaration
+    ok 4 - specialization name that collides with a source declaration
+      ---
+      duration_ms: 13978.931481
+      type: 'test'
+      ...
+    1..4
+ok 9 - fresh Lean contradictions stop a reviewed specialization at the exact decision
+  ---
+  duration_ms: 58276.140933
+  type: 'test'
+  ...
+# Subtest: the independent native review reconciles with fresh Lean and leaves no configured decision
+ok 10 - the independent native review reconciles with fresh Lean and leaves no configured decision
+  ---
+  duration_ms: 15485.128995
+  type: 'test'
+  ...
+# Subtest: independently reviewed C and C++ packages install every chosen specialization without its generic
+ok 11 - independently reviewed C and C++ packages install every chosen specialization without its generic
+  ---
+  duration_ms: 372021.612625
+  type: 'test'
+  ...
+# reviewed build 0: c, cpp
+# installing and checking reviewed c
+# installing and checking reviewed cpp
+# reviewed build 1: c, cpp
+# Subtest: an independently reviewed npm package installs the chosen specializations for Node and strict TypeScript
+ok 12 - an independently reviewed npm package installs the chosen specializations for Node and strict TypeScript # SKIP
+  ---
+  duration_ms: 0.187914
+  type: 'test'
+  ...
+# Subtest: CI runs the reviewed C/C++ and npm specialization gates against fresh Lean and keeps both reports
+ok 13 - CI runs the reviewed C/C++ and npm specialization gates against fresh Lean and keeps both reports
+  ---
+  duration_ms: 1.995572
+  type: 'test'
+  ...
+1..13
+# tests 17
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 482396.775005
+exit=0

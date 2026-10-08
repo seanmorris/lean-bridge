@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1220,
+  "execution": "local",
+  "revision": "fc8dbefc5a365b3b19c797ff95067656603c69b5",
+  "scope": {
+    "sourcePath": "reviewed-source",
+    "profiles": [
+      "c",
+      "cpp",
+      "npm"
+    ],
+    "specializations": 10,
+    "ordinaryExports": 1,
+    "features": [
+      "closed primitive and alias arguments",
+      "compiler-resolved typeclass instances",
+      "two-root archive reproduction",
+      "source-free offline installation",
+      "strict TypeScript consumer"
+    ],
+    "dispatch": "not measured",
+    "browserExecution": false,
+    "otherNativeHosts": false
+  },
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "85a9b41f1c2f7617a9aa17989b6bcd8669183d88fe032559d31232248ebe3caa"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "sha256": "fb25854e5b06f1946429bdfe069e0e59ba2b098c288f310313c3a47b56eaafe0"
+    },
+    {
+      "path": "tests/reviewed-specializations.test.mjs",
+      "sha256": "58ae92f3acdaa37597489ea7fb9e12ef9fe4f5a03c0f6b5ba1ba64939f0a7911"
+    },
+    {
+      "path": "tests/helpers/reviewed-native-specialization-fixture.mjs",
+      "sha256": "141fb8e9be5ea58f5ead4be6189efc3476cecaf7e06ef73d2166757577f33a56"
+    },
+    {
+      "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-specializations/Specialized.lean",
+      "sha256": "a4578c3de5657f52e602449a567eb43e1b0be32015ce9a3bad793a3de75ca693"
+    },
+    {
+      "path": "tests/fixtures/specialization-consumers/c.c",
+      "sha256": "56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9"
+    },
+    {
+      "path": "tests/fixtures/specialization-consumers/cpp.cpp",
+      "sha256": "f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-specializations-20261008/c-cpp.json",
+      "sha256": "f3e558803ec2e7b3dd28b0c740bef82fc02922604a90c723e4bc21e1c2356c83"
+    },
+    {
+      "path": "docs/evidence/reviewed-specializations-20261008/c-cpp.tap",
+      "sha256": "6ca4c7515a9e2671839ad5b9bacbf7131cde410b9ed2bd47f8e83a19f8155703"
+    },
+    {
+      "path": "docs/evidence/reviewed-specializations-20261008/npm.json",
+      "sha256": "c5a7210773ab98b1a9b895741d6ab587fe4120856aa5a3b27b98b35f9dc2a799"
+    },
+    {
+      "path": "docs/evidence/reviewed-specializations-20261008/npm.tap",
+      "sha256": "02a33f5a3da2d811ddb1acbd341a785925591fe9fdaff6e3557d96078013051a"
+    }
+  ],
+  "results": {
+    "c": {
+      "checks": 2016
+    },
+    "cpp": {
+      "checks": 2011
+    },
+    "npm": {
+      "checks": 6,
+      "rejections": 3,
+      "strictTypescript": true,
+      "skipLibCheck": false
+    }
+  },
+  "logs": {
+    "native": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 1
+    },
+    "npm": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "remaining": [
+    "Other native hosts and browser execution need separate reviewed-specialization observations.",
+    "Generic-record instantiation is a separate source decision with its own acceptance.",
+    "These local executions do not establish supported release-floor or hosted-CI acceptance.",
+    "No dispatch counter measurements are inferred from value and rejection checks."
+  ]
+}

@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSpecializationArchiveSource } from "./reviewed-specialization-archive-source-history.mjs";
 import { beforeReviewedCallbackHarnessSource, reviewedCallbackHarnessChangedPaths, reviewedCallbackHarnessHistoryPath, reverseReviewedCallbackHarnessUpdate } from "./reviewed-callback-harness-source-history.mjs";
 
 test("Reviewed callback harness authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Reviewed callback harness authenticates each exact source predecessor", as
 	assert.deepEqual(record.updates.map(update => update.path), reviewedCallbackHarnessChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedSpecializationArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseReviewedCallbackHarnessUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedCallbackHarnessSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedCallbackHarnessSource(update.path, source, update.currentSha256), source);

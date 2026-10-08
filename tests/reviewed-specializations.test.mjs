@@ -4,6 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/reviewed-specialization-evidence-tests.mjs";
+import "./helpers/reviewed-specialization-archive-source-history-tests.mjs";
 import "./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs";
 import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -98,7 +100,10 @@ test("the author recipe names the independently reviewed specialization and its 
 	const declaration = shopSpecializationReview().declarations.find(item => item.id === "lean:Shop.keepText");
 	assert.deepEqual(example, declaration.source.extensions[key]);
 	assert.match(section, /never executes application text from the review/u);
-	assert.match(section, /installed gates are prepared but have not run/u);
+	assert.match(section, /evidence\/reviewed-specializations-20261008\/receipt\.json/u);
+	assert.match(section, /cover ten specializations and one ordinary export in C, C\+\+ and npm with strict TypeScript/u);
+	assert.match(section, /reproduces the archives in two author roots, removes the author files and installs offline/u);
+	assert.doesNotMatch(section, /installed gates are prepared but have not run/u);
 });
 
 test("malformed, extra, colliding and indirect specialization decisions are refused before compilation", () => {

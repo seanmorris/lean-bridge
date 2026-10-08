@@ -1,0 +1,57 @@
+{
+  "bindingIrFileSha256": "0abeabb00085ab6ac51af6a673439e23bf88733809dee913267387e6eec21a71",
+  "bindingIrSha256": "6890aef4bc9eb419e853f9a082349c9d2c9fea32228276c2c3db231267e71d56",
+  "checks": 6,
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "path": "reviewed-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "6890aef4bc9eb419e853f9a082349c9d2c9fea32228276c2c3db231267e71d56",
+    "component": {
+      "id": "specialized@1.0.0",
+      "name": "specialized",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "5a0b7be92d17db29ad0acf6b2eaa6c9cbf35227450c90dd580eb5fde98e982ad",
+    "componentBundleSha256": "96c866ad3b8a17c6173486fb40f4560a1165696702802f7bdb10153d2e04f382",
+    "componentIdentitySha256": "520795801f8e0710c08880622c27749ca3c5b35401ae167bc9cc3cad7d906479",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "specialized-1.0.0.tgz",
+      "package": "specialized@1.0.0",
+      "sha256": "ec42bdf8b7ea8b8aa5c346ac9bc8f1d88b18573c0231d83213e753dc3b296260"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "15d67e595ab92ebd6629bd8c1fd68bfec0084fa9d70cd44c46647c355a738cde",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce",
+      "sha256": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "b0c4ec860e45b72606eb761dca7f6b177dc3ccaccfafd72995bc9a26bd0173dd"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "2140ad242356a5a731c0074fedc044e30a7c258c1b8e39c72847fb277e313f92",
+  "rejections": 3,
+  "reproducible": true,
+  "reviewedBindingIrSha256": "16a78ebbd13c85c07d3c56024efd63aa7091a440ea1c1f96466d454bd531a1c5",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "7ec9131b53c2c3e4e17879fdc6427f509b561dc8d4e623b4aa631b06742b2f24",
+    "skipLibCheck": false,
+    "sourceSha256": "c9229d6d5f58bd42bf6a49297a9fc8598a397cc79933afb3c5b5da95b3bd52de",
+    "strict": true
+  }
+}
