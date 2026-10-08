@@ -47,4 +47,18 @@ def twice (first : Nat → Option (Fin 5)) (second : Nat → Nat) : Nat :=
 /-- A plain export a host callback can reenter while a reply is pending. -/
 def plain (n : Nat) : Nat := n + 1
 
+/-! Composite families whose stand-in holds no Fin: an alias, List (Fin 0), a nested array, a product,
+a record field and an Except ok branch. -/
+
+abbrev MaybeDigit := Option (Fin 5)
+def aliased (host : Nat → MaybeDigit) : Nat := match host 0 with | none => 1 | some d => d.val
+def empty0 (host : Nat → List (Fin 0)) : Nat := (host 0).length
+def nested (host : Nat → Option (Array (Fin 3))) : Nat := match host 0 with | none => 2 | some values => values.size
+def product (host : Nat → Option (Fin 5) × Nat) : Nat := (host 0).2
+structure Slot where
+  digit : Option (Fin 5)
+  count : Nat
+def slotted (host : Nat → Slot) : Nat := (host 0).count
+def success (host : Nat → Except Nat (Array (Fin 3))) : Nat := match host 0 with | .ok values => values.size | .error n => n
+
 end FinReplies

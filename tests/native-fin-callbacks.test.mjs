@@ -11,6 +11,7 @@ import "./helpers/native-fin-callback-archive-source-history-tests.mjs";
 import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import "./helpers/fin-reply-compiled-tests.mjs";
+import "./helpers/fin-reply-installed-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -463,24 +464,13 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 	assert.deepEqual(model.exports[0].parameters[0].type.reply, { kind: "result", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "5" }] }, null] });
 });
 
-// Every admitted reply family, from the FinReplies fixture and the composite families whose stand-in holds no Fin.
-const replyFamilies = `
-abbrev MaybeDigit := Option (Fin 5)
-def aliased (host : Nat → MaybeDigit) : Nat := match host 0 with | none => 1 | some d => d.val
-def empty0 (host : Nat → List (Fin 0)) : Nat := (host 0).length
-def nested (host : Nat → Option (Array (Fin 3))) : Nat := match host 0 with | none => 2 | some values => values.size
-def product (host : Nat → Option (Fin 5) × Nat) : Nat := (host 0).2
-structure Slot where
-  digit : Option (Fin 5)
-  count : Nat
-def slotted (host : Nat → Slot) : Nat := (host 0).count
-def success (host : Nat → Except Nat (Array (Fin 3))) : Nat := match host 0 with | .ok values => values.size | .error n => n
-`;
+// Every admitted reply family is in the FinReplies fixture, including the composite families whose
+// stand-in holds no Fin.
 
 test("fresh Lean admits every checked host reply family and compiles each typed reconstruction", { skip: !lean, timeout: 1_800_000 }, async t => {
 	const fixtureSource = await readFile("tests/fixtures/onboarding/native-fin-replies/FinReplies.lean", "utf8");
 	const body = fixtureSource.replace("namespace FinReplies\n", "").replace("end FinReplies\n", "");
-	const source = `namespace FinCallbacks\n${body}${replyFamilies}end FinCallbacks\n`;
+	const source = `namespace FinCallbacks\n${body}end FinCallbacks\n`;
 	const names = ["aliased", "digits", "empty0", "failure", "late", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
 	const { model, adapters } = await elaborate(t, { exports: names.map(name => `FinCallbacks.${name}`) }, source);
 	const reply = name => model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type.reply;
