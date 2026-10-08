@@ -36,6 +36,7 @@ export const assertReviewedSourceConfiguration = configuration => {
 };
 
 const specializationKey = "lean-lang.org/specialization";
+const erasedProofsKey = "lean-lang.org/erased-proofs";
 // The compiler's application text is compared with a fresh compilation, never executed from the review.
 const applicationText = value => typeof value === "string" && value.length > 0 && value.length <= 4096 && ![...value].some(character => character.codePointAt(0) < 32 || character.codePointAt(0) === 127);
 
@@ -95,7 +96,8 @@ const checkReview = document => {
 		// Aliases, records and variants carry their bounds on the definition, as compiled metadata does.
 		const refinementKey = declaration || item.kind === "callback" ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
 		// A record may restate its compiler-owned instantiation; it never selects a compilation.
-		const allowed = [refinementKey, declaration ? specializationKey : item.kind === "record" ? instantiationKey : null];
+		const record = !declaration && item.kind === "record";
+		const allowed = [refinementKey, declaration ? specializationKey : record ? instantiationKey : null, record ? erasedProofsKey : null];
 		reject(Object.keys(item.source.extensions).some(key => !allowed.includes(key)), `${item.id}.source.extensions`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
@@ -175,6 +177,25 @@ const checkReview = document => {
 			catch(error)
 			{ unsupported(`Reviewed generic record instantiations are invalid: ${error.message}`, { path: error.path }); }
 		}
+		// A checked record names its erased proof fields once; the payload stays the record's fields.
+		if(Object.hasOwn(definition.source.extensions, erasedProofsKey))
+		{
+			const erased = definition.source.extensions[erasedProofsKey];
+			reject(!erased || typeof erased !== "object" || Array.isArray(erased) || Object.keys(erased).join() !== "fields"
+				|| !Array.isArray(erased.fields) || !erased.fields.length || erased.fields.length > 1024 || new Set(erased.fields).size !== erased.fields.length
+				|| erased.fields.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name) || definition.fields.some(field => field.name === name))
+				|| !definition.fields.length, `${definition.id}.source.extensions.${erasedProofsKey}`);
+		}
+	}
+	// A checked record crosses only at a top-level site: a parameter through its checked constructor,
+	// or a Lean-produced result with no constructor.
+	const checkedRecord = type => type?.kind === "named" && Object.hasOwn(definitions.get(type.id)?.source.extensions ?? {}, erasedProofsKey);
+	for(const declaration of document.declarations)
+	{
+		const refinements = declaration.source.extensions["lean-lang.org/refinements"];
+		for(const [index, value] of declaration.parameters.entries())
+			reject(checkedRecord(value.type) !== (refinements?.parameters?.[index]?.kind === "checked-record"), `${declaration.id}.parameters[${index}]`);
+		reject(refinements?.result?.kind === "checked-record", `${declaration.id}.result`);
 	}
 	for(const declaration of document.declarations)
 	{
@@ -272,7 +293,8 @@ const semanticSourceExtensions = [
 	"lean-lang.org/refinements"
 	, "lean-lang.org/nominal-refinements"
 	, "lean-lang.org/specialization"
-	, "lean-lang.org/instantiation"];
+	, "lean-lang.org/instantiation"
+	, "lean-lang.org/erased-proofs"];
 
 const contract = document => {
 	const strip = (value, key = "") => {

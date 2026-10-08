@@ -195,6 +195,9 @@ def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
     unless result.isAppOfArity ``Option 1 && (← isDefEq result.appArg! e) do
       reject e "checked record constructor must return Option of the exact record"
   discard <| checkBody request constructorName
+  -- The constructor is the only source of the erased proofs, so none of them may be assumed.
+  if (← collectAxioms constructorName).contains ``sorryAx then
+    reject e "checked record constructor depends on sorry"
   return obj [("kind", str "refinement"), ("base", reference),
     ("predicate", obj [("kind", str "checked-record"), ("constructor", str constructor)]),
     ("abi", ← abi e)]

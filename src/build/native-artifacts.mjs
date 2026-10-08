@@ -99,8 +99,9 @@ export async function readVerifiedNativeRuntime(root)
  * @param options.ownedCallbackResultAnchors - The caller preserves callback-local result owners.
  * @param options.nativeRefinements - The caller checks top-level Fin bounds before Lean dispatch.
  * @param options.nativeCallbackRefinements - The caller checks a leased closure's Fin arguments before Lean dispatch.
+ * @param options.nativeCheckedRecords - The caller passes checked records as payload mirrors (C and C++).
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false, nativeCallbackRefinements = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false, nativeCallbackRefinements = false, nativeCheckedRecords = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
@@ -126,6 +127,9 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 	if(refined && nativeRefinements !== true)
 		throw Object.assign(new TypeError("This native component requires a checked Fin consumer adapter"), { code: "native-refinements-unavailable" });
 	const callbackRefined = refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "callback"));
+	// Checked records cross only as payload mirrors, which only the C and C++ projections generate.
+	if(refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "checked-record")) && nativeCheckedRecords !== true)
+		throw Object.assign(new TypeError("This native component requires a checked-record consumer adapter"), { code: "native-checked-records-unavailable" });
 	if(callbackRefined && nativeCallbackRefinements !== true)
 		throw Object.assign(new TypeError("This native component requires a consumer adapter that checks Fin in callbacks"), { code: "native-refinements-unavailable" });
 	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers, ownedCallbackResultAnchors: callbackResults, nativeRefinements: refined, nativeCallbackRefinements: callbackRefined });

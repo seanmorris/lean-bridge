@@ -24,6 +24,9 @@ export const nativeFinRefinements = (declaration, types = []) => {
 		throw new TypeError(`${declaration.id} has malformed refinement metadata`);
 	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type));
 	assertRefinement(value.result, declaration.result.type);
+	// Checked records have generated mirror carriers only for C, C++ and npm packages so far.
+	if([...value.parameters, value.result].some(refinement => refinement?.kind === "checked-record"))
+		throw new TypeError(`${declaration.id}: checked records are implemented only for C, C++ and npm packages`);
 	// Only Fin, alone or inside arrays, lists, options, products and results, reaches native
 	// hosts; any other constraint must fail rather than vanish from the docs.
 	const supported = (refinement, top) => refinement === null || refinement.kind === "fin" || (top && refinement.kind === "subtype")
