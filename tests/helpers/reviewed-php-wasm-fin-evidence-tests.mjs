@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import { phpWasmDriverHashes } from "./type-corpus-php-wasm-evidence.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertReviewedPhpWasmFinExecution, assertReviewedPhpWasmFinReport, reviewedPhpWasmFinDirectory, reviewedPhpWasmFinFiles, reviewedPhpWasmFinHarness, reviewedPhpWasmFinIdentities, reviewedPhpWasmFinRevision, reviewedPhpWasmFinSourcePaths } from "./reviewed-php-wasm-fin-evidence.mjs";
 
@@ -126,8 +127,54 @@ test("reviewed PHP-Wasm validation refuses lost executions, changed reviews and 
 	}
 	const changed = structuredClone(archive); changed.reports[0].receiptSha256 = "0".repeat(64);
 	await assert.rejects(() => assertReviewedPhpWasmFinReport(changed, record, readSource), assert.AssertionError);
-	for(const path of ["src/analyze/NativeExports.lean", "tests/fixtures/onboarding/native-fin-products/FinProducts.lean"])
+	for(const path of ["src/analyze/NativeExports.lean", "tests/fixtures/onboarding/native-fin-products/FinProducts.lean", "tests/fixtures/onboarding/native-fin-records/FinRecords.lean"])
 		await assert.rejects(() => assertReviewedPhpWasmFinReport(archive, record, async source => (await readSource(source)) + (source === path ? "\n" : "")), assert.AssertionError);
+});
+
+test("reviewed PHP-Wasm validation independently rejects each package, request, driver and execution mutation", async () => {
+	const { record, archive, readSource } = await selection();
+	let controls = 0;
+	for(const [index, report] of archive.reports.entries())
+	{
+		const rejected = async (label, mutate) => {
+			const changed = structuredClone(archive); mutate(changed.reports[index]);
+			assert.notDeepEqual(changed.reports[index], report, label);
+			const rebound = { ...record, identities: changed.reports.map(reviewedPhpWasmFinIdentities) };
+			await assert.rejects(() => assertReviewedPhpWasmFinReport(changed, rebound, readSource), assert.AssertionError, `${report.fixture}/${label}`);
+			controls++;
+		};
+		for(const [packageIndex, pkg] of report.packages.entries())
+		{
+			const artifact = pkg.artifacts[0], packedIndex = report.phpWasm.packageSet.archives.findIndex(item => item.role === pkg.role);
+			assert.ok(packedIndex >= 0);
+			const packed = report.phpWasm.packageSet.archives[packedIndex];
+			await rejected(`${pkg.role}/package-version`, changed => { changed.packages[packageIndex].version += "-altered"; });
+			await rejected(`${pkg.role}/artifact-bytes`, changed => { changed.packages[packageIndex].artifacts[0].bytes++; });
+			await rejected(`${pkg.role}/archive-hash`, changed => { changed.archives[artifact.path] = "0".repeat(64); });
+			await rejected(`${pkg.role}/package-set`, changed => { changed.phpWasm.packageSet.archives[packedIndex].sha256 = "0".repeat(64); });
+			await rejected(`${pkg.role}/archive-file`, changed => { delete changed.phpWasm.packageSet.files[`archives/${packed.archive}`]; });
+			const prefix = `${pkg.ecosystem === "composer" ? "vendor" : "node_modules"}/${pkg.name}/`;
+			const installed = Object.keys(report.phpWasm.deployment).find(path => path.startsWith(prefix));
+			assert.ok(installed, prefix);
+			await rejected(`${pkg.role}/installed-file`, changed => { changed.phpWasm.deployment[installed].sha256 = "0".repeat(64); });
+		}
+		for(const arrangement of ["embedded", "composer"])
+			await rejected(`${arrangement}/request`, changed => {
+				// Matching forged report and deployed hashes still disagree with the independent request generator.
+				changed.phpWasm.requests[arrangement] = "0".repeat(64);
+				changed.phpWasm.deployment[`request-${arrangement}.json`].sha256 = "0".repeat(64);
+			});
+		const hostFile = Object.keys(report.phpWasm.host.files)[0];
+		assert.ok(hostFile);
+		await rejected("host-file", changed => { changed.phpWasm.host.files[hostFile].sha256 = "0".repeat(64); });
+		for(const driver of Object.keys(phpWasmDriverHashes))
+			await rejected(driver, changed => { changed.phpWasm.deployment[driver].sha256 = "0".repeat(64); });
+		for(const [executionIndex, execution] of report.phpWasm.executions.entries())
+			await rejected(`${execution.realm}/${execution.arrangement}/${execution.loading}/${execution.mode}`, changed => {
+				changed.phpWasm.executions[executionIndex].observation.checks--;
+			});
+	}
+	assert.equal(controls, 72);
 });
 
 test("reviewed PHP-Wasm execution authentication rejects incomplete tests, fixture builds and realm selections", async () => {
