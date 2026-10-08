@@ -38,7 +38,9 @@ const expectedChecks = 27;
  * @param run - Command to run.
  */
 export const retainFailure = (path, run) => run().catch(async error => {
-	const output = error.details ?? error, bounded = value => typeof value === "string" ? value.slice(-8000) : "";
+	// Long output keeps its first and last 4000 characters: a linker's first diagnostics and its last.
+	const bounded = value => typeof value !== "string" ? "" : value.length <= 8000 ? value : `${value.slice(0, 4000)}\n[...]\n${value.slice(-4000)}`;
+	const output = error.details ?? error;
 	const captured = { command: output.command ?? null, args: output.args ?? [], stdout: bounded(output.stdout), stderr: bounded(output.stderr) };
 	await writeFile(path, canonicalJson({ code: error.code ?? null, ...captured, message: bounded(error.message) }));
 	throw error;
@@ -73,9 +75,11 @@ test("a failed harness command keeps its structured output beside the report", a
 	const record = JSON.parse(await readFile(path, "utf8"));
 	assert.deepEqual([record.command, record.args, record.stdout, record.stderr], ["/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], "out\n", "err\n"]);
 	// A coded build error without process output keeps its code and bounded message.
-	await assert.rejects(() => retainFailure(path, () => Promise.reject(Object.assign(new Error("x".repeat(9000)), { code: "unsupported-native-c-signature", details: { declaration: "lean:FinReplies.late" } }))));
+	const long = `${"h".repeat(4000)}${"m".repeat(1000)}${"t".repeat(4000)}`;
+	await assert.rejects(() => retainFailure(path, () => Promise.reject(Object.assign(new Error(long), { code: "unsupported-native-c-signature", details: { declaration: "lean:FinReplies.late" } }))));
 	const coded = JSON.parse(await readFile(path, "utf8"));
-	assert.deepEqual([coded.code, coded.command, coded.stdout, coded.message.length], ["unsupported-native-c-signature", null, "", 8000]);
+	assert.deepEqual([coded.code, coded.command, coded.stdout], ["unsupported-native-c-signature", null, ""]);
+	assert.equal(coded.message, `${"h".repeat(4000)}\n[...]\n${"t".repeat(4000)}`);
 	// A successful command leaves no record.
 	await rm(path);
 	await retainFailure(path, () => runCopied("/bin/sh", ["-c", "true"], directory, { PATH: "/usr/bin:/bin" }));
@@ -132,7 +136,8 @@ test("generated C wrapper execution: C reply walks and Lean's own reconstruction
 	const names = Object.fromEntries([["HOST_MAYBE", "maybe", 0], ["HOST_TWICE_FIRST", "twice", 0], ["HOST_TWICE_SECOND", "twice", 1]]
 		.map(([macro, name, index]) => [macro, `${surface.prefix}_${surface.callbacks.get(model.bindingIr.declarations.find(item => item.id === `lean:FinReplies.${name}`).parameters[index].type.id).field}`]));
 	const harness = `${Object.entries(names).map(([macro, value]) => `#define ${macro} ${value}`).join("\n")}\n${await readFile("tests/fixtures/fin-reply-consumers/bypass.c", "utf8")}`;
-	const consumerFlags = ["-std=c11", "-Wall", "-Wextra", "-Werror", ...sanitizers, "-pthread"];
+	// The wrapper's own libraries sit in separate build directories, not beside it as in a package.
+	const consumerFlags = ["-std=c11", "-Wall", "-Wextra", "-Werror", ...sanitizers, "-pthread", `-Wl,-rpath-link,${component}:${join(runtime, "lib")}`];
 	const runs = {};
 	const retained = (label, command, args, cwd, environment) => retainFailure(`${reportPath}.${label}.failure.json`, () => runCopied(command, args, cwd, environment));
 	const compilerVersion = (await runCopied("/usr/bin/cc", ["--version"], directory, env)).stdout.split("\n")[0];
