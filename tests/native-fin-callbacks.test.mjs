@@ -14,6 +14,8 @@ import "./helpers/fin-reply-compiled-tests.mjs";
 import "./helpers/fin-reply-installed-tests.mjs";
 import "./helpers/native-fin-reply-evidence-tests.mjs";
 import "./helpers/native-fin-reply-archive-source-history-tests.mjs";
+import "./helpers/native-fin-reply-promotion-tests.mjs";
+import "./helpers/native-fin-reply-promotion-source-history-tests.mjs";
 import "./helpers/native-fin-reply-ci-tests.mjs";
 import "./helpers/native-fin-reply-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";

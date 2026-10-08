@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
 import { beforeNativeFinReplyArchiveSource, nativeFinReplyArchiveChangedPaths, nativeFinReplyArchiveHistoryPath, reverseNativeFinReplyArchiveUpdate } from "./native-fin-reply-archive-source-history.mjs";
 
 test("Native Fin reply archive integration authenticates each exact source predecessor", async () => {
@@ -19,7 +20,7 @@ test("Native Fin reply archive integration authenticates each exact source prede
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinReplyArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeFinReplyPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinReplyArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinReplyArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinReplyArchiveSource(update.path, source, update.currentSha256), source);
@@ -32,7 +33,7 @@ test("Native Fin reply archive integration authenticates each exact source prede
 });
 
 test("Native Fin reply archive source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeNativeFinReplyPromotionSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeNativeFinReplyArchiveSource(path, text));
 	const record = JSON.parse(await readFile(nativeFinReplyArchiveHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -42,7 +43,7 @@ test("Native Fin reply archive source pins do not change observations or other i
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeNativeFinReplyPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

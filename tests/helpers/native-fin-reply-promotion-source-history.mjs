@@ -1,20 +1,23 @@
 /**
- * Preserve exact source predecessors of the native Fin reply archive (#1220).
+ * Preserve exact source predecessors of the native Fin reply promotion (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
 
-export const nativeFinReplyArchiveHistoryPath = "docs/evidence/native-fin-reply-archive-source-history-20261008.json";
-export const nativeFinReplyArchiveChangedPaths = [
-	".gitattributes"
+export const nativeFinReplyPromotionHistoryPath = "docs/evidence/native-fin-reply-promotion-source-history-20261008.json";
+export const nativeFinReplyPromotionChangedPaths = [
+	"docs/type-surface.v1.json"
+	, "docs/consume/c.md"
+	, "docs/consume/cpp.md"
 	, "tests/native-fin-callbacks.test.mjs"
+	, "tests/helpers/nominal-fin-contract-tests.mjs"
+	, "tests/helpers/php-wasm-fin-promotion-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/callback-coverage-repair-source-history.mjs"
-	, "tests/helpers/callback-coverage-repair-source-history-tests.mjs"
+	, "tests/helpers/native-fin-reply-archive-source-history.mjs"
+	, "tests/helpers/native-fin-reply-archive-source-history-tests.mjs"
 ];
 let history;
 
@@ -24,8 +27,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseNativeFinReplyArchiveUpdate = (source, update) => {
-	assert.ok(nativeFinReplyArchiveChangedPaths.includes(update.path));
+export const reverseNativeFinReplyPromotionUpdate = (source, update) => {
+	assert.ok(nativeFinReplyPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -45,18 +48,17 @@ export const reverseNativeFinReplyArchiveUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the native Fin reply archive, stopping at an explicitly requested identity.
+ * Restore the source before the native Fin reply promotion, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNativeFinReplyArchiveSource = (path, source, expected) => {
-	source = beforeNativeFinReplyPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !nativeFinReplyArchiveChangedPaths.includes(path)) return source;
+export const beforeNativeFinReplyPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeFinReplyPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nativeFinReplyArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeFinReplyPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNativeFinReplyArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeFinReplyPromotionUpdate(source, update) : source;
 };

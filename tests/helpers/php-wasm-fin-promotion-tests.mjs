@@ -11,6 +11,15 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source-history.mjs";
 import { phpWasmFinPromotionConversion, phpWasmFinPromotionEnvironment, phpWasmFinPromotionLimit, phpWasmFinPromotionNestedOnly, phpWasmFinPromotionNotes, phpWasmFinPromotionReceipts, phpWasmFinPromotionReferences, phpWasmFinPromotionScope, phpWasmFinPromotionValidators } from "./php-wasm-fin-promotion-references.mjs";
 
+import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
+
+// Check this milestone at its authenticated identity; later host-reply support is separate.
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
+
 const predecessor = async () => JSON.parse(beforePhpWasmFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
 const validate = (document, previous, references, contracts) => {
@@ -56,7 +65,7 @@ const validate = (document, previous, references, contracts) => {
 };
 
 test("PHP-Wasm Fin promotion authenticates four original selections and every pinned file", async () => {
-	const references = await phpWasmFinPromotionReferences(), { document } = await readTypeSurface(), previous = await predecessor();
+	const references = await phpWasmFinPromotionReferences(), { document } = await readPromotedSurface(), previous = await predecessor();
 	assert.deepEqual(references.map(item => [item.sourcePath, item.fixture, item.checks]), [
 		["ordinary-source", "products", 2039], ["ordinary-source", "records", 2053]
 		, ["reviewed-ir", "products", 2039], ["reviewed-ir", "records", 2053]
@@ -78,7 +87,7 @@ test("PHP-Wasm Fin promotion authenticates four original selections and every pi
 
 test("PHP-Wasm Fin promotion states nested-only coverage in the evidence and generated consumer table", async () => {
 	assert.equal(phpWasmFinPromotionNestedOnly, "Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed.");
-	const { document } = await readTypeSurface();
+	const { document } = await readPromotedSurface();
 	for(const observation of document.observations.slice(-4))
 	{
 		assert.ok(observation.limitations.some(note => note.startsWith(phpWasmFinPromotionNestedOnly)));
@@ -91,7 +100,7 @@ test("PHP-Wasm Fin promotion states nested-only coverage in the evidence and gen
 });
 
 test("PHP-Wasm Fin promotion rejects appended and replaced claims in every selection", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor();
 	const references = await phpWasmFinPromotionReferences();
 	let controls = 0;
 	for(let index = 0; index < 4; index++) for(const append of [false, true])
@@ -111,13 +120,13 @@ test("PHP-Wasm Fin promotion rejects appended and replaced claims in every selec
 });
 
 test("PHP-Wasm Fin promotion changes exactly six cells and no earlier observation", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor();
 	assert.equal(previous.observations.length, 486); assert.equal(previous.evidence.length, 260);
 	validate(document, previous, await phpWasmFinPromotionReferences(), contracts);
 });
 
 test("PHP-Wasm Fin promotion rejects inferred hosts, positions, runtime claims and weakened scope", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor();
 	const references = await phpWasmFinPromotionReferences(), start = previous.observations.length;
 	for(const mutate of [
 		value => { value.observations[start].profiles = ["php-native"]; }
