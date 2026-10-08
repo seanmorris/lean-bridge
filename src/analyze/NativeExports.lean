@@ -355,8 +355,19 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
       if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
         reject e "unsupported native record identifier"
-      if induct.numParams != 0 || induct.numIndices != 0 || !info.parentInfo.isEmpty then
-        reject e "generic, dependent and inherited records require a reviewed projection"
+      if induct.numParams != 0 || induct.numIndices != 0 then
+        reject e "generic and dependent records require a reviewed projection"
+      -- An inherited record keeps Lean's own layout: each subobject parent is one field, such as
+      -- toBase of the parent record, and the constructor takes exactly these closed fields in order.
+      if !info.parentInfo.isEmpty then
+        let constructor := mkConst induct.ctors.head! (induct.levelParams.map mkLevelParam)
+        forallTelescopeReducing (← inferType constructor) fun binders _ => do
+          unless binders.size == info.fieldNames.size do reject e "inherited record constructor arity disagrees with its projections"
+          for binder in binders, index in [0:binders.size] do
+            let some projection := info.getProjFn? index | reject e "missing record projection"
+            let .forallE _ _ fieldType _ := (← getConstInfo projection).type | reject e "invalid record projection"
+            if fieldType.hasLooseBVars then reject e "inherited record fields cannot depend on the record value"
+            unless ← isDefEq (← inferType binder) fieldType do reject e "inherited record constructor and projection types disagree"
       let mut fields := #[]
       for field in info.fieldNames do
         let some projection := info.getProjFn? fields.size | reject e "missing record projection"
