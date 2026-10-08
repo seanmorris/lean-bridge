@@ -22,6 +22,28 @@ const graphGuide = target => "\n\nRecursive copied records and named variants us
 		: "\n\nC variants use named KIND constants and a union of named cases. Initialize a value with _init, select a constructor with _select, then assign that constructor's fields. _select returns STATUS_OK on success and preserves the value on invalid selections. A freshly initialized or cleared variant has no active constructor until selected. Do not assign kind directly. Caller inputs borrow pointer/span children for one call. Initialize every output before calling; success replaces the previous owned output and failure preserves it. An output root owns its nested data through private bookkeeping. Clear or select only the owning root, never a borrowed child view. Do not shallow-copy owned outputs or alter private ownership fields. An initialized caller-built parent may own an inline returned child; clearing that parent releases the child. Clear is idempotent. GMP integers in active fields are initialized already: assign with mpz_set, not mpz_init. Never overwrite them with a shallow struct copy. Finish standalone integers with mpz_clear.");
 
 /**
+ * README text for Fin bounds in callable positions, only for models that carry them: a closure
+ * returned by Lean checks its arguments before it runs, and values Lean produces for the host keep
+ * their bounds. Packages without callback bounds keep their README byte for byte.
+ *
+ * @param model - Compiled native model.
+ * @param target - C or C++ package.
+ */
+export const nativeCallbackFinGuide = (model, target) => {
+	const trees = model.exports.flatMap(item => [...(item.refinements?.parameters ?? []), item.refinements?.result ?? null]).filter(tree => tree?.kind === "callback");
+	if(!trees.length) return "";
+	const checked = model.exports.some(item => item.result.checked);
+	const produced = trees.some(tree => tree.result !== null) || model.exports.some(item => item.refinements?.parameters.some(tree => tree?.kind === "callback"));
+	const refusal = target === "cpp" ? "throws Error with status INVALID_ARGUMENT whose message names the argument and its bound"
+		: "returns INVALID_ARGUMENT with a message naming the argument and its bound";
+	const release = target === "cpp" ? "close() or destruction releases it" : "its dispose function releases it, exactly once";
+	return "\n\nLean Fin n values cross as Nat values below n, including bounds wider than 64 bits."
+		+ (checked ? ` A closure returned by Lean compares every Fin in its arguments with its bound before it runs: each element of an array or list, a present option value, both product components, only the active Except branch, each record field and only the active variant case's fields. An argument at or above its bound ${refusal}; the closure is not invoked, the caller's values are unchanged, and the closure stays valid until ${release}. Fin 0 has no values, so every call to a closure taking one is refused.` : "")
+		+ (produced ? " Values Lean produces for the host, the arguments it passes to a host callback and the results of a returned closure, are already below their bounds." : "")
+		+ " A host callback's result cannot carry a Fin bound: the host produces it while Lean runs, so such exports are refused when the package is built. Invoke and release returned closures on their creating thread.";
+};
+
+/**
  * Validate archive coordinates before any native compilation.
  *
  * @param settings - Optional target name and version.
@@ -159,7 +181,7 @@ endif()
 	const initialization = graph ? (target === "cpp" ? "C++ results own their memory and release native buffers automatically, including when a C++ allocation throws."
 		: `Initialize Nat/Int with mpz_init and aggregate structs with ${p}_TYPE_init before first use. C inputs borrow caller buffers for one call. The recursive C value API includes GMP in every package; CMake and pkg-config link it automatically.`)
 		: `C inputs borrow caller buffers for one call. ${cInitialization} C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.`;
-	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? graph ? "C++20" : "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\n${initialization}\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. ${integerGuide} Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}\n\n${exports.join("\n")}\n`);
+	await save("README.md", `# ${name} ${version}\n\nCompiled ${target === "cpp" ? graph ? "C++20" : "C++20 and C11" : "C11"} API from ${model.component.id}. Linux x86-64, glibc ${glibcMinimumVersion} or newer. Lean is not required by consumers. The shared native runtime is included in lib/ and loads automatically.\n\nInclude ${p}.${target === "cpp" ? "hpp" : "h"}. Use pkg-config package ${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}. C++ functions live in lean_bridge::${p}.\n\n${initialization}\n\nStrings are length-delimited UTF-8, including embedded NUL. Byte arrays are uninterpreted bytes. ${integerGuide} Unit parameters are zero in C and std::monostate in C++; Unit results have no output. Fixed-width integers use exact-width host types; floating-point values retain IEEE special values. Input and output copies share a 16 MiB per-call budget. Invalid input leaves the output unchanged and returns a status (C) or throws Error (C++).${copiedGuide}${graph ? "" : nativeCallbackFinGuide(model, target)}\n\n${exports.join("\n")}\n`);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
 	const manifest = { schemaVersion: 1, kind: "lean-bridge-native-c-package"

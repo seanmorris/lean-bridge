@@ -25,6 +25,7 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { generateNativeCallables } from "../src/backends/c/native-callables.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
+import { nativeCallbackFinGuide } from "../src/release/native-c-family.mjs";
 import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
@@ -161,6 +162,34 @@ test("the Binding IR that npm reads carries exactly the callback bounds the nati
 	}
 	assert.deepEqual([...nominal.keys()].sort(), ["FinCallbacks.Shape", "FinCallbacks.Tile"]);
 	for(const [name, value] of nominal) assert.deepEqual(definition(`lean:${name}`).source.extensions["lean-lang.org/nominal-refinements"], value, name);
+});
+
+test("C and C++ READMEs document only the callable bounds a package admits, and other packages keep their text", async () => {
+	const model = finCallbackCompilerModel();
+	const c = nativeCallbackFinGuide(model, "c"), cpp = nativeCallbackFinGuide(model, "cpp");
+	for(const text of [c, cpp])
+	{
+		assert.match(text, /^\n\nLean Fin n values cross as Nat values below n, including bounds wider than 64 bits\./u);
+		assert.match(text, /A closure returned by Lean compares every Fin in its arguments with its bound before it runs: each element of an array or list, a present option value, both product components, only the active Except branch, each record field and only the active variant case's fields\./u);
+		assert.match(text, /the closure is not invoked, the caller's values are unchanged/u);
+		assert.match(text, /Fin 0 has no values, so every call to a closure taking one is refused\./u);
+		assert.match(text, /Values Lean produces for the host, the arguments it passes to a host callback and the results of a returned closure, are already below their bounds\./u);
+		assert.match(text, /A host callback's result cannot carry a Fin bound: the host produces it while Lean runs, so such exports are refused when the package is built\./u);
+		assert.doesNotMatch(text, /installed|tested|verified/u);
+	}
+	assert.match(c, /returns INVALID_ARGUMENT with a message naming the argument and its bound; .* until its dispose function releases it, exactly once\./u);
+	assert.match(cpp, /throws Error with status INVALID_ARGUMENT whose message names the argument and its bound; .* until close\(\) or destruction releases it\./u);
+	// Only Lean-produced bounds: no sentence about checked closure arguments.
+	const produced = nativeCallbackFinGuide(finCallbackCompilerModel({ visit: finCallbackSignatures.visit, counter: finCallbackSignatures.counter }), "c");
+	assert.doesNotMatch(produced, /A closure returned by Lean compares/u);
+	assert.match(produced, /are already below their bounds/u);
+	// Packages without callback bounds, including ordinary top-level Fin, keep their README text unchanged.
+	const nat = finCallbackNat, plain = finCallbackCompilerModel({ scaler: [nat, finCallback([nat], nat)], visit: [finCallback([nat], nat), nat] });
+	assert.equal(nativeCallbackFinGuide(plain, "c"), "");
+	assert.equal(nativeCallbackFinGuide(finCallbackCompilerModel({ top: [finCallbackBound("5"), nat] }), "cpp"), "");
+	// The README appends the guide once, after the copied-value and callable guides, and never for graph packages.
+	const source = await readFile("src/release/native-c-family.mjs", "utf8");
+	assert.equal(source.split("${copiedGuide}${graph ? \"\" : nativeCallbackFinGuide(model, target)}\\n\\n${exports.join").length, 2);
 });
 
 test("host replies, nested callbacks, mixed bounds and packages without callback checks stay refused", () => {
