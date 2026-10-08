@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeReplyRefusalSource } from "./native-reply-refusal-source-history.mjs";
 
 export const scalarFinSourceEntryCiHistoryPath = "docs/evidence/scalar-fin-source-entry-ci-source-history-20261008.json";
 export const scalarFinSourceEntryCiChangedPaths = [
@@ -55,6 +56,7 @@ export const reverseScalarFinSourceEntryCiUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeScalarFinSourceEntryCiSource = (path, source, expected) => {
+	source = beforeNativeReplyRefusalSource(path, source, expected);
 	if(typeof source !== "string" || !scalarFinSourceEntryCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

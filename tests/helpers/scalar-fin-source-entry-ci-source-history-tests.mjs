@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeReplyRefusalSource } from "./native-reply-refusal-source-history.mjs";
 import { beforeScalarFinSourceEntryCiSource, scalarFinSourceEntryCiChangedPaths, scalarFinSourceEntryCiHistoryPath, reverseScalarFinSourceEntryCiUpdate } from "./scalar-fin-source-entry-ci-source-history.mjs";
 
 test("Scalar Fin source-entry CI authenticates each exact source predecessor", async () => {
@@ -19,7 +20,7 @@ test("Scalar Fin source-entry CI authenticates each exact source predecessor", a
 	assert.deepEqual(record.updates.map(update => update.path), scalarFinSourceEntryCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeReplyRefusalSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseScalarFinSourceEntryCiUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeScalarFinSourceEntryCiSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeScalarFinSourceEntryCiSource(update.path, source, update.currentSha256), source);
@@ -32,7 +33,7 @@ test("Scalar Fin source-entry CI authenticates each exact source predecessor", a
 });
 
 test("Scalar Fin source-entry CI source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeNativeReplyRefusalSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeScalarFinSourceEntryCiSource(path, text));
 	const record = JSON.parse(await readFile(scalarFinSourceEntryCiHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -42,7 +43,7 @@ test("Scalar Fin source-entry CI source pins do not change observations or other
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeNativeReplyRefusalSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-reply-refusal-v1",
+  "predecessorCommit": "bf89effc3735069b1f069482c26ccf296026e7db",
+  "updates": [
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "8ae4772cdccaf8c8f66ae40dbece361f687c22378fa0f98a9f96c0ae6c2d3796",
+      "previousSha256": "3509c4d11b892524e88415195c3b947dbe6fd1a269b8c19d5b7fcd94854dc542",
+      "edits": [
+        {
+          "start": 1273,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-reply-refusal-evidence-tests.mjs\";\nimport \"./helpers/native-reply-refusal-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 19039,
+          "previous": "",
+          "current": "const replyHeap = { cType: \"lean_object*\", box: \"lean_box\", unbox: \"lean_unbox\", heap: true };\nconst replySubtype = { kind: \"refinement\", base: finCallbackNat, predicate: { kind: \"subtype\", constructor: \"Sample.checkedDigit\" }, abi: finCallbackNat.abi };\nconst replyField = name => ({ name, projection: `Sample.Interval.${name}`, type: finCallbackNat });\nconst replyInterval = {\n\tkind: \"record\"\n\t, name: \"Sample.Interval\"\n\t, lean: \"Sample.Interval\"\n\t, constructor: \"Sample.Interval.mk\"\n\t, fields: [replyField(\"lo\"), replyField(\"hi\")]\n\t, erased: [\"ordered\"]\n\t, abi: replyHeap\n};\n\n"
+        },
+        {
+          "start": 20976,
+          "previous": "\t\t, [\"a host callback's record result\", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]];\n",
+          "current": "\t\t, [\"a host callback's record result\", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]\n\t\t// Subtype and checked records are refused by native type validation before any reply rule applies.\n\t\t, [\"a host callback's Subtype result\", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]\n\t\t, [\"a host callback's optional Subtype result\", { reply: [finCallback([nat], { kind: \"option\", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level native parameter or result/u]\n\t\t, [\"a host callback's checked-record result\", { reply: [finCallback([nat], replyInterval), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]\n\t\t, [\"a host callback's optional checked-record result\", { reply: [finCallback([nat], { kind: \"option\", element: replyInterval, abi: replyHeap }), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]];\n"
+        },
+        {
+          "start": 22237,
+          "previous": "",
+          "current": "\t// The same reply position admits a contained Fin, so each refusal above comes from its own type.\n\tassert.ok(finCallbackCompilerModel({ reply: [finCallback([nat], { kind: \"option\", element: finCallbackBound(\"5\"), abi: replyHeap }), nat] }, true).exports[0].parameters[0].type.reply);\n"
+        },
+        {
+          "start": 40254,
+          "previous": "",
+          "current": "\t// Extraction itself refuses a Subtype or checked record inside a host reply. Its diagnostic names the\n\t// rejected type for the one selected export; a checked constructor configured on the callback\n\t// parameter never reaches the reply.\n\tconst interval = \"structure Interval where\\n  lo : Nat\\n  hi : Nat\\n  ordered : lo ≤ hi\\ndef mkInterval (lo hi : Nat) : Option Interval := if ordered : lo ≤ hi then some ⟨lo, hi, ordered⟩ else none\\n\";\n\tconst site = refinement => ({ ownership: \"copy\", lifetime: null, ...refinement });\n\tconst configured = { \"FinCallbacks.replyConfigured\": { parameters: [site({ refinement: { constructor: \"FinCallbacks.mkInterval\" } })], result: site({}) } };\n\tconst extracted = [\n\t\t{\n\t\t\tname: \"replySubtype\"\n\t\t\t, definition: \"def replySubtype (host : Nat → Option { n : Nat // n < 5 }) : Nat := match host 0 with | none => 0 | some value => value.val\"\n\t\t\t, configuration: {}\n\t\t\t, pattern: /Subtype refinements currently require a top-level parameter or result: /u\n\t\t}\n\t\t, {\n\t\t\tname: \"replyInterval\"\n\t\t\t, definition: `${interval}def replyInterval (host : Nat → Option Interval) : Nat := match host 0 with | none => 0 | some value => value.hi`\n\t\t\t, configuration: {}\n\t\t\t, pattern: /checked records currently require a top-level parameter or result: [^\"]*Interval/u\n\t\t}\n\t\t, {\n\t\t\tname: \"replyConfigured\"\n\t\t\t, definition: `${interval}def replyConfigured (host : Nat → Interval) : Nat := (host 0).hi`\n\t\t\t, configuration: { contracts: configured }\n\t\t\t, pattern: /checked records currently require a top-level parameter or result: [^\"]*Interval/u\n\t\t}\n\t];\n\tfor(const { name, definition, configuration, pattern } of extracted)\n\t{\n\t\tconst source = `namespace FinCallbacks\\n${definition}\\nend FinCallbacks\\n`;\n\t\tawait assert.rejects(() => elaborate(t, { exports: [`FinCallbacks.${name}`], ...configuration }, source), error => {\n\t\t\tassert.ok(error.message.includes(`\"declaration\":\"FinCallbacks.${name}\"`), `${name}: ${error.message}`);\n\t\t\tassert.ok(error.message.includes(\"\\\"reason\\\":\\\"unsupported-native-type\\\"\"), `${name}: ${error.message}`);\n\t\t\tassert.match(error.message, pattern, name);\n\t\t\t// The refusal is extraction's own, not the model's later reply rule.\n\t\t\tassert.doesNotMatch(error.message, /a host callback result needs a Fin-free failure value/u, name);\n\t\t\treturn true;\n\t\t}, name);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "cab4783603cf02f90d5879d7dc08831a1e7c167f975589e1a4e0bf59e8442fb0",
+      "previousSha256": "e4acd5fbe2058c5a25679d92421d52027c64158c21e1edcad17024dd48628315",
+      "edits": [
+        {
+          "start": 11344,
+          "previous": "",
+          "current": "import { nativeReplyRefusalChangedPaths } from \"./native-reply-refusal-source-history.mjs\";\n"
+        },
+        {
+          "start": 49063,
+          "previous": "",
+          "current": "\t, ...nativeReplyRefusalChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-source-entry-ci-source-history.mjs",
+      "currentSha256": "0412896bd2386bae6a27d416963478a606281ea53dd7d46314037a3568209472",
+      "previousSha256": "9a9b0030746534f88625f6e565faca97ddef2ee7d0c85e61841dc1ca9309c7d5",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforeNativeReplyRefusalSource } from \"./native-reply-refusal-source-history.mjs\";\n"
+        },
+        {
+          "start": 2457,
+          "previous": "",
+          "current": "\tsource = beforeNativeReplyRefusalSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-source-entry-ci-source-history-tests.mjs",
+      "currentSha256": "dafabf6988d8460fd951cd4f2b77a848e3d4981b54ff9bfa8b68526551184a6a",
+      "previousSha256": "d7247ff8eb022de1246af6e636edb2fbdd99689b0d034fbd5f9b7e2b73f426e7",
+      "edits": [
+        {
+          "start": 517,
+          "previous": "",
+          "current": "import { beforeNativeReplyRefusalSource } from \"./native-reply-refusal-source-history.mjs\";\n"
+        },
+        {
+          "start": 1223,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeReplyRefusalSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2203,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeNativeReplyRefusalSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2790,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeNativeReplyRefusalSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ],
+  "producerCommit": "190c8fd76774c1e767b7d03f6b0ec40bebabe9f0",
+  "producerUpdates": [
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "8ae4772cdccaf8c8f66ae40dbece361f687c22378fa0f98a9f96c0ae6c2d3796",
+      "previousSha256": "23846d584c6d79a186c5522138aaf2fd90ae87efd4ab20db885d4c65f1601fc5",
+      "edits": [
+        {
+          "start": 1273,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-reply-refusal-evidence-tests.mjs\";\nimport \"./helpers/native-reply-refusal-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

@@ -126,6 +126,7 @@ import { nativeReplySymbolFixChangedPaths } from "./native-reply-symbol-fix-sour
 import { nativeReplyReviewChangedPaths } from "./native-reply-review-source-history.mjs";
 import { scalarFinSourceEntryIntegrationChangedPaths } from "./scalar-fin-source-entry-integration-source-history.mjs";
 import { scalarFinSourceEntryCiChangedPaths } from "./scalar-fin-source-entry-ci-source-history.mjs";
+import { nativeReplyRefusalChangedPaths } from "./native-reply-refusal-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -716,6 +717,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeReplyReviewChangedPaths
 	, ...scalarFinSourceEntryIntegrationChangedPaths
 	, ...scalarFinSourceEntryCiChangedPaths
+	, ...nativeReplyRefusalChangedPaths
 ])].sort());
 
 /**

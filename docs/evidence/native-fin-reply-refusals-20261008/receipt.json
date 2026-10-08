@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1453,
+  "execution": "local",
+  "revision": "190c8fd76774c1e767b7d03f6b0ec40bebabe9f0",
+  "test": "fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it",
+  "selection": "tests/native-fin-callbacks.test.mjs --test-name-pattern=\"^fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it$\"",
+  "sources": {
+    "tests/native-fin-callbacks.test.mjs": "23846d584c6d79a186c5522138aaf2fd90ae87efd4ab20db885d4c65f1601fc5",
+    "src/analyze/NativeExports.lean": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+    "src/analyze/native-metadata.mjs": "d2cf52cf67bd8630a5fa172e63af02145606e19de03d174d8dac0387c7e64d8e"
+  },
+  "scope": {
+    "cases": [
+      "reply",
+      "replyTile",
+      "replyOk",
+      "replySubtype",
+      "replyInterval",
+      "replyConfigured",
+      "replies"
+    ],
+    "enforcement": "seven elaborations asserted inside one selected test; the TAP records that test, not seven separate results",
+    "executed": "fresh Lean extraction and native model construction, stopping before any C compilation",
+    "installed": false,
+    "sanitizers": false,
+    "hostedCi": false
+  },
+  "sourceIdentity": "The producer test is archived as text because its integrated successor adds an import; the extractor and metadata sources are authenticated through the historical source reader.",
+  "artifacts": [
+    {
+      "path": "docs/evidence/native-fin-reply-refusals-20261008/queue.json",
+      "originalPath": "build/vo1453-fresh-lean-refusals-190c8fd.queue",
+      "sha256": "e7b2cc3a053809f366301c8e474ea134c04011f53bbd34f7359864d2768b6c61",
+      "bytes": 1671
+    },
+    {
+      "path": "docs/evidence/native-fin-reply-refusals-20261008/run.tap",
+      "originalPath": "build/vo1453-fresh-lean-refusals-190c8fd.tap",
+      "sha256": "633b1ffed168b8d32578d582e185433cd4382c04b3c931da6379f1120a9bebd4",
+      "bytes": 396
+    },
+    {
+      "path": "docs/evidence/native-fin-reply-refusals-20261008/end.txt",
+      "originalPath": "build/vo1453-fresh-lean-refusals-190c8fd.end",
+      "sha256": "7402f18f6a955df08e928863f75b376ce9418cc0d0564399dd6b7913e01e4111",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/native-fin-reply-refusals-20261008/sources/190c8fd/tests/native-fin-callbacks.test.mjs.txt",
+      "originalPath": "git:190c8fd76774c1e767b7d03f6b0ec40bebabe9f0:tests/native-fin-callbacks.test.mjs",
+      "sha256": "23846d584c6d79a186c5522138aaf2fd90ae87efd4ab20db885d4c65f1601fc5",
+      "bytes": 53016
+    }
+  ],
+  "remaining": [
+    "Source and archive integration with an exact history layer.",
+    "Installed, sanitizer and hosted execution of these refusals are not claimed."
+  ]
+}
