@@ -247,6 +247,16 @@ cover bounds 3, 5 and 10; the R2 fixture also checks a host-produced `Fin 3`
 reply. TypeScript checks the generated declarations; the installed Node package
 provides the runtime checks. Reviewed browser callback coverage remains open.
 
+For top-level `Fin n` arguments, both public JavaScript calls and direct compiled
+runtime calls reject values outside `0 <= value < n`. The
+[scalar rejection checks](evidence/npm-scalar-fin-rejection-20261007.md) cover
+Node and browser calls. A separate
+[compiled Node source-entry probe](evidence/scalar-fin-source-entry-20261008/receipt.json)
+records every call across six private ABIs: all 15,286 rejected calls stop before
+entering the Lean function, and 15,298 valid calls enter it. The probe uses
+instrumented packages, including valid controls and recovery calls. Its counters
+measure Node execution, not browser or native-host execution.
+
 ### Owned resources inside structured values
 
 The `javascript-wasm-owned-v1` package profile supports identity-bearing values

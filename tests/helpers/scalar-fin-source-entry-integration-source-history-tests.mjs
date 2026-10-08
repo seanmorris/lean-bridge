@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeScalarFinSourceEntryCiSource } from "./scalar-fin-source-entry-ci-source-history.mjs";
 import { beforeScalarFinSourceEntryIntegrationSource, scalarFinSourceEntryIntegrationChangedPaths, scalarFinSourceEntryIntegrationHistoryPath, reverseScalarFinSourceEntryIntegrationUpdate } from "./scalar-fin-source-entry-integration-source-history.mjs";
 
 test("Scalar Fin source-entry integration authenticates each exact source predecessor", async () => {
@@ -19,7 +20,7 @@ test("Scalar Fin source-entry integration authenticates each exact source predec
 	assert.deepEqual(record.updates.map(update => update.path), scalarFinSourceEntryIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeScalarFinSourceEntryCiSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseScalarFinSourceEntryIntegrationUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeScalarFinSourceEntryIntegrationSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeScalarFinSourceEntryIntegrationSource(update.path, source, update.currentSha256), source);
@@ -32,7 +33,7 @@ test("Scalar Fin source-entry integration authenticates each exact source predec
 });
 
 test("Scalar Fin source-entry integration source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeScalarFinSourceEntryCiSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeScalarFinSourceEntryIntegrationSource(path, text));
 	const record = JSON.parse(await readFile(scalarFinSourceEntryIntegrationHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -42,7 +43,7 @@ test("Scalar Fin source-entry integration source pins do not change observations
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeScalarFinSourceEntryCiSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

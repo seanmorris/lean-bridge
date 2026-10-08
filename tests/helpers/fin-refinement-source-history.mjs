@@ -125,6 +125,7 @@ import { nodeConsumerBudgetChangedPaths } from "./node-consumer-budget-source-hi
 import { nativeReplySymbolFixChangedPaths } from "./native-reply-symbol-fix-source-history.mjs";
 import { nativeReplyReviewChangedPaths } from "./native-reply-review-source-history.mjs";
 import { scalarFinSourceEntryIntegrationChangedPaths } from "./scalar-fin-source-entry-integration-source-history.mjs";
+import { scalarFinSourceEntryCiChangedPaths } from "./scalar-fin-source-entry-ci-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -714,6 +715,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeReplySymbolFixChangedPaths
 	, ...nativeReplyReviewChangedPaths
 	, ...scalarFinSourceEntryIntegrationChangedPaths
+	, ...scalarFinSourceEntryCiChangedPaths
 ])].sort());
 
 /**

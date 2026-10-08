@@ -18,6 +18,8 @@ import { scalarFinSourceEntryProbe, sourceEntryInstrumentation } from "./helpers
 import "./helpers/scalar-fin-source-entry-tests.mjs";
 import "./helpers/scalar-fin-source-entry-evidence-tests.mjs";
 import "./helpers/scalar-fin-source-entry-integration-source-history-tests.mjs";
+import "./helpers/scalar-fin-source-entry-run-tests.mjs";
+import "./helpers/scalar-fin-source-entry-ci-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
