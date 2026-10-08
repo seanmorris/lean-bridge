@@ -231,6 +231,8 @@ const profileManifest = Object.freeze({
 		, "browser-refinements"
 		, "scalar-fin-rejection"
 		, "generic-records"
+		, "inherited-records"
+		, "generic-inheritance"
 		, "generic-records-browser"
 		, "browser-callback-fin"
 		, "browser-callback-fin-evidence"

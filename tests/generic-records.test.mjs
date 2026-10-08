@@ -216,7 +216,7 @@ test("generic structure instantiations are rejected at the Lean source unless an
 	const cases = [
 		["an unaliased application in a result", ["swap"], "", /name this instantiation of a generic structure with an abbrev: GenericRecords\.Pair Nat String/]
 		, ["an unaliased application as an argument", ["nested"], "abbrev Nested := Box (Box Nat)\ndef nested (value : Nested) : Nat := value.value.value", /name this instantiation of a generic structure with an abbrev: GenericRecords\.Box Nat/]
-		, ["an inherited structure", ["named"], "structure Named (α : Type) extends Box α where\n  name : String\nabbrev NamedNat := Named Nat\ndef named (value : NamedNat) : Nat := value.value", /inherited generic records require a reviewed projection/]
+		, ["an inherited parent with ambiguous aliases", ["named"], "structure Named (α : Type) extends Box α where\n  name : String\nabbrev NamedNat := Named Nat\ndef named (value : NamedNat) : Nat := value.value", /ambiguous inherited generic parent; candidates: GenericRecords\.NatBox, GenericRecords\.NatBoxAgain/]
 		, ["a field that depends on the value", ["sized"], "structure Sized (α : Type) where\n  items : List α\n  ok : items.length < 10\nabbrev SizedNat := Sized Nat\ndef sized (value : SizedNat) : Nat := value.items.length", /generic record field ok depends on the record value/]
 		, ["a callback argument", ["applied"], "abbrev FnBox := Box (Nat → Nat)\ndef applied (value : FnBox) : Nat := value.value value.count", /callbacks inside copied values require a retention policy/]
 		// The native profile checks Fin only at structural positions, so the argument's bound is refused before the argument rule.

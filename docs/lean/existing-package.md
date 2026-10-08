@@ -188,6 +188,36 @@ The [installed checks](../evidence/generic-record-specializations-20261007.md) c
 
 The [browser run](../evidence/generic-record-browser-20261008/receipt.json) also covers Array-valued fields, the nine specializations and separate namespaces in Chromium, Firefox and WebKit. Each page, React production/strict and worker execution performs 1025 checks and 1023 rejection checks. The harness verifies the installed descriptor, served Wasm hashes, React cleanup, worker shutdown and recovery after a failed asset request. It removes author/build files before installation and serves only the bundled deployment. [PHP-Wasm direct-record checks](../evidence/php-wasm-generic-records-20261007/receipt.json) are separate: those twelve executions do not include configured function specializations or Array-valued fields. Reviewed generic-record signatures remain unmeasured by these runs.
 
+### Export inherited records
+
+Lean Bridge keeps Lean's constructor and projection layout for copied inherited records. A parent subobject becomes a nested field, not a set of flattened host fields. Lean decides the layout when parents overlap; the bridge checks that the constructor accepts the projected field types in that order.
+
+For a generic parent, give its closed instantiation one alias in the compiled source closure:
+
+```lean
+namespace Library
+
+structure Base (α : Type) where
+  value : α
+
+structure Child (α : Type) extends Base α where
+  count : Nat
+
+abbrev NatBase := Base Nat
+abbrev NatChild := Child Nat
+
+def increment (child : NatChild) : NatChild :=
+  { child with value := child.value + 1 }
+
+end Library
+```
+
+The `NatChild` boundary shape has `toBase : NatBase` and `count : Nat`. In JavaScript, its input is `{ toBase: { value: 4n }, count: 2n }`. Both aliases retain their own generic-structure origin in the Binding IR; a phantom type argument remains part of that origin even when no field stores it.
+
+Parent discovery considers public, safe, universe-free aliases in the project's compiled modules and imported captured dependencies. It excludes unimported modules. No matching alias, or several aliases for the same parent, produces a source diagnostic. A field whose type explicitly names an alias needs no discovery and keeps that identity even when another equal alias exists.
+
+The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent fields, proof fields and recursive generic records remain unsupported. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.
+
 ### Declare export contracts
 
 Use `contracts` to require specific ownership, lifetimes, refinement policies or boundary effects. Each key names an exact exported declaration or configured specialization. Lean checks the decisions against the compiled signature and the selected adapter. A mismatch stops the build before linking.

@@ -124,9 +124,31 @@ def nominalReference (e : Expr) (name : Name) : MetaM Json := do
   return obj [("kind", str "reference"), ("name", str name.toString),
     ("lean", str name.toString), ("abi", ← abi e)]
 
+/-- Generic-structure aliases in the request's compiled source closure, grouped by structure. -/
+abbrev ParentAliasIndex := Array (Name × Array Name)
+
+/-- Declarations scanned while indexing aliases for inherited generic parents, per request. -/
+def parentAliasWorkLimit : Nat := 65536
+
+/-- Request-wide inherited-parent discovery state. The index is built only when a site first needs
+discovery, so a request without inherited generic parents never scans. A scan that exceeds the limit
+is attempted once: the request remembers it and every later site refuses with the same diagnostic.
+The counters are internal: normal metadata never reports them. -/
+structure ParentAliasCache where
+  limit : Nat := parentAliasWorkLimit
+  index : Option ParentAliasIndex := none
+  resolved : Array (Expr × Name) := #[]
+  attempts : Nat := 0
+  builds : Nat := 0
+  scanned : Nat := 0
+  probes : Nat := 0
+  hits : Nat := 0
+  exhausted : Bool := false
+
 structure ShapeState where
   types : Array Json := #[]
   nodes : Nat := 0
+  parentAliases : Option (IO.Ref ParentAliasCache) := none
 
 abbrev ShapeM := StateT ShapeState MetaM
 
@@ -159,6 +181,76 @@ def structuralConstructors : List Name := [``Array, ``Prod, ``Fin, ``Subtype]
 /-- The structure a closed application may instantiate as an alias-named record. -/
 def genericStructure? (env : Environment) (name : Name) : Option StructureInfo :=
   if structuralConstructors.contains name then none else getStructureInfo? env name
+
+/-- Index every safe, public, universe-free abbrev of a generic structure in the request's compiled
+source closure: request.modules, which includes captured dependency modules the project imports.
+Unimported modules and the rest of the environment are never candidates. Returns no index when the
+scan exceeds the limit, with the declarations it scanned either way. -/
+def buildParentAliasIndex (request : Request) (limit : Nat := parentAliasWorkLimit) : MetaM (Option ParentAliasIndex × Nat) := do
+  let env ← getEnv
+  let mut index : ParentAliasIndex := #[]
+  let mut scanned := 0
+  for position in [0:env.header.moduleNames.size] do
+    unless request.modules.contains env.header.moduleNames[position]!.toString do continue
+    for name in env.header.moduleData[position]!.constNames do
+      scanned := scanned + 1
+      if scanned > limit then return (none, scanned)
+      let some (.defnInfo definition) := env.find? name | continue
+      unless definition.levelParams.isEmpty && definition.safety == .safe && !isPrivateName name &&
+          nativeIdentifier name.toString do continue
+      let some structureName := definition.value.getAppFn.constName? | continue
+      unless (genericStructure? env structureName).isSome do continue
+      index := match index.findIdx? (·.1 == structureName) with
+        | some found => index.modify found fun (key, names) => (key, names.push name)
+        | none => index.push (structureName, #[name])
+  return (some index, scanned)
+
+/-- The one diagnostic for a request whose alias search exceeded its limit. -/
+def parentAliasExhausted (limit : Nat) : MetaM α :=
+  throwError "inherited parent alias search exceeds its limit of {limit} declarations"
+
+/-- Resolve the unnamed type of an inherited generic parent to the one source alias that denotes it.
+Each candidate is probed without keeping metavariable assignments; no match or several matches refuse. -/
+def resolveParentAlias (request : Request) (child : Name) (e : Expr) : ShapeM Name := do
+  let e ← instantiateMVars e
+  if e.hasMVar || e.hasFVar || e.hasLevelMVar then reject e "an inherited generic parent must be a closed type"
+  if (e.find? (·.isConstOf child)).isSome then reject e "recursive generic records are not admitted"
+  -- A site without a request-wide cache still discovers, with its own cache.
+  let cache ← match (← get).parentAliases with
+    | some cache => pure cache
+    | none => do
+      let cache ← IO.mkRef ({} : ParentAliasCache)
+      modify fun state => { state with parentAliases := some cache }
+      pure cache
+  if let some (_, name) := (← cache.get).resolved.find? (·.1 == e) then
+    cache.modify fun state => { state with hits := state.hits + 1 }
+    return name
+  let limit := (← cache.get).limit
+  if (← cache.get).exhausted then parentAliasExhausted limit
+  let index ← match (← cache.get).index with
+    | some index => pure index
+    | none => do
+      let (index?, scanned) ← buildParentAliasIndex request limit
+      cache.modify fun state => { state with attempts := state.attempts + 1, scanned := state.scanned + scanned }
+      let some index := index? | do
+        cache.modify fun state => { state with exhausted := true }
+        parentAliasExhausted limit
+      cache.modify fun state => { state with index := some index, builds := state.builds + 1 }
+      pure index
+  let some structureName := e.getAppFn.constName? | reject e "an inherited generic parent must instantiate a structure"
+  let candidates := (index.find? (·.1 == structureName)).map (·.2) |>.getD #[]
+  let mut matching := #[]
+  for name in candidates do
+    cache.modify fun state => { state with probes := state.probes + 1 }
+    let denotes : MetaM Bool := withoutModifyingState <| withNewMCtxDepth do
+      return (← whnf (← inferType (mkConst name))).isSort && (← isDefEq (mkConst name) e)
+    if ← denotes then matching := matching.push name
+  match (matching.qsort (·.toString < ·.toString)).toList with
+  | [] => reject e "name this inherited generic parent with an abbrev in the compiled source"
+  | [name] =>
+    cache.modify fun state => { state with resolved := state.resolved.push (e, name) }
+    return name
+  | names => reject e s!"ambiguous inherited generic parent; candidates: {", ".intercalate (names.map toString)}"
 
 /-- `structural` stays true while only arrays, lists, options, products, results, aliases and
 plain record and variant fields separate a position from its top-level parameter or result.
@@ -284,8 +376,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         let args := e.getAppArgs
         if !nativeIdentifier structureName.toString || !nativeIdentifier induct.ctors.head!.toString then
           reject e "unsupported native record identifier"
-        if induct.numParams != args.size || induct.numIndices != 0 || !info.parentInfo.isEmpty then
-          reject e "indexed, partially applied and inherited generic records require a reviewed projection"
+        if induct.numParams != args.size || induct.numIndices != 0 then
+          reject e "indexed and partially applied generic records require a reviewed projection"
         if levels.length != induct.levelParams.length then reject e "generic record universe instantiation is incomplete"
         -- Every type argument is a closed runtime type: a Sort-typed, non-proposition, copied shape.
         let mut arguments := #[]
@@ -313,9 +405,18 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
             if fieldType.containsFVar receiver.fvarId! then reject e s!"generic record field {field} depends on the record value"
             if ← isProp fieldType then reject e s!"generic record field {field} is a proof"
             return fieldType
+          -- An inherited generic parent is one subobject field whose Lean type is an unnamed
+          -- application; it resolves to the single source alias that denotes it. Fields that a
+          -- program names explicitly never take this path.
+          let parent := info.parentInfo.any fun item => item.subobject && item.projFn == projection
+          let env ← getEnv
+          let generic := fieldType.getAppFn.constName?.any fun head => (genericStructure? env head).isSome
+          let fieldShape ← if parent && fieldType.isApp && generic then
+              shapeTree request (mkConst (← resolveParentAlias request structureName fieldType)) (aliasName :: seen) 0 true none containerFin false
+            else shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false
           fields := fields.push (obj [("name", str field.toString),
             ("projection", str projection.toString),
-            ("type", ← shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false)])
+            ("type", fieldShape)])
         -- The constructor at the same universes, applied to the arguments, must take exactly the
         -- projected field types in order and build the closed alias; the probe is Lean-typed.
         let constructorType ← inferType (mkAppN (mkConst induct.ctors.head! levels) args)
@@ -355,8 +456,19 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
       if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
         reject e "unsupported native record identifier"
-      if induct.numParams != 0 || induct.numIndices != 0 || !info.parentInfo.isEmpty then
-        reject e "generic, dependent and inherited records require a reviewed projection"
+      if induct.numParams != 0 || induct.numIndices != 0 then
+        reject e "generic and dependent records require a reviewed projection"
+      -- An inherited record keeps Lean's own layout: each subobject parent is one field, such as
+      -- toBase of the parent record, and the constructor takes exactly these closed fields in order.
+      if !info.parentInfo.isEmpty then
+        let constructor := mkConst induct.ctors.head! (induct.levelParams.map mkLevelParam)
+        forallTelescopeReducing (← inferType constructor) fun binders _ => do
+          unless binders.size == info.fieldNames.size do reject e "inherited record constructor arity disagrees with its projections"
+          for binder in binders, index in [0:binders.size] do
+            let some projection := info.getProjFn? index | reject e "missing record projection"
+            let .forallE _ _ fieldType _ := (← getConstInfo projection).type | reject e "invalid record projection"
+            if fieldType.hasLooseBVars then reject e "inherited record fields cannot depend on the record value"
+            unless ← isDefEq (← inferType binder) fieldType do reject e "inherited record constructor and projection types disagree"
       let mut fields := #[]
       for field in info.fieldNames do
         let some projection := info.getProjFn? fields.size | reject e "missing record projection"
@@ -534,25 +646,25 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
     ("abi", ← ofExcept <| value.getObjVal? "abi")]
 
 def shape (request : Request) (e : Expr) (checked : Option String := none)
-    (callbackSite : Option Bool := none) : MetaM Json := do
+    (callbackSite : Option Bool := none) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do
   if let some policy := request.ownedAggregates then
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
-  let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)).run {}
+  let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)).run { parentAliases }
   finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (checkedParameters : Array (Option String) := #[]) (checkedResult : Option String := none)
-    (index : Nat := 0) : MetaM (Array Json × Json) := do
+    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × Json) := do
   let reduced ← whnf e
   if index < limit then
     if let .forallE _ argument result binder := reduced then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
-      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false)
-      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1)
+      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false) parentAliases
+      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1) parentAliases
       return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
-  return (#[], ← shape request e checkedResult (callbackSite := some true))
+  return (#[], ← shape request e checkedResult (callbackSite := some true) parentAliases)
 
 def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
@@ -826,7 +938,7 @@ def checkedConstructor (site : Json) : Option String := do
   let refinement ← (site.getObjVal? "refinement").toOption
   (refinement.getObjValAs? String "constructor").toOption
 
-def describeSignature (request : Request) (name : String) (type : Expr) : MetaM (Array Json × String × Json) := do
+def describeSignature (request : Request) (name : String) (type : Expr) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × String × Json) := do
   let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
   let native := request.profile.getD "component-scalars-v1" == "native-library-v1"
   let selectedArity := request.arities.find? (·.1 == name) |>.map (·.2)
@@ -838,7 +950,7 @@ def describeSignature (request : Request) (name : String) (type : Expr) : MetaM 
     |>.getD #[] |>.map checkedConstructor
   let checkedResult := contract.bind (fun value => (value.getObjVal? "result").toOption) |>.bind checkedConstructor
   try
-    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult
+    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult (parentAliases := parentAliases)
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
@@ -944,7 +1056,7 @@ def checkedApplicationSource (value : Expr) : MetaM String := do
     throwError "serialized specialization differs from its compiler application"
   return source
 
-def extractSpecialization (request : Request) (source : Json) (selection : Specialization) : MetaM Json := do
+def extractSpecialization (request : Request) (source : Json) (selection : Specialization) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do
   let mut result := source.setObjVal! "identity" (str selection.name) |>.setObjVal! "selected" (toJson true)
   let mut application := Json.null
   try
@@ -957,7 +1069,7 @@ def extractSpecialization (request : Request) (source : Json) (selection : Speci
       if (← collectAxioms name).contains ``sorryAx then
         throwError "specialization depends on sorry: {name}"
     let type ← inferType value
-    let (parameters, resultText, projection) ← describeSignature request selection.name type
+    let (parameters, resultText, projection) ← describeSignature request selection.name type parentAliases
     let effects ← effectNames type
     let typeText ← expression type
     let projection := constrainProjection request selection.name <|
@@ -979,12 +1091,14 @@ def loadBuiltinIndex {α β σ : Type} [Inhabited σ]
   let state ← extension.addImportedFn entries { env := env, opts := {} }
   return extension.setState env state
 
-def extractMetadata (request : Request) : MetaM Json := do
+def extractMetadata (request : Request) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do
   let some context := request.metadata | throwError "metadata context is required"
   let profile := request.profile.getD "component-scalars-v1"
   unless ["component-scalars-v1", "native-library-v1"].contains profile do
     throwError "unsupported metadata profile"
   let env ← getEnv
+  -- One lazily built alias index per request, shared by every site that needs discovery.
+  let parentAliases := some (← match parentAliases with | some cache => pure cache | none => IO.mkRef ({} : ParentAliasCache))
   let specializations := request.specializations.getD #[]
   for selection in specializations do
     if env.contains selection.name.toName then
@@ -1026,7 +1140,7 @@ def extractMetadata (request : Request) : MetaM Json := do
           else request.exports.contains name.toString
         if selected then discovered := discovered.push name.toString
         let typeText ← expression info.type
-        let (parameters, resultText, runtimeProjection) ← describeSignature request name.toString info.type
+        let (parameters, resultText, runtimeProjection) ← describeSignature request name.toString info.type parentAliases
         let effects ← effectNames info.type
         let mut projection := runtimeProjection
         if !info.levelParams.isEmpty then projection := unsupported "specialization-required" typeText
@@ -1065,7 +1179,7 @@ def extractMetadata (request : Request) : MetaM Json := do
     let originals := items
     for selection in specializations do
       if let some original := originals.find? (fun item => (item.getObjValAs? String "identity").toOption == some selection.declaration) then
-        let item ← extractSpecialization request original selection
+        let item ← extractSpecialization request original selection parentAliases
         items := items.push item
         discovered := discovered.push selection.name
         let projection ← ofExcept <| item.getObjVal? "projection"

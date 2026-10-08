@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeInheritedRecordsSource } from "./inherited-records-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeSubtypeFixtureLinkSource, subtypeFixtureLinkChangedPaths, subtypeFixtureLinkHistoryPath, reverseSubtypeFixtureLinkUpdate } from "./subtype-fixture-link-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Subtype fixture link repair authenticates each exact source predecessor", 
 	assert.deepEqual(record.updates.map(update => update.path), subtypeFixtureLinkChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeInheritedRecordsSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseSubtypeFixtureLinkUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeFixtureLinkSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeFixtureLinkSource(update.path, source, update.currentSha256), source);
