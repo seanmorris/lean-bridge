@@ -7,7 +7,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -19,6 +19,12 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { finCallbackEnvironment } from "./fin-callback-install.mjs";
 import { finReplyConsumerNames, finReplyExports, finReplyTargets, installFinReplyConsumer, parseFinReplyResult } from "./fin-reply-install.mjs";
 import { retainFailure } from "./fin-reply-compiled-tests.mjs";
+import { finReplyCompilerModel } from "./fin-reply-model.mjs";
+import { runCopied } from "./copied-fixture-install.mjs";
+import { boostSources } from "../../src/backends/cpp/boost.mjs";
+import { generateCBindingPackage } from "../../src/backends/c/generate.mjs";
+import { generateGmpProjection } from "../../src/backends/c/gmp-projection.mjs";
+import { generateCppBindingPackage } from "../../src/backends/cpp/generate.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_REPLY_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin reply profile");
@@ -45,6 +51,41 @@ test("the C consumer spells no module-qualified type name, so the installed modu
 	// Option-of-record names embed the Lean module path; the harness passes that one as TILE_REPLY.
 	assert.deepEqual(source.match(/\bfinreplies_[a-z0-9_]*lean_[a-z0-9_]*/gu) ?? [], []);
 	assert.match(source, /\bTILE_REPLY \*reply\b/u);
+});
+
+test("both consumers compile against generated public headers for the fixture module and a renamed one", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-reply-headers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const write = async (root, files) => {
+		for(const [path, text] of Object.entries(files))
+		{
+			await mkdir(dirname(join(root, path)), { recursive: true });
+			await writeFile(join(root, path), text);
+		}
+	};
+	const env = { PATH: "/usr/bin:/bin" }, strict = ["-Wall", "-Wextra", "-Werror", "-UNDEBUG", "-fsyntax-only"];
+	const tiles = [];
+	const expected = { FinReplies: "finreplies_option_lean_fin_replies_tile_value", "Renamed.Replies": "finreplies_option_lean_renamed_replies_tile_value" };
+	for(const [module, expectedTile] of Object.entries(expected))
+	{
+		const model = finReplyCompilerModel(module), root = join(directory, module);
+		const names = finReplyConsumerNames(model.bindingIr);
+		// Sixteen host callbacks and one reply type, counted separately; only the type carries the module path.
+		const { TILE_REPLY: tile, ...hosts } = names;
+		assert.equal(Object.keys(hosts).length, 16, module);
+		assert.ok(Object.keys(hosts).every(name => name.startsWith("HOST_")), module);
+		assert.equal(tile, expectedTile, module);
+		tiles.push(tile);
+		await write(join(root, "c"), generateGmpProjection(model.bindingIr).files);
+		const cpp = generateCppBindingPackage(model.bindingIr);
+		await write(join(root, "cpp"), { ...Object.fromEntries(Object.entries(cpp).filter(([path]) => path.startsWith("include/")))
+			, "include/finreplies.h": generateCBindingPackage(model.bindingIr)["include/finreplies.h"]
+			, ...Object.fromEntries(Object.entries(boostSources()).filter(([path]) => path.startsWith("include/"))) });
+		const defines = Object.entries(names).map(([macro, name]) => `-D${macro}=${name}`);
+		await runCopied("/usr/bin/cc", ["-std=c11", ...strict, "-I", join(root, "c/include"), ...defines, resolve("tests/fixtures/fin-reply-consumers/c.c")], root, env);
+		await runCopied("/usr/bin/c++", ["-std=c++20", ...strict, "-I", join(root, "cpp/include"), resolve("tests/fixtures/fin-reply-consumers/cpp.cpp")], root, env);
+	}
+	assert.notEqual(tiles[0], tiles[1]);
 });
 
 test("relocated source-free C and C++ packages check every host reply bound and recover", { skip: !profiles.length, timeout: 2_400_000 }, async t => {

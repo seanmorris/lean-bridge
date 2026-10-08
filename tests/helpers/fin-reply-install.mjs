@@ -32,7 +32,8 @@ export const finReplyConsumerNames = ir => {
 		});
 	}
 	assert.equal(Object.keys(names).length, 16);
-	// The option-of-Tile reply's C name embeds the module path, so the consumer takes it from the surface.
+	// The option-of-Tile reply's C name embeds the module path, so the consumer takes it from the installed
+	// callback result's copied representation, never from a module name.
 	const tile = ir.declarations.find(declaration => declaration.id.endsWith(".maybeTile"));
 	names.TILE_REPLY = surface.copy(surface.callbacks.get(tile.parameters[0].type.id).type.callable.result.type).name;
 	return names;
