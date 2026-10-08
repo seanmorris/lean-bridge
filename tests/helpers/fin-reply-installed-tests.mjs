@@ -17,7 +17,7 @@ import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.m
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { finCallbackEnvironment } from "./fin-callback-install.mjs";
-import { finReplyConsumerNames, finReplyExports, finReplyTargets, installFinReplyConsumer, parseFinReplyResult } from "./fin-reply-install.mjs";
+import { finReplyConsumerNames, finReplyExports, finReplyFixture, finReplyTargets, installFinReplyConsumer, parseFinReplyResult } from "./fin-reply-install.mjs";
 import { retainFailure } from "./fin-reply-compiled-tests.mjs";
 import { finReplyCompilerModel } from "./fin-reply-model.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
@@ -44,6 +44,18 @@ test("the installed result parser accepts only the fixed check count and a forke
 		, ["perl", "fork-status 5 0\nfin-reply-ok perl 1\n"]
 	];
 	for(const [profile, stdout] of rejected) assert.throws(() => parseFinReplyResult(profile, stdout), assert.AssertionError, stdout);
+});
+
+test("each installed fixture demands its exact check count and keeps the consumer's output", () => {
+	for(const [profile, count] of [["c", 81], ["cpp", 74]])
+	{
+		const seen = {}, fixture = finReplyFixture(profile, {}, seen);
+		assert.equal(fixture.expectedChecks, count);
+		const stdout = `fork-status 5 0\nfin-reply-ok ${profile} ${count}\n`;
+		assert.deepEqual(fixture.parseResult(stdout), { checks: count, forkStatus: 5, forkHostCalls: 0 });
+		assert.equal(seen.stdout, stdout);
+	}
+	assert.throws(() => finReplyFixture("cpp", {}).parseResult("fork-status 5 0\nfin-reply-ok cpp 81\n"), assert.AssertionError);
 });
 
 test("the C consumer spells no module-qualified type name, so the installed module path cannot break it", async () => {

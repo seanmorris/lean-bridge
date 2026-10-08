@@ -69,14 +69,38 @@ export const parseFinReplyResult = (profile, stdout) => {
 };
 
 /**
- * Install and exercise every checked host reply through the public C or C++ API.
+ * The installed-consumer fixture for one profile, with its exact check count.
+ *
+ * @param profile - Native consumer profile.
+ * @param names - Generated host callback names from the installed Binding IR.
+ * @param seen - Receives the consumer's stdout once it ran.
+ */
+export const finReplyFixture = (profile, names, seen = {}) => ({
+	source: (_profile, extension) => finReplyConsumerSource(profile, extension, names)
+	, wit: []
+	, success: "fin-reply-ok"
+	// The shared helper compares exactly this count instead of its generic minimum.
+	, expectedChecks: finReplyExpectedChecks[profile]
+	, parseResult: stdout => {
+		seen.stdout = stdout;
+		return parseFinReplyResult(profile, stdout);
+	}
+});
+
+/**
+ * Install and exercise every checked host reply through the public C or C++ API. A failure after the
+ * consumer ran carries its stdout, so the stage record shows what the consumer printed.
  *
  * @param options - Verified archive handoff and selected consumer profile.
  * @param names - Generated host callback names from the installed Binding IR.
  */
-export const installFinReplyConsumer = (options, names) => installCopiedConsumer({ ...options, fixture: {
-	source: (profile, extension) => finReplyConsumerSource(profile, extension, names)
-	, wit: []
-	, success: "fin-reply-ok"
-	, parseResult: stdout => parseFinReplyResult(options.profile, stdout)
-} });
+export const installFinReplyConsumer = async (options, names) => {
+	const seen = {};
+	try
+	{ return await installCopiedConsumer({ ...options, fixture: finReplyFixture(options.profile, names, seen) }); }
+	catch(error)
+	{
+		if(seen.stdout !== undefined) error.details = { ...error.details, stdout: error.details?.stdout ?? seen.stdout };
+		throw error;
+	}
+};
