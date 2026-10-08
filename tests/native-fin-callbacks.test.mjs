@@ -18,6 +18,7 @@ import "./helpers/native-fin-reply-promotion-tests.mjs";
 import "./helpers/native-fin-reply-promotion-source-history-tests.mjs";
 import "./helpers/native-fin-reply-ci-tests.mjs";
 import "./helpers/native-fin-reply-source-history-tests.mjs";
+import "./helpers/native-reply-symbol-fix-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -413,6 +414,18 @@ test("the C reply walk and Lean's reconstruction are independent, and packages w
 	assert.doesNotMatch(generateNativeCallables(fixture, replySurface(fixture)).source, /lb_fin_reply_|_reply_take_rejected|Lean rejected a host callback result/u);
 	assert.doesNotMatch(generateCompiledCallbacks(fixture), /reply_reject|lb_reply_rejected/u);
 	assert.doesNotMatch(generateNativeLeanAdapters(fixture).leanSource, /reply_reject_|_bridgeReply/u);
+	// The closure registry probe has no callbacks or component identity. Reply-free generation must
+	// not even read an identity getter on either native pointer width.
+	for(const pointerBits of [32, 64])
+	{
+		const minimal = { pointerBits, types: [] };
+		Object.defineProperty(minimal, "component", { get: () => { throw new Error("reply-free component identity was read"); } });
+		const surface = { prefix: "sample", callbacks: new Map([["present", {}]]), functions: [] };
+		const registry = generateNativeCallables(minimal, surface).source;
+		assert.match(registry, /typedef struct \{ uintptr_t token;/u);
+		assert.doesNotMatch(registry, /_reply_take_rejected|Lean rejected a host callback result/u);
+		assert.equal(registry, generateNativeCallables({ pointerBits, types: [] }, surface).source);
+	}
 	// The README describes checked replies only where a package has them.
 	for(const target of ["c", "cpp"])
 	{

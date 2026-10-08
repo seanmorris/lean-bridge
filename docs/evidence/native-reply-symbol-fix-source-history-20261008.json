@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-reply-symbol-fix-v1",
+  "predecessorCommit": "4b97c0864b87b25ca449685f618027e2547a2ad4",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "2b536b3981d1815e6bc343d10e27266d64eb7c3237890fd03137492481eeab0e",
+      "previousSha256": "3b07d329ab9d898fb37bf5fbeba4196293e9b4997efa99bfed5bedd892ba56bb",
+      "edits": [
+        {
+          "start": 705219,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 719613,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 730327,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 744678,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 755013,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 767197,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 778631,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 787888,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 794336,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 802937,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 1019794,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 1073750,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        },
+        {
+          "start": 1169202,
+          "previous": "          \"sha256\": \"6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71\"\n",
+          "current": "          \"sha256\": \"a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/native-callables.mjs",
+      "currentSha256": "a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75",
+      "previousSha256": "6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71",
+      "edits": [
+        {
+          "start": 3923,
+          "previous": "\t// Only packages with checked host callback replies consume Lean's rejection flag; others keep their bytes.\n\tconst replies = types.some(type => type.reply), rejected = nativeReplyRejectedSymbol(model);\n",
+          "current": "\t// Only packages with checked host callback replies consume Lean's rejection flag; others keep their bytes\n\t// and need no component identity to name it.\n\tconst replies = types.some(type => type.reply), rejected = replies ? nativeReplyRejectedSymbol(model) : null;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "c1eaf527b359991c536ae4d87e4a626c216961876149bd6ac52f5055fff0bd94",
+      "previousSha256": "b7d9aa9049e7b1ae3f3e1e879a96f9815d12015894870e3aadb2fbb4d453cbf7",
+      "edits": [
+        {
+          "start": 1085,
+          "previous": "",
+          "current": "import \"./helpers/native-reply-symbol-fix-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 33265,
+          "previous": "",
+          "current": "\t// The closure registry probe has no callbacks or component identity. Reply-free generation must\n\t// not even read an identity getter on either native pointer width.\n\tfor(const pointerBits of [32, 64])\n\t{\n\t\tconst minimal = { pointerBits, types: [] };\n\t\tObject.defineProperty(minimal, \"component\", { get: () => { throw new Error(\"reply-free component identity was read\"); } });\n\t\tconst surface = { prefix: \"sample\", callbacks: new Map([[\"present\", {}]]), functions: [] };\n\t\tconst registry = generateNativeCallables(minimal, surface).source;\n\t\tassert.match(registry, /typedef struct \\{ uintptr_t token;/u);\n\t\tassert.doesNotMatch(registry, /_reply_take_rejected|Lean rejected a host callback result/u);\n\t\tassert.equal(registry, generateNativeCallables({ pointerBits, types: [] }, surface).source);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "da995572db54e2b0eabd1cc8181921f14bcb1fb43181c0f6ca7206d314673f93",
+      "previousSha256": "68704093d87314003bb100582617915ca0cc8f941d55d836b8304014bcd73edd",
+      "edits": [
+        {
+          "start": 10935,
+          "previous": "",
+          "current": "import { nativeReplySymbolFixChangedPaths } from \"./native-reply-symbol-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 48493,
+          "previous": "",
+          "current": "\t, ...nativeReplySymbolFixChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/node-consumer-budget-source-history.mjs",
+      "currentSha256": "330b95c4dbd5c37ef6df304b6e86d092865a43148e03707a66f55f51e51547de",
+      "previousSha256": "ea1e6a6c0735797f5a4f687a52aa329a016648fdda917105a30cdf574a8571fb",
+      "edits": [
+        {
+          "start": 230,
+          "previous": "",
+          "current": "import { beforeNativeReplySymbolFixSource } from \"./native-reply-symbol-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 2277,
+          "previous": "",
+          "current": "\tsource = beforeNativeReplySymbolFixSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/node-consumer-budget-source-history-tests.mjs",
+      "currentSha256": "66ffbe030505ffbc4feed87f335d00e6f0a0dd1de9ff4b849259b7ccf62f645c",
+      "previousSha256": "dfd753bbd4578a9915b59b8726fa1dd26897376890a671f66f4a972da06e75f3",
+      "edits": [
+        {
+          "start": 523,
+          "previous": "",
+          "current": "import { beforeNativeReplySymbolFixSource } from \"./native-reply-symbol-fix-source-history.mjs\";\n"
+        },
+        {
+          "start": 1210,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeReplySymbolFixSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2162,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeNativeReplySymbolFixSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2743,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeNativeReplySymbolFixSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

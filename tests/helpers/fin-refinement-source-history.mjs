@@ -122,6 +122,7 @@ import { callbackCoverageRepairChangedPaths } from "./callback-coverage-repair-s
 import { nativeFinReplyArchiveChangedPaths } from "./native-fin-reply-archive-source-history.mjs";
 import { nativeFinReplyPromotionChangedPaths } from "./native-fin-reply-promotion-source-history.mjs";
 import { nodeConsumerBudgetChangedPaths } from "./node-consumer-budget-source-history.mjs";
+import { nativeReplySymbolFixChangedPaths } from "./native-reply-symbol-fix-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -708,6 +709,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeFinReplyArchiveChangedPaths
 	, ...nativeFinReplyPromotionChangedPaths
 	, ...nodeConsumerBudgetChangedPaths
+	, ...nativeReplySymbolFixChangedPaths
 ])].sort());
 
 /**

@@ -92,8 +92,9 @@ export const generateNativeCallables = (model, surface) => {
 	const copy = type => surface.copy(nativeCReference(type));
 	const id = type => `lb_copy_${copy(type).index}`;
 	const types = model.types.filter(type => type.kind === "callback"), bindings = new Map();
-	// Only packages with checked host callback replies consume Lean's rejection flag; others keep their bytes.
-	const replies = types.some(type => type.reply), rejected = nativeReplyRejectedSymbol(model);
+	// Only packages with checked host callback replies consume Lean's rejection flag; others keep their bytes
+	// and need no component identity to name it.
+	const replies = types.some(type => type.reply), rejected = replies ? nativeReplyRejectedSymbol(model) : null;
 	const rejection = frame => `  if (${rejected}()) lb_record(${frame}, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Lean rejected a host callback result outside its Fin bound");`;
 	for(const type of types)
 	{

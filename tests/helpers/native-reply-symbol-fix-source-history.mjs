@@ -1,21 +1,20 @@
 /**
- * Preserve exact source predecessors of the Node consumer budget (#1220).
+ * Preserve exact source predecessors of the Native reply symbol fix (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNativeReplySymbolFixSource } from "./native-reply-symbol-fix-source-history.mjs";
 
-export const nodeConsumerBudgetHistoryPath = "docs/evidence/node-consumer-budget-source-history-20261008.json";
-export const nodeConsumerBudgetChangedPaths = [
+export const nativeReplySymbolFixHistoryPath = "docs/evidence/native-reply-symbol-fix-source-history-20261008.json";
+export const nativeReplySymbolFixChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".github/workflows/consumer-matrix.yml"
-	, "tests/documentation.test.mjs"
+	, "src/backends/c/native-callables.mjs"
+	, "tests/native-fin-callbacks.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-fin-reply-promotion-source-history.mjs"
-	, "tests/helpers/native-fin-reply-promotion-source-history-tests.mjs"
+	, "tests/helpers/node-consumer-budget-source-history.mjs"
+	, "tests/helpers/node-consumer-budget-source-history-tests.mjs"
 ];
 let history;
 
@@ -25,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseNodeConsumerBudgetUpdate = (source, update) => {
-	assert.ok(nodeConsumerBudgetChangedPaths.includes(update.path));
+export const reverseNativeReplySymbolFixUpdate = (source, update) => {
+	assert.ok(nativeReplySymbolFixChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -46,18 +45,17 @@ export const reverseNodeConsumerBudgetUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the Node consumer budget, stopping at an explicitly requested identity.
+ * Restore the source before the Native reply symbol fix, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNodeConsumerBudgetSource = (path, source, expected) => {
-	source = beforeNativeReplySymbolFixSource(path, source, expected);
-	if(typeof source !== "string" || !nodeConsumerBudgetChangedPaths.includes(path)) return source;
+export const beforeNativeReplySymbolFixSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeReplySymbolFixChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nodeConsumerBudgetHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeReplySymbolFixHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNodeConsumerBudgetUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeReplySymbolFixUpdate(source, update) : source;
 };
