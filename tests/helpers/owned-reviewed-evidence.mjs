@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedAggregateCarriers } from "../../src/build/owned-aggregate-carriers.mjs";
 import { validateReviewedOwnedSource } from "../../src/analyze/reviewed-owned-source.mjs";

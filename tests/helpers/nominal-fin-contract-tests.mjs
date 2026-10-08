@@ -13,7 +13,8 @@ import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../../src
 import { generateComponentRecursiveAdapters } from "../../src/build/component-recursive-adapters.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
 
 const fin = bound => ({ kind: "fin", bound });

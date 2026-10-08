@@ -7,7 +7,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertPerlStructuredCallableIntegration } from "./perl-structured-callable-evidence.mjs";
 import { perlStructuredCallableHistoryPath } from "./perl-structured-callable-source-history.mjs";
 import { npmStructuredCallableChangedPaths, reverseNpmStructuredCallableUpdate } from "./npm-structured-callable-source-history.mjs";

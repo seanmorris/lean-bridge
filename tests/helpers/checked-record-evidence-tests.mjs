@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { checkedRecordDispatchExpected } from "./checked-record-dispatch.mjs";
 import { assertCheckedRecordEvidenceExecution, assertCheckedRecordEvidenceReport, checkedRecordEvidenceDirectory, checkedRecordEvidenceHosts, checkedRecordEvidenceRevision, checkedRecordEvidenceRoutes, checkedRecordEvidenceSelections, checkedRecordEvidenceSourcePaths } from "./checked-record-evidence.mjs";
 
@@ -43,7 +44,8 @@ test("checked-record evidence authenticates six original reports, two queues and
 	assert.match(record.runner, /no separate runner file/u);
 	assert.match(record.sourceIdentityScope, /not a complete dependency closure/u);
 	assert.deepEqual(record.sourceFiles.map(file => file.path), checkedRecordEvidenceSourcePaths);
-	for(const source of record.sourceFiles) assert.equal(sha256(await readFile(source.path)), source.sha256, source.path);
+	for(const source of record.sourceFiles)
+		assert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path, "utf8"), source.sha256)), source.sha256, source.path);
 	assert.deepEqual(record.hosts.map(host => host.id), Object.keys(checkedRecordEvidenceHosts));
 	assert.deepEqual(record.runs.map(run => run.id), checkedRecordEvidenceSelections.map(selection => selection.id));
 	const expected = [];

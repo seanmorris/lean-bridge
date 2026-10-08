@@ -1,0 +1,1307 @@
+{
+  "schemaVersion": 1,
+  "milestone": "copied-graph-repair-v1",
+  "predecessorCommit": "2b5a0f9d6a32a7973c8b91a2751558dc6a8d8010",
+  "updates": [
+    {
+      "path": "src/build/component-recursive-lean.mjs",
+      "currentSha256": "4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8",
+      "previousSha256": "27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd",
+      "edits": [
+        {
+          "start": 5549,
+          "previous": "",
+          "current": "\t\t// Copied-graph callers name no per-parameter Lean types, so they cannot carry checked-record mirrors.\n\t\tif(!item.parameters)\n\t\t{\n\t\t\tif([...signature.parameters, signature.result].some(mirror)) throw new TypeError(\"Checked-record mirrors require per-parameter export sites\");\n\t\t\treturn { ...item, ...refinements ? { refinements } : {} };\n\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-graph-model.test.mjs",
+      "currentSha256": "31f5c985ae2b6ae9130e521607f6c651f6e125a684b573c1f3bd9053a859df9b",
+      "previousSha256": "0c307683db5f6598e0d74d8832ec7e9d251910863513307f57f1ac659c5f8321",
+      "edits": [
+        {
+          "start": 286,
+          "previous": "import { canonicalJson } from \"../src/capsule/node.mjs\";\n",
+          "current": "import { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\n"
+        },
+        {
+          "start": 654,
+          "previous": "",
+          "current": "import { createComponentPrivateAbi } from \"../src/build/component-callable-adapters.mjs\";\nimport { componentRecursiveLeanSource } from \"../src/build/component-recursive-lean.mjs\";\n"
+        },
+        {
+          "start": 905,
+          "previous": "",
+          "current": "import { checkedRecordReview } from \"./helpers/checked-record-fixture.mjs\";\n"
+        },
+        {
+          "start": 1156,
+          "previous": "",
+          "current": "import \"./helpers/copied-graph-repair-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 4746,
+          "previous": "",
+          "current": "test(\"copied-graph native adapters keep their f9d5ce9 bytes when export sites carry no metadata\", () => {\n\t// Checked-record admission (7cef0d5) must leave unrefined copied graphs byte-for-byte unchanged.\n\tconst output = generateCompiledNativeLeanAdapters(createCompiledNativeModel(fixture()));\n\tassert.equal(sha256(output.leanSource), \"0f01b78e3aabab63aa3b2d3e3f9d033aff53cd056c416f7baa04184c44262094\");\n\tassert.equal(sha256(output.header), \"746c87af024b54ddb1e83c1f07fb25aaf4128e2ba1516ca9c7b492f925abe030\");\n});\n\ntest(\"copied-graph export sites without parameter types refuse checked-record mirrors\", () => {\n\t// Native and PHP-Wasm copied graphs pass no per-parameter Lean types, so they cannot build a mirror.\n\tconst abi = createComponentPrivateAbi(checkedRecordReview());\n\tconst exports = abi.exports.map((item, index) => ({ bindingId: item.bindingId, symbol: item.symbol, wrapper: `export${index}`, sourceDeclaration: \"CheckedRecords.f\" }));\n\tassert.throws(() => componentRecursiveLeanSource(abi, exports, () => \"_root_.Nat\"), { name: \"TypeError\", message: \"Checked-record mirrors require per-parameter export sites\" });\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-graph-package.test.mjs",
+      "currentSha256": "42a15b21bda0add0c51cc483d8cad68ce23dc8d4ef31505940250627e3160a1a",
+      "previousSha256": "b00266fc997c0fd82562deb55d49d666eeba6216bb42ed8f86b0c5fba51ea2d2",
+      "edits": [
+        {
+          "start": 7259,
+          "previous": "",
+          "current": "test(\"copied-graph PHP-Wasm adapters keep their f9d5ce9 and installed bytes when export sites carry no metadata\", async () => {\n\t// Checked-record admission (7cef0d5) must leave unrefined copied graphs byte-for-byte unchanged.\n\tconst input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;\n\tconst abi = { cType: \"lean_object*\", box: \"lean_box\", unbox: \"lean_unbox\", heap: true };\n\tconst reference = { kind: \"reference\", name: \"Sample.Tree\", lean: \"Sample.Tree\", abi };\n\tconst tree = { kind: \"variant\", name: \"Sample.Tree\", lean: \"Sample.Tree\", abi\n\t\t, cases: [{ name: \"leaf\", constructor: \"Sample.Tree.leaf\", fields: [{ name: \"value\", type: projection.result }] }\n\t\t\t, { name: \"next\", constructor: \"Sample.Tree.next\", fields: [{ name: \"child\", type: reference }] }] };\n\tconst graph = { kind: \"graph\", root: reference, types: [tree], abi };\n\tprojection.parameters[0].type = graph; projection.result = graph;\n\tconst output = generateCompiledPhpWasmLeanAdapters(createCompiledPhpWasmModel({ ...input, component: { id: \"sample@1.0.0\", name: \"sample\", version: \"1.0.0\" } }));\n\tassert.equal(sha256(output.leanSource), \"0f01b78e3aabab63aa3b2d3e3f9d033aff53cd056c416f7baa04184c44262094\");\n\tassert.equal(sha256(output.header), \"4399d46b3f29fe7639fea4eb0cfcd26eb303202e90cf2cb07e46dc4ed1dc2565\");\n\t// The ordinary and reviewed installed runs regenerate exactly the adapters they recorded.\n\tconst record = JSON.parse(await readFile(\"docs/evidence/php-wasm-recursive-packages-20260924.json\", \"utf8\"));\n\tassert.deepEqual(record.report.observations.map(run => run.reviewed), [false, true]);\n\tfor(const { model, receipt } of record.report.observations)\n\t{\n\t\tconst adapters = generateCompiledPhpWasmLeanAdapters(model);\n\t\tassert.equal(sha256(adapters.leanSource), receipt.adaptersSha256); assert.equal(sha256(adapters.header), receipt.headerSha256);\n\t}\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "d148ee9d90255ab7da876398c213f8d63f6903e191de79e9983f1a272a00eeee",
+      "previousSha256": "f54ce91552434b778ca2f5e537296ebc46291821bc4cd0b9b3bac46d9e40c1d9",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 66283,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 87191,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 103041,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 118642,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 129122,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 138778,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 686889,
+          "previous": "          \"sha256\": \"6b2e8eeaf5a06239cb45450d88f5860efee9123eaedef7058d54045e2889de3c\"\n",
+          "current": "          \"sha256\": \"d07eabf8ec820e77e57f9d72b5b44965f7652d212c037769e92944205404f7ab\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 836311,
+          "previous": "          \"sha256\": \"6b2e8eeaf5a06239cb45450d88f5860efee9123eaedef7058d54045e2889de3c\"\n",
+          "current": "          \"sha256\": \"d07eabf8ec820e77e57f9d72b5b44965f7652d212c037769e92944205404f7ab\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1044741,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1067984,
+          "previous": "          \"sha256\": \"e51d4218c0081efdb7949f6077e76226b75f170f4615592baef17c4dd29d6d13\"\n",
+          "current": "          \"sha256\": \"0d49e7221a2499cbc5b839dca830788e6344b2e4b7ce8eee1206faaf4a296273\"\n"
+        },
+        {
+          "start": 1076335,
+          "previous": "          \"sha256\": \"296fef9dc4432211c4f62e5b600fb43662df7f736051ab6bfc29645a2b1a6afd\"\n",
+          "current": "          \"sha256\": \"144647d62b087948cfad5c3f5e7301ef3ef9f88f8e7a422d5a1c26790f3e542b\"\n"
+        },
+        {
+          "start": 1077579,
+          "previous": "          \"sha256\": \"e51d4218c0081efdb7949f6077e76226b75f170f4615592baef17c4dd29d6d13\"\n",
+          "current": "          \"sha256\": \"0d49e7221a2499cbc5b839dca830788e6344b2e4b7ce8eee1206faaf4a296273\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1083529,
+          "previous": "          \"sha256\": \"296fef9dc4432211c4f62e5b600fb43662df7f736051ab6bfc29645a2b1a6afd\"\n",
+          "current": "          \"sha256\": \"144647d62b087948cfad5c3f5e7301ef3ef9f88f8e7a422d5a1c26790f3e542b\"\n"
+        },
+        {
+          "start": 1083893,
+          "previous": "          \"sha256\": \"0ce87ec7048bdfa791628a5e317ea81efe53a46596764b7abc13582e5f60e01f\"\n",
+          "current": "          \"sha256\": \"d716e21a4e64eeffff0b2dfc473ea2bf913c7722738f7feb95505c56696a79bc\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1089152,
+          "previous": "          \"sha256\": \"0ce87ec7048bdfa791628a5e317ea81efe53a46596764b7abc13582e5f60e01f\"\n",
+          "current": "          \"sha256\": \"d716e21a4e64eeffff0b2dfc473ea2bf913c7722738f7feb95505c56696a79bc\"\n"
+        },
+        {
+          "start": 1089519,
+          "previous": "          \"sha256\": \"de4f80ceb9b73eb9c2f1503d9a32ba13eb3171109527b57b494f88ccfec3d266\"\n",
+          "current": "          \"sha256\": \"e9bb926fd431cc0eef3a760e2d799edd8432f89f9f316b018ea6d9b3de24d168\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1096641,
+          "previous": "          \"sha256\": \"d3a2e956bde823f56cdf40e30c64eb30cd3ba9bce6fd7a5f3fa191e6c8da08ec\"\n",
+          "current": "          \"sha256\": \"365f4ccc6f03869edae3c2c003cdc86876d10e37d71846dffe031e6774736c14\"\n"
+        },
+        {
+          "start": 1097378,
+          "previous": "          \"sha256\": \"de4f80ceb9b73eb9c2f1503d9a32ba13eb3171109527b57b494f88ccfec3d266\"\n",
+          "current": "          \"sha256\": \"e9bb926fd431cc0eef3a760e2d799edd8432f89f9f316b018ea6d9b3de24d168\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1103611,
+          "previous": "          \"sha256\": \"d3a2e956bde823f56cdf40e30c64eb30cd3ba9bce6fd7a5f3fa191e6c8da08ec\"\n",
+          "current": "          \"sha256\": \"365f4ccc6f03869edae3c2c003cdc86876d10e37d71846dffe031e6774736c14\"\n"
+        },
+        {
+          "start": 1103981,
+          "previous": "          \"sha256\": \"22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640\"\n",
+          "current": "          \"sha256\": \"3f87bde11bf07a48313eb7347aec432877df151e99af9cb4058dad959e47c8c0\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1112074,
+          "previous": "          \"sha256\": \"31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc\"\n",
+          "current": "          \"sha256\": \"9b290f7a0b33dde3e09bad1abf5183085a127e6a60c14e19688b802f031af555\"\n"
+        },
+        {
+          "start": 1113172,
+          "previous": "          \"sha256\": \"22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640\"\n",
+          "current": "          \"sha256\": \"3f87bde11bf07a48313eb7347aec432877df151e99af9cb4058dad959e47c8c0\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1119669,
+          "previous": "          \"sha256\": \"31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc\"\n",
+          "current": "          \"sha256\": \"9b290f7a0b33dde3e09bad1abf5183085a127e6a60c14e19688b802f031af555\"\n"
+        },
+        {
+          "start": 1120204,
+          "previous": "          \"sha256\": \"dbd8f21e22b807b7814cc02e519dd70ddbe1aa87a88850a4eb0e087b52ed5be9\"\n",
+          "current": "          \"sha256\": \"a926b01e6bc51038dd84d8c959410ed7605d38c3eb8586eb26cc58f856d56c45\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1128909,
+          "previous": "          \"sha256\": \"dbd8f21e22b807b7814cc02e519dd70ddbe1aa87a88850a4eb0e087b52ed5be9\"\n",
+          "current": "          \"sha256\": \"a926b01e6bc51038dd84d8c959410ed7605d38c3eb8586eb26cc58f856d56c45\"\n"
+        },
+        {
+          "start": 1129459,
+          "previous": "          \"sha256\": \"f32425cdbe5b1bb3a7bbc056e27b8d658ef207ea34bb99f2f3c68d250c840af6\"\n",
+          "current": "          \"sha256\": \"ecfc0ead7c31fcd40d24dc1459db400e20a468057fe4ba23ecb540ab6f4ef7f4\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1145563,
+          "previous": "          \"sha256\": \"32390692687086d3c1386c9929c44f2f4c237af868ac082356f764278e73aa4a\"\n",
+          "current": "          \"sha256\": \"acc5277b49f1704885384293fb452b1614e4e055ddedf580f7d4ffcef468a7ff\"\n"
+        },
+        {
+          "start": 1146472,
+          "previous": "          \"sha256\": \"f32425cdbe5b1bb3a7bbc056e27b8d658ef207ea34bb99f2f3c68d250c840af6\"\n",
+          "current": "          \"sha256\": \"ecfc0ead7c31fcd40d24dc1459db400e20a468057fe4ba23ecb540ab6f4ef7f4\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1152623,
+          "previous": "          \"sha256\": \"32390692687086d3c1386c9929c44f2f4c237af868ac082356f764278e73aa4a\"\n",
+          "current": "          \"sha256\": \"acc5277b49f1704885384293fb452b1614e4e055ddedf580f7d4ffcef468a7ff\"\n"
+        },
+        {
+          "start": 1152989,
+          "previous": "          \"sha256\": \"9edb2d80f5cfec686de9e9de9b1b4abb2060eebca684f17129cbfba9bfa725a2\"\n",
+          "current": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1159974,
+          "previous": "          \"sha256\": \"9edb2d80f5cfec686de9e9de9b1b4abb2060eebca684f17129cbfba9bfa725a2\"\n",
+          "current": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n"
+        },
+        {
+          "start": 1160701,
+          "previous": "          \"sha256\": \"40a278cc3e3740d73f1ec91e9addfd86e5fbfce64a653530ba3ca6f55f0d66fd\"\n",
+          "current": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1171442,
+          "previous": "          \"sha256\": \"40a278cc3e3740d73f1ec91e9addfd86e5fbfce64a653530ba3ca6f55f0d66fd\"\n",
+          "current": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n"
+        },
+        {
+          "start": 1172165,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1184485,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1185218,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1201766,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1211977,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1213210,
+          "previous": "          \"sha256\": \"9d9320c53fae7e39ec0937f347f3543ee54d92add596633ffbdfe05ef60a60f6\"\n",
+          "current": "          \"sha256\": \"1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be\"\n"
+        },
+        {
+          "start": 1213919,
+          "previous": "          \"sha256\": \"8549d6b9d3b1436e2fdfa6b8d9413e9842abdcd9bce5f85cda022b6888b23d20\"\n",
+          "current": "          \"sha256\": \"446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869\"\n"
+        },
+        {
+          "start": 1214471,
+          "previous": "          \"sha256\": \"d3a2e956bde823f56cdf40e30c64eb30cd3ba9bce6fd7a5f3fa191e6c8da08ec\"\n",
+          "current": "          \"sha256\": \"365f4ccc6f03869edae3c2c003cdc86876d10e37d71846dffe031e6774736c14\"\n"
+        },
+        {
+          "start": 1215541,
+          "previous": "          \"sha256\": \"de4f80ceb9b73eb9c2f1503d9a32ba13eb3171109527b57b494f88ccfec3d266\"\n",
+          "current": "          \"sha256\": \"e9bb926fd431cc0eef3a760e2d799edd8432f89f9f316b018ea6d9b3de24d168\"\n"
+        },
+        {
+          "start": 1216081,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1233443,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1240486,
+          "previous": "          \"sha256\": \"0ce87ec7048bdfa791628a5e317ea81efe53a46596764b7abc13582e5f60e01f\"\n",
+          "current": "          \"sha256\": \"d716e21a4e64eeffff0b2dfc473ea2bf913c7722738f7feb95505c56696a79bc\"\n"
+        },
+        {
+          "start": 1241733,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1242974,
+          "previous": "          \"sha256\": \"8549d6b9d3b1436e2fdfa6b8d9413e9842abdcd9bce5f85cda022b6888b23d20\"\n",
+          "current": "          \"sha256\": \"446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869\"\n"
+        },
+        {
+          "start": 1243850,
+          "previous": "          \"sha256\": \"bc12ce48a2d8d81ab41f5e2663fc313b26b7c5e8bf8c8244d2f14a1f3675f08b\"\n",
+          "current": "          \"sha256\": \"5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59\"\n"
+        },
+        {
+          "start": 1244574,
+          "previous": "          \"sha256\": \"de4f80ceb9b73eb9c2f1503d9a32ba13eb3171109527b57b494f88ccfec3d266\"\n",
+          "current": "          \"sha256\": \"e9bb926fd431cc0eef3a760e2d799edd8432f89f9f316b018ea6d9b3de24d168\"\n"
+        },
+        {
+          "start": 1246166,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1265770,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1274988,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1276406,
+          "previous": "          \"sha256\": \"d3a2e956bde823f56cdf40e30c64eb30cd3ba9bce6fd7a5f3fa191e6c8da08ec\"\n",
+          "current": "          \"sha256\": \"365f4ccc6f03869edae3c2c003cdc86876d10e37d71846dffe031e6774736c14\"\n"
+        },
+        {
+          "start": 1277283,
+          "previous": "          \"sha256\": \"af8c69963117700cd7c9e6425b01d41e9be6ae7b824c52fbde809111c0cdaf62\"\n",
+          "current": "          \"sha256\": \"79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f\"\n"
+        },
+        {
+          "start": 1277829,
+          "previous": "          \"sha256\": \"22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640\"\n",
+          "current": "          \"sha256\": \"3f87bde11bf07a48313eb7347aec432877df151e99af9cb4058dad959e47c8c0\"\n"
+        },
+        {
+          "start": 1278559,
+          "previous": "          \"sha256\": \"bc12ce48a2d8d81ab41f5e2663fc313b26b7c5e8bf8c8244d2f14a1f3675f08b\"\n",
+          "current": "          \"sha256\": \"5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59\"\n"
+        },
+        {
+          "start": 1279098,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1300550,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1310646,
+          "previous": "          \"sha256\": \"dbd8f21e22b807b7814cc02e519dd70ddbe1aa87a88850a4eb0e087b52ed5be9\"\n",
+          "current": "          \"sha256\": \"a926b01e6bc51038dd84d8c959410ed7605d38c3eb8586eb26cc58f856d56c45\"\n"
+        },
+        {
+          "start": 1311537,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1314838,
+          "previous": "          \"sha256\": \"d83d645af3031c041c8aad4ed518dc46a1a340cd8acf5a44a300f38e2b8eb905\"\n",
+          "current": "          \"sha256\": \"fca48c951e38c9131660f258b6f0f975d29f4d6d4925014a1c154b0690a3bfac\"\n"
+        },
+        {
+          "start": 1315925,
+          "previous": "          \"sha256\": \"f32425cdbe5b1bb3a7bbc056e27b8d658ef207ea34bb99f2f3c68d250c840af6\"\n",
+          "current": "          \"sha256\": \"ecfc0ead7c31fcd40d24dc1459db400e20a468057fe4ba23ecb540ab6f4ef7f4\"\n"
+        },
+        {
+          "start": 1317179,
+          "previous": "          \"sha256\": \"af8c69963117700cd7c9e6425b01d41e9be6ae7b824c52fbde809111c0cdaf62\"\n",
+          "current": "          \"sha256\": \"79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f\"\n"
+        },
+        {
+          "start": 1317893,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1341742,
+          "previous": "          \"sha256\": \"bc7ef94ca10657013878f7c14e944b15a03bfd9a7f1d271ab87e0f1bf93aa0b0\"\n",
+          "current": "          \"sha256\": \"8b1706f88991634cf9a88c1e5222805a9066e6505f4381fdcd9f71b8347359f7\"\n"
+        },
+        {
+          "start": 1343014,
+          "previous": "          \"sha256\": \"31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc\"\n",
+          "current": "          \"sha256\": \"9b290f7a0b33dde3e09bad1abf5183085a127e6a60c14e19688b802f031af555\"\n"
+        },
+        {
+          "start": 1344298,
+          "previous": "          \"sha256\": \"a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7\"\n",
+          "current": "          \"sha256\": \"a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3\"\n"
+        },
+        {
+          "start": 1345031,
+          "previous": "          \"sha256\": \"d83d645af3031c041c8aad4ed518dc46a1a340cd8acf5a44a300f38e2b8eb905\"\n",
+          "current": "          \"sha256\": \"fca48c951e38c9131660f258b6f0f975d29f4d6d4925014a1c154b0690a3bfac\"\n"
+        },
+        {
+          "start": 1345929,
+          "previous": "          \"sha256\": \"22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640\"\n",
+          "current": "          \"sha256\": \"3f87bde11bf07a48313eb7347aec432877df151e99af9cb4058dad959e47c8c0\"\n"
+        },
+        {
+          "start": 1346468,
+          "previous": "          \"sha256\": \"de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7\"\n",
+          "current": "          \"sha256\": \"866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1363234,
+          "previous": "          \"sha256\": \"bc7ef94ca10657013878f7c14e944b15a03bfd9a7f1d271ab87e0f1bf93aa0b0\"\n",
+          "current": "          \"sha256\": \"8b1706f88991634cf9a88c1e5222805a9066e6505f4381fdcd9f71b8347359f7\"\n"
+        },
+        {
+          "start": 1363605,
+          "previous": "          \"sha256\": \"31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc\"\n",
+          "current": "          \"sha256\": \"9b290f7a0b33dde3e09bad1abf5183085a127e6a60c14e19688b802f031af555\"\n"
+        },
+        {
+          "start": 1364329,
+          "previous": "          \"sha256\": \"08c72ebcde2e5b94c3a34e1f6c5f33e10084da8fbfbc3f3d6d6781358a5082e0\"\n",
+          "current": "          \"sha256\": \"1008c98fc81fb04c579016592264ef3d370ab7adf06b9a6a1afa828be3092fcc\"\n"
+        },
+        {
+          "start": 1366461,
+          "previous": "          \"sha256\": \"dbd8f21e22b807b7814cc02e519dd70ddbe1aa87a88850a4eb0e087b52ed5be9\"\n",
+          "current": "          \"sha256\": \"a926b01e6bc51038dd84d8c959410ed7605d38c3eb8586eb26cc58f856d56c45\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1384172,
+          "previous": "          \"sha256\": \"08c72ebcde2e5b94c3a34e1f6c5f33e10084da8fbfbc3f3d6d6781358a5082e0\"\n",
+          "current": "          \"sha256\": \"1008c98fc81fb04c579016592264ef3d370ab7adf06b9a6a1afa828be3092fcc\"\n"
+        },
+        {
+          "start": 1384708,
+          "previous": "          \"sha256\": \"32390692687086d3c1386c9929c44f2f4c237af868ac082356f764278e73aa4a\"\n",
+          "current": "          \"sha256\": \"acc5277b49f1704885384293fb452b1614e4e055ddedf580f7d4ffcef468a7ff\"\n"
+        },
+        {
+          "start": 1385604,
+          "previous": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n",
+          "current": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n"
+        },
+        {
+          "start": 1386677,
+          "previous": "          \"sha256\": \"9edb2d80f5cfec686de9e9de9b1b4abb2060eebca684f17129cbfba9bfa725a2\"\n",
+          "current": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1403724,
+          "previous": "          \"sha256\": \"9d9320c53fae7e39ec0937f347f3543ee54d92add596633ffbdfe05ef60a60f6\"\n",
+          "current": "          \"sha256\": \"1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be\"\n"
+        },
+        {
+          "start": 1403903,
+          "previous": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n",
+          "current": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n"
+        },
+        {
+          "start": 1404268,
+          "previous": "          \"sha256\": \"9edb2d80f5cfec686de9e9de9b1b4abb2060eebca684f17129cbfba9bfa725a2\"\n",
+          "current": "          \"sha256\": \"f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4\"\n"
+        },
+        {
+          "start": 1404983,
+          "previous": "          \"sha256\": \"8c81753f2063fa38ae480a66a2136ebcedcdff8ee1cf67e34bf9c1a30326fd5b\"\n",
+          "current": "          \"sha256\": \"0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567\"\n"
+        },
+        {
+          "start": 1407191,
+          "previous": "          \"sha256\": \"40a278cc3e3740d73f1ec91e9addfd86e5fbfce64a653530ba3ca6f55f0d66fd\"\n",
+          "current": "          \"sha256\": \"6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1422283,
+          "previous": "          \"sha256\": \"4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182\"\n",
+          "current": "          \"sha256\": \"d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63\"\n"
+        },
+        {
+          "start": 1422467,
+          "previous": "          \"sha256\": \"8c81753f2063fa38ae480a66a2136ebcedcdff8ee1cf67e34bf9c1a30326fd5b\"\n",
+          "current": "          \"sha256\": \"0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567\"\n"
+        },
+        {
+          "start": 1423011,
+          "previous": "          \"sha256\": \"2e6380b420bf89f6604d48e66b9a22a78fb867560d315fd51ebe6ca565e87315\"\n",
+          "current": "          \"sha256\": \"48b419417623a2e53c4ae93566465d0683c5af9072b7f945af26f197f85cfc73\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a\"\n",
+          "current": "          \"sha256\": \"31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9\"\n"
+        },
+        {
+          "start": 1435571,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1436407,
+          "previous": "          \"sha256\": \"0d634665f7815e895792c7a0b36cbdb0f73ae3eb430648a205444239a52e1de6\"\n",
+          "current": "          \"sha256\": \"0b540d5712432bb6d5bb974d7549d5f678044adf132638e0a3027318e22d1c03\"\n"
+        },
+        {
+          "start": 1446646,
+          "previous": "          \"sha256\": \"27f1f71932048a1b71f88541c22da56da181136623bc94422ce79826d399b6bd\"\n",
+          "current": "          \"sha256\": \"4282f63e65280b6099593ad711c0e4b5d0165a9560f0ea019ed5a7f6e000fac8\"\n"
+        },
+        {
+          "start": 1841501,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        },
+        {
+          "start": 1845409,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        },
+        {
+          "start": 1849214,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        },
+        {
+          "start": 1853052,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        },
+        {
+          "start": 1856921,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        },
+        {
+          "start": 1860795,
+          "previous": "          \"sha256\": \"292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600\"\n",
+          "current": "          \"sha256\": \"a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-promotion-source-history.mjs",
+      "currentSha256": "05d13dead555d3825a44e56b12f4cf0f9186b2ccb0afeb9ce924dd93902e1ffe",
+      "previousSha256": "b43074b1d69e4acd6b457116185228621c10328fba3770f11a724106dd31d3ff",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeCopiedGraphRepairSource } from \"./copied-graph-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2956,
+          "previous": "",
+          "current": "\tsource = beforeCopiedGraphRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-promotion-source-history-tests.mjs",
+      "currentSha256": "ca0f39c794221054704b0cb6f3be603b211aea0c6fa27b52153ff6145b40bb66",
+      "previousSha256": "595e9ccb1bfc2f5fba12e5bc3c75a79e91c63bec77f686a164408818250b5820",
+      "edits": [
+        {
+          "start": 354,
+          "previous": "",
+          "current": "import { beforeCopiedGraphRepairSource } from \"./copied-graph-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1054,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCopiedGraphRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e0ca01705afe19926b41352c4b768463b8b54e183824113cca61e959e1175e7d",
+      "previousSha256": "bb20d85309c1449a58a133d8256b867a6122cd845b8ef4f0bf7978ba7f2e7338",
+      "edits": [
+        {
+          "start": 9874,
+          "previous": "",
+          "current": "import { copiedGraphRepairChangedPaths } from \"./copied-graph-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 46997,
+          "previous": "",
+          "current": "\t, ...copiedGraphRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/c-structured-callable-evidence.mjs",
+      "currentSha256": "144647d62b087948cfad5c3f5e7301ef3ef9f88f8e7a422d5a1c26790f3e542b",
+      "previousSha256": "296fef9dc4432211c4f62e5b600fb43662df7f736051ab6bfc29645a2b1a6afd",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/closure-thread-evidence.mjs",
+      "currentSha256": "0da4eea6baf495c136c5847a3b963c534852f80e7b5cc07b8645d10d07306282",
+      "previousSha256": "d233e102986fe402da00222e85341bb5da8ecc6da0e6ad3a3f30f2dad8333ba4",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/cpp-structured-callable-evidence.mjs",
+      "currentSha256": "d716e21a4e64eeffff0b2dfc473ea2bf913c7722738f7feb95505c56696a79bc",
+      "previousSha256": "0ce87ec7048bdfa791628a5e317ea81efe53a46596764b7abc13582e5f60e01f",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-recursive-callable-evidence.mjs",
+      "currentSha256": "8b1706f88991634cf9a88c1e5222805a9066e6505f4381fdcd9f71b8347359f7",
+      "previousSha256": "bc7ef94ca10657013878f7c14e944b15a03bfd9a7f1d271ab87e0f1bf93aa0b0",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-structured-callable-evidence.mjs",
+      "currentSha256": "9b290f7a0b33dde3e09bad1abf5183085a127e6a60c14e19688b802f031af555",
+      "previousSha256": "31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-recursive-callable-evidence.mjs",
+      "currentSha256": "1008c98fc81fb04c579016592264ef3d370ab7adf06b9a6a1afa828be3092fcc",
+      "previousSha256": "08c72ebcde2e5b94c3a34e1f6c5f33e10084da8fbfbc3f3d6d6781358a5082e0",
+      "edits": [
+        {
+          "start": 265,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from '../../src/adoption/type-surface.mjs';\n",
+          "current": "import { readTypeSurface } from '../../src/adoption/type-surface.mjs';\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-structured-callable-evidence.mjs",
+      "currentSha256": "a926b01e6bc51038dd84d8c959410ed7605d38c3eb8586eb26cc58f856d56c45",
+      "previousSha256": "dbd8f21e22b807b7814cc02e519dd70ddbe1aa87a88850a4eb0e087b52ed5be9",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/managed-ci-isolation-evidence.mjs",
+      "currentSha256": "0d11aac244e00e7bfc9c189c70b14b98a6f904276cc843f64bce995317bdeee2",
+      "previousSha256": "47363b328c7e8e0edeaf97fa190a320d41db2061641810b576a7d71f3d4baa89",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fork-repair-evidence.mjs",
+      "currentSha256": "ef682f017e88af81ba365c6bcdbb2403cb0e7f6f22b05274d284c5186b2a175b",
+      "previousSha256": "0d7cc8ad2ebd3b1c6c2f2fb37de9b5764bd2f4764813ad308135659c8ce1f752",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-recursive-callable-evidence.mjs",
+      "currentSha256": "a8ff9904a755f3b4203c4f338a2dbb0b680225e125233226a1e4d70e2023b3b3",
+      "previousSha256": "a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-fin-contract-tests.mjs",
+      "currentSha256": "0b540d5712432bb6d5bb974d7549d5f678044adf132638e0a3027318e22d1c03",
+      "previousSha256": "0d634665f7815e895792c7a0b36cbdb0f73ae3eb430648a205444239a52e1de6",
+      "edits": [
+        {
+          "start": 759,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/npm-structured-callable-evidence.mjs",
+      "currentSha256": "acc5277b49f1704885384293fb452b1614e4e055ddedf580f7d4ffcef468a7ff",
+      "previousSha256": "32390692687086d3c1386c9929c44f2f4c237af868ac082356f764278e73aa4a",
+      "edits": [
+        {
+          "start": 289,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-aggregate-evidence.mjs",
+      "currentSha256": "41931669b6573831ddb3dbc7cda4954b745f53052c7b410832006757653b2885",
+      "previousSha256": "928c09bbea003c876d8c93f341d8742e90deefa75d879461c53b63a4ab5e3af5",
+      "edits": [
+        {
+          "start": 255,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-c-evidence.mjs",
+      "currentSha256": "19cd2f8bdec4719a450fde87c220c6df3a821bd0fb08f3e4a2e9b98b521a9739",
+      "previousSha256": "45d7760a8110dc8c26d0c3e89275ba498fb8a11212e0865406864f3c34cd2baf",
+      "edits": [
+        {
+          "start": 335,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-cpp-evidence.mjs",
+      "currentSha256": "89b38211120177d04d982f6725dd24c93f634bf142894bcd872ddebbf442002e",
+      "previousSha256": "4d6ae8e3dca41998633a0f3a690d015694687b63a9cd7447764bbcff2f2d1161",
+      "edits": [
+        {
+          "start": 256,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-evidence.mjs",
+      "currentSha256": "fff7f772be2be50fa5d15425b709fd16abfa45ccde32844d4ad19caa3ae12c01",
+      "previousSha256": "bdf40b6fde681d5ec744397bc9843b79535f1fe4bcd6decf6e7e924d95d69fed",
+      "edits": [
+        {
+          "start": 254,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-process-evidence.mjs",
+      "currentSha256": "bd15e167f9d2fc2aa3e418a1203b28a57abd9232b2239d270dcb875f47065a70",
+      "previousSha256": "4b53ac24c8c386f2ed06c4e7414579a77395fa71c18d3f6b4e7bd57ea2d87c9b",
+      "edits": [
+        {
+          "start": 254,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-host-evidence.mjs",
+      "currentSha256": "64862719e62e419713f338abb160eecd02697ff40e7cd98ba7ef7c89cc32b290",
+      "previousSha256": "f7784e7e5d9c9a0f97b635482a214f80c23c963a136352894debef9fa171769d",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-package-evidence.mjs",
+      "currentSha256": "beb6dee3c170cb19011d9d57190b910bf1f0ae3e86ca7b78873133a12b886bc4",
+      "previousSha256": "82255ac8ba212051c17deb0cae95def08de7b5208e99ee37cee668d049725bac",
+      "edits": [
+        {
+          "start": 405,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-package-evidence.mjs",
+      "currentSha256": "b948f4418b034eece32d7afcbb0af99948e44b95a6decde12959c84afbe188c2",
+      "previousSha256": "ee0ddfcceb1716e8f594b44a9c8e0a98608c820eaa939f9c43174a728709b918",
+      "edits": [
+        {
+          "start": 254,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-python-evidence.mjs",
+      "currentSha256": "7241afa9414ce34dff0491a9a8724da02a6552fb449166f84b3a4a3d3741e6d2",
+      "previousSha256": "92b068fcb6bb56047eccc9e5e0d45314bf8c8e39924df8caf3c28c2c6e64c9ab",
+      "edits": [
+        {
+          "start": 250,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-reviewed-evidence.mjs",
+      "currentSha256": "aafc3953e229149caac9ac19f82dd80e642ee5264fc6e0c8af1a0a18ccd05f9a",
+      "previousSha256": "b58a23b5d40a556f0abc75d98556be6d5630846cf719522ddc7d15658c65cb43",
+      "edits": [
+        {
+          "start": 257,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-evidence.mjs",
+      "currentSha256": "ed199bbc4e68fc427f3e2ef07190a548b978a6e08953c4c3f96c87635e6af4a3",
+      "previousSha256": "39886e96d33e9b2b44e42012779e4045a942654db68abd4ec3b39cdad239fd51",
+      "edits": [
+        {
+          "start": 252,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-rust-evidence.mjs",
+      "currentSha256": "bb0b07415cb200783b772680021551ed04bd08e946d55d7c891f3ffe900de72e",
+      "previousSha256": "802d3011f30ab5d95da684f80f098bacd30e326d248111cd68028e4a1d923f24",
+      "edits": [
+        {
+          "start": 260,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-recursive-callable-evidence.mjs",
+      "currentSha256": "fca48c951e38c9131660f258b6f0f975d29f4d6d4925014a1c154b0690a3bfac",
+      "previousSha256": "d83d645af3031c041c8aad4ed518dc46a1a340cd8acf5a44a300f38e2b8eb905",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-structured-callable-evidence.mjs",
+      "currentSha256": "ecfc0ead7c31fcd40d24dc1459db400e20a468057fe4ba23ecb540ab6f4ef7f4",
+      "previousSha256": "f32425cdbe5b1bb3a7bbc056e27b8d658ef207ea34bb99f2f3c68d250c840af6",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-ci-regression-evidence.mjs",
+      "currentSha256": "1ec2bb17b430d9001252a56c3fc712ea37c2a76ec0edb4d8ba71a2056f6581be",
+      "previousSha256": "9d9320c53fae7e39ec0937f347f3543ee54d92add596633ffbdfe05ef60a60f6",
+      "edits": [
+        {
+          "start": 255,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-recursive-callable-evidence.mjs",
+      "currentSha256": "d3498a362e04a92ffbd34b59ddff4277ab839beebdc5efe51da488c7b563db63",
+      "previousSha256": "4c9b5f51dd0b2a298e6070fa88fa1b6314035c027afad6e73a2f62b7f56a2182",
+      "edits": [
+        {
+          "start": 325,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from '../../src/adoption/type-surface.mjs';\n",
+          "current": "import { readTypeSurface } from '../../src/adoption/type-surface.mjs';\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-structured-callable-evidence.mjs",
+      "currentSha256": "f7bdb62299eb16f492f74cb1299178b3a594eb41c64e154552c8ca89d76e6cb4",
+      "previousSha256": "9edb2d80f5cfec686de9e9de9b1b4abb2060eebca684f17129cbfba9bfa725a2",
+      "edits": [
+        {
+          "start": 259,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-recursive-callable-evidence.mjs",
+      "currentSha256": "0f070e88975d5bf1c82dc21643e414982fb0cdadeb0348f8c1627190542a3567",
+      "previousSha256": "8c81753f2063fa38ae480a66a2136ebcedcdff8ee1cf67e34bf9c1a30326fd5b",
+      "edits": [
+        {
+          "start": 255,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-structured-callable-evidence.mjs",
+      "currentSha256": "6cd3a75ef38b81e04bef4674e1460c64a453afebbe0a8407c541d51e8068c921",
+      "previousSha256": "40a278cc3e3740d73f1ec91e9addfd86e5fbfce64a653530ba3ca6f55f0d66fd",
+      "edits": [
+        {
+          "start": 255,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-recursive-callable-evidence.mjs",
+      "currentSha256": "446a696ff2f2a94edc727befa742f87b8cbbe1498568bd747765649c7a2bd869",
+      "previousSha256": "8549d6b9d3b1436e2fdfa6b8d9413e9842abdcd9bce5f85cda022b6888b23d20",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/python-structured-callable-evidence.mjs",
+      "currentSha256": "365f4ccc6f03869edae3c2c003cdc86876d10e37d71846dffe031e6774736c14",
+      "previousSha256": "d3a2e956bde823f56cdf40e30c64eb30cd3ba9bce6fd7a5f3fa191e6c8da08ec",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-recursive-callable-evidence.mjs",
+      "currentSha256": "79ba7ea6e90fb1387bac77ae08677a2742e94e4f4e63e223d54f8035330af70f",
+      "previousSha256": "af8c69963117700cd7c9e6425b01d41e9be6ae7b824c52fbde809111c0cdaf62",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-structured-callable-evidence.mjs",
+      "currentSha256": "3f87bde11bf07a48313eb7347aec432877df151e99af9cb4058dad959e47c8c0",
+      "previousSha256": "22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-recursive-callable-evidence.mjs",
+      "currentSha256": "5bb1161dbd76f0ec884d4f9cc12201fe49ac9c928303924c51a62271b079fa59",
+      "previousSha256": "bc12ce48a2d8d81ab41f5e2663fc313b26b7c5e8bf8c8244d2f14a1f3675f08b",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/rust-structured-callable-evidence.mjs",
+      "currentSha256": "e9bb926fd431cc0eef3a760e2d799edd8432f89f9f316b018ea6d9b3de24d168",
+      "previousSha256": "de4f80ceb9b73eb9c2f1503d9a32ba13eb3171109527b57b494f88ccfec3d266",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-recursive-acceptance.mjs",
+      "currentSha256": "0d49e7221a2499cbc5b839dca830788e6344b2e4b7ce8eee1206faaf4a296273",
+      "previousSha256": "e51d4218c0081efdb7949f6077e76226b75f170f4615592baef17c4dd29d6d13",
+      "edits": [
+        {
+          "start": 242,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-recursive-callable-evidence.mjs",
+      "currentSha256": "48b419417623a2e53c4ae93566465d0683c5af9072b7f945af26f197f85cfc73",
+      "previousSha256": "2e6380b420bf89f6604d48e66b9a22a78fb867560d315fd51ebe6ca565e87315",
+      "edits": [
+        {
+          "start": 256,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-structured-callable-evidence.mjs",
+      "currentSha256": "866a2f793fa673dbe1ecb5c104a6e0bc17db8696c0070f8a83211e354e58d90d",
+      "previousSha256": "de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7",
+      "edits": [
+        {
+          "start": 322,
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\nimport { historicalTypeSurfaceCells as typeSurfaceCells } from \"./historical-type-surface-cells.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "31982d1824b6f508fb6898ba4758d0f49eeb1b2c8581570cb0f5a58cf56550f9",
+      "previousSha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a",
+      "edits": [
+        {
+          "start": 603,
+          "previous": "",
+          "current": "import { historicalTypeSurfaceCells } from \"./helpers/historical-type-surface-cells.mjs\";\nimport { beforeCheckedRecordPromotionSource } from \"./helpers/checked-record-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2016,
+          "previous": "",
+          "current": "test(\"historical shape comparisons preserve old cells without weakening the live classifier\", async () => {\n\tconst file = \"docs/type-surface.v1.json\";\n\tconst previous = JSON.parse(beforeCheckedRecordPromotionSource(file, await readFile(file, \"utf8\")));\n\tconst unchanged = clone(previous);\n\tassert.equal(previous.shapes.length, 48);\n\tassert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);\n\tconst historical = historicalTypeSurfaceCells(previous, contracts);\n\tassert.deepEqual(previous, unchanged);\n\tassert.deepEqual(historical, typeSurfaceCells(document, contracts).filter(cell => cell.shape !== \"checked-record\"));\n\tassert.deepEqual(historicalTypeSurfaceCells(document, contracts), typeSurfaceCells(document, contracts));\n\tconst missing = clone(previous);\n\tmissing.shapes = missing.shapes.filter(shape => shape.id !== \"fin\");\n\tassert.throws(() => historicalTypeSurfaceCells(missing, contracts), /IR and source shapes/u);\n\tconst invented = clone(previous);\n\tinvented.observations[0].shapes = [\"checked-record\"];\n\tassert.throws(() => historicalTypeSurfaceCells(invented, contracts));\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-evidence-tests.mjs",
+      "currentSha256": "a2b707c4bf3a617604654a3ef00641d8335cbe7619e14364d64c732d73f7fb35",
+      "previousSha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600",
+      "edits": [
+        {
+          "start": 292,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 3051,
+          "previous": "\tfor(const source of record.sourceFiles) assert.equal(sha256(await readFile(source.path)), source.sha256, source.path);\n",
+          "current": "\tfor(const source of record.sourceFiles)\n\t\tassert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path, \"utf8\"), source.sha256)), source.sha256, source.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-corpus.test.mjs",
+      "currentSha256": "d07eabf8ec820e77e57f9d72b5b44965f7652d212c037769e92944205404f7ab",
+      "previousSha256": "6b2e8eeaf5a06239cb45450d88f5860efee9123eaedef7058d54045e2889de3c",
+      "edits": [
+        {
+          "start": 25100,
+          "previous": "\tassert.equal(cells.length, 6562);\n",
+          "current": "\tassert.equal(cells.length, 6732);\n"
+        },
+        {
+          "start": 25201,
+          "previous": "\tassert.equal(new Set(cells.map(cell => cell.shape)).size, 48);\n",
+          "current": "\tassert.equal(new Set(cells.map(cell => cell.shape)).size, 49);\n\t// Separate installed checked-record fixtures do not execute this corpus's missing cases.\n\tconst checked = cells.filter(cell => cell.shape === \"checked-record\");\n\tassert.equal(checked.length, 170);\n\tassert.deepEqual(checked.map(cell => [cell.profile, cell.path, cell.position].join(\"/\")).sort()\n\t\t, inventory.document.profiles.flatMap(profile => [\"ordinary-source\", \"reviewed-ir\"].flatMap(path =>\n\t\t\t[\"parameter\", \"result\", \"field\", \"callback-parameter\", \"callback-result\"].map(position => [profile.id, path, position].join(\"/\")))).sort());\n"
+        },
+        {
+          "start": 49925,
+          "previous": "\tassert.equal(cells.filter(cell => cell.status === \"gap\").length, 6521);\n",
+          "current": "\tassert.equal(cells.filter(cell => cell.status === \"gap\").length, 6691);\n\tassert.ok(cells.filter(cell => cell.shape === \"checked-record\").every(cell => cell.status === \"gap\" && cell.cases.length === 0));\n"
+        }
+      ]
+    }
+  ]
+}

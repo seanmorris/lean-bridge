@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
 import { jvmCallableSignatures, jvmCallableConsumer, jvmCallablePublicChecks, jvmCallableRejections } from "./jvm-callable-fixture.mjs";
 import { jvmStructuredCallableSignatures, jvmStructuredCallableConsumer, jvmStructuredCallableRejections, jvmStructuredCallableExamples } from "./jvm-structured-callable-fixture.mjs";

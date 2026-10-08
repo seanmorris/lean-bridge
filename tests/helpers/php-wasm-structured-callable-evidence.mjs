@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { compileCopiedPhpModel } from "../../src/backends/php/copied-model.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";

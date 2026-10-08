@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertRustRecursiveCallableIntegration } from "./rust-recursive-callable-evidence.mjs";
 import { rustRecursiveCallableHistoryPath } from "./rust-recursive-callable-source-history.mjs";
 import { assertRubyStructuredCallableExecution, rubyStructuredCallableExecutionPath } from "./ruby-structured-callable-evidence.mjs";

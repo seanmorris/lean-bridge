@@ -94,6 +94,12 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			? { ...refinement, definition: signature.parameters[index].id.slice(5) } : refinement);
 		const result = mirror(signature.result) ? { kind: "checked-record", definition: signature.result.id.slice(5), constructor: null } : item.refinements?.result ?? null;
 		const refinements = parameters.some(Boolean) || result ? { parameters, result } : undefined;
+		// Copied-graph callers name no per-parameter Lean types, so they cannot carry checked-record mirrors.
+		if(!item.parameters)
+		{
+			if([...signature.parameters, signature.result].some(mirror)) throw new TypeError("Checked-record mirrors require per-parameter export sites");
+			return { ...item, ...refinements ? { refinements } : {} };
+		}
 		return { ...item, parameters: item.parameters.map((parameter, index) => mirror(signature.parameters[index]) ? { ...parameter, leanType: mirror(signature.parameters[index]) } : parameter)
 			, ...refinements ? { refinements } : {} };
 	});

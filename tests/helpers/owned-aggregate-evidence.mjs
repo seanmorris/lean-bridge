@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateAddedPaths, ownedAggregateChangedPaths, ownedAggregateBaseline, ownedAggregateExecutionPath, reverseOwnedAggregateUpdate } from "./owned-aggregate-source-history.mjs";
 import { witRecursiveCallableHistoryPath } from "./wit-recursive-callable-source-history.mjs";

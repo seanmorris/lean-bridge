@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCopiedGraphRepairSource } from "./copied-graph-repair-source-history.mjs";
 
 export const checkedRecordPromotionHistoryPath = "docs/evidence/checked-record-promotion-source-history-20261008.json";
 export const checkedRecordPromotionChangedPaths = [
@@ -72,6 +73,7 @@ export const reverseCheckedRecordPromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordPromotionSource = (path, source, expected) => {
+	source = beforeCopiedGraphRepairSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

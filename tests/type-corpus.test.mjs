@@ -307,9 +307,15 @@ test("corpus identity binds the cases, consumers, Lean sources, oracles and harn
 test("every inventoried profile and position remains a gap without executed cases", () => {
 	const before = canonicalJson(inventory);
 	const cells = corpusCoverage(inventory, catalog);
-	assert.equal(cells.length, 6562);
+	assert.equal(cells.length, 6732);
 	assert.equal(new Set(cells.map(cell => cell.profile)).size, 17);
-	assert.equal(new Set(cells.map(cell => cell.shape)).size, 48);
+	assert.equal(new Set(cells.map(cell => cell.shape)).size, 49);
+	// Separate installed checked-record fixtures do not execute this corpus's missing cases.
+	const checked = cells.filter(cell => cell.shape === "checked-record");
+	assert.equal(checked.length, 170);
+	assert.deepEqual(checked.map(cell => [cell.profile, cell.path, cell.position].join("/")).sort()
+		, inventory.document.profiles.flatMap(profile => ["ordinary-source", "reviewed-ir"].flatMap(path =>
+			["parameter", "result", "field", "callback-parameter", "callback-result"].map(position => [profile.id, path, position].join("/")))).sort());
 	assert.ok(cells.every(cell => cell.status === "gap" && cell.cases.length === 0 && cell.owner > 0));
 	assert.ok(cells.every(cell => cell.reason !== "adapter-not-implemented"));
 	assert.deepEqual(Object.keys(corpusProfiles).sort(), inventory.document.profiles.map(profile => profile.id).sort());
@@ -679,7 +685,8 @@ test(".NET separates C# type errors from executed public calls and recovery", ()
 	const runs = catalog.libraries.map(library => validationFixture("dotnet", library.id));
 	const cells = corpusCoverage(inventory, catalog, runs);
 	assert.equal(cells.filter(cell => cell.status === "observed").length, 41);
-	assert.equal(cells.filter(cell => cell.status === "gap").length, 6521);
+	assert.equal(cells.filter(cell => cell.status === "gap").length, 6691);
+	assert.ok(cells.filter(cell => cell.shape === "checked-record").every(cell => cell.status === "gap" && cell.cases.length === 0));
 	const results = runs.flatMap(run => run.observation.results);
 	assert.equal(results.filter(entry => entry.status === "matched").length, 88);
 	assert.equal(results.filter(entry => entry.status === "rejected-as-expected").length, 4);

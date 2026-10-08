@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertClosureThreadIntegration } from "./closure-thread-evidence.mjs";
 import { closureThreadHistoryPath } from "./closure-thread-source-history.mjs";
 import { assertPhpStructuredCallableExecution, phpStructuredCallableExecutionPath } from "./php-structured-callable-evidence.mjs";

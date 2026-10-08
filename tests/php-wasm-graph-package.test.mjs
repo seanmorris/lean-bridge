@@ -97,6 +97,29 @@ test("PHP-Wasm CI requires and retains the recursive installed-package report", 
 	assert.ok(workflow.includes("            build/recursive/php-wasm-graph-packages.json\n"));
 });
 
+test("copied-graph PHP-Wasm adapters keep their f9d5ce9 and installed bytes when export sites carry no metadata", async () => {
+	// Checked-record admission (7cef0d5) must leave unrefined copied graphs byte-for-byte unchanged.
+	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
+	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const reference = { kind: "reference", name: "Sample.Tree", lean: "Sample.Tree", abi };
+	const tree = { kind: "variant", name: "Sample.Tree", lean: "Sample.Tree", abi
+		, cases: [{ name: "leaf", constructor: "Sample.Tree.leaf", fields: [{ name: "value", type: projection.result }] }
+			, { name: "next", constructor: "Sample.Tree.next", fields: [{ name: "child", type: reference }] }] };
+	const graph = { kind: "graph", root: reference, types: [tree], abi };
+	projection.parameters[0].type = graph; projection.result = graph;
+	const output = generateCompiledPhpWasmLeanAdapters(createCompiledPhpWasmModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }));
+	assert.equal(sha256(output.leanSource), "0f01b78e3aabab63aa3b2d3e3f9d033aff53cd056c416f7baa04184c44262094");
+	assert.equal(sha256(output.header), "4399d46b3f29fe7639fea4eb0cfcd26eb303202e90cf2cb07e46dc4ed1dc2565");
+	// The ordinary and reviewed installed runs regenerate exactly the adapters they recorded.
+	const record = JSON.parse(await readFile("docs/evidence/php-wasm-recursive-packages-20260924.json", "utf8"));
+	assert.deepEqual(record.report.observations.map(run => run.reviewed), [false, true]);
+	for(const { model, receipt } of record.report.observations)
+	{
+		const adapters = generateCompiledPhpWasmLeanAdapters(model);
+		assert.equal(sha256(adapters.leanSource), receipt.adaptersSha256); assert.equal(sha256(adapters.header), receipt.headerSha256);
+	}
+});
+
 test("recursive PHP-Wasm package evidence binds actual installed APIs and browser assets", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/php-wasm-recursive-packages-20260924.json", "utf8"));
 	await assertPhpWasmGraphPackageEvidence(record);

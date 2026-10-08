@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { recursiveCallableCConsumer, recursiveCallableCFaultConsumer } from "./c-recursive-callable-fixture.mjs";
 import { recursiveCallableCppConsumer } from "./cpp-recursive-callable-fixture.mjs";
 import { assertWitStructuredCallableIntegration } from "./wit-structured-callable-evidence.mjs";

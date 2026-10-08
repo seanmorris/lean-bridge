@@ -8,13 +8,17 @@ import test from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { canonicalJson } from "../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "../src/build/native-graph-model.mjs";
+import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
+import { componentRecursiveLeanSource } from "../src/build/component-recursive-lean.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import { checkedRecordReview } from "./helpers/checked-record-fixture.mjs";
 import { checkNativeRecursiveTransport } from "./helpers/native-recursive-transport.mjs";
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
+import "./helpers/copied-graph-repair-source-history-tests.mjs";
 
 const fixture = () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
@@ -69,6 +73,20 @@ test("native graph helpers use total typed arrays and explicit prototype checks"
 	assert.doesNotMatch(output.leanSource, /\b(?:unsafe|unsafeCast|partial|sorry|axiom|defaultValue)\b/u);
 	assert.match(output.header, /uint32_t lean_bridge_[a-f0-9]+_recursive_[a-f0-9]+_branch\(lean_object \*\);/u);
 	assert.match(output.header, /lean_object \* lean_bridge_[a-f0-9]+_lean\(lean_object \*\);/u);
+});
+
+test("copied-graph native adapters keep their f9d5ce9 bytes when export sites carry no metadata", () => {
+	// Checked-record admission (7cef0d5) must leave unrefined copied graphs byte-for-byte unchanged.
+	const output = generateCompiledNativeLeanAdapters(createCompiledNativeModel(fixture()));
+	assert.equal(sha256(output.leanSource), "0f01b78e3aabab63aa3b2d3e3f9d033aff53cd056c416f7baa04184c44262094");
+	assert.equal(sha256(output.header), "746c87af024b54ddb1e83c1f07fb25aaf4128e2ba1516ca9c7b492f925abe030");
+});
+
+test("copied-graph export sites without parameter types refuse checked-record mirrors", () => {
+	// Native and PHP-Wasm copied graphs pass no per-parameter Lean types, so they cannot build a mirror.
+	const abi = createComponentPrivateAbi(checkedRecordReview());
+	const exports = abi.exports.map((item, index) => ({ bindingId: item.bindingId, symbol: item.symbol, wrapper: `export${index}`, sourceDeclaration: "CheckedRecords.f" }));
+	assert.throws(() => componentRecursiveLeanSource(abi, exports, () => "_root_.Nat"), { name: "TypeError", message: "Checked-record mirrors require per-parameter export sites" });
 });
 
 test("non-graph native models and emitted adapters are unchanged", () => {
