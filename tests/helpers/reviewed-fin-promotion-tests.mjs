@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { reviewedFinPromotionReferences } from "./reviewed-fin-promotion-references.mjs";
 import { beforeReviewedFinPromotionSource } from "./reviewed-fin-promotion-source-history.mjs";
+import { beforeNativeFinPromotionSource } from "./native-fin-promotion-source-history.mjs";
 import "./reviewed-fin-host-evidence-tests.mjs";
 import "./reviewed-scalar-host-evidence-tests.mjs";
 import "./reviewed-scalar-rollout-evidence-tests.mjs";
@@ -18,10 +19,16 @@ import "./reviewed-perl-container-evidence-tests.mjs";
 import "./reviewed-fin-wasm-evidence-tests.mjs";
 import "./reviewed-fin-promotion-source-history-tests.mjs";
 
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeNativeFinPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
+
 test("reviewed Fin promotion cites nineteen unchanged original reports and artifact sets", async () => {
 	const references = await reviewedFinPromotionReferences();
 	assert.equal(references.length, 19);
-	const { document } = await readTypeSurface();
+	const { document } = await readPromotedSurface();
 	const previous = JSON.parse(beforeReviewedFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	for(const reference of references)
@@ -36,12 +43,12 @@ test("reviewed Fin promotion cites nineteen unchanged original reports and artif
 		assert.ok(entry.files.some(file => file.path === reference.receiptPath));
 		assert.ok(entry.files.some(file => file.path === reference.reportPath && file.sha256 === reference.reportSha256));
 		assert.ok(entry.files.some(file => file.path === reference.validator));
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeNativeFinPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
 	}
 });
 
 test("reviewed Fin promotion advances exactly twenty-eight parameter/result cells and no unrelated claims", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const { document, ...contracts } = await readPromotedSurface();
 	const previous = JSON.parse(beforeReviewedFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const added = document.observations.slice(previous.observations.length);
 	const nativeProfiles = ["python", "rust", "dotnet", "java", "kotlin", "php-native", "ruby", "wit-wasi", "perl"];

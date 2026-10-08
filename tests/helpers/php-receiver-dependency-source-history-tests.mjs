@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNativeFinPromotionSource } from "./native-fin-promotion-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpReceiverDependencySource, phpReceiverDependencyChangedPaths, phpReceiverDependencyHistoryPath, reversePhpReceiverDependencyUpdate } from "./php-receiver-dependency-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("PHP-Wasm receiver dependency authenticates each exact source predecessor",
 	assert.deepEqual(record.updates.map(update => update.path), phpReceiverDependencyChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeFinPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpReceiverDependencyUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpReceiverDependencySource(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpReceiverDependencySource(update.path, source, update.currentSha256), source);

@@ -1,20 +1,32 @@
 /**
- * Preserve exact source predecessors of the PHP-Wasm receiver dependency change (#1220).
+ * Preserve exact source predecessors of the native Fin promotion change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNativeFinPromotionSource } from "./native-fin-promotion-source-history.mjs";
 
-export const phpReceiverDependencyHistoryPath = "docs/evidence/php-receiver-dependency-source-history-20261008.json";
-export const phpReceiverDependencyChangedPaths = [
-	"tests/helpers/owned-php-wasm-receiver-ci.mjs"
-	, "tests/owned-php-wasm-receiver-ci.test.mjs"
+export const nativeFinPromotionHistoryPath = "docs/evidence/native-fin-promotion-source-history-20261008.json";
+export const nativeFinPromotionChangedPaths = [
+	"docs/consume/c.md"
+	, "docs/consume/cpp.md"
+	, "docs/consume/dotnet.md"
+	, "docs/consume/java.md"
+	, "docs/consume/kotlin.md"
+	, "docs/consume/perl.md"
+	, "docs/consume/python.md"
+	, "docs/consume/ruby.md"
+	, "docs/consume/rust.md"
+	, "docs/consume/wit-wasi.md"
+	, "docs/javascript-typescript.md"
+	, "docs/php.md"
+	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/fin-product-php-name-source-history.mjs"
-	, "tests/helpers/fin-product-php-name-source-history-tests.mjs"
+	, "tests/helpers/php-receiver-dependency-source-history.mjs"
+	, "tests/helpers/php-receiver-dependency-source-history-tests.mjs"
+	, "tests/helpers/reviewed-fin-promotion-tests.mjs"
+	, "tests/native-fin-records.test.mjs"
 ];
 let history;
 
@@ -24,8 +36,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePhpReceiverDependencyUpdate = (source, update) => {
-	assert.ok(phpReceiverDependencyChangedPaths.includes(update.path));
+export const reverseNativeFinPromotionUpdate = (source, update) => {
+	assert.ok(nativeFinPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +63,11 @@ export const reversePhpReceiverDependencyUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpReceiverDependencySource = (path, source, expected) => {
-	source = beforeNativeFinPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !phpReceiverDependencyChangedPaths.includes(path)) return source;
+export const beforeNativeFinPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nativeFinPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpReceiverDependencyHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nativeFinPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpReceiverDependencyUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNativeFinPromotionUpdate(source, update) : source;
 };

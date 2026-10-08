@@ -9,6 +9,7 @@ import { join } from "node:path";
 import test from "node:test";
 import "./helpers/native-fin-records-source-history-tests.mjs";
 import "./helpers/fin-record-evidence-tests.mjs";
+import "./helpers/native-fin-promotion-tests.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
