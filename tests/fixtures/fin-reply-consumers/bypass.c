@@ -60,7 +60,7 @@ static int matches(const finreplies_error *error, const char *expected) {
 }
 
 /* A refused call keeps the caller's output exactly as it was. */
-static int untouched(const finreplies_nat *out) { return out->data == sentinel_limbs && out->length == 1 && out->owner == NULL; }
+static int untouched(const finreplies_nat *out) { return out->data == sentinel_limbs && out->length == 1 && out->owner == NULL && out->release == NULL; }
 
 static const char *refusal;
 

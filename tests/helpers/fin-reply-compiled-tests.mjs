@@ -25,6 +25,10 @@ const enabled = process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST === "1";
 const fixture = "tests/fixtures/onboarding/native-fin-replies";
 const exports = ["digits", "failure", "late", "maybe", "maybeTile", "none0", "plain", "twice", "wide"].map(name => `FinReplies.${name}`);
 const sanitizers = ["-fsanitize=address,undefined", "-fno-sanitize-recover=undefined", "-fno-omit-frame-pointer", "-g"];
+// Lean's runtime keeps process-lifetime allocations, so only memory errors and undefined behavior fail.
+const sanitized = { ASAN_OPTIONS: "detect_leaks=0:halt_on_error=1:abort_on_error=0", UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1" };
+// Every CHECK the consumer executes on success, including the second thread's and the parent's fork check.
+const expectedChecks = 27;
 
 /**
  * Remove exactly one C reply walk: the bound comparison of one native callback key and its constant.
@@ -62,7 +66,9 @@ test("the harness bypass removes exactly one C reply walk and keeps Lean's rejec
 	assert.throws(() => stripReplyWalk(source, "0".repeat(20)), assert.AssertionError);
 });
 
-test("C reply walks and Lean's own reconstruction both refuse host replies outside their bounds under ASan and UBSan", { skip: !enabled, timeout: 2_400_000 }, async t => {
+// A generated-wrapper execution check, not source-free installed acceptance: it relinks the producer's
+// C wrapper from its build paths and exercises maybe and twice; the other admitted exports are compiled.
+test("generated C wrapper execution: C reply walks and Lean's own reconstruction both refuse host replies under ASan and UBSan", { skip: !enabled, timeout: 2_400_000 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-replies-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
@@ -93,7 +99,15 @@ test("C reply walks and Lean's own reconstruction both refuse host replies outsi
 		.map(([macro, name, index]) => [macro, `${surface.prefix}_${surface.callbacks.get(model.bindingIr.declarations.find(item => item.id === `lean:FinReplies.${name}`).parameters[index].type.id).field}`]));
 	const harness = `${Object.entries(names).map(([macro, value]) => `#define ${macro} ${value}`).join("\n")}\n${await readFile("tests/fixtures/fin-reply-consumers/bypass.c", "utf8")}`;
 	const consumerFlags = ["-std=c11", "-Wall", "-Wextra", "-Werror", ...sanitizers, "-pthread"];
-	const runs = {};
+	const runs = {}, reportPath = resolve(process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_REPORT ?? "build/native-fin-replies/c-bypass.json");
+	await mkdir(dirname(reportPath), { recursive: true });
+	// Compiler and consumer output survive a failure even though the temporary build is removed.
+	const retained = async (label, command, args, cwd, environment) => runCopied(command, args, cwd, environment).catch(async error => {
+		await writeFile(`${reportPath}.${label}.failure.json`, canonicalJson({ command, args, stdout: error.stdout ?? "", stderr: error.stderr ?? "", message: error.message }));
+		throw error;
+	});
+	const compilerVersion = (await runCopied("/usr/bin/cc", ["--version"], directory, env)).stdout.split("\n")[0];
+	const libraries = { wrapperSha256: sha256(await readFile(join(binding, "lib", `lib${surface.prefix}.so`))), componentSha256: sha256(await readFile(join(component, receipt.library))) };
 	for(const [variant, source] of Object.entries(variants))
 	{
 		const root = join(work, variant);
@@ -101,22 +115,19 @@ test("C reply walks and Lean's own reconstruction both refuse host replies outsi
 		await writeFile(join(root, "src/native.c"), source);
 		await writeFile(join(root, "consumer.c"), harness);
 		const library = join(root, `lib${surface.prefix}.so`);
-		await runCopied("/usr/bin/cc", [...wrapperFlags, ...includes, join(binding, surface.paths.implementation), join(root, "src/native.c"), ...link, `-Wl,-soname,lib${surface.prefix}.so`, "-o", library], root, env);
-		await runCopied("/usr/bin/cc", [...consumerFlags, "-I", join(binding, "include"), "consumer.c", "-L", root, `-l${surface.prefix}`, "-o", "consumer"], root, env);
-		// Lean's runtime keeps process-lifetime allocations, so only memory errors and undefined behavior fail.
-		const sanitized = { ASAN_OPTIONS: "detect_leaks=0:halt_on_error=1:abort_on_error=0", UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1" };
-		const run = await runCopied(join(root, "consumer"), [variant], root, { ...env, LD_LIBRARY_PATH: [root, component, join(runtime, "lib")].join(":"), ...sanitized });
+		await retained(`${variant}-wrapper`, "/usr/bin/cc", [...wrapperFlags, ...includes, join(binding, surface.paths.implementation), join(root, "src/native.c"), ...link, `-Wl,-soname,lib${surface.prefix}.so`, "-o", library], root, env);
+		await retained(`${variant}-consumer`, "/usr/bin/cc", [...consumerFlags, "-I", join(binding, "include"), "consumer.c", "-L", root, `-l${surface.prefix}`, "-o", "consumer"], root, env);
+		const run = await retained(`${variant}-run`, join(root, "consumer"), [variant], root, { ...env, LD_LIBRARY_PATH: [root, component, join(runtime, "lib")].join(":"), ...sanitized });
 		const lines = run.stdout.trim().split("\n");
-		assert.match(lines.at(-1), new RegExp(`^fin-reply-ok ${variant} \\d+$`, "u"));
+		assert.equal(lines.at(-1), `fin-reply-ok ${variant} ${expectedChecks}`);
+		assert.match(lines.find(line => line.startsWith("fork-status ")) ?? "", /^fork-status \d+ 0$/u);
 		assert.equal(run.stderr, "");
 		runs[variant] = { sourceSha256: sha256(source), librarySha256: sha256(await readFile(library)), stdout: lines };
 	}
-	const reportPath = resolve(process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_REPORT ?? "build/native-fin-replies/c-bypass.json");
-	await mkdir(dirname(reportPath), { recursive: true });
 	// The wrapper (surface implementation and native.c) and the consumer are instrumented; the Lean
 	// component, the bridge runtime and libleanshared are the unchanged, uninstrumented package build.
 	const instrumentation = { instrumented: ["wrapper", "consumer"], uninstrumented: [receipt.library, "liblean_bridge_native.so", "libleanshared.so"] };
 	const identities = { harnessSha256: sha256(harness), componentReceiptSha256: sha256(await readFile(join(component, "native-component.json"))) };
-	const compiler = { wrapper: wrapperFlags, consumer: consumerFlags, link };
-	await writeFile(reportPath, canonicalJson({ schemaVersion: 1, key, removed: stripped.removed, names, runs, compiler, ...instrumentation, ...identities }));
+	const compiler = { version: compilerVersion, wrapper: wrapperFlags, consumer: consumerFlags, link, environment: sanitized, expectedChecks };
+	await writeFile(reportPath, canonicalJson({ schemaVersion: 1, scope: "generated C wrapper execution, not installed acceptance", key, removed: stripped.removed, names, runs, compiler, original: libraries, ...instrumentation, ...identities }));
 });
