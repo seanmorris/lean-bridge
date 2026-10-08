@@ -133,7 +133,8 @@ static _Thread_local char lb_error_text[1024];
 static void lb_record(lb_frame *frame, ${p}_status status, const ${p}_error *error, const char *fallback) {
   if (frame->status != ${m}_STATUS_OK) return;
   frame->status = status > ${m}_STATUS_OK && status <= ${m}_STATUS_UNEXPECTED_ERROR ? status : ${m}_STATUS_UNEXPECTED_ERROR;
-  frame->code = error && error->code ? error->code : ${m}_ERROR_UNEXPECTED;
+  /* An explicit host code is kept; otherwise an invalid argument keeps its matching boundary code. */
+  frame->code = error && error->code ? error->code : frame->status == ${m}_STATUS_INVALID_ARGUMENT ? ${m}_ERROR_INVALID_ARGUMENT : ${m}_ERROR_UNEXPECTED;
   const char *text = error && error->message ? error->message : fallback;
   size_t length = error && error->message ? error->message_length : strlen(fallback);
   if (length >= sizeof(frame->message)) length = sizeof(frame->message) - 1;
