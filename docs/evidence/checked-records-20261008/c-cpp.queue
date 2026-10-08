@@ -1,0 +1,27 @@
+sha 78a4d3da45754f3e425faafdadc9e959cee65bc5
+tree /app/build/worktrees/checked-records-vo1220 (detached; branch agent/checked-records-vo1220 kept at 784b750)
+node v22.23.3 (Codex 1764 asked for v22.23.2; only v22.23.3 is installed locally)
+lean Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+glibc ldd (Debian GLIBC 2.36-9+deb12u14) 2.36
+cc cc (Debian 12.2.0-14+deb12u1) 12.2.0
+free_mib_after_setup 4118
+cpu 3 concurrency 1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1
+profiles c,cpp
+ordinary command: env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_REPORT=/app/build/vo1446-checked-records-ordinary-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^relocated source-free C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-ordinary-c-cpp-78a4d3d.tap
+ordinary start 2026-10-08T08:37:58Z
+environment recorded 2026-10-08T08:43:37Z from /proc/1786783/environ, read-only, no restart:
+  LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR unset; effective default 2.38 (src/build/native-c-projection.mjs:138) on a glibc 2.36 host
+  LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR unset (no Perl profile)
+  LEAN_BRIDGE_* overrides inherited: none besides CHECKED_RECORD_PROFILES and the report override; LEAN_BRIDGE_LEAN_PREFIX unset, so nativeFixtureEnvironment uses .toolchains/elan/toolchains/leanprover--lean4---v4.32.2
+  LEAN_BRIDGE_BUILD_BACKEND, LEAN_BRIDGE_RUNTIME_ROOT, LEAN_BRIDGE_LAKE_RUNTIME_ROOT, CC, CXX, PKG_CONFIG_*, LD_* unset
+  NODE_PATH=/usr/lib/node_modules PATH=/root/.local/bin:/root/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1
+ordinary end 2026-10-08T08:44:17Z exit 0 # pass 1 # fail 0 # skipped 0 
+reviewed command: env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_REVIEWED_REPORT=/app/build/vo1446-checked-records-reviewed-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^independently reviewed C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-reviewed-c-cpp-78a4d3d.tap
+reviewed start 2026-10-08T08:44:17Z
+reviewed end 2026-10-08T08:50:37Z exit 0 # pass 1 # fail 0 # skipped 0 
+result-only command: env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_RESULT_ONLY_REPORT=/app/build/vo1446-checked-records-result-only-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^a relocated C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-result-only-c-cpp-78a4d3d.tap
+result-only start 2026-10-08T08:50:37Z
+correction 2026-10-08T08:54:08Z: the 08:43:37Z note was wrong that the glibc floor does not reach C/C++ bytes. native-c-projection.mjs passes glibcMinimumVersion to packageNativeCFamily, and native-c-family.mjs writes it into README.md and package metadata. This run is local glibc 2.36 with the default declared minimum 2.38, not an explicit 2.36-floor run.
+result-only end 2026-10-08T08:56:52Z exit 0 # pass 1 # fail 0 # skipped 0 
+queue complete 2026-10-08T08:56:52Z
+free_mib_end 4097

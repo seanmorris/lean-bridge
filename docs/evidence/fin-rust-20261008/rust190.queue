@@ -1,0 +1,23 @@
+revision=78a4d3da45754f3e425faafdadc9e959cee65bc5 cwd=/app/build/worktrees/checked-records-vo1220 runner=/app/build/vo1441-rust-queue-78a4d3d.mjs
+node=v22.23.3 cargo=cargo 1.90.0 (840b83a10 2025-07-30) rustc=rustc 1.90.0 (1159e78c4 2025-09-14) lean=Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release) glibc=ldd (Debian GLIBC 2.36-9+deb12u14) 2.36 cc=cc (Debian 12.2.0-14+deb12u1) 12.2.0
+env LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1; all inherited LEAN_BRIDGE_* removed; cpu=3 concurrency=1
+start=2026-10-08T09:08:11.392Z freeMiB=4086
+start product-ordinary 2026-10-08T09:08:11.413Z freeMiB=4086 file=tests/native-fin-products.test.mjs pattern=^relocated source-free native packages check Fin inside products LEAN_BRIDGE_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_FIN_PRODUCT_REPORT=/app/build/vo1441-rust-product-ordinary-78a4d3d.json
+end product-ordinary 2026-10-08T09:10:21.409Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4083
+report product-ordinary sha256=0b03b8d917018933f947372d0e7cb7e391a55df2c373c380859ed43bf3877709 checks=2039 dispatch=null
+start product-reviewed 2026-10-08T09:10:21.429Z freeMiB=4083 file=tests/native-fin-products.test.mjs pattern=^independently reviewed native packages check product and Except bounds LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_REPORT=/app/build/vo1441-rust-product-reviewed-78a4d3d.json
+end product-reviewed 2026-10-08T09:12:18.936Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4085
+report product-reviewed sha256=e59a8fab193d7b4bb9ae63e7d30faa67843e99718a9cbeebb2eb97a903b38b6e checks=2039 dispatch=null
+start product-array-ordinary 2026-10-08T09:12:18.954Z freeMiB=4085 file=tests/native-fin-product-arrays.test.mjs pattern=^relocated source-free native packages check Fin inside every element LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=rust LEAN_BRIDGE_FIN_PRODUCT_ARRAY_REPORT=/app/build/vo1441-rust-product-array-ordinary-78a4d3d.json
+end product-array-ordinary 2026-10-08T09:14:13.824Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4082
+report product-array-ordinary sha256=1295e9288b6ebc2b9e5ee86ab0e342d68be4a1234cbce6761c7fa085ae44b232 checks=2010 dispatch=null
+start product-array-reviewed 2026-10-08T09:14:13.848Z freeMiB=4082 file=tests/native-fin-product-arrays.test.mjs pattern=^independently reviewed native packages check array-of-product bounds LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_REPORT=/app/build/vo1441-rust-product-array-reviewed-78a4d3d.json
+end product-array-reviewed 2026-10-08T09:16:08.443Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4078
+report product-array-reviewed sha256=a9f938ef745033df114ddd35b7f89a67f9be3bbfc3cceba580c7a084f17c4113 checks=2010 dispatch=null
+start record-ordinary 2026-10-08T09:16:08.462Z freeMiB=4078 file=tests/native-fin-records.test.mjs pattern=^relocated source-free native packages check Fin inside record fields LEAN_BRIDGE_FIN_RECORD_PROFILES=rust LEAN_BRIDGE_FIN_RECORD_REPORT=/app/build/vo1441-rust-record-ordinary-78a4d3d.json
+end record-ordinary 2026-10-08T09:18:10.041Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4076
+report record-ordinary sha256=bc3ac9eecd57100e52ffd27cd6acc932f1646208d1d959331779df719983d297 checks=2053 dispatch=null
+start record-reviewed 2026-10-08T09:18:10.060Z freeMiB=4076 file=tests/native-fin-records.test.mjs pattern=^independently reviewed native packages check record and variant field bounds LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_RECORD_REPORT=/app/build/vo1441-rust-record-reviewed-78a4d3d.json
+end record-reviewed 2026-10-08T09:20:15.834Z exit=0 pass=1 fail=0 skipped=0 freeMiB=4073
+report record-reviewed sha256=31964c8c3a4534cad7fb9a3bb7560a440bb80ceed0194d5ece8726d6eb90852a checks=2053 dispatch=null
+all steps passed 2026-10-08T09:20:15.835Z

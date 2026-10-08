@@ -1,0 +1,248 @@
+{
+  "archives": {
+    "archives/checkedrecords-1.0.0-c.tar.gz": "a15d18fcb1525a3c2dbc2a4ae0b0b523c1de8531210d36fb5c5e6dbbb5e90226",
+    "archives/checkedrecords-1.0.0-cpp.tar.gz": "4c4ca9f7bf885eec59a273cff64f3cf3f4a8ccf9968f43704cb6c77cef5f8f68"
+  },
+  "dispatch": {
+    "columns": [
+      "l_CheckedRecords_width",
+      "l_CheckedRecords_span",
+      "l_CheckedRecords_mkInterval",
+      "lb_aad2b63e65ac8fb15f3f227a",
+      "lb_a6305cd0ef2e210efa593d33",
+      "lb_aad2b63e65ac8fb15f3f227a_refinement_0",
+      "lb_a6305cd0ef2e210efa593d33_refinement_0",
+      "lb_a6305cd0ef2e210efa593d33_refinement_1",
+      "checkedrecords_gmp_width",
+      "checkedrecords_gmp_span"
+    ],
+    "interposer": "LD_PRELOAD",
+    "observed": [
+      [
+        "start",
+        0,
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "public-valid-width",
+        0,
+        [
+          1,
+          0,
+          2,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ]
+      ],
+      [
+        "public-invalid-width",
+        1,
+        [
+          1,
+          0,
+          3,
+          1,
+          0,
+          2,
+          0,
+          0,
+          2,
+          0
+        ]
+      ],
+      [
+        "public-valid-span",
+        0,
+        [
+          1,
+          1,
+          7,
+          1,
+          1,
+          2,
+          1,
+          1,
+          2,
+          1
+        ]
+      ],
+      [
+        "public-invalid-span-second",
+        1,
+        [
+          1,
+          1,
+          9,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ],
+      [
+        "public-invalid-span-first",
+        1,
+        [
+          1,
+          1,
+          10,
+          1,
+          1,
+          2,
+          3,
+          2,
+          2,
+          3
+        ]
+      ],
+      [
+        "raw-invalid-width",
+        1,
+        [
+          1,
+          1,
+          11,
+          2,
+          1,
+          2,
+          3,
+          2,
+          2,
+          3
+        ]
+      ],
+      [
+        "raw-valid-width",
+        0,
+        [
+          2,
+          1,
+          12,
+          3,
+          1,
+          2,
+          3,
+          2,
+          2,
+          3
+        ]
+      ],
+      [
+        "raw-invalid-span-second",
+        1,
+        [
+          2,
+          1,
+          14,
+          3,
+          2,
+          2,
+          3,
+          2,
+          2,
+          3
+        ]
+      ]
+    ],
+    "positiveControl": "valid public calls increment entry, pre-validator, constructor, adapter and source; valid raw calls skip entry/pre-validator but increment constructor, adapter and source",
+    "unmeasured": [
+      "C++ dispatch (it calls the same C entries)",
+      "resident memory"
+    ]
+  },
+  "independentBuilds": 2,
+  "path": "reviewed-source",
+  "reports": [
+    {
+      "bindingIrSha256": "12d790bdc8449288b0906e5e88ac5624d0df8e5fb430892d174605afc3b7d234",
+      "checks": 2020,
+      "compilerFreePath": true,
+      "consumerSha256": "e25d71956a9e5fd1372dda8ca9682113e296ba3ddc77ebacce400b5936624e36",
+      "modelBindingIrSha256": "12d790bdc8449288b0906e5e88ac5624d0df8e5fb430892d174605afc3b7d234",
+      "modelSha256": "0a02fd41205f02f940a9f6d696e6e235977d7a35773c52c51f2bfed6913ec90a",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53847675,
+              "path": "archives/checkedrecords-1.0.0-c.tar.gz",
+              "sha256": "a15d18fcb1525a3c2dbc2a4ae0b0b523c1de8531210d36fb5c5e6dbbb5e90226"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "c",
+      "receiptSha256": "e4f380d5ac298c81c6b25d16eb2c0582b0105b4f5ce37554ee4a48d29a2c0c0c",
+      "receiptTamperRefused": true,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "12d790bdc8449288b0906e5e88ac5624d0df8e5fb430892d174605afc3b7d234",
+      "checks": 2018,
+      "compilerFreePath": true,
+      "consumerSha256": "44879279122400d1ce55768c351b37357664c0707b3c8325df6e544bcc156379",
+      "modelBindingIrSha256": "12d790bdc8449288b0906e5e88ac5624d0df8e5fb430892d174605afc3b7d234",
+      "modelSha256": "0a02fd41205f02f940a9f6d696e6e235977d7a35773c52c51f2bfed6913ec90a",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51778919,
+              "path": "archives/checkedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "4c4ca9f7bf885eec59a273cff64f3cf3f4a8ccf9968f43704cb6c77cef5f8f68"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "cpp",
+      "receiptSha256": "e4f380d5ac298c81c6b25d16eb2c0582b0105b4f5ce37554ee4a48d29a2c0c0c",
+      "receiptTamperRefused": true,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "reviewedBindingIrSha256": "26f8b5ce11c01bfa51ee98a162d3d3d15258a5030816af59c5b64e2cb4b6b14e",
+  "route": "reviewed",
+  "schemaVersion": 1
+}

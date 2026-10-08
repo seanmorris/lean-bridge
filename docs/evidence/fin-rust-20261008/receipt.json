@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1441,
+    1442
+  ],
+  "execution": "local",
+  "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+  "scope": {
+    "profiles": [
+      "rust"
+    ],
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "families": [
+      "product",
+      "product-array",
+      "record"
+    ],
+    "dispatchObserved": false,
+    "hostedCi": false,
+    "binaryArchivesRetained": false
+  },
+  "producerEnvironment": {
+    "measured": {
+      "node": "v22.23.3",
+      "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)",
+      "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+      "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+      "glibc": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36",
+      "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0"
+    },
+    "measurementSource": "runner process.version and --version of the configured cargo, rustc, Lean, ldd and cc before any selection",
+    "nativeGlibcFloor": "2.36",
+    "nativeGlibcFloorSource": "configured LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR",
+    "configuredCargo": "/app/.toolchains/rust-1.90.0/bin/cargo",
+    "configuredRustc": "/app/.toolchains/rust-1.90.0/bin/rustc",
+    "configuredLeanPrefix": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "cpu": 3,
+    "concurrency": 1,
+    "minimumFreeMiB": 2048,
+    "leanThreads": 1,
+    "ompThreads": 1,
+    "makeJobs": 1
+  },
+  "compilerFreePath": "No Lean or producer toolchain on the consumer path. The Rust consumer itself still runs cargo build --offline with the configured rustc and the system linker on PATH /usr/bin:/bin, from the vendored dependency archive.",
+  "sourceIdentityScope": "Selected compiler, installer, fixture and consumer files, not a complete dependency closure; the runner checked the recorded Git revision and a clean tracked tree before each selection.",
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "398e92373ef2e9a7f04f3a00d5ee9cd41f00b317dec995d0a5815630bc9cd019"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "0b1c7a9bfdddd06d0f6b81e9271714791076e2e07110f9dba68a1ebf1d6264d2"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "1ea961a3362fa3919a1a90035a8fd9bfb1af2c67ca682e68ce6e9da5e690443d"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "sha256": "e54ccaa9cc34016ee1632b37ea535051ac167f0ce192facf3d375155718c2ab4"
+    },
+    {
+      "path": "src/build/native-rust-projection.mjs",
+      "sha256": "1ecd4297d3c0eff24a6e7a832da09c4b141906b686a03338058d8e49d72efefb"
+    },
+    {
+      "path": "src/build/native-rust-artifacts.mjs",
+      "sha256": "da6b9fc6bbf1e97d2f279f0d1fc1b3059099131790a2db325cc863c13460ddee"
+    },
+    {
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "ba14b12ba6d0f7df8ff091f472d70fd74c003e78e1ac6e58dc8170eee2163640"
+    },
+    {
+      "path": "src/backends/native/fin-refinements.mjs",
+      "sha256": "6adea625c086cfb017abc6f8b896675da8f18b914960e695b420549ab8746122"
+    },
+    {
+      "path": "src/backends/rust/copied-values.mjs",
+      "sha256": "e3c604b3c9a70cbfa664053dc4b6aa4bcee6c6aa80d1738929af8639cb0fbac1"
+    },
+    {
+      "path": "src/backends/rust/generate.mjs",
+      "sha256": "e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"
+    },
+    {
+      "path": "src/backends/rust/dependencies.lock",
+      "sha256": "11602e653105ab63f26028801a07262cd6d32eb5d4f43628f9a74a522f4e27cd"
+    },
+    {
+      "path": "src/release/native-cargo.mjs",
+      "sha256": "518df05ec278196f508cd77eaf616db764c60dbc4269fa9c9d5d29a7c59d2818"
+    },
+    {
+      "path": "tests/native-fin-products.test.mjs",
+      "sha256": "1aeb143f39d46958b3820f9b486722499a7db007acb766718cf01242e28ddd32"
+    },
+    {
+      "path": "tests/native-fin-product-arrays.test.mjs",
+      "sha256": "42dd97a02b01f760e45b0ce874b5fccf2bb440c5c2ddbc1ae1f67a475a7ba833"
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "sha256": "5c779661b09a0cbbddf08501315800c84100a8f03a3caf150979b9d88b5f54b7"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "path": "tests/helpers/fin-product-array-install.mjs",
+      "sha256": "80bbf184fd2b7b7ecdb022487e446e1f739e76dc028031d7314e6ebc954bd951"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-array-fixture.mjs",
+      "sha256": "ec84070065000341646e64738a964b79280993ee4c59d8ac2f57a1229eb8b58e"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean",
+      "sha256": "72cd38b5cb424e5d652dbf9e45bc697583965aba7f01fdbff3bb02a3623710b3"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/rust.rs",
+      "sha256": "d7a38902630abe1d34d08798f64945a1b486ee41c8b7d54b5094674de262a5df"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/rust.rs",
+      "sha256": "9232ec11bc72e7466d259bfb697b31cbcd3c3621516abdecb9b86f4367a01406"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/rust.rs",
+      "sha256": "f00efd53b22f7f0967343754c23ac5e07cd17c2253ec785ba591cc99572beab8"
+    }
+  ],
+  "runtime": {
+    "id": "rust190",
+    "profile": "rust",
+    "tap": {
+      "path": "docs/evidence/fin-rust-20261008/rust190.tap",
+      "originalPath": "build/vo1441-rust-78a4d3d.tap",
+      "sha256": "add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf",
+      "bytes": 2935
+    },
+    "queue": {
+      "path": "docs/evidence/fin-rust-20261008/rust190.queue",
+      "originalPath": "build/vo1441-rust-78a4d3d.queue",
+      "sha256": "260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02",
+      "bytes": 4087
+    },
+    "runner": {
+      "path": "docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt",
+      "originalPath": "build/vo1441-rust-queue-78a4d3d.mjs",
+      "sha256": "ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7",
+      "bytes": 5773
+    }
+  },
+  "runs": [
+    {
+      "id": "rust190-product-ordinary",
+      "profile": "rust",
+      "family": "product",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-product-ordinary.json",
+        "originalPath": "build/vo1441-rust-product-ordinary-78a4d3d.json",
+        "sha256": "0b03b8d917018933f947372d0e7cb7e391a55df2c373c380859ed43bf3877709",
+        "bytes": 6672
+      },
+      "identities": {
+        "bindingIrSha256": "fe96bfe3164559e4bea048db6db84eede82a233007417c5a9bb36c5a3723078f",
+        "modelSha256": "cd54213377b3bc4ed11b7799e8253879e37a4ee1430b65a328ac2ee89a7c4b2a",
+        "receiptSha256": "2f1ea5734c556a0654cd5276080bfcb403fa5e77aa871851bd9e0a502c3265dd",
+        "sourceTreeSha256": "61208333a9405b3f83071adbd0c438ee26245df5d45631c7e07936a7d99decca",
+        "consumerSha256": "d7a38902630abe1d34d08798f64945a1b486ee41c8b7d54b5094674de262a5df",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51368532,
+                "path": "archives/finproducts-1.0.0.crate",
+                "sha256": "2379501dcdd731c35cc2930c08512a14156c15b5e9bf20324b4f3537bc70bc12"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rust190-product-reviewed",
+      "profile": "rust",
+      "family": "product",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-product-reviewed.json",
+        "originalPath": "build/vo1441-rust-product-reviewed-78a4d3d.json",
+        "sha256": "e59a8fab193d7b4bb9ae63e7d30faa67843e99718a9cbeebb2eb97a903b38b6e",
+        "bytes": 6766
+      },
+      "identities": {
+        "bindingIrSha256": "4d45a5b176129de3863281b59a0c2369c684574018f95fb4966cd763b150b7ff",
+        "modelSha256": "3508159acf162256566014fff22c2af50c89e071a353123d22adbfa605b17a25",
+        "receiptSha256": "10045fa674aa3cc6c054e2ab0c3000ed9d305f78745226d484648ee18645a5e1",
+        "sourceTreeSha256": "d5acb694e1a77419c72af8720f45c63e8fedfd8a0326b938061f5b56490721b8",
+        "consumerSha256": "d7a38902630abe1d34d08798f64945a1b486ee41c8b7d54b5094674de262a5df",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51374632,
+                "path": "archives/finproducts-1.0.0.crate",
+                "sha256": "577d05d46329eedcfc603980798768de086dae80c01f09e33d7db97223d5b848"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rust190-product-array-ordinary",
+      "profile": "rust",
+      "family": "product-array",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-product-array-ordinary.json",
+        "originalPath": "build/vo1441-rust-product-array-ordinary-78a4d3d.json",
+        "sha256": "1295e9288b6ebc2b9e5ee86ab0e342d68be4a1234cbce6761c7fa085ae44b232",
+        "bytes": 3676
+      },
+      "identities": {
+        "bindingIrSha256": "09a287cfe19c4fd6e2c8f1964b760841dd6db7eb02ad130d8eabeb3060635dc0",
+        "modelSha256": "9987dbfb91ee08cfa7151ca3e21662ed00198eb95b28f703325dd928f9ca2b20",
+        "receiptSha256": "1677bd97381a6c2f2fa505c7af1f21903c599ab0f7a24df20e70a4e86430d62f",
+        "sourceTreeSha256": "23fd732d3a67182db2f713a1d9fba876d6db2a594b5dfb15cd150956a6e103a8",
+        "consumerSha256": "9232ec11bc72e7466d259bfb697b31cbcd3c3621516abdecb9b86f4367a01406",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51340701,
+                "path": "archives/finproductarrays-1.0.0.crate",
+                "sha256": "4b1f558ff5a9a45d8eddbeb7fc8fe19a5dad11f1bdf3ab1ab67d1b747607e47e"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rust190-product-array-reviewed",
+      "profile": "rust",
+      "family": "product-array",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-product-array-reviewed.json",
+        "originalPath": "build/vo1441-rust-product-array-reviewed-78a4d3d.json",
+        "sha256": "a9f938ef745033df114ddd35b7f89a67f9be3bbfc3cceba580c7a084f17c4113",
+        "bytes": 3770
+      },
+      "identities": {
+        "bindingIrSha256": "0f53837bcb20cc596f6ad6507c8e51e47308a1813749f3d7d57b4956c3e4f475",
+        "modelSha256": "0c47b85482098baaab7197eced3aa6178846533679a632c3a3893d28fd26b6cf",
+        "receiptSha256": "9d135307e9bd78afc15f418208b34bf031dfb9a871477728f8fc2a2d3426d226",
+        "sourceTreeSha256": "2b03f29c5a6f253459e5dee200fe36a9cc8f24fb3066410347506e7a6788f10c",
+        "consumerSha256": "9232ec11bc72e7466d259bfb697b31cbcd3c3621516abdecb9b86f4367a01406",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51342588,
+                "path": "archives/finproductarrays-1.0.0.crate",
+                "sha256": "b4db51eec1d2823c44653dc4fb9f31369dad7d94495ce2a2380acef0727e0f33"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rust190-record-ordinary",
+      "profile": "rust",
+      "family": "record",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-record-ordinary.json",
+        "originalPath": "build/vo1441-rust-record-ordinary-78a4d3d.json",
+        "sha256": "bc3ac9eecd57100e52ffd27cd6acc932f1646208d1d959331779df719983d297",
+        "bytes": 13030
+      },
+      "identities": {
+        "bindingIrSha256": "0ec4ca8b3fd539255bda07e2b37603f2cfa3071bb848a99932a4eb7cd022f01d",
+        "modelSha256": "f08b248caf2517b7c3d883c033742629398b56affd9aee06bc772953ec98b2a7",
+        "receiptSha256": "0ddb9bab2cd02a75ac9f2fe8688838358e446962072ab6cfd962c3cbe38d4843",
+        "sourceTreeSha256": "f48ce1ca78a31e3010dc53e167df3f81ac02b753b78db170cbe6584b81597d02",
+        "consumerSha256": "f00efd53b22f7f0967343754c23ac5e07cd17c2253ec785ba591cc99572beab8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51391706,
+                "path": "archives/finrecords-1.0.0.crate",
+                "sha256": "695fafcf3f876ef7c5a1f956d8fd7eaa0ec1a3e1750651157394f0454ed6d321"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rust190-record-reviewed",
+      "profile": "rust",
+      "family": "record",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-rust-20261008/rust190-record-reviewed.json",
+        "originalPath": "build/vo1441-rust-record-reviewed-78a4d3d.json",
+        "sha256": "31964c8c3a4534cad7fb9a3bb7560a440bb80ceed0194d5ece8726d6eb90852a",
+        "bytes": 13124
+      },
+      "identities": {
+        "bindingIrSha256": "dcce11caee01c45c0db8442792149c61f128ffb5204f3cc6959ddc4992239e9a",
+        "modelSha256": "6c53d9673c3b15f43ab2ca2462c46846e13ad9770b37ca738255731e77e8524d",
+        "receiptSha256": "aa1f8f195210e6caf3eb4cff1d24dbd30a9f49e926f0362b605672b1f89b872b",
+        "sourceTreeSha256": "1ae38ec70841716eabf63e2bfe085d8350465ce1e317dfcee73c3dedb801062a",
+        "consumerSha256": "f00efd53b22f7f0967343754c23ac5e07cd17c2253ec785ba591cc99572beab8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51397443,
+                "path": "archives/finrecords-1.0.0.crate",
+                "sha256": "af13ce635d03606d4640023b7d61480725ad85b7ba72a7ee5f7549d87e6dae01"
+              }
+            ],
+            "ecosystem": "cargo",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "cargo",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190.tap",
+      "originalPath": "build/vo1441-rust-78a4d3d.tap",
+      "sha256": "add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf",
+      "bytes": 2935
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190.queue",
+      "originalPath": "build/vo1441-rust-78a4d3d.queue",
+      "sha256": "260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02",
+      "bytes": 4087
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt",
+      "originalPath": "build/vo1441-rust-queue-78a4d3d.mjs",
+      "sha256": "ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7",
+      "bytes": 5773
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-product-ordinary.json",
+      "originalPath": "build/vo1441-rust-product-ordinary-78a4d3d.json",
+      "sha256": "0b03b8d917018933f947372d0e7cb7e391a55df2c373c380859ed43bf3877709",
+      "bytes": 6672
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-product-reviewed.json",
+      "originalPath": "build/vo1441-rust-product-reviewed-78a4d3d.json",
+      "sha256": "e59a8fab193d7b4bb9ae63e7d30faa67843e99718a9cbeebb2eb97a903b38b6e",
+      "bytes": 6766
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-product-array-ordinary.json",
+      "originalPath": "build/vo1441-rust-product-array-ordinary-78a4d3d.json",
+      "sha256": "1295e9288b6ebc2b9e5ee86ab0e342d68be4a1234cbce6761c7fa085ae44b232",
+      "bytes": 3676
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-product-array-reviewed.json",
+      "originalPath": "build/vo1441-rust-product-array-reviewed-78a4d3d.json",
+      "sha256": "a9f938ef745033df114ddd35b7f89a67f9be3bbfc3cceba580c7a084f17c4113",
+      "bytes": 3770
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-record-ordinary.json",
+      "originalPath": "build/vo1441-rust-record-ordinary-78a4d3d.json",
+      "sha256": "bc3ac9eecd57100e52ffd27cd6acc932f1646208d1d959331779df719983d297",
+      "bytes": 13030
+    },
+    {
+      "path": "docs/evidence/fin-rust-20261008/rust190-record-reviewed.json",
+      "originalPath": "build/vo1441-rust-record-reviewed-78a4d3d.json",
+      "sha256": "31964c8c3a4534cad7fb9a3bb7560a440bb80ceed0194d5ece8726d6eb90852a",
+      "bytes": 13124
+    }
+  ]
+}

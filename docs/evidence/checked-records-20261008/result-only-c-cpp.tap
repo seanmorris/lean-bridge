@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: a relocated C and C++ package whose only checked record is a Lean-produced result returns its payload
+ok 1 - a relocated C and C++ package whose only checked record is a Lean-produced result returns its payload
+  ---
+  duration_ms: 375150.891266
+  type: 'test'
+  ...
+# result-only build 0: c, cpp
+# result-only: installing and checking c
+# result-only: installing and checking cpp
+# result-only build 1: c, cpp
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 375560.177874

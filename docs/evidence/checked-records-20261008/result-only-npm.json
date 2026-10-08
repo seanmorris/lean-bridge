@@ -1,0 +1,76 @@
+{
+  "archiveSha256": "b37c0c6289d49abb3bc1a4b852b01f7238a6b8980b7e3fb59adb310cb2196db5",
+  "bindingIrFileSha256": "c78c6429336b1bf4e9ee139013e78628bea05fb449ff85e982576e3636bd6afc",
+  "bindingIrSha256": "0280e8868a3ceef1b9be6ff2454985a926da66138de30ac1f96791513b8b1740",
+  "checks": 1001,
+  "compilerFreePath": true,
+  "consumerSha256": "50581d4acefb06c04fdf59f28a323d7281eba281ef268ab003c0ab865a7cf419",
+  "contracts": {
+    "OnboardingSmall.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "path": "ordinary-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "0280e8868a3ceef1b9be6ff2454985a926da66138de30ac1f96791513b8b1740",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "45dfa66e5e35b9d749c555170a35dadcbc5f1cce11afefeaf8f89e196c02fe4c",
+    "componentBundleSha256": "2e3cefb1fd76685fcec370dce039b1be4dc12a1d8edda561ea92330c7a0c5942",
+    "componentIdentitySha256": "452315732e1a162e94bc06c97854a153f0efb6a4b1b097b6b4c0c4403f3a9588",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "b37c0c6289d49abb3bc1a4b852b01f7238a6b8980b7e3fb59adb310cb2196db5"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "a753ed3151169ce4f1f9bf566265bcfe03c5b2c58774640b2eebdb0978b25340",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425",
+      "sha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "fcaccaa5fe670367f6416c44bc3c563b7c3241644ff9f7c4cfbd723a7261c8c2"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "2a02f9403d213bc5fcc5081897a6cbb5bf6976c8036a107791de8d46f26c5a7f",
+  "receiptTamperRefused": true,
+  "rejections": 0,
+  "reproducible": true,
+  "route": "result-only",
+  "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "3a89e1536a86dd28fb3541915f8ec462f125d0b4b63a56126a1ea7a3e17cdc75",
+    "skipLibCheck": false,
+    "sourceSha256": "d0afc5ecb8817b8f97f391b5f7c48338b9eb54eb9bba84cfd0c490e37b196dfb",
+    "strict": true
+  }
+}

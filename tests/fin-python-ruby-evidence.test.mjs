@@ -12,6 +12,10 @@ import { assertFinPythonRubyExecution, assertFinPythonRubyReport, finPythonRubyD
 import "./helpers/fin-python-ruby-archive-source-history-tests.mjs";
 import "./helpers/fin-runtime-provenance-source-history-tests.mjs";
 import "./helpers/fin-python-ruby-promotion-tests.mjs";
+import "./helpers/fin-rust-evidence-tests.mjs";
+import "./helpers/checked-record-evidence-tests.mjs";
+import "./helpers/fin-dotnet-hosted-evidence-tests.mjs";
+import "./helpers/archive-batch-source-history-tests.mjs";
 
 const receipt = async () => {
 	const bytes = await readFile(`${finPythonRubyDirectory}/receipt-v2.json`);

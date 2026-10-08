@@ -1,0 +1,95 @@
+{
+  "archives": {
+    "archives/checkedrecords-1.0.0-c.tar.gz": "2414b2ced6662ea4456600afe47e6b6a62bd738a17e5a5525f96e1610985f7d2",
+    "archives/checkedrecords-1.0.0-cpp.tar.gz": "4e448501bc0cbcaf47d22fe54f8cb65e5b4e91153d1da8205dc5e31606f2da67"
+  },
+  "contracts": {
+    "CheckedRecords.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "independentBuilds": 2,
+  "path": "ordinary-source",
+  "reports": [
+    {
+      "bindingIrSha256": "864aa15d83fce5375e05739ec73285d9465534eb344e8c91dce0db03e352f03c",
+      "checks": 1001,
+      "compilerFreePath": true,
+      "consumerSha256": "a9bc75b95b652b64d7428faa6dd5936e34c178a8de98c85bab655ba70965d8f1",
+      "modelBindingIrSha256": "864aa15d83fce5375e05739ec73285d9465534eb344e8c91dce0db03e352f03c",
+      "modelSha256": "ee63161529940fb313a17536348baa868fcf1cc6040173a3cdab54420d01a5cb",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53817247,
+              "path": "archives/checkedrecords-1.0.0-c.tar.gz",
+              "sha256": "2414b2ced6662ea4456600afe47e6b6a62bd738a17e5a5525f96e1610985f7d2"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "79c99e5b758e2dfb26f0083f796d68485565a09d3aff668343ce546ee196c28a",
+      "receiptTamperRefused": true,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "864aa15d83fce5375e05739ec73285d9465534eb344e8c91dce0db03e352f03c",
+      "checks": 1001,
+      "compilerFreePath": true,
+      "consumerSha256": "8165aa53ee01315680ed764efc5306075b3c051634c35b7e37fcfd8db47c6aec",
+      "modelBindingIrSha256": "864aa15d83fce5375e05739ec73285d9465534eb344e8c91dce0db03e352f03c",
+      "modelSha256": "ee63161529940fb313a17536348baa868fcf1cc6040173a3cdab54420d01a5cb",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51754653,
+              "path": "archives/checkedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "4e448501bc0cbcaf47d22fe54f8cb65e5b4e91153d1da8205dc5e31606f2da67"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "checkedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "79c99e5b758e2dfb26f0083f796d68485565a09d3aff668343ce546ee196c28a",
+      "receiptTamperRefused": true,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "route": "result-only",
+  "schemaVersion": 1
+}

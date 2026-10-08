@@ -1,0 +1,556 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1441,
+    1442
+  ],
+  "execution": "hosted",
+  "revision": "f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+  "hosted": {
+    "runId": 37736101772,
+    "jobId": 113176414688,
+    "jobName": "Managed consumer (dotnet)",
+    "jobConclusion": "success",
+    "selectionStep": "15 Compare installed NuGet corpus packages with fresh Lean results",
+    "jobMetadataFetchedAt": "2026-10-08T11:51:01Z",
+    "artifact": {
+      "id": 11538793507,
+      "name": "type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+      "bytes": 1044597,
+      "sha256": "11ebf1c453875bb0706b89babf0aca2b9cebf3d90f05243f51625f06249bd02d",
+      "githubDigest": "sha256:11ebf1c453875bb0706b89babf0aca2b9cebf3d90f05243f51625f06249bd02d",
+      "retained": false
+    }
+  },
+  "scope": {
+    "profiles": [
+      "dotnet"
+    ],
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "families": [
+      "product",
+      "product-array",
+      "record"
+    ],
+    "dispatchObserved": false,
+    "hostedCi": true,
+    "binaryArchivesRetained": false,
+    "wholeRun": "Only this successful .NET job is archived; other jobs of the run are separate and several failed."
+  },
+  "environment": {
+    "printed": {
+      "runnerImage": "ubuntu-24.04 Version: 20260927.320.1",
+      "node": "22.23.3 (setup-node cache path)",
+      "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+      "dotnetSdk": "8.0.424 (dotnet-install: Installed version)",
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]"
+    },
+    "configured": {
+      "nodeVersionInput": "22",
+      "dotnetVersionInput": "8.0.424",
+      "rubyVersionInput": "3.3.12"
+    },
+    "nativeGlibcFloor": {
+      "override": "absent from the job log",
+      "declaredMinimum": "2.38",
+      "source": "default in src/build/native-c-projection.mjs at the producer revision"
+    },
+    "hostGlibcVersion": "absent: the job never printed it; the declared minimum is not a measurement"
+  },
+  "compilerFreePath": "No Lean or producer toolchain on the consumer path. The C# caller still restores the package offline from a local feed and builds with the .NET 8 SDK.",
+  "sourceIdentityScope": "Selected compiler, package, harness, fixture and caller files at the hosted revision, not a complete dependency closure.",
+  "sourceTreeCheck": "Each report's sourceTreeSha256 equals the tree rebuilt from the pinned fixture files, the generated lean-bridge.exports.json and, for reviewed runs, the generated api.binding-ir.json, using the formula of src/analyze/lean-project.mjs.",
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "c13f9ece623da722db1499d2349f696f3085e14c22aa89884916290ea3afc2a1"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807"
+    },
+    {
+      "path": "src/analyze/lean-project.mjs",
+      "sha256": "810ba5b9adf3b9af61763b8ed9fdc8eb0b4fa491bd53f287439536be63df3695"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "sha256": "546c4339664edf1ef0480e493f31a0d561fd0d0de80a06ba22cfebffe76fdb9d"
+    },
+    {
+      "path": "src/build/native-dotnet-projection.mjs",
+      "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
+    },
+    {
+      "path": "src/build/native-dotnet-artifacts.mjs",
+      "sha256": "279eb251295503724c9799f6d07c5840837bea799e6114ec80082dd49fb7e1a8"
+    },
+    {
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "770e83cd1348808616b406fbbc1ba05e6acb9e7560ba94a1ecdac3077113815c"
+    },
+    {
+      "path": "src/backends/native/fin-refinements.mjs",
+      "sha256": "621296d07a0c2adf7f39e30cf6248c25512d74b85be1ac5c8b9e9bb1932d1c1e"
+    },
+    {
+      "path": "src/backends/dotnet/copied-values.mjs",
+      "sha256": "b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c"
+    },
+    {
+      "path": "src/backends/dotnet/generate.mjs",
+      "sha256": "4a270f1cee05936996eed48b57faa57405efaae103348c5e4f6ba9604ebbb73b"
+    },
+    {
+      "path": "src/release/native-nuget.mjs",
+      "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
+    },
+    {
+      "path": "tests/native-fin-products.test.mjs",
+      "sha256": "1aeb143f39d46958b3820f9b486722499a7db007acb766718cf01242e28ddd32"
+    },
+    {
+      "path": "tests/native-fin-product-arrays.test.mjs",
+      "sha256": "42dd97a02b01f760e45b0ce874b5fccf2bb440c5c2ddbc1ae1f67a475a7ba833"
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "sha256": "5c779661b09a0cbbddf08501315800c84100a8f03a3caf150979b9d88b5f54b7"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/fin-fixture-installed.mjs",
+      "sha256": "fb52e672df3f2dc369a0d51a271e73c0c7c670a15c47d9d2c0c96ba717a3d403"
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "path": "tests/helpers/fin-product-array-install.mjs",
+      "sha256": "80bbf184fd2b7b7ecdb022487e446e1f739e76dc028031d7314e6ebc954bd951"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-array-fixture.mjs",
+      "sha256": "ec84070065000341646e64738a964b79280993ee4c59d8ac2f57a1229eb8b58e"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "sha256": "b8297b15d9b4f88137bed7406aaa21cb7dd634ac9a78b99aa1027d3cc3b95e84"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/lakefile.toml",
+      "sha256": "04a6e0397d15bf464a8f3ae42f00e2d9d357f0949b4666385d7bfab8b658d58b"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/package.json",
+      "sha256": "fdc856c0235c414118e684669f51543af6cd079e261412922c82eff41d25a023"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean",
+      "sha256": "72cd38b5cb424e5d652dbf9e45bc697583965aba7f01fdbff3bb02a3623710b3"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/lakefile.toml",
+      "sha256": "9748a039831c11f26fbdcd4c92ec533e292b9dd68d65cadc7493cb1379e8a7a4"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/package.json",
+      "sha256": "0a0304720bc3260859e3057e733e7e8a16aa009c6e82919afe81cae2e4a2f5ec"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/lakefile.toml",
+      "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/package.json",
+      "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/dotnet.cs",
+      "sha256": "159548728bc33045887e9835082c0a001a187cd0096f8accffc3d69998e1aa75"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/dotnet.cs",
+      "sha256": "138274153e475e7dacf16dac08ef3ce3a594cfc5d16a78b45264a96188980670"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/dotnet.cs",
+      "sha256": "704a816e570daf1d7d01b3fcfbab8f145d5310ec593081cf307dfd9b20df9832"
+    }
+  ],
+  "provenance": {
+    "log": {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/logs/job-113176414688.log",
+      "sha256": "7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4",
+      "bytes": 519462
+    },
+    "job": {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/metadata/job-113176414688.json",
+      "sha256": "e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341",
+      "bytes": 7499
+    },
+    "artifact": {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/metadata/artifact-11538793507.json",
+      "sha256": "8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329",
+      "bytes": 760
+    }
+  },
+  "runs": [
+    {
+      "id": "product-ordinary",
+      "family": "product",
+      "route": "ordinary",
+      "member": "native-fin-products/dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/product-ordinary.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-products/dotnet.json",
+        "sha256": "083b184e5366759b010418e033253a01682d0dbb6846cf1f3a7f00dc9867e233",
+        "bytes": 6686
+      },
+      "identities": {
+        "bindingIrSha256": "c6dfc4082f87ec4efafa5fdaa444f6621a1167dd0e4ab4e19878e8ccfa8b7973",
+        "modelSha256": "fa95b461c5adea2b29db8802cc6e810d60f18e12c2f6280f4b1603edda7b7734",
+        "receiptSha256": "b84f6cc85a912a3fe00b81a0dad37cb7550c093300dfe6e1e1f988b58dac8650",
+        "sourceTreeSha256": "4f71376ac051a6457a78ee98ec1a27a62c746f096d351484620bc1f431337ca2",
+        "consumerSha256": "159548728bc33045887e9835082c0a001a187cd0096f8accffc3d69998e1aa75",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51395165,
+                "path": "archives/FinProducts.Api.1.0.0.nupkg",
+                "sha256": "4e01c3fc7675c4be44d44590bff5403dc0f3f8f262dc31fb654be66bb0d2a39e"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinProducts.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product-reviewed",
+      "family": "product",
+      "route": "reviewed",
+      "member": "native-fin-products/reviewed-dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/product-reviewed.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-products/reviewed-dotnet.json",
+        "sha256": "f6f02915df66747a653ee0dcfa95551ed5006df33a671adc80bea0137ba5224c",
+        "bytes": 6780
+      },
+      "identities": {
+        "bindingIrSha256": "db126b8d332b6aa876995d72b7b99cb760339425c553cdabfc219a8d87a63132",
+        "modelSha256": "627e7b31f9fed1d6360d49c155525cc583560711ffb461f97fb2848d8fbc2cbb",
+        "receiptSha256": "b5c7f2668e9daad943078f7333eab3461920914a8a0305dd0c89c4b7c868f5f3",
+        "sourceTreeSha256": "afe18a4ab1ef6a0fe3444bae6d666812cef97074d3d8e32b66efba7eb0e161db",
+        "consumerSha256": "159548728bc33045887e9835082c0a001a187cd0096f8accffc3d69998e1aa75",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51399508,
+                "path": "archives/FinProducts.Api.1.0.0.nupkg",
+                "sha256": "7681e4c79abfed92e93b3ccf4ceb936012ee78693dbf04d4badd77f79fd12757"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinProducts.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product-array-ordinary",
+      "family": "product-array",
+      "route": "ordinary",
+      "member": "native-fin-product-arrays/dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/product-array-ordinary.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-product-arrays/dotnet.json",
+        "sha256": "a44c6e393b6297f6af133bc9bd28fefb8a18491e3d703ba80f347c60b6791097",
+        "bytes": 3690
+      },
+      "identities": {
+        "bindingIrSha256": "96b00920c39e68136a4dc03e874708f5479e330bec181ff0cf909d1e6c3d1d48",
+        "modelSha256": "a0092f04f077b49a9a8aac2b4cce26022a5eb7303cf65ff334351f6547ca5493",
+        "receiptSha256": "e866abaa84e616439cdd8074c58b4d1163b63f2084e0aebd428d6ecdaedb71c9",
+        "sourceTreeSha256": "952f9fd4a0dc7c3b64d2f66919eb322a0d193c711d286e037679acb5f8ab2037",
+        "consumerSha256": "138274153e475e7dacf16dac08ef3ce3a594cfc5d16a78b45264a96188980670",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51365116,
+                "path": "archives/FinProductArrays.Api.1.0.0.nupkg",
+                "sha256": "a2921be19d1ca6c977abb9a922fac24798bac8f3de0f8d752805e10d9bee1493"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinProductArrays.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product-array-reviewed",
+      "family": "product-array",
+      "route": "reviewed",
+      "member": "native-fin-product-arrays/reviewed-dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/product-array-reviewed.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-product-arrays/reviewed-dotnet.json",
+        "sha256": "065c130c2a13f19c4389db7aaf37627b411785d16113e223382858c72dea481e",
+        "bytes": 3784
+      },
+      "identities": {
+        "bindingIrSha256": "b31a2dbaef9b712d6e84f3a184718e72026fb6afdf97e8b2b9f3b4c16553131f",
+        "modelSha256": "92a2b2e96d32514cb77e98284001766e25ab892ff2a6ce6bb84bc65fb3ecdcc6",
+        "receiptSha256": "eed4c59f88ae30673ba9f1a4d79cd1420f5e118e7cb691fe3781f3135fd509d2",
+        "sourceTreeSha256": "30d5435e1e9a51140d25585013d42a1cfc5495626888ce4708a090f008351b2a",
+        "consumerSha256": "138274153e475e7dacf16dac08ef3ce3a594cfc5d16a78b45264a96188980670",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51367979,
+                "path": "archives/FinProductArrays.Api.1.0.0.nupkg",
+                "sha256": "09c981035fd51a0020fb9d950eb648957cce5247f805a74b94206b29e477cdc2"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinProductArrays.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "record-ordinary",
+      "family": "record",
+      "route": "ordinary",
+      "member": "native-fin-records/dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/record-ordinary.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-records/dotnet.json",
+        "sha256": "e7958865994be626479401be69f704223bd9622db7f5d4f00591cd36c78a8e52",
+        "bytes": 13044
+      },
+      "identities": {
+        "bindingIrSha256": "7556b0c0c1f8509a8bac590c29eeb9ff7303916ae4ac9616f27cadcb808635c7",
+        "modelSha256": "a5127c708dfe6ceb76c5144367c92753802d35ead4db602345f9b7c31dc4d55c",
+        "receiptSha256": "2cc7a22a3064a5096f1629583a7f5950b598d1ba5b82d97f8068c32afa31fbdf",
+        "sourceTreeSha256": "b541ac4a0bc10c646419e37c8b83f49c3d96468833f0d19a9731a2a9bdfa0b40",
+        "consumerSha256": "704a816e570daf1d7d01b3fcfbab8f145d5310ec593081cf307dfd9b20df9832",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51422341,
+                "path": "archives/FinRecords.Api.1.0.0.nupkg",
+                "sha256": "75a3ea4c62630b44bb7b12ed66cc859bbadabaac8b8c9f61841c07738012eb02"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinRecords.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "record-reviewed",
+      "family": "record",
+      "route": "reviewed",
+      "member": "native-fin-records/reviewed-dotnet.json",
+      "report": {
+        "path": "docs/evidence/fin-dotnet-hosted-20261008/record-reviewed.json",
+        "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-records/reviewed-dotnet.json",
+        "sha256": "e576bccc33b4e4e9749bcc9e6d0c5a48d144959c2c1d74593831a83163eb5a44",
+        "bytes": 13138
+      },
+      "identities": {
+        "bindingIrSha256": "71d7020b0c8965b68d556c6da191f3293aa19ef4acc311d9895282a354e94a79",
+        "modelSha256": "ad40686fb3726d514c06dad8b0ac205b9f733ed2a7afadf028a9df636cf76e60",
+        "receiptSha256": "97bb6582210dfa7eb043a793ba4ad79b7c798320e1600893a7cab1e4670e2439",
+        "sourceTreeSha256": "901c35a66b82aa9285f74ddcab4d9602b6502eec75dc9175fe6fb947de9ffcfa",
+        "consumerSha256": "704a816e570daf1d7d01b3fcfbab8f145d5310ec593081cf307dfd9b20df9832",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51427050,
+                "path": "archives/FinRecords.Api.1.0.0.nupkg",
+                "sha256": "88177fb5d57674b6003b149c531e2f828f58bbafbf1f9dc7119506227b0e833d"
+              }
+            ],
+            "ecosystem": "nuget",
+            "name": "FinRecords.Api",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+            "target": "nuget",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/logs/job-113176414688.log",
+      "sha256": "7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4",
+      "bytes": 519462
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/metadata/job-113176414688.json",
+      "sha256": "e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341",
+      "bytes": 7499
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/metadata/artifact-11538793507.json",
+      "sha256": "8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329",
+      "bytes": 760
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/product-ordinary.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-products/dotnet.json",
+      "sha256": "083b184e5366759b010418e033253a01682d0dbb6846cf1f3a7f00dc9867e233",
+      "bytes": 6686
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/product-reviewed.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-products/reviewed-dotnet.json",
+      "sha256": "f6f02915df66747a653ee0dcfa95551ed5006df33a671adc80bea0137ba5224c",
+      "bytes": 6780
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/product-array-ordinary.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-product-arrays/dotnet.json",
+      "sha256": "a44c6e393b6297f6af133bc9bd28fefb8a18491e3d703ba80f347c60b6791097",
+      "bytes": 3690
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/product-array-reviewed.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-product-arrays/reviewed-dotnet.json",
+      "sha256": "065c130c2a13f19c4389db7aaf37627b411785d16113e223382858c72dea481e",
+      "bytes": 3784
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/record-ordinary.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-records/dotnet.json",
+      "sha256": "e7958865994be626479401be69f704223bd9622db7f5d4f00591cd36c78a8e52",
+      "bytes": 13044
+    },
+    {
+      "path": "docs/evidence/fin-dotnet-hosted-20261008/record-reviewed.json",
+      "originalPath": "build/vo1220-hosted-fin-f9d5ce9/zips/type-corpus-dotnet-f9d5ce96eb04ec800209c6a6863092b3bdea6e85.zip!native-fin-records/reviewed-dotnet.json",
+      "sha256": "e576bccc33b4e4e9749bcc9e6d0c5a48d144959c2c1d74593831a83163eb5a44",
+      "bytes": 13138
+    }
+  ]
+}

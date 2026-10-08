@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: independently reviewed C and C++ packages name each checked parameter by its reviewed name
+ok 1 - independently reviewed C and C++ packages name each checked parameter by its reviewed name
+  ---
+  duration_ms: 379767.990284
+  type: 'test'
+  ...
+# reviewed build 0: c, cpp
+# reviewed: installing and checking c
+# reviewed: installing and checking cpp
+# reviewed build 1: c, cpp
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 380171.9046

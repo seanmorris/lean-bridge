@@ -1,0 +1,192 @@
+{
+  "archiveSha256": "2aa37b776ba84d4f013beba1e1af369a762c673eec80025e79b2bca41654dbb6",
+  "bindingIrFileSha256": "6123b6ec09846b3ce847e309d8a81ab1ddac377072c194caa13cb0aba81c6fd2",
+  "bindingIrSha256": "52bbfeca4dd611c6bbc3714e75370184dc32d67afe346a4ecead488d00e3191a",
+  "checks": 1011,
+  "compilerFreePath": true,
+  "consumerSha256": "12aa08eec6926cb9b537bbe5ed3c8cff1284eb314dc68124611120fc8a757bf5",
+  "contracts": {
+    "OnboardingSmall.complement": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkPercent"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.firstOf": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.repeated": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.scale": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.smallest": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.sortedTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.span": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkInterval"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkInterval"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.total": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkTriple"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "OnboardingSmall.width": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "OnboardingSmall.mkInterval"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "offlineInstall": true,
+  "path": "ordinary-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "52bbfeca4dd611c6bbc3714e75370184dc32d67afe346a4ecead488d00e3191a",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "1de3d2c949dff54db397a78c662b5f36e638e5aeae3ee647e20467033c29edc9",
+    "componentBundleSha256": "a657559fc57628741635f0b357193d4794820f4eaaad3469c972754b8c69f5c0",
+    "componentIdentitySha256": "48f667f9119d8806935e59a7294321eae94c1416686ad909c9e8e52ff9c92135",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "2aa37b776ba84d4f013beba1e1af369a762c673eec80025e79b2bca41654dbb6"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "657ee0660bde85321fb8d6a41c9ab9c91a0978dd807cce56e27fb21529382556",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425",
+      "sha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "b62f9218246059d8d3ad08ed9351c6edc5077e3d4bbab079300649eeb5e05833"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "2b4c89b667747409cb0a919e00bbd29958399f8119628e2f68fed8abb93fe33d",
+  "receiptTamperRefused": true,
+  "rejections": 1009,
+  "reproducible": true,
+  "route": "ordinary",
+  "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "9c7e69c1a0236370bd8629e7cfaec7863226219e383f88c784c9c5a2b8e1443d",
+    "skipLibCheck": false,
+    "sourceSha256": "be2b07cc89c064a601631a750bcf23b02f87550f8424a8cd0b4c556fb56bfae7",
+    "strict": true
+  }
+}
