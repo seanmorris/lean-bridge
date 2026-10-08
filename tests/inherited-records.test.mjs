@@ -6,15 +6,20 @@
 import assert from "node:assert/strict";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import { canonicalJson } from "../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
 
 const lean = process.env.LEAN_BRIDGE_INHERITED_RECORD_LEAN_TEST === "1";
 const fixture = "tests/fixtures/onboarding/inherited-records";
-const exports = ["move", "total", "restamp", "merged", "bump"].map(name => `InheritedRecords.${name}`);
+const exports = ["move", "total", "restamp", "mergedTotal", "bump"].map(name => `InheritedRecords.${name}`);
 const leanPrefix = join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 
 /**
@@ -73,7 +78,7 @@ test("inherited records carry each subobject parent as its own field and compile
 	const tagged = { kind: "record", definition: "InheritedRecords.Tagged", fields: ["toDigit", "toPoint", "tag"], arguments: [digit, null, null] };
 	assert.deepEqual(refinements.total, { parameters: [tagged], result: null });
 	assert.deepEqual(refinements.bump, { parameters: [tagged], result: tagged });
-	assert.deepEqual(refinements.merged, { parameters: [{ kind: "record", definition: "InheritedRecords.Merged", fields: ["toLabeled", "toDigit", "tag", "extra"], arguments: [null, digit, null, null] }], result: null });
+	assert.deepEqual(refinements.mergedTotal, { parameters: [{ kind: "record", definition: "InheritedRecords.Merged", fields: ["toLabeled", "toDigit", "tag", "extra"], arguments: [null, digit, null, null] }], result: null });
 	assert.deepEqual([refinements.move, refinements.restamp], [null, null]);
 	const ir = model.bindingIr;
 	assert.deepEqual(ir.types.find(type => type.id === "lean:InheritedRecords.Digit").source.extensions["lean-lang.org/nominal-refinements"], { kind: "record", fields: [{ kind: "fin", bound: "10" }] });
@@ -90,4 +95,52 @@ test("inherited fields that depend on the record value and generic inheritance s
 		, ["generic inheritance", "structure Base (α : Type) where\n  base : α\nstructure Child (α : Type) extends Base α where\n  child : Nat\nabbrev NatChild := Child Nat\ndef grow (value : NatChild) : Nat := value.child", "grow", /inherited generic records require a reviewed projection/u]];
 	for(const [label, extra, name, pattern] of cases)
 		await assert.rejects(() => nativeModel(t, { extra, names: [`InheritedRecords.${name}`] }), refused(pattern, label), label);
+});
+
+const profiles = process.env.LEAN_BRIDGE_INHERITED_RECORD_PROFILES?.split(",").sort() ?? [];
+assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Inherited record acceptance covers C and C++ first");
+const coordinate = { name: "inheritedrecords", version: "1.0.0" };
+const targets = { c: ["c", coordinate], cpp: ["cpp", coordinate] };
+
+test("relocated source-free C and C++ packages construct inherited records and check a parent's Fin field", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const reports = [], archives = [];
+	const selected = Object.fromEntries(profiles.map(profile => targets[profile]));
+	const environment = nativeFixtureEnvironment(profiles);
+	for(const attempt of [0, 1])
+	{
+		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-inherited-records-author-"));
+		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-inherited-records-consumer-"));
+		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
+		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
+		await cp(fixture, projectRoot, { recursive: true });
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["InheritedRecords"], exports, targets: selected }));
+		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
+		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(selected), environment }).catch(error => {
+			error.message += `: ${JSON.stringify(error.details)}`; throw error;
+		});
+		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		const tagged = model.types.find(type => type.name === "InheritedRecords.Tagged");
+		assert.deepEqual(tagged.fields.map(field => field.name), ["toDigit", "toPoint", "tag"]);
+		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		// Install from prepared archives only. No author workspace or build staging remains.
+		await rm(directory, { recursive: true, force: true });
+		if(attempt === 1) break;
+		for(const profile of profiles)
+		{
+			t.diagnostic(`installing and checking ${profile}`);
+			const packages = receipt.packages.filter(pkg => pkg.target === targets[profile][0]);
+			const source = (name, extension) => readFile(`tests/fixtures/inherited-record-consumers/${name}.${extension}`, "utf8");
+			const observation = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture: { source, wit: [], success: "inherited-record-ok" } });
+			delete observation.command;
+			const identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json"))) };
+			reports.push({ profile, path: "ordinary-source", ...observation, packages, ...identities, sourceRemovedBeforeInstallation: true });
+			await rm(join(consumer, profile), { recursive: true, force: true });
+		}
+		await rm(consumer, { recursive: true, force: true });
+	}
+	assert.deepEqual(archives[1], archives[0]);
+	const reportPath = resolve(process.env.LEAN_BRIDGE_INHERITED_RECORD_REPORT ?? `build/inherited-records/${profiles.join("-")}.json`);
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
 });

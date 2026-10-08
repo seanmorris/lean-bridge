@@ -28,7 +28,7 @@ structure Merged extends Labeled, Tagged where
 def move (value : Labeled) : Labeled := { value with x := value.x + 1, label := value.label ++ "!" }
 def total (value : Tagged) : Nat := value.digit.val + value.x + value.y + value.tag.length
 def restamp (value : Stamped) : Stamped := { value with stamp := value.stamp + 1, y := value.y * 2 }
-def merged (value : Merged) : Nat := value.x + value.digit.val + value.extra
+def mergedTotal (value : Merged) : Nat := value.x + value.digit.val + value.extra
 def bump (value : Tagged) : Tagged := { value with digit := ⟨(value.digit.val + 1) % 10, Nat.mod_lt _ (by decide)⟩ }
 
 end InheritedRecords
