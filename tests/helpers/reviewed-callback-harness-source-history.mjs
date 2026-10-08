@@ -1,20 +1,19 @@
 /**
- * Preserve exact source predecessors of the Reviewed Subtype harness change (#1220).
+ * Preserve exact source predecessors of the Reviewed callback harness change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedCallbackHarnessSource } from "./reviewed-callback-harness-source-history.mjs";
 
-export const reviewedSubtypeHarnessHistoryPath = "docs/evidence/reviewed-subtype-harness-source-history-20261008.json";
-export const reviewedSubtypeHarnessChangedPaths = [
+export const reviewedCallbackHarnessHistoryPath = "docs/evidence/reviewed-callback-harness-source-history-20261008.json";
+export const reviewedCallbackHarnessChangedPaths = [
 	"src/adoption/test-profiles.mjs"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-npm-snapshot-source-history.mjs"
-	, "tests/helpers/reviewed-npm-snapshot-source-history-tests.mjs"
+	, "tests/helpers/reviewed-subtype-harness-source-history.mjs"
+	, "tests/helpers/reviewed-subtype-harness-source-history-tests.mjs"
 ];
 let history;
 
@@ -24,8 +23,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedSubtypeHarnessUpdate = (source, update) => {
-	assert.ok(reviewedSubtypeHarnessChangedPaths.includes(update.path));
+export const reverseReviewedCallbackHarnessUpdate = (source, update) => {
+	assert.ok(reviewedCallbackHarnessChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +50,11 @@ export const reverseReviewedSubtypeHarnessUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedSubtypeHarnessSource = (path, source, expected) => {
-	source = beforeReviewedCallbackHarnessSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedSubtypeHarnessChangedPaths.includes(path)) return source;
+export const beforeReviewedCallbackHarnessSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedCallbackHarnessChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedSubtypeHarnessHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedCallbackHarnessHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedSubtypeHarnessUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedCallbackHarnessUpdate(source, update) : source;
 };
