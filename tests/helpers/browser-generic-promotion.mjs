@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 export const browserGenericEvidenceId = "browser-generic-specializations-ordinary-installed";
 export const browserGenericObservationId = "browser-generic-specializations-ordinary-source";
 export const browserGenericReceiptPath = "docs/evidence/generic-record-browser-20261008/receipt.json";
+export const browserGenericCommandQualification = " The command is a reconstructed reproduction instruction; the original browser queue records times and result, not the verbatim command.";
 
 /** The six signature cells established by the browser fixture, without instance dictionaries. */
 export const browserGenericObservation = () => ({
@@ -56,7 +57,7 @@ export const browserGenericEvidence = async () => {
 	return {
 		id: browserGenericEvidenceId, kind: "installed", revision: receipt.revision
 		, command: "source scripts/env.sh && env -u LEAN_BRIDGE_LAKE_ENGINE LEAN_BRIDGE_GENERIC_RECORD_BROWSER_TEST=1 LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test --test-concurrency=1 tests/generic-records-browser.test.mjs"
-		, scope: "Local ordinary-source npm browser acceptance at the recorded producer: nine finite function specializations, implicit type arguments and Array-field records; 12 engine/realm executions with 1025 checks and 1023 rejections each. The original report and logs remain byte-identical; current-source pins authenticate their history-aware regression readers."
+		, scope: "Local ordinary-source npm browser acceptance at the recorded producer: nine finite function specializations, implicit type arguments and Array-field records; 12 engine/realm executions with 1025 checks and 1023 rejections each. The original report and logs remain byte-identical; current-source pins authenticate their history-aware regression readers." + browserGenericCommandQualification
 		, files: await Promise.all(paths.map(async path => ({ path, sha256: sha256(await readFile(path)) })))
 		, artifacts: Object.entries(receipt.identities.archives).map(([name, digest]) => ({ path: `browser-generic-specializations/${name}`, sha256: digest }))
 	};

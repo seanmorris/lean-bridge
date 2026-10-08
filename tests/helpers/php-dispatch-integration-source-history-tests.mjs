@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeReviewedRecordPromotionSource } from "./reviewed-record-promotion-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpDispatchIntegrationSource, phpDispatchIntegrationChangedPaths, phpDispatchIntegrationHistoryPath, phpDispatchIntegrationPredecessor, reversePhpDispatchIntegrationUpdate } from "./php-dispatch-integration-source-history.mjs";
 import { phpDispatchSnapshot, phpDispatchSources } from "./php-fin-dispatch-evidence.mjs";
@@ -23,7 +24,7 @@ test("PHP dispatch integration restores exact predecessors and refuses unknown s
 	assert.deepEqual(record.updates.map(update => update.path), phpDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedRecordPromotionSource(update.path, await readFile(update.path, "utf8"));
 		const restored = reversePhpDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforePhpDispatchIntegrationSource(update.path, source), restored);
@@ -40,7 +41,7 @@ test("PHP dispatch integration restores exact predecessors and refuses unknown s
 });
 
 test("PHP dispatch integration refreshes exactly 96 source pins and preserves every earlier claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedRecordPromotionSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(source), previous = JSON.parse(beforePhpDispatchIntegrationSource(path, source));
 	const record = JSON.parse(await readFile(phpDispatchIntegrationHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -50,7 +51,7 @@ test("PHP dispatch integration refreshes exactly 96 source pins and preserves ev
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeReviewedRecordPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

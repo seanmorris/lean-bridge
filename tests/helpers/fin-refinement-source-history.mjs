@@ -130,6 +130,7 @@ import { nativeReplyRefusalChangedPaths } from "./native-reply-refusal-source-hi
 import { browserGenericPromotionChangedPaths } from "./browser-generic-promotion-source-history.mjs";
 import { reviewedInstantiationArchiveChangedPaths } from "./reviewed-instantiation-archive-source-history.mjs";
 import { phpDispatchIntegrationChangedPaths } from "./php-dispatch-integration-source-history.mjs";
+import { reviewedRecordPromotionChangedPaths } from "./reviewed-record-promotion-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -724,6 +725,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...browserGenericPromotionChangedPaths
 	, ...reviewedInstantiationArchiveChangedPaths
 	, ...phpDispatchIntegrationChangedPaths
+	, ...reviewedRecordPromotionChangedPaths
 ])].sort());
 
 /**

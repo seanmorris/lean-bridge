@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/reviewed-record-promotion-tests.mjs";
 import "./helpers/reviewed-instantiation-source-history-tests.mjs";
 import "./helpers/reviewed-instantiation-evidence-tests.mjs";
 import "./helpers/reviewed-instantiation-archive-source-history-tests.mjs";

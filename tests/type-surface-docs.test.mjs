@@ -326,6 +326,22 @@ test("installed primitive coverage stays separate from field audits and other pr
 	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed/u);
 });
 
+test("profile-specific conversion sentences do not acquire a semicolon after their period", () => {
+	const source = renderTypeTable(inventory, typeGuideProfiles["docs/javascript-typescript.md"], "reference/types.md");
+	const generic = row(source, "Polymorphic exports");
+	assert.match(generic, /Node JavaScript \/ TypeScript:/u);
+	assert.match(generic, /\. Browser \/ React \/ Worker:/u);
+	assert.doesNotMatch(generic, /\.;/u);
+	const php = renderTypeTable(inventory, typeGuideProfiles["docs/php.md"], "reference/types.md");
+	assert.doesNotMatch(php, /\.; (?:Native PHP|PHP-Wasm):/u);
+	for(const profile of ["c", "cpp"])
+	{
+		const implicit = row(renderTypeTable(inventory, [profile], "reference/types.md"), "Implicit arguments {α}");
+		assert.equal(implicit.split("Lean elaboration supplies configured type arguments before native compilation; the host passes no placeholder value.").length, 2);
+		assert.match(implicit, /Reviewed record specializations fix the implicit type/u);
+	}
+});
+
 test("table generation rejects missing, overlapping and foreign conversion-note claims", () => {
 	assert.throws(() => renderTypeTable(inventory, ["unknown"], "types.md"), /Unknown type profile/u);
 	assert.throws(() => replaceTypeSection("No generated heading", "replacement"), /exactly one/u);

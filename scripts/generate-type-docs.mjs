@@ -67,7 +67,7 @@ export function cellTypeCoverage(cell)
 	return "Not audited";
 }
 
-const groupedProfiles = (profiles, project) => {
+const groupedProfiles = (profiles, project, separator = "; ") => {
 	const groups = new Map();
 	for(const profile of profiles)
 	{
@@ -77,7 +77,7 @@ const groupedProfiles = (profiles, project) => {
 		groups.get(value).push(names[profile]);
 	}
 	return [...groups].map(([value, group]) => profiles.length === 1 || group.length === profiles.length
-		? value : `${group.join(" / ")}: ${value}`).join("; ");
+		? value : `${group.join(" / ")}: ${value}`).join(separator);
 };
 
 const coverageText = (cells, profiles) => Object.entries(paths).map(([source, label]) => {
@@ -125,7 +125,7 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 	const rows = document.shapes.map(shape => {
 		const selected = cells.filter(cell => cell.shape === shape.id);
 		const notes = groupedProfiles(profiles, profile => unique(selected.filter(cell => cell.profile === profile)
-			.map(cell => cell.conversionNote).filter(Boolean)).join(" "));
+			.map(cell => cell.conversionNote).filter(Boolean)).join(" "), " ");
 		return [inline(shape.lean), hostText(selected, profiles), coverageText(selected, profiles), `${notes ? notes + " " : ""}Required: ${shape.bounds}`];
 	});
 	return [

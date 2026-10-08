@@ -14,7 +14,7 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiation-archive-source-history.mjs";
 import { beforeBrowserGenericPromotionSource, browserGenericPromotionChangedPaths, browserGenericPromotionHistoryPath, browserGenericPromotionPredecessor, reverseBrowserGenericPromotionUpdate } from "./browser-generic-promotion-source-history.mjs";
-import { browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
+import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
 
 test("browser generic promotion authenticates every source predecessor and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(browserGenericPromotionHistoryPath, "utf8"));
@@ -46,6 +46,9 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 	assert.deepEqual(document.observations.slice(previous.observations.length), [browserGenericObservation()]);
 	assert.equal(document.observations.at(-1).id, browserGenericObservationId);
 	const evidence = await browserGenericEvidence();
+	// The current factory qualifies its reproduction command; this test preserves the older wording.
+	assert.ok(evidence.scope.endsWith(browserGenericCommandQualification));
+	evidence.scope = evidence.scope.slice(0, -browserGenericCommandQualification.length);
 	for(const file of evidence.files)
 		file.sha256 = sha256(beforeReviewedInstantiationArchiveSource(file.path, await readFile(file.path, "utf8")));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length), [evidence]);
