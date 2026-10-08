@@ -377,8 +377,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                   return (← getConstInfo other) matches .inductInfo _
                 unless guarded do reject e "cyclic copied alias"
                 return ← nominalReference e name
-              -- Alias spelling does not change the permitted refinement position.
-              let directFin := (← whnf definition.value).isAppOfArity ``Fin 1
+              -- Alias spelling does not change the permitted refinement position: a Fin or Subtype
+              -- alias keeps its depth, so an aliased Subtype in a callback argument is not top-level.
+              let unfolded ← whnf definition.value
+              let directFin := unfolded.isAppOfArity ``Fin 1 || unfolded.isAppOfArity ``Subtype 2
               -- A closed application of a generic structure becomes a record named by this alias.
               let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
                 (genericStructure? (← getEnv) definition.value.getAppFn.constName!).isSome
