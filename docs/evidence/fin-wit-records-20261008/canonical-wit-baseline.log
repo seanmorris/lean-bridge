@@ -1,0 +1,268 @@
+wasm-tools 1.245.1 (76927bf4b 2026-02-12)
+compact patterns all pass; canonical matches: false,false,false
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /type (bridge-value-\d+) = list<u32>;[^]*record tile \{ digit: \1, count: \1 \}[^]*record nest \{ inner: tile, tag: \1 \}[^]*nest-sum: func\(arg0: nest\) -> \1;/u. Input:
+
+'package root:component;\n' +
+  '\n' +
+  'world root {\n' +
+  '  import lean-bridge:finrecords/native@1.0.0;\n' +
+  '\n' +
+  '  export lean-bridge:finrecords/api@1.0.0;\n' +
+  '}\n' +
+  'package lean-bridge:finrecords@1.0.0 {\n' +
+  '  interface native {\n' +
+  '    type bridge-value-0 = list<u32>;\n' +
+  '\n' +
+  '    record tile {\n' +
+  '      digit: bridge-value-0,\n' +
+  '      count: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    record gate-never-fields {\n' +
+  '      value: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    variant gate {\n' +
+  '      closed,\n' +
+  '      never(gate-never-fields),\n' +
+  '    }\n' +
+  '\n' +
+  '    type bridge-value-4 = list<bridge-value-0>;\n' +
+  '\n' +
+  '    record late {\n' +
+  '      label: string,\n' +
+  '      items: bridge-value-4,\n' +
+  '      digit: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    record shape-circle-fields {\n' +
+  '      radius: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    record shape-label-fields {\n' +
+  '      text: string,\n' +
+  '    }\n' +
+  '\n' +
+  '    variant shape {\n' +
+  '      circle(shape-circle-fields),\n' +
+  '      label(shape-label-fields),\n' +
+  '      empty,\n' +
+  '    }\n' +
+  '\n' +
+  '    type bridge-value-7 = option<shape>;\n' +
+  '\n' +
+  '    record nest {\n' +
+  '      inner: tile,\n' +
+  '      tag: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    type bridge-value-9 = option<bridge-value-0>;\n' +
+  '\n' +
+  '    record slot {\n' +
+  '      maybe: bridge-value-9,\n' +
+  '      count: bridge-value-0,\n' +
+  '    }\n' +
+  '\n' +
+  '    type bridge-value-11 = result<tile, shape>;\n' +
+  '\n' +
+  '    type bridge-value-12 = list<tile>;\n' +
+  '\n' +
+  '    type bridge-value-13 = tuple<tile, shape>;\n' +
+  '\n' +
+  '    type bridge-value-14 = list<tile>;\n' +
+  '\n' +
+  '    bump: func(arg0: tile) -> tile;\n' +
+  '\n' +
+  '    gate-open: func(arg0: gate) -> bridge-value-0;\n' +
+  '\n' +
+  '    late-sum: func(arg0: late) -> bridge-value-0;\n' +
+  '\n' +
+  '    make-shape: func(arg0: bridge-value-0) -> shape;\n' +
+  '\n' +
+  '    maybe-shape: func(arg0: bridge-value-7) -> bridge-value-0;\n' +
+  '\n' +
+  '    nest-sum: func(arg0: nest) -> bridge-value-0;\n' +
+  '\n' +
+  '    shape-size: func(arg0: shape) -> bridge-value-0;\n' +
+  '\n' +
+  '    slot-count: func(arg0: slot) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-except: func(arg0: bridge-value-11) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-list: func(arg0: bridge-value-12) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-pair: func(arg0: bridge-value-13) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-sum: func(arg0: tile) -> bridge-value-0;\n' +
+  '\n' +
+  '    tiles: func(arg0: bridge-value-14) -> bridge-value-0;\n' +
+  '  }\n' +
+  '  interface api {\n' +
+  '    use native.{bridge-value-0, tile, gate-never-fields, gate, bridge-value-4, late, shape-circle-fields, shape-label-fields, shape, bridge-value-7, nest, bridge-value-9, slot, bridge-value-11, bridge-value-12, bridge-value-13, bridge-value-14};\n' +
+  '\n' +
+  '    bump: func(arg0: tile) -> tile;\n' +
+  '\n' +
+  '    gate-open: func(arg0: gate) -> bridge-value-0;\n' +
+  '\n' +
+  '    late-sum: func(arg0: late) -> bridge-value-0;\n' +
+  '\n' +
+  '    make-shape: func(arg0: bridge-value-0) -> shape;\n' +
+  '\n' +
+  '    maybe-shape: func(arg0: bridge-value-7) -> bridge-value-0;\n' +
+  '\n' +
+  '    nest-sum: func(arg0: nest) -> bridge-value-0;\n' +
+  '\n' +
+  '    shape-size: func(arg0: shape) -> bridge-value-0;\n' +
+  '\n' +
+  '    slot-count: func(arg0: slot) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-except: func(arg0: bridge-value-11) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-list: func(arg0: bridge-value-12) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-pair: func(arg0: bridge-value-13) -> bridge-value-0;\n' +
+  '\n' +
+  '    tile-sum: func(arg0: tile) -> bridge-value-0;\n' +
+  '\n' +
+  '    tiles: func(arg0: bridge-value-14) -> bridge-value-0;\n' +
+  '  }\n' +
+  '}\n'
+
+    at file:///app/[eval1]:20:52 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'package root:component;\n' +
+    '\n' +
+    'world root {\n' +
+    '  import lean-bridge:finrecords/native@1.0.0;\n' +
+    '\n' +
+    '  export lean-bridge:finrecords/api@1.0.0;\n' +
+    '}\n' +
+    'package lean-bridge:finrecords@1.0.0 {\n' +
+    '  interface native {\n' +
+    '    type bridge-value-0 = list<u32>;\n' +
+    '\n' +
+    '    record tile {\n' +
+    '      digit: bridge-value-0,\n' +
+    '      count: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    record gate-never-fields {\n' +
+    '      value: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    variant gate {\n' +
+    '      closed,\n' +
+    '      never(gate-never-fields),\n' +
+    '    }\n' +
+    '\n' +
+    '    type bridge-value-4 = list<bridge-value-0>;\n' +
+    '\n' +
+    '    record late {\n' +
+    '      label: string,\n' +
+    '      items: bridge-value-4,\n' +
+    '      digit: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    record shape-circle-fields {\n' +
+    '      radius: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    record shape-label-fields {\n' +
+    '      text: string,\n' +
+    '    }\n' +
+    '\n' +
+    '    variant shape {\n' +
+    '      circle(shape-circle-fields),\n' +
+    '      label(shape-label-fields),\n' +
+    '      empty,\n' +
+    '    }\n' +
+    '\n' +
+    '    type bridge-value-7 = option<shape>;\n' +
+    '\n' +
+    '    record nest {\n' +
+    '      inner: tile,\n' +
+    '      tag: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    type bridge-value-9 = option<bridge-value-0>;\n' +
+    '\n' +
+    '    record slot {\n' +
+    '      maybe: bridge-value-9,\n' +
+    '      count: bridge-value-0,\n' +
+    '    }\n' +
+    '\n' +
+    '    type bridge-value-11 = result<tile, shape>;\n' +
+    '\n' +
+    '    type bridge-value-12 = list<tile>;\n' +
+    '\n' +
+    '    type bridge-value-13 = tuple<tile, shape>;\n' +
+    '\n' +
+    '    type bridge-value-14 = list<tile>;\n' +
+    '\n' +
+    '    bump: func(arg0: tile) -> tile;\n' +
+    '\n' +
+    '    gate-open: func(arg0: gate) -> bridge-value-0;\n' +
+    '\n' +
+    '    late-sum: func(arg0: late) -> bridge-value-0;\n' +
+    '\n' +
+    '    make-shape: func(arg0: bridge-value-0) -> shape;\n' +
+    '\n' +
+    '    maybe-shape: func(arg0: bridge-value-7) -> bridge-value-0;\n' +
+    '\n' +
+    '    nest-sum: func(arg0: nest) -> bridge-value-0;\n' +
+    '\n' +
+    '    shape-size: func(arg0: shape) -> bridge-value-0;\n' +
+    '\n' +
+    '    slot-count: func(arg0: slot) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-except: func(arg0: bridge-value-11) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-list: func(arg0: bridge-value-12) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-pair: func(arg0: bridge-value-13) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-sum: func(arg0: tile) -> bridge-value-0;\n' +
+    '\n' +
+    '    tiles: func(arg0: bridge-value-14) -> bridge-value-0;\n' +
+    '  }\n' +
+    '  interface api {\n' +
+    '    use native.{bridge-value-0, tile, gate-never-fields, gate, bridge-value-4, late, shape-circle-fields, shape-label-fields, shape, bridge-value-7, nest, bridge-value-9, slot, bridge-value-11, bridge-value-12, bridge-value-13, bridge-value-14};\n' +
+    '\n' +
+    '    bump: func(arg0: tile) -> tile;\n' +
+    '\n' +
+    '    gate-open: func(arg0: gate) -> bridge-value-0;\n' +
+    '\n' +
+    '    late-sum: func(arg0: late) -> bridge-value-0;\n' +
+    '\n' +
+    '    make-shape: func(arg0: bridge-value-0) -> shape;\n' +
+    '\n' +
+    '    maybe-shape: func(arg0: bridge-value-7) -> bridge-value-0;\n' +
+    '\n' +
+    '    nest-sum: func(arg0: nest) -> bridge-value-0;\n' +
+    '\n' +
+    '    shape-size: func(arg0: shape) -> bridge-value-0;\n' +
+    '\n' +
+    '    slot-count: func(arg0: slot) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-except: func(arg0: bridge-value-11) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-list: func(arg0: bridge-value-12) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-pair: func(arg0: bridge-value-13) -> bridge-value-0;\n' +
+    '\n' +
+    '    tile-sum: func(arg0: tile) -> bridge-value-0;\n' +
+    '\n' +
+    '    tiles: func(arg0: bridge-value-14) -> bridge-value-0;\n' +
+    '  }\n' +
+    '}\n',
+  expected: /type (bridge-value-\d+) = list<u32>;[^]*record tile \{ digit: \1, count: \1 \}[^]*record nest \{ inner: tile, tag: \1 \}[^]*nest-sum: func\(arg0: nest\) -> \1;/u,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v22.23.2
