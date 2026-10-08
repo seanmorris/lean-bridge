@@ -14,6 +14,8 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { checkScalarFinRejection, scalarFinRejectionAbis } from "./helpers/scalar-fin-rejection-packages.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import "./helpers/refinement-engine-tests.mjs";
+import { scalarFinSourceEntryProbe, sourceEntryInstrumentation } from "./helpers/scalar-fin-source-entry.mjs";
+import "./helpers/scalar-fin-source-entry-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();
@@ -35,4 +37,15 @@ test("installed scalar Fin rejects through the public API and the internal runti
 	for(const item of observations) assert.ok(item.checks > 100 && item.rejections > 2000, item.abi);
 	const reportPath = resolve(process.env.LEAN_BRIDGE_SCALAR_FIN_REJECTION_REPORT ?? "build/scalar-fin-rejection/report.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, observations }));
+});
+
+const sourceEntry = enabled && process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY === "1";
+
+test("installed scalar Fin rejections never enter the Lean source on any private ABI", { skip: !sourceEntry, timeout: 3_600_000 }, async t => {
+	const observations = [];
+	for(const abi of scalarFinRejectionAbis) observations.push(await checkScalarFinRejection(t, { fixture, build, runtimeRoot }, abi, scalarFinSourceEntryProbe));
+	assert.deepEqual(observations.map(item => item.privateAbi), [2, 3, 4, 5, 6, 7]);
+	for(const item of observations) assert.ok(item.checks > 100 && item.rejections > 2000 && item.sourceEntry.rejected === item.rejections, item.abi);
+	const reportPath = resolve(process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY_REPORT ?? "build/scalar-fin-source-entry/report.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, instrumentation: sourceEntryInstrumentation, observations }));
 });

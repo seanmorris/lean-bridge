@@ -109,6 +109,18 @@ console.log(JSON.stringify({ abi: ${JSON.stringify(abi)}, checks, rejections }))
 `;
 
 /**
+ * The project source, export names and consumer one ABI's run uses. A probe instruments them; without one
+ * they are exactly the rejection suite's inputs.
+ *
+ * @param abi - Private ABI name.
+ * @param probe - Optional source-entry probe.
+ */
+export const scalarFinRejectionInputs = (abi, probe = null) => {
+	const { names, extra } = abis[abi], inputs = { lean: source(extra), names, consumer: consumerSource(abi) };
+	return probe ? probe.instrument(inputs, abi) : inputs;
+};
+
+/**
  * Build, install offline and run the scalar Fin rejection consumer for one private ABI.
  *
  * @param t - Test context.
@@ -117,17 +129,18 @@ console.log(JSON.stringify({ abi: ${JSON.stringify(abi)}, checks, rejections }))
  * @param options.build - Builds the canonical project for npm.
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param abi - One of scalar, callable or copied.
+ * @param probe - Optional source-entry probe; it instruments the inputs, builds one root and accounts for stderr.
  */
-export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }, abi) => {
-	const { version, names, extra } = abis[abi];
+export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }, abi, probe = null) => {
+	const { version } = abis[abi], inputs = scalarFinRejectionInputs(abi, probe), names = inputs.names;
 	const { directory, root } = await fixture(t);
-	await saveLakeFile(root, "OnboardingSmall.lean", source(extra));
+	await saveLakeFile(root, "OnboardingSmall.lean", inputs.lean);
 	const copy = { ownership: "copy", lifetime: null };
 	const contracts = { "OnboardingSmall.mix": { parameters: [{ ...copy, refinement: { constructor: "OnboardingSmall.checkedText" } }, copy] } };
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: names.map(name => `OnboardingSmall.${name}`), contracts }));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
-	for(const [index, projectRoot] of [root, moved].entries())
+	for(const [index, projectRoot] of (probe ? [root] : [root, moved]).entries())
 	{
 		const before = await lakeInputState(projectRoot), outputRoot = join(directory, `build-${index}`);
 		await build(projectRoot, outputRoot).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
@@ -150,18 +163,25 @@ export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }
 		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 	}
-	assert.deepEqual(releases[0].report, releases[1].report);
 	const archiveSha256 = sha256(await readFile(releases[0].componentArchive));
-	assert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));
+	if(!probe)
+	{
+		assert.deepEqual(releases[0].report, releases[1].report);
+		assert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));
+	}
 	await rename(root, join(directory, "source-unavailable"));
 	await rename(moved, join(directory, "moved-unavailable"));
 	const consumer = join(directory, "consumer"); await mkdir(consumer);
 	await saveLakeFile(consumer, "package.json", '{"private":true,"type":"module"}');
 	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(directory, "npm-cache"), releases[0].runtimeArchive, releases[0].componentArchive], cwd: consumer });
-	await saveLakeFile(consumer, "index.mjs", consumerSource(abi));
+	await saveLakeFile(consumer, "index.mjs", inputs.consumer);
 	const run = await processBuildRunner.capture({ command: process.execPath, args: ["index.mjs"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
-	assert.equal(run.stderr, "", "no Lean panic or other diagnostic reaches stderr");
+	if(!probe) assert.equal(run.stderr, "", "no Lean panic or other diagnostic reaches stderr");
 	const result = JSON.parse(run.stdout.trim());
 	assert.equal(result.abi, abi);
-	return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), ...result };
+	const runtimeArchiveSha256 = sha256(await readFile(releases[0].runtimeArchive));
+	if(!probe) return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...result };
+	// The per-call records stay in the probe's accounting; the observation keeps the consumer's counts.
+	const counts = Object.fromEntries(Object.entries(result).filter(([key]) => key !== "calls"));
+	return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...counts, sourceEntry: probe.check(run.stderr, result, inputs) };
 };
