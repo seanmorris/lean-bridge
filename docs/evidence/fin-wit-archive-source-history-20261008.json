@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-wit-archive-v1",
+  "predecessorCommit": "ed8d83691f74c56483ca37a87896278cc9cbc25b",
+  "updates": [
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "currentSha256": "8ab99e97718f05d9dc0c548853205b183b2548c7902fca280e49539dbf0dca3c",
+      "previousSha256": "f6681d83fc4179a13809ab1ad8a77c31e22b423edac2e8e00de1f177e9690b41",
+      "edits": [
+        {
+          "start": 474,
+          "previous": "",
+          "current": "import \"./helpers/fin-wit-record-evidence-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-install-source-history.mjs",
+      "currentSha256": "674bd03465a868974fda976f6f76bf06da2e472e992515d5ec8953431ed8054d",
+      "previousSha256": "a2777248814797b44b0e573ee86f6d13fefab572c9ede3b47916575505df410e",
+      "edits": [
+        {
+          "start": 245,
+          "previous": "",
+          "current": "import { beforeFinWitArchiveSource } from \"./fin-wit-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2893,
+          "previous": "",
+          "current": "\tsource = beforeFinWitArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-install-source-history-tests.mjs",
+      "currentSha256": "a984f1339e6e416c7153a4c272d8e97cf8d69322ed4a966b1098570f06b73caf",
+      "previousSha256": "cfcb95479b820d19c9931db9a1ede6a74faa30d384cb656878bb02361882df26",
+      "edits": [
+        {
+          "start": 525,
+          "previous": "",
+          "current": "import { beforeFinWitArchiveSource } from \"./fin-wit-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 997,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinWitArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "f59adf0e4c02f137d20c2a8e26c4b9fae88ecc0c5cd0a248bbf9983826affa6c",
+      "previousSha256": "6000d4e9bda44b74b274af878bee36bac015e6e518d25b0cd8f4eb2bebb71627",
+      "edits": [
+        {
+          "start": 9368,
+          "previous": "",
+          "current": "import { finWitArchiveChangedPaths } from \"./fin-wit-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 46283,
+          "previous": "",
+          "current": "\t, ...finWitArchiveChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

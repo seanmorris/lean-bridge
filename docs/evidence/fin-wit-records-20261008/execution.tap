@@ -1,0 +1,42 @@
+# step ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside record fields and the active variant case
+ok 1 - relocated source-free native packages check Fin inside record fields and the active variant case
+  ---
+  duration_ms: 111832.964792
+  type: 'test'
+  ...
+# build 0: wit-wasi
+# installing and checking wit-wasi
+# build 1: wit-wasi
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 112503.511587
+exit=0
+# step reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check record and variant field bounds after source-free installation
+ok 1 - independently reviewed native packages check record and variant field bounds after source-free installation
+  ---
+  duration_ms: 107427.203725
+  type: 'test'
+  ...
+# build 0: wit-wasi
+# installing and checking wit-wasi
+# build 1: wit-wasi
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 107978.833679
+exit=0

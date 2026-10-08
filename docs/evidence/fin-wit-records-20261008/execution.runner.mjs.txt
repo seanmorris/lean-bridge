@@ -1,0 +1,51 @@
+import assert from "node:assert/strict";
+import {createHash} from "node:crypto";
+import {execFileSync,spawn} from "node:child_process";
+import {openSync,closeSync,writeSync} from "node:fs";
+import {readFile,statfs} from "node:fs/promises";
+const revision="738d41764dcaa3f689a628ea18f7c292b2f2e8bd", cwd="/app";
+const prefix="/app/build/vo1448-wit-records-738d417";
+const git=args=>execFileSync("git",args,{cwd,encoding:"utf8"}).trim();
+const clean=()=>{assert.equal(git(["rev-parse","HEAD"]),revision);assert.equal(git(["status","--porcelain","--untracked-files=no"]),"");};
+clean();
+const queue=openSync(prefix+".queue","wx"),tap=openSync(prefix+".tap","wx");
+const stamp=()=>new Date().toISOString();
+const log=line=>{writeSync(queue,line+"\n");process.stdout.write(line+"\n");};
+const freeMiB=async()=>{const state=await statfs(cwd);return Math.floor(state.bavail*state.bsize/1024/1024);};
+const lean="/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const wasmTools="/app/.toolchains/wasm-tools/bin/wasm-tools";
+const wasmtime="/app/.toolchains/wasmtime42";
+const sha=bytes=>createHash("sha256").update(bytes).digest("hex");
+const version=(command,args)=>execFileSync(command,args,{encoding:"utf8"}).trim();
+const base=Object.fromEntries(Object.entries(process.env).filter(([key])=>!key.startsWith("LEAN_BRIDGE_")));
+const environment={...base,LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:"2.36",LEAN_BRIDGE_LEAN_PREFIX:lean,LEAN_BRIDGE_WASM_TOOLS:wasmTools,LEAN_BRIDGE_WASMTIME_C_API:wasmtime,LEAN_NUM_THREADS:"1",OMP_NUM_THREADS:"1",MAKEFLAGS:"-j1"};
+try{
+ log("revision="+revision+" node="+process.version+" cpu=3 concurrency=1");
+ log("hostGlibc="+version("/usr/bin/getconf",["GNU_LIBC_VERSION"]));
+ log("lean="+version(lean+"/bin/lean",["--version"]));
+ log("wasmTools="+version(wasmTools,["--version"]));
+ log("wasmtimeLibrary="+wasmtime+"/lib/libwasmtime.so sha256="+sha(await readFile(wasmtime+"/lib/libwasmtime.so")));
+ log("declaredGlibcFloor=2.36 leanThreads=1 ompThreads=1 makeJobs=1");
+ for(const [route,pattern] of [["ordinary","^relocated source-free native packages check Fin inside record fields"],["reviewed","^independently reviewed native packages check record and variant field bounds"]]){
+  clean();const free=await freeMiB();assert.ok(free>=2048,"Only "+free+" MiB free; stopping before "+route);
+  const selected="LEAN_BRIDGE_"+(route==="reviewed"?"REVIEWED_":"")+"FIN_RECORD";
+  const report=prefix+"-"+route+".json";
+  const env={...environment,[selected+"_PROFILES"]:"wit-wasi",[selected+"_REPORT"]:report};
+  log("start "+route+" "+stamp()+" freeMiB="+free+" pattern="+pattern+" report="+report);
+  writeSync(tap,"# step "+route+"\n");
+  const code=await new Promise((resolve,reject)=>{
+   const child=spawn("/usr/bin/taskset",["-c","3",process.execPath,"--test","--test-concurrency=1","--test-name-pattern="+pattern,"tests/native-fin-records.test.mjs"],{cwd,env,stdio:["ignore",tap,tap]});
+   child.once("error",reject);child.once("close",(code,signal)=>resolve(code??(signal?128:1)));
+  });
+  writeSync(tap,"exit="+code+"\n");log("end "+route+" "+stamp()+" exit="+code+" freeMiB="+await freeMiB());
+  assert.equal(code,0,route+" failed; queue stopped");
+  const bytes=await readFile(report),data=JSON.parse(bytes);
+  assert.equal(data.reproducible,true);assert.deepEqual(data.reports.map(item=>item.profile),["wit-wasi"]);
+  const item=data.reports[0];assert.equal(item.path,route==="reviewed"?"reviewed-ir":"ordinary-source");
+  for(const key of ["sourceRemovedBeforeInstallation","offlineInstall","compilerFreePath"])assert.equal(item[key],true,key);
+  assert.ok(item.checks>0);assert.equal(Object.hasOwn(item,"dispatch"),false);
+  log("report "+route+" sha256="+sha(bytes)+" checks="+item.checks);
+ }
+ clean();log("all steps passed "+stamp());
+}catch(error){log("stopped "+stamp()+" "+error.stack);process.exitCode=1;}
+finally{closeSync(tap);closeSync(queue);}

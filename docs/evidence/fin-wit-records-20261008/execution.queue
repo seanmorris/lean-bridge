@@ -1,0 +1,13 @@
+revision=738d41764dcaa3f689a628ea18f7c292b2f2e8bd node=v22.23.2 cpu=3 concurrency=1
+hostGlibc=glibc 2.36
+lean=Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+wasmTools=wasm-tools 1.245.1 (76927bf4b 2026-02-12)
+wasmtimeLibrary=/app/.toolchains/wasmtime42/lib/libwasmtime.so sha256=566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3
+declaredGlibcFloor=2.36 leanThreads=1 ompThreads=1 makeJobs=1
+start ordinary 2026-10-08T10:24:07.657Z freeMiB=3469 pattern=^relocated source-free native packages check Fin inside record fields report=/app/build/vo1448-wit-records-738d417-ordinary.json
+end ordinary 2026-10-08T10:26:00.202Z exit=0 freeMiB=3467
+report ordinary sha256=885534859c25d9380b5434eeeabfd051a10fd0d6ad34b1b2d1df713ac73f6910 checks=2056
+start reviewed 2026-10-08T10:26:00.217Z freeMiB=3467 pattern=^independently reviewed native packages check record and variant field bounds report=/app/build/vo1448-wit-records-738d417-reviewed.json
+end reviewed 2026-10-08T10:27:48.232Z exit=0 freeMiB=3465
+report reviewed sha256=e9919ffabe7840b17e7ad7723a44e7cd6d2a8df9ecd228ee77b4149aa719a5e5 checks=2056
+all steps passed 2026-10-08T10:27:48.244Z

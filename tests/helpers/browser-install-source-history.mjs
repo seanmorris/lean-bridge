@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinWitArchiveSource } from "./fin-wit-archive-source-history.mjs";
 
 export const browserInstallHistoryPath = "docs/evidence/browser-install-source-history-20261008.json";
 export const browserInstallChangedPaths = [
@@ -65,6 +66,7 @@ export const reverseBrowserInstallUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeBrowserInstallSource = (path, source, expected) => {
+	source = beforeFinWitArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !browserInstallChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

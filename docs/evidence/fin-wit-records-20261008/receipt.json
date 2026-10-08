@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1442,
+    1448
+  ],
+  "execution": "local",
+  "revision": "738d41764dcaa3f689a628ea18f7c292b2f2e8bd",
+  "scope": {
+    "profiles": [
+      "wit-wasi"
+    ],
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "family": "record",
+    "checksPerRoute": 2056,
+    "exports": 13,
+    "dispatchObserved": false,
+    "hostedCi": false,
+    "binaryArchivesRetained": false,
+    "compilerFreePathMeaning": "The consumer PATH excludes Lean and producer tools. Absolute system C compiler/linker paths build the C host caller; wasm-tools validates and prints the installed component before execution."
+  },
+  "producerEnvironment": {
+    "nodeVersion": "v22.23.2",
+    "nodeVersionSource": "runner process.version",
+    "hostGlibcVersion": "2.36",
+    "hostGlibcVersionSource": "runner getconf GNU_LIBC_VERSION",
+    "nativeGlibcFloor": "2.36",
+    "floorSource": "explicit LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR",
+    "leanVersion": "4.32.2",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanVersionSource": "runner invoked the selected Lean executable with --version",
+    "wasmToolsVersion": "1.245.1",
+    "wasmToolsCommit": "76927bf4b",
+    "wasmToolsVersionSource": "runner invoked the selected wasm-tools executable with --version",
+    "wasmtimeLibrarySha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3",
+    "wasmtimeLibrarySource": "runner hashed /app/.toolchains/wasmtime42/lib/libwasmtime.so",
+    "wasmtimeVersionMeasured": false,
+    "versionsPrintedByConsumer": false,
+    "cpu": 3,
+    "concurrency": 1,
+    "minimumFreeMiB": 2048,
+    "leanThreads": 1,
+    "ompThreads": 1,
+    "makeJobs": 1
+  },
+  "sourceIdentityScope": "Selected compiler, installer, fixture and consumer identities, not a complete dependency closure; the runner checked the Git revision and a clean tracked tree before each selection.",
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "398e92373ef2e9a7f04f3a00d5ee9cd41f00b317dec995d0a5815630bc9cd019"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "0b1c7a9bfdddd06d0f6b81e9271714791076e2e07110f9dba68a1ebf1d6264d2"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "ba87773c1738ced6131e800e497a92b99ae6b10b26d9782e2562d2b2159a9dda"
+    },
+    {
+      "path": "src/analyze/lean-project.mjs",
+      "sha256": "810ba5b9adf3b9af61763b8ed9fdc8eb0b4fa491bd53f287439536be63df3695"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "1ea961a3362fa3919a1a90035a8fd9bfb1af2c67ca682e68ce6e9da5e690443d"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "sha256": "e54ccaa9cc34016ee1632b37ea535051ac167f0ce192facf3d375155718c2ab4"
+    },
+    {
+      "path": "src/build/native-wit-projection.mjs",
+      "sha256": "2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397"
+    },
+    {
+      "path": "src/build/native-wit-artifacts.mjs",
+      "sha256": "9d010c7ce8b8d396adee7e7db21cf1b2c7f2c6c2d7adc8ce33a4257e0efc704b"
+    },
+    {
+      "path": "src/backends/native/fin-refinements.mjs",
+      "sha256": "6adea625c086cfb017abc6f8b896675da8f18b914960e695b420549ab8746122"
+    },
+    {
+      "path": "src/backends/wit/copied-model.mjs",
+      "sha256": "eee9f9a456a92bc4d9680e92afead3b27fe42e239d586cadc3af9c84926e85d0"
+    },
+    {
+      "path": "src/backends/wit/fin-refinements.mjs",
+      "sha256": "8ddc9f4ce9d4bcf98d1abc269c93f11fb1366b92ae00de48547e9f255f9125f3"
+    },
+    {
+      "path": "src/backends/wit/copied-host.mjs",
+      "sha256": "d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf"
+    },
+    {
+      "path": "src/backends/wit/copied-component.mjs",
+      "sha256": "91aabbb9a0bb18a0c64854873b6f7651a24ea48dc714d59e8cb4988b7214b701"
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "sha256": "f6681d83fc4179a13809ab1ad8a77c31e22b423edac2e8e00de1f177e9690b41"
+    },
+    {
+      "path": "tests/helpers/fin-fixture-installed.mjs",
+      "sha256": "fb52e672df3f2dc369a0d51a271e73c0c7c670a15c47d9d2c0c96ba717a3d403"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "f47a2cf7290887d2ac09a37e873d89fa575687ec5d9228c05ce904de35259227"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/LICENSE",
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/lakefile.toml",
+      "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/package.json",
+      "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/wit-wasi.c",
+      "sha256": "a88155c0c19afcd13061e127317d66de6001c0c1bc5e26e43e756ba01e09c9ca"
+    }
+  ],
+  "priorFailures": {
+    "local": {
+      "artifact": "canonical-wit-baseline.log",
+      "outcome": "failure",
+      "tool": "wasm-tools 1.245.1",
+      "meaning": "The unmodified assertions accept compact generator text and reject the actual canonical WIT output. This log is not an installed consumer pass."
+    },
+    "hosted": {
+      "artifact": "hosted-f9d5ce9-failure.log",
+      "outcome": "failure",
+      "revision": "f9d5ce96eb04ec800209c6a6863092b3bdea6e85",
+      "runId": 37736101772,
+      "jobId": 113176414728,
+      "url": "https://github.com/seanmorris/lean-bridge/actions/runs/37736101772/job/113176414728",
+      "meaning": "Both record selections failed before consumer execution; the local repaired passes are separate observations."
+    }
+  },
+  "runs": [
+    {
+      "id": "ordinary",
+      "route": "ordinary-source",
+      "report": {
+        "path": "docs/evidence/fin-wit-records-20261008/ordinary.json",
+        "originalPath": "build/vo1448-wit-records-738d417-ordinary.json",
+        "sha256": "885534859c25d9380b5434eeeabfd051a10fd0d6ad34b1b2d1df713ac73f6910",
+        "bytes": 13060
+      },
+      "identities": {
+        "bindingIrSha256": "451f2d20398193ae09149dca1d7f1d59ef7f12ef5019f1eee4d1bacb50c92450",
+        "modelSha256": "993eaa4cb7ca0048e7e96af23348aac16fbc2866e149eb71e98a48358e213ed5",
+        "receiptSha256": "a6f6f3402e1f0af344f9f69882b46c7d47268beccd8120c994b07ef5b6bec52a",
+        "sourceTreeSha256": "34a10d9e1605235cbfa793719fe654159afcb667ffc6a422711419ce0a98c52f",
+        "consumerSha256": "a88155c0c19afcd13061e127317d66de6001c0c1bc5e26e43e756ba01e09c9ca",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 59281615,
+                "path": "archives/finrecords-1.0.0-wit-wasi.tar.gz",
+                "sha256": "053a956f824b6fcd0df408876b007fb9730d4748dc1f9832f6da3600d4ce87bb"
+              }
+            ],
+            "ecosystem": "wit-wasi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "wit-wasi",
+            "version": "1.0.0"
+          }
+        ]
+      },
+      "fixture": {
+        "inputs": [
+          {
+            "path": "FinRecords.lean",
+            "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+          },
+          {
+            "path": "lakefile.toml",
+            "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+          },
+          {
+            "path": "lean-bridge.exports.json",
+            "sha256": "679d23b5b52898357a1657b8bb7ce59d41ac2d1777cb134b45c7b9283210cb94"
+          },
+          {
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "path": "package.json",
+            "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+          }
+        ],
+        "sha256": "34a10d9e1605235cbfa793719fe654159afcb667ffc6a422711419ce0a98c52f"
+      }
+    },
+    {
+      "id": "reviewed",
+      "route": "reviewed-ir",
+      "report": {
+        "path": "docs/evidence/fin-wit-records-20261008/reviewed.json",
+        "originalPath": "build/vo1448-wit-records-738d417-reviewed.json",
+        "sha256": "e9919ffabe7840b17e7ad7723a44e7cd6d2a8df9ecd228ee77b4149aa719a5e5",
+        "bytes": 13154
+      },
+      "identities": {
+        "bindingIrSha256": "071bc2ae2d0c3d1ea8f48b5f53dafab81727867f0c9cdada7bd4ed6920098eb5",
+        "modelSha256": "d3351de8df5937e30467290e281454ef7258cb61f0dace81dcabfc23dacb6127",
+        "receiptSha256": "5a2c48b9305991f450698ea61c2326301d4d4f7fbb42218c93269f057e830372",
+        "sourceTreeSha256": "17838f9d76516916a7e8f5eea2d32005783ca844e236a7ccc1232508c8ca2425",
+        "consumerSha256": "a88155c0c19afcd13061e127317d66de6001c0c1bc5e26e43e756ba01e09c9ca",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 59287308,
+                "path": "archives/finrecords-1.0.0-wit-wasi.tar.gz",
+                "sha256": "b872e5ec581fdf5f6fcb78fc79c1ccdc93751955d23cc2fea28ffcfa9f14d0b1"
+              }
+            ],
+            "ecosystem": "wit-wasi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "wit-wasi",
+            "version": "1.0.0"
+          }
+        ]
+      },
+      "fixture": {
+        "inputs": [
+          {
+            "path": "api.binding-ir.json",
+            "sha256": "8567eb3454fcc818645aa97c4b406c0c7b0e6be3f539592730ecff8a92a5b9f5"
+          },
+          {
+            "path": "FinRecords.lean",
+            "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+          },
+          {
+            "path": "lakefile.toml",
+            "sha256": "876cf2bc655ac6d95d6b144b8ac9d4ad755d3565e13c87c2e742ccc425f506df"
+          },
+          {
+            "path": "lean-bridge.exports.json",
+            "sha256": "0c1867736d34882383a249498f328e08ebb599fe3c29f3fd3e12e3a8444ad251"
+          },
+          {
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "path": "package.json",
+            "sha256": "1d16d863f29a946af4e8be43fc9f101a433d70258499da070495d6aeae12dfc2"
+          }
+        ],
+        "sha256": "17838f9d76516916a7e8f5eea2d32005783ca844e236a7ccc1232508c8ca2425"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/ordinary.json",
+      "originalPath": "build/vo1448-wit-records-738d417-ordinary.json",
+      "sha256": "885534859c25d9380b5434eeeabfd051a10fd0d6ad34b1b2d1df713ac73f6910",
+      "bytes": 13060
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/reviewed.json",
+      "originalPath": "build/vo1448-wit-records-738d417-reviewed.json",
+      "sha256": "e9919ffabe7840b17e7ad7723a44e7cd6d2a8df9ecd228ee77b4149aa719a5e5",
+      "bytes": 13154
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/execution.tap",
+      "originalPath": "build/vo1448-wit-records-738d417.tap",
+      "sha256": "771f161a60c7f6da6c42dcc91709b9a8c61fa8a1d3c90f209a5ee0cd7020d269",
+      "bytes": 998
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/execution.queue",
+      "originalPath": "build/vo1448-wit-records-738d417.queue",
+      "sha256": "793a1dfbd9db6c9b9583161a21f5b46943389db7800c39a74138f78f23a6ffc2",
+      "bytes": 1211
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/execution.runner.mjs.txt",
+      "originalPath": "build/vo1448-wit-records-queue-738d417.mjs",
+      "sha256": "dc21a0311702c57a4f2dfdb95502351a9683836dc84b53807c6725364e6576f6",
+      "bytes": 3903
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/canonical-wit-baseline.log",
+      "originalPath": "build/vo1448-wit-format-baseline-retry.log",
+      "sha256": "b6316e8928404c98dbf3d8bcc766cf14eb53dd5331ae8edc09103121f7b196ac",
+      "bytes": 8943
+    },
+    {
+      "path": "docs/evidence/fin-wit-records-20261008/hosted-f9d5ce9-failure.log",
+      "originalPath": "build/vo1220-wit-f9d5ce9-failed.log",
+      "sha256": "54979a3114c03c40a6d6764cc5a18616cd250c808aa6311b70945f651bf6ec6f",
+      "bytes": 532711
+    }
+  ]
+}
