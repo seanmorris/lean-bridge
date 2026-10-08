@@ -12,6 +12,7 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { assertReviewedFin, assertReviewedFinNominal } from "./reviewed-refinements.mjs";
+import { assertReviewedInstantiation, instantiationKey } from "./reviewed-instantiation.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -76,6 +77,7 @@ const checkReview = document => {
 	};
 	for(const field of ["capabilities", "assurance"]) reject(document[field].length, field);
 	const callbacks = new Map(document.types.filter(type => type.kind === "callback").map(type => [type.id, type]));
+	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const isCallback = type => type.kind === "named" && callbacks.has(type.id);
 	reject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.size ? [{
 		id: "error:native-callback", name: "NativeCallbackFailure"
@@ -90,7 +92,9 @@ const checkReview = document => {
 		if(specialization !== undefined) checkSpecialization(item, specialization);
 		// Aliases, records and variants carry their bounds on the definition, as compiled metadata does.
 		const refinementKey = declaration ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
-		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey && (!declaration || key !== specializationKey)), `${item.id}.source.extensions`);
+		// A record may restate its compiler-owned instantiation; it never selects a compilation.
+		const allowed = [refinementKey, declaration ? specializationKey : item.kind === "record" ? instantiationKey : null];
+		reject(Object.keys(item.source.extensions).some(key => !allowed.includes(key)), `${item.id}.source.extensions`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
@@ -158,6 +162,13 @@ const checkReview = document => {
 		{
 			reject(field.mutability !== "immutable", `${definition.id}.${field.name}.mutability`);
 			type(field.type, `${definition.id}.${field.name}.type`);
+		}
+		if(Object.hasOwn(definition.source.extensions, instantiationKey))
+		{
+			try
+			{ assertReviewedInstantiation(definition, definition.source.extensions[instantiationKey], definitions); }
+			catch(error)
+			{ unsupported(`Reviewed generic record instantiations are invalid: ${error.message}`, { path: error.path }); }
 		}
 	}
 	for(const declaration of document.declarations)

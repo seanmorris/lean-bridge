@@ -791,6 +791,7 @@ const profileManifest = Object.freeze({
 		, "perl-refinements"
 		, "native-specializations"
 		, "reviewed-specializations"
+		, "reviewed-instantiations"
 		, "native-fin-containers"
 		, "native-fin-products"
 		, "native-fin-product-arrays"
