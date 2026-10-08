@@ -11,6 +11,16 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
 import { nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionId, nativeFinReplyPromotionLimit, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from "./native-fin-reply-promotion-references.mjs";
 
+import { beforeNativeReplyReviewSource } from "./native-reply-review-source-history.mjs";
+
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	const source = beforeNativeReplyReviewSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n");
+	assert.equal(sha256(source), "2b536b3981d1815e6bc343d10e27266d64eb7c3237890fd03137492481eeab0e", "authenticate the original reply-promotion inventory");
+	result.document = JSON.parse(source);
+	return result;
+};
+
 const predecessor = async () => JSON.parse(beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 const validate = (document, previous, reference, contracts) => {
 	assert.equal(document.observations.length, previous.observations.length);
@@ -45,7 +55,7 @@ const validate = (document, previous, reference, contracts) => {
 };
 
 test("native host-reply promotion authenticates its original producers, sources and installed archives", async () => {
-	const reference = await nativeFinReplyPromotionReference(), { document } = await readTypeSurface();
+	const reference = await nativeFinReplyPromotionReference(), { document } = await readPromotedSurface();
 	const entry = document.evidence.at(-1);
 	assert.equal(entry.id, reference.id); assert.equal(entry.artifacts.length, 2);
 	assert.deepEqual(entry.files.map(file => file.path), [...nativeFinReplyPromotionValidators, ...reference.files.map(file => file.path)]);
@@ -54,13 +64,13 @@ test("native host-reply promotion authenticates its original producers, sources 
 });
 
 test("host-reply reconciliation preserves every other observation and adds no passed cells", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor();
 	assert.equal(previous.observations.length, 490); assert.equal(previous.evidence.length, 264);
 	validate(document, previous, await nativeFinReplyPromotionReference(), contracts);
 });
 
 test("host-reply reconciliation refuses broader types, hosts, source routes, counters and lost earlier directions", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), reference = await nativeFinReplyPromotionReference();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), reference = await nativeFinReplyPromotionReference();
 	let controls = 0;
 	for(const id of nativeFinReplyPromotionObservationIds)
 	{

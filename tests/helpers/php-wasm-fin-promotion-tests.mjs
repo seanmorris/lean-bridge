@@ -14,11 +14,26 @@ import { phpWasmFinPromotionConversion, phpWasmFinPromotionEnvironment, phpWasmF
 import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
 
 // Check this milestone at its authenticated identity; later host-reply support is separate.
+const parsePromotedSurface = source => {
+	const previous = beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", source);
+	assert.equal(sha256(previous), "c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc", "authenticate the exact historical PHP promotion inventory");
+	return JSON.parse(previous);
+};
 const readPromotedSurface = async () => {
 	const result = await readTypeSurface();
-	result.document = JSON.parse(beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	result.document = parsePromotedSurface(JSON.stringify(result.document, null, 2) + "\n");
 	return result;
 };
+
+test("PHP promotion normalization refuses unauthenticated round-trip inventory bytes", async () => {
+	const source = await readFile("docs/type-surface.v1.json", "utf8");
+	const previous = parsePromotedSurface(source);
+	assert.equal(previous.evidence.length, 264);
+	assert.deepEqual(parsePromotedSurface(JSON.stringify(previous, null, 2) + "\n"), previous);
+	const changed = JSON.parse(source); changed.observations[0].scope += " unknown edit";
+	for(const candidate of [source + "\n", JSON.stringify(changed, null, 2) + "\n", JSON.stringify(previous)])
+		assert.throws(() => parsePromotedSurface(candidate), /authenticate the exact historical PHP promotion inventory/u);
+});
 
 const predecessor = async () => JSON.parse(beforePhpWasmFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 

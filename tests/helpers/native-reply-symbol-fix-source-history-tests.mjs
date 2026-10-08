@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeReplyReviewSource } from "./native-reply-review-source-history.mjs";
 import { beforeNativeReplySymbolFixSource, nativeReplySymbolFixChangedPaths, nativeReplySymbolFixHistoryPath, reverseNativeReplySymbolFixUpdate } from "./native-reply-symbol-fix-source-history.mjs";
 
 test("Native reply symbol fix integration authenticates each exact source predecessor", async () => {
@@ -19,7 +20,7 @@ test("Native reply symbol fix integration authenticates each exact source predec
 	assert.deepEqual(record.updates.map(update => update.path), nativeReplySymbolFixChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeReplyReviewSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeReplySymbolFixUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeReplySymbolFixSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeReplySymbolFixSource(update.path, source, update.currentSha256), source);
@@ -32,7 +33,7 @@ test("Native reply symbol fix integration authenticates each exact source predec
 });
 
 test("Native reply symbol fix source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeNativeReplyReviewSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeNativeReplySymbolFixSource(path, text));
 	const record = JSON.parse(await readFile(nativeReplySymbolFixHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -42,7 +43,7 @@ test("Native reply symbol fix source pins do not change observations or other in
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeNativeReplyReviewSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

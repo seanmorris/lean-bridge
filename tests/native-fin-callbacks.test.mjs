@@ -19,6 +19,8 @@ import "./helpers/native-fin-reply-promotion-source-history-tests.mjs";
 import "./helpers/native-fin-reply-ci-tests.mjs";
 import "./helpers/native-fin-reply-source-history-tests.mjs";
 import "./helpers/native-reply-symbol-fix-source-history-tests.mjs";
+import "./helpers/native-fin-reply-review-tests.mjs";
+import "./helpers/native-reply-review-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";

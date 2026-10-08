@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-reply-review-v1",
+  "predecessorCommit": "f8a1b5daa350f0584c64dd4d2922ae57574bf1aa",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "73ec6f27e35f8e40f249900ea4bae2a8a24caa52edd8c74950252063a9bf0110",
+      "previousSha256": "2b536b3981d1815e6bc343d10e27266d64eb7c3237890fd03137492481eeab0e",
+      "edits": [
+        {
+          "start": 256783,
+          "previous": "          \"sha256\": \"0824bd8028b1dec2b1762aafd252f915bfe3955a0b845cff7f8f5fdf2eb56232\"\n",
+          "current": "          \"sha256\": \"176a7fb953fb4e853f3b0789dade153db8360cd9b4c3ef2e8d5a88e727cca699\"\n"
+        },
+        {
+          "start": 256932,
+          "previous": "          \"sha256\": \"dca8fddfd98b252924acbd9392949b046680a09e8ec8ea61cd013cad05ccc3bf\"\n",
+          "current": "          \"sha256\": \"683d77121f0e156cbe39f88834c310f1bf16b1f011a32735b4a27a148457a1a4\"\n"
+        },
+        {
+          "start": 1894360,
+          "previous": "      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-concurrency=1 --test-name-pattern='fresh Lean|generated C wrapper execution: C reply walks|relocated source-free C and C\\\\+\\\\+ packages check every host reply' tests/native-fin-callbacks.test.mjs\",\n",
+          "current": "      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 node --test --test-concurrency=1 --test-name-pattern='^(?:fresh Lean|generated C wrapper execution: C reply walks|relocated source-free C and C\\\\+\\\\+ packages check every host reply)' tests/native-fin-callbacks.test.mjs\",\n"
+        },
+        {
+          "start": 1905922,
+          "previous": "",
+          "current": "        },\n        {\n          \"path\": \"tests/helpers/native-fin-reply-review-notes.mjs\",\n          \"sha256\": \"9879deabd9163af479fa1f8aceb60024e2d70e9dbae7c2374ddf2e2427ff52c8\"\n"
+        },
+        {
+          "start": 4374579,
+          "previous": "          \"callback-result\": \"GMP mpz values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes\"\n",
+          "current": "          \"callback-result\": \"Ordinary source: GMP mpz values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes, below the declared Fin bound\"\n"
+        },
+        {
+          "start": 4376189,
+          "previous": "          \"note\": \"Earlier callback packages retain their separately recorded environment. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\"\n",
+          "current": "          \"note\": \"Earlier closure-argument run: Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred. Host-reply run: The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\"\n"
+        },
+        {
+          "start": 4377290,
+          "previous": "          \"note\": \"The earlier callback report passes C 297 and C++ 283 checks. Only its ordinary C closure cases measure public lease entry, checked adapter and source body; C++ dispatch is unmeasured. The new host-reply report contributes only the contained callback-result direction. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n",
+          "current": "          \"note\": \"The earlier closure-argument and Lean-produced-value checks cover scalar Fin, Array/List/Option/Prod/Except and plain record/variant payloads, including Fin 0 absence and wide bounds. The earlier callback report passes C 297 and C++ 283 checks. Only its ordinary C closure cases measure public lease entry, checked adapter and source body; C++ dispatch is unmeasured. The new host-reply report contributes only the contained callback-result direction. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n"
+        },
+        {
+          "start": 4378978,
+          "previous": "        \"Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\",\n",
+          "current": "        \"Host-reply run: Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\",\n"
+        },
+        {
+          "start": 4379594,
+          "previous": "        \"Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred.\",\n",
+          "current": "        \"Earlier closure-argument run: Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred.\",\n"
+        },
+        {
+          "start": 4380032,
+          "previous": "        \"fin\": \"Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n",
+          "current": "        \"fin\": \"Ordinary source: Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n"
+        },
+        {
+          "start": 4381886,
+          "previous": "          \"callback-result\": \"boost::multiprecision::cpp_int values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes\"\n",
+          "current": "          \"callback-result\": \"Ordinary source: boost::multiprecision::cpp_int values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes, below the declared Fin bound\"\n"
+        },
+        {
+          "start": 4383519,
+          "previous": "          \"note\": \"Earlier callback packages retain their separately recorded environment. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\"\n",
+          "current": "          \"note\": \"Earlier closure-argument run: Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred. Host-reply run: The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\"\n"
+        },
+        {
+          "start": 4384620,
+          "previous": "          \"note\": \"The earlier callback report passes C 297 and C++ 283 checks. Only its ordinary C closure cases measure public lease entry, checked adapter and source body; C++ dispatch is unmeasured. The new host-reply report contributes only the contained callback-result direction. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n",
+          "current": "          \"note\": \"The earlier closure-argument and Lean-produced-value checks cover scalar Fin, Array/List/Option/Prod/Except and plain record/variant payloads, including Fin 0 absence and wide bounds. The earlier callback report passes C 297 and C++ 283 checks. Only its ordinary C closure cases measure public lease entry, checked adapter and source body; C++ dispatch is unmeasured. The new host-reply report contributes only the contained callback-result direction. The original ordinary-source host-reply packages pass C 81 and C++ 74 checks, reproduce from two author roots and install offline after source removal with a compiler-free consumer PATH. Both forked children exit 5 before any host call. This installed run has no dispatch or sanitizer instrumentation. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n"
+        },
+        {
+          "start": 4386308,
+          "previous": "        \"Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\",\n",
+          "current": "        \"Host-reply run: Local Node 22.23.3, Lean 4.32.2, GCC/G++ 12.2.0 and measured glibc 2.36, with declared floor 2.36. Hosted CI and other release floors are not established. Package archive hashes are retained, not the binary archives; selected producer sources are not a complete dependency closure.\",\n"
+        },
+        {
+          "start": 4386924,
+          "previous": "        \"Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred.\",\n",
+          "current": "        \"Earlier closure-argument run: Local runner records Node 22.23.3 and a declared glibc floor of 2.36; it does not measure host glibc. C/C++ consumers compile against the installed package with the system compiler. No hosted or other-floor acceptance is inferred.\",\n"
+        },
+        {
+          "start": 4387362,
+          "previous": "        \"fin\": \"Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n",
+          "current": "        \"fin\": \"Ordinary source: Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters.\"\n"
+        },
+        {
+          "start": 4399927,
+          "previous": "          \"callback-result\": \"GMP mpz values for leased-closure results produced by Lean, below the declared Fin bound\"\n",
+          "current": "          \"callback-result\": \"Reviewed IR: GMP mpz values for leased-closure results produced by Lean, below the declared Fin bound\"\n"
+        },
+        {
+          "start": 4402670,
+          "previous": "        \"fin\": \"Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean.\"\n",
+          "current": "        \"fin\": \"Reviewed IR: Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean.\"\n"
+        },
+        {
+          "start": 4403728,
+          "previous": "          \"callback-result\": \"boost::multiprecision::cpp_int values for leased-closure results produced by Lean, below the declared Fin bound\"\n",
+          "current": "          \"callback-result\": \"Reviewed IR: boost::multiprecision::cpp_int values for leased-closure results produced by Lean, below the declared Fin bound\"\n"
+        },
+        {
+          "start": 4406494,
+          "previous": "        \"fin\": \"Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean.\"\n",
+          "current": "        \"fin\": \"Reviewed IR: Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean.\"\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/c.md",
+      "currentSha256": "176a7fb953fb4e853f3b0789dade153db8360cd9b4c3ef2e8d5a88e727cca699",
+      "previousSha256": "0824bd8028b1dec2b1762aafd252f915bfe3955a0b845cff7f8f5fdf2eb56232",
+      "edits": [
+        {
+          "start": 28927,
+          "previous": "A value at or above the bound, or a negative value, returns `INVALID_ARGUMENT` with an error message naming the bound. No argument is converted and Lean is not called, so outputs and caller-owned values stay unchanged and the next call works normally. `Fin 0` parameters reject every value. Bounds wider than 64 bits are compared exactly. Results are always below their bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. Source-dispatch counters were measured in C only.\n",
+          "current": "A value at or above the bound, or a negative value, returns `INVALID_ARGUMENT` with an error message naming the bound. No argument is converted and Lean is not called, so outputs and caller-owned values stay unchanged and the next call works normally. `Fin 0` parameters reject every value. Bounds wider than 64 bits are compared exactly. Results are always below their bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. The earlier ordinary-source C closure-argument probes measured source dispatch; C++ and the installed host-reply run did not.\n"
+        },
+        {
+          "start": 55920,
+          "previous": "| `Fin n` | `GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound` (input); `GMP mpz_ptr (C) or cpp_int (C++) below the declared bound` (result); `GMP integer (C) or cpp_int (C++) checked against the field's closed bound` (field); `GMP mpz values for arguments to returned Lean closures and Lean-produced arguments to host callbacks, constrained by the declared Fin bound` (callback input); `GMP mpz values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes` (callback result); `GMP mpz values for leased-closure results produced by Lean, below the declared Fin bound` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Nat values with their declared closed bounds through arrays, lists, options, products and active Except branches. Every present constrained leaf is checked; empty or absent Fin 0 containers remain valid. Record and active variant fields keep Nat values and exact closed bounds. Constraints also apply inside their structural containers; an inactive Fin 0 branch is not constructed or read. Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound` (input); `GMP mpz_ptr (C) or cpp_int (C++) below the declared bound` (result); `GMP integer (C) or cpp_int (C++) checked against the field's closed bound` (field); `GMP mpz values for arguments to returned Lean closures and Lean-produced arguments to host callbacks, constrained by the declared Fin bound` (callback input); `Ordinary source: GMP mpz values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes, below the declared Fin bound` (callback result); `Reviewed IR: GMP mpz values for leased-closure results produced by Lean, below the declared Fin bound` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Nat values with their declared closed bounds through arrays, lists, options, products and active Except branches. Every present constrained leaf is checked; empty or absent Fin 0 containers remain valid. Record and active variant fields keep Nat values and exact closed bounds. Constraints also apply inside their structural containers; an inactive Fin 0 branch is not constructed or read. Ordinary source: Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters. Reviewed IR: Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "currentSha256": "683d77121f0e156cbe39f88834c310f1bf16b1f011a32735b4a27a148457a1a4",
+      "previousSha256": "dca8fddfd98b252924acbd9392949b046680a09e8ec8ea61cd013cad05ccc3bf",
+      "edits": [
+        {
+          "start": 8494,
+          "previous": "A Lean `Fin n` parameter or result uses the same `cpp_int` as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(3)` returns `6`. `mirror(10)` and `mirror(-1)` throw `Error` with `status == LIBRARY_STATUS_INVALID_ARGUMENT`. The check runs before Lean is called, so a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The header does not repeat the bound; read it from the Lean signature or the packaged `binding-ir.json`. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. Source-dispatch counters were measured in C only.\n",
+          "current": "A Lean `Fin n` parameter or result uses the same `cpp_int` as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(3)` returns `6`. `mirror(10)` and `mirror(-1)` throw `Error` with `status == LIBRARY_STATUS_INVALID_ARGUMENT`. The check runs before Lean is called, so a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The header does not repeat the bound; read it from the Lean signature or the packaged `binding-ir.json`. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. The earlier ordinary-source C closure-argument probes measured source dispatch; C++ and the installed host-reply run did not.\n"
+        },
+        {
+          "start": 46992,
+          "previous": "| `Fin n` | `GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound` (input); `GMP mpz_ptr (C) or cpp_int (C++) below the declared bound` (result); `GMP integer (C) or cpp_int (C++) checked against the field's closed bound` (field); `boost::multiprecision::cpp_int values for arguments to returned Lean closures and Lean-produced arguments to host callbacks, constrained by the declared Fin bound` (callback input); `boost::multiprecision::cpp_int values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes` (callback result); `boost::multiprecision::cpp_int values for leased-closure results produced by Lean, below the declared Fin bound` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Nat values with their declared closed bounds through arrays, lists, options, products and active Except branches. Every present constrained leaf is checked; empty or absent Fin 0 containers remain valid. Record and active variant fields keep Nat values and exact closed bounds. Constraints also apply inside their structural containers; an inactive Fin 0 branch is not constructed or read. Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `GMP mpz_srcptr (C) or boost::multiprecision::cpp_int (C++) checked against the declared bound` (input); `GMP mpz_ptr (C) or cpp_int (C++) below the declared bound` (result); `GMP integer (C) or cpp_int (C++) checked against the field's closed bound` (field); `boost::multiprecision::cpp_int values for arguments to returned Lean closures and Lean-produced arguments to host callbacks, constrained by the declared Fin bound` (callback input); `Ordinary source: boost::multiprecision::cpp_int values for Lean-produced leased-closure results and checked host replies inside the tested Fin-free-containment shapes, below the declared Fin bound` (callback result); `Reviewed IR: boost::multiprecision::cpp_int values for leased-closure results produced by Lean, below the declared Fin bound` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Nat values with their declared closed bounds through arrays, lists, options, products and active Except branches. Every present constrained leaf is checked; empty or absent Fin 0 containers remain valid. Record and active variant fields keep Nat values and exact closed bounds. Constraints also apply inside their structural containers; an inactive Fin 0 branch is not constructed or read. Ordinary source: Earlier callback evidence covers arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Ordinary C/C++ host-produced replies retain Fin bounds inside Option, Array, List, tested nested containers, products, records and active Except/variant branches when the selected failure value contains no Fin inhabitant. A rejected reply preserves the first boundary error, suppresses later host callbacks and leaves caller output unchanged. Lean may continue with a typed Fin-free containment value; earlier effects are not rolled back and no default Fin is substituted. Bare Fin replies and selected failure constructors needing a Fin remain refused, as do callback Subtype and checked records. This report does not establish reviewed host replies, other native hosts, recursive or generic refined replies, asynchronous or retained callbacks, or installed dispatch counters. Reviewed IR: Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks. Native host-produced refined replies are not established by this evidence; callback-result coverage here means results produced by Lean. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "3509c4d11b892524e88415195c3b947dbe6fd1a269b8c19d5b7fcd94854dc542",
+      "previousSha256": "c1eaf527b359991c536ae4d87e4a626c216961876149bd6ac52f5055fff0bd94",
+      "edits": [
+        {
+          "start": 1154,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-reply-review-tests.mjs\";\nimport \"./helpers/native-reply-review-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-reply-promotion-tests.mjs",
+      "currentSha256": "5942834062c21126f922a2126006a5281c081e9e0379f0b17ce23e175c1a2e3a",
+      "previousSha256": "c726aba8291ce0e6144a89586140e67d73622f2658544537fb3eab346986588d",
+      "edits": [
+        {
+          "start": 793,
+          "previous": "",
+          "current": "import { beforeNativeReplyReviewSource } from \"./native-reply-review-source-history.mjs\";\n\nconst readPromotedSurface = async () => {\n\tconst result = await readTypeSurface();\n\tconst source = beforeNativeReplyReviewSource(\"docs/type-surface.v1.json\", JSON.stringify(result.document, null, 2) + \"\\n\");\n\tassert.equal(sha256(source), \"2b536b3981d1815e6bc343d10e27266d64eb7c3237890fd03137492481eeab0e\", \"authenticate the original reply-promotion inventory\");\n\tresult.document = JSON.parse(source);\n\treturn result;\n};\n\n"
+        },
+        {
+          "start": 3986,
+          "previous": "\tconst reference = await nativeFinReplyPromotionReference(), { document } = await readTypeSurface();\n",
+          "current": "\tconst reference = await nativeFinReplyPromotionReference(), { document } = await readPromotedSurface();\n"
+        },
+        {
+          "start": 4704,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previous = await predecessor();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface(), previous = await predecessor();\n"
+        },
+        {
+          "start": 5115,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), reference = await nativeFinReplyPromotionReference();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), reference = await nativeFinReplyPromotionReference();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-promotion-tests.mjs",
+      "currentSha256": "3333617a55d671b37a0ef0e7f56660f0b54424de80cc9ad9efba3821df5cc616",
+      "previousSha256": "38eab45ef763fc9bfc7d861c3b7e3ea046983b258a7caffbf7b4dee634f83dc8",
+      "edits": [
+        {
+          "start": 982,
+          "previous": "",
+          "current": "const parsePromotedSurface = source => {\n\tconst previous = beforeNativeFinReplyPromotionSource(\"docs/type-surface.v1.json\", source);\n\tassert.equal(sha256(previous), \"c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc\", \"authenticate the exact historical PHP promotion inventory\");\n\treturn JSON.parse(previous);\n};\n"
+        },
+        {
+          "start": 1393,
+          "previous": "\tresult.document = JSON.parse(beforeNativeFinReplyPromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(result.document, null, 2) + \"\\n\"));\n",
+          "current": "\tresult.document = parsePromotedSurface(JSON.stringify(result.document, null, 2) + \"\\n\");\n"
+        },
+        {
+          "start": 1503,
+          "previous": "",
+          "current": "test(\"PHP promotion normalization refuses unauthenticated round-trip inventory bytes\", async () => {\n\tconst source = await readFile(\"docs/type-surface.v1.json\", \"utf8\");\n\tconst previous = parsePromotedSurface(source);\n\tassert.equal(previous.evidence.length, 264);\n\tassert.deepEqual(parsePromotedSurface(JSON.stringify(previous, null, 2) + \"\\n\"), previous);\n\tconst changed = JSON.parse(source); changed.observations[0].scope += \" unknown edit\";\n\tfor(const candidate of [source + \"\\n\", JSON.stringify(changed, null, 2) + \"\\n\", JSON.stringify(previous)])\n\t\tassert.throws(() => parsePromotedSurface(candidate), /authenticate the exact historical PHP promotion inventory/u);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2a950985802ff2ed6dbd7e6aa128991be34ae2a16bde36b49bca9291709d001b",
+      "previousSha256": "da995572db54e2b0eabd1cc8181921f14bcb1fb43181c0f6ca7206d314673f93",
+      "edits": [
+        {
+          "start": 11032,
+          "previous": "",
+          "current": "import { nativeReplyReviewChangedPaths } from \"./native-reply-review-source-history.mjs\";\n"
+        },
+        {
+          "start": 48622,
+          "previous": "",
+          "current": "\t, ...nativeReplyReviewChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-reply-symbol-fix-source-history.mjs",
+      "currentSha256": "5ac268b490f4a9d2de1e589eb7bf5568e4208fe2bc3a042c7a2a98c14efe0fbd",
+      "previousSha256": "3faf8090653179d0852a5e572524d97e23dc5f634b80af86645aeac433460260",
+      "edits": [
+        {
+          "start": 233,
+          "previous": "",
+          "current": "import { beforeNativeReplyReviewSource } from \"./native-reply-review-source-history.mjs\";\n"
+        },
+        {
+          "start": 2282,
+          "previous": "",
+          "current": "\tsource = beforeNativeReplyReviewSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-reply-symbol-fix-source-history-tests.mjs",
+      "currentSha256": "3209c9e0dea2ec0cacb2d23551d6edc680e5e7c3aaa92eecf7db337c9416a7ba",
+      "previousSha256": "58652cd3778194c7b3137f2f54a03363419037b1eb0be38b0648db133afa4ef8",
+      "edits": [
+        {
+          "start": 526,
+          "previous": "",
+          "current": "import { beforeNativeReplyReviewSource } from \"./native-reply-review-source-history.mjs\";\n"
+        },
+        {
+          "start": 1224,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeReplyReviewSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2188,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeNativeReplyReviewSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2770,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeNativeReplyReviewSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}
