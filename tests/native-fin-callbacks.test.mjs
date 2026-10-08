@@ -10,6 +10,7 @@ import "./helpers/native-fin-callback-evidence-tests.mjs";
 import "./helpers/native-fin-callback-archive-source-history-tests.mjs";
 import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
+import "./helpers/fin-reply-compiled-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
