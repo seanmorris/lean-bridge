@@ -93,7 +93,8 @@ export const reviewedProjectAnalysis = async (projectRoot, inventory, signal) =>
 		bindingIr = { origin: "existing-validated", path: paths[0].path, semanticSha256: hashBindingIr(document), document };
 	}
 	const candidates = (bindingIr?.document.declarations ?? []).map(item => ({
-		declaration: item.source?.declaration ?? item.id
+		// A reviewed specialization is listed under its own public name, not its generic source.
+		declaration: item.source?.extensions?.["lean-lang.org/specialization"]?.name ?? item.source?.declaration ?? item.id
 		, kind: "reviewed-ir"
 		, path: bindingIr.path
 		, line: null
@@ -148,7 +149,8 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 	const reviewedSelection = review ? (JSON.parse(review.source).schemaVersion === 4 ? reviewedOwnedSourceSelection : reviewedSourceSelection)(review) : null;
 	const selectionFields = { ...compilerExportSelection(configuration)
 		, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {})
-		, ...(reviewedSelection?.contracts ? { contracts: reviewedSelection.contracts } : {}) };
+		, ...(reviewedSelection?.contracts ? { contracts: reviewedSelection.contracts } : {})
+		, ...(reviewedSelection?.specializations ? { specializations: reviewedSelection.specializations } : {}) };
 	const owned = selectionFields.ownedAggregates !== undefined;
 	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields), ...(owned ? ["profile"] : [])]);
 	closed(request.metadata, ["toolchain", "invocationIdentitySha256", "modules"]);
