@@ -22,6 +22,7 @@ import { installCopiedConsumer } from "./helpers/copied-fixture-install.mjs";
 import { nativeSubtypeEnvironment, nativeSubtypeTargets } from "./helpers/native-subtype-install.mjs";
 import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource, reviewedSubtypeNativeConsumer } from "./helpers/reviewed-subtype-installed-fixture.mjs";
 import "./helpers/reviewed-subtype-harness-source-history-tests.mjs";
+import "./helpers/reviewed-subtype-npm-tests.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-subtype";
 const reviewInput = review => {
