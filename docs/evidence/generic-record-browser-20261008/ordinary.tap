@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: Browser generic-record acceptance authenticates each exact source predecessor
+ok 1 - Browser generic-record acceptance authenticates each exact source predecessor
+  ---
+  duration_ms: 135.778167
+  type: 'test'
+  ...
+# Subtest: the npm handoff contains only receipt, verifier and both exact archives after author removal
+ok 2 - the npm handoff contains only receipt, verifier and both exact archives after author removal
+  ---
+  duration_ms: 74.605093
+  type: 'test'
+  ...
+# Subtest: the npm handoff refuses producer-contained destinations and altered archives
+ok 3 - the npm handoff refuses producer-contained destinations and altered archives
+  ---
+  duration_ms: 11.859373
+  type: 'test'
+  ...
+# Subtest: the shared browser generic-record checks fail on a permissive API, wrong values or a changed origin
+ok 4 - the shared browser generic-record checks fail on a permissive API, wrong values or a changed origin
+  ---
+  duration_ms: 98.509874
+  type: 'test'
+  ...
+# Subtest: each browser observation must carry every record's exact origin from its own realm
+ok 5 - each browser observation must carry every record's exact origin from its own realm
+  ---
+  duration_ms: 18.996961
+  type: 'test'
+  ...
+# Subtest: the Array-field declarations extend the shared fixture without changing it
+ok 6 - the Array-field declarations extend the shared fixture without changing it
+  ---
+  duration_ms: 53.475324
+  type: 'test'
+  ...
+# Subtest: CI runs the browser generic-record gate in all three engines and keeps its report
+ok 7 - CI runs the browser generic-record gate in all three engines and keeps its report
+  ---
+  duration_ms: 8.209975
+  type: 'test'
+  ...
+# Subtest: installed npm generic records run in browser pages, React effects and dedicated workers
+ok 8 - installed npm generic records run in browser pages, React effects and dedicated workers
+  ---
+  duration_ms: 217013.886814
+  type: 'test'
+  ...
+# Browser generic-record archives: {\\n  "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79",\\n  "onboarding-small-1.0.0.tgz": "6dc43355d551aff20bc79c362deea9953201791e8dc966dad4c5373fbf56be71"\\n}
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 218361.344277
+exit=0

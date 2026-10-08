@@ -76,6 +76,7 @@ import { witDependencyChangedPaths } from "./wit-dependency-source-history.mjs";
 import { genericRecordBrowserChangedPaths } from "./generic-record-browser-source-history.mjs";
 import { reviewedSpecializationAdmissionChangedPaths } from "./reviewed-specialization-admission-source-history.mjs";
 import { phpWasmFinArchiveChangedPaths } from "./php-wasm-fin-archive-source-history.mjs";
+import { genericRecordBrowserArchiveChangedPaths } from "./generic-record-browser-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -616,6 +617,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...genericRecordBrowserChangedPaths
 	, ...reviewedSpecializationAdmissionChangedPaths
 	, ...phpWasmFinArchiveChangedPaths
+	, ...genericRecordBrowserArchiveChangedPaths
 ])].sort());
 
 /**

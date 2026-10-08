@@ -10,6 +10,8 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import "./helpers/component-package-handoff-tests.mjs";
 import "./helpers/generic-record-browser-source-history-tests.mjs";
+import "./helpers/generic-record-browser-evidence-tests.mjs";
+import "./helpers/generic-record-browser-archive-source-history-tests.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";

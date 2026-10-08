@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "milestone": "generic-record-browser-archive-v1",
+  "predecessorCommit": "9baf9e6e3cd74bf8af7cecfd9687f13930a1aa20",
+  "updates": [
+    {
+      "path": "tests/generic-records-browser.test.mjs",
+      "currentSha256": "59904b3e68ffb48d17a3058c87ee99c8543452df2dbd6553bd4c0b0af8bc8198",
+      "previousSha256": "902e34382f48b2f8510f3adad0fa262c0fd5daf0aefd3b83013c4060d658525c",
+      "edits": [
+        {
+          "start": 465,
+          "previous": "",
+          "current": "import \"./helpers/generic-record-browser-evidence-tests.mjs\";\nimport \"./helpers/generic-record-browser-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b",
+      "previousSha256": "ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd",
+      "edits": [
+        {
+          "start": 22530,
+          "previous": "The [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options. Reviewed generic signatures, browser contexts and PHP-Wasm remain unmeasured by these runs.\n",
+          "current": "The [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options.\n\nThe [browser run](../evidence/generic-record-browser-20261008/receipt.json) also covers Array-valued fields, the nine specializations and separate namespaces in Chromium, Firefox and WebKit. Each page, React production/strict and worker execution performs 1025 checks and 1023 rejection checks. The harness verifies the installed descriptor, served Wasm hashes, React cleanup, worker shutdown and recovery after a failed asset request. It removes author/build files before installation and serves only the bundled deployment. [PHP-Wasm direct-record checks](../evidence/php-wasm-generic-records-20261007/receipt.json) are separate: those twelve executions do not include configured function specializations or Array-valued fields. Reviewed generic-record signatures remain unmeasured by these runs.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "33dccb3db6f984b291986adc6ca325a253a381a59e66758a0e176cb48fc267b1",
+      "previousSha256": "e8010e49a80798e6b49159c9ce85fa655b7f0ff5e2a8cfdfdbd3d6555ddcdcf3",
+      "edits": [
+        {
+          "start": 1072135,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1079724,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1086325,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1093433,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1100927,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1107983,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1115584,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1125865,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1138198,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1191657,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1224200,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1254479,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1287446,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1328856,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1354704,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1377384,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1397076,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        },
+        {
+          "start": 1417561,
+          "previous": "          \"sha256\": \"ba7220df8df45ab38dba8baa8df0c7705299d83bca2375831770f9c8162aa0cd\"\n",
+          "current": "          \"sha256\": \"cadc7dd105d0b965706c7863109be06785178b25eaba9ee9a544578f5c25b27b\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "de9bebe3072e89a37894c52d07c0f8064a67ab4fc9f86330c36a359d3164cf87",
+      "previousSha256": "849657e66262e27a3f4412b5dee346bcab7851c1707d445a49a750c03c3f5606",
+      "edits": [
+        {
+          "start": 6469,
+          "previous": "",
+          "current": "import { genericRecordBrowserArchiveChangedPaths } from \"./generic-record-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 42229,
+          "previous": "",
+          "current": "\t, ...genericRecordBrowserArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-archive-source-history.mjs",
+      "currentSha256": "48074e0cad0920e5c38de5ffae317d672f8db642ad7df5d24eec0c3b8594924f",
+      "previousSha256": "33fa6edaae0beef4345d2b526dcd3a83986be51d882c9d9c707df8d536a39dd2",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "",
+          "current": "import { beforeGenericRecordBrowserArchiveSource } from \"./generic-record-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2279,
+          "previous": "",
+          "current": "\tsource = beforeGenericRecordBrowserArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-archive-source-history-tests.mjs",
+      "currentSha256": "8cedf4e15830fbd8da51bfc0aaa206640299eed1fa86133457586da22c775ff3",
+      "previousSha256": "5d58ceffd714244d7a379f758f2a558da702abe9d8dc24fe9fc097d467aa7855",
+      "edits": [
+        {
+          "start": 269,
+          "previous": "",
+          "current": "import { beforeGenericRecordBrowserArchiveSource } from \"./generic-record-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1033,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeGenericRecordBrowserArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

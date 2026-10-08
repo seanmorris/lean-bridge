@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1433,
+  "execution": "local",
+  "revision": "a412a5a035c7569dd8e581364ba4deedd5a70c3d",
+  "producerEngine": "local",
+  "scope": {
+    "sourcePath": "ordinary-source",
+    "profiles": [
+      "browser-javascript",
+      "browser-react",
+      "browser-worker"
+    ],
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "executions": 12,
+    "checksPerExecution": 1025,
+    "rejectionsPerExecution": 1023,
+    "arrayFields": true,
+    "finiteFunctionSpecializations": 9,
+    "reviewedContracts": false,
+    "dispatch": "not measured"
+  },
+  "sourceFiles": [
+    {
+      "path": "tests/generic-records-browser.test.mjs",
+      "sha256": "902e34382f48b2f8510f3adad0fa262c0fd5daf0aefd3b83013c4060d658525c"
+    },
+    {
+      "path": "tests/helpers/generic-record-browser.mjs",
+      "sha256": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5"
+    },
+    {
+      "path": "tests/helpers/component-package-handoff.mjs",
+      "sha256": "c1a65cb670e3baee1f2bf602a665c0cabbd8c811edfd2dc650e6718ce14a6fbc"
+    },
+    {
+      "path": "tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f"
+    },
+    {
+      "path": "tests/helpers/generic-record-packages.mjs",
+      "sha256": "160ed5f3914188e6075046b0513b7fe037ca83996c8abd098db5337a08d1b4c9"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9"
+    },
+    {
+      "path": "tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+      "sha256": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec"
+    },
+    {
+      "path": "tests/fixtures/generic-record-browser/javascript.mjs",
+      "sha256": "23deba515075d858cc2c2d43124a32a406804144049fc00d958b68cfd7515e06"
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser.mjs",
+      "sha256": "7776bd4bfe99ed21fa2faf98b19aedc36d4e713f013831806329d6dd10e5c1d9"
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser-build.mjs",
+      "sha256": "9e6618c2653b6700a61a3591db9f2fc3b5718f8362aa1e64dca923c82665f852"
+    }
+  ],
+  "identities": {
+    "bindingIrSha256": "880b8eb4c1f7a66abc5e984a519a93d16bd75c47799ce52a55e26dca0e774277",
+    "componentIdentitySha256": "194947ed123ed408f7a9da243667e74fd2d34bef27858adccef592182a65b3eb",
+    "receiptSha256": "12632dd28b6ebd1d3d3680f7592235633d84a5f0089b9cf6526c8aed485766ee",
+    "archives": {
+      "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79",
+      "onboarding-small-1.0.0.tgz": "6dc43355d551aff20bc79c362deea9953201791e8dc966dad4c5373fbf56be71"
+    }
+  },
+  "report": {
+    "path": "docs/evidence/generic-record-browser-20261008/ordinary.json",
+    "sha256": "17acc1ebedbca79ca3ff6adffcb436517af46e96dc09d8c6983ee440427add1a"
+  },
+  "log": {
+    "path": "docs/evidence/generic-record-browser-20261008/ordinary.tap",
+    "sha256": "175f55047633c6613e56fa0ab2d9c859026be2217f4f1f1f3c7545aa4b8bd2f1",
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "earlierFailure": {
+    "stage": "author build before installation",
+    "cause": "The frozen worktree lacked its shared runtime header closure. An ignored build/lean-runtime link supplied the existing pinned closure for the successful rerun.",
+    "sourceRevisionUnchanged": true,
+    "reportProduced": false,
+    "log": {
+      "path": "docs/evidence/generic-record-browser-20261008/missing-runtime-header.tap",
+      "sha256": "28e55c6d3ab7ec0b369312212805968f380c52b807fa7b6cb45b38b4d22835e8",
+      "passed": 7,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "remaining": [
+    "Promote only the observed ordinary-source browser positions.",
+    "Reviewed generic records, recursive, indexed, inherited and refined instantiations remain separate requirements.",
+    "This run does not measure source/adapter dispatch or establish a hosted locked-engine result."
+  ]
+}

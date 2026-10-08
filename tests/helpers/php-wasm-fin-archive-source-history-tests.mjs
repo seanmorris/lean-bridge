@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeGenericRecordBrowserArchiveSource } from "./generic-record-browser-archive-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpWasmFinArchiveSource, phpWasmFinArchiveChangedPaths, phpWasmFinArchiveHistoryPath, reversePhpWasmFinArchiveUpdate } from "./php-wasm-fin-archive-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("PHP-Wasm Fin archive authenticates each exact source predecessor", async (
 	assert.deepEqual(record.updates.map(update => update.path), phpWasmFinArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeGenericRecordBrowserArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpWasmFinArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpWasmFinArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpWasmFinArchiveSource(update.path, source, update.currentSha256), source);

@@ -1,0 +1,3929 @@
+{
+  "archives": {
+    "lean-bridge-runtime-0.0.0-abi2.8bd55a3bd4eecde57020fd0b4fd641a1fd165d6371dc75d5d886d9e3a16e43ce.tgz": "53ae663f0a62c6e2a096e1477ebc0378875e861ada44ac801957da85264c2d79",
+    "onboarding-small-1.0.0.tgz": "6dc43355d551aff20bc79c362deea9953201791e8dc966dad4c5373fbf56be71"
+  },
+  "bindingIrSha256": "880b8eb4c1f7a66abc5e984a519a93d16bd75c47799ce52a55e26dca0e774277",
+  "componentIdentitySha256": "194947ed123ed408f7a9da243667e74fd2d34bef27858adccef592182a65b3eb",
+  "expected": {
+    "checks": 1025,
+    "rejections": 1023
+  },
+  "externalNetworkBlocked": true,
+  "instantiations": {
+    "lean:OnboardingSmall.ArrayBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.BoxPair": {
+      "arguments": [
+        {
+          "id": "lean:OnboardingSmall.NatBox",
+          "kind": "named"
+        },
+        {
+          "id": "lean:OnboardingSmall.TextBox",
+          "kind": "named"
+        }
+      ],
+      "structure": "OnboardingSmall.Pair"
+    },
+    "lean:OnboardingSmall.Left.LeftBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.Marker": null,
+    "lean:OnboardingSmall.MarkerTag": {
+      "arguments": [
+        {
+          "id": "lean:OnboardingSmall.Marker",
+          "kind": "named"
+        }
+      ],
+      "structure": "OnboardingSmall.Tag"
+    },
+    "lean:OnboardingSmall.MaybeBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.NatBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.NatBoxAgain": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.Right.RightBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.RowBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "id": "lean:OnboardingSmall.NatBox",
+              "kind": "named"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.TaggedNat": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Tagged"
+    },
+    "lean:OnboardingSmall.TextBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        }
+      ],
+      "structure": "OnboardingSmall.Box"
+    },
+    "lean:OnboardingSmall.WordPair": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "OnboardingSmall.Pair"
+    }
+  },
+  "observations": [
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 65768,
+                "path": "assets/descriptor-Br6Ivesq.js",
+                "sha256": "fc485ca67ec1c6aa38a3eb16c90f672851ce82a86f9c3744f78fe442ea95e782"
+              },
+              {
+                "bytes": 110,
+                "path": "assets/descriptor-CGLbDEjm.js",
+                "sha256": "cc414c6836283c6efc409ad99aa04b9c5c690d6a63d9276af3d701a30f991895"
+              },
+              {
+                "bytes": 9851,
+                "path": "assets/index-6pnr_WLU.js",
+                "sha256": "573a0c01dfb2a9cc4d14dedf5d9f6bfad50ccdeddddd56b1274d44ac8fc22e90"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 36648,
+                "path": "assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+              },
+              {
+                "bytes": 3549952,
+                "path": "assets/onboarding-small-D5yJMp0d.js",
+                "sha256": "9f9c8b2ca7dc410f3d4f73d5e68d430fe91a7712482580b7f4548933f0fe8e7a"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 396,
+                "path": "index.html",
+                "sha256": "0f990cdb7ef0dbe328b4ce990afbbeb5df042ff0fd8ec72c6ba2a06835adc768"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/onboarding-small/index.mjs",
+              "node_modules/onboarding-small/internal/descriptor.mjs",
+              "node_modules/onboarding-small/internal/runtime.mjs",
+              "node_modules/onboarding-small/internal/validators.mjs"
+            ],
+            "sha256": "2c418e88d1d7396318d79aaf83c848e77534c05e1dbd23a300cb2f2770d18ddf",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "onboarding-small",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "onboarding-small",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "onboarding-small",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 36648,
+            "path": "node_modules/onboarding-small/internal/wasm/onboarding-small-c4efbff59d9d3398.so.wasm",
+            "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "onboarding-small",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "checks": 1025,
+          "instantiations": {
+            "lean:OnboardingSmall.ArrayBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.BoxPair": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.NatBox",
+                  "kind": "named"
+                },
+                {
+                  "id": "lean:OnboardingSmall.TextBox",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            },
+            "lean:OnboardingSmall.Left.LeftBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Marker": null,
+            "lean:OnboardingSmall.MarkerTag": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.Marker",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Tag"
+            },
+            "lean:OnboardingSmall.MaybeBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBoxAgain": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Right.RightBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.RowBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:OnboardingSmall.NatBox",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.TaggedNat": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Tagged"
+            },
+            "lean:OnboardingSmall.TextBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.WordPair": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            }
+          },
+          "module": "onboarding-small",
+          "rejections": 1023,
+          "specializations": {
+            "lean:OnboardingSmall.echoAgain": {
+              "id": "lean:OnboardingSmall.NatBoxAgain",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoBoxes": {
+              "id": "lean:OnboardingSmall.Boxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoLeft": {
+              "id": "lean:OnboardingSmall.Left.LeftBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNatBox": {
+              "id": "lean:OnboardingSmall.NatBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNats": {
+              "id": "lean:OnboardingSmall.Nats",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalBoxes": {
+              "id": "lean:OnboardingSmall.OptionalBoxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalNat": {
+              "id": "lean:OnboardingSmall.OptionalNat",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoRight": {
+              "id": "lean:OnboardingSmall.Right.RightBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoTextBox": {
+              "id": "lean:OnboardingSmall.TextBox",
+              "kind": "named"
+            }
+          }
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-javascript"
+    },
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 65768,
+                "path": "assets/descriptor-Br6Ivesq.js",
+                "sha256": "fc485ca67ec1c6aa38a3eb16c90f672851ce82a86f9c3744f78fe442ea95e782"
+              },
+              {
+                "bytes": 110,
+                "path": "assets/descriptor-CGLbDEjm.js",
+                "sha256": "cc414c6836283c6efc409ad99aa04b9c5c690d6a63d9276af3d701a30f991895"
+              },
+              {
+                "bytes": 496169,
+                "path": "assets/index-BBT71tGq.js",
+                "sha256": "efc1902d2eb83ac54ea822a44b512b1398f48a82940574b4203a722b6b07b19d"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 36648,
+                "path": "assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+              },
+              {
+                "bytes": 3549952,
+                "path": "assets/onboarding-small-D5yJMp0d.js",
+                "sha256": "9f9c8b2ca7dc410f3d4f73d5e68d430fe91a7712482580b7f4548933f0fe8e7a"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "7e9cf20b21791f3f7f0f9e1470ee0415cd585d43410307aa731596c49911c6de"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/onboarding-small/index.mjs",
+              "node_modules/onboarding-small/internal/descriptor.mjs",
+              "node_modules/onboarding-small/internal/runtime.mjs",
+              "node_modules/onboarding-small/internal/validators.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.production.js",
+              "node_modules/react-dom/cjs/react-dom.production.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.production.js",
+              "node_modules/react/index.js",
+              "node_modules/scheduler/cjs/scheduler.production.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "5b9c72a2cf5d52616b848adbfa6178f2e1f8791b03d75038bee957cc10ca664f",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          },
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 65768,
+                "path": "assets/descriptor-Br6Ivesq.js",
+                "sha256": "fc485ca67ec1c6aa38a3eb16c90f672851ce82a86f9c3744f78fe442ea95e782"
+              },
+              {
+                "bytes": 110,
+                "path": "assets/descriptor-CGLbDEjm.js",
+                "sha256": "cc414c6836283c6efc409ad99aa04b9c5c690d6a63d9276af3d701a30f991895"
+              },
+              {
+                "bytes": 883819,
+                "path": "assets/index-CgEjpDTi.js",
+                "sha256": "7c561baa59646751b34c66ebcd9972c5b22b9457ce1f808bd4834d398611368d"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 36648,
+                "path": "assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+              },
+              {
+                "bytes": 3549952,
+                "path": "assets/onboarding-small-D5yJMp0d.js",
+                "sha256": "9f9c8b2ca7dc410f3d4f73d5e68d430fe91a7712482580b7f4548933f0fe8e7a"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "4b8b354e7e40e58186f7286fddd46c3fe0c83da31be30f64e25dfe76d4298a96"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/onboarding-small/index.mjs",
+              "node_modules/onboarding-small/internal/descriptor.mjs",
+              "node_modules/onboarding-small/internal/runtime.mjs",
+              "node_modules/onboarding-small/internal/validators.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.development.js",
+              "node_modules/react-dom/cjs/react-dom.development.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.development.js",
+              "node_modules/react/index.js",
+              "node_modules/scheduler/cjs/scheduler.development.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "d38ce03ac492f6496f402601ce1ef76d854713bbdd35fb5de1ed315f70140f0d",
+            "variant": "strict",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "onboarding-small",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [
+          {
+            "archive": "framework/react-19.2.8.tgz",
+            "name": "react",
+            "sha256": "98194e5c2f9003355b8d0f8fbff5ab90970aeaa2fffc98ebeadcfba4ca201a73",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/react-dom-19.2.8.tgz",
+            "name": "react-dom",
+            "sha256": "9ed0cce3ae338576db9a90ad85eb24e5b40f6079589b10b9fce9dbaed53104c4",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/scheduler-0.27.0.tgz",
+            "name": "scheduler",
+            "sha256": "eee584b9bad43f93d70f3e02dd4e564237ad08230b00e4539e1833fc7f6ab0c9",
+            "version": "0.27.0"
+          }
+        ],
+        "installedAssets": [
+          {
+            "bytes": 36648,
+            "path": "node_modules/onboarding-small/internal/wasm/onboarding-small-c4efbff59d9d3398.so.wasm",
+            "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "onboarding-small",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "checks": 1025,
+          "instantiations": {
+            "lean:OnboardingSmall.ArrayBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.BoxPair": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.NatBox",
+                  "kind": "named"
+                },
+                {
+                  "id": "lean:OnboardingSmall.TextBox",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            },
+            "lean:OnboardingSmall.Left.LeftBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Marker": null,
+            "lean:OnboardingSmall.MarkerTag": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.Marker",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Tag"
+            },
+            "lean:OnboardingSmall.MaybeBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBoxAgain": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Right.RightBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.RowBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:OnboardingSmall.NatBox",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.TaggedNat": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Tagged"
+            },
+            "lean:OnboardingSmall.TextBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.WordPair": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            }
+          },
+          "module": "onboarding-small",
+          "rejections": 1023,
+          "specializations": {
+            "lean:OnboardingSmall.echoAgain": {
+              "id": "lean:OnboardingSmall.NatBoxAgain",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoBoxes": {
+              "id": "lean:OnboardingSmall.Boxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoLeft": {
+              "id": "lean:OnboardingSmall.Left.LeftBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNatBox": {
+              "id": "lean:OnboardingSmall.NatBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNats": {
+              "id": "lean:OnboardingSmall.Nats",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalBoxes": {
+              "id": "lean:OnboardingSmall.OptionalBoxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalNat": {
+              "id": "lean:OnboardingSmall.OptionalNat",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoRight": {
+              "id": "lean:OnboardingSmall.Right.RightBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoTextBox": {
+              "id": "lean:OnboardingSmall.TextBox",
+              "kind": "named"
+            }
+          }
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-react"
+    },
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 65770,
+                "path": "assets/descriptor-B88_rGtq.js",
+                "sha256": "958b649177f8150e9c7fe93241ee8b7e5d15853f2d83c6a3e3799da9d39df30f"
+              },
+              {
+                "bytes": 110,
+                "path": "assets/descriptor-BNo8ndDe.js",
+                "sha256": "8874bf8f4022100cfecb31a314d8a8ad88ce0a0909c41d9c21a28cb6c01a91dd"
+              },
+              {
+                "bytes": 2493,
+                "path": "assets/index-7aIJHtsf.js",
+                "sha256": "5e53c27f5f650dc2694d9dd7b34fc814d62cebc14cf1c9a55c2c9b629f93e955"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 3549967,
+                "path": "assets/onboarding-small-BLYNFXht.js",
+                "sha256": "3720ec6960dfee159fb1473265d1c269fe20935a0a8222fa7e61bb8b71297fb7"
+              },
+              {
+                "bytes": 36648,
+                "path": "assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 8065,
+                "path": "assets/worker-DHtvqzGO.js",
+                "sha256": "48cec92bc0c0da05d1d48d3f4408b33915d05c837f09d8b8baae3b0001e4495c"
+              },
+              {
+                "bytes": 301,
+                "path": "index.html",
+                "sha256": "fee8d0e53cd9c652e32d4010c05d1fd426017e644efb389979d67f81d60ee20f"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/onboarding-small/index.mjs",
+              "node_modules/onboarding-small/internal/descriptor.mjs",
+              "node_modules/onboarding-small/internal/runtime.mjs",
+              "node_modules/onboarding-small/internal/validators.mjs"
+            ],
+            "sha256": "cd3dc9a4e0370fd857d356a390a845fb31deb26924ea7daeb22096680b8b4ccc",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "onboarding-small",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "onboarding-small",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 36648,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/onboarding-small-c4efbff59d9d3398.so-FmB8P7_H.wasm",
+                "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "onboarding-small",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 1025,
+                "instantiations": {
+                  "lean:OnboardingSmall.ArrayBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.BoxPair": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.NatBox",
+                        "kind": "named"
+                      },
+                      {
+                        "id": "lean:OnboardingSmall.TextBox",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  },
+                  "lean:OnboardingSmall.Left.LeftBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Marker": null,
+                  "lean:OnboardingSmall.MarkerTag": {
+                    "arguments": [
+                      {
+                        "id": "lean:OnboardingSmall.Marker",
+                        "kind": "named"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tag"
+                  },
+                  "lean:OnboardingSmall.MaybeBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "kind": "primitive",
+                            "name": "nat"
+                          }
+                        ],
+                        "constructor": "option",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.NatBoxAgain": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.Right.RightBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.RowBox": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": "lean:OnboardingSmall.NatBox",
+                            "kind": "named"
+                          }
+                        ],
+                        "constructor": "array",
+                        "kind": "apply"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.TaggedNat": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Tagged"
+                  },
+                  "lean:OnboardingSmall.TextBox": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Box"
+                  },
+                  "lean:OnboardingSmall.WordPair": {
+                    "arguments": [
+                      {
+                        "kind": "primitive",
+                        "name": "string"
+                      },
+                      {
+                        "kind": "primitive",
+                        "name": "nat"
+                      }
+                    ],
+                    "structure": "OnboardingSmall.Pair"
+                  }
+                },
+                "module": "onboarding-small",
+                "rejections": 1023,
+                "specializations": {
+                  "lean:OnboardingSmall.echoAgain": {
+                    "id": "lean:OnboardingSmall.NatBoxAgain",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoBoxes": {
+                    "id": "lean:OnboardingSmall.Boxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoLeft": {
+                    "id": "lean:OnboardingSmall.Left.LeftBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNatBox": {
+                    "id": "lean:OnboardingSmall.NatBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoNats": {
+                    "id": "lean:OnboardingSmall.Nats",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalBoxes": {
+                    "id": "lean:OnboardingSmall.OptionalBoxes",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoOptionalNat": {
+                    "id": "lean:OnboardingSmall.OptionalNat",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoRight": {
+                    "id": "lean:OnboardingSmall.Right.RightBox",
+                    "kind": "named"
+                  },
+                  "lean:OnboardingSmall.echoTextBox": {
+                    "id": "lean:OnboardingSmall.TextBox",
+                    "kind": "named"
+                  }
+                }
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 36648,
+            "path": "node_modules/onboarding-small/internal/wasm/onboarding-small-c4efbff59d9d3398.so.wasm",
+            "sha256": "7701702b7ff65626697f7a6414e4eee95149753916251ad963c6114a50e35a98"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "onboarding-small",
+        "profile": "browser-worker",
+        "realm": "dedicated-worker",
+        "results": {
+          "checks": 1025,
+          "instantiations": {
+            "lean:OnboardingSmall.ArrayBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.BoxPair": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.NatBox",
+                  "kind": "named"
+                },
+                {
+                  "id": "lean:OnboardingSmall.TextBox",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            },
+            "lean:OnboardingSmall.Left.LeftBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Marker": null,
+            "lean:OnboardingSmall.MarkerTag": {
+              "arguments": [
+                {
+                  "id": "lean:OnboardingSmall.Marker",
+                  "kind": "named"
+                }
+              ],
+              "structure": "OnboardingSmall.Tag"
+            },
+            "lean:OnboardingSmall.MaybeBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "kind": "primitive",
+                      "name": "nat"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.NatBoxAgain": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.Right.RightBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.RowBox": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:OnboardingSmall.NatBox",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.TaggedNat": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Tagged"
+            },
+            "lean:OnboardingSmall.TextBox": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              ],
+              "structure": "OnboardingSmall.Box"
+            },
+            "lean:OnboardingSmall.WordPair": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "string"
+                },
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "structure": "OnboardingSmall.Pair"
+            }
+          },
+          "module": "onboarding-small",
+          "rejections": 1023,
+          "specializations": {
+            "lean:OnboardingSmall.echoAgain": {
+              "id": "lean:OnboardingSmall.NatBoxAgain",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoBoxes": {
+              "id": "lean:OnboardingSmall.Boxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoLeft": {
+              "id": "lean:OnboardingSmall.Left.LeftBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNatBox": {
+              "id": "lean:OnboardingSmall.NatBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoNats": {
+              "id": "lean:OnboardingSmall.Nats",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalBoxes": {
+              "id": "lean:OnboardingSmall.OptionalBoxes",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoOptionalNat": {
+              "id": "lean:OnboardingSmall.OptionalNat",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoRight": {
+              "id": "lean:OnboardingSmall.Right.RightBox",
+              "kind": "named"
+            },
+            "lean:OnboardingSmall.echoTextBox": {
+              "id": "lean:OnboardingSmall.TextBox",
+              "kind": "named"
+            }
+          }
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-worker"
+    }
+  ],
+  "packagesRelocatedBeforeInstallation": true,
+  "producerBuildsRemovedBeforeInstallation": true,
+  "profile": "npm-browser",
+  "receiptSha256": "12632dd28b6ebd1d3d3680f7592235633d84a5f0089b9cf6526c8aed485766ee",
+  "reproducible": true,
+  "requestedEngines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "specializations": {
+    "lean:OnboardingSmall.echoAgain": {
+      "id": "lean:OnboardingSmall.NatBoxAgain",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoBoxes": {
+      "id": "lean:OnboardingSmall.Boxes",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoLeft": {
+      "id": "lean:OnboardingSmall.Left.LeftBox",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoNatBox": {
+      "id": "lean:OnboardingSmall.NatBox",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoNats": {
+      "id": "lean:OnboardingSmall.Nats",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoOptionalBoxes": {
+      "id": "lean:OnboardingSmall.OptionalBoxes",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoOptionalNat": {
+      "id": "lean:OnboardingSmall.OptionalNat",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoRight": {
+      "id": "lean:OnboardingSmall.Right.RightBox",
+      "kind": "named"
+    },
+    "lean:OnboardingSmall.echoTextBox": {
+      "id": "lean:OnboardingSmall.TextBox",
+      "kind": "named"
+    }
+  }
+}

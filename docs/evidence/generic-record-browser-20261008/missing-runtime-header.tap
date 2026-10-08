@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: Browser generic-record acceptance authenticates each exact source predecessor
+ok 1 - Browser generic-record acceptance authenticates each exact source predecessor
+  ---
+  duration_ms: 171.1413
+  type: 'test'
+  ...
+# Subtest: the npm handoff contains only receipt, verifier and both exact archives after author removal
+ok 2 - the npm handoff contains only receipt, verifier and both exact archives after author removal
+  ---
+  duration_ms: 75.417217
+  type: 'test'
+  ...
+# Subtest: the npm handoff refuses producer-contained destinations and altered archives
+ok 3 - the npm handoff refuses producer-contained destinations and altered archives
+  ---
+  duration_ms: 12.193051
+  type: 'test'
+  ...
+# Subtest: the shared browser generic-record checks fail on a permissive API, wrong values or a changed origin
+ok 4 - the shared browser generic-record checks fail on a permissive API, wrong values or a changed origin
+  ---
+  duration_ms: 96.142536
+  type: 'test'
+  ...
+# Subtest: each browser observation must carry every record's exact origin from its own realm
+ok 5 - each browser observation must carry every record's exact origin from its own realm
+  ---
+  duration_ms: 13.648119
+  type: 'test'
+  ...
+# Subtest: the Array-field declarations extend the shared fixture without changing it
+ok 6 - the Array-field declarations extend the shared fixture without changing it
+  ---
+  duration_ms: 43.934003
+  type: 'test'
+  ...
+# Subtest: CI runs the browser generic-record gate in all three engines and keeps its report
+ok 7 - CI runs the browser generic-record gate in all three engines and keeps its report
+  ---
+  duration_ms: 4.995515
+  type: 'test'
+  ...
+# Subtest: installed npm generic records run in browser pages, React effects and dedicated workers
+not ok 8 - installed npm generic records run in browser pages, React effects and dedicated workers
+  ---
+  duration_ms: 48641.89578
+  type: 'test'
+  location: '/app/build/worktrees/generic-records-browser-vo1220/tests/generic-records-browser.test.mjs:149:1'
+  failureType: 'testCodeFailure'
+  error: `The shared runtime header closure is unavailable: {"path":"/app/build/worktrees/generic-records-browser-vo1220/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include","cause":"ENOENT: no such file or directory, stat '/app/build/worktrees/generic-records-browser-vo1220/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h'"}`
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    file:///app/build/worktrees/generic-records-browser-vo1220/tests/helpers/generic-record-browser.mjs:171:62
+    async checkGenericRecordBrowserPackages (file:///app/build/worktrees/generic-records-browser-vo1220/tests/helpers/generic-record-browser.mjs:171:3)
+    async TestContext.<anonymous> (file:///app/build/worktrees/generic-records-browser-vo1220/tests/generic-records-browser.test.mjs:150:22)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49937.886545
+exit=1

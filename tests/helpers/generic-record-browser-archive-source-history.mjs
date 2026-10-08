@@ -1,21 +1,20 @@
 /**
- * Preserve exact source predecessors of the PHP-Wasm Fin archive change (#1220).
+ * Preserve exact source predecessors of the Browser generic-record archive change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeGenericRecordBrowserArchiveSource } from "./generic-record-browser-archive-source-history.mjs";
 
-export const phpWasmFinArchiveHistoryPath = "docs/evidence/php-wasm-fin-archive-source-history-20261008.json";
-export const phpWasmFinArchiveChangedPaths = [
-	"tests/php-wasm-fin.test.mjs"
+export const genericRecordBrowserArchiveHistoryPath = "docs/evidence/generic-record-browser-archive-source-history-20261008.json";
+export const genericRecordBrowserArchiveChangedPaths = [
+	"tests/generic-records-browser.test.mjs"
 	, "docs/lean/existing-package.md"
 	, "docs/type-surface.v1.json"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-specialization-admission-source-history.mjs"
-	, "tests/helpers/reviewed-specialization-admission-source-history-tests.mjs"
+	, "tests/helpers/php-wasm-fin-archive-source-history.mjs"
+	, "tests/helpers/php-wasm-fin-archive-source-history-tests.mjs"
 ];
 let history;
 
@@ -25,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePhpWasmFinArchiveUpdate = (source, update) => {
-	assert.ok(phpWasmFinArchiveChangedPaths.includes(update.path));
+export const reverseGenericRecordBrowserArchiveUpdate = (source, update) => {
+	assert.ok(genericRecordBrowserArchiveChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -52,12 +51,11 @@ export const reversePhpWasmFinArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePhpWasmFinArchiveSource = (path, source, expected) => {
-	source = beforeGenericRecordBrowserArchiveSource(path, source, expected);
-	if(typeof source !== "string" || !phpWasmFinArchiveChangedPaths.includes(path)) return source;
+export const beforeGenericRecordBrowserArchiveSource = (path, source, expected) => {
+	if(typeof source !== "string" || !genericRecordBrowserArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(phpWasmFinArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(genericRecordBrowserArchiveHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmFinArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseGenericRecordBrowserArchiveUpdate(source, update) : source;
 };
