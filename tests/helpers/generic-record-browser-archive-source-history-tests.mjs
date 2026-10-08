@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeReviewedSpecializationCiHotfixSource } from "./reviewed-specialization-ci-hotfix-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeGenericRecordBrowserArchiveSource, genericRecordBrowserArchiveChangedPaths, genericRecordBrowserArchiveHistoryPath, reverseGenericRecordBrowserArchiveUpdate } from "./generic-record-browser-archive-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Browser generic-record archive authenticates each exact source predecessor
 	assert.deepEqual(record.updates.map(update => update.path), genericRecordBrowserArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedSpecializationCiHotfixSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseGenericRecordBrowserArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeGenericRecordBrowserArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeGenericRecordBrowserArchiveSource(update.path, source, update.currentSha256), source);

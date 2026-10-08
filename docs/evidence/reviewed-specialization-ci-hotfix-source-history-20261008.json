@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-specialization-ci-hotfix-v1",
+  "predecessorCommit": "7021df4bfa6f7d6c99f5c8eb5a7a39099f5d69a7",
+  "updates": [
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f",
+      "previousSha256": "bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c",
+      "edits": [
+        {
+          "start": 95043,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/c-cpp\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-c-cpp\\.json\\n\\s*build\\/char-native\\/c-cpp\\.json\\n\\s*build\\/word-native\\/c-cpp\\.json\\n\\s*build\\/callables\\/c\\.json\\n\\s*build\\/structured-callables\\/c\\.json\\n\\s*build\\/closure-thread\\/installed\\.json\\n\\s*build\\/callables\\/cpp\\.json\\n\\s*build\\/structured-callables\\/cpp\\.json\\n\\s*build\\/native-recursive-callables\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/values\\.json\\n\\s*build\\/owned-aggregate-native\\/scalars\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c-scalars\\.json\\n\\s*build\\/owned-transfers\\/\\n\\s*build\\/owned-transfer-packaging\\/\\n\\s*build\\/owned-borrows\\/\\n\\s*build\\/owned-borrows-runtime\\.log\\n\\s*build\\/owned-borrows-installed\\.log\\n\\s*build\\/owned-receivers\\/\\n\\s*build\\/owned-receivers\\.log\\n\\s*build\\/owned-aggregate-native\\/reviewed-public-c\\.json\\n\\s*build\\/owned-c-packaging\\/\\n\\s*build\\/owned-host-callbacks\\/ordinary\\.json\\n\\s*build\\/owned-host-callbacks\\/reviewed\\.json\\n\\s*build\\/owned-host-packaging\\/ordinary\\.json\\n\\s*build\\/owned-host-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-runtime\\/\\n\\s*build\\/owned-cpp-callables\\/\\n\\s*build\\/owned-cpp-packaging\\/ordinary\\.json\\n\\s*build\\/owned-cpp-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-transfers\\/\\n\\s*build\\/owned-cpp-borrows\\/\\n\\s*build\\/owned-cpp-borrow-packaging\\/\\n\\s*build\\/owned-cpp-borrows\\.log\\n\\s*build\\/owned-cpp-receivers\\/\\n\\s*build\\/owned-cpp-receivers\\.log\\n\\s*build\\/owned-cpp-transfer-packaging\\/\\n\\s*build\\/recursive-callables\\/c\\.json\\n\\s*build\\/recursive-callables\\/cpp\\.json\\n\\s*build\\/recursive-callables\\/c-family-documentation\\.json\\n\\s*build\\/compounds\\/native\\.json\\n\\s*build\\/lists\\/native\\.json\\n\\s*build\\/collections\\/native\\.json\\n\\s*build\\/aliases\\/native\\.json\\n\\s*build\\/native-fin\\/native\\.json\\n\\s*build\\/native-fin\\/native-reviewed\\.json\\n\\s*build\\/native-specializations\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-products\\/c-cpp\\.json\\n\\s*build\\/native-fin-products\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-product-arrays\\/c-cpp\\.json\\n\\s*build\\/native-fin-product-arrays\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-records\\/c-cpp\\.json\\n\\s*build\\/native-fin-records\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-subtype\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/specialized-c-cpp\\.json\\n\\s*build\\/variants\\/cpp\\.json\\n\\s*build\\/variants\\/c\\.json\\n\\s*build\\/recursive\\/c-family\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/type-corpus\\/c-cpp\\.json\\n\\s*build\\/type-corpus\\/reviewed-native-c-cpp\\.json\\n\\s*build\\/char-native\\/c-cpp\\.json\\n\\s*build\\/word-native\\/c-cpp\\.json\\n\\s*build\\/callables\\/c\\.json\\n\\s*build\\/structured-callables\\/c\\.json\\n\\s*build\\/closure-thread\\/installed\\.json\\n\\s*build\\/callables\\/cpp\\.json\\n\\s*build\\/structured-callables\\/cpp\\.json\\n\\s*build\\/native-recursive-callables\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/transport\\.json\\n\\s*build\\/owned-aggregate-native\\/values\\.json\\n\\s*build\\/owned-aggregate-native\\/scalars\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c\\.json\\n\\s*build\\/owned-aggregate-native\\/public-c-scalars\\.json\\n\\s*build\\/owned-transfers\\/\\n\\s*build\\/owned-transfer-packaging\\/\\n\\s*build\\/owned-borrows\\/\\n\\s*build\\/owned-borrows-runtime\\.log\\n\\s*build\\/owned-borrows-installed\\.log\\n\\s*build\\/owned-receivers\\/\\n\\s*build\\/owned-receivers\\.log\\n\\s*build\\/owned-aggregate-native\\/reviewed-public-c\\.json\\n\\s*build\\/owned-c-packaging\\/\\n\\s*build\\/owned-host-callbacks\\/ordinary\\.json\\n\\s*build\\/owned-host-callbacks\\/reviewed\\.json\\n\\s*build\\/owned-host-packaging\\/ordinary\\.json\\n\\s*build\\/owned-host-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-runtime\\/\\n\\s*build\\/owned-cpp-callables\\/\\n\\s*build\\/owned-cpp-packaging\\/ordinary\\.json\\n\\s*build\\/owned-cpp-packaging\\/reviewed\\.json\\n\\s*build\\/owned-cpp-transfers\\/\\n\\s*build\\/owned-cpp-borrows\\/\\n\\s*build\\/owned-cpp-borrow-packaging\\/\\n\\s*build\\/owned-cpp-borrows\\.log\\n\\s*build\\/owned-cpp-receivers\\/\\n\\s*build\\/owned-cpp-receivers\\.log\\n\\s*build\\/owned-cpp-transfer-packaging\\/\\n\\s*build\\/recursive-callables\\/c\\.json\\n\\s*build\\/recursive-callables\\/cpp\\.json\\n\\s*build\\/recursive-callables\\/c-family-documentation\\.json\\n\\s*build\\/compounds\\/native\\.json\\n\\s*build\\/lists\\/native\\.json\\n\\s*build\\/collections\\/native\\.json\\n\\s*build\\/aliases\\/native\\.json\\n\\s*build\\/native-fin\\/native\\.json\\n\\s*build\\/native-fin\\/native-reviewed\\.json\\n\\s*build\\/native-specializations\\/c-cpp\\.json\\n\\s*build\\/reviewed-specializations\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/c-cpp\\.json\\n\\s*build\\/native-fin-containers\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-products\\/c-cpp\\.json\\n\\s*build\\/native-fin-products\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-product-arrays\\/c-cpp\\.json\\n\\s*build\\/native-fin-product-arrays\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-fin-records\\/c-cpp\\.json\\n\\s*build\\/native-fin-records\\/reviewed-c-cpp\\.json\\n\\s*build\\/native-subtype\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/c-cpp\\.json\\n\\s*build\\/generic-records\\/specialized-c-cpp\\.json\\n\\s*build\\/variants\\/cpp\\.json\\n\\s*build\\/variants\\/c\\.json\\n\\s*build\\/recursive\\/c-family\\.json\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-specializations.test.mjs",
+      "currentSha256": "58ac989a05df705c023ab67f0bb88eb1813af72669317ae117b7af2456d338e7",
+      "previousSha256": "58ae92f3acdaa37597489ea7fb9e12ef9fe4f5a03c0f6b5ba1ba64939f0a7911",
+      "edits": [
+        {
+          "start": 172,
+          "previous": "",
+          "current": "import \"./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "5354891292304c5396fcd44c00f80d74961b75ed81df30ed76400b1f2d08cbf7",
+      "previousSha256": "33dccb3db6f984b291986adc6ca325a253a381a59e66758a0e176cb48fc267b1",
+      "edits": [
+        {
+          "start": 813196,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 831571,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1057778,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1074895,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1082669,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1088101,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1095202,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1102368,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1109425,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1117677,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1127140,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1144151,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1151226,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1159123,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1170003,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1182165,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1205691,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1237046,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1269846,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1304946,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1335792,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1359089,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1380980,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1401053,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        },
+        {
+          "start": 1420833,
+          "previous": "          \"sha256\": \"bacabdf0b066c759b015f9a769a76e0228a3698e54aff46a42b867ed375b3b7c\"\n",
+          "current": "          \"sha256\": \"e1fc38a21107555fdaec5fef5272a489c09da7870e14041e1f3251ffc9972c4f\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "c055f749d41dbc4b3e16c7f2a10bb5fe6c5f36c8dc245d99ea15af097eba4ec7",
+      "previousSha256": "de9bebe3072e89a37894c52d07c0f8064a67ab4fc9f86330c36a359d3164cf87",
+      "edits": [
+        {
+          "start": 6580,
+          "previous": "",
+          "current": "import { reviewedSpecializationCiHotfixChangedPaths } from \"./reviewed-specialization-ci-hotfix-source-history.mjs\";\n"
+        },
+        {
+          "start": 42392,
+          "previous": "",
+          "current": "\t, ...reviewedSpecializationCiHotfixChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-browser-archive-source-history.mjs",
+      "currentSha256": "ad690096c0ec4158859aca286aab1c975e93dd8786ba36ec51946b0e0230bfe7",
+      "previousSha256": "42f4de7562511f5f1bf92ce870f0084981302dabeb228b8d0e9ff5d603121c0f",
+      "edits": [
+        {
+          "start": 247,
+          "previous": "",
+          "current": "import { beforeReviewedSpecializationCiHotfixSource } from \"./reviewed-specialization-ci-hotfix-source-history.mjs\";\n"
+        },
+        {
+          "start": 2340,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSpecializationCiHotfixSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-browser-archive-source-history-tests.mjs",
+      "currentSha256": "cd4546bbeb95ace9e23f07fd9d5013060061c1fa182349d04abd2c648a288555",
+      "previousSha256": "afc301a4ff0789bb85b831257b80e96172f826c652947bca12a759d022090a79",
+      "edits": [
+        {
+          "start": 279,
+          "previous": "",
+          "current": "import { beforeReviewedSpecializationCiHotfixSource } from \"./reviewed-specialization-ci-hotfix-source-history.mjs\";\n"
+        },
+        {
+          "start": 1129,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeReviewedSpecializationCiHotfixSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

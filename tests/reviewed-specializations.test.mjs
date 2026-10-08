@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs";
 import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
