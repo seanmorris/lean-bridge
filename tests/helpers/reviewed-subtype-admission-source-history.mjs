@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCallbackCodeCiRepairSource } from "./callback-code-ci-repair-source-history.mjs";
 
 export const reviewedSubtypeAdmissionHistoryPath = "docs/evidence/reviewed-subtype-admission-source-history-20261008.json";
 export const reviewedSubtypeAdmissionChangedPaths = [
@@ -68,6 +69,7 @@ export const reverseReviewedSubtypeAdmissionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedSubtypeAdmissionSource = (path, source, expected) => {
+	source = beforeCallbackCodeCiRepairSource(path, source, expected);
 	if(typeof source !== "string" || !reviewedSubtypeAdmissionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

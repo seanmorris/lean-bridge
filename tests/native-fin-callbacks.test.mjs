@@ -6,6 +6,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -25,6 +26,8 @@ import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from ".
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateNativeCallables } from "../src/backends/c/native-callables.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
+import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { nativeCallbackFinGuide } from "../src/release/native-c-family.mjs";
 import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
@@ -131,6 +134,41 @@ test("the C lease call compares every bound on caller limbs before borrowing Lea
 	const c = generateNativePrimitiveC(model, { initializer: "initialize_LeanBridgeNative0123456789abcdef" });
 	assert.equal((c.match(/static inline int lb_fin_below\(/gu) ?? []).length, 1);
 	assert.ok(c.indexOf("static inline int lb_fin_below(") < c.indexOf("lb_fin_lease_"));
+});
+
+test("the generated frame reports a Fin rejection as an invalid argument and keeps host codes, bounded text and the first error", async t => {
+	const model = finCallbackCompilerModel(), c = generateNativePrimitiveC(model, { initializer: "initialize_LeanBridgeNative0123456789abcdef" });
+	const header = generateCBindingPackage(model.bindingIr)["include/fincallbacks.h"];
+	const extract = (start, end) => c.slice(c.indexOf(start), c.indexOf(end, c.indexOf(start)) + end.length);
+	// The exact generated frame and recorder, without the runtime they are linked against.
+	const harness = `#include <stdio.h>
+#include <string.h>
+${header}
+${extract("typedef struct lb_frame {", "} lb_frame;")}
+${extract("static void lb_record(", "\n}\n")}
+static char long_text[2048];
+int main(void) {
+  lb_frame frame = {0};
+  lb_record(&frame, FINCALLBACKS_STATUS_INVALID_ARGUMENT, NULL, "arg0 is not below its Fin 10 bound");
+  lb_record(&frame, FINCALLBACKS_STATUS_UNEXPECTED_ERROR, NULL, "second");
+  printf("%d %d %s\\n", frame.status, frame.code, frame.message);
+  lb_frame host = {0};
+  fincallbacks_error supplied = {FINCALLBACKS_ERROR_NATIVE_CALLBACK_FAILURE, "host failure", 12};
+  lb_record(&host, FINCALLBACKS_STATUS_INVALID_ARGUMENT, &supplied, "fallback");
+  printf("%d %d %s\\n", host.status, host.code, host.message);
+  lb_frame unexpected = {0};
+  memset(long_text, 'x', sizeof(long_text) - 1);
+  lb_record(&unexpected, FINCALLBACKS_STATUS_UNEXPECTED_ERROR, NULL, long_text);
+  printf("%d %d %zu\\n", unexpected.status, unexpected.code, unexpected.message_length);
+  return 0;
+}
+`;
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-callback-frame-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	await writeFile(join(directory, "frame.c"), harness);
+	await processBuildRunner.capture({ command: process.env.CC ?? "cc", args: ["-std=c11", "-Wall", "-Werror", "-Wno-unused-function", "frame.c", "-o", "frame"], cwd: directory });
+	const { stdout } = await processBuildRunner.capture({ command: join(directory, "frame"), args: [], cwd: directory });
+	assert.deepEqual(stdout.trim().split("\n"), ["1 1 arg0 is not below its Fin 10 bound", "1 100 host failure", "5 65535 1023"]);
 });
 
 test("the Binding IR that npm reads carries exactly the callback bounds the native model checks", () => {

@@ -203,7 +203,9 @@ test("an unaliased instantiation and a refined phantom argument stop an npm buil
 		await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [`OnboardingSmall.${name}`] }));
 		const outputRoot = join(directory, "build");
 		await assert.rejects(() => build(root, outputRoot), error => {
-			assert.deepEqual(error.details?.hints, [`hint:OnboardingSmall.${name}:unsupported-parameter-type`]);
+			// A locked engine process reports its hints through the decoded engine failure; the local engine throws them directly.
+			const hints = process.env.LEAN_BRIDGE_LAKE_ENGINE ? error.details?.engine?.details?.hints : error.details?.hints;
+			assert.deepEqual(hints, [`hint:OnboardingSmall.${name}:unsupported-parameter-type`]);
 			return true;
 		});
 		await assert.rejects(() => access(join(outputRoot, "bundle")));

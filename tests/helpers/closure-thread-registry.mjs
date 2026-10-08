@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { generateNativeCallables } from "../../src/backends/c/native-callables.mjs";
+import { beforeCallableErrorCode } from "./callable-error-code-history.mjs";
 
 /**
  * Extract the complete generated registry without replacing its operations.
@@ -28,6 +29,7 @@ export const closureThreadRegistry = pointerBits => {
  * @param source - Complete generated C source, including non-callable fixtures.
  */
 export const beforeClosureThreadRegistry = source => {
+	source = beforeCallableErrorCode(source);
 	if(!source.includes("typedef struct { uintptr_t token;")) return source;
 	const edits = [
 		["const char *kind; uint64_t thread; pid_t process; } lb_lease;", "const char *kind; pthread_t thread; pid_t process; } lb_lease;"]

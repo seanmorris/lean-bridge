@@ -15,6 +15,20 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { closureThreadRegistry, closureThreadRegistryProbe, beforeClosureThreadRegistry } from "./helpers/closure-thread-registry.mjs";
 import { witStructuredNativeModels, witStructuredNativeReceipt } from "./helpers/wit-structured-callable-regression.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
+import { beforeCallableErrorCode } from "./helpers/callable-error-code-history.mjs";
+
+test("callable error-code history reverses only its complete recorded generated change", () => {
+	const models = witStructuredNativeModels();
+	const sources = Object.values(models).map(model => generateNativePrimitiveC(model, witStructuredNativeReceipt));
+	const source = sources.find(value => value.includes("An explicit host code is kept;"));
+	assert.ok(source);
+	const previous = beforeCallableErrorCode(source);
+	assert.notEqual(source, previous);
+	assert.equal(beforeCallableErrorCode(previous), previous);
+	assert.equal(beforeCallableErrorCode(source + "\n/* unrelated */\n"), previous + "\n/* unrelated */\n");
+	assert.throws(() => beforeCallableErrorCode(source.replace(/frame->status == ([A-Z][A-Z0-9_]*)_STATUS_INVALID_ARGUMENT/u, "frame->status == 0")));
+	assert.throws(() => beforeCallableErrorCode(source + source));
+});
 
 test("closure lifetime repair preserves every other byte in the recorded native callback families", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/wit-structured-codegen-regression-20260925.json", "utf8"));

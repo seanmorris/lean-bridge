@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 1,
+  "milestone": "callback-code-ci-repair-v1",
+  "predecessorCommit": "50c742b4565b4b68ab397fa41ad8d7b82220dfe6",
+  "updates": [
+    {
+      "path": "src/backends/c/native-callables.mjs",
+      "currentSha256": "0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675",
+      "previousSha256": "70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3",
+      "edits": [
+        {
+          "start": 6391,
+          "previous": "  frame->code = error && error->code ? error->code : ${m}_ERROR_UNEXPECTED;\n",
+          "current": "  /* An explicit host code is kept; otherwise an invalid argument keeps its matching boundary code. */\n  frame->code = error && error->code ? error->code : frame->status == ${m}_STATUS_INVALID_ARGUMENT ? ${m}_ERROR_INVALID_ARGUMENT : ${m}_ERROR_UNEXPECTED;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/c-callable-contract.test.mjs",
+      "currentSha256": "29b2abcd718746575003755b5e9c5d26acbc3c52dba4ec3f5390850d8e553188",
+      "previousSha256": "5be033f7d455497c7ed1d842fcda11577a894b668d50c308193ed203dc2d9cbc",
+      "edits": [
+        {
+          "start": 3595,
+          "previous": "typedef enum { SAMPLE_ERROR_UNEXPECTED = 1 } sample_error_code;\n",
+          "current": "typedef enum { SAMPLE_ERROR_INVALID_ARGUMENT = 1, SAMPLE_ERROR_UNEXPECTED = 65535 } sample_error_code;\n"
+        },
+        {
+          "start": 5511,
+          "previous": "  assert(strcmp(error.message, \"Expired or wrong-thread host callback\") == 0);\n",
+          "current": "  assert(strcmp(error.message, \"Expired or wrong-thread host callback\") == 0 && error.code == SAMPLE_ERROR_INVALID_ARGUMENT);\n"
+        },
+        {
+          "start": 5761,
+          "previous": "  assert(strcmp(error.message, \"Lean runtime is not ready or has been retired\") == 0);\n",
+          "current": "  assert(strcmp(error.message, \"Lean runtime is not ready or has been retired\") == 0 && error.code == SAMPLE_ERROR_UNEXPECTED);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "80dfd0ffe65d3723ddb7cfd752df240cfd6c34b659fde7ed2137c6f08fcac9fd",
+      "previousSha256": "52b5c8173e248c2a82bbb4671230ec7b9f20901b823dda640c7a7f650c950636",
+      "edits": [
+        {
+          "start": 289,
+          "previous": "",
+          "current": "import \"./helpers/callback-code-ci-repair-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 1960,
+          "previous": "",
+          "current": "import { generateCBindingPackage } from \"../src/backends/c/generate.mjs\";\nimport { processBuildRunner } from \"../src/build/process-runner.mjs\";\n"
+        },
+        {
+          "start": 10920,
+          "previous": "",
+          "current": "test(\"the generated frame reports a Fin rejection as an invalid argument and keeps host codes, bounded text and the first error\", async t => {\n\tconst model = finCallbackCompilerModel(), c = generateNativePrimitiveC(model, { initializer: \"initialize_LeanBridgeNative0123456789abcdef\" });\n\tconst header = generateCBindingPackage(model.bindingIr)[\"include/fincallbacks.h\"];\n\tconst extract = (start, end) => c.slice(c.indexOf(start), c.indexOf(end, c.indexOf(start)) + end.length);\n\t// The exact generated frame and recorder, without the runtime they are linked against.\n\tconst harness = `#include <stdio.h>\n#include <string.h>\n${header}\n${extract(\"typedef struct lb_frame {\", \"} lb_frame;\")}\n${extract(\"static void lb_record(\", \"\\n}\\n\")}\nstatic char long_text[2048];\nint main(void) {\n  lb_frame frame = {0};\n  lb_record(&frame, FINCALLBACKS_STATUS_INVALID_ARGUMENT, NULL, \"arg0 is not below its Fin 10 bound\");\n  lb_record(&frame, FINCALLBACKS_STATUS_UNEXPECTED_ERROR, NULL, \"second\");\n  printf(\"%d %d %s\\\\n\", frame.status, frame.code, frame.message);\n  lb_frame host = {0};\n  fincallbacks_error supplied = {FINCALLBACKS_ERROR_NATIVE_CALLBACK_FAILURE, \"host failure\", 12};\n  lb_record(&host, FINCALLBACKS_STATUS_INVALID_ARGUMENT, &supplied, \"fallback\");\n  printf(\"%d %d %s\\\\n\", host.status, host.code, host.message);\n  lb_frame unexpected = {0};\n  memset(long_text, 'x', sizeof(long_text) - 1);\n  lb_record(&unexpected, FINCALLBACKS_STATUS_UNEXPECTED_ERROR, NULL, long_text);\n  printf(\"%d %d %zu\\\\n\", unexpected.status, unexpected.code, unexpected.message_length);\n  return 0;\n}\n`;\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-fin-callback-frame-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tawait writeFile(join(directory, \"frame.c\"), harness);\n\tawait processBuildRunner.capture({ command: process.env.CC ?? \"cc\", args: [\"-std=c11\", \"-Wall\", \"-Werror\", \"-Wno-unused-function\", \"frame.c\", \"-o\", \"frame\"], cwd: directory });\n\tconst { stdout } = await processBuildRunner.capture({ command: join(directory, \"frame\"), args: [], cwd: directory });\n\tassert.deepEqual(stdout.trim().split(\"\\n\"), [\"1 1 arg0 is not below its Fin 10 bound\", \"1 100 host failure\", \"5 65535 1023\"]);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-records.test.mjs",
+      "currentSha256": "1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4",
+      "previousSha256": "f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f",
+      "edits": [
+        {
+          "start": 18093,
+          "previous": "\t\t\tassert.deepEqual(error.details?.hints, [`hint:OnboardingSmall.${name}:unsupported-parameter-type`]);\n",
+          "current": "\t\t\t// A locked engine process reports its hints through the decoded engine failure; the local engine throws them directly.\n\t\t\tconst hints = process.env.LEAN_BRIDGE_LAKE_ENGINE ? error.details?.engine?.details?.hints : error.details?.hints;\n\t\t\tassert.deepEqual(hints, [`hint:OnboardingSmall.${name}:unsupported-parameter-type`]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/closure-thread-contract.test.mjs",
+      "currentSha256": "4b3bc4ad55f9b15b0c8f1008cd96e786f5c80132f10ee9acf7e64c9ecbc0fe55",
+      "previousSha256": "77611ab34e44d603c7f9ed779ff3ecdca99da66c196a2a465db19e26af0ea798",
+      "edits": [
+        {
+          "start": 876,
+          "previous": "",
+          "current": "import { beforeCallableErrorCode } from \"./helpers/callable-error-code-history.mjs\";\n\ntest(\"callable error-code history reverses only its complete recorded generated change\", () => {\n\tconst models = witStructuredNativeModels();\n\tconst sources = Object.values(models).map(model => generateNativePrimitiveC(model, witStructuredNativeReceipt));\n\tconst source = sources.find(value => value.includes(\"An explicit host code is kept;\"));\n\tassert.ok(source);\n\tconst previous = beforeCallableErrorCode(source);\n\tassert.notEqual(source, previous);\n\tassert.equal(beforeCallableErrorCode(previous), previous);\n\tassert.equal(beforeCallableErrorCode(source + \"\\n/* unrelated */\\n\"), previous + \"\\n/* unrelated */\\n\");\n\tassert.throws(() => beforeCallableErrorCode(source.replace(/frame->status == ([A-Z][A-Z0-9_]*)_STATUS_INVALID_ARGUMENT/u, \"frame->status == 0\")));\n\tassert.throws(() => beforeCallableErrorCode(source + source));\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/closure-thread-registry.mjs",
+      "currentSha256": "fe2147cb9a26812321d1bcea17768e9aaea7582cf7d0cb62e6757495c4302500",
+      "previousSha256": "8b909369f2701617f48af6de842bcd60f335bb27bce1fcf597b4cd3a02880f52",
+      "edits": [
+        {
+          "start": 225,
+          "previous": "",
+          "current": "import { beforeCallableErrorCode } from \"./callable-error-code-history.mjs\";\n"
+        },
+        {
+          "start": 1144,
+          "previous": "",
+          "current": "\tsource = beforeCallableErrorCode(source);\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "b13503090ae6313a95d5ec630bf718293d48615a055dfa3a6629e28371abd2b5",
+      "previousSha256": "e71e9f0fdedced4e2e351a98e9830eafb0746afe6d53bebd17e7d6ec9e0f0611",
+      "edits": [
+        {
+          "start": 704719,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 719113,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 729827,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 744178,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 754513,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 766697,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 778131,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 787388,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 793836,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 802437,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 803716,
+          "previous": "          \"sha256\": \"5be033f7d455497c7ed1d842fcda11577a894b668d50c308193ed203dc2d9cbc\"\n",
+          "current": "          \"sha256\": \"29b2abcd718746575003755b5e9c5d26acbc3c52dba4ec3f5390850d8e553188\"\n"
+        },
+        {
+          "start": 1019294,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 1073250,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 1168702,
+          "previous": "          \"sha256\": \"70e9a5fc6b47b6408035a15bff34a6f753581b0b2a0a57180f4eddc3bde871e3\"\n",
+          "current": "          \"sha256\": \"0cc2cb097611dca7f610c7536ee90cc39d5795e2d90655fddd93d7a10f621675\"\n"
+        },
+        {
+          "start": 1466273,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1470208,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1570079,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1574853,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1579408,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1584389,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1589277,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1593651,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1598023,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1602397,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        },
+        {
+          "start": 1606645,
+          "previous": "          \"sha256\": \"f8e47a1a1d6fd8a28cc67f4dafd5cd96a4c8d1a4982938dd75e0c92faf1c149f\"\n",
+          "current": "          \"sha256\": \"1c79703699cbc969af1622a75976d096a7e7085a130322ab35ecf41febd945e4\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "52c97b5dace13931df935a81b6f246331ae5fc58d705b0150c842ad5ef83cc00",
+      "previousSha256": "44540ccc2e94ce0a2af80a3fe23ad4c4b9fcd811a1ec47a4fd371954ae8c3ead",
+      "edits": [
+        {
+          "start": 6910,
+          "previous": "",
+          "current": "import { callbackCodeCiRepairChangedPaths } from \"./callback-code-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 42839,
+          "previous": "",
+          "current": "\t, ...callbackCodeCiRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-admission-source-history.mjs",
+      "currentSha256": "e777cecfbd4ef8d5d9e5c8f145f6dc1ea1c0201bef3433274056014225c89a56",
+      "previousSha256": "6ca6deff514327ca891eb24df618fe7516ea9b82ce72391ccb71353dfcbb32be",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeCallbackCodeCiRepairSource } from \"./callback-code-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2975,
+          "previous": "",
+          "current": "\tsource = beforeCallbackCodeCiRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-admission-source-history-tests.mjs",
+      "currentSha256": "aee4768ab83dcf98f4c2015e4f2ddab675fed02cc1d0c6bf83b9824bde0a2074",
+      "previousSha256": "6ac7d37d58986a46ea67361cbaecb30f7547991ef44502de366a8ed6cd7f27b1",
+      "edits": [
+        {
+          "start": 356,
+          "previous": "",
+          "current": "import { beforeCallbackCodeCiRepairSource } from \"./callback-code-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1079,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeCallbackCodeCiRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}
