@@ -463,6 +463,51 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 	assert.deepEqual(model.exports[0].parameters[0].type.reply, { kind: "result", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "5" }] }, null] });
 });
 
+// Every admitted reply family, from the FinReplies fixture and the composite families whose stand-in holds no Fin.
+const replyFamilies = `
+abbrev MaybeDigit := Option (Fin 5)
+def aliased (host : Nat → MaybeDigit) : Nat := match host 0 with | none => 1 | some d => d.val
+def empty0 (host : Nat → List (Fin 0)) : Nat := (host 0).length
+def nested (host : Nat → Option (Array (Fin 3))) : Nat := match host 0 with | none => 2 | some values => values.size
+def product (host : Nat → Option (Fin 5) × Nat) : Nat := (host 0).2
+structure Slot where
+  digit : Option (Fin 5)
+  count : Nat
+def slotted (host : Nat → Slot) : Nat := (host 0).count
+def success (host : Nat → Except Nat (Array (Fin 3))) : Nat := match host 0 with | .ok values => values.size | .error n => n
+`;
+
+test("fresh Lean admits every checked host reply family and compiles each typed reconstruction", { skip: !lean, timeout: 1_800_000 }, async t => {
+	const fixtureSource = await readFile("tests/fixtures/onboarding/native-fin-replies/FinReplies.lean", "utf8");
+	const body = fixtureSource.replace("namespace FinReplies\n", "").replace("end FinReplies\n", "");
+	const source = `namespace FinCallbacks\n${body}${replyFamilies}end FinCallbacks\n`;
+	const names = ["aliased", "digits", "empty0", "failure", "late", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
+	const { model, adapters } = await elaborate(t, { exports: names.map(name => `FinCallbacks.${name}`) }, source);
+	const reply = name => model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type.reply;
+	const fin = bound => ({ kind: "fin", bound });
+	assert.deepEqual(reply("maybe"), { kind: "option", arguments: [fin("5")] });
+	assert.deepEqual(reply("aliased"), { kind: "option", arguments: [fin("5")] });
+	assert.deepEqual(reply("empty0"), { kind: "list", arguments: [fin("0")] });
+	assert.deepEqual(reply("none0"), { kind: "option", arguments: [fin("0")] });
+	assert.deepEqual(reply("wide"), { kind: "option", arguments: [fin("184467440737095516170")] });
+	assert.deepEqual(reply("failure"), { kind: "result", arguments: [null, fin("7")] });
+	assert.deepEqual(reply("success"), { kind: "result", arguments: [{ kind: "array", arguments: [fin("3")] }, null] });
+	assert.deepEqual(reply("product"), { kind: "tuple", arguments: [{ kind: "option", arguments: [fin("5")] }, null] });
+	for(const name of ["digits", "late", "maybeTile", "nested", "slotted"]) assert.ok(reply(name), name);
+	assert.equal(model.exports.find(item => item.name === "FinCallbacks.plain").refinements, undefined);
+	// The compiled adapter rebuilds each reply through its decidable check and the source-typed fallback.
+	for(const name of names.filter(item => item !== "plain"))
+		assert.match(adapters.leanSource, new RegExp(`reply_reject_${nativeTypeKey(model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type)} _bridgeReply`, "u"), name);
+	// Families whose selected stand-in needs a Fin stay refused after fresh extraction.
+	const refused = [["pairDigit", "def pairDigit (host : Nat → Fin 5 × Nat) : Nat := (host 0).2"]
+		, ["firstCase", "inductive Early where\n  | digit (value : Fin 5)\n  | label (text : String)\ndef firstCase (host : Nat → Early) : Nat := match host 0 with | .digit d => d.val | .label _ => 0"]
+		, ["aliasedScalar", "abbrev Digit := Fin 5\ndef aliasedScalar (host : Nat → Digit) : Nat := (host 0).val"]
+		, ["zero", "def zero (host : Nat → Fin 0) : Nat := (host 0).elim0"]];
+	for(const [name, definition] of refused)
+		await assert.rejects(() => elaborate(t, { exports: [`FinCallbacks.${name}`] }, `namespace FinCallbacks\n${definition}\nend FinCallbacks\n`)
+			, error => /a host callback result needs a Fin-free failure value/u.test(JSON.stringify(error.details ?? error.message)), name);
+});
+
 const profiles = process.env.LEAN_BRIDGE_FIN_CALLBACK_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin callback profile");
 assert.ok(profiles.every(profile => Object.hasOwn(finCallbackTargets, profile)), "Fin in callbacks is checked by C and C++ packages only");
