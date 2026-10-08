@@ -18,6 +18,7 @@ const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const sourceShapes = [
 	"fin"
 	, "subtype"
+	, "checked-record"
 	, "dependent"
 	, "recursive"
 	, "generic"

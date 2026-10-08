@@ -530,6 +530,14 @@
       "bounds": "Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates."
     },
     {
+      "id": "checked-record",
+      "lean": "Checked records and closed Nat indices",
+      "family": "checked-value",
+      "ir": null,
+      "meaning": "A structure with runtime payload fields and erased proofs, optionally specialized at closed Nat literal indices.",
+      "bounds": "Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs."
+    },
+    {
       "id": "dependent",
       "lean": "Dependent parameters and results",
       "family": "generic",
@@ -1259,15 +1267,15 @@
       "files": [
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341"
+          "sha256": "35ff28b81377daf86ad39d3063a9f0dda46de58098331e1ee4786c5512bfc8a8"
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "e4f6abb404f880755cf8483679981ea4f68721050e7ea1693ccce5f785a5bbca"
+          "sha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/evidence/dotnet-current-graph-packages-20260924.json",
@@ -1315,7 +1323,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "tests/current-source-evidence.test.mjs",
@@ -1343,7 +1351,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -3460,7 +3468,7 @@
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/evidence/kotlin-collections-20260922.json",
@@ -3987,7 +3995,7 @@
         },
         {
           "path": "docs/consume/wit-wasi.md",
-          "sha256": "1f2144faa4a2ad3d45ddec2a44cebe638f1af813aa096afb415ead1a676da9bf"
+          "sha256": "7e293237b29e2e6b725ae75f852198de25e2eb598edde59ea691f81c123988be"
         },
         {
           "path": "docs/evidence/wit-collections-20260922.json",
@@ -4278,7 +4286,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -4597,7 +4605,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -4868,11 +4876,11 @@
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "e4f6abb404f880755cf8483679981ea4f68721050e7ea1693ccce5f785a5bbca"
+          "sha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/evidence/java-collections-20260922.json",
@@ -5163,7 +5171,7 @@
         },
         {
           "path": "docs/consume/rust.md",
-          "sha256": "2005fef09eca3992bd07d44587f7a180d614d9da281708de738e1363c20440ab"
+          "sha256": "56c576f43d2995aba4ca9f5054411c8bb7e46940732619c28906b00cdee5f6d7"
         },
         {
           "path": "docs/evidence/rust-collections-20260922.json",
@@ -5346,7 +5354,7 @@
         },
         {
           "path": "docs/consume/python.md",
-          "sha256": "ee1176d52002f3bd0146ce3da176237abd3866afa3983ae3e0aaaf662c5309a1"
+          "sha256": "2d94e6670fe87931e651c0e58575fea63a06680b6b4e4a0d6eb6b234aba7ff85"
         },
         {
           "path": "docs/evidence/python-collections-20260922.json",
@@ -5525,7 +5533,7 @@
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341"
+          "sha256": "35ff28b81377daf86ad39d3063a9f0dda46de58098331e1ee4786c5512bfc8a8"
         },
         {
           "path": "docs/evidence/dotnet-collections-20260922.json",
@@ -5720,7 +5728,7 @@
         },
         {
           "path": "docs/consume/ruby.md",
-          "sha256": "f72c791597bb1ca275076ad055eae7e41ffe419abfcae3f0884d7c7c51132e4b"
+          "sha256": "cca1b6c276c599800fe36d743332dfb1bfc2a7d2ee4124c93bd0bf5f2cef5036"
         },
         {
           "path": "docs/evidence/ruby-collections-20260922.json",
@@ -5899,11 +5907,11 @@
         },
         {
           "path": "docs/consume/c.md",
-          "sha256": "4bb90a34e45902ed9b72abb2d07d053460c971f9cff8f9c1f4b21cafcd2d24d6"
+          "sha256": "715644f3e12b3efbde3da8710278009f49c3a8098e009fa07cac1355ecb0132f"
         },
         {
           "path": "docs/consume/cpp.md",
-          "sha256": "df8b18e4caaf221d059918ae322b18ce691dd8abc3ccd43b0731427ca2dbfcdd"
+          "sha256": "2be10836c9d32e9e2d1e079cec3cebc2ba9cfd57076f158d695c4749f0c03852"
         },
         {
           "path": "docs/evidence/native-collections-20260921.json",
@@ -6118,7 +6126,7 @@
         },
         {
           "path": "docs/consume/perl.md",
-          "sha256": "2fcad2f28987586ac86ebe1f3161f9833ba71098bf9de5953e18ee1c5d1a9d7d"
+          "sha256": "da97c6654e2de56efb353f118b8ccc086aea02b75fd866e58cc4d061b18144f4"
         },
         {
           "path": "docs/evidence/perl-collections-20260921.json",
@@ -15728,7 +15736,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -15967,7 +15975,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -16166,7 +16174,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16433,7 +16441,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16640,7 +16648,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16859,7 +16867,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17062,7 +17070,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17201,7 +17209,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17340,7 +17348,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17467,7 +17475,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -17586,7 +17594,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/documentation.test.mjs",
@@ -17753,7 +17761,7 @@
         },
         {
           "path": "src/adoption/type-surface.mjs",
-          "sha256": "9e2b9afed7f5e6f820ac4d484f6279701aa06df793208185b0392759e60ee181"
+          "sha256": "817cbd8df4fe8e79a23ad950e0f7dca1ba7d8f165d1111f9201487290e19f0e9"
         },
         {
           "path": "src/analyze/lean-project.mjs",
@@ -18005,7 +18013,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -22123,7 +22131,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-recursive-acceptance.test.mjs",
@@ -22274,7 +22282,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -22429,7 +22437,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -22592,7 +22600,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -22743,7 +22751,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -22906,7 +22914,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -23109,7 +23117,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -23308,7 +23316,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -23615,7 +23623,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -23786,7 +23794,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/word-evidence.test.mjs",
@@ -23977,7 +23985,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         }
       ],
       "artifacts": [
@@ -24168,7 +24176,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-callable-contract.test.mjs",
@@ -24455,7 +24463,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -25210,7 +25218,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -25901,7 +25909,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -26652,7 +26660,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -27551,7 +27559,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -27606,11 +27614,11 @@
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "e4f6abb404f880755cf8483679981ea4f68721050e7ea1693ccce5f785a5bbca"
+          "sha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/contributing/testing.md",
@@ -27702,7 +27710,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "docs/publish/c.md",
@@ -28138,7 +28146,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -28189,7 +28197,7 @@
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341"
+          "sha256": "35ff28b81377daf86ad39d3063a9f0dda46de58098331e1ee4786c5512bfc8a8"
         },
         {
           "path": "docs/contributing/testing.md",
@@ -28269,7 +28277,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "docs/publish/maven.md",
@@ -28625,7 +28633,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -28676,15 +28684,15 @@
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341"
+          "sha256": "35ff28b81377daf86ad39d3063a9f0dda46de58098331e1ee4786c5512bfc8a8"
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "e4f6abb404f880755cf8483679981ea4f68721050e7ea1693ccce5f785a5bbca"
+          "sha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/contributing/testing.md",
@@ -29056,7 +29064,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -29103,15 +29111,15 @@
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341"
+          "sha256": "35ff28b81377daf86ad39d3063a9f0dda46de58098331e1ee4786c5512bfc8a8"
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "e4f6abb404f880755cf8483679981ea4f68721050e7ea1693ccce5f785a5bbca"
+          "sha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "8ccb8a61cb30cce3b334a849bc05dc755b8900bd7677d49ff4e328af84d8f7b9"
+          "sha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d"
         },
         {
           "path": "docs/contributing/testing.md",
@@ -29519,7 +29527,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -29602,7 +29610,7 @@
         },
         {
           "path": "docs/consume/wit-wasi.md",
-          "sha256": "1f2144faa4a2ad3d45ddec2a44cebe638f1af813aa096afb415ead1a676da9bf"
+          "sha256": "7e293237b29e2e6b725ae75f852198de25e2eb598edde59ea691f81c123988be"
         },
         {
           "path": "docs/contributing/testing.md",
@@ -29790,7 +29798,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187"
+          "sha256": "4495194562d94266521b62bcea05ec71c9a0dbe2b982cae30a5ddf86467ce93a"
         },
         {
           "path": "tests/wit-recursive-callable-evidence.test.mjs",
@@ -29857,7 +29865,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "9791a18e76b2507c8e7393cfc8010038a1516a4a6a60f7c7789aefc22d81f411"
+          "sha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d"
         },
         {
           "path": "docs/publish/php.md",
@@ -33253,7 +33261,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33324,7 +33332,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33399,7 +33407,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33474,7 +33482,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33545,7 +33553,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33616,7 +33624,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33687,7 +33695,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33762,7 +33770,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33833,7 +33841,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33904,7 +33912,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -33975,7 +33983,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -34046,7 +34054,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -34117,7 +34125,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -34188,7 +34196,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -34259,7 +34267,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -34330,7 +34338,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/component-refinements.mjs",
@@ -34417,7 +34425,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/component-refinements.mjs",
@@ -34504,7 +34512,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/component-refinements.mjs",
@@ -34591,7 +34599,7 @@
         },
         {
           "path": "tests/helpers/reviewed-fin-promotion-tests.mjs",
-          "sha256": "043ff446c0377800b358f1088ec1db54e78f6dafd30a7d66e6c9db05d269ba0b"
+          "sha256": "06826ff7cd43a3134eb9a527cf4c309801ad65c361982382a6d9cec74bdd0c4d"
         },
         {
           "path": "src/build/component-refinements.mjs",
@@ -34694,7 +34702,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-evidence-tests.mjs",
@@ -34769,7 +34777,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-evidence-tests.mjs",
@@ -34844,7 +34852,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-array-evidence-tests.mjs",
@@ -34915,7 +34923,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-array-evidence-tests.mjs",
@@ -34986,7 +34994,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-array-dispatch-evidence-tests.mjs",
@@ -35057,7 +35065,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-product-array-dispatch-evidence-tests.mjs",
@@ -35128,7 +35136,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-record-evidence-tests.mjs",
@@ -35199,7 +35207,7 @@
         },
         {
           "path": "tests/helpers/native-fin-promotion-tests.mjs",
-          "sha256": "46bb26a58e32d30970e7bd559247c834a69ed994bc7977d5290b8d30eedac83f"
+          "sha256": "7f3b217b7451ce1b2e5cec243004cace1734723b50972989a69c79b1a1a6b0cb"
         },
         {
           "path": "tests/helpers/fin-record-evidence-tests.mjs",
@@ -35334,7 +35342,7 @@
         },
         {
           "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
-          "sha256": "47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446"
+          "sha256": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
         }
       ],
       "artifacts": [
@@ -35457,7 +35465,7 @@
         },
         {
           "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
-          "sha256": "47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446"
+          "sha256": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
         }
       ],
       "artifacts": [
@@ -35540,7 +35548,7 @@
         },
         {
           "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
-          "sha256": "47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446"
+          "sha256": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
         }
       ],
       "artifacts": [
@@ -35623,7 +35631,7 @@
         },
         {
           "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
-          "sha256": "47d1904043e7134b94eb7d2f7fe071ccc61615b513b398a09e44378adbde0446"
+          "sha256": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
         }
       ],
       "artifacts": [
@@ -35650,7 +35658,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35662,7 +35670,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-product-ordinary.json",
@@ -35701,7 +35709,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35713,7 +35721,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-product-reviewed.json",
@@ -35752,7 +35760,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35764,7 +35772,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-ordinary.json",
@@ -35803,7 +35811,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35815,7 +35823,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-reviewed.json",
@@ -35854,7 +35862,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35866,7 +35874,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-record-ordinary.json",
@@ -35905,7 +35913,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35917,7 +35925,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python311-record-reviewed.json",
@@ -35956,7 +35964,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -35968,7 +35976,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-product-ordinary.json",
@@ -36007,7 +36015,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36019,7 +36027,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-product-reviewed.json",
@@ -36058,7 +36066,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36070,7 +36078,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-ordinary.json",
@@ -36109,7 +36117,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36121,7 +36129,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-reviewed.json",
@@ -36160,7 +36168,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36172,7 +36180,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-record-ordinary.json",
@@ -36211,7 +36219,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36223,7 +36231,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/python312-record-reviewed.json",
@@ -36262,7 +36270,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36274,7 +36282,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-ordinary.json",
@@ -36313,7 +36321,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36325,7 +36333,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-reviewed.json",
@@ -36364,7 +36372,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36376,7 +36384,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-ordinary.json",
@@ -36415,7 +36423,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36427,7 +36435,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-reviewed.json",
@@ -36466,7 +36474,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36478,7 +36486,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-ordinary.json",
@@ -36517,7 +36525,7 @@
         },
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-python-ruby-evidence.mjs",
@@ -36529,7 +36537,7 @@
         },
         {
           "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
-          "sha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526"
+          "sha256": "41524d428825ec3e150478503c548c5fb4d553a9273bfe63127cc40849271c37"
         },
         {
           "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-reviewed.json",
@@ -36564,7 +36572,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36572,7 +36580,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36619,7 +36627,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36627,7 +36635,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36674,7 +36682,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36682,7 +36690,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36729,7 +36737,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36737,7 +36745,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36784,7 +36792,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36792,7 +36800,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36839,7 +36847,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36847,7 +36855,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-rust-evidence.mjs",
@@ -36894,7 +36902,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36902,7 +36910,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -36949,7 +36957,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -36957,7 +36965,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -37004,7 +37012,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37012,7 +37020,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -37059,7 +37067,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37067,7 +37075,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -37114,7 +37122,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37122,7 +37130,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -37169,7 +37177,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37177,7 +37185,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-dotnet-hosted-evidence.mjs",
@@ -37224,7 +37232,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37232,7 +37240,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-wit-record-evidence.mjs",
@@ -37287,7 +37295,7 @@
       "files": [
         {
           "path": "tests/fin-python-ruby-evidence.test.mjs",
-          "sha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2"
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-references.mjs",
@@ -37295,7 +37303,7 @@
         },
         {
           "path": "tests/helpers/fin-native-batch-promotion-tests.mjs",
-          "sha256": "9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296"
+          "sha256": "203f6fce3feb9d4a6a2a33e250ff3ae6bba72c963d3682d6c2f49ecef49f06e4"
         },
         {
           "path": "tests/helpers/fin-wit-record-evidence.mjs",
@@ -37338,6 +37346,384 @@
         {
           "path": "fin-batch-wit-wasi-record-reviewed-installed/archives/finrecords-1.0.0-wit-wasi.tar.gz",
           "sha256": "b872e5ec581fdf5f6fcb78fc79c1ccdc93751955d23cc2fea28ffcfa9f14d0b1"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-ordinary-c-cpp-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_REPORT=/app/build/vo1446-checked-records-ordinary-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^relocated source-free C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-ordinary-c-cpp-78a4d3d.tap",
+      "scope": "ordinary-source c-cpp ordinary checked records: c 2020 checks, cpp 2018 checks. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH. Nine C interposer rows measure public entry, pre-validator, constructor, adapter and source separately. C++ dispatch and resident memory are unmeasured. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-c-cpp.json",
+          "sha256": "6fc2634cc43d31f2f8877e17de539d8b3710882d97fb8838b18f695fea06c2a9"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/c-cpp.queue",
+          "sha256": "0dd52036e1520a3e4dad3503a23984e0e612d3c74abc5f705e1c7874f9ad589d"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-c-cpp.tap",
+          "sha256": "ce316be693f483c0be7f28d48b8e947912d2e3fa3a93cdac2aea81aa3af34e76"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-c-cpp.tap",
+          "sha256": "7c661307067d074815f8e2178a83a74078f94f48f0a81579fb9cc4c4f96033bb"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-c-cpp.tap",
+          "sha256": "7ab019d6b6fc55bc3646cdba49ed6a191159074ca78e7f4587d95275b0d24113"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-ordinary-c-cpp-installed/archives/checkedrecords-1.0.0-c.tar.gz",
+          "sha256": "34a9cbac866e75b33316078f9e305c19b27d14595eb7cc35f80d94f7447d1ded"
+        },
+        {
+          "path": "checked-record-ordinary-c-cpp-installed/archives/checkedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "f81c72175997e8c8f2660e5cb5510e967617f2ca5039e711a14633538dcc7762"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-reviewed-c-cpp-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_REVIEWED_REPORT=/app/build/vo1446-checked-records-reviewed-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^independently reviewed C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-reviewed-c-cpp-78a4d3d.tap",
+      "scope": "reviewed-ir c-cpp reviewed checked records: c 2020 checks, cpp 2018 checks. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH. Nine C interposer rows measure public entry, pre-validator, constructor, adapter and source separately. C++ dispatch and resident memory are unmeasured. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-c-cpp.json",
+          "sha256": "85ac7f42829a019472e44fce5e59125999693e122ae67b53139e1e299cb1ae60"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/c-cpp.queue",
+          "sha256": "0dd52036e1520a3e4dad3503a23984e0e612d3c74abc5f705e1c7874f9ad589d"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-c-cpp.tap",
+          "sha256": "ce316be693f483c0be7f28d48b8e947912d2e3fa3a93cdac2aea81aa3af34e76"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-c-cpp.tap",
+          "sha256": "7c661307067d074815f8e2178a83a74078f94f48f0a81579fb9cc4c4f96033bb"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-c-cpp.tap",
+          "sha256": "7ab019d6b6fc55bc3646cdba49ed6a191159074ca78e7f4587d95275b0d24113"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-reviewed-c-cpp-installed/archives/checkedrecords-1.0.0-c.tar.gz",
+          "sha256": "a15d18fcb1525a3c2dbc2a4ae0b0b523c1de8531210d36fb5c5e6dbbb5e90226"
+        },
+        {
+          "path": "checked-record-reviewed-c-cpp-installed/archives/checkedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "4c4ca9f7bf885eec59a273cff64f3cf3f4a8ccf9968f43704cb6c77cef5f8f68"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-result-only-c-cpp-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp LEAN_BRIDGE_CHECKED_RECORD_RESULT_ONLY_REPORT=/app/build/vo1446-checked-records-result-only-c-cpp-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^a relocated C and C' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-result-only-c-cpp-78a4d3d.tap",
+      "scope": "ordinary-source c-cpp result-only checked records: c 1001 checks, cpp 1001 checks. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH. Dispatch is unmeasured in this selection. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-c-cpp.json",
+          "sha256": "da46d46aee766be0b4d008dc8187d71ecf93929a3f0a34874ab95cac9878bb72"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/c-cpp.queue",
+          "sha256": "0dd52036e1520a3e4dad3503a23984e0e612d3c74abc5f705e1c7874f9ad589d"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-c-cpp.tap",
+          "sha256": "ce316be693f483c0be7f28d48b8e947912d2e3fa3a93cdac2aea81aa3af34e76"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-c-cpp.tap",
+          "sha256": "7c661307067d074815f8e2178a83a74078f94f48f0a81579fb9cc4c4f96033bb"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-c-cpp.tap",
+          "sha256": "7ab019d6b6fc55bc3646cdba49ed6a191159074ca78e7f4587d95275b0d24113"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-result-only-c-cpp-installed/archives/checkedrecords-1.0.0-c.tar.gz",
+          "sha256": "2414b2ced6662ea4456600afe47e6b6a62bd738a17e5a5525f96e1610985f7d2"
+        },
+        {
+          "path": "checked-record-result-only-c-cpp-installed/archives/checkedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "4e448501bc0cbcaf47d22fe54f8cb65e5b4e91153d1da8205dc5e31606f2da67"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-ordinary-npm-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST=1 LEAN_BRIDGE_CHECKED_RECORD_NPM_REPORT=/app/build/vo1446-checked-records-ordinary-npm-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^a relocated source-free npm package builds checked records' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-ordinary-npm-78a4d3d.tap",
+      "scope": "ordinary-source npm ordinary checked records: npm 1011 checks. 1009 Node runtime rejections; strict TypeScript validates declarations separately. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred. Dispatch is unmeasured in this selection. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-npm.json",
+          "sha256": "2ba16c62f27b80c0115f0736e002c33bffda1dd33e9789a1a1e1958b7a06329e"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/npm.queue",
+          "sha256": "b305e21d3948ab161650d12b2eab2f9639219c2fdbd00db4997465a280a55321"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-npm.tap",
+          "sha256": "30f4dab74aa47073bee1e2cdf6602099db32232ca17e4169a80bf41d3c985a3f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-npm.tap",
+          "sha256": "acb8be6175b314fdfecbdfb38657a7867f0e1b33ba5367cf614831c49cf8b343"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-npm.tap",
+          "sha256": "24ef4fe5a0d081f8f92e468b1cb4073611475aed50aac8522afcdfe84a5a7dcd"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-ordinary-npm-installed/onboarding-small-1.0.0.tgz",
+          "sha256": "2aa37b776ba84d4f013beba1e1af369a762c673eec80025e79b2bca41654dbb6"
+        },
+        {
+          "path": "checked-record-ordinary-npm-installed/lean-bridge-runtime-0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425.tgz",
+          "sha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-reviewed-npm-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST=1 LEAN_BRIDGE_CHECKED_RECORD_REVIEWED_NPM_REPORT=/app/build/vo1446-checked-records-reviewed-npm-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^an independently reviewed npm package builds checked records' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-reviewed-npm-78a4d3d.tap",
+      "scope": "reviewed-ir npm reviewed checked records: npm 1011 checks. 1009 Node runtime rejections; strict TypeScript validates declarations separately. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred. Dispatch is unmeasured in this selection. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-npm.json",
+          "sha256": "6dde48ce36afe0fec5b4f33640bb6360580ff7b4184e066633aeabdb92b59857"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/npm.queue",
+          "sha256": "b305e21d3948ab161650d12b2eab2f9639219c2fdbd00db4997465a280a55321"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-npm.tap",
+          "sha256": "30f4dab74aa47073bee1e2cdf6602099db32232ca17e4169a80bf41d3c985a3f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-npm.tap",
+          "sha256": "acb8be6175b314fdfecbdfb38657a7867f0e1b33ba5367cf614831c49cf8b343"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-npm.tap",
+          "sha256": "24ef4fe5a0d081f8f92e468b1cb4073611475aed50aac8522afcdfe84a5a7dcd"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-reviewed-npm-installed/onboarding-small-1.0.0.tgz",
+          "sha256": "3dc816d29f5d5fabe860d819a966589fb53ff54f91e09d9fbdbaff6549e5f66b"
+        },
+        {
+          "path": "checked-record-reviewed-npm-installed/lean-bridge-runtime-0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425.tgz",
+          "sha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09"
+        }
+      ]
+    },
+    {
+      "id": "checked-record-result-only-npm-installed",
+      "kind": "installed",
+      "revision": "78a4d3da45754f3e425faafdadc9e959cee65bc5",
+      "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST=1 LEAN_BRIDGE_CHECKED_RECORD_RESULT_ONLY_NPM_REPORT=/app/build/vo1446-checked-records-result-only-npm-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^a relocated npm package whose only checked record' tests/checked-records.test.mjs > /app/build/vo1446-checked-records-result-only-npm-78a4d3d.tap",
+      "scope": "ordinary-source npm result-only checked records: npm 1001 checks. 0 Node runtime rejections; strict TypeScript validates declarations separately. Two-root package reproduction, deleted author/build roots and offline installed calls. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred. Dispatch is unmeasured in this selection. Selected source pins are not a complete dependency closure. No reconstructed analyzed-tree claim, general dependent payload, nested record, other host or callback coverage is inferred.",
+      "files": [
+        {
+          "path": "tests/fin-python-ruby-evidence.test.mjs",
+          "sha256": "e1fd3b112098dd5e381b035c5ea018c0817297c072cbdda6e732bab75827983b"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-references.mjs",
+          "sha256": "ab8f98d18789ca9873f1244420618bb5424ca16114f1565407434e88909a82cd"
+        },
+        {
+          "path": "tests/helpers/checked-record-promotion-tests.mjs",
+          "sha256": "180e99e51f141007d29b38375f6af08e7305876a16d62552ce0c39e5da2e1224"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence.mjs",
+          "sha256": "09587cdadfadd61d8180257f07542fbb5e2d58a06f0d518b43149a2769c5462a"
+        },
+        {
+          "path": "tests/helpers/checked-record-evidence-tests.mjs",
+          "sha256": "292e0aa8a2b1f28b0a409d059bea1f4868dacd0758ac8eed294e9014343af600"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/receipt.json",
+          "sha256": "ddbd22ea869ab7f82c40ed6fa4c158a68f262449a865e12dae900a227dec736f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-npm.json",
+          "sha256": "038ad5d36be10620e0b3b35e2db64fd81abffaf866b80bee09ab55a3dbf550c0"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/npm.queue",
+          "sha256": "b305e21d3948ab161650d12b2eab2f9639219c2fdbd00db4997465a280a55321"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/ordinary-npm.tap",
+          "sha256": "30f4dab74aa47073bee1e2cdf6602099db32232ca17e4169a80bf41d3c985a3f"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/reviewed-npm.tap",
+          "sha256": "acb8be6175b314fdfecbdfb38657a7867f0e1b33ba5367cf614831c49cf8b343"
+        },
+        {
+          "path": "docs/evidence/checked-records-20261008/result-only-npm.tap",
+          "sha256": "24ef4fe5a0d081f8f92e468b1cb4073611475aed50aac8522afcdfe84a5a7dcd"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "checked-record-result-only-npm-installed/onboarding-small-1.0.0.tgz",
+          "sha256": "b37c0c6289d49abb3bc1a4b852b01f7238a6b8980b7e3fb59adb310cb2196db5"
+        },
+        {
+          "path": "checked-record-result-only-npm-installed/lean-bridge-runtime-0.0.0-abi2.126b20b68887f5c6b5f179d233ac4a6b9f5c5ae30e1b9a0f3e1897734533d425.tgz",
+          "sha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09"
         }
       ]
     }
@@ -75843,6 +76229,1050 @@
       ],
       "conversionNotes": {
         "fin": "A Fin field uses the Nat carrier, a list<u32> of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound."
+      }
+    },
+    {
+      "id": "checked-record-c-ordinary-source-parameter",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Borrowed generated C record with GMP integer and typed-span payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Installed c ordinary-source calls preserve valid values and rejection recovery. Ordinary/reviewed C interposers distinguish entry, pre-validator, constructor, adapter and source; result-only dispatch is unmeasured."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-c-ordinary-source-result",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Initialized generated C record with owning GMP and span payloads; clear after use"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Installed c ordinary-source calls preserve valid values and rejection recovery. Ordinary/reviewed C interposers distinguish entry, pre-validator, constructor, adapter and source; result-only dispatch is unmeasured."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-c-reviewed-ir-parameter",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Borrowed generated C record with GMP integer and typed-span payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Installed c reviewed-ir calls preserve valid values and rejection recovery. Ordinary/reviewed C interposers distinguish entry, pre-validator, constructor, adapter and source; result-only dispatch is unmeasured."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-c-reviewed-ir-result",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Initialized generated C record with owning GMP and span payloads; clear after use"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Installed c reviewed-ir calls preserve valid values and rejection recovery. Ordinary/reviewed C interposers distinguish entry, pre-validator, constructor, adapter and source; result-only dispatch is unmeasured."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-cpp-ordinary-source-parameter",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Generated value record with cpp_int and vector payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed"
+          ],
+          "note": "Installed cpp ordinary-source calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-cpp-ordinary-source-result",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Generated owning value record with cpp_int and vector payloads"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-c-cpp-installed",
+            "checked-record-result-only-c-cpp-installed"
+          ],
+          "note": "Installed cpp ordinary-source calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-cpp-reviewed-ir-parameter",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Generated value record with cpp_int and vector payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Installed cpp reviewed-ir calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-cpp-reviewed-ir-result",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Generated owning value record with cpp_int and vector payloads"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-c-cpp-installed"
+          ],
+          "note": "Installed cpp reviewed-ir calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, cc 12.2.0 and host glibc 2.36. The package declares the default glibc minimum 2.38 because the floor override was unset; this is not execution on a measured 2.38 host. C/C++ callers still compile with the system compiler after removal of Lean and producer tools from PATH."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-javascript-ordinary-source-parameter",
+      "profiles": [
+        "node-javascript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Object with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Installed node-javascript ordinary-source calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-javascript-ordinary-source-result",
+      "profiles": [
+        "node-javascript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Copied object with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Installed node-javascript ordinary-source calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-javascript-reviewed-ir-parameter",
+      "profiles": [
+        "node-javascript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Object with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Installed node-javascript reviewed-ir calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-javascript-reviewed-ir-result",
+      "profiles": [
+        "node-javascript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Copied object with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Installed node-javascript reviewed-ir calls preserve valid values and rejection recovery. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-typescript-ordinary-source-parameter",
+      "profiles": [
+        "node-typescript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Generated structural record type with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed"
+          ],
+          "note": "Strict generated TypeScript declarations compile with negative type controls; the same installed package executes the Node runtime checks. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-typescript-ordinary-source-result",
+      "profiles": [
+        "node-typescript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "ordinary-source",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Generated structural record type with copied bigint and bigint[] fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-ordinary-npm-installed",
+            "checked-record-result-only-npm-installed"
+          ],
+          "note": "Strict generated TypeScript declarations compile with negative type controls; the same installed package executes the Node runtime checks. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-typescript-reviewed-ir-parameter",
+      "profiles": [
+        "node-typescript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "parameter"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "parameter": "Generated structural record type with bigint and bigint[] payload fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Strict generated TypeScript declarations compile with negative type controls; the same installed package executes the Node runtime checks. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
+      }
+    },
+    {
+      "id": "checked-record-node-typescript-reviewed-ir-result",
+      "profiles": [
+        "node-typescript"
+      ],
+      "shapes": [
+        "checked-record"
+      ],
+      "positions": [
+        "result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "First installed slice: Interval, Sized 3 and Bounded 0 101 at top-level parameters/results, including multiple checked inputs, normalizing constructors and result-only output.",
+      "hostTypes": {
+        "checked-record": {
+          "result": "Generated structural record type with copied bigint and bigint[] fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Fresh Lean authenticates erased proof fields, closed Nat literal indices and each checked parameter's constructor; independently authored reviewed IR must reconcile exactly."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Typed proof-free payload carriers retain record identity and per-site constructor choices."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "The selected safe constructor returns Option of the exact source record. Lean-produced results project payloads without an input constructor."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Two roots reproduce the selected release; author/build roots are deleted before offline installation. Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "checked-record-reviewed-npm-installed"
+          ],
+          "note": "Strict generated TypeScript declarations compile with negative type controls; the same installed package executes the Node runtime checks. Dispatch is unmeasured for this consumer."
+        }
+      },
+      "limitations": [
+        "Only this consumer, source route and top-level position. No field or callback observations; nested, recursive, inherited and refined payload records remain separate requirements.",
+        "Only closed Nat literal indices. General dependent runtime payloads, other index kinds, zero-payload proofs and open generic records remain required and unpromoted.",
+        "Local runner measured Node 22.23.3, Lean 4.32.2, npm 10.9.9 and TypeScript 5.9.3. Installation and Node execution use a Node-only PATH; TypeScript compilation uses the checkout's tsc with strict true and skipLibCheck false. No browser or hosted CI execution is inferred."
+      ],
+      "conversionNotes": {
+        "checked-record": "Pass only payload fields: Interval {lo, hi}, Triple {data} for Sized 3, and Percent {value} for Bounded 0 101. Input constructors validate cross-field predicates or normalize values inside Lean without changing caller input. Results expose payload fields, not proofs. A standalone result-only package works without any checked input. Other indices, nested/refined/recursive records and dynamic dependent payloads are not covered."
       }
     }
   ]

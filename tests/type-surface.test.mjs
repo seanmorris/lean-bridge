@@ -49,7 +49,7 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	await assertJsonSchema("type-surface", document);
 	assert.equal(validateTypeSurface(document, contracts), true);
 	assert.equal(document.profiles.length, 17);
-	assert.equal(document.shapes.length, 48);
+	assert.equal(document.shapes.length, 49);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "jvm").map(profile => profile.id), ["java", "kotlin"]);
 	assert.deepEqual(document.profiles.filter(profile => profile.consumer === "browser-javascript").map(profile => profile.id),
 		["browser-javascript", "browser-react", "browser-worker"]);

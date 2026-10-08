@@ -7,17 +7,25 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { beforeSubtypeAliasPositionSource } from "./subtype-alias-position-source-history.mjs";
+import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { reviewedApiPromotionReferences } from "./reviewed-api-promotion-references.mjs";
 import { beforeReviewedApiPromotionSource } from "./reviewed-api-promotion-source-history.mjs";
 import "./reviewed-api-promotion-source-history-tests.mjs";
 import "./reviewed-subtype-evidence-tests.mjs";
 import "./reviewed-specialization-evidence-tests.mjs";
 
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeSubtypeAliasPositionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
+
 test("reviewed API promotion authenticates four original report sets without rewriting their receipts", async () => {
 	const references = await reviewedApiPromotionReferences();
 	assert.equal(references.length, 4);
-	const { document } = await readTypeSurface();
+	const { document } = await readPromotedSurface();
 	const previous = JSON.parse(beforeReviewedApiPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	for(const reference of references)
@@ -32,14 +40,14 @@ test("reviewed API promotion authenticates four original report sets without rew
 		assert.ok(entry.files.some(file => file.path === reference.receiptPath));
 		assert.ok(entry.files.some(file => file.path === reference.reportPath && file.sha256 === reference.reportSha256));
 		assert.ok(entry.files.some(file => file.path === reference.validator));
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeSubtypeAliasPositionSource(file.path, await readFile(file.path, "utf8"))), file.sha256, file.path);
 		assert.match(entry.scope, /Browser, other-host and dispatch-counter coverage is not inferred/u);
 		assert.match(entry.scope, /does not establish another floor or hosted CI/u);
 	}
 });
 
 test("reviewed API promotion advances exactly twenty observed cells and preserves every older claim", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const { document, ...contracts } = await readPromotedSurface();
 	const previous = JSON.parse(beforeReviewedApiPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const references = await reviewedApiPromotionReferences();
 	for(const before of previous.observations)

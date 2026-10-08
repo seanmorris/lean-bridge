@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCheckedRecordPromotionSource } from "./checked-record-promotion-source-history.mjs";
 
 export const phpShardHistoryPath = "docs/evidence/php-shard-source-history-20261008.json";
 export const phpShardChangedPaths = [
@@ -58,6 +59,7 @@ export const reversePhpShardUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePhpShardSource = (path, source, expected) => {
+	source = beforeCheckedRecordPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !phpShardChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

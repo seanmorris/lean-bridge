@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeCheckedRecordPromotionSource } from "./checked-record-promotion-source-history.mjs";
 import { beforePhpShardSource, phpShardChangedPaths, phpShardHistoryPath, reversePhpShardUpdate } from "./php-shard-source-history.mjs";
 
 test("PHP acceptance shard authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("PHP acceptance shard authenticates each exact source predecessor", async (
 	assert.deepEqual(record.updates.map(update => update.path), phpShardChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCheckedRecordPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpShardUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpShardSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpShardSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("PHP acceptance shard authenticates each exact source predecessor", async (
 });
 
 test("PHP shard source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeCheckedRecordPromotionSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforePhpShardSource(path, text));
 	const record = JSON.parse(await readFile(phpShardHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -39,7 +40,7 @@ test("PHP shard source pins do not change observations or other inventory claims
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeCheckedRecordPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

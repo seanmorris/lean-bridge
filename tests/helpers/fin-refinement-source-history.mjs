@@ -110,6 +110,7 @@ import { jvmShardChangedPaths } from "./jvm-shard-source-history.mjs";
 import { archiveBatchChangedPaths } from "./archive-batch-source-history.mjs";
 import { finNativeBatchPromotionChangedPaths } from "./fin-native-batch-promotion-source-history.mjs";
 import { phpShardChangedPaths } from "./php-shard-source-history.mjs";
+import { checkedRecordPromotionChangedPaths } from "./checked-record-promotion-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -684,6 +685,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...archiveBatchChangedPaths
 	, ...finNativeBatchPromotionChangedPaths
 	, ...phpShardChangedPaths
+	, ...checkedRecordPromotionChangedPaths
 ])].sort());
 
 /**
