@@ -1,0 +1,44 @@
+# step ordinary pattern=^independently reviewed C and C
+TAP version 13
+# Subtest: independently reviewed C and C++ packages install every alias-named generic record from source-free archives
+ok 1 - independently reviewed C and C++ packages install every alias-named generic record from source-free archives
+  ---
+  duration_ms: 408218.838985
+  type: 'test'
+  ...
+# reviewed build 0: c, cpp
+# installing and checking reviewed c
+# installing and checking reviewed cpp
+# reviewed build 1: c, cpp
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 408663.842173
+exit=0
+# step composed pattern=^a composed review installs C and C
+TAP version 13
+# Subtest: a composed review installs C and C++ specializations over alias-instantiated records in two namespaces
+ok 1 - a composed review installs C and C++ specializations over alias-instantiated records in two namespaces
+  ---
+  duration_ms: 442065.899773
+  type: 'test'
+  ...
+# reviewed build 0: c, cpp
+# installing and checking reviewed c
+# installing and checking reviewed cpp
+# reviewed build 1: c, cpp
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 442487.204369
+exit=0

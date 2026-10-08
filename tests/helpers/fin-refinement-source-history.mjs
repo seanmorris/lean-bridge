@@ -128,6 +128,7 @@ import { scalarFinSourceEntryIntegrationChangedPaths } from "./scalar-fin-source
 import { scalarFinSourceEntryCiChangedPaths } from "./scalar-fin-source-entry-ci-source-history.mjs";
 import { nativeReplyRefusalChangedPaths } from "./native-reply-refusal-source-history.mjs";
 import { browserGenericPromotionChangedPaths } from "./browser-generic-promotion-source-history.mjs";
+import { reviewedInstantiationArchiveChangedPaths } from "./reviewed-instantiation-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -720,6 +721,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...scalarFinSourceEntryCiChangedPaths
 	, ...nativeReplyRefusalChangedPaths
 	, ...browserGenericPromotionChangedPaths
+	, ...reviewedInstantiationArchiveChangedPaths
 ])].sort());
 
 /**

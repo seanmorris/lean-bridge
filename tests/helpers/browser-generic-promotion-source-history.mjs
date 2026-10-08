@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiation-archive-source-history.mjs";
 
 export const browserGenericPromotionHistoryPath = "docs/evidence/browser-generic-promotion-source-history-20261008.json";
 export const browserGenericPromotionPredecessor = "9eb39058caa2529edaed6f87f2f3989204294e80";
@@ -54,6 +55,7 @@ export const reverseBrowserGenericPromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeBrowserGenericPromotionSource = (path, source, expected) => {
+	source = beforeReviewedInstantiationArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !browserGenericPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

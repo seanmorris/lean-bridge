@@ -1,0 +1,7 @@
+revision=111ec13268059c8bf8c901ff0b17583c1fa3ed29
+start=2026-10-08T05:26:04Z free=4735MiB node=v22.23.3 cpu=3 concurrency=1 queue=npm,composed-npm build/lean-runtime=/app/build/lean-runtime
+start npm 2026-10-08T05:26:04Z pattern=^an independently reviewed npm package keeps env=LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-npm-111ec13.json LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-specialized-npm-111ec13.json
+end npm 2026-10-08T05:27:17Z exit=0
+start composed-npm 2026-10-08T05:27:17Z pattern=^a composed review keeps npm env=LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-npm-111ec13.json LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-specialized-npm-111ec13.json
+end composed-npm 2026-10-08T05:28:48Z exit=0
+all steps passed 2026-10-08T05:28:48Z

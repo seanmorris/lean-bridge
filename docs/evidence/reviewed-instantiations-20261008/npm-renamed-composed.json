@@ -1,0 +1,169 @@
+{
+  "abi": 7,
+  "archiveSha256": "e9a7c57fe34a3439bc8f1a86d9419a3dae9e7f7e8a5cf1148f4703393cbe25fa",
+  "checks": 1019,
+  "instantiations": {
+    "BoxPair": {
+      "arguments": [
+        {
+          "id": "NatBox",
+          "kind": "named"
+        },
+        {
+          "id": "TextBox",
+          "kind": "named"
+        }
+      ],
+      "structure": "Pair"
+    },
+    "MarkerTag": {
+      "arguments": [
+        {
+          "id": "Marker",
+          "kind": "named"
+        }
+      ],
+      "fields": 1,
+      "structure": "Tag"
+    },
+    "MaybeBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBoxAgain": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "TaggedNat": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Tagged"
+    },
+    "TextBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        }
+      ],
+      "structure": "Box"
+    },
+    "WordPair": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Pair"
+    }
+  },
+  "path": "reviewed-source",
+  "profile": "npm",
+  "rejections": 1010,
+  "reviewedBindingIrSha256": "59e9fbc35f83129423f8031bedcebbbd53dcb5c013f764a487c0512a12628820",
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "specializations": [
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNatBox",
+      "types": [
+        "OnboardingSmall.NatBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoAgain",
+      "types": [
+        "OnboardingSmall.NatBoxAgain"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoTextBox",
+      "types": [
+        "OnboardingSmall.TextBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoLeft",
+      "types": [
+        "OnboardingSmall.Left.LeftBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoRight",
+      "types": [
+        "OnboardingSmall.Right.RightBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoBoxes",
+      "types": [
+        "OnboardingSmall.Boxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalBoxes",
+      "types": [
+        "OnboardingSmall.OptionalBoxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNats",
+      "types": [
+        "OnboardingSmall.Nats"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalNat",
+      "types": [
+        "OnboardingSmall.OptionalNat"
+      ]
+    }
+  ]
+}

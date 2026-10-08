@@ -1,0 +1,220 @@
+{
+  "abi": 7,
+  "archiveSha256": "dfa4d75901b2ea0eabf9c9713b7ae353284f66b516d48e72c5e8c2153836e58e",
+  "bindingIrFileSha256": "0b254b61995993908f99eb269352568be4f0bdc6a4284904ab74d1a35ebea485",
+  "bindingIrSha256": "814375336c3cee2c0d9e3727bdcbc1b4dfcb290616eefad08fc16b6efe34c07a",
+  "checks": 1019,
+  "compilerFreePath": true,
+  "consumerSha256": "c614240aa4237059ded896efd69cf97ee3b6e16a1ff3471eb311a4cb5b5b5e38",
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "instantiations": {
+    "BoxPair": {
+      "arguments": [
+        {
+          "id": "NatBox",
+          "kind": "named"
+        },
+        {
+          "id": "TextBox",
+          "kind": "named"
+        }
+      ],
+      "structure": "Pair"
+    },
+    "MarkerTag": {
+      "arguments": [
+        {
+          "id": "Marker",
+          "kind": "named"
+        }
+      ],
+      "fields": 1,
+      "structure": "Tag"
+    },
+    "MaybeBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBoxAgain": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "TaggedNat": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Tagged"
+    },
+    "TextBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        }
+      ],
+      "structure": "Box"
+    },
+    "WordPair": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Pair"
+    }
+  },
+  "offlineInstall": true,
+  "path": "reviewed-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "814375336c3cee2c0d9e3727bdcbc1b4dfcb290616eefad08fc16b6efe34c07a",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "26dfb4cfaec761a5733cfa665d069d37dfa38c4804faceb367c6654feaefb268",
+    "componentBundleSha256": "f30a9d7a7109ef24c120fcd0286359082e0356b4be2cae200f945a8afd19b237",
+    "componentIdentitySha256": "3afc63d6d1971a6196b386bffb98d45ef09482942f13f717542732b221536bcf",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "dfa4d75901b2ea0eabf9c9713b7ae353284f66b516d48e72c5e8c2153836e58e"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "01f4503150b5904307876da1f17adccefdb368434696a9153ec22c192b579603",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "8da8bd4291cb0285e487548ee713b57e6c6cc2886fe318d5c11c19a7f3f7a79a"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "c5c62113a32342b4447b114b3756e7fca0b50efc90445bff711538a7a92d941e",
+  "rejections": 1010,
+  "reproducible": true,
+  "reviewedBindingIrSha256": "59e9fbc35f83129423f8031bedcebbbd53dcb5c013f764a487c0512a12628820",
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "specializations": [
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNatBox",
+      "types": [
+        "OnboardingSmall.NatBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoAgain",
+      "types": [
+        "OnboardingSmall.NatBoxAgain"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoTextBox",
+      "types": [
+        "OnboardingSmall.TextBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoLeft",
+      "types": [
+        "OnboardingSmall.Left.LeftBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoRight",
+      "types": [
+        "OnboardingSmall.Right.RightBox"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoBoxes",
+      "types": [
+        "OnboardingSmall.Boxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalBoxes",
+      "types": [
+        "OnboardingSmall.OptionalBoxes"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoNats",
+      "types": [
+        "OnboardingSmall.Nats"
+      ]
+    },
+    {
+      "declaration": "OnboardingSmall.echo",
+      "name": "OnboardingSmall.echoOptionalNat",
+      "types": [
+        "OnboardingSmall.OptionalNat"
+      ]
+    }
+  ],
+  "typescript": {
+    "declarationsSha256": "d39113af1338df8ece821154b6e8b58de738e77424a15568b6f9e6c7cd2e9657",
+    "skipLibCheck": false,
+    "sourceSha256": "177fc21683740bc1ceee2ba9aa9d95a9196b230039a5e2969f64d220ea0a6e21",
+    "strict": true
+  }
+}

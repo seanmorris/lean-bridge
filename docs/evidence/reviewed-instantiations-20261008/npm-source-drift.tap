@@ -1,0 +1,32 @@
+# step ordinary pattern=^an independently reviewed npm package
+TAP version 13
+# Subtest: an independently reviewed npm package keeps every alias-named record for Node and strict TypeScript
+not ok 1 - an independently reviewed npm package keeps every alias-named record for Node and strict TypeScript
+  ---
+  duration_ms: 33273.151556
+  type: 'test'
+  location: '/app/build/worktrees/producer-d40fd3b/tests/reviewed-instantiations.test.mjs:323:1'
+  failureType: 'testCodeFailure'
+  error: 'Independent project files differ from the captured root inputs'
+  code: 'lake-source-drift'
+  stack: |-
+    fail (file:///app/build/worktrees/producer-d40fd3b/src/build/lake-dependency-snapshot.mjs:21:55)
+    verifyLakeSnapshotProject (file:///app/build/worktrees/producer-d40fd3b/src/build/lake-dependency-snapshot.mjs:385:3)
+    async prepareLakeEntryIntent (file:///app/build/worktrees/producer-d40fd3b/src/build/lake-entry-intent.mjs:93:19)
+    async verifiedBundle (file:///app/build/worktrees/producer-d40fd3b/src/release/component-npm-package.mjs:69:18)
+    async buildComponentNpmPackages (file:///app/build/worktrees/producer-d40fd3b/src/release/component-npm-package.mjs:182:17)
+    async checkGenericRecordNpmPackages (file:///app/build/worktrees/producer-d40fd3b/tests/helpers/generic-record-packages.mjs:141:17)
+    async TestContext.<anonymous> (file:///app/build/worktrees/producer-d40fd3b/tests/reviewed-instantiations.test.mjs:328:22)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33654.609705
+exit=1

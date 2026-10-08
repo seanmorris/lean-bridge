@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiation-archive-source-history.mjs";
 import { beforeBrowserGenericPromotionSource, browserGenericPromotionChangedPaths, browserGenericPromotionHistoryPath, browserGenericPromotionPredecessor, reverseBrowserGenericPromotionUpdate } from "./browser-generic-promotion-source-history.mjs";
 import { browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
 
@@ -21,7 +22,7 @@ test("browser generic promotion authenticates every source predecessor and rejec
 	assert.deepEqual(record.updates.map(update => update.path), browserGenericPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedInstantiationArchiveSource(update.path, await readFile(update.path, "utf8"));
 		const restored = reverseBrowserGenericPromotionUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforeBrowserGenericPromotionSource(update.path, source), restored);

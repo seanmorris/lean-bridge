@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1433,
+  "execution": "local",
+  "scope": {
+    "sourcePath": "reviewed-source",
+    "hosts": [
+      "c",
+      "cpp",
+      "npm"
+    ],
+    "cases": [
+      "direct alias-named records",
+      "nine finite function specializations over record and List/Option aliases"
+    ],
+    "strictTypescript": true,
+    "browser": false,
+    "dispatch": "not measured",
+    "sourceIdentity": "Selected compiler, harness, fixture and caller files; not a complete dependency closure.",
+    "nativeCompilerFreePath": "No Lean or producer toolchain in the consumer path; C/C++ callers still compile against installed archives with the host compiler.",
+    "npmCompilerFreePath": "Offline install and Node calls use a Node-only PATH after author/build deletion; strict TypeScript uses the engine checkout's tsc.",
+    "environment": {
+      "node": "v22.23.3",
+      "nativeGlibcFloorOverride": "2.36",
+      "cpu": 3,
+      "concurrency": 1,
+      "npmEngine": "local"
+    },
+    "hostedCi": false,
+    "binaryArchivesRetained": false
+  },
+  "producers": {
+    "native": {
+      "revision": "3c2d5800cfcfc08b6506e6ee05af718772b4208e",
+      "files": [
+        {
+          "path": "tests/reviewed-instantiations.test.mjs",
+          "sha256": "d10ef75e9f8e229064b502ea6538030afe38f8ce3770b225055e6de4b065e4d7"
+        },
+        {
+          "path": "tests/helpers/reviewed-instantiation-fixture.mjs",
+          "sha256": "4f4b3ae5e4b5fbb2f0bdfa71bf04411ea6bd5d977a55d85c05684f9be3ffbbe8"
+        },
+        {
+          "path": "tests/helpers/generic-record-packages.mjs",
+          "sha256": "175f05e460f8038a30c454b3df42db57a15e52ec9a857d2f86b1f65ffdab0a89"
+        },
+        {
+          "path": "tests/helpers/generic-record-specializations.mjs",
+          "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+        },
+        {
+          "path": "src/analyze/reviewed-instantiation.mjs",
+          "sha256": "dae3118a8d11e0e23778156cf6105df4cbcdb3ec8a38dc948e78c305a693a476"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "3379ec688a48a317b8897b877903238cee50408b03cff3d4decb8d6c16d09a79"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "3fd03b301b7038ec1101a33ea8626e2aad61446a09385df90ff4493ed3c882ef"
+        },
+        {
+          "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+          "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specializations.lean",
+          "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9"
+        },
+        {
+          "path": "tests/fixtures/generic-record-consumers/c.c",
+          "sha256": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70"
+        },
+        {
+          "path": "tests/fixtures/generic-record-consumers/cpp.cpp",
+          "sha256": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specialization-consumers/c.c",
+          "sha256": "4ca635d51219e560bc45c98f97d05495db460372843fa63151764028fbdd8733"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specialization-consumers/cpp.cpp",
+          "sha256": "50f2248465f34075d1e8d3c852813764534d64c722a978f01a51248a557ddab4"
+        }
+      ]
+    },
+    "npm": {
+      "revision": "111ec13268059c8bf8c901ff0b17583c1fa3ed29",
+      "files": [
+        {
+          "path": "tests/reviewed-instantiations.test.mjs",
+          "sha256": "6caf578df82046e503f0570f45db740755114dc91d14bd5cb990e7cc5a7642c5"
+        },
+        {
+          "path": "tests/helpers/reviewed-instantiation-fixture.mjs",
+          "sha256": "4f4b3ae5e4b5fbb2f0bdfa71bf04411ea6bd5d977a55d85c05684f9be3ffbbe8"
+        },
+        {
+          "path": "tests/helpers/generic-record-packages.mjs",
+          "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd"
+        },
+        {
+          "path": "tests/helpers/generic-record-specializations.mjs",
+          "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+        },
+        {
+          "path": "src/analyze/reviewed-instantiation.mjs",
+          "sha256": "dae3118a8d11e0e23778156cf6105df4cbcdb3ec8a38dc948e78c305a693a476"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "9f0f4466daeb2292f51ae1063e06b46f7687829183657ae824682a6e06359c3a"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "3fd03b301b7038ec1101a33ea8626e2aad61446a09385df90ff4493ed3c882ef"
+        },
+        {
+          "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+          "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specializations.lean",
+          "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9"
+        },
+        {
+          "path": "tests/fixtures/generic-record-consumers/c.c",
+          "sha256": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70"
+        },
+        {
+          "path": "tests/fixtures/generic-record-consumers/cpp.cpp",
+          "sha256": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specialization-consumers/c.c",
+          "sha256": "4ca635d51219e560bc45c98f97d05495db460372843fa63151764028fbdd8733"
+        },
+        {
+          "path": "tests/fixtures/generic-record-specialization-consumers/cpp.cpp",
+          "sha256": "50f2248465f34075d1e8d3c852813764534d64c722a978f01a51248a557ddab4"
+        }
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/native-direct.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-c-cpp-3c2d580.json",
+      "bytes": 7024,
+      "sha256": "fd41eca999d9c60c304b54fee28748a8f4c7417cd0005f74861280d21f6db10c"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/native-composed.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-specialized-c-cpp-3c2d580.json",
+      "bytes": 10494,
+      "sha256": "bd715718b5beb19c606727d63ca19a44a6410092f8891b384a09c0fb895e7974"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/native.queue",
+      "originalPath": "build/vo1220-reviewed-instantiations-c-cpp-3c2d580.queue",
+      "bytes": 753,
+      "sha256": "1acfb26662afd2caf8da103534a39c7a2a308338cb89923dacb200bfe36dacf4"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/native.tap",
+      "originalPath": "build/vo1220-reviewed-instantiations-c-cpp-3c2d580.tap",
+      "bytes": 1206,
+      "sha256": "d69ddc3be630d8bdf3f472c8c952509a9cdc9aa3d71a1953d4c136c7856b109b"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-direct.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-111ec13.json",
+      "bytes": 4571,
+      "sha256": "58cd411b647f7bc434c13a2a516f1b1fdf3ff50de0ca241d781ae0b0579e7a05"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-composed.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-specialized-npm-111ec13.json",
+      "bytes": 6073,
+      "sha256": "a0b9b3b9806e7f734e81f2a129d88188615a1a61a5c9151e01a5bf624ea85ed8"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm.queue",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-111ec13.queue",
+      "bytes": 1156,
+      "sha256": "63b9837dc8c958afda6d7b632265dbeb74b92403d467ce3d5cc9bcc3bed46e47"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm.tap",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-111ec13.tap",
+      "bytes": 935,
+      "sha256": "95b14eca5264232c528edf6ff5444837d7e7cddbdbb41b2272540f3f7bb98d77"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-source-drift.queue",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-3c2d580.queue",
+      "bytes": 685,
+      "sha256": "7e00964fc6d9c47910bf362b2bddc155b648cc75c8aa3001f26a54c273403a0e"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-source-drift.tap",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-3c2d580.tap",
+      "bytes": 1698,
+      "sha256": "ef23f7a29585dbee93ec6b5c30dbc38e0933b6df590f28745741786785e858f9"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-renamed-direct.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-4bab1c7.json",
+      "bytes": 2059,
+      "sha256": "b41730a0b392305bd3f3057e86e99245890eb2db3b1b0cea056ed72368c7fd9b"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-renamed-composed.json",
+      "originalPath": "build/vo1220-reviewed-instantiations-specialized-npm-4bab1c7.json",
+      "bytes": 3561,
+      "sha256": "2d2d06dc0400fefb8161af32a9ceda1b4239457a3bb0cfbf7da54f2ab54c8648"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-renamed.queue",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-4bab1c7.queue",
+      "bytes": 817,
+      "sha256": "17200539b1f153ffd23cfc82d1b165a78cdd678fc2e4bf3d4994d40d82613891"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/npm-renamed.tap",
+      "originalPath": "build/vo1220-reviewed-instantiations-npm-4bab1c7.tap",
+      "bytes": 932,
+      "sha256": "3685bdf01ac52e734ca73575fcabcfe683ad6cff9b7b1b2203c2c7e811c6ef69"
+    },
+    {
+      "path": "docs/evidence/reviewed-instantiations-20261008/fresh-lean.tap",
+      "originalPath": "build/vo1220-reviewed-instantiation-3c2d580-lean.tap",
+      "bytes": 3558,
+      "sha256": "f7c9a8db32687f47a6c83982c89365c347e77d5340deb40ffb511c00ad3bd56f"
+    }
+  ],
+  "earlierAttempts": [
+    {
+      "revision": "3c2d5800cfcfc08b6506e6ee05af718772b4208e",
+      "artifacts": [
+        "npm-source-drift.queue",
+        "npm-source-drift.tap"
+      ],
+      "accepted": false,
+      "reason": "lake-source-drift before installation; composed selection did not run"
+    },
+    {
+      "revision": "4bab1c77f750e5420bde7a8ecc9b6f03467fff6b",
+      "artifacts": [
+        "npm-renamed-direct.json",
+        "npm-renamed-composed.json",
+        "npm-renamed.queue",
+        "npm-renamed.tap"
+      ],
+      "acceptedForSourceDeletion": false,
+      "reason": "Author directories were renamed, not deleted; the later 111ec13 runs establish actual deletion."
+    }
+  ],
+  "freshLean": {
+    "artifact": "fresh-lean.tap",
+    "tests": 14,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 4,
+    "scope": "Four nested mismatch controls count separately; four installed package gates were skipped."
+  },
+  "remaining": [
+    "Promote only these reviewed C/C++ and Node/TypeScript observations.",
+    "Browser reviewed generics, inherited, recursive, refined and dependent instantiations need separate evidence."
+  ]
+}

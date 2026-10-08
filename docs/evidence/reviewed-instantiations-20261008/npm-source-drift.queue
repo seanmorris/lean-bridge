@@ -1,0 +1,10 @@
+revision=3c2d5800cfcfc08b6506e6ee05af718772b4208e
+start=2026-10-08T03:19:41Z free=4741MiB node=v22.23.3 cpu=3 concurrency=1 queue=ordinary,composed build/lean-runtime=/app/build/lean-runtime
+LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-specialized-npm-3c2d580.json
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_REPORT=/app/build/vo1220-reviewed-instantiations-npm-3c2d580.json
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_TEST=1
+NO_COLOR=1
+start ordinary 2026-10-08T03:19:41Z pattern=^an independently reviewed npm package
+end ordinary 2026-10-08T03:20:15Z exit=1
+stopped at ordinary

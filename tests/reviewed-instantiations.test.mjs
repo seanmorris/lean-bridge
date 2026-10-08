@@ -6,6 +6,8 @@
  */
 import assert from "node:assert/strict";
 import "./helpers/reviewed-instantiation-source-history-tests.mjs";
+import "./helpers/reviewed-instantiation-evidence-tests.mjs";
+import "./helpers/reviewed-instantiation-archive-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";

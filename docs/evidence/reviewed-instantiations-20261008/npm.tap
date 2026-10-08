@@ -1,0 +1,36 @@
+# step npm pattern=^an independently reviewed npm package keeps
+TAP version 13
+# Subtest: an independently reviewed npm package keeps every alias-named record for Node and strict TypeScript
+ok 1 - an independently reviewed npm package keeps every alias-named record for Node and strict TypeScript
+  ---
+  duration_ms: 72289.837875
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72754.2406
+exit=0
+# step composed-npm pattern=^a composed review keeps npm
+TAP version 13
+# Subtest: a composed review keeps npm specializations over alias-instantiated records for Node and strict TypeScript
+ok 1 - a composed review keeps npm specializations over alias-instantiated records for Node and strict TypeScript
+  ---
+  duration_ms: 90874.622078
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91368.559039
+exit=0

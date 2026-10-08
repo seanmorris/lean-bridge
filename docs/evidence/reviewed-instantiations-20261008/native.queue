@@ -1,0 +1,12 @@
+revision=3c2d5800cfcfc08b6506e6ee05af718772b4208e
+start=2026-10-08T02:57:16Z free=4766MiB node=v22.23.3 cpu=3 concurrency=1 queue=ordinary,composed
+LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_REPORT=/app/build/vo1220-reviewed-instantiations-specialized-c-cpp-3c2d580.json
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_PROFILES=c,cpp
+LEAN_BRIDGE_REVIEWED_INSTANTIATION_REPORT=/app/build/vo1220-reviewed-instantiations-c-cpp-3c2d580.json
+NO_COLOR=1
+start ordinary 2026-10-08T02:57:16Z pattern=^independently reviewed C and C
+end ordinary 2026-10-08T03:04:04Z exit=0
+start composed 2026-10-08T03:04:04Z pattern=^a composed review installs C and C
+end composed 2026-10-08T03:11:27Z exit=0
+all steps passed 2026-10-08T03:11:27Z

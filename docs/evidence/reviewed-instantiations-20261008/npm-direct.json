@@ -1,0 +1,155 @@
+{
+  "abi": 7,
+  "archiveSha256": "83d9bed0c88a8f10e7d4c82ab273e51bdf546a2e1c6ce55a7d1afcc0ef627646",
+  "bindingIrFileSha256": "7723f6fee0381f6454c898602cc1f0ac2ec4955ab40e0d279bdec6fdaedf4f33",
+  "bindingIrSha256": "a8e32a280ef25862031bbe50b6c0321ca99fd02108071a8f2d03928ff16c93e2",
+  "checks": 1010,
+  "compilerFreePath": true,
+  "consumerSha256": "b0b3b09c738e9d203f7ee1dfb9bc11f21f858a4492395f0b678d92ccd1a631ac",
+  "dispatch": "not measured",
+  "independentBuilds": 2,
+  "instantiations": {
+    "BoxPair": {
+      "arguments": [
+        {
+          "id": "NatBox",
+          "kind": "named"
+        },
+        {
+          "id": "TextBox",
+          "kind": "named"
+        }
+      ],
+      "structure": "Pair"
+    },
+    "MarkerTag": {
+      "arguments": [
+        {
+          "id": "Marker",
+          "kind": "named"
+        }
+      ],
+      "fields": 1,
+      "structure": "Tag"
+    },
+    "MaybeBox": {
+      "arguments": [
+        {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "NatBoxAgain": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Box"
+    },
+    "TaggedNat": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Tagged"
+    },
+    "TextBox": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        }
+      ],
+      "structure": "Box"
+    },
+    "WordPair": {
+      "arguments": [
+        {
+          "kind": "primitive",
+          "name": "string"
+        },
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "structure": "Pair"
+    }
+  },
+  "offlineInstall": true,
+  "path": "reviewed-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "a8e32a280ef25862031bbe50b6c0321ca99fd02108071a8f2d03928ff16c93e2",
+    "component": {
+      "id": "onboarding-small@1.0.0",
+      "name": "onboarding-small",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "3e3e71f6cd972ea88b8c5ba540b696f1c19177fd00ca9be8c34b3f7a79ed856f",
+    "componentBundleSha256": "ebee5c9c44ad6017ee901184c82586434fad1fc9e8b305e24b8dd3d1a50d40fd",
+    "componentIdentitySha256": "eceee6bfb66951b48901d8c25090d97d75f24f4bd444d9fc139337cc3f6cb739",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "onboarding-small-1.0.0.tgz",
+      "package": "onboarding-small@1.0.0",
+      "sha256": "83d9bed0c88a8f10e7d4c82ab273e51bdf546a2e1c6ce55a7d1afcc0ef627646"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "cced1e294247aa274e8fdd06b2b74feceaceaf1232f8f2884bcc90369fbd60f7",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.28bc7ead91ccdec242e002053c8b2ef7514281454704d86f5c663ce08bf1cf4a",
+      "sha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "13fe3374e27bc7a867af17a7cd2316031584f4f153f2f7bbb20e33fd2df73402"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "593cd20c61707325501e596a32cf245870e04c9532fbad8ba85a3948a56bdbd0",
+  "rejections": 1005,
+  "reproducible": true,
+  "reviewedBindingIrSha256": "6b94239f9a06ba206e58fbf2eef9d71658658bbef5a67da4e59fa4ece057f8db",
+  "runtimeArchiveSha256": "adabede49690aa159106e216b7faafd3ec5f184c03f08adcbdba2ccb654074b0",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "declarationsSha256": "f92747f60521d52c1349ed57c0492d700e489a125c5a242816e7be9aba867deb",
+    "skipLibCheck": false,
+    "sourceSha256": "0b954fff034a11eb3759be135406c1b5b1b65813508c43c43e11988b8eb25e27",
+    "strict": true
+  }
+}
