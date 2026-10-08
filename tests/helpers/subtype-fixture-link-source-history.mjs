@@ -1,24 +1,20 @@
 /**
- * Preserve exact source predecessors of the Browser callback archive change (#1220).
+ * Preserve exact source predecessors of the Subtype fixture link repair change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeSubtypeFixtureLinkSource } from "./subtype-fixture-link-source-history.mjs";
 
-export const browserCallbackArchiveHistoryPath = "docs/evidence/browser-callback-archive-source-history-20261008.json";
-export const browserCallbackArchiveChangedPaths = [
-	".gitattributes"
-	, "src/adoption/test-profiles.mjs"
-	, "tests/helpers/callback-fin-packages.mjs"
-	, "docs/lean/existing-package.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "docs/type-surface.v1.json"
+export const subtypeFixtureLinkHistoryPath = "docs/evidence/subtype-fixture-link-source-history-20261008.json";
+export const subtypeFixtureLinkChangedPaths = [
+	"tests/helpers/reviewed-subtype-fixture.mjs"
+	, "tests/helpers/reviewed-subtype-build-tests.mjs"
+	, "tests/reviewed-subtype-installed.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-instantiation-source-history.mjs"
-	, "tests/helpers/reviewed-instantiation-source-history-tests.mjs"
+	, "tests/helpers/browser-callback-archive-source-history.mjs"
+	, "tests/helpers/browser-callback-archive-source-history-tests.mjs"
 ];
 let history;
 
@@ -28,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseBrowserCallbackArchiveUpdate = (source, update) => {
-	assert.ok(browserCallbackArchiveChangedPaths.includes(update.path));
+export const reverseSubtypeFixtureLinkUpdate = (source, update) => {
+	assert.ok(subtypeFixtureLinkChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +51,11 @@ export const reverseBrowserCallbackArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeBrowserCallbackArchiveSource = (path, source, expected) => {
-	source = beforeSubtypeFixtureLinkSource(path, source, expected);
-	if(typeof source !== "string" || !browserCallbackArchiveChangedPaths.includes(path)) return source;
+export const beforeSubtypeFixtureLinkSource = (path, source, expected) => {
+	if(typeof source !== "string" || !subtypeFixtureLinkChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(browserCallbackArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(subtypeFixtureLinkHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseBrowserCallbackArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseSubtypeFixtureLinkUpdate(source, update) : source;
 };

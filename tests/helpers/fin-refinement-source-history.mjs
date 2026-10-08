@@ -90,6 +90,7 @@ import { reviewedCallbackHarnessChangedPaths } from "./reviewed-callback-harness
 import { reviewedSpecializationArchiveChangedPaths } from "./reviewed-specialization-archive-source-history.mjs";
 import { reviewedInstantiationChangedPaths } from "./reviewed-instantiation-source-history.mjs";
 import { browserCallbackArchiveChangedPaths } from "./browser-callback-archive-source-history.mjs";
+import { subtypeFixtureLinkChangedPaths } from "./subtype-fixture-link-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -644,6 +645,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedSpecializationArchiveChangedPaths
 	, ...reviewedInstantiationChangedPaths
 	, ...browserCallbackArchiveChangedPaths
+	, ...subtypeFixtureLinkChangedPaths
 ])].sort());
 
 /**

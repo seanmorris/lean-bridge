@@ -60,6 +60,12 @@ def wrongEven (value : Nat) : Option Nat := some value
 unsafe def unsafeEven (value : Nat) : Option Even := checkedEven value
 partial def partialEven (value : Nat) : Option Even :=
   if value == 0 then checkedEven value else partialEven (value - 1)
+end Subtypes
+`;
+
+/** Undefined foreign constructor used only by source rejection tests, never installed packages. */
+export const reviewedSubtypeForeignSource = `
+namespace Subtypes
 @[extern "lean_bridge_test_foreign_even"] opaque foreignEven (value : Nat) : Option Even
 end Subtypes
 `;

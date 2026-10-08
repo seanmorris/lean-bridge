@@ -22,6 +22,7 @@ import { installCopiedConsumer } from "./helpers/copied-fixture-install.mjs";
 import { nativeSubtypeEnvironment, nativeSubtypeTargets } from "./helpers/native-subtype-install.mjs";
 import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource, reviewedSubtypeNativeConsumer } from "./helpers/reviewed-subtype-installed-fixture.mjs";
 import "./helpers/reviewed-subtype-harness-source-history-tests.mjs";
+import "./helpers/subtype-fixture-link-source-history-tests.mjs";
 import "./helpers/reviewed-subtype-npm-tests.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-subtype";
@@ -37,6 +38,7 @@ const authorProject = async (projectRoot, targets, review) => {
 };
 
 test("an independent Subtype review keeps distinct constructor choices and a zero-argument result", async () => {
+	assert.doesNotMatch(reviewedSubtypeInstalledSource, /\bextern\b|foreignEven|lean_bridge_test_foreign_even/u);
 	const review = reviewedSubtypeInstalledIr();
 	validateReviewedSource(reviewInput(review));
 	const selection = reviewedSourceSelection(reviewInput(review));
@@ -75,7 +77,9 @@ test("fresh Lean compiles the reviewed zero-argument Subtype result and both gen
 			assert.deepEqual(input.sourceIdentity.request.contracts, reviewedSourceSelection(reviewInput(review)).contracts);
 			return createNativeModel(input, { refinements: true });
 		}
-		, compileComponent: async ({ model }) => {
+		, compileComponent: async ({ model, compileOrder }) => {
+			const compiled = compileOrder.find(item => item.module === "Subtypes");
+			assert.doesNotMatch(await readFile(compiled.c, "utf8"), /lean_bridge_test_foreign_even/u, "installed modules must not retain the undefined foreign rejection fixture");
 			assert.equal(reviewedContractDifference(review, model.bindingIr), null);
 			const zero = model.exports.find(item => item.name === "Subtypes.zeroEven");
 			assert.deepEqual(zero.parameters, []);

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeSubtypeFixtureLinkSource } from "./subtype-fixture-link-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeBrowserCallbackArchiveSource, browserCallbackArchiveChangedPaths, browserCallbackArchiveHistoryPath, reverseBrowserCallbackArchiveUpdate } from "./browser-callback-archive-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Browser callback archive authenticates each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), browserCallbackArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeSubtypeFixtureLinkSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseBrowserCallbackArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeBrowserCallbackArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeBrowserCallbackArchiveSource(update.path, source, update.currentSha256), source);

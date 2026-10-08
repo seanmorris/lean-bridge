@@ -14,7 +14,7 @@ import { buildElaboratedComponent } from "../../src/build/elaborated-component.m
 import { createNativeModel } from "../../src/build/native-model.mjs";
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
-import { reviewedSubtypeExtraSource, reviewedSubtypeIr } from "./reviewed-subtype-fixture.mjs";
+import { reviewedSubtypeExtraSource, reviewedSubtypeForeignSource, reviewedSubtypeIr } from "./reviewed-subtype-fixture.mjs";
 
 const key = "lean-lang.org/refinements";
 const half = ir => ir.declarations.find(item => item.name === "half");
@@ -28,7 +28,7 @@ test("independent Subtype reviews select typed constructors, authenticate specia
 	const projectRoot = join(directory, "project"), outputRoot = join(directory, "component");
 	const fixture = "tests/fixtures/onboarding/native-subtype";
 	await cp(fixture, projectRoot, { recursive: true });
-	await saveLakeFile(projectRoot, "Subtypes.lean", `${await readFile(join(fixture, "Subtypes.lean"), "utf8")}${reviewedSubtypeExtraSource}`);
+	await saveLakeFile(projectRoot, "Subtypes.lean", `${await readFile(join(fixture, "Subtypes.lean"), "utf8")}${reviewedSubtypeExtraSource}${reviewedSubtypeForeignSource}`);
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Subtypes"] }));
 	const cases = [
 		["all primitive sites and two generic specializations", () => {}, null]
@@ -60,8 +60,10 @@ test("independent Subtype reviews select typed constructors, authenticate specia
 			, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
 			, targets: ["c"], profile: "native-library-v1"
 			, receiptName: "native-component.json", createModel
-			, compileComponent: async ({ model, adapters }) => {
+			, compileComponent: async ({ model, adapters, compileOrder }) => {
 				assert.equal(failure, null, `${name}: invalid review reached the linker`);
+				const compiled = compileOrder.find(item => item.module === "Subtypes");
+				assert.match(await readFile(compiled.c, "utf8"), /lean_bridge_test_foreign_even/u, "retain the actual undefined foreign control in source-only tests");
 				assert.equal(model.schemaVersion, 3);
 				assert.equal(model.exports.length, 11);
 				for(const item of model.exports)

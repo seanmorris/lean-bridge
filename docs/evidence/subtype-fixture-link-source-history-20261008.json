@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "milestone": "subtype-fixture-link-v1",
+  "predecessorCommit": "4249bde5421e82bd7ad1beb24d11a51dad65b4a2",
+  "updates": [
+    {
+      "path": "tests/helpers/reviewed-subtype-fixture.mjs",
+      "currentSha256": "98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197",
+      "previousSha256": "f574e75d7e87c0d5e73bf6bb588a8b6cc14108ace168146a727819886d9faafb",
+      "edits": [
+        {
+          "start": 2881,
+          "previous": "",
+          "current": "end Subtypes\n`;\n\n/** Undefined foreign constructor used only by source rejection tests, never installed packages. */\nexport const reviewedSubtypeForeignSource = `\nnamespace Subtypes\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-build-tests.mjs",
+      "currentSha256": "6413f0f63467c77d6acc36ab594a91f6100792b0fbecea8f198b7501932d2e51",
+      "previousSha256": "65d0254c8216c74195e0151d1c68f319007d81984c6454ffbe3140b5d256fd40",
+      "edits": [
+        {
+          "start": 761,
+          "previous": "import { reviewedSubtypeExtraSource, reviewedSubtypeIr } from \"./reviewed-subtype-fixture.mjs\";\n",
+          "current": "import { reviewedSubtypeExtraSource, reviewedSubtypeForeignSource, reviewedSubtypeIr } from \"./reviewed-subtype-fixture.mjs\";\n"
+        },
+        {
+          "start": 1595,
+          "previous": "\tawait saveLakeFile(projectRoot, \"Subtypes.lean\", `${await readFile(join(fixture, \"Subtypes.lean\"), \"utf8\")}${reviewedSubtypeExtraSource}`);\n",
+          "current": "\tawait saveLakeFile(projectRoot, \"Subtypes.lean\", `${await readFile(join(fixture, \"Subtypes.lean\"), \"utf8\")}${reviewedSubtypeExtraSource}${reviewedSubtypeForeignSource}`);\n"
+        },
+        {
+          "start": 4596,
+          "previous": "\t\t\t, compileComponent: async ({ model, adapters }) => {\n",
+          "current": "\t\t\t, compileComponent: async ({ model, adapters, compileOrder }) => {\n"
+        },
+        {
+          "start": 4745,
+          "previous": "",
+          "current": "\t\t\t\tconst compiled = compileOrder.find(item => item.module === \"Subtypes\");\n\t\t\t\tassert.match(await readFile(compiled.c, \"utf8\"), /lean_bridge_test_foreign_even/u, \"retain the actual undefined foreign control in source-only tests\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/reviewed-subtype-installed.test.mjs",
+      "currentSha256": "d4cef00fb7e9370d683d871879496007a5dbb3adcc16aeb4acce7716d8451958",
+      "previousSha256": "f1cde968855ee7b8ece5e3d335fede38b090f568996fa00c33fe4c0f38b7c773",
+      "edits": [
+        {
+          "start": 1542,
+          "previous": "",
+          "current": "import \"./helpers/subtype-fixture-link-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2517,
+          "previous": "",
+          "current": "\tassert.doesNotMatch(reviewedSubtypeInstalledSource, /\\bextern\\b|foreignEven|lean_bridge_test_foreign_even/u);\n"
+        },
+        {
+          "start": 4906,
+          "previous": "\t\t, compileComponent: async ({ model }) => {\n",
+          "current": "\t\t, compileComponent: async ({ model, compileOrder }) => {\n\t\t\tconst compiled = compileOrder.find(item => item.module === \"Subtypes\");\n\t\t\tassert.doesNotMatch(await readFile(compiled.c, \"utf8\"), /lean_bridge_test_foreign_even/u, \"installed modules must not retain the undefined foreign rejection fixture\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "03ab26116b6e3d72b16db8adb2fcb5379b29e3cbc107ad56d22dec309e7c06b9",
+      "previousSha256": "5c513e201e183aca161c00293d039f9677b45eab6eb08c42311ddc31e6dc9b83",
+      "edits": [
+        {
+          "start": 7933,
+          "previous": "",
+          "current": "import { subtypeFixtureLinkChangedPaths } from \"./subtype-fixture-link-source-history.mjs\";\n"
+        },
+        {
+          "start": 44277,
+          "previous": "",
+          "current": "\t, ...subtypeFixtureLinkChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-callback-archive-source-history.mjs",
+      "currentSha256": "9e544afdf7b9986708172e8603507fbc6019e4dcb55ee93afe08ca3ed4efd4d7",
+      "previousSha256": "e6de450b8bac95861f758ab6856860179ec568077463b56e486a9a8a50779cbe",
+      "edits": [
+        {
+          "start": 241,
+          "previous": "",
+          "current": "import { beforeSubtypeFixtureLinkSource } from \"./subtype-fixture-link-source-history.mjs\";\n"
+        },
+        {
+          "start": 2395,
+          "previous": "",
+          "current": "\tsource = beforeSubtypeFixtureLinkSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-callback-archive-source-history-tests.mjs",
+      "currentSha256": "ee86d81303fdee2ffd351aea9c177a35389e59077a3bfb51f020900e185599a6",
+      "previousSha256": "d2eb554bef40775ceeefc8acbf4d9f2484fe3de35423a3b2b250d610cb155600",
+      "edits": [
+        {
+          "start": 273,
+          "previous": "",
+          "current": "import { beforeSubtypeFixtureLinkSource } from \"./subtype-fixture-link-source-history.mjs\";\n"
+        },
+        {
+          "start": 1056,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeSubtypeFixtureLinkSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}
