@@ -21,6 +21,7 @@ import { nativeSubtypeDispatchColumns, nativeSubtypeDispatchExpected, nativeSubt
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterposer, perlSubtypePrelude } from "./helpers/perl-subtype-dispatch.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
+import "./helpers/subtype-alias-position-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
@@ -77,18 +78,29 @@ test("native builds reject Subtype outside top-level sites and without a constru
 		, ["option", "def optionSite (value : Option Word) : Nat := 0", { "Subtypes.optionSite": { parameters: [site("Subtypes.checkedWord")], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
 		, ["field", "structure Box where\n  word : Word\ndef fieldSite (value : Box) : Nat := value.word.val.length", { "Subtypes.fieldSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
 		, ["callback", "def callbackSite (value : Word → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
+		, ["callbackAlias", "abbrev OtherWord := Word\ndef callbackAliasSite (value : OtherWord → Nat) : Nat := value ⟨\"a\", by decide⟩", { "Subtypes.callbackAliasSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
+		, ["callbackResult", "def callbackResultSite (value : Nat → Word) : Nat := (value 0).val.length", { "Subtypes.callbackResultSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/]
+		, ["closure", "def closureSite (_ : Nat) : Word → Nat := fun value => value.val.length", { "Subtypes.closureSite": { parameters: [plain], result: plain } }, /Subtype refinements currently require a top-level parameter or result/, 1]
 		, ["missing", "def missingSite (value : Word) : Nat := value.val.length", {}, /Subtype refinements require a configured checked constructor/]
 		, ["wrong", "def wrongSite (value : Word) : Nat := value.val.length", { "Subtypes.wrongSite": { parameters: [site("Subtypes.checkedEven")], result: plain } }, /Subtype checked constructor input must equal the subtype base/]];
-	for(const [name, source, contracts, pattern] of cases)
+	for(const [name, source, contracts, pattern, arity] of cases)
 	{
 		const directory = await mkdtemp(join(tmpdir(), `lean-bridge-subtype-${name}-`));
 		t.after(() => rm(directory, { recursive: true, force: true }));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release");
 		await cp(fixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, "Subtypes.lean", `${await readFile(join(fixture, "Subtypes.lean"), "utf8")}\nnamespace Subtypes\n${source}\nend Subtypes\n`);
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Subtypes"], exports: Object.keys(contracts).length ? Object.keys(contracts) : [`Subtypes.${name}Site`], contracts, targets: Object.fromEntries([nativeSubtypeTargets.c]) }));
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({
+			schemaVersion: 1, modules: ["Subtypes"]
+			, exports: Object.keys(contracts).length ? Object.keys(contracts) : [`Subtypes.${name}Site`]
+			, contracts
+			, targets: Object.fromEntries([nativeSubtypeTargets.c])
+			, ...(arity === undefined ? {} : { arities: { [`Subtypes.${name}Site`]: arity } }) }));
 		await assert.rejects(() => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment: nativeSubtypeEnvironment(["c"]) })
-			, error => pattern.test(JSON.stringify({ message: error.message, details: error.details })), name);
+			, error => {
+				assert.match(JSON.stringify({ message: error.message, details: error.details }), pattern, name);
+				return true;
+			}, name);
 		await assert.rejects(() => access(outputRoot), name);
 	}
 	// Perl XS runs the exported validators since VO #1432; the Perl profile below checks the archived XS, so a

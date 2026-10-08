@@ -95,6 +95,7 @@ import { inheritedRecordsChangedPaths } from "./inherited-records-source-history
 import { inheritanceSubtypeHarnessChangedPaths } from "./inheritance-subtype-harness-source-history.mjs";
 import { reviewedSubtypeArchiveChangedPaths } from "./reviewed-subtype-archive-source-history.mjs";
 import { reviewedApiPromotionChangedPaths } from "./reviewed-api-promotion-source-history.mjs";
+import { subtypeAliasPositionChangedPaths } from "./subtype-alias-position-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -654,6 +655,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...inheritanceSubtypeHarnessChangedPaths
 	, ...reviewedSubtypeArchiveChangedPaths
 	, ...reviewedApiPromotionChangedPaths
+	, ...subtypeAliasPositionChangedPaths
 ])].sort());
 
 /**

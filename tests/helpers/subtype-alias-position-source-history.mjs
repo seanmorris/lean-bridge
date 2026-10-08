@@ -1,25 +1,19 @@
 /**
- * Preserve exact source predecessors of the Reviewed API promotion change (#1220).
+ * Preserve exact source predecessors of the Subtype alias position change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeSubtypeAliasPositionSource } from "./subtype-alias-position-source-history.mjs";
 
-export const reviewedApiPromotionHistoryPath = "docs/evidence/reviewed-api-promotion-source-history-20261008.json";
-export const reviewedApiPromotionChangedPaths = [
-	"src/adoption/test-profiles.mjs"
-	, "docs/consume/c.md"
-	, "docs/consume/cpp.md"
-	, "docs/javascript-typescript.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "tests/helpers/native-fin-promotion-tests.mjs"
-	, "tests/type-surface.test.mjs"
+export const subtypeAliasPositionHistoryPath = "docs/evidence/subtype-alias-position-source-history-20261008.json";
+export const subtypeAliasPositionChangedPaths = [
+	"src/analyze/NativeExports.lean"
+	, "tests/native-subtype.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-subtype-archive-source-history.mjs"
-	, "tests/helpers/reviewed-subtype-archive-source-history-tests.mjs"
+	, "tests/helpers/reviewed-api-promotion-source-history.mjs"
+	, "tests/helpers/reviewed-api-promotion-source-history-tests.mjs"
 	, "docs/type-surface.v1.json"
 ];
 let history;
@@ -30,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseReviewedApiPromotionUpdate = (source, update) => {
-	assert.ok(reviewedApiPromotionChangedPaths.includes(update.path));
+export const reverseSubtypeAliasPositionUpdate = (source, update) => {
+	assert.ok(subtypeAliasPositionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -57,12 +51,11 @@ export const reverseReviewedApiPromotionUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeReviewedApiPromotionSource = (path, source, expected) => {
-	source = beforeSubtypeAliasPositionSource(path, source, expected);
-	if(typeof source !== "string" || !reviewedApiPromotionChangedPaths.includes(path)) return source;
+export const beforeSubtypeAliasPositionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !subtypeAliasPositionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(reviewedApiPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(subtypeAliasPositionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseReviewedApiPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseSubtypeAliasPositionUpdate(source, update) : source;
 };
