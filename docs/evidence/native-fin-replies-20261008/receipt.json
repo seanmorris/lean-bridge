@@ -1,0 +1,551 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1453,
+  "execution": "local",
+  "scope": {
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "sourcePath": "ordinary-source",
+    "exports": 16,
+    "checkedHostReplies": 15,
+    "installedChecks": {
+      "c": 81,
+      "cpp": 74
+    },
+    "forkedChild": "exits with status 5 before any host call",
+    "reviewedContracts": false,
+    "otherNativeHosts": false,
+    "hostedCi": false,
+    "binaryArchivesRetained": false,
+    "dispatch": {
+      "installed": "not measured",
+      "wrapper": "C only: a wrapper without the Fin 5 reply walk still refused through Lean's reconstruction; no source-entry or adapter counter"
+    },
+    "sanitizers": {
+      "installed": "none",
+      "wrapper": "ASan and UBSan on the generated wrapper and consumer; the Lean component, bridge runtime and libleanshared are uninstrumented"
+    }
+  },
+  "producerEnvironment": {
+    "glibc": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36",
+    "glibcFloor": "2.36",
+    "versions": {
+      "node": "v22.23.3",
+      "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+      "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+      "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+      "ldd": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36"
+    },
+    "cpu": 3,
+    "concurrency": 1
+  },
+  "sourceIdentityScope": "Selected producer sources archived as text, not a complete dependency closure. The installed run and the fresh Lean gate ran 5459b7f; the wrapper ran 65f7dd7, whose selected sources differ only in three test-side files.",
+  "producers": {
+    "installed": {
+      "revision": "5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec",
+      "test": "relocated source-free C and C++ packages check every host reply bound and recover",
+      "report": "docs/evidence/native-fin-replies-20261008/installed.json",
+      "log": "docs/evidence/native-fin-replies-20261008/installed.tap",
+      "queue": "docs/evidence/native-fin-replies-20261008/installed.queue",
+      "callers": {
+        "c": "docs/evidence/native-fin-replies-20261008/installed-c-caller.c.txt",
+        "cpp": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/fin-reply-consumers/cpp.cpp.txt"
+      },
+      "sources": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/NativeExports.lean.txt"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6e3612687fc26c12d8cacc0eb07612598c0bb16eaa61026165dddebdef4ff971",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/native-types.mjs.txt"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-model.mjs.txt"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-component.mjs.txt"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/native-callables.mjs.txt"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/primitive-surface.mjs.txt"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/release/native-c-family.mjs.txt"
+        },
+        {
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "sha256": "90535d0be76f2a87836c8519615108db7fef023cefd0e4233f5d9d9999dc61e8",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/native-fin-callbacks.test.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-reply-install.mjs",
+          "sha256": "a45ae072edf273f3b91f805eb15d4dcd6d5cc44bc52356ada52e5cce98f76d66",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-install.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-reply-installed-tests.mjs",
+          "sha256": "3045cbfd1a118304e5aa03f5bbcab494f308131560c4f969ec98cd313913494b",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-installed-tests.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-reply-compiled-tests.mjs",
+          "sha256": "cbf08f9a26a3c842a49e05ce99b7c9eebc5da19ec8281d089c346dbe857acc60",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-compiled-tests.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-reply-model.mjs",
+          "sha256": "d7f22fa25c170c74334eee2afc215276f36fc2ffdb311972d8368a4b32fb29d1",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-model.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-callback-model.mjs",
+          "sha256": "013ed83466422104146aa5b376c962e1f2aaa911dabf3befc24bebcecef6f68a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-model.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-callback-install.mjs",
+          "sha256": "167cc340be4700ffbaaa536ccc12f2abbfac2c01a33cb92b81e56614ac08c24a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-install.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/copied-fixture-install.mjs.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/FinReplies.lean",
+          "sha256": "25b147e9634f9353ca95ec8b83596f387718fb736db7721630776ceb8f9bb2bc",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/FinReplies.lean.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/lakefile.toml",
+          "sha256": "9f2f09d0b646a28445820812decd1ff59dbd26f84164c7ba7a7ef7d1bbae7681",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lakefile.toml.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lean-toolchain.txt"
+        },
+        {
+          "path": "tests/fixtures/fin-reply-consumers/c.c",
+          "sha256": "39998671d63550234b7efc66346ce55cbefbb26a1d79b25413984ff06014b0dd",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/fin-reply-consumers/c.c.txt"
+        },
+        {
+          "path": "tests/fixtures/fin-reply-consumers/cpp.cpp",
+          "sha256": "294c5de4f979f30c19535a5ba5ec7f9b5e16c98aa3417a084ead50ce687a4404",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/fin-reply-consumers/cpp.cpp.txt"
+        }
+      ]
+    },
+    "freshLean": {
+      "revision": "5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec",
+      "tests": [
+        "fresh Lean admits every safe direction and compiles the generated adapter",
+        "fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it",
+        "fresh Lean admits every checked host reply family and compiles each typed reconstruction"
+      ],
+      "selection": "tests/native-fin-callbacks.test.mjs --test-name-pattern=\"fresh Lean\"",
+      "environment": {
+        "NO_COLOR": "1",
+        "FORCE_COLOR": "(unset)",
+        "LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST": "1",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2"
+      },
+      "log": "docs/evidence/native-fin-replies-20261008/fresh-lean.tap",
+      "queue": "none written; the revision, CPU 3 and environment were announced on the coordination board before the run",
+      "sources": "installed"
+    },
+    "wrapper": {
+      "revision": "65f7dd7e442236e9ad2cfcdd932bba092b09a2b8",
+      "test": "generated C wrapper execution: C reply walks and Lean's own reconstruction both refuse host replies under ASan and UBSan",
+      "report": "docs/evidence/native-fin-replies-20261008/wrapper.json",
+      "log": "docs/evidence/native-fin-replies-20261008/wrapper.tap",
+      "queue": "docs/evidence/native-fin-replies-20261008/wrapper.queue",
+      "sources": [
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/NativeExports.lean.txt"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6e3612687fc26c12d8cacc0eb07612598c0bb16eaa61026165dddebdef4ff971",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/native-types.mjs.txt"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-model.mjs.txt"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-component.mjs.txt"
+        },
+        {
+          "path": "src/backends/c/native-callables.mjs",
+          "sha256": "6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/native-callables.mjs.txt"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/primitive-surface.mjs.txt"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/release/native-c-family.mjs.txt"
+        },
+        {
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "sha256": "70059341f26a3c93ec385b24fed00186812abcd37d222ba1bf05ae5445d9df0d",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/native-fin-callbacks.test.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-reply-compiled-tests.mjs",
+          "sha256": "a5cf87e6ada79fed25efce1944380a2af2d6865fe81f23b8b8fbcf7b8235f594",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/helpers/fin-reply-compiled-tests.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-callback-model.mjs",
+          "sha256": "013ed83466422104146aa5b376c962e1f2aaa911dabf3befc24bebcecef6f68a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-model.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/fin-callback-install.mjs",
+          "sha256": "167cc340be4700ffbaaa536ccc12f2abbfac2c01a33cb92b81e56614ac08c24a",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-install.mjs.txt"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/copied-fixture-install.mjs.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/FinReplies.lean",
+          "sha256": "8ad6bf3d0b48a91e3e4caa360e345914687a02796a59de24e5cffdd3496a25a8",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/fixtures/onboarding/native-fin-replies/FinReplies.lean.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/lakefile.toml",
+          "sha256": "9f2f09d0b646a28445820812decd1ff59dbd26f84164c7ba7a7ef7d1bbae7681",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lakefile.toml.txt"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-fin-replies/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lean-toolchain.txt"
+        },
+        {
+          "path": "tests/fixtures/fin-reply-consumers/bypass.c",
+          "sha256": "7071cbabe787331799f5b6aa772852700d748fdf3db5ffdbb8a1c36cca4c955c",
+          "snapshot": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/fixtures/fin-reply-consumers/bypass.c.txt"
+        }
+      ]
+    }
+  },
+  "failedAttempts": [
+    {
+      "revision": "a65a937a7b1a4652ba623b84121786a44351ccad",
+      "profile": "c",
+      "code": "build-command-failed",
+      "cause": "unknown type name 'finreplies_option_lean_sample_tile_value'",
+      "queue": "docs/evidence/native-fin-replies-20261008/failed/a65a937.queue",
+      "log": "docs/evidence/native-fin-replies-20261008/failed/a65a937.tap",
+      "failure": "docs/evidence/native-fin-replies-20261008/failed/a65a937.c-failure.json"
+    },
+    {
+      "revision": "0dffe4486ca3c426ee08d1c83d6ea9621b8c4d50",
+      "profile": "c",
+      "code": "ERR_ASSERTION",
+      "cause": "assert.ok(checks >= 100)",
+      "queue": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.queue",
+      "log": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.tap",
+      "failure": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.c-failure.json"
+    },
+    {
+      "revision": "c02c760e18b6f9046fd95ac817358d52b57490e9",
+      "profile": "cpp",
+      "code": "build-command-failed",
+      "cause": "'MaybeDigit' is not a member of 'fr'",
+      "queue": "docs/evidence/native-fin-replies-20261008/failed/c02c760.queue",
+      "log": "docs/evidence/native-fin-replies-20261008/failed/c02c760.tap",
+      "failure": "docs/evidence/native-fin-replies-20261008/failed/c02c760.cpp-failure.json"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/installed.json",
+      "originalPath": "build/vo1453-fin-replies-installed-5459b7f.json",
+      "sha256": "0e2099292d2826d5b8ab3104a592d0a197c0a1a237c249a109129311049f9e3d",
+      "bytes": 3147
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/installed.tap",
+      "originalPath": "build/vo1453-fin-replies-installed-5459b7f.tap",
+      "sha256": "25ab545a1c136ea58406b9236ab3981c9269bb7b042f923f060ca746523c8e48",
+      "bytes": 453
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/installed.queue",
+      "originalPath": "build/vo1453-fin-replies-installed-5459b7f.queue",
+      "sha256": "90333e1332f1c1abf510da0a20f2d7dce5ca73407bed448b9e9ab2b6cc58784c",
+      "bytes": 1236
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/fresh-lean.tap",
+      "originalPath": "build/vo1453-fresh-lean-replies-10-5459b7f.txt",
+      "sha256": "fbf8cc113b04ca71db40b5aa4706b3287874b8a87b85aef2ca3a50bd5273e936",
+      "bytes": 867
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/wrapper.json",
+      "originalPath": "build/vo1453-fin-replies-65f7dd7-report.json",
+      "sha256": "2848189bddc5ba2d1424cde517bb0ab3c1add073e434a0ea55adeb8e8d849b18",
+      "bytes": 3127
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/wrapper.tap",
+      "originalPath": "build/vo1453-fin-replies-65f7dd7.tap",
+      "sha256": "dd4cbdc1e18928922fcc144a7a397ed9729a4fb812146d0c934b0506631f512e",
+      "bytes": 438
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/wrapper.queue",
+      "originalPath": "build/vo1453-fin-replies-65f7dd7-queue.json",
+      "sha256": "f5f3115c7411256bcd3bf69336e60d6bfedb2244c835c7c03d13be49ec24c968",
+      "bytes": 1083
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/a65a937.queue",
+      "originalPath": "build/vo1453-fin-replies-installed-a65a937.queue",
+      "sha256": "83bb49f3207ff3516d971450f0dce7c9c445883e0ee7737f15913d4d7ba94bed",
+      "bytes": 1236
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/a65a937.tap",
+      "originalPath": "build/vo1453-fin-replies-installed-a65a937.tap",
+      "sha256": "2b267dd737943b0c4a5df62659e8867ebe8db38ae9dc9963979b777f5172db87",
+      "bytes": 4357
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/a65a937.c-failure.json",
+      "originalPath": "build/vo1453-fin-replies-installed-a65a937.json.c.failure.json",
+      "sha256": "14fd3b166e863f74df8b6283dabcfa83c2eb841b6fda3a0f74ebe33c251cc743",
+      "bytes": 6907
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.queue",
+      "originalPath": "build/vo1453-fin-replies-installed-0dffe44.queue",
+      "sha256": "9ca57364903478986bb91d31ee6672feb23ad764fa52ff103253136e4389a94b",
+      "bytes": 1236
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.tap",
+      "originalPath": "build/vo1453-fin-replies-installed-0dffe44.tap",
+      "sha256": "9787e1fae967d2cefc6a37bdea12e99994295c46299986a635365ea447715cf8",
+      "bytes": 1241
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.c-failure.json",
+      "originalPath": "build/vo1453-fin-replies-installed-0dffe44.json.c.failure.json",
+      "sha256": "b7bb50190210feaf971290dc12805fad95dd8487fe83c5b90a58d68ea365e574",
+      "bytes": 186
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/c02c760.queue",
+      "originalPath": "build/vo1453-fin-replies-installed-c02c760.queue",
+      "sha256": "14fc9132bf63ca5a6dd3365a2ae7e17acfd0b52cda767c6491c7af0f8758acd4",
+      "bytes": 1236
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/c02c760.tap",
+      "originalPath": "build/vo1453-fin-replies-installed-c02c760.tap",
+      "sha256": "c0b857d7e159889b46eeb2081329b38c489151e0e9d9bc3d2dc03a869cf83fe3",
+      "bytes": 5331
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/failed/c02c760.cpp-failure.json",
+      "originalPath": "build/vo1453-fin-replies-installed-c02c760.json.cpp.failure.json",
+      "sha256": "b0b6409a57fbfdfa1538439dd0eb4b3021466d8ed499223463c3169a2a04bc4e",
+      "bytes": 8794
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/NativeExports.lean.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/analyze/NativeExports.lean",
+      "sha256": "46b46cbb21fe51d166ab700cde2c41583bc3a093f67cecd07d104cdf649f61ce",
+      "bytes": 87953
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/analyze/native-types.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/analyze/native-types.mjs",
+      "sha256": "6e3612687fc26c12d8cacc0eb07612598c0bb16eaa61026165dddebdef4ff971",
+      "bytes": 15283
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-model.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/build/native-component.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+      "bytes": 12579
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/native-callables.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/backends/c/native-callables.mjs",
+      "sha256": "6d236ee94f4a05a3e864242802721197c1c11627879682ee314963cf3dc64f71",
+      "bytes": 22757
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/backends/c/primitive-surface.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df",
+      "bytes": 11921
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/src/release/native-c-family.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "bytes": 24893
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/native-fin-callbacks.test.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/native-fin-callbacks.test.mjs",
+      "sha256": "90535d0be76f2a87836c8519615108db7fef023cefd0e4233f5d9d9999dc61e8",
+      "bytes": 47498
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-install.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-reply-install.mjs",
+      "sha256": "a45ae072edf273f3b91f805eb15d4dcd6d5cc44bc52356ada52e5cce98f76d66",
+      "bytes": 5423
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-installed-tests.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-reply-installed-tests.mjs",
+      "sha256": "3045cbfd1a118304e5aa03f5bbcab494f308131560c4f969ec98cd313913494b",
+      "bytes": 12071
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-compiled-tests.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-reply-compiled-tests.mjs",
+      "sha256": "cbf08f9a26a3c842a49e05ce99b7c9eebc5da19ec8281d089c346dbe857acc60",
+      "bytes": 15033
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-reply-model.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-reply-model.mjs",
+      "sha256": "d7f22fa25c170c74334eee2afc215276f36fc2ffdb311972d8368a4b32fb29d1",
+      "bytes": 4957
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-model.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-callback-model.mjs",
+      "sha256": "013ed83466422104146aa5b376c962e1f2aaa911dabf3befc24bebcecef6f68a",
+      "bytes": 5180
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/fin-callback-install.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/fin-callback-install.mjs",
+      "sha256": "167cc340be4700ffbaaa536ccc12f2abbfac2c01a33cb92b81e56614ac08c24a",
+      "bytes": 3019
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/FinReplies.lean.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/fixtures/onboarding/native-fin-replies/FinReplies.lean",
+      "sha256": "25b147e9634f9353ca95ec8b83596f387718fb736db7721630776ceb8f9bb2bc",
+      "bytes": 3312
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lakefile.toml.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/fixtures/onboarding/native-fin-replies/lakefile.toml",
+      "sha256": "9f2f09d0b646a28445820812decd1ff59dbd26f84164c7ba7a7ef7d1bbae7681",
+      "bytes": 71
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/onboarding/native-fin-replies/lean-toolchain.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/fixtures/onboarding/native-fin-replies/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/fin-reply-consumers/c.c.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/fixtures/fin-reply-consumers/c.c",
+      "sha256": "39998671d63550234b7efc66346ce55cbefbb26a1d79b25413984ff06014b0dd",
+      "bytes": 20916
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/5459b7f/tests/fixtures/fin-reply-consumers/cpp.cpp.txt",
+      "originalPath": "git:5459b7fbdd7d60e9e4411daae1ea8ba8b3febaec:tests/fixtures/fin-reply-consumers/cpp.cpp",
+      "sha256": "294c5de4f979f30c19535a5ba5ec7f9b5e16c98aa3417a084ead50ce687a4404",
+      "bytes": 8958
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/native-fin-callbacks.test.mjs.txt",
+      "originalPath": "git:65f7dd7e442236e9ad2cfcdd932bba092b09a2b8:tests/native-fin-callbacks.test.mjs",
+      "sha256": "70059341f26a3c93ec385b24fed00186812abcd37d222ba1bf05ae5445d9df0d",
+      "bytes": 47439
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/helpers/fin-reply-compiled-tests.mjs.txt",
+      "originalPath": "git:65f7dd7e442236e9ad2cfcdd932bba092b09a2b8:tests/helpers/fin-reply-compiled-tests.mjs",
+      "sha256": "a5cf87e6ada79fed25efce1944380a2af2d6865fe81f23b8b8fbcf7b8235f594",
+      "bytes": 14535
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/fixtures/onboarding/native-fin-replies/FinReplies.lean.txt",
+      "originalPath": "git:65f7dd7e442236e9ad2cfcdd932bba092b09a2b8:tests/fixtures/onboarding/native-fin-replies/FinReplies.lean",
+      "sha256": "8ad6bf3d0b48a91e3e4caa360e345914687a02796a59de24e5cffdd3496a25a8",
+      "bytes": 2362
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/sources/65f7dd7/tests/fixtures/fin-reply-consumers/bypass.c.txt",
+      "originalPath": "git:65f7dd7e442236e9ad2cfcdd932bba092b09a2b8:tests/fixtures/fin-reply-consumers/bypass.c",
+      "sha256": "7071cbabe787331799f5b6aa772852700d748fdf3db5ffdbb8a1c36cca4c955c",
+      "bytes": 7022
+    },
+    {
+      "path": "docs/evidence/native-fin-replies-20261008/installed-c-caller.c.txt",
+      "originalPath": "generated at 5459b7f: finReplyConsumerNames(finReplyCompilerModel(\"FinReplies\").bindingIr) macros followed by tests/fixtures/fin-reply-consumers/c.c",
+      "sha256": "295f36a015a6c74a13e0f17d7d5083c3859ffea641e7bda7ec7fb4654cde8019",
+      "bytes": 21949
+    }
+  ],
+  "remaining": [
+    "Promote only the observed C and C++ ordinary-source host reply positions in a separate inventory change.",
+    "Hosted CI and supported release floors are separate from this local glibc 2.36 run.",
+    "Reviewed contracts and other native hosts require separate installed acceptance.",
+    "No installed dispatch counter was run; C++ dispatch is not inferred from the C wrapper.",
+    "The sanitizers cover the generated wrapper and consumer, not the Lean component or runtimes."
+  ]
+}

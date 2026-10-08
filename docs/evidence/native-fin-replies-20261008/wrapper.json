@@ -1,0 +1,92 @@
+{
+  "compiler": {
+    "consumer": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=undefined",
+      "-fno-omit-frame-pointer",
+      "-g",
+      "-pthread",
+      "-Wl,-rpath-link,/tmp/lean-bridge-fin-replies-RtV1OE/release/native/component:/tmp/lean-bridge-fin-replies-RtV1OE/release/native/runtime/lib"
+    ],
+    "environment": {
+      "ASAN_OPTIONS": "detect_leaks=0:halt_on_error=1:abort_on_error=0",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+    },
+    "expectedChecks": 27,
+    "link": [
+      "-L",
+      "/tmp/lean-bridge-fin-replies-RtV1OE/release/native/component",
+      "-L",
+      "/tmp/lean-bridge-fin-replies-RtV1OE/release/native/runtime/lib",
+      "-Wl,--no-as-needed",
+      "-l:libcomponent_afd9fb9efe01a80ce3d8.so",
+      "-llean_bridge_native",
+      "-lleanshared",
+      "-Wl,-z,defs",
+      "-Wl,-z,nodelete"
+    ],
+    "version": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "wrapper": [
+      "-std=c11",
+      "-O2",
+      "-fPIC",
+      "-shared",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=undefined",
+      "-fno-omit-frame-pointer",
+      "-g"
+    ]
+  },
+  "componentReceiptSha256": "2c4171c0c183d1e6440f0c71063c3392b3c364a9224941c454f759a11a629031",
+  "harnessSha256": "28bc7777f49797c1764e64d8798522d5308d8819a38e68ee4275ac182c8b24b8",
+  "instrumented": [
+    "wrapper",
+    "consumer"
+  ],
+  "key": "8ef1ac62c50186646191",
+  "names": {
+    "HOST_MAYBE": "finreplies_callback7dac04b909ee4f3ae137",
+    "HOST_TWICE_FIRST": "finreplies_callback7dac04b909ee4f3ae137",
+    "HOST_TWICE_SECOND": "finreplies_callbackf2af9db3bda87ab235db"
+  },
+  "original": {
+    "componentSha256": "cb70600a7fd3261386ee4aaa75d3d2fd72dab60edf7f32cd2cf7e67ca1f1e486",
+    "wrapperSha256": "813840c1507c8f635bf5b4b87912be0600abdcd4c6b551906c49f01cc31bb922"
+  },
+  "removed": [
+    "static const uint32_t lb_fin_reply_8ef1ac62c50186646191_0[1] = {0x5u};",
+    "        if (!lb_fin_below((&(&returned)->value)->data, (&(&returned)->value)->length, lb_fin_reply_8ef1ac62c50186646191_0, 1)) { lb_record(frame, FINREPLIES_STATUS_INVALID_ARGUMENT, NULL, \"callback result is not below its Fin 5 bound\"); goto done; }"
+  ],
+  "runs": {
+    "checked": {
+      "librarySha256": "3b50e86c8cb27cb1a3997627aadabedb444ded1516cf575190c1fff9a96a16ad",
+      "sourceSha256": "cb40316858d461e55f194a6b8e7bcadbbd73e1904ac38c28472649bcaebe9f39",
+      "stdout": [
+        "fork-status 5 0",
+        "fin-reply-ok checked 27"
+      ]
+    },
+    "stripped": {
+      "librarySha256": "29ab37188db2f41111690c7626a1dd152172680b72a5575a3806a64e2f931418",
+      "sourceSha256": "e72162925c86a70ff5320227ff638065fd8abfb51243d8aa899476f24c618dac",
+      "stdout": [
+        "fork-status 5 0",
+        "fin-reply-ok stripped 27"
+      ]
+    }
+  },
+  "schemaVersion": 1,
+  "scope": "generated C wrapper execution, not installed acceptance",
+  "uninstrumented": [
+    "libcomponent_afd9fb9efe01a80ce3d8.so",
+    "liblean_bridge_native.so",
+    "libleanshared.so"
+  ]
+}

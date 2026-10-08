@@ -119,6 +119,7 @@ import { nativeConsumerCiRepairChangedPaths } from "./native-consumer-ci-repair-
 import { phpWasmFinPromotionChangedPaths } from "./php-wasm-fin-promotion-source-history.mjs";
 import { nativeFinReplyChangedPaths } from "./native-fin-reply-source-history.mjs";
 import { callbackCoverageRepairChangedPaths } from "./callback-coverage-repair-source-history.mjs";
+import { nativeFinReplyArchiveChangedPaths } from "./native-fin-reply-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -702,6 +703,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...phpWasmFinPromotionChangedPaths
 	, ...nativeFinReplyChangedPaths
 	, ...callbackCoverageRepairChangedPaths
+	, ...nativeFinReplyArchiveChangedPaths
 ])].sort());
 
 /**

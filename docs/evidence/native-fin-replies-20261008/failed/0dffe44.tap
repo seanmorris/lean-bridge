@@ -1,0 +1,36 @@
+TAP version 13
+# Subtest: relocated source-free C and C++ packages check every host reply bound and recover
+not ok 1 - relocated source-free C and C++ packages check every host reply bound and recover
+  ---
+  duration_ms: 206471.373971
+  type: 'test'
+  location: '/app/build/worktrees/callback-reply-vo1220/tests/helpers/fin-reply-installed-tests.mjs:91:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(checks >= 100)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    installCopiedConsumer (file:///app/build/worktrees/callback-reply-vo1220/tests/helpers/copied-fixture-install.mjs:180:14)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (file:///app/build/worktrees/callback-reply-vo1220/tests/helpers/fin-reply-installed-tests.mjs:124:24)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# build 0: c, cpp
+# installing and checking c
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 206884.993531

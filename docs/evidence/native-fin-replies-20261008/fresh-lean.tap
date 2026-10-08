@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: fresh Lean admits every safe direction and compiles the generated adapter
+ok 1 - fresh Lean admits every safe direction and compiles the generated adapter
+  ---
+  duration_ms: 37842.192909
+  type: 'test'
+  ...
+# Subtest: fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it
+ok 2 - fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it
+  ---
+  duration_ms: 75666.213111
+  type: 'test'
+  ...
+# Subtest: fresh Lean admits every checked host reply family and compiles each typed reconstruction
+ok 3 - fresh Lean admits every checked host reply family and compiles each typed reconstruction
+  ---
+  duration_ms: 89399.787951
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 203334.511127

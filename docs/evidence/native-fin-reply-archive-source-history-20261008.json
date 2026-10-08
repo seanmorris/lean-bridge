@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "milestone": "native-fin-reply-archive-v1",
+  "predecessorCommit": "a9b6940ac04df73218a57f4af0702eef744ae1b5",
+  "updates": [
+    {
+      "path": ".gitattributes",
+      "currentSha256": "57de0c13aff93b4134989b4bd36f375773eede1d0c749ec95b11286f3e8d6948",
+      "previousSha256": "12c351e186e8df97c64ef8c63f082877ad97ee6154bca6264946573abc922055",
+      "edits": [
+        {
+          "start": 353,
+          "previous": "",
+          "current": "docs/evidence/native-fin-replies-20261008/failed/0dffe44.tap whitespace=-blank-at-eol\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "currentSha256": "2ad1a22524c361b2f032db9d85804adfb4572d9e331f769cc4dc26fb53f1d341",
+      "previousSha256": "ccef46b966764b2bd48af017abc0d191920a66f2c11836ec7d4d5e92f5ad8ef0",
+      "edits": [
+        {
+          "start": 718,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-reply-evidence-tests.mjs\";\nimport \"./helpers/native-fin-reply-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1fe810931f70bb59e1caa01217d673c888a857b886db7476ea878c499d8d8b51",
+      "previousSha256": "3cbe17e4216abd60cf5ff922e5d89b9bf6b1998ff3c65538d632729c64300a3d",
+      "edits": [
+        {
+          "start": 10641,
+          "previous": "",
+          "current": "import { nativeFinReplyArchiveChangedPaths } from \"./native-fin-reply-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 48082,
+          "previous": "",
+          "current": "\t, ...nativeFinReplyArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-coverage-repair-source-history.mjs",
+      "currentSha256": "21f64835dc8598e8769999eb19265845db46b85a5431d3313e756df601d7eb2b",
+      "previousSha256": "51b252baf394d9a0a2f1a94c0f71e317a40fb0df17e4d5235c152e921cf20c07",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { beforeNativeFinReplyArchiveSource } from \"./native-fin-reply-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2264,
+          "previous": "",
+          "current": "\tsource = beforeNativeFinReplyArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-coverage-repair-source-history-tests.mjs",
+      "currentSha256": "a5fcc12eec2c37b9bad3c95357154a35607985202e2e84331022fcf0a34a89d8",
+      "previousSha256": "d23e241aaeb221922fa0e28e69a9e1c1e6444446f7b54aa09974ed5eeb763faf",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "",
+          "current": "import { beforeNativeFinReplyArchiveSource } from \"./native-fin-reply-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1248,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeNativeFinReplyArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2229,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeNativeFinReplyArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2819,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeNativeFinReplyArchiveSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

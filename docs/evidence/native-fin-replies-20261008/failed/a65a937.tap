@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: relocated source-free C and C++ packages check every host reply bound and recover
+not ok 1 - relocated source-free C and C++ packages check every host reply bound and recover
+  ---
+  duration_ms: 193677.104563
+  type: 'test'
+  location: '/app/build/worktrees/callback-reply-vo1220/tests/helpers/fin-reply-installed-tests.mjs:43:1'
+  failureType: 'testCodeFailure'
+  error: `/usr/bin/cc exited with status 1: {"command":"/usr/bin/cc","args":["-std=c11","-Wall","-Wextra","-Werror","-UNDEBUG","consumer.c","-I/tmp/lean-bridge-fin-replies-consumer-LG7fym/c/finreplies-1.0.0-c/lib/pkgconfig/../../include","-L/tmp/lean-bridge-fin-replies-consumer-LG7fym/c/finreplies-1.0.0-c/lib/pkgconfig/../../lib","-Wl,-rpath,/tmp/lean-bridge-fin-replies-consumer-LG7fym/c/finreplies-1.0.0-c/lib/pkgconfig/../../lib","-lfinreplies_gmp","-l:libgmp.so.10","-o","/tmp/lean-bridge-fin-replies-consumer-LG7fym/c/consumer"],"stderr":"consumer.c:142:68: error: unknown type name 'finreplies_option_lean_sample_tile_value'; did you mean 'finreplies_option_lean_fin_replies_tile_value'?\\n  142 | static finreplies_status tile_host(void *context, mpz_srcptr arg0, finreplies_option_lean_sample_tile_value *reply, finreplies_error *error) {\\n      |                                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\\n      |                                                                    finreplies_option_lean_fin_replies_tile_value\\nconsumer.c: In function 'call_tile':\\nconsumer.c:185:81: error: 'tile_host' undeclared (first use in this function); did you mean 'late_host'?\\n  185 | static finreplies_status call_tile(host_state *state) { return CALL(maybe_tile, tile_host, *state); }\\n      |                                                                                 ^~~~~~~~~\\nconsumer.c:168:74: note: in definition of macro 'CALL'\\n  168 | #define CALL(name, host, state) finreplies_##name(&(HOST_##name){.call = host, .context = &(state)}, out, &error)\\n      |                                                                          ^~~~\\nconsumer.c:185:81: note: each undeclared identifier is reported only once for each function it appears in\\n  185 | static finreplies_status call_tile(host_state *state) { return CALL(maybe_tile, tile_host, *state); }\\n      |                                                                                 ^~~~~~~~~\\nconsumer.c:168:74: note: in definition of macro 'CALL'\\n  168 | #define CALL(name, host, state) finreplies_##name(&(HOST_##name){.call = host, .context = &(state)}, out, &error)\\n      |                                                                          ^~~~\\nconsumer.c: In function 'check_composites':\\nconsumer.c:298:35: error: 'tile_host' undeclared (first use in this function); did you mean 'late_host'?\\n  298 |   CHECK(accepted(CALL(maybe_tile, tile_host, noTile), 3));\\n      |                                   ^~~~~~~~~\\nconsumer.c:32:32: note: in definition of macro 'CHECK'\\n   32 | #define CHECK(test) do { if (!(test)) { fprintf(stderr, \\"failed at line %d: %s\\\\n\\", __LINE__, #test); return 1; } ++checks; } while (0)\\n      |                                ^~~~\\nconsumer.c:298:18: note: in expansion of macro 'CALL'\\n  298 |   CHECK(accepted(CALL(maybe_tile, tile_host, noTile), 3));\\n      |                  ^~~~\\nconsumer.c: In function 'call_tile':\\nconsumer.c:185:101: error: control reaches end of non-void function [-Werror=return-type]\\n  185 | static finreplies_status call_tile(host_state *state) { return CALL(maybe_tile, tile_host, *state); }\\n      |                                                                                                     ^\\ncc1: all warnings being treated as errors\\n","stdout":""}`
+  code: 'build-command-failed'
+  name: 'CanonicalBuildError'
+  stack: |-
+    ChildProcess.<anonymous> (file:///app/build/worktrees/callback-reply-vo1220/src/build/process-runner.mjs:77:21)
+    Object.onceWrapper (node:events:634:26)
+    ChildProcess.emit (node:events:519:28)
+    maybeClose (node:internal/child_process:1101:16)
+    ChildProcess._handle.onexit (node:internal/child_process:304:5)
+  ...
+# build 0: c, cpp
+# installing and checking c
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 194095.934001

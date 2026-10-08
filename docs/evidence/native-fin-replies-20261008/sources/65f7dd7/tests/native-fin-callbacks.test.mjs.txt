@@ -1,7 +1,7 @@
 /**
  * Native Fin in safe callable directions (VO #1445): a Lean closure leased to the host checks its
  * arguments before it runs, and values Lean produces for the host keep their bounds. A host
- * callback's Fin reply is checked when its type has a Fin-free failure value (VO #1453).
+ * callback's result stays refused.
  *
  * @file
  */
@@ -11,11 +11,6 @@ import "./helpers/native-fin-callback-archive-source-history-tests.mjs";
 import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import "./helpers/fin-reply-compiled-tests.mjs";
-import "./helpers/fin-reply-installed-tests.mjs";
-import "./helpers/native-fin-reply-evidence-tests.mjs";
-import "./helpers/native-fin-reply-archive-source-history-tests.mjs";
-import "./helpers/native-fin-reply-ci-tests.mjs";
-import "./helpers/native-fin-reply-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -39,7 +34,6 @@ import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { nativeCallbackFinGuide } from "../src/release/native-c-family.mjs";
-import { finReplyCompilerModel, finReplyHostShape, finReplyOptionDigit } from "./helpers/fin-reply-model.mjs";
 import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
@@ -469,21 +463,31 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 	assert.deepEqual(model.exports[0].parameters[0].type.reply, { kind: "result", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "5" }] }, null] });
 });
 
-// Every admitted reply family is in the FinReplies fixture, including the composite families whose
-// stand-in holds no Fin.
+// Every admitted reply family, from the FinReplies fixture and the composite families whose stand-in holds no Fin.
+const replyFamilies = `
+abbrev MaybeDigit := Option (Fin 5)
+def aliased (host : Nat → MaybeDigit) : Nat := match host 0 with | none => 1 | some d => d.val
+def empty0 (host : Nat → List (Fin 0)) : Nat := (host 0).length
+def nested (host : Nat → Option (Array (Fin 3))) : Nat := match host 0 with | none => 2 | some values => values.size
+def product (host : Nat → Option (Fin 5) × Nat) : Nat := (host 0).2
+structure Slot where
+  digit : Option (Fin 5)
+  count : Nat
+def slotted (host : Nat → Slot) : Nat := (host 0).count
+def success (host : Nat → Except Nat (Array (Fin 3))) : Nat := match host 0 with | .ok values => values.size | .error n => n
+`;
 
 test("fresh Lean admits every checked host reply family and compiles each typed reconstruction", { skip: !lean, timeout: 1_800_000 }, async t => {
 	const fixtureSource = await readFile("tests/fixtures/onboarding/native-fin-replies/FinReplies.lean", "utf8");
 	const body = fixtureSource.replace("namespace FinReplies\n", "").replace("end FinReplies\n", "");
-	const source = `namespace FinCallbacks\n${body}end FinCallbacks\n`;
-	const names = ["aliased", "digits", "empty0", "failure", "late", "listed", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
+	const source = `namespace FinCallbacks\n${body}${replyFamilies}end FinCallbacks\n`;
+	const names = ["aliased", "digits", "empty0", "failure", "late", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
 	const { model, adapters } = await elaborate(t, { exports: names.map(name => `FinCallbacks.${name}`) }, source);
 	const reply = name => model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type.reply;
 	const fin = bound => ({ kind: "fin", bound });
 	assert.deepEqual(reply("maybe"), { kind: "option", arguments: [fin("5")] });
 	assert.deepEqual(reply("aliased"), { kind: "option", arguments: [fin("5")] });
 	assert.deepEqual(reply("empty0"), { kind: "list", arguments: [fin("0")] });
-	assert.deepEqual(reply("listed"), { kind: "list", arguments: [fin("3")] });
 	assert.deepEqual(reply("none0"), { kind: "option", arguments: [fin("0")] });
 	assert.deepEqual(reply("wide"), { kind: "option", arguments: [fin("184467440737095516170")] });
 	assert.deepEqual(reply("failure"), { kind: "result", arguments: [null, fin("7")] });
@@ -491,12 +495,6 @@ test("fresh Lean admits every checked host reply family and compiles each typed 
 	assert.deepEqual(reply("product"), { kind: "tuple", arguments: [{ kind: "option", arguments: [fin("5")] }, null] });
 	for(const name of ["digits", "late", "maybeTile", "nested", "slotted"]) assert.ok(reply(name), name);
 	assert.equal(model.exports.find(item => item.name === "FinCallbacks.plain").refinements, undefined);
-	// The compiler-shaped model behind the header controls declares every reply as extraction does, so a
-	// fictitious nominal alias cannot pass those controls.
-	const synthetic = finReplyCompilerModel("FinCallbacks").bindingIr;
-	for(const name of names.filter(item => item !== "plain"))
-		assert.deepEqual(finReplyHostShape(model.bindingIr, name), finReplyHostShape(synthetic, name), name);
-	assert.deepEqual(finReplyHostShape(model.bindingIr, "aliased"), finReplyOptionDigit);
 	// The compiled adapter rebuilds each reply through its decidable check and the source-typed fallback.
 	for(const name of names.filter(item => item !== "plain"))
 		assert.match(adapters.leanSource, new RegExp(`reply_reject_${nativeTypeKey(model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type)} _bridgeReply`, "u"), name);

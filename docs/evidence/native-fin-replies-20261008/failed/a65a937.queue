@@ -1,0 +1,28 @@
+{
+  "node": 1453,
+  "revision": "a65a937a7b1a4652ba623b84121786a44351ccad",
+  "selection": "tests/native-fin-callbacks.test.mjs --test-name-pattern=\"relocated source-free C and C\\+\\+ packages check every host reply\"",
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "instrumentation": "none",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_FIN_REPLY_PROFILES": "c,cpp",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+    "LEAN_BRIDGE_FIN_REPLY_REPORT": "/app/build/vo1453-fin-replies-installed-a65a937.json"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "ldd": "ldd (Debian GLIBC 2.36-9+deb12u14) 2.36"
+  },
+  "freeSpace": "3214M",
+  "tap": "/app/build/vo1453-fin-replies-installed-a65a937.tap",
+  "report": "/app/build/vo1453-fin-replies-installed-a65a937.json",
+  "worktree": "/app/build/worktrees/callback-reply-vo1220",
+  "startedAt": "2026-10-08T17:27:19.070Z"
+}

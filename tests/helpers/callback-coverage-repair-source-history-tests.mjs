@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeNativeFinReplyArchiveSource } from "./native-fin-reply-archive-source-history.mjs";
 import { beforeCallbackCoverageRepairSource, callbackCoverageRepairChangedPaths, callbackCoverageRepairHistoryPath, reverseCallbackCoverageRepairUpdate } from "./callback-coverage-repair-source-history.mjs";
 
 test("Callback coverage repair integration authenticates each exact source predecessor", async () => {
@@ -19,7 +20,7 @@ test("Callback coverage repair integration authenticates each exact source prede
 	assert.deepEqual(record.updates.map(update => update.path), callbackCoverageRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeFinReplyArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCallbackCoverageRepairUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackCoverageRepairSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCallbackCoverageRepairSource(update.path, source, update.currentSha256), source);
@@ -32,7 +33,7 @@ test("Callback coverage repair integration authenticates each exact source prede
 });
 
 test("Callback coverage repair source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeNativeFinReplyArchiveSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeCallbackCoverageRepairSource(path, text));
 	const record = JSON.parse(await readFile(callbackCoverageRepairHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -42,7 +43,7 @@ test("Callback coverage repair source pins do not change observations or other i
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeNativeFinReplyArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

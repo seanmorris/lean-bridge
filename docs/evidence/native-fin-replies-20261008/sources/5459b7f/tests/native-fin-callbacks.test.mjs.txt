@@ -1,7 +1,7 @@
 /**
  * Native Fin in safe callable directions (VO #1445): a Lean closure leased to the host checks its
  * arguments before it runs, and values Lean produces for the host keep their bounds. A host
- * callback's Fin reply is checked when its type has a Fin-free failure value (VO #1453).
+ * callback's result stays refused.
  *
  * @file
  */
@@ -12,10 +12,6 @@ import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
 import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import "./helpers/fin-reply-compiled-tests.mjs";
 import "./helpers/fin-reply-installed-tests.mjs";
-import "./helpers/native-fin-reply-evidence-tests.mjs";
-import "./helpers/native-fin-reply-archive-source-history-tests.mjs";
-import "./helpers/native-fin-reply-ci-tests.mjs";
-import "./helpers/native-fin-reply-source-history-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
