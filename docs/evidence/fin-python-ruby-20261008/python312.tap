@@ -1,0 +1,126 @@
+# step product-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside products and the active Except branch
+ok 1 - relocated source-free native packages check Fin inside products and the active Except branch
+  ---
+  duration_ms: 131241.908037
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131625.2389
+exit=0
+# step product-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check product and Except bounds after source-free installation
+ok 1 - independently reviewed native packages check product and Except bounds after source-free installation
+  ---
+  duration_ms: 118104.122632
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 118554.224003
+exit=0
+# step product-array-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside every element of an array of products
+ok 1 - relocated source-free native packages check Fin inside every element of an array of products
+  ---
+  duration_ms: 126584.84809
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 127106.421591
+exit=0
+# step product-array-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check array-of-product bounds after source-free installation
+ok 1 - independently reviewed native packages check array-of-product bounds after source-free installation
+  ---
+  duration_ms: 118492.328405
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 119141.162145
+exit=0
+# step record-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside record fields and the active variant case
+ok 1 - relocated source-free native packages check Fin inside record fields and the active variant case
+  ---
+  duration_ms: 125421.836797
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 126017.567967
+exit=0
+# step record-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check record and variant field bounds after source-free installation
+ok 1 - independently reviewed native packages check record and variant field bounds after source-free installation
+  ---
+  duration_ms: 119887.9711
+  type: 'test'
+  ...
+# build 0: python
+# installing and checking python
+# build 1: python
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 120721.887519
+exit=0

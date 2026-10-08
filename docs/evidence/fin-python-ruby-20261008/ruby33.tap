@@ -1,0 +1,126 @@
+# step product-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside products and the active Except branch
+ok 1 - relocated source-free native packages check Fin inside products and the active Except branch
+  ---
+  duration_ms: 116683.992021
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117144.293879
+exit=0
+# step product-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check product and Except bounds after source-free installation
+ok 1 - independently reviewed native packages check product and Except bounds after source-free installation
+  ---
+  duration_ms: 121536.013892
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 121949.585843
+exit=0
+# step product-array-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside every element of an array of products
+ok 1 - relocated source-free native packages check Fin inside every element of an array of products
+  ---
+  duration_ms: 101569.552909
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 101998.330334
+exit=0
+# step product-array-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check array-of-product bounds after source-free installation
+ok 1 - independently reviewed native packages check array-of-product bounds after source-free installation
+  ---
+  duration_ms: 97385.710659
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 97803.773088
+exit=0
+# step record-ordinary
+TAP version 13
+# Subtest: relocated source-free native packages check Fin inside record fields and the active variant case
+ok 1 - relocated source-free native packages check Fin inside record fields and the active variant case
+  ---
+  duration_ms: 119513.967398
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 120058.507487
+exit=0
+# step record-reviewed
+TAP version 13
+# Subtest: independently reviewed native packages check record and variant field bounds after source-free installation
+ok 1 - independently reviewed native packages check record and variant field bounds after source-free installation
+  ---
+  duration_ms: 124459.162466
+  type: 'test'
+  ...
+# build 0: ruby
+# installing and checking ruby
+# build 1: ruby
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 125051.786165
+exit=0

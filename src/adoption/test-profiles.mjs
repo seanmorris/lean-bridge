@@ -234,6 +234,7 @@ const profileManifest = Object.freeze({
 		, "inherited-records"
 		, "generic-inheritance"
 		, "checked-records"
+		, "fin-python-ruby-evidence"
 		, "generic-inheritance-installed"
 		, "generic-records-browser"
 		, "browser-callback-fin"

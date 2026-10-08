@@ -1,0 +1,21 @@
+revision=72c5e27e62bf5676c29a24174cad7ff35b39c447 node=v22.23.2 ruby=ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux] cpu=3 concurrency=1 glibc=2.36
+start=2026-10-08T07:30:39.265Z freeMiB=2614
+start product-ordinary 2026-10-08T07:30:39.281Z freeMiB=2614 pattern=^relocated source-free native packages check Fin inside products report=/app/build/vo1441-ruby33-product-ordinary-72c5e27.json
+end product-ordinary 2026-10-08T07:32:36.481Z exit=0 freeMiB=2464
+report product-ordinary sha256=d438632a39fa4e5ad00511e2468bc7071eceb890001bc2dffeaccd53b90d39db checks=2039
+start product-reviewed 2026-10-08T07:32:36.496Z freeMiB=2464 pattern=^independently reviewed native packages check product and Except bounds report=/app/build/vo1441-ruby33-product-reviewed-72c5e27.json
+end product-reviewed 2026-10-08T07:34:38.488Z exit=0 freeMiB=2610
+report product-reviewed sha256=1dd941f024308c817b79681966473c1c97bea73dc1b5a62dacc0d8a9ed281d56 checks=2039
+start product-array-ordinary 2026-10-08T07:34:38.499Z freeMiB=2610 pattern=^relocated source-free native packages check Fin inside every element report=/app/build/vo1441-ruby33-product-array-ordinary-72c5e27.json
+end product-array-ordinary 2026-10-08T07:36:20.541Z exit=0 freeMiB=2600
+report product-array-ordinary sha256=ffb1bd48174877112e512b1512ae798bad32bfde8e9e22df9efbb241ddbc9854 checks=2010
+start product-array-reviewed 2026-10-08T07:36:20.552Z freeMiB=2600 pattern=^independently reviewed native packages check array-of-product bounds report=/app/build/vo1441-ruby33-product-array-reviewed-72c5e27.json
+end product-array-reviewed 2026-10-08T07:37:58.389Z exit=0 freeMiB=2597
+report product-array-reviewed sha256=5918c79cb897714e28600b2652b42dc0507d83a4735388f9e8e9a87b0dede8ca checks=2010
+start record-ordinary 2026-10-08T07:37:58.399Z freeMiB=2597 pattern=^relocated source-free native packages check Fin inside record fields report=/app/build/vo1441-ruby33-record-ordinary-72c5e27.json
+end record-ordinary 2026-10-08T07:39:58.498Z exit=0 freeMiB=2595
+report record-ordinary sha256=a01bfc93ff0fee2b4444812e8dae5ead16b2aad32c4cba836f4db53c27114906 checks=2053
+start record-reviewed 2026-10-08T07:39:58.510Z freeMiB=2595 pattern=^independently reviewed native packages check record and variant field bounds report=/app/build/vo1441-ruby33-record-reviewed-72c5e27.json
+end record-reviewed 2026-10-08T07:42:03.606Z exit=0 freeMiB=2429
+report record-reviewed sha256=3d714804129befe675d6ff345594d15c3908c4eb86a450b38b2cc29c4c86f214 checks=2053
+all steps passed 2026-10-08T07:42:03.607Z

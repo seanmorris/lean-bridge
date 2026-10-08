@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinPythonRubyArchiveSource } from "./fin-python-ruby-archive-source-history.mjs";
 import { beforeCheckedRecordAdmissionSource, checkedRecordAdmissionChangedPaths, checkedRecordAdmissionHistoryPath, reverseCheckedRecordAdmissionUpdate } from "./checked-record-admission-source-history.mjs";
 
 test("Checked-record admission authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Checked-record admission authenticates each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), checkedRecordAdmissionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinPythonRubyArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseCheckedRecordAdmissionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCheckedRecordAdmissionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCheckedRecordAdmissionSource(update.path, source, update.currentSha256), source);

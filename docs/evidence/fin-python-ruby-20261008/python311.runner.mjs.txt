@@ -1,0 +1,65 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, openSync, writeSync } from "node:fs";
+import { readFile, statfs } from "node:fs/promises";
+
+const revision = "72c5e27e62bf5676c29a24174cad7ff35b39c447";
+const cwd = "/app/build/worktrees/producer-72c5e27";
+const prefix = "/app/build/vo1441-python311-72c5e27";
+const python = "/app/.toolchains/python311/bin/python3";
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+assert.equal(git(["rev-parse", "HEAD"]), revision);
+assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+const queue = openSync(`${prefix}.queue`, "wx");
+const tap = openSync(`${prefix}.tap`, "wx");
+const stamp = () => new Date().toISOString();
+const log = line => { writeSync(queue, line + "\n"); process.stdout.write(line + "\n"); };
+const freeMiB = async () => { const fs = await statfs(cwd); return Math.floor(fs.bavail * fs.bsize / 1024 / 1024); };
+const base = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_")));
+const environment = { ...base, LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36", LEAN_BRIDGE_PYTHON: python
+  , LEAN_BRIDGE_LEAN_PREFIX: "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2"
+  , LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1" };
+const fixtures = [
+  ["product", "PRODUCT", "native-fin-products", "^relocated source-free native packages check Fin inside products", "^independently reviewed native packages check product and Except bounds"]
+  , ["product-array", "PRODUCT_ARRAY", "native-fin-product-arrays", "^relocated source-free native packages check Fin inside every element", "^independently reviewed native packages check array-of-product bounds"]
+  , ["record", "RECORD", "native-fin-records", "^relocated source-free native packages check Fin inside record fields", "^independently reviewed native packages check record and variant field bounds"]
+];
+log(`revision=${revision} node=${process.version} python=${execFileSync(python, ["--version"], { encoding: "utf8" }).trim()} cpu=3 concurrency=1 glibc=2.36`);
+log(`start=${stamp()} freeMiB=${await freeMiB()}`);
+try {
+  for(const [name, variable, testFile, ordinaryPattern, reviewedPattern] of fixtures) {
+    for(const reviewed of [false, true]) {
+      const free = await freeMiB();
+      assert.ok(free >= 2048, `Only ${free}MiB free; refusing next producer`);
+      assert.equal(git(["rev-parse", "HEAD"]), revision);
+      assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+      const label = `${name}-${reviewed ? "reviewed" : "ordinary"}`;
+      const selected = `LEAN_BRIDGE_${reviewed ? "REVIEWED_" : ""}FIN_${variable}`;
+      const report = `/app/build/vo1441-python311-${label}-72c5e27.json`;
+      const pattern = reviewed ? reviewedPattern : ordinaryPattern;
+      const env = { ...environment, [`${selected}_PROFILES`]: "python", [`${selected}_REPORT`]: report };
+      log(`start ${label} ${stamp()} freeMiB=${free} pattern=${pattern} report=${report}`);
+      writeSync(tap, `# step ${label}\n`);
+      const code = await new Promise((resolve, reject) => {
+        const child = spawn("/usr/bin/taskset", ["-c", "3", process.execPath, "--test", "--test-concurrency=1", `--test-name-pattern=${pattern}`, `tests/${testFile}.test.mjs`], { cwd, env, stdio: ["ignore", tap, tap] });
+        child.once("error", reject);
+        child.once("close", (code, signal) => resolve(code ?? (signal ? 128 : 1)));
+      });
+      writeSync(tap, `exit=${code}\n`);
+      log(`end ${label} ${stamp()} exit=${code} freeMiB=${await freeMiB()}`);
+      assert.equal(code, 0, `${label} failed; queue stopped`);
+      const bytes = await readFile(report), data = JSON.parse(bytes);
+      assert.equal(data.reproducible, true);
+      assert.deepEqual(data.reports.map(row => row.profile), ["python"]);
+      assert.equal(data.reports[0].sourceRemovedBeforeInstallation, true);
+      log(`report ${label} sha256=${createHash("sha256").update(bytes).digest("hex")} checks=${data.reports[0].checks}`);
+    }
+  }
+  log(`all steps passed ${stamp()}`);
+} catch(error) {
+  log(`stopped ${stamp()} ${error.message}`);
+  process.exitCode = 1;
+} finally {
+  closeSync(tap); closeSync(queue);
+}

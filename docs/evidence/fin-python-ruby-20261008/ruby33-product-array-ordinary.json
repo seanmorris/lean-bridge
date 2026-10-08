@@ -1,0 +1,125 @@
+{
+  "archives": {
+    "archives/finproductarrays-1.0.0-x86_64-linux.gem": "ab5b91378ce1a30e5249241bc8d8f903c29e756570aff0e235f993336d57eaee"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "590c372fbf4eec06b4399e1f92883726abca3b4b162d7ac475dc72706922d4c3",
+      "checks": 2010,
+      "compilerFreePath": true,
+      "consumerSha256": "d91273980903c4e4a5f704933b352c186e447b3ee8b28495c030015239c85e40",
+      "modelSha256": "b584487c5f8ba36e4c3d87897a0a4927ca13a45b921a8d5cb314dc574d9dca76",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50083328,
+              "path": "archives/finproductarrays-1.0.0-x86_64-linux.gem",
+              "sha256": "ab5b91378ce1a30e5249241bc8d8f903c29e756570aff0e235f993336d57eaee"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "finproductarrays",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "ruby",
+      "receiptSha256": "881552c7c530b81db0d216bda01c20b8f437052ba3ee6b06d2fead66498c440e",
+      "refinements": {
+        "FinProductArrays.reversed": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "4",
+                    "kind": "fin"
+                  },
+                  {
+                    "arguments": [
+                      null,
+                      {
+                        "bound": "6",
+                        "kind": "fin"
+                      }
+                    ],
+                    "kind": "result"
+                  }
+                ],
+                "kind": "tuple"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinProductArrays.rows": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "4",
+                      "kind": "fin"
+                    },
+                    {
+                      "arguments": [
+                        null,
+                        {
+                          "bound": "6",
+                          "kind": "fin"
+                        }
+                      ],
+                      "kind": "result"
+                    }
+                  ],
+                  "kind": "tuple"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        }
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "764f57e95da19a522f84a3135bc89b334ab305ceb569111a275829510a9c6c07"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

@@ -99,6 +99,7 @@ import { subtypeAliasPositionChangedPaths } from "./subtype-alias-position-sourc
 import { finCallbackDiagnosticChangedPaths } from "./fin-callback-diagnostic-source-history.mjs";
 import { subtypeXsArchiveChangedPaths } from "./subtype-xs-archive-source-history.mjs";
 import { checkedRecordAdmissionChangedPaths } from "./checked-record-admission-source-history.mjs";
+import { finPythonRubyArchiveChangedPaths } from "./fin-python-ruby-archive-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -662,6 +663,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finCallbackDiagnosticChangedPaths
 	, ...subtypeXsArchiveChangedPaths
 	, ...checkedRecordAdmissionChangedPaths
+	, ...finPythonRubyArchiveChangedPaths
 ])].sort());
 
 /**

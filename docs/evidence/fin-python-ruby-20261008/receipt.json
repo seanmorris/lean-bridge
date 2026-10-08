@@ -1,0 +1,1126 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1441,
+    1442
+  ],
+  "execution": "local",
+  "revision": "72c5e27e62bf5676c29a24174cad7ff35b39c447",
+  "scope": {
+    "profiles": [
+      "python",
+      "ruby"
+    ],
+    "sourcePaths": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "families": [
+      "product",
+      "product-array",
+      "record"
+    ],
+    "dispatchObserved": false,
+    "hostedCi": false,
+    "binaryArchivesRetained": false
+  },
+  "producerEnvironment": {
+    "nodeVersion": "v22.23.2",
+    "hostGlibcVersion": "2.36",
+    "nativeGlibcFloor": "2.36",
+    "cpu": 3,
+    "concurrency": 1,
+    "minimumFreeMiB": 2048,
+    "leanToolchain": "leanprover/lean4:v4.32.2",
+    "leanThreads": 1,
+    "ompThreads": 1,
+    "makeJobs": 1
+  },
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "a314452e860d614b644bd26a4311706ea30557f86c7e9a6b2eaf8cf45db84455"
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "c13f9ece623da722db1499d2349f696f3085e14c22aa89884916290ea3afc2a1"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "sha256": "546c4339664edf1ef0480e493f31a0d561fd0d0de80a06ba22cfebffe76fdb9d"
+    },
+    {
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "770e83cd1348808616b406fbbc1ba05e6acb9e7560ba94a1ecdac3077113815c"
+    },
+    {
+      "path": "src/backends/native/fin-refinements.mjs",
+      "sha256": "621296d07a0c2adf7f39e30cf6248c25512d74b85be1ac5c8b9e9bb1932d1c1e"
+    },
+    {
+      "path": "src/backends/python/copied-values.mjs",
+      "sha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7"
+    },
+    {
+      "path": "src/backends/python/refinements.mjs",
+      "sha256": "09af6ea16c013a7191d165c2939d0ce7f2b11d24b15e843e292be93859f4b0be"
+    },
+    {
+      "path": "src/backends/ruby/copied-values.mjs",
+      "sha256": "44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7"
+    },
+    {
+      "path": "src/release/native-pypi.mjs",
+      "sha256": "b23497950d6dda57ac82fb81fdaaa8a8736327da06b3d614c137fe686dbf48ba"
+    },
+    {
+      "path": "src/release/native-rubygems.mjs",
+      "sha256": "5f4451473d73e8b5224e23c0e1107436dbfe117fa2261292426a80ce6b7b44bb"
+    },
+    {
+      "path": "tests/native-fin-products.test.mjs",
+      "sha256": "1aeb143f39d46958b3820f9b486722499a7db007acb766718cf01242e28ddd32"
+    },
+    {
+      "path": "tests/native-fin-product-arrays.test.mjs",
+      "sha256": "42dd97a02b01f760e45b0ce874b5fccf2bb440c5c2ddbc1ae1f67a475a7ba833"
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "sha256": "5c779661b09a0cbbddf08501315800c84100a8f03a3caf150979b9d88b5f54b7"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "path": "tests/helpers/fin-product-array-install.mjs",
+      "sha256": "80bbf184fd2b7b7ecdb022487e446e1f739e76dc028031d7314e6ebc954bd951"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-array-fixture.mjs",
+      "sha256": "ec84070065000341646e64738a964b79280993ee4c59d8ac2f57a1229eb8b58e"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-product-arrays/FinProductArrays.lean",
+      "sha256": "72cd38b5cb424e5d652dbf9e45bc697583965aba7f01fdbff3bb02a3623710b3"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/python.py",
+      "sha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/ruby.rb",
+      "sha256": "b85aed48e93055f5d44f1fc30945dd4e5d9a714428006a06b8e1d62145e61b79"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/python.py",
+      "sha256": "0001440ba71b3d2707fbfa296965a837671eff2e60edce699664c6bda930c0b8"
+    },
+    {
+      "path": "tests/fixtures/fin-product-array-consumers/ruby.rb",
+      "sha256": "d91273980903c4e4a5f704933b352c186e447b3ee8b28495c030015239c85e40"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/python.py",
+      "sha256": "32dfe46ea67e2a8e2c53db961e351bdad4587731a7f944714853e48a56daa921"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/ruby.rb",
+      "sha256": "ab247bb8fb01f8692bb2f4b236677144a9b5dbb0688121098fc1bf5e3e2aeec2"
+    }
+  ],
+  "runtimes": [
+    {
+      "id": "python311",
+      "profile": "python",
+      "version": "3.11.16",
+      "tap": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311.tap",
+        "originalPath": "build/vo1441-python311-72c5e27.tap",
+        "sha256": "fd9e1255ea09d0bc092b2184af9bd243e0b1d9d234a0d836897b91bc78c3a032",
+        "bytes": 2970
+      },
+      "queue": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311.queue",
+        "originalPath": "build/vo1441-python311-72c5e27.queue",
+        "sha256": "c658261a0d78409128006efd301fd4d66b624db673428ab9442c24ce22269de6",
+        "bytes": 2516
+      },
+      "runner": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311.runner.mjs.txt",
+        "originalPath": "build/vo1441-python311-queue-72c5e27.mjs",
+        "sha256": "c93e96f2235e9563ab6600a281b121c421c3506d5d0af33b73838cc89e7ae133",
+        "bytes": 4340
+      }
+    },
+    {
+      "id": "python312",
+      "profile": "python",
+      "version": "3.12.14",
+      "tap": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312.tap",
+        "originalPath": "build/vo1441-python312-72c5e27.tap",
+        "sha256": "a69a8ee0f8be196e539de2551282a86acde7b5ff8bf4d16eec492b6fba427f30",
+        "bytes": 2967
+      },
+      "queue": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312.queue",
+        "originalPath": "build/vo1441-python312-72c5e27.queue",
+        "sha256": "3602e98f11fdd36318cc40dc6f30d30a3bcf6f7670c9721477662aee6d5873e9",
+        "bytes": 2516
+      },
+      "runner": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312.runner.mjs.txt",
+        "originalPath": "build/vo1441-python312-queue-72c5e27.mjs",
+        "sha256": "e4558c8c5510c5956a6830e548620a78e1af4d8d6adde1fcd4f53f0cb2ea4604",
+        "bytes": 4340
+      }
+    },
+    {
+      "id": "ruby33",
+      "profile": "ruby",
+      "version": "3.3.12",
+      "tap": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33.tap",
+        "originalPath": "build/vo1441-ruby33-72c5e27.tap",
+        "sha256": "81adf6f61d8fb8bbb8b098d4666768f3a35dc2a0112470c7c3b2987e57d8c395",
+        "bytes": 2934
+      },
+      "queue": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33.queue",
+        "originalPath": "build/vo1441-ruby33-72c5e27.queue",
+        "sha256": "86af869c5c968c19183719b6ab7a866364794ec794b329fd387bfc062705dcee",
+        "bytes": 2541
+      },
+      "runner": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33.runner.mjs.txt",
+        "originalPath": "build/vo1441-ruby33-queue-72c5e27.mjs",
+        "sha256": "65c38ee8623feaccd3c198e00237a9e00dd1e19b8060921f3c4f2ec417b8925b",
+        "bytes": 4366
+      }
+    }
+  ],
+  "runs": [
+    {
+      "id": "python311-product-ordinary",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "product",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-product-ordinary.json",
+        "originalPath": "build/vo1441-python311-product-ordinary-72c5e27.json",
+        "sha256": "2a9defd9aa832997234dfcdd4ad1fb531eebc1ce70992cde4295f8ef634fafd2",
+        "bytes": 6730
+      },
+      "identities": {
+        "bindingIrSha256": "4ac185a427502b34869f87b0b5de65c4660625bb13b2f8521df5e9234bede8ad",
+        "modelSha256": "89657fa9ce809113b3cd6f2891c9ed1612cfa79a36576158d6684d7cbed780d5",
+        "receiptSha256": "c745b0ad6f4573e9ab043e2de573dd825d192acf83cd101cf7a9b6e2b18a521b",
+        "sourceTreeSha256": "89b75d669aa56ce15b060965eb778c0851c45d83dd7b8583f8b21484ecdb85d3",
+        "consumerSha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51383093,
+                "path": "archives/finproducts-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "23bc635bdbdb5b3d212f0ca3d715adfd24eef2e8e76e685a2bd2fce6a79636e9"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python311-product-reviewed",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "product",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-product-reviewed.json",
+        "originalPath": "build/vo1441-python311-product-reviewed-72c5e27.json",
+        "sha256": "44ac21d4c82b603eadb1d81ccd7c4184566a4036d9c4064a08e4f3a5f3ad2aa4",
+        "bytes": 6824
+      },
+      "identities": {
+        "bindingIrSha256": "701ebd7fee64dc1c92f55e5f5cf35d86a5ad6a8988c8fd875dc30fe1dbbf6965",
+        "modelSha256": "abc179694591ed16be17177451204cdefb3bad5faab8ace87450b221744d6b52",
+        "receiptSha256": "f010f501b6de44fe5f0e27c541149c7df1f23daf068dc85b96dde206e778e2d0",
+        "sourceTreeSha256": "9cadb5b89a83c1ce2d904bb56eda8d052ae58c8f74b2fc724d51e062fad0e288",
+        "consumerSha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51387438,
+                "path": "archives/finproducts-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "789475be0c6c9f41e3bf0c0ca529c6cd76b63b841a49480f75da27ef8d0f5791"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python311-product-array-ordinary",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "product-array",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-ordinary.json",
+        "originalPath": "build/vo1441-python311-product-array-ordinary-72c5e27.json",
+        "sha256": "40dba27871c2395b5a8a50c023f1f3f33bb58098bb71c3b756a0a0cd38c997bb",
+        "bytes": 3734
+      },
+      "identities": {
+        "bindingIrSha256": "9aab1635638d9ea557293194212a745f084e99d7dc6044bd3607b35d7958dadd",
+        "modelSha256": "a6db682d2a9c71a131fd3541737b5a15c86bf950e1220e696b346107692bc4ac",
+        "receiptSha256": "17d73aa3e70180856d6f7c89dede65687a6a6f7ac88797fdef4ca28d059c61d6",
+        "sourceTreeSha256": "94fc5c2b9301a0122f9325162e0dbc2cc0c68b4340dee9864c217c5281345499",
+        "consumerSha256": "0001440ba71b3d2707fbfa296965a837671eff2e60edce699664c6bda930c0b8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51355074,
+                "path": "archives/finproductarrays-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "05770488653aa7468238047bea1bbb9380fc5cb43c58fbf54d82bffbee8e9035"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python311-product-array-reviewed",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "product-array",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-reviewed.json",
+        "originalPath": "build/vo1441-python311-product-array-reviewed-72c5e27.json",
+        "sha256": "bc77b3f6fcc945000fe93d5dc8c084660d545d1c6f320163bee3d57a447a791b",
+        "bytes": 3828
+      },
+      "identities": {
+        "bindingIrSha256": "c6d681c864118df9dfd02c81570e4a361c6e0496f22a92cd0126190304c00e3d",
+        "modelSha256": "4519d7fd6b5f4d6267d65e9514d1b4cd01dcaa9113808fc3e873982b3c8def60",
+        "receiptSha256": "4620cff395c4803cf3bc0aa0d73f192ef2c5733e56f0bc20cd8ac36d8d98766c",
+        "sourceTreeSha256": "95bfc7d01e0523ae9c63bf17cd3c49c709e973a9d9e070f13512a180af60b71d",
+        "consumerSha256": "0001440ba71b3d2707fbfa296965a837671eff2e60edce699664c6bda930c0b8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51357899,
+                "path": "archives/finproductarrays-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "33ce74a02fff9551f90241d5b2207c9ca34406facb128435b548a01e162adf19"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python311-record-ordinary",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "record",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-record-ordinary.json",
+        "originalPath": "build/vo1441-python311-record-ordinary-72c5e27.json",
+        "sha256": "0b80b9a83098cd0add13efb41de7d1d7e7d6acff031760a6c0022fb676010499",
+        "bytes": 13088
+      },
+      "identities": {
+        "bindingIrSha256": "5d58a7b6a0114775cead265103670403a8d854da98179859d18144d616096af0",
+        "modelSha256": "e484250674a1bad0efa4fb29d02a7995100d17f932bb53452c3567a27ee18072",
+        "receiptSha256": "2498db971de5d54d51775524110d3a2fa5b63f155dd2bf6eb43bc8f193f90d97",
+        "sourceTreeSha256": "6b207c9c29a9855846e925f866758d7e18fb0dcfa6c84c9765c0cb179070fcc5",
+        "consumerSha256": "32dfe46ea67e2a8e2c53db961e351bdad4587731a7f944714853e48a56daa921",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51406117,
+                "path": "archives/finrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "147a3b483dbc13af9dd18aafe34bcc0cbdfc043d61448615294ffd3420377719"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python311-record-reviewed",
+      "runtime": "python311",
+      "profile": "python",
+      "family": "record",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python311-record-reviewed.json",
+        "originalPath": "build/vo1441-python311-record-reviewed-72c5e27.json",
+        "sha256": "6482e7bd8d48125a8ae6ff21009c1f7e91c510d2929642948dec223d3a10e475",
+        "bytes": 13182
+      },
+      "identities": {
+        "bindingIrSha256": "65dfb51274014cef60f15513532f439caacabb5cc1f9b59635ada600fa286a87",
+        "modelSha256": "cc842f5aee796f1df3d3c5a1cbfc224c49dfa4e084420839788731c96f8d21ad",
+        "receiptSha256": "c2fae9760c9af6c0670c4e7f976f9b2e6c9028fb586351eaabc0308bacad05b6",
+        "sourceTreeSha256": "87a241ac4e890831dcd15314f86ebec56b97e1b4e39e1343ea67808f36f2807b",
+        "consumerSha256": "32dfe46ea67e2a8e2c53db961e351bdad4587731a7f944714853e48a56daa921",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51410790,
+                "path": "archives/finrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "b336048c734523e1116a9f6fc651c2e33539b78356974e001910fd8f1033039d"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-product-ordinary",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "product",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-product-ordinary.json",
+        "originalPath": "build/vo1441-python312-product-ordinary-72c5e27.json",
+        "sha256": "2a9defd9aa832997234dfcdd4ad1fb531eebc1ce70992cde4295f8ef634fafd2",
+        "bytes": 6730
+      },
+      "identities": {
+        "bindingIrSha256": "4ac185a427502b34869f87b0b5de65c4660625bb13b2f8521df5e9234bede8ad",
+        "modelSha256": "89657fa9ce809113b3cd6f2891c9ed1612cfa79a36576158d6684d7cbed780d5",
+        "receiptSha256": "c745b0ad6f4573e9ab043e2de573dd825d192acf83cd101cf7a9b6e2b18a521b",
+        "sourceTreeSha256": "89b75d669aa56ce15b060965eb778c0851c45d83dd7b8583f8b21484ecdb85d3",
+        "consumerSha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51383093,
+                "path": "archives/finproducts-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "23bc635bdbdb5b3d212f0ca3d715adfd24eef2e8e76e685a2bd2fce6a79636e9"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-product-reviewed",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "product",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-product-reviewed.json",
+        "originalPath": "build/vo1441-python312-product-reviewed-72c5e27.json",
+        "sha256": "44ac21d4c82b603eadb1d81ccd7c4184566a4036d9c4064a08e4f3a5f3ad2aa4",
+        "bytes": 6824
+      },
+      "identities": {
+        "bindingIrSha256": "701ebd7fee64dc1c92f55e5f5cf35d86a5ad6a8988c8fd875dc30fe1dbbf6965",
+        "modelSha256": "abc179694591ed16be17177451204cdefb3bad5faab8ace87450b221744d6b52",
+        "receiptSha256": "f010f501b6de44fe5f0e27c541149c7df1f23daf068dc85b96dde206e778e2d0",
+        "sourceTreeSha256": "9cadb5b89a83c1ce2d904bb56eda8d052ae58c8f74b2fc724d51e062fad0e288",
+        "consumerSha256": "b93fe2143eef029e7d1cf537451245c9beff861abd6736a6a8cfcf77cc3b79cf",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51387438,
+                "path": "archives/finproducts-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "789475be0c6c9f41e3bf0c0ca529c6cd76b63b841a49480f75da27ef8d0f5791"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-product-array-ordinary",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "product-array",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-ordinary.json",
+        "originalPath": "build/vo1441-python312-product-array-ordinary-72c5e27.json",
+        "sha256": "40dba27871c2395b5a8a50c023f1f3f33bb58098bb71c3b756a0a0cd38c997bb",
+        "bytes": 3734
+      },
+      "identities": {
+        "bindingIrSha256": "9aab1635638d9ea557293194212a745f084e99d7dc6044bd3607b35d7958dadd",
+        "modelSha256": "a6db682d2a9c71a131fd3541737b5a15c86bf950e1220e696b346107692bc4ac",
+        "receiptSha256": "17d73aa3e70180856d6f7c89dede65687a6a6f7ac88797fdef4ca28d059c61d6",
+        "sourceTreeSha256": "94fc5c2b9301a0122f9325162e0dbc2cc0c68b4340dee9864c217c5281345499",
+        "consumerSha256": "0001440ba71b3d2707fbfa296965a837671eff2e60edce699664c6bda930c0b8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51355074,
+                "path": "archives/finproductarrays-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "05770488653aa7468238047bea1bbb9380fc5cb43c58fbf54d82bffbee8e9035"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-product-array-reviewed",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "product-array",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-reviewed.json",
+        "originalPath": "build/vo1441-python312-product-array-reviewed-72c5e27.json",
+        "sha256": "bc77b3f6fcc945000fe93d5dc8c084660d545d1c6f320163bee3d57a447a791b",
+        "bytes": 3828
+      },
+      "identities": {
+        "bindingIrSha256": "c6d681c864118df9dfd02c81570e4a361c6e0496f22a92cd0126190304c00e3d",
+        "modelSha256": "4519d7fd6b5f4d6267d65e9514d1b4cd01dcaa9113808fc3e873982b3c8def60",
+        "receiptSha256": "4620cff395c4803cf3bc0aa0d73f192ef2c5733e56f0bc20cd8ac36d8d98766c",
+        "sourceTreeSha256": "95bfc7d01e0523ae9c63bf17cd3c49c709e973a9d9e070f13512a180af60b71d",
+        "consumerSha256": "0001440ba71b3d2707fbfa296965a837671eff2e60edce699664c6bda930c0b8",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51357899,
+                "path": "archives/finproductarrays-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "33ce74a02fff9551f90241d5b2207c9ca34406facb128435b548a01e162adf19"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-record-ordinary",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "record",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-record-ordinary.json",
+        "originalPath": "build/vo1441-python312-record-ordinary-72c5e27.json",
+        "sha256": "0b80b9a83098cd0add13efb41de7d1d7e7d6acff031760a6c0022fb676010499",
+        "bytes": 13088
+      },
+      "identities": {
+        "bindingIrSha256": "5d58a7b6a0114775cead265103670403a8d854da98179859d18144d616096af0",
+        "modelSha256": "e484250674a1bad0efa4fb29d02a7995100d17f932bb53452c3567a27ee18072",
+        "receiptSha256": "2498db971de5d54d51775524110d3a2fa5b63f155dd2bf6eb43bc8f193f90d97",
+        "sourceTreeSha256": "6b207c9c29a9855846e925f866758d7e18fb0dcfa6c84c9765c0cb179070fcc5",
+        "consumerSha256": "32dfe46ea67e2a8e2c53db961e351bdad4587731a7f944714853e48a56daa921",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51406117,
+                "path": "archives/finrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "147a3b483dbc13af9dd18aafe34bcc0cbdfc043d61448615294ffd3420377719"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "python312-record-reviewed",
+      "runtime": "python312",
+      "profile": "python",
+      "family": "record",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/python312-record-reviewed.json",
+        "originalPath": "build/vo1441-python312-record-reviewed-72c5e27.json",
+        "sha256": "6482e7bd8d48125a8ae6ff21009c1f7e91c510d2929642948dec223d3a10e475",
+        "bytes": 13182
+      },
+      "identities": {
+        "bindingIrSha256": "65dfb51274014cef60f15513532f439caacabb5cc1f9b59635ada600fa286a87",
+        "modelSha256": "cc842f5aee796f1df3d3c5a1cbfc224c49dfa4e084420839788731c96f8d21ad",
+        "receiptSha256": "c2fae9760c9af6c0670c4e7f976f9b2e6c9028fb586351eaabc0308bacad05b6",
+        "sourceTreeSha256": "87a241ac4e890831dcd15314f86ebec56b97e1b4e39e1343ea67808f36f2807b",
+        "consumerSha256": "32dfe46ea67e2a8e2c53db961e351bdad4587731a7f944714853e48a56daa921",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 51410790,
+                "path": "archives/finrecords-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+                "sha256": "b336048c734523e1116a9f6fc651c2e33539b78356974e001910fd8f1033039d"
+              }
+            ],
+            "ecosystem": "pypi",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "pypi",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-product-ordinary",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "product",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-ordinary.json",
+        "originalPath": "build/vo1441-ruby33-product-ordinary-72c5e27.json",
+        "sha256": "d438632a39fa4e5ad00511e2468bc7071eceb890001bc2dffeaccd53b90d39db",
+        "bytes": 6700
+      },
+      "identities": {
+        "bindingIrSha256": "e620d068e3711f030527a7f09929adfc687f222579e625fcc755fafac00c3752",
+        "modelSha256": "e072079c9e01e74dd9242fec063fcfa2a9b49072078996bf2ae3d0fc00406c21",
+        "receiptSha256": "ffc2b8b910df5e2199ade937fefd61e941fca4f2dd1d9afb81444f5bba60695f",
+        "sourceTreeSha256": "ec058b10dda482fe809f5455811f8d622b095cc90453bf57d9478a44c3c8841a",
+        "consumerSha256": "b85aed48e93055f5d44f1fc30945dd4e5d9a714428006a06b8e1d62145e61b79",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50112000,
+                "path": "archives/finproducts-1.0.0-x86_64-linux.gem",
+                "sha256": "804a7f4c3dfeea957a13cc95fcb6a2624df2dd07852dc35f988d789794fdb60f"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-product-reviewed",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "product",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-reviewed.json",
+        "originalPath": "build/vo1441-ruby33-product-reviewed-72c5e27.json",
+        "sha256": "1dd941f024308c817b79681966473c1c97bea73dc1b5a62dacc0d8a9ed281d56",
+        "bytes": 6794
+      },
+      "identities": {
+        "bindingIrSha256": "d3027e552289e6ca6daec88c23e512189659ab295ea6a6d821cd4cd280279d3f",
+        "modelSha256": "eb341db51c2a95105863401a807c6304b2e9af666dae9bdfba429b1cfbc17d6c",
+        "receiptSha256": "f36afc60e74759821ced64f216c9771654f38b69def392e5f51cb935c4cd2d18",
+        "sourceTreeSha256": "b28ef33cfc01202716932afa79ecc521fd12d1c2fa0dc3d738d3b6a46f57309f",
+        "consumerSha256": "b85aed48e93055f5d44f1fc30945dd4e5d9a714428006a06b8e1d62145e61b79",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50119680,
+                "path": "archives/finproducts-1.0.0-x86_64-linux.gem",
+                "sha256": "b75e1ebfb121a2cfe136ab156cdf6bfdd1d149243e2cb8fea2dfe7be499fdf51"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finproducts",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-product-array-ordinary",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "product-array",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-ordinary.json",
+        "originalPath": "build/vo1441-ruby33-product-array-ordinary-72c5e27.json",
+        "sha256": "ffb1bd48174877112e512b1512ae798bad32bfde8e9e22df9efbb241ddbc9854",
+        "bytes": 3704
+      },
+      "identities": {
+        "bindingIrSha256": "590c372fbf4eec06b4399e1f92883726abca3b4b162d7ac475dc72706922d4c3",
+        "modelSha256": "b584487c5f8ba36e4c3d87897a0a4927ca13a45b921a8d5cb314dc574d9dca76",
+        "receiptSha256": "881552c7c530b81db0d216bda01c20b8f437052ba3ee6b06d2fead66498c440e",
+        "sourceTreeSha256": "764f57e95da19a522f84a3135bc89b334ab305ceb569111a275829510a9c6c07",
+        "consumerSha256": "d91273980903c4e4a5f704933b352c186e447b3ee8b28495c030015239c85e40",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50083328,
+                "path": "archives/finproductarrays-1.0.0-x86_64-linux.gem",
+                "sha256": "ab5b91378ce1a30e5249241bc8d8f903c29e756570aff0e235f993336d57eaee"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-product-array-reviewed",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "product-array",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-reviewed.json",
+        "originalPath": "build/vo1441-ruby33-product-array-reviewed-72c5e27.json",
+        "sha256": "5918c79cb897714e28600b2652b42dc0507d83a4735388f9e8e9a87b0dede8ca",
+        "bytes": 3798
+      },
+      "identities": {
+        "bindingIrSha256": "8b81296e4d05fdb650e1c6d30d5208db614e682c5782ae15c55e0b8e79652c50",
+        "modelSha256": "0d198fc9089fcbd8e47bfc3ba2b182f78935d5b504eca10e63cf0aabc80e2bdf",
+        "receiptSha256": "97b38ce6aa78d62913bf0c5c4e28e5547653c6406722075e37a34574d171175f",
+        "sourceTreeSha256": "e1ea6943432cc77b5b8d017863dd6741a33b1126f47280e7c332f9c93eb67e2c",
+        "consumerSha256": "d91273980903c4e4a5f704933b352c186e447b3ee8b28495c030015239c85e40",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50084864,
+                "path": "archives/finproductarrays-1.0.0-x86_64-linux.gem",
+                "sha256": "1dd620d4af3f11dda85211c0056b4fa9aa2d6e41fdda31266c6751f3e164960d"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finproductarrays",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-record-ordinary",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "record",
+      "route": "ordinary",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-ordinary.json",
+        "originalPath": "build/vo1441-ruby33-record-ordinary-72c5e27.json",
+        "sha256": "a01bfc93ff0fee2b4444812e8dae5ead16b2aad32c4cba836f4db53c27114906",
+        "bytes": 13058
+      },
+      "identities": {
+        "bindingIrSha256": "6a267326903985e14bf537ba5c7e6052d387308f9b69a7fe5cc6222106d594d8",
+        "modelSha256": "d1ebb3fd55205ee68f4587964aed28676c5677af359a7c4a9035da23c5d61c2c",
+        "receiptSha256": "f646a69e48afe3e11f6d0abfaa53924fa0de0d16e8a27625d610714f5e382ef9",
+        "sourceTreeSha256": "9b2e996751bb9c079cdb84ce93b328e47b64937986a9509a4836fc3ddf79e171",
+        "consumerSha256": "ab247bb8fb01f8692bb2f4b236677144a9b5dbb0688121098fc1bf5e3e2aeec2",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50134016,
+                "path": "archives/finrecords-1.0.0-x86_64-linux.gem",
+                "sha256": "fec0c72b4228b35a1743791a363418f6488385977a366c793b8e30767e9b9ed1"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ruby33-record-reviewed",
+      "runtime": "ruby33",
+      "profile": "ruby",
+      "family": "record",
+      "route": "reviewed",
+      "report": {
+        "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-reviewed.json",
+        "originalPath": "build/vo1441-ruby33-record-reviewed-72c5e27.json",
+        "sha256": "3d714804129befe675d6ff345594d15c3908c4eb86a450b38b2cc29c4c86f214",
+        "bytes": 13152
+      },
+      "identities": {
+        "bindingIrSha256": "461032b9e3730714df05e1f8ce2687906ffb59ae4d09bf54ce921e61deda1719",
+        "modelSha256": "1b7e64e7be9fbeae420e0485a4b8b873ddfe181ef947518570060d2f17ac46cf",
+        "receiptSha256": "e9e8a6d14ac1ffb3696d8a5fc267f88720793f41251e51d3caf7afa0f7624a2a",
+        "sourceTreeSha256": "4897975face88efd0504f1c2cd6336043c0b20fd7f21748b515ec277cde3d709",
+        "consumerSha256": "ab247bb8fb01f8692bb2f4b236677144a9b5dbb0688121098fc1bf5e3e2aeec2",
+        "packages": [
+          {
+            "artifacts": [
+              {
+                "bytes": 50141696,
+                "path": "archives/finrecords-1.0.0-x86_64-linux.gem",
+                "sha256": "e3a15c340ede4abe139d0f9d67128b09ad36a7d21dbcbf4204d806ec91ac198d"
+              }
+            ],
+            "ecosystem": "rubygems",
+            "name": "finrecords",
+            "profile": "native-library-v1",
+            "requires": [],
+            "role": "component",
+            "runtimeDelivery": "embedded",
+            "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+            "target": "rubygems",
+            "version": "1.0.0"
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311.tap",
+      "originalPath": "build/vo1441-python311-72c5e27.tap",
+      "sha256": "fd9e1255ea09d0bc092b2184af9bd243e0b1d9d234a0d836897b91bc78c3a032",
+      "bytes": 2970
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311.queue",
+      "originalPath": "build/vo1441-python311-72c5e27.queue",
+      "sha256": "c658261a0d78409128006efd301fd4d66b624db673428ab9442c24ce22269de6",
+      "bytes": 2516
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311.runner.mjs.txt",
+      "originalPath": "build/vo1441-python311-queue-72c5e27.mjs",
+      "sha256": "c93e96f2235e9563ab6600a281b121c421c3506d5d0af33b73838cc89e7ae133",
+      "bytes": 4340
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-product-ordinary.json",
+      "originalPath": "build/vo1441-python311-product-ordinary-72c5e27.json",
+      "sha256": "2a9defd9aa832997234dfcdd4ad1fb531eebc1ce70992cde4295f8ef634fafd2",
+      "bytes": 6730
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-product-reviewed.json",
+      "originalPath": "build/vo1441-python311-product-reviewed-72c5e27.json",
+      "sha256": "44ac21d4c82b603eadb1d81ccd7c4184566a4036d9c4064a08e4f3a5f3ad2aa4",
+      "bytes": 6824
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-ordinary.json",
+      "originalPath": "build/vo1441-python311-product-array-ordinary-72c5e27.json",
+      "sha256": "40dba27871c2395b5a8a50c023f1f3f33bb58098bb71c3b756a0a0cd38c997bb",
+      "bytes": 3734
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-product-array-reviewed.json",
+      "originalPath": "build/vo1441-python311-product-array-reviewed-72c5e27.json",
+      "sha256": "bc77b3f6fcc945000fe93d5dc8c084660d545d1c6f320163bee3d57a447a791b",
+      "bytes": 3828
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-record-ordinary.json",
+      "originalPath": "build/vo1441-python311-record-ordinary-72c5e27.json",
+      "sha256": "0b80b9a83098cd0add13efb41de7d1d7e7d6acff031760a6c0022fb676010499",
+      "bytes": 13088
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python311-record-reviewed.json",
+      "originalPath": "build/vo1441-python311-record-reviewed-72c5e27.json",
+      "sha256": "6482e7bd8d48125a8ae6ff21009c1f7e91c510d2929642948dec223d3a10e475",
+      "bytes": 13182
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312.tap",
+      "originalPath": "build/vo1441-python312-72c5e27.tap",
+      "sha256": "a69a8ee0f8be196e539de2551282a86acde7b5ff8bf4d16eec492b6fba427f30",
+      "bytes": 2967
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312.queue",
+      "originalPath": "build/vo1441-python312-72c5e27.queue",
+      "sha256": "3602e98f11fdd36318cc40dc6f30d30a3bcf6f7670c9721477662aee6d5873e9",
+      "bytes": 2516
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312.runner.mjs.txt",
+      "originalPath": "build/vo1441-python312-queue-72c5e27.mjs",
+      "sha256": "e4558c8c5510c5956a6830e548620a78e1af4d8d6adde1fcd4f53f0cb2ea4604",
+      "bytes": 4340
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-product-ordinary.json",
+      "originalPath": "build/vo1441-python312-product-ordinary-72c5e27.json",
+      "sha256": "2a9defd9aa832997234dfcdd4ad1fb531eebc1ce70992cde4295f8ef634fafd2",
+      "bytes": 6730
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-product-reviewed.json",
+      "originalPath": "build/vo1441-python312-product-reviewed-72c5e27.json",
+      "sha256": "44ac21d4c82b603eadb1d81ccd7c4184566a4036d9c4064a08e4f3a5f3ad2aa4",
+      "bytes": 6824
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-ordinary.json",
+      "originalPath": "build/vo1441-python312-product-array-ordinary-72c5e27.json",
+      "sha256": "40dba27871c2395b5a8a50c023f1f3f33bb58098bb71c3b756a0a0cd38c997bb",
+      "bytes": 3734
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-product-array-reviewed.json",
+      "originalPath": "build/vo1441-python312-product-array-reviewed-72c5e27.json",
+      "sha256": "bc77b3f6fcc945000fe93d5dc8c084660d545d1c6f320163bee3d57a447a791b",
+      "bytes": 3828
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-record-ordinary.json",
+      "originalPath": "build/vo1441-python312-record-ordinary-72c5e27.json",
+      "sha256": "0b80b9a83098cd0add13efb41de7d1d7e7d6acff031760a6c0022fb676010499",
+      "bytes": 13088
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/python312-record-reviewed.json",
+      "originalPath": "build/vo1441-python312-record-reviewed-72c5e27.json",
+      "sha256": "6482e7bd8d48125a8ae6ff21009c1f7e91c510d2929642948dec223d3a10e475",
+      "bytes": 13182
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33.tap",
+      "originalPath": "build/vo1441-ruby33-72c5e27.tap",
+      "sha256": "81adf6f61d8fb8bbb8b098d4666768f3a35dc2a0112470c7c3b2987e57d8c395",
+      "bytes": 2934
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33.queue",
+      "originalPath": "build/vo1441-ruby33-72c5e27.queue",
+      "sha256": "86af869c5c968c19183719b6ab7a866364794ec794b329fd387bfc062705dcee",
+      "bytes": 2541
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33.runner.mjs.txt",
+      "originalPath": "build/vo1441-ruby33-queue-72c5e27.mjs",
+      "sha256": "65c38ee8623feaccd3c198e00237a9e00dd1e19b8060921f3c4f2ec417b8925b",
+      "bytes": 4366
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-ordinary.json",
+      "originalPath": "build/vo1441-ruby33-product-ordinary-72c5e27.json",
+      "sha256": "d438632a39fa4e5ad00511e2468bc7071eceb890001bc2dffeaccd53b90d39db",
+      "bytes": 6700
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-reviewed.json",
+      "originalPath": "build/vo1441-ruby33-product-reviewed-72c5e27.json",
+      "sha256": "1dd941f024308c817b79681966473c1c97bea73dc1b5a62dacc0d8a9ed281d56",
+      "bytes": 6794
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-ordinary.json",
+      "originalPath": "build/vo1441-ruby33-product-array-ordinary-72c5e27.json",
+      "sha256": "ffb1bd48174877112e512b1512ae798bad32bfde8e9e22df9efbb241ddbc9854",
+      "bytes": 3704
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-product-array-reviewed.json",
+      "originalPath": "build/vo1441-ruby33-product-array-reviewed-72c5e27.json",
+      "sha256": "5918c79cb897714e28600b2652b42dc0507d83a4735388f9e8e9a87b0dede8ca",
+      "bytes": 3798
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-ordinary.json",
+      "originalPath": "build/vo1441-ruby33-record-ordinary-72c5e27.json",
+      "sha256": "a01bfc93ff0fee2b4444812e8dae5ead16b2aad32c4cba836f4db53c27114906",
+      "bytes": 13058
+    },
+    {
+      "path": "docs/evidence/fin-python-ruby-20261008/ruby33-record-reviewed.json",
+      "originalPath": "build/vo1441-ruby33-record-reviewed-72c5e27.json",
+      "sha256": "3d714804129befe675d6ff345594d15c3908c4eb86a450b38b2cc29c4c86f214",
+      "bytes": 13152
+    }
+  ]
+}

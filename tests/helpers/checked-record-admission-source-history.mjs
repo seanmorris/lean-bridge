@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinPythonRubyArchiveSource } from "./fin-python-ruby-archive-source-history.mjs";
 
 export const checkedRecordAdmissionHistoryPath = "docs/evidence/checked-record-admission-source-history-20261008.json";
 export const checkedRecordAdmissionChangedPaths = [
@@ -85,6 +86,7 @@ export const reverseCheckedRecordAdmissionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeCheckedRecordAdmissionSource = (path, source, expected) => {
+	source = beforeFinPythonRubyArchiveSource(path, source, expected);
 	if(typeof source !== "string" || !checkedRecordAdmissionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
