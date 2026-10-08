@@ -31,34 +31,36 @@ export const assertReviewedInstantiation = (definition, value, types) => {
 	if(!leanName(value.structure) || value.structure === definition.source.declaration) refuse(`${base}.structure`, "the structure is a Lean name other than the record's alias");
 	if(!Array.isArray(value.arguments) || !value.arguments.length || value.arguments.length > 16) refuse(`${base}.arguments`, "an instantiation has 1 to 16 arguments");
 	if(refinementKeys.some(key => Object.hasOwn(definition.source.extensions, key))) refuse(base, "an instantiated generic record has no refined fields");
-	// Each named definition is explored once; one still on the current path is a cycle.
-	const active = new Set(), done = new Set();
-	// Inside a named definition, refusals name the reference that entered it.
+	// Each named definition is explored once and keeps its height, so a later, deeper reference
+	// is still bounded; one still on the current path is a cycle. The record itself is on the path.
+	const active = new Set([definition.id]), heights = new Map();
+	// Returns the height below `type`; inside a named definition, refusals name the reference that entered it.
 	const reach = (type, path, depth, bound, inside = false) => {
 		if(depth > 32) refuse(path, "type nesting exceeds 32");
-		if(type?.kind === "primitive" && keys(type, ["kind", "name"]) && componentScalarTypes.includes(type.name)) return;
+		if(type?.kind === "primitive" && keys(type, ["kind", "name"]) && componentScalarTypes.includes(type.name)) return 0;
 		const applied = type?.kind === "apply" && keys(type, ["kind", "constructor", "arguments"]) && Object.hasOwn(arities, type.constructor)
 			&& Array.isArray(type.arguments) && type.arguments.length === arities[type.constructor];
-		if(applied)
-		{
-			type.arguments.forEach((argument, index) => reach(argument, inside ? path : `${path}.arguments[${index}]`, depth + 1, bound, inside));
-			return;
-		}
+		if(applied) return 1 + Math.max(...type.arguments.map((argument, index) => reach(argument, inside ? path : `${path}.arguments[${index}]`, depth + 1, bound, inside)));
 		if(type?.kind !== "named" || !keys(type, ["kind", "id"])) refuse(path, "arguments are primitives, closed applications or named definitions");
 		const target = types.get(type.id);
 		if(!target || !["alias", "record", "variant"].includes(target.kind)) refuse(path, "a named argument refers to a reviewed alias, record or variant");
 		if(active.has(target.id)) refuse(path, "named definitions cannot form a cycle");
-		if(done.has(target.id)) return;
-		if(refinementKeys.some(key => Object.hasOwn(target.source.extensions, key))) refuse(path, bound);
-		active.add(target.id);
-		const children = target.kind === "alias" ? [target.target] : target.kind === "record" ? target.fields.map(field => field.type)
-			: target.cases.flatMap(item => item.fields.map(field => field.type));
-		children.forEach(child => reach(child, path, depth + 1, bound, true));
-		active.delete(target.id);
-		done.add(target.id);
+		if(!heights.has(target.id))
+		{
+			if(refinementKeys.some(key => Object.hasOwn(target.source.extensions, key))) refuse(path, bound);
+			active.add(target.id);
+			// A named record's own instantiation arguments are reached like its fields.
+			const origin = target.kind === "record" ? target.source.extensions[instantiationKey]?.arguments : undefined;
+			const own = target.kind === "alias" ? [target.target] : target.kind === "record" ? target.fields.map(field => field.type)
+				: target.cases.flatMap(item => item.fields.map(field => field.type));
+			const children = [...own, ...Array.isArray(origin) ? origin : []];
+			heights.set(target.id, children.length ? 1 + Math.max(...children.map(child => reach(child, path, depth + 1, bound, true))) : 0);
+			active.delete(target.id);
+		}
+		if(depth + heights.get(target.id) > 32) refuse(path, "type nesting exceeds 32");
+		return heights.get(target.id);
 	};
 	value.arguments.forEach((argument, index) => reach(argument, `${base}.arguments[${index}]`, 0, "an instantiation argument cannot reach a Fin bound"));
 	// Field types were checked as reviewed types; a bound hidden behind a named field remains.
-	active.add(definition.id);
 	for(const field of definition.fields) reach(field.type, `${definition.id}.${field.name}.type`, 0, "an instantiated generic record has no refined fields");
 };

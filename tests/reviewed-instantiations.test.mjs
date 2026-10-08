@@ -78,6 +78,28 @@ const hiddenField = ir => {
 	ir.types.push(plain("Refined", { digit: nat }, { "lean-lang.org/nominal-refinements": finField }));
 	type(ir, "MarkerTag").fields.push({ name: "refined", type: { kind: "named", id: "lean:GenericRecords.Refined" }, mutability: "immutable", documentation: doc });
 };
+// Leaf is reached once shallowly and once 32 options deep; the cached visit must keep its height.
+const options = (count, value) => count ? { kind: "apply", constructor: "option", arguments: [options(count - 1, value)] } : value;
+const leaf = { kind: "named", id: "lean:GenericRecords.Leaf" };
+const leafFirst = order => ir => {
+	ir.types.push(plain("Leaf", { n: nat }));
+	const values = [leaf, options(32, leaf)];
+	type(ir, "MarkerTag").source.extensions[instantiationKey].arguments = order ? values : values.toReversed();
+};
+const leafField = ir => {
+	ir.types.push(plain("Leaf", { n: nat }));
+	type(ir, "MarkerTag").source.extensions[instantiationKey].arguments = [leaf];
+	type(ir, "MarkerTag").fields.push({ name: "deep", type: options(32, leaf), mutability: "immutable", documentation: doc });
+};
+// Two alias-named records whose origins name each other: neither field reaches the other.
+const origin = (id, other) => plain(id, { n: nat }, { [instantiationKey]: { structure: "GenericRecords.Box", arguments: [{ kind: "named", id: `lean:GenericRecords.${other}` }] } });
+const originCycle = ir => { ir.types.push(origin("OriginA", "OriginB"), origin("OriginB", "OriginA")); };
+// The phantom argument's own origin hides the bound; its fields carry none.
+const originBound = ir => {
+	refinedMarker(ir);
+	ir.types.push(origin("Wrapper", "Marker"));
+	type(ir, "MarkerTag").source.extensions[instantiationKey].arguments = [{ kind: "named", id: "lean:GenericRecords.Wrapper" }];
+};
 const onAlias = ir => { type(ir, "Boxes").source.extensions[instantiationKey] = { structure: "List", arguments: [{ kind: "named", id: "lean:GenericRecords.NatBox" }] }; };
 const onDeclaration = ir => { ir.declarations.find(item => item.id === "lean:GenericRecords.bump").source.extensions[instantiationKey] = structuredClone(type(ir, "NatBox").source.extensions[instantiationKey]); };
 
@@ -99,6 +121,11 @@ test("malformed, misplaced, cyclic and refined instantiations are refused at the
 		, ["a Fin bound hidden behind a named argument", hiddenArgument, `${extension("MarkerTag")}.arguments[0]`, /argument cannot reach a Fin bound/u]
 		, ["refined fields on the instantiated record", refinedRecord, extension("NatBox"), /no refined fields/u]
 		, ["a Fin bound hidden behind a named field", hiddenField, "lean:GenericRecords.MarkerTag.refined.type", /no refined fields/u]
+		, ["a shallow then deep reference to one definition", leafFirst(true), `${extension("MarkerTag")}.arguments[1]${".arguments[0]".repeat(32)}`, /nesting exceeds 32/u]
+		, ["a deep then shallow reference to one definition", leafFirst(false), `${extension("MarkerTag")}.arguments[0]${".arguments[0]".repeat(32)}`, /nesting exceeds 32/u]
+		, ["an argument reference reused deeper in a field", leafField, `lean:GenericRecords.MarkerTag.deep.type${".arguments[0]".repeat(32)}`, /nesting exceeds 32/u]
+		, ["a cycle through instantiation arguments", originCycle, `${extension("OriginA")}.arguments[0]`, /cycle/u]
+		, ["a Fin bound hidden in a named argument's own instantiation", originBound, `${extension("MarkerTag")}.arguments[0]`, /argument cannot reach a Fin bound/u]
 		, ["an instantiation on an alias", onAlias, "lean:GenericRecords.Boxes.source.extensions", null]
 		, ["an instantiation on a declaration", onDeclaration, "lean:GenericRecords.bump.source.extensions", null]];
 	for(const [label, change, path, reason] of cases)
@@ -117,6 +144,13 @@ test("malformed, misplaced, cyclic and refined instantiations are refused at the
 	ir.types.push(plain("Refined", { digit: nat }, { "lean-lang.org/nominal-refinements": finField }), plain("Hidden", { inner: { kind: "named", id: "lean:GenericRecords.Marker" } }));
 	type(ir, "MarkerTag").source.extensions[instantiationKey].arguments = [{ kind: "named", id: "lean:GenericRecords.Hidden" }];
 	validateReviewedSource(reviewInput(ir));
+	// A 24-level diamond chain has 2^24 paths; each definition is explored once, and the chain is admitted.
+	const chain = genericRecordInstantiationReview(), link = index => ({ kind: "named", id: `lean:GenericRecords.Chain${index}` });
+	for(let index = 0; index < 24; index++) chain.types.push(plain(`Chain${index}`, index === 23 ? { n: nat } : { left: link(index + 1), right: link(index + 1) }));
+	type(chain, "MarkerTag").source.extensions[instantiationKey].arguments = [link(0), options(7, link(0))];
+	const started = performance.now();
+	validateReviewedSource(reviewInput(chain));
+	assert.ok(performance.now() - started < 5_000);
 });
 
 test("a review that drops or changes an instantiation differs from the compiler at the exact extension path", () => {
