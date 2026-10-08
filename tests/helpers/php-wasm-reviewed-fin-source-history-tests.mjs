@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedPhpWasmFinArchiveSource } from "./reviewed-php-wasm-fin-archive-source-history.mjs";
 import { beforePhpWasmReviewedFinSource, phpWasmReviewedFinChangedPaths, phpWasmReviewedFinHistoryPath, reversePhpWasmReviewedFinUpdate } from "./php-wasm-reviewed-fin-source-history.mjs";
 
 test("Reviewed PHP-Wasm Fin integration authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Reviewed PHP-Wasm Fin integration authenticates each exact source predeces
 	assert.deepEqual(record.updates.map(update => update.path), phpWasmReviewedFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedPhpWasmFinArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpWasmReviewedFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpWasmReviewedFinSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpWasmReviewedFinSource(update.path, source, update.currentSha256), source);
@@ -29,7 +30,7 @@ test("Reviewed PHP-Wasm Fin integration authenticates each exact source predeces
 });
 
 test("Reviewed PHP-Wasm Fin source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeReviewedPhpWasmFinArchiveSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforePhpWasmReviewedFinSource(path, text));
 	const record = JSON.parse(await readFile(phpWasmReviewedFinHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -39,7 +40,7 @@ test("Reviewed PHP-Wasm Fin source pins do not change observations or other inve
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeReviewedPhpWasmFinArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

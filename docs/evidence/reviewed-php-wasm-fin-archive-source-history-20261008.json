@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-php-wasm-fin-archive-v1",
+  "predecessorCommit": "ddb183caaddc8d847dbbb43a4217a92077c254ba",
+  "updates": [
+    {
+      "path": "tests/helpers/php-wasm-fin-evidence-tests.mjs",
+      "currentSha256": "e61df6f53b2356d5c84b7f1b05d4c0e94f11d1c047d395b3eafe96d9b97cb822",
+      "previousSha256": "bc3ad2de181b8ef9d076a5e1179838d1a7c4cfe037471f2ecad444a4af360c08",
+      "edits": [
+        {
+          "start": 199,
+          "previous": "import { basename } from \"node:path\";\n",
+          "current": ""
+        },
+        {
+          "start": 229,
+          "previous": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "current": "import { sha256 } from \"../../src/capsule/node.mjs\";\n"
+        },
+        {
+          "start": 363,
+          "previous": "import { phpWasmExecutionTuples, phpWasmFinCaller, phpWasmFinConsumer, phpWasmFinFixtures } from \"./php-wasm-fin-fixtures.mjs\";\nimport { phpWasmDriverHashes, phpWasmIsolationFlags } from \"./type-corpus-php-wasm-evidence.mjs\";\n",
+          "current": "import { phpWasmFinCaller, phpWasmFinFixtures } from \"./php-wasm-fin-fixtures.mjs\";\nimport { assertPhpWasmFinObservation as validateReport } from \"./php-wasm-fin-observation.mjs\";\n"
+        },
+        {
+          "start": 776,
+          "previous": "const subset = (files, prefix) => Object.fromEntries(Object.entries(files).filter(([path]) => path.startsWith(prefix)).map(([path, value]) => [path.slice(prefix.length), value]));\n\nconst validateReport = (report, fixture, caller, requests, checks) => {\n\tassert.equal(phpWasmFinFixtures[report.fixture], fixture);\n\tassert.equal(report.label, `fin-${report.fixture}`);\n\tassert.deepEqual(report.refinements, fixture.refinements);\n\tassert.equal(report.profile, \"php-wasm\"); assert.equal(report.path, \"ordinary-source\");\n\tassert.equal(report.dispatch, \"not measured\");\n\tassert.equal(report.reproducible, true); assert.equal(report.sourceRemovedBeforeInstallation, true);\n\tconst evidence = report.phpWasm, set = evidence.packageSet, component = evidence.component, runtime = evidence.runtime;\n\tfor(const flag of phpWasmIsolationFlags) assert.equal(evidence[flag], true, flag);\n\tassert.equal(component.pointerBits, 32); assert.equal(runtime.pointerBits, 32);\n\tassert.deepEqual(component.exports.map(item => item.declaration).sort(),\n\t\tObject.keys(fixture.refinements).map(name => `lean:${name}`).sort());\n\tconst configuration = JSON.parse(component.sourceIdentity.exportConfigurationSource);\n\tassert.deepEqual([...configuration.exports].sort(), Object.keys(fixture.refinements).sort());\n\tassert.deepEqual(configuration.modules, [fixture.module]);\n\tassert.equal(runtime.pins.phpVersion, \"8.4.1\"); assert.equal(runtime.pins.emscriptenVersion, \"3.1.68\");\n\tassert.equal(component.bindingIrSha256, report.bindingIrSha256); assert.equal(component.modelSha256, report.modelSha256);\n\tassert.equal(component.runtimeIdentity, sha256(canonicalJson(runtime)));\n\tassert.equal(set.runtimeIdentity, component.runtimeIdentity);\n\tassert.equal(report.packages.length, 3); assert.equal(set.archives.length, 3);\n\tassert.equal(Object.keys(report.archives).length, 3);\n\tconst deployed = evidence.deployment;\n\tfor(const pkg of report.packages)\n\t{\n\t\tassert.equal(pkg.artifacts.length, 1);\n\t\tassert.equal(pkg.runtimeIdentity, component.runtimeIdentity);\n\t\tconst artifact = pkg.artifacts[0], packed = set.archives.find(item => item.role === pkg.role);\n\t\tassert.ok(packed); assert.equal(packed.name, pkg.name); assert.equal(packed.version, pkg.version);\n\t\tassert.equal(packed.ecosystem, pkg.ecosystem);\n\t\tassert.equal(packed.archive, basename(artifact.path));\n\t\tassert.equal(packed.sha256, artifact.sha256); assert.equal(packed.bytes, artifact.bytes);\n\t\tassert.equal(report.archives[artifact.path], artifact.sha256);\n\t\tassert.deepEqual(set.files[`archives/${packed.archive}`], { sha256: artifact.sha256, bytes: artifact.bytes });\n\t\tconst destination = `${pkg.ecosystem === \"composer\" ? \"vendor\" : \"node_modules\"}/${pkg.name}/`;\n\t\tassert.deepEqual(subset(deployed, destination), subset(set.files, `${packed.directory}/`));\n\t}\n\tconst componentRoot = `node_modules/${fixture.settings.npm.name}/compiled/`;\n\tconst runtimeRoot = \"node_modules/@lean-bridge/php-wasm-copied-runtime/compiled/\";\n\tassert.equal(deployed[componentRoot + \"php-wasm-component.json\"].sha256, sha256(canonicalJson(component)));\n\tassert.equal(deployed[componentRoot + \"model.json\"].sha256, report.modelSha256);\n\tassert.equal(deployed[runtimeRoot + \"runtime.json\"].sha256, component.runtimeIdentity);\n\tconst libraryPaths = [componentRoot + component.library, runtimeRoot + runtime.library];\n\tassert.deepEqual(deployed[libraryPaths[0]], component.wasmLibrary);\n\tassert.deepEqual(deployed[libraryPaths[1]], runtime.files[runtime.library]);\n\tassert.deepEqual(subset(deployed, \"node_modules/php-wasm/\"), evidence.host.files);\n\tassert.equal(evidence.host.version, \"0.1.0\");\n\tfor(const [path, hash] of Object.entries(phpWasmDriverHashes)) assert.equal(deployed[path].sha256, hash);\n\tfor(const mode of [\"weak\", \"strict\"])\n\t{\n\t\tassert.equal(evidence.consumerSources[mode], sha256(phpWasmFinConsumer(caller, mode)));\n\t\tassert.equal(deployed[`${mode}.php`].sha256, evidence.consumerSources[mode]);\n\t}\n\tfor(const arrangement of [\"embedded\", \"composer\"])\n\t{\n\t\tassert.equal(evidence.requests[arrangement], sha256(requests(arrangement)));\n\t\tassert.equal(deployed[`request-${arrangement}.json`].sha256, evidence.requests[arrangement]);\n\t}\n\tassert.deepEqual(evidence.executions.map(item => `${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort(), phpWasmExecutionTuples);\n\tconst libraries = [basename(component.library), basename(runtime.library)].sort();\n\tfor(const execution of evidence.executions)\n\t{\n\t\tassert.deepEqual(execution.observation, { checks, php: \"8.4.1\", word_bits: 32 });\n\t\tassert.deepEqual(execution.phases.map(item => ({ ...item, libraries: [...item.libraries].sort() })),\n\t\t\t[\"ready\", \"autoload\", \"invalid\", \"complete\"].map(stage => ({ stage, libraries: execution.loading === \"startup\" || stage === \"complete\" ? libraries : [] })));\n\t\tif(execution.realm !== \"chromium\") continue;\n\t\tfor(const request of execution.requests) assert.deepEqual({ bytes: request.bytes, sha256: request.sha256 }, deployed[request.path]);\n\t\tfor(const path of libraryPaths)\n\t\t\tassert.equal(execution.requests.filter(request => request.sha256 === deployed[path].sha256).length, 1);\n\t\tfor(const path of [\"bundled/consumer.mjs\", \"node_modules/php-wasm/PhpWeb.mjs\", `${execution.mode}.php`])\n\t\t\tassert.ok(execution.requests.some(request => request.path === path), path);\n\t}\n\tassert.deepEqual(report.observation, evidence.executions[0].observation);\n};\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "e4f7457442b2107f0fc220e28c028f84cdb234ec837b462dc0b63d9b5aed384d",
+      "previousSha256": "33d63a2c578653cec7e61e8613d763c6cad84c112351e14d38834c051eb66e68",
+      "edits": [
+        {
+          "start": 1798,
+          "previous": "",
+          "current": "import \"./helpers/reviewed-php-wasm-fin-evidence-tests.mjs\";\nimport \"./helpers/reviewed-php-wasm-fin-archive-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 19875,
+          "previous": "\t\t, workflow.replace(command, \"\").replace(\"  php-consumers:\\n\", \"  php-consumers:\\n\" + command)\n",
+          "current": "\t\t, workflow.replace(\"  php-consumers:\\n\", \"  php-consumers:\\n\" + command)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-reviewed-fin-source-history.mjs",
+      "currentSha256": "60a5167724ba6f28cbd2838203fb4001c2e8ac2b96d5354ce052b0de7ae969f8",
+      "previousSha256": "cd8afd8db6c280225839677403c8efbac9430694f41f73ba2eed3c46a63fb3c5",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeReviewedPhpWasmFinArchiveSource } from \"./reviewed-php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 2479,
+          "previous": "",
+          "current": "\tsource = beforeReviewedPhpWasmFinArchiveSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-reviewed-fin-source-history-tests.mjs",
+      "currentSha256": "632027af8b7db36c8c90f8d4020917da383e1c8574de01c0da96db5efe7d46dc",
+      "previousSha256": "e1c0dd87134e74570e3ac6e573e2a014796035525ddebb13d44a2ce154e36a42",
+      "edits": [
+        {
+          "start": 363,
+          "previous": "",
+          "current": "import { beforeReviewedPhpWasmFinArchiveSource } from \"./reviewed-php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 1063,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeReviewedPhpWasmFinArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2021,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeReviewedPhpWasmFinArchiveSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2607,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeReviewedPhpWasmFinArchiveSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "a9f048f2b5442e79d96b2082af0aa92dde839a0644708bc4ef169d9d14a2d744",
+      "previousSha256": "515948755fe5194af73f795275d0a3f51a4f22c626fb3c9ccfb1504211e3bfbc",
+      "edits": [
+        {
+          "start": 10153,
+          "previous": "",
+          "current": "import { reviewedPhpWasmFinArchiveChangedPaths } from \"./reviewed-php-wasm-fin-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 47406,
+          "previous": "",
+          "current": "\t, ...reviewedPhpWasmFinArchiveChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1443,
+  "execution": "local",
+  "revision": "8d395a3e49e189b174d9b8359c3247f77215b663",
+  "scope": {
+    "profile": "php-wasm",
+    "sourcePath": "reviewed-source",
+    "reviewedContracts": true,
+    "fixtures": [
+      {
+        "name": "products",
+        "exports": 11,
+        "executions": 12,
+        "checksPerExecution": 2039
+      },
+      {
+        "name": "records",
+        "exports": 13,
+        "executions": 12,
+        "checksPerExecution": 2053
+      }
+    ],
+    "dispatch": "not measured",
+    "hostedCi": false,
+    "binaryArchivesRetained": false,
+    "subtype": false,
+    "callbacks": false,
+    "ownedOrGraphRefinements": false
+  },
+  "producerEnvironment": {
+    "nodeVersion": "v22.23.3",
+    "browserVersion": "154.0.8037.57",
+    "pins": {
+      "emscriptenCommit": "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
+      "emscriptenVersion": "3.1.68",
+      "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+      "phpCommit": "0454901ed1518cfb42bc77ac91728591b58c3e6e",
+      "phpVersion": "8.4.1",
+      "phpWasmCommit": "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89",
+      "phpWasmVersion": "0.1.0"
+    },
+    "cpu": 3,
+    "concurrency": 1,
+    "declaredNativeGlibcFloor": "2.36",
+    "measuredHostGlibc": "not measured",
+    "scope": "Node and Chromium versions come from the original report. Runtime/compiler source pins are retained from the compiled runtime receipt. The native glibc override is recorded by the queue; it does not establish a PHP-Wasm host floor."
+  },
+  "sourceIdentityScope": "Twenty selected producer source files, not a complete dependency closure. Nineteen are checked through exact current-source history. The original test root is retained separately because it belongs to a side branch; no claim that the later integrated harness ran in this producer. No whole input-tree reconstruction is claimed.",
+  "sourceFiles": [
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "sha256": "7b1f8ce82f4d7c11837138bff30c6d0147d75a2e4a9a33f4768293b983b86cb8",
+      "archivePath": "docs/evidence/reviewed-php-wasm-fin-20261008/producer-test.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "sha256": "02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9"
+    },
+    {
+      "path": "tests/helpers/fin-product-install.mjs",
+      "sha256": "74f6f2b12fb89ab0e1b7cf26d985a57b63fa6249298aba48e22175389e90b640"
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "sha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-products/FinProducts.lean",
+      "sha256": "aa79a2cb232c968d1e2e1e7d640630df97adc40dee506e5c4e26ad56c41ff220"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-records/FinRecords.lean",
+      "sha256": "419dcccad2f2a6cafb828315e0e51ee3747ad15a3fe3c7a5e74deb7a532dd299"
+    },
+    {
+      "path": "tests/fixtures/fin-product-consumers/php-native.php",
+      "sha256": "dd8bd573c6045588c78b9895607052bce302a14e3084e60a683b6eaa6e3be357"
+    },
+    {
+      "path": "tests/fixtures/fin-record-consumers/php-native.php",
+      "sha256": "1223817f66d548279646bd14d66f939ea544c7756f908ec75284ba5e851a4127"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-product-fixture.mjs",
+      "sha256": "ad29b17c2ef7ce9734b944ae414d616d96a006ace417e4d2c91ca63f17ec9368"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-record-fixture.mjs",
+      "sha256": "757d1a1a2d672d3ec66de20688860182f982a0fcd0e731051a58109a671b06a4"
+    },
+    {
+      "path": "tests/helpers/type-corpus-php-wasm-install.mjs",
+      "sha256": "1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc"
+    },
+    {
+      "path": "tests/helpers/type-corpus-php-wasm-evidence.mjs",
+      "sha256": "708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "052e33eba44c049c4c9f5b4009e8fe87847d487059d2c2ae456c6e8ea729454c"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "85a9b41f1c2f7617a9aa17989b6bcd8669183d88fe032559d31232248ebe3caa"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "98791ab2054fb74b668b7fb1667a906d0075796864006bc2fc3bb334ca84b8cb"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "ae8271e09b987d2ab9b16c90f351990b1d1c5747dff46154bd0780e054d8b823"
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+    },
+    {
+      "path": "src/build/php-wasm-copied-component.mjs",
+      "sha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae"
+    },
+    {
+      "path": "src/backends/php/copied-values.mjs",
+      "sha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d"
+    }
+  ],
+  "identities": [
+    {
+      "fixture": "products",
+      "bindingIrSha256": "2cad5588b02e1083204ac60c029e126422473c20805b083a5960be8a0083fdfb",
+      "modelSha256": "ba02414b8112563093232ec979c59262302d6d3a46e12ca67d4f94cdaf1db6dd",
+      "receiptSha256": "5e30ddd49aa9c3f2082e96a486eb7b1e9bca022114a6d653c0751ec3c174d546",
+      "reviewedBindingIrSha256": "7184660b4e263e5f16a879723903eb6d6fc65b00e4a177adb07874ed2365d817",
+      "componentSourceIdentitySha256": "d85518e43efb362c144e1cbd82afbe21c2bba080b54130b9b539ee1f0c756672",
+      "archives": {
+        "packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0-php-wasm.zip": "f612e971aa81094777263a4c1ce946d1dc27fb38125c0e1790af71988ee51c14",
+        "packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0.tgz": "01a3c1b643c680327b1ce4845d38b115d968943545da56cdac92003829784584",
+        "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz": "cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024"
+      }
+    },
+    {
+      "fixture": "records",
+      "bindingIrSha256": "924046ad3103b5918089765d147c8cbe85ef817124ebf7f5f67912c352421d2d",
+      "modelSha256": "74b95dcf90c018b128e4511aba857a11ed9cc9338afe7ea6ddeacc2cc4be3f92",
+      "receiptSha256": "af9a8b33e5a87e288c4e843259dbc27a4c042241e3d1c9eabd2a6d80b612e80f",
+      "reviewedBindingIrSha256": "7e54693dbc522ac90934ea67c4d04dabe48627c4e99091b0ba90890c41730b78",
+      "componentSourceIdentitySha256": "4acbf85a9ed0442d2174161c2e74189a18f1983a2f6f71ebb953c0d3e930a812",
+      "archives": {
+        "packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0-php-wasm.zip": "147179fc63a599fd637fea45c31c3c3ebe0f6b88b0d9153d66a312240e106664",
+        "packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0.tgz": "a4b1651a580c6ea927d948bf982fe0ebc0674b030ceb33e95d35974b3c78a18e",
+        "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz": "cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-php-wasm-fin-20261008/reviewed.json",
+      "originalPath": "build/vo1220-php-wasm-reviewed-fin-8d395a3.json",
+      "sha256": "4620eececc51da0dd6a639598b058d789bb3e860f65813779d5de27e22af947f",
+      "bytes": 598180
+    },
+    {
+      "path": "docs/evidence/reviewed-php-wasm-fin-20261008/original.tap",
+      "originalPath": "build/vo1220-php-wasm-reviewed-fin-8d395a3.tap",
+      "sha256": "17b73e0afa2e2cc704b2c55327dad4c9c55ab4af4fc3fe361b6e840d860cd301",
+      "bytes": 2328
+    },
+    {
+      "path": "docs/evidence/reviewed-php-wasm-fin-20261008/original.queue",
+      "originalPath": "build/vo1220-php-wasm-reviewed-fin-8d395a3.queue",
+      "sha256": "281a1ee775bfe93fb81996f94ca6843da591ab4e4b8b73543aceefc56094c643",
+      "bytes": 700
+    },
+    {
+      "path": "docs/evidence/reviewed-php-wasm-fin-20261008/producer-test.mjs.txt",
+      "originalPath": "git:8d395a3e49e189b174d9b8359c3247f77215b663:tests/php-wasm-fin.test.mjs",
+      "sha256": "7b1f8ce82f4d7c11837138bff30c6d0147d75a2e4a9a33f4768293b983b86cb8",
+      "bytes": 19305
+    }
+  ],
+  "remaining": [
+    "Promote only the exact observed source routes and parameter/result/nominal-field positions in a separate inventory change.",
+    "Source and checked-adapter dispatch are not measured by this run.",
+    "Subtype, callable, graph/owned and other refined combinations require separate installed acceptance.",
+    "Hosted CI and release-floor acceptance are separate from this local producer."
+  ]
+}
