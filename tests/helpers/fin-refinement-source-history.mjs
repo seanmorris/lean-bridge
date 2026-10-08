@@ -83,6 +83,7 @@ import { reviewedSubtypeAdmissionChangedPaths } from "./reviewed-subtype-admissi
 import { callbackCodeCiRepairChangedPaths } from "./callback-code-ci-repair-source-history.mjs";
 import { reviewedCallbackFinAdmissionChangedPaths } from "./reviewed-callback-fin-admission-source-history.mjs";
 import { nativeFinCallbackArchiveChangedPaths } from "./native-fin-callback-archive-source-history.mjs";
+import { closureHistoryCiRepairChangedPaths } from "./closure-history-ci-repair-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -630,6 +631,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackCodeCiRepairChangedPaths
 	, ...reviewedCallbackFinAdmissionChangedPaths
 	, ...nativeFinCallbackArchiveChangedPaths
+	, ...closureHistoryCiRepairChangedPaths
 ])].sort());
 
 /**

@@ -1,22 +1,19 @@
 /**
- * Preserve exact source predecessors of the Native callback Fin archive change (#1220).
+ * Preserve exact source predecessors of the Closure history CI repair change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeClosureHistoryCiRepairSource } from "./closure-history-ci-repair-source-history.mjs";
 
-export const nativeFinCallbackArchiveHistoryPath = "docs/evidence/native-fin-callback-archive-source-history-20261008.json";
-export const nativeFinCallbackArchiveChangedPaths = [
-	"tests/native-fin-callbacks.test.mjs"
-	, "docs/lean/existing-package.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "docs/type-surface.v1.json"
+export const closureHistoryCiRepairHistoryPath = "docs/evidence/closure-history-ci-repair-source-history-20261008.json";
+export const closureHistoryCiRepairChangedPaths = [
+	"tests/helpers/closure-thread-evidence.mjs"
+	, "tests/closure-thread-evidence.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-callback-fin-admission-source-history.mjs"
-	, "tests/helpers/reviewed-callback-fin-admission-source-history-tests.mjs"
+	, "tests/helpers/native-fin-callback-archive-source-history.mjs"
+	, "tests/helpers/native-fin-callback-archive-source-history-tests.mjs"
 ];
 let history;
 
@@ -26,8 +23,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseNativeFinCallbackArchiveUpdate = (source, update) => {
-	assert.ok(nativeFinCallbackArchiveChangedPaths.includes(update.path));
+export const reverseClosureHistoryCiRepairUpdate = (source, update) => {
+	assert.ok(closureHistoryCiRepairChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,12 +50,11 @@ export const reverseNativeFinCallbackArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNativeFinCallbackArchiveSource = (path, source, expected) => {
-	source = beforeClosureHistoryCiRepairSource(path, source, expected);
-	if(typeof source !== "string" || !nativeFinCallbackArchiveChangedPaths.includes(path)) return source;
+export const beforeClosureHistoryCiRepairSource = (path, source, expected) => {
+	if(typeof source !== "string" || !closureHistoryCiRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nativeFinCallbackArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(closureHistoryCiRepairHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNativeFinCallbackArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseClosureHistoryCiRepairUpdate(source, update) : source;
 };

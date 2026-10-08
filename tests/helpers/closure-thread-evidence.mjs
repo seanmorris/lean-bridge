@@ -15,6 +15,7 @@ import { assertNativeRecursiveCallableIntegration } from "./native-recursive-cal
 import { nativeRecursiveCallableHistoryPath } from "./native-recursive-callable-source-history.mjs";
 import { closureThreadChangedPaths, reverseClosureThreadUpdate } from "./closure-thread-source-history.mjs";
 import { beforePhpCiRegression } from "./php-ci-regression-source-history.mjs";
+import { beforeCallableErrorCode } from "./callable-error-code-history.mjs";
 
 const priorSource = async path => beforePhpCiRegression(path, await readFile(path, "utf8"));
 
@@ -53,7 +54,7 @@ export const assertClosureThreadCodegen = record => {
 	{
 		const model = { ...models[row.name], pointerBits: row.pointerBits };
 		assert.equal(row.modelSha256, sha256(canonicalJson(model)));
-		const source = generateNativePrimitiveC(model, witStructuredNativeReceipt);
+		const source = beforeCallableErrorCode(generateNativePrimitiveC(model, witStructuredNativeReceipt));
 		assert.deepEqual(row.current, { bytes: Buffer.byteLength(source), sha256: sha256(source) });
 		const previous = beforeClosureThreadRegistry(source);
 		assert.deepEqual(row.previous, { bytes: Buffer.byteLength(previous), sha256: sha256(previous) });
@@ -96,7 +97,7 @@ export const assertClosureThreadExecution = async record => {
 		}
 	}
 	assert.notEqual(record.baseline.generatorSha256, record.fixed.generatorSha256);
-	assert.equal(record.fixed.generatorSha256, sha256(await readFile("src/backends/c/native-callables.mjs")));
+	assert.equal(record.fixed.generatorSha256, sha256(await priorSource("src/backends/c/native-callables.mjs")));
 	const registries = record.installed.text.split("\n").filter(line => line.startsWith('# {"pointerBits"')).map(line => JSON.parse(line.slice(2)));
 	assert.deepEqual(registries.map(row => row.pointerBits), [32, 64]);
 	for(const row of registries)

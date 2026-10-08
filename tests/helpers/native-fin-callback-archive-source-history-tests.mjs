@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeClosureHistoryCiRepairSource } from "./closure-history-ci-repair-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeFinCallbackArchiveSource, nativeFinCallbackArchiveChangedPaths, nativeFinCallbackArchiveHistoryPath, reverseNativeFinCallbackArchiveUpdate } from "./native-fin-callback-archive-source-history.mjs";
 
@@ -16,7 +17,7 @@ test("Native callback Fin archive authenticates each exact source predecessor", 
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinCallbackArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeClosureHistoryCiRepairSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeFinCallbackArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinCallbackArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinCallbackArchiveSource(update.path, source, update.currentSha256), source);

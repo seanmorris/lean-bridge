@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "milestone": "closure-history-ci-repair-v1",
+  "predecessorCommit": "84c804242b76bc3d01d10a87d96d88859fb2917f",
+  "updates": [
+    {
+      "path": "tests/helpers/closure-thread-evidence.mjs",
+      "currentSha256": "d233e102986fe402da00222e85341bb5da8ecc6da0e6ad3a3f30f2dad8333ba4",
+      "previousSha256": "b39311dfd00e9ad4f7c14afed92ccfadf671d4a50be0927e973888d62ffb98cc",
+      "edits": [
+        {
+          "start": 1113,
+          "previous": "",
+          "current": "import { beforeCallableErrorCode } from \"./callable-error-code-history.mjs\";\n"
+        },
+        {
+          "start": 3180,
+          "previous": "\t\tconst source = generateNativePrimitiveC(model, witStructuredNativeReceipt);\n",
+          "current": "\t\tconst source = beforeCallableErrorCode(generateNativePrimitiveC(model, witStructuredNativeReceipt));\n"
+        },
+        {
+          "start": 5586,
+          "previous": "\tassert.equal(record.fixed.generatorSha256, sha256(await readFile(\"src/backends/c/native-callables.mjs\")));\n",
+          "current": "\tassert.equal(record.fixed.generatorSha256, sha256(await priorSource(\"src/backends/c/native-callables.mjs\")));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/closure-thread-evidence.test.mjs",
+      "currentSha256": "c8bc4c1b388d5566c3a5a9b633dd2e24e23c6bf90447118b628ae64fc4fa3003",
+      "previousSha256": "47e3f7879953557e485947e675608e8f80037c81b3766596d730a070da056582",
+      "edits": [
+        {
+          "start": 214,
+          "previous": "",
+          "current": "import \"./helpers/closure-history-ci-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e8865201f34801e96bf9424fca0bedc4b068b0253353ac8370edb8e098436de5",
+      "previousSha256": "2a250fcbd54cebc9a755f8ad1dc34be4d1a8cf261390907a7d983ef3334e0fb1",
+      "edits": [
+        {
+          "start": 7225,
+          "previous": "",
+          "current": "import { closureHistoryCiRepairChangedPaths } from \"./closure-history-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 43287,
+          "previous": "",
+          "current": "\t, ...closureHistoryCiRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-callback-archive-source-history.mjs",
+      "currentSha256": "791e804b9affb009e2cdfa4501e7f311e2a7b37350e3e7c0962b90a8d95e9704",
+      "previousSha256": "d3509233138f0a99814eda43e647e2e9f310c2e49d2fb6147419e3ccd80da139",
+      "edits": [
+        {
+          "start": 244,
+          "previous": "",
+          "current": "import { beforeClosureHistoryCiRepairSource } from \"./closure-history-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 2378,
+          "previous": "",
+          "current": "\tsource = beforeClosureHistoryCiRepairSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-callback-archive-source-history-tests.mjs",
+      "currentSha256": "e3870d85821c08960767a9aa0abfe1c37d7416cb57c1c4a625ccdbbd6393bb15",
+      "previousSha256": "4692e67962ef1441349854f5453f2fe0316a9e1e6b4a833c5d24c2fe766cf314",
+      "edits": [
+        {
+          "start": 276,
+          "previous": "",
+          "current": "import { beforeClosureHistoryCiRepairSource } from \"./closure-history-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 1086,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeClosureHistoryCiRepairSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/closure-history-ci-repair-source-history-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath } from "./helpers/closure-thread-evidence.mjs";
 import { beforeClosureThreadLifetime, closureThreadHistoryPath, reverseClosureThreadUpdate } from "./helpers/closure-thread-source-history.mjs";
