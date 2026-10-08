@@ -64,9 +64,14 @@ const verifiedBundle = async bundleRoot => {
 		? JSON.parse(await readFile(join(root, evidencePath), "utf8")) : null;
 	if(elaboration?.reviewedBindingIr || manifest.files.some(item => item.path.startsWith("source/") && item.path.endsWith(".binding-ir.json")))
 	{
-		const projectRoot = join(root, "source"), inventory = await inspectLeanProject(projectRoot);
+		// The authenticated snapshot keeps the complete project, including files that are not compiler
+		// inputs; source/ keeps only those inputs. Rebuild intent from the snapshot's own root, then
+		// require the staged inputs to be exactly the inputs that intent selects.
 		const lakeSnapshot = await readLakeDependencySnapshot({ snapshotRoot: join(root, "lake"), expectedSha256: elaboration?.snapshotSha256 });
-		const intent = await prepareLakeEntryIntent({ projectRoot, lakeSnapshot });
+		const intent = await prepareLakeEntryIntent({ projectRoot: join(root, "lake", "root"), lakeSnapshot });
+		const inventory = await inspectLeanProject(join(root, "source"));
+		if(canonicalJson(inventory.inputs) !== canonicalJson(intent.document.source.inputs) || inventory.sourceTreeSha256 !== intent.document.source.treeSha256)
+			throw new Error("Reviewed npm bundle source differs from its captured project inputs");
 		const analysis = compilerProjectAnalysis(inventory, intent.document.modules, elaboration);
 		validateCompilerProjectAnalysis(analysis, inventory, intent);
 		if(canonicalJson(analysis.bindingIr?.document) !== await readFile(join(root, "binding/binding-ir.json"), "utf8")
