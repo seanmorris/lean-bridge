@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: VO 1430 feasibility: scalar private ABI 2 source-entry probe, one build
+not ok 1 - VO 1430 feasibility: scalar private ABI 2 source-entry probe, one build
+  ---
+  duration_ms: 38335.704528
+  type: 'test'
+  location: '/app/build/vo1430-feasibility-runner-3f2de27.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: `The shared runtime header closure is unavailable: {"path":"/app/build/worktrees/scalar-fin-source-entry-vo1430/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include","cause":"ENOENT: no such file or directory, stat '/app/build/worktrees/scalar-fin-source-entry-vo1430/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h'"}`
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    file:///app/build/worktrees/scalar-fin-source-entry-vo1430/tests/helpers/scalar-fin-rejection-packages.mjs:147:62
+    async checkScalarFinRejection (file:///app/build/worktrees/scalar-fin-source-entry-vo1430/tests/helpers/scalar-fin-rejection-packages.mjs:147:3)
+    async TestContext.<anonymous> (file:///app/build/vo1430-feasibility-runner-3f2de27.mjs:33:22)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 38736.420402

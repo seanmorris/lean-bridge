@@ -16,8 +16,6 @@ import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import "./helpers/refinement-engine-tests.mjs";
 import { scalarFinSourceEntryProbe, sourceEntryInstrumentation } from "./helpers/scalar-fin-source-entry.mjs";
 import "./helpers/scalar-fin-source-entry-tests.mjs";
-import "./helpers/scalar-fin-source-entry-evidence-tests.mjs";
-import "./helpers/scalar-fin-source-entry-integration-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const engineRoot = process.cwd();

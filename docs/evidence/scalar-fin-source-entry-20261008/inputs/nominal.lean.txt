@@ -1,0 +1,16 @@
+namespace OnboardingSmall
+abbrev Digit := Fin 10
+def mirror (value : Digit) : Digit := dbgTrace "lean-bridge-source-entry mirror" fun _ => ⟨9 - value.val, by omega⟩
+def never (value : Fin 0) : Nat := dbgTrace "lean-bridge-source-entry never" fun _ => value.val
+def one (value : Fin 1) : Nat := dbgTrace "lean-bridge-source-entry one" fun _ => value.val
+def huge (value : Fin 184467440737095516170) : Nat := dbgTrace "lean-bridge-source-entry huge" fun _ => value.val
+def pair (left : Digit) (right : Fin 4) : Nat := dbgTrace "lean-bridge-source-entry pair" fun _ => left.val * 4 + right.val
+def tenth (value : Nat) : Digit := dbgTrace "lean-bridge-source-entry tenth" fun _ => ⟨value % 10, Nat.mod_lt _ (by decide)⟩
+abbrev Text := { value : String // value != "" }
+def checkedText (value : String) : Option Text :=
+  if valid : value != "" then some ⟨value, valid⟩ else none
+def mix (text : Text) (digit : Digit) : String := dbgTrace "lean-bridge-source-entry mix" fun _ => text.val ++ toString digit.val
+abbrev Label := String
+def labelled (label : Label) (value : Digit) : Label := dbgTrace "lean-bridge-source-entry labelled" fun _ => label ++ toString value.val
+def traceNat (value : Nat) : Nat := dbgTrace "lean-bridge-source-entry traceNat" fun _ => value
+end OnboardingSmall

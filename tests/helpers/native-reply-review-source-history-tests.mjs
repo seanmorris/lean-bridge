@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { clarifyNativeReplyEvidence, clarifyNativeReplyObservation, nativeReplyReviewObservationIds, nativeReplyReviewValidator } from "./native-fin-reply-review-notes.mjs";
 import { nativeFinReplyPromotionId } from "./native-fin-reply-promotion-references.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeScalarFinSourceEntryIntegrationSource } from "./scalar-fin-source-entry-integration-source-history.mjs";
 import { beforeNativeReplyReviewSource, nativeReplyReviewChangedPaths, nativeReplyReviewHistoryPath, reverseNativeReplyReviewUpdate } from "./native-reply-review-source-history.mjs";
 
 test("Native reply review integration authenticates each exact source predecessor", async () => {
@@ -21,7 +22,7 @@ test("Native reply review integration authenticates each exact source predecesso
 	assert.deepEqual(record.updates.map(update => update.path), nativeReplyReviewChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeScalarFinSourceEntryIntegrationSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeReplyReviewUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeReplyReviewSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeReplyReviewSource(update.path, source, update.currentSha256), source);
@@ -34,7 +35,7 @@ test("Native reply review integration authenticates each exact source predecesso
 });
 
 test("Native reply review records only four wording clarifications and its bounded reproduction selector", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeScalarFinSourceEntryIntegrationSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeNativeReplyReviewSource(path, text));
 	const record = JSON.parse(await readFile(nativeReplyReviewHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -44,7 +45,7 @@ test("Native reply review records only four wording clarifications and its bound
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeScalarFinSourceEntryIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

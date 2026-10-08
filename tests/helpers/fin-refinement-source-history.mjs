@@ -124,6 +124,7 @@ import { nativeFinReplyPromotionChangedPaths } from "./native-fin-reply-promotio
 import { nodeConsumerBudgetChangedPaths } from "./node-consumer-budget-source-history.mjs";
 import { nativeReplySymbolFixChangedPaths } from "./native-reply-symbol-fix-source-history.mjs";
 import { nativeReplyReviewChangedPaths } from "./native-reply-review-source-history.mjs";
+import { scalarFinSourceEntryIntegrationChangedPaths } from "./scalar-fin-source-entry-integration-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -712,6 +713,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nodeConsumerBudgetChangedPaths
 	, ...nativeReplySymbolFixChangedPaths
 	, ...nativeReplyReviewChangedPaths
+	, ...scalarFinSourceEntryIntegrationChangedPaths
 ])].sort());
 
 /**

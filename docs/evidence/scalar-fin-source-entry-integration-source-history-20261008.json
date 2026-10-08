@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "milestone": "scalar-fin-source-entry-integration-v1",
+  "predecessorCommit": "8e88eae85d2b0dd4f67c442ad9c36928bea0d485",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "e1c06fbfd51539112c90cc0513aedc36cf458dedf529ee34a73cc84fbb4941a7",
+      "previousSha256": "73ec6f27e35f8e40f249900ea4bae2a8a24caa52edd8c74950252063a9bf0110",
+      "edits": [
+        {
+          "start": 1457695,
+          "previous": "          \"sha256\": \"6cfafc94be55d741e16a79d27824f06f81e5774faadee0b6a4a73ba0ff6fc92b\"\n",
+          "current": "          \"sha256\": \"04addf1a5c95c0dc468f545242b1e56ae5876458449f2e5f9bf5738e5548d6c3\"\n"
+        },
+        {
+          "start": 1457872,
+          "previous": "          \"sha256\": \"73ad82175aadb4e30e3698c771974803c251e9077c3f86daf49ad9e3bbd0424f\"\n",
+          "current": "          \"sha256\": \"2f0c75acef03944d44104f7af397ed9bff9f1ada3b7a2ff7a993a0496ab93bf9\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-packages.mjs",
+      "currentSha256": "2f0c75acef03944d44104f7af397ed9bff9f1ada3b7a2ff7a993a0496ab93bf9",
+      "previousSha256": "73ad82175aadb4e30e3698c771974803c251e9077c3f86daf49ad9e3bbd0424f",
+      "edits": [
+        {
+          "start": 7279,
+          "previous": "",
+          "current": "/**\n * The project source, export names and consumer one ABI's run uses. A probe instruments them; without one\n * they are exactly the rejection suite's inputs.\n *\n * @param abi - Private ABI name.\n * @param probe - Optional source-entry probe.\n */\nexport const scalarFinRejectionInputs = (abi, probe = null) => {\n\tconst { names, extra } = abis[abi], inputs = { lean: source(extra), names, consumer: consumerSource(abi) };\n\treturn probe ? probe.instrument(inputs, abi) : inputs;\n};\n\n"
+        },
+        {
+          "start": 8159,
+          "previous": "",
+          "current": " * @param probe - Optional source-entry probe; it instruments the inputs, builds one root, keeps the consumer's\n * exact output and accounts for every call.\n"
+        },
+        {
+          "start": 8320,
+          "previous": "export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }, abi) => {\n\tconst { version, names, extra } = abis[abi];\n",
+          "current": "export const checkScalarFinRejection = async (t, { fixture, build, runtimeRoot }, abi, probe = null) => {\n\tconst { version } = abis[abi], inputs = scalarFinRejectionInputs(abi, probe), names = inputs.names;\n"
+        },
+        {
+          "start": 8574,
+          "previous": "\tawait saveLakeFile(root, \"OnboardingSmall.lean\", source(extra));\n",
+          "current": "\tawait saveLakeFile(root, \"OnboardingSmall.lean\", inputs.lean);\n"
+        },
+        {
+          "start": 9123,
+          "previous": "\tfor(const [index, projectRoot] of [root, moved].entries())\n",
+          "current": "\tfor(const [index, projectRoot] of (probe ? [root] : [root, moved]).entries())\n"
+        },
+        {
+          "start": 11043,
+          "previous": "\tassert.deepEqual(releases[0].report, releases[1].report);\n",
+          "current": ""
+        },
+        {
+          "start": 11120,
+          "previous": "\tassert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));\n",
+          "current": "\tif(!probe)\n\t{\n\t\tassert.deepEqual(releases[0].report, releases[1].report);\n\t\tassert.equal(archiveSha256, sha256(await readFile(releases[1].componentArchive)));\n\t}\n"
+        },
+        {
+          "start": 11804,
+          "previous": "\tawait saveLakeFile(consumer, \"index.mjs\", consumerSource(abi));\n\tconst run = await processBuildRunner.capture({ command: process.execPath, args: [\"index.mjs\"], cwd: consumer }).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));\n\tassert.equal(run.stderr, \"\", \"no Lean panic or other diagnostic reaches stderr\");\n",
+          "current": "\tawait saveLakeFile(consumer, \"index.mjs\", inputs.consumer);\n\tconst run = await processBuildRunner.capture({ command: process.execPath, args: [\"index.mjs\"], cwd: consumer }).catch(async error => {\n\t\tif(probe) await probe.retain(abi, { \"failure.json\": JSON.stringify({ message: error.message, details: error.details ?? null }, null, 2) + \"\\n\" });\n\t\tassert.fail(`${error.message}: ${JSON.stringify(error.details)}`);\n\t});\n\tif(!probe) assert.equal(run.stderr, \"\", \"no Lean panic or other diagnostic reaches stderr\");\n\t// The probe keeps the exact output before parsing or accounting, so a failed run can be re-accounted.\n\tconst retained = probe ? await probe.retain(abi, { \"stderr.txt\": run.stderr, \"stdout.json\": run.stdout }) : null;\n"
+        },
+        {
+          "start": 12616,
+          "previous": "\treturn { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256: sha256(await readFile(releases[0].runtimeArchive)), ...result };\n",
+          "current": "\tconst runtimeArchiveSha256 = sha256(await readFile(releases[0].runtimeArchive));\n\tif(!probe) return { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...result };\n\t// The per-call records stay in the probe's accounting; the observation keeps the consumer's counts.\n\tconst counts = Object.fromEntries(Object.entries(result).filter(([key]) => key !== \"calls\"));\n\treturn { abi, privateAbi: version, archiveSha256, runtimeArchiveSha256, ...counts, sourceEntry: { ...probe.check(run.stderr, result, inputs), retained } };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/scalar-fin-rejection.test.mjs",
+      "currentSha256": "04addf1a5c95c0dc468f545242b1e56ae5876458449f2e5f9bf5738e5548d6c3",
+      "previousSha256": "6cfafc94be55d741e16a79d27824f06f81e5774faadee0b6a4a73ba0ff6fc92b",
+      "edits": [
+        {
+          "start": 760,
+          "previous": "",
+          "current": "import { scalarFinSourceEntryProbe, sourceEntryInstrumentation } from \"./helpers/scalar-fin-source-entry.mjs\";\nimport \"./helpers/scalar-fin-source-entry-tests.mjs\";\nimport \"./helpers/scalar-fin-source-entry-evidence-tests.mjs\";\nimport \"./helpers/scalar-fin-source-entry-integration-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2664,
+          "previous": "",
+          "current": "\nconst sourceEntry = enabled && process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY === \"1\";\n\ntest(\"installed scalar Fin rejections never enter the Lean source on any private ABI\", { skip: !sourceEntry, timeout: 3_600_000 }, async t => {\n\tconst observations = [], reportPath = resolve(process.env.LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY_REPORT ?? \"build/scalar-fin-source-entry/report.json\");\n\tconst probe = scalarFinSourceEntryProbe(join(dirname(reportPath), \"calls\"));\n\tfor(const abi of scalarFinRejectionAbis) observations.push(await checkScalarFinRejection(t, { fixture, build, runtimeRoot }, abi, probe));\n\tassert.deepEqual(observations.map(item => item.privateAbi), [2, 3, 4, 5, 6, 7]);\n\tfor(const item of observations) assert.ok(item.checks > 100 && item.rejections > 2000 && item.sourceEntry.rejected === item.rejections, item.abi);\n\tawait saveLakeFile(dirname(reportPath), reportPath.split(\"/\").at(-1), canonicalJson({ schemaVersion: 1, instrumentation: sourceEntryInstrumentation, observations }));\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "674f67981dc5697799ede5b9d270be4564395ea59a27fdef8348b5e70b4a7602",
+      "previousSha256": "2a950985802ff2ed6dbd7e6aa128991be34ae2a16bde36b49bca9291709d001b",
+      "edits": [
+        {
+          "start": 11122,
+          "previous": "",
+          "current": "import { scalarFinSourceEntryIntegrationChangedPaths } from \"./scalar-fin-source-entry-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 48778,
+          "previous": "",
+          "current": "\t, ...scalarFinSourceEntryIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-reply-review-source-history.mjs",
+      "currentSha256": "81fe7ec2429fecc80f84ebe271076c83ad47bfde60fa1d0b421b5245bc7a6011",
+      "previousSha256": "b3aa9c1cd42abb7977cb0842372870fe52c86b822b71013ab2a4e59c6c67f75a",
+      "edits": [
+        {
+          "start": 229,
+          "previous": "",
+          "current": "import { beforeScalarFinSourceEntryIntegrationSource } from \"./scalar-fin-source-entry-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2406,
+          "previous": "",
+          "current": "\tsource = beforeScalarFinSourceEntryIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-reply-review-source-history-tests.mjs",
+      "currentSha256": "3bc536720fc20c3f509d48e691230c943f93a944030de28ec49220f855533136",
+      "previousSha256": "8a66051348fafe874b7241d899ecccd663c367fa17258f8ef85c465466a38e10",
+      "edits": [
+        {
+          "start": 785,
+          "previous": "",
+          "current": "import { beforeScalarFinSourceEntryIntegrationSource } from \"./scalar-fin-source-entry-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1487,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeScalarFinSourceEntryIntegrationSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2457,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeScalarFinSourceEntryIntegrationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3047,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeScalarFinSourceEntryIntegrationSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

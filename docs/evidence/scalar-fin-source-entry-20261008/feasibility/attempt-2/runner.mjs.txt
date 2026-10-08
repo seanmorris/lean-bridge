@@ -1,0 +1,38 @@
+/**
+ * VO #1430 bounded feasibility: the scalar private ABI (2) only, one build, through the existing
+ * checkScalarFinRejection harness with the source-entry probe from 3f2de27. Run with the worktree as cwd.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { cp, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+
+const worktree = "/app/build/worktrees/scalar-fin-source-entry-vo1430";
+const base = "/app/build/vo1430-feasibility-3f2de27-r2";
+assert.equal(process.cwd(), worktree);
+const { buildCanonicalProject } = await import(`${worktree}/src/build/canonical-build.mjs`);
+const { canonicalJson } = await import(`${worktree}/src/capsule/node.mjs`);
+const { checkScalarFinRejection } = await import(`${worktree}/tests/helpers/scalar-fin-rejection-packages.mjs`);
+const { refinementEngineTransport } = await import(`${worktree}/tests/helpers/refinement-engine.mjs`);
+const { scalarFinSourceEntryProbe, sourceEntryInstrumentation } = await import(`${worktree}/tests/helpers/scalar-fin-source-entry.mjs`);
+const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT);
+const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
+const fixture = async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-vo1430-feasibility-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const root = join(directory, "project");
+	await cp("tests/fixtures/documentation/lean-author", root, { recursive: true });
+	return { directory, root };
+};
+const build = (root, outputRoot) => buildCanonicalProject({ projectRoot: root, outputRoot, engineRoot: worktree, environment, targets: ["npm"], runner: refinementEngineTransport() });
+
+test("VO 1430 feasibility: scalar private ABI 2 source-entry probe, one build", { timeout: 1_800_000 }, async t => {
+	const observation = await checkScalarFinRejection(t, { fixture, build, runtimeRoot }, "scalar", scalarFinSourceEntryProbe(`${base}-calls`));
+	assert.equal(observation.privateAbi, 2);
+	assert.equal(observation.sourceEntry.rejected, observation.rejections);
+	t.diagnostic(`checks ${observation.checks} rejections ${observation.rejections} calls ${observation.sourceEntry.calls} entered ${observation.sourceEntry.entered}`);
+	await writeFile(`${base}.json`, canonicalJson({ schemaVersion: 1, scope: "feasibility: scalar private ABI 2 only, one build", instrumentation: sourceEntryInstrumentation, observation }), { flag: "wx" });
+});

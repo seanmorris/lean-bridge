@@ -1,0 +1,398 @@
+{
+  "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+  "observations": [
+    {
+      "abi": "scalar",
+      "archiveSha256": "b2f9631d454c384b564e842709d9371f065451ed983cf68b3d616202ee062905",
+      "checks": 1545,
+      "privateAbi": 2,
+      "rejections": 2546,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5094,
+        "consumerSha256": "83a9cede6c858d5978dd570ad2ffae40a55422ac165638d520474bf348ba0f66",
+        "entered": 2548,
+        "exports": {
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "b3fa78479e21587c939c050ed562a52d0649031a78c17ed5728ad58ad2367268",
+        "rejected": 2546,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 352868,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/scalar.stderr.txt",
+            "sha256": "6efbeaf9ff3ac9b9bc07f75087e7a761a85ac07d633b5462f7517d151f1c2bdf"
+          },
+          "stdout.json": {
+            "bytes": 176948,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/scalar.stdout.json",
+            "sha256": "b4bbcd51e6a3fe2edbc03e3a9ba016e1028bb08bdc00428e5f05fdd57f51e298"
+          }
+        }
+      }
+    },
+    {
+      "abi": "callable",
+      "archiveSha256": "2a5f83d42da3b3c3eb41c50e2f5acf5fff40b639c8160c6a13a5e93b7f29605a",
+      "checks": 1547,
+      "privateAbi": 3,
+      "rejections": 2548,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5098,
+        "consumerSha256": "3546d2e77d1df1578115b822b14f0178e24de569b656d2667d1856740e8721b1",
+        "entered": 2550,
+        "exports": {
+          "apply": {
+            "entered": 2,
+            "rejected": 2
+          },
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "8ff33340aeef1d285936a8642e0bd4756e716b2db205df16975aa3cc92bf9fa7",
+        "rejected": 2548,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 353146,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/callable.stderr.txt",
+            "sha256": "477d66f035393c2bb96091633cb3946fdb1603512179ed562087b06eed636c4e"
+          },
+          "stdout.json": {
+            "bytes": 177085,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/callable.stdout.json",
+            "sha256": "374e580149d291ce54ed11070f33bd1f521d88260fdcba99ec41b0ba3f11860a"
+          }
+        }
+      }
+    },
+    {
+      "abi": "copied",
+      "archiveSha256": "c64e0cf6853c2a2e5c82e25f832dc6fd8fbcfa83ffb75c3c64c8db7ca3c6dad5",
+      "checks": 1546,
+      "privateAbi": 4,
+      "rejections": 2548,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5098,
+        "consumerSha256": "33052a11acc443b670f7166d72e59705e77788683ec01eb7b8e4c80d463ae61c",
+        "entered": 2550,
+        "exports": {
+          "count": {
+            "entered": 2,
+            "rejected": 2
+          },
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "88d2719407833ab744e7cedbbff87d5540f1d00d64ddbd79bdc4decbc4460da4",
+        "rejected": 2548,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 353146,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/copied.stderr.txt",
+            "sha256": "044d33d77ac659d59686829a1b3277ffb0cb0edd27f7991c40456db00ebc75e0"
+          },
+          "stdout.json": {
+            "bytes": 177083,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/copied.stdout.json",
+            "sha256": "53a291e5d00084d189678c0822ec2a9946646c9e985fead7daad41d372cdf08d"
+          }
+        }
+      }
+    },
+    {
+      "abi": "record",
+      "archiveSha256": "cc3b49057a5d55de1d09a99e0d7efd7c5bef9a89530bd9f06d52f3bba6c2a3c2",
+      "checks": 1546,
+      "privateAbi": 5,
+      "rejections": 2548,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5098,
+        "consumerSha256": "c247270143670b6678b169d14d86aa4349a13510261a124cf15246cd7b82df61",
+        "entered": 2550,
+        "exports": {
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tag": {
+            "entered": 2,
+            "rejected": 2
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "dc756b82cdebc16ced0308a89cf4869e8a589a530909da09e33fe9e22e6161d2",
+        "rejected": 2548,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 353142,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/record.stderr.txt",
+            "sha256": "1a4843f03fdee62ff06530bea1f752714d1c0398f5c8c89eaf432fe3488ed5d1"
+          },
+          "stdout.json": {
+            "bytes": 177071,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/record.stdout.json",
+            "sha256": "450c86dd44d5a0912ab1aa22bf8e9bac683a6915e0e763c7008527b8a4d91a6f"
+          }
+        }
+      }
+    },
+    {
+      "abi": "compound",
+      "archiveSha256": "91481089c175131488fd1942a8c0a7c569c6ab2bc62fa6f3537cd36ebdf0e426",
+      "checks": 1546,
+      "privateAbi": 6,
+      "rejections": 2548,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5098,
+        "consumerSha256": "2215ea6c4cc3299e59bd6ab27aeef4cb348bfdf03fd4ff58a7b6abfae83e9142",
+        "entered": 2550,
+        "exports": {
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "orZero": {
+            "entered": 2,
+            "rejected": 2
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "5c140edb515ede0892a5c2061cdaeae3ec7a18fe97dbda11b1f176e62309c415",
+        "rejected": 2548,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 353148,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/compound.stderr.txt",
+            "sha256": "aac73306975df570fdd7323df0c101a18f6bff00353ee005261da142fd917683"
+          },
+          "stdout.json": {
+            "bytes": 177091,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/compound.stdout.json",
+            "sha256": "b9984bab9c1c4fc9ccf853b48ea0b49d8bb3f98563a0ce524898d8fc72670404"
+          }
+        }
+      }
+    },
+    {
+      "abi": "nominal",
+      "archiveSha256": "9b4c518759bcd3e7e3b323b31dd490419277a39796dc68fe2ba743f1538d519e",
+      "checks": 1546,
+      "privateAbi": 7,
+      "rejections": 2548,
+      "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+      "sourceEntry": {
+        "calls": 5098,
+        "consumerSha256": "f97703d1544d65fa5ae597c16aa170287fcde6a5fe95e88681bfb2f4b39184f5",
+        "entered": 2550,
+        "exports": {
+          "huge": {
+            "entered": 10,
+            "rejected": 10
+          },
+          "labelled": {
+            "entered": 2,
+            "rejected": 2
+          },
+          "mirror": {
+            "entered": 2018,
+            "rejected": 2012
+          },
+          "mix": {
+            "entered": 502,
+            "rejected": 504
+          },
+          "never": {
+            "entered": 0,
+            "rejected": 8
+          },
+          "one": {
+            "entered": 4,
+            "rejected": 8
+          },
+          "pair": {
+            "entered": 2,
+            "rejected": 4
+          },
+          "tenth": {
+            "entered": 2,
+            "rejected": 0
+          },
+          "traceNat": {
+            "entered": 10,
+            "rejected": 0
+          }
+        },
+        "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+        "leanSha256": "513c2e165ef04816967fa5ec72cf06275df4fbe258c225e74ee8a221d60b4cb9",
+        "rejected": 2548,
+        "retained": {
+          "stderr.txt": {
+            "bytes": 353152,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/nominal.stderr.txt",
+            "sha256": "29809dc6f680000de5c0d8612920e7c3184f299cc05a5a0d72d821b1edc775c4"
+          },
+          "stdout.json": {
+            "bytes": 177102,
+            "path": "/app/build/vo1430-source-entry-3f2de27/calls/nominal.stdout.json",
+            "sha256": "100e894e411df71f8db2d851b0ac6d6baf08e1da44bcc83cc4d96df71fcd7b23"
+          }
+        }
+      }
+    }
+  ],
+  "schemaVersion": 1
+}

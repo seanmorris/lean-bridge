@@ -1,0 +1,73 @@
+import assert from "node:assert/strict";
+import * as published from "onboarding-small";
+import { runtime } from "./node_modules/onboarding-small/internal/runtime.mjs";
+const sourceEntryCalls = [];
+let sourceEntryNext = 0, sourceEntryCase = null;
+// Begin and end share the stderr stream that Lean's dbgTrace writes, so each marker falls inside its call.
+const measure = (name, kind, call) => {
+  const id = sourceEntryNext++;
+  console.error("lean-bridge-call-begin " + id);
+  let outcome = 1;
+  try { return call(); } catch (error) { outcome = 0; throw error; } finally { console.error("lean-bridge-call-end " + id); sourceEntryCalls.push([id, name, kind, outcome, sourceEntryCase]); sourceEntryCase = null; }
+};
+const api = new Proxy(published, { get: (target, key) => typeof target[key] === "function" ? (...args) => measure(String(key), "public", () => target[key](...args)) : target[key] });
+const raw = (name, args) => measure(name, "raw", () => runtime.call("lean:OnboardingSmall." + name, args));
+const failure = "Component copied call failed (5)";
+let rejections = 0, checks = 0;
+const check = (ok, label) => { if(!ok) throw new Error("failed: " + label); checks++; };
+const rejected = (call, label, message) => {
+  sourceEntryCase = label;
+  try { call(); } catch(error) { if(message && error.message !== message) throw new Error(label + ": " + error.message); rejections++; return; } finally { sourceEntryCase = null; }
+  throw new Error("accepted: " + label);
+};
+const cases = [
+  ["mirror", [[0n, 9n], [3n, 6n], [9n, 0n]], [10n, 11n, 2n ** 70n, -1n]],
+  ["never", [], [0n, 1n]],
+  ["one", [[0n, 0n]], [1n, 2n]],
+  ["huge", [[184467440737095516170n - 1n, 184467440737095516170n - 1n], [0n, 0n]], [184467440737095516170n, 184467440737095516170n + 1n, 2n ** 70n]]
+];
+for (const [name, valid, invalid] of cases) {
+  for (const [input, expected] of valid) { check(api[name](input) === expected, name + " public " + input); check(raw(name, [input]) === expected, name + " raw " + input); }
+  for (const bad of invalid) {
+    rejected(() => api[name](bad), name + " public " + bad);
+    rejected(() => raw(name, [bad]), name + " raw " + bad, bad < 0n ? undefined : failure);
+    for (const [input, expected] of valid) check(raw(name, [input]) === expected, name + " recovers " + input);
+  }
+  for (const bad of [3, "3", null, undefined]) rejected(() => api[name](bad), name + " public " + String(bad));
+}
+// Result-only Fin never rejects an input; the source constructs the bound.
+check(api.tenth(123n) === 3n && raw("tenth", [2n ** 70n]) === 4n, "tenth result only");
+// Mixed Subtype and Fin: the Subtype validator runs first, then the Fin bound; a heap-backed String argument is released on either rejection.
+check(api.mix("ab", 7n) === "ab7" && raw("mix", ["λ🙂", 0n]) === "λ🙂0", "mix valid");
+rejected(() => raw("mix", ["", 7n]), "mix raw empty text", failure);
+rejected(() => raw("mix", ["ab", 10n]), "mix raw late Fin", failure);
+rejected(() => api.mix("", 7n), "mix public empty text");
+rejected(() => api.mix("ab", 10n), "mix public late Fin");
+for (let round = 0; round < 500; round++) {
+  rejected(() => raw("mix", ["x".repeat(4096), 10n]), "mix cycle late Fin", failure);
+  check(api.mix("x".repeat(4096), 9n).length === 4097, "mix cycle recovers");
+}
+// A later argument is rejected after an earlier one passed; the earlier bound is checked first.
+check(api.pair(2n, 3n) === 11n && raw("pair", [2n, 3n]) === 11n, "pair valid");
+rejected(() => raw("pair", [2n, 4n]), "pair raw late", failure);
+rejected(() => raw("pair", [10n, 0n]), "pair raw early", failure);
+rejected(() => raw("pair", [10n, 4n]), "pair raw both", failure);
+rejected(() => api.pair(2n, 4n), "pair public late");
+
+check(api.tag({ value: "p" }, 9n) === "p9" && raw("tag", [{ value: "q" }, 0n]) === "q0", "tag valid");
+rejected(() => raw("tag", [{ value: "p" }, 10n]), "tag raw", failure);
+rejected(() => api.tag({ value: "p" }, 10n), "tag public");
+
+
+
+for (let round = 0; round < 1000; round++) {
+  rejected(() => raw("mirror", [10n]), "cycle raw", failure);
+  rejected(() => api.mirror(2n ** 70n), "cycle public");
+  check(api.mirror(4n) === 5n && raw("mirror", [5n]) === 4n, "cycle recovers");
+}
+// Unrefined control: the same out-of-range numbers reach the source when no Fin bound applies.
+for (const value of [10n, 11n, 2n ** 70n, 184467440737095516170n, 184467440737095516171n]) {
+  check(api.traceNat(value) === value, "traceNat public " + value);
+  check(raw("traceNat", [value]) === value, "traceNat raw " + value);
+}
+console.log(JSON.stringify({ abi: "record", checks, rejections, calls: sourceEntryCalls }));

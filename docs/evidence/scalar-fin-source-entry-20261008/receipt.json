@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1430,
+  "execution": "local",
+  "revision": "3f2de27757b1c5f570ae8c505f9f16e5fa240e0e",
+  "scope": {
+    "packages": "installed npm packages in Node, instrumented with source-entry markers",
+    "privateAbis": [
+      {
+        "abi": "scalar",
+        "privateAbi": 2
+      },
+      {
+        "abi": "callable",
+        "privateAbi": 3
+      },
+      {
+        "abi": "copied",
+        "privateAbi": 4
+      },
+      {
+        "abi": "record",
+        "privateAbi": 5
+      },
+      {
+        "abi": "compound",
+        "privateAbi": 6
+      },
+      {
+        "abi": "nominal",
+        "privateAbi": 7
+      }
+    ],
+    "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+    "observedCounts": "absolute per-ABI counts observed in these instrumented runs; each instrumented consumer adds ten traceNat control checks",
+    "uninstrumentedArchiveIdentity": "not established",
+    "hostedCi": false,
+    "browsers": false,
+    "nativeHosts": false,
+    "closure": "not claimed"
+  },
+  "producerEnvironment": {
+    "cpu": 3,
+    "concurrency": 1,
+    "versions": {
+      "node": "v22.23.3",
+      "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+    },
+    "runtimeRoot": {
+      "path": "/app/build/lean-link-spike/lazy",
+      "mainMjsSha256": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "mainWasmSha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+    },
+    "environmentRepair": {
+      "symlink": "/app/build/worktrees/scalar-fin-source-entry-vo1430/build/lean-runtime",
+      "target": "/app/build/lean-runtime"
+    },
+    "freeSpaceFloor": "1024M"
+  },
+  "sourceIdentityScope": "Selected producer sources at 3f2de27, archived as text, not a complete dependency closure; the exact instrumented Lean and consumer inputs are archived separately.",
+  "producers": {
+    "sixAbi": {
+      "selection": "tests/scalar-fin-rejection.test.mjs --test-name-pattern=\"^installed scalar Fin rejections never enter the Lean source on any private ABI$\"",
+      "test": "installed scalar Fin rejections never enter the Lean source on any private ABI",
+      "queue": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/queue.json",
+      "log": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/run.tap",
+      "report": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/report.json",
+      "end": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/end.txt",
+      "calls": {
+        "scalar": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/scalar.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/scalar.stdout.json"
+        },
+        "callable": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/callable.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/callable.stdout.json"
+        },
+        "copied": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/copied.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/copied.stdout.json"
+        },
+        "record": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/record.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/record.stdout.json"
+        },
+        "compound": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/compound.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/compound.stdout.json"
+        },
+        "nominal": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/nominal.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/nominal.stdout.json"
+        }
+      }
+    },
+    "feasibility": [
+      {
+        "attempt": 1,
+        "outcome": "failed before the consumer: absent worktree runtime header closure",
+        "queue": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/queue.json",
+        "log": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/run.tap",
+        "end": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/end.txt",
+        "runner": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/runner.mjs.txt"
+      },
+      {
+        "attempt": 2,
+        "outcome": "passed after the recorded runtime header symlink; scalar only",
+        "queue": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/queue.json",
+        "log": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/run.tap",
+        "report": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/report.json",
+        "end": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/end.txt",
+        "runner": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/runner.mjs.txt",
+        "calls": {
+          "stderr": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/calls/scalar.stderr.txt",
+          "stdout": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/calls/scalar.stdout.json"
+        },
+        "identicalToSixAbiScalar": true
+      }
+    ]
+  },
+  "inputs": {
+    "scalar": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/scalar.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/scalar.consumer.mjs.txt"
+    },
+    "callable": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/callable.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/callable.consumer.mjs.txt"
+    },
+    "copied": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/copied.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/copied.consumer.mjs.txt"
+    },
+    "record": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/record.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/record.consumer.mjs.txt"
+    },
+    "compound": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/compound.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/compound.consumer.mjs.txt"
+    },
+    "nominal": {
+      "lean": "docs/evidence/scalar-fin-source-entry-20261008/inputs/nominal.lean.txt",
+      "consumer": "docs/evidence/scalar-fin-source-entry-20261008/inputs/nominal.consumer.mjs.txt"
+    }
+  },
+  "sources": [
+    {
+      "path": "tests/helpers/scalar-fin-source-entry.mjs",
+      "sha256": "ae1c2281c60c440db198f7c594d7d48108d731fb5dc0053ea04d47dce1c50208",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-source-entry.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/scalar-fin-source-entry-tests.mjs",
+      "sha256": "f7b0acdecfda6c54a078c670f5e0bb9ea29194348bd3185c0b389361237cade0",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-source-entry-tests.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/scalar-fin-rejection-packages.mjs",
+      "sha256": "2f0c75acef03944d44104f7af397ed9bff9f1ada3b7a2ff7a993a0496ab93bf9",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-rejection-packages.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/refinement-engine.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/lake-workspace.mjs.txt"
+    },
+    {
+      "path": "tests/scalar-fin-rejection.test.mjs",
+      "sha256": "299543a39ae61f3bdb22818db8355251d677de3b2bfb07ad6f69b2001b028c35",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/scalar-fin-rejection.test.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/documentation/lean-author/OnboardingSmall.lean",
+      "sha256": "d4f4b4fe9141a24726b11bc665420909f4ab3aa875c661e1371a66d4c2af2816",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/OnboardingSmall.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/documentation/lean-author/lakefile.toml",
+      "sha256": "9e1cbd2a7a690c0d0e5e04da187b9908a877d5d9d42f4d73a12bdc530350cd4b",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/lakefile.toml.txt"
+    },
+    {
+      "path": "tests/fixtures/documentation/lean-author/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/lean-toolchain.txt"
+    },
+    {
+      "path": "tests/fixtures/documentation/lean-author/package.json",
+      "sha256": "da95e2337da313ce561e519365e3d7279532abcfe0bb1d59946269d4a5e92187",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/package.json.txt"
+    },
+    {
+      "path": "src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/build/canonical-build.mjs.txt"
+    },
+    {
+      "path": "src/build/component-side-linker.mjs",
+      "sha256": "b8771cd18329981fff3dac7b30d29b7817f5ddf7d06078f27937e28718ca5318",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/build/component-side-linker.mjs.txt"
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4",
+      "snapshot": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/release/component-npm-package.mjs.txt"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/queue.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/queue.json",
+      "sha256": "c2f916195e3a95945439998f8d6412884564f874a40dbe941b5239984a0fe4b4",
+      "bytes": 2245
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/run.tap",
+      "originalPath": "build/vo1430-source-entry-3f2de27/run.tap",
+      "sha256": "7ef8d52e484daf90e2e03eab2ab86bc620d0f938d44ff90ed559724d7860592c",
+      "bytes": 353
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/report.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/report.json",
+      "sha256": "eb684595cb2c6c02135f5f2e1f981a2c6d9b1d2d49d346756457cf00d0c710a1",
+      "bytes": 12670
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/end.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/end.txt",
+      "sha256": "b366ed467671514a4c8261474b24d373e1ccc2e69fc32d53e054a273eca65f05",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/scalar.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/scalar.stderr.txt",
+      "sha256": "6efbeaf9ff3ac9b9bc07f75087e7a761a85ac07d633b5462f7517d151f1c2bdf",
+      "bytes": 352868
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/scalar.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/scalar.stdout.json",
+      "sha256": "b4bbcd51e6a3fe2edbc03e3a9ba016e1028bb08bdc00428e5f05fdd57f51e298",
+      "bytes": 176948
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/callable.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/callable.stderr.txt",
+      "sha256": "477d66f035393c2bb96091633cb3946fdb1603512179ed562087b06eed636c4e",
+      "bytes": 353146
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/callable.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/callable.stdout.json",
+      "sha256": "374e580149d291ce54ed11070f33bd1f521d88260fdcba99ec41b0ba3f11860a",
+      "bytes": 177085
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/copied.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/copied.stderr.txt",
+      "sha256": "044d33d77ac659d59686829a1b3277ffb0cb0edd27f7991c40456db00ebc75e0",
+      "bytes": 353146
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/copied.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/copied.stdout.json",
+      "sha256": "53a291e5d00084d189678c0822ec2a9946646c9e985fead7daad41d372cdf08d",
+      "bytes": 177083
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/record.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/record.stderr.txt",
+      "sha256": "1a4843f03fdee62ff06530bea1f752714d1c0398f5c8c89eaf432fe3488ed5d1",
+      "bytes": 353142
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/record.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/record.stdout.json",
+      "sha256": "450c86dd44d5a0912ab1aa22bf8e9bac683a6915e0e763c7008527b8a4d91a6f",
+      "bytes": 177071
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/compound.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/compound.stderr.txt",
+      "sha256": "aac73306975df570fdd7323df0c101a18f6bff00353ee005261da142fd917683",
+      "bytes": 353148
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/compound.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/compound.stdout.json",
+      "sha256": "b9984bab9c1c4fc9ccf853b48ea0b49d8bb3f98563a0ce524898d8fc72670404",
+      "bytes": 177091
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/nominal.stderr.txt",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/nominal.stderr.txt",
+      "sha256": "29809dc6f680000de5c0d8612920e7c3184f299cc05a5a0d72d821b1edc775c4",
+      "bytes": 353152
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/six-abi/calls/nominal.stdout.json",
+      "originalPath": "build/vo1430-source-entry-3f2de27/calls/nominal.stdout.json",
+      "sha256": "100e894e411df71f8db2d851b0ac6d6baf08e1da44bcc83cc4d96df71fcd7b23",
+      "bytes": 177102
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/queue.json",
+      "originalPath": "build/vo1430-feasibility-3f2de27.queue",
+      "sha256": "dcc80d1a9e1edaac5ae215e2a9a657635b92f253c0f6730e673167f9de5ecd0d",
+      "bytes": 1889
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/run.tap",
+      "originalPath": "build/vo1430-feasibility-3f2de27.tap",
+      "sha256": "7e3ef0788070b84d81b8d12b786bac5170bc7d8a43380fc16944ce60ec840d50",
+      "bytes": 1560
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/end.txt",
+      "originalPath": "build/vo1430-feasibility-3f2de27.end",
+      "sha256": "0a8ffb20433e65412fe22779f6552ac5f3d8baf8bb57220c360eb731e1b31544",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-1/runner.mjs.txt",
+      "originalPath": "build/vo1430-feasibility-runner-3f2de27.mjs",
+      "sha256": "86dc7d7807871c6f4e5b962b3e82f6915250b44e2a20f99572361c243e6e3e1f",
+      "bytes": 2578
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/queue.json",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2.queue",
+      "sha256": "08ed785da6e780b76b9bf075ca3364a3d9d86b4a30b2388a2fe0af80aad9775c",
+      "bytes": 2474
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/run.tap",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2.tap",
+      "sha256": "07687895a4ff77ad1ce4325e21b7829c3fb32bfecd6a2eeade1d8d3481ac9a28",
+      "bytes": 392
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/report.json",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2.json",
+      "sha256": "b9f79889aed52839e96f6858ff68f0c386ea82c761dafa48debcb13918d8404f",
+      "bytes": 2148
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/end.txt",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2.end",
+      "sha256": "fcd6025cb63f547c4fd95301891eb3b85ed064b1354fedf497a63bbc76afed85",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/runner.mjs.txt",
+      "originalPath": "build/vo1430-feasibility-runner-3f2de27-r2.mjs",
+      "sha256": "ce2d3cf06c47eb477054b3bd9b7189532d82e92a79949881c4279e0519bd145d",
+      "bytes": 2581
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/calls/scalar.stderr.txt",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2-calls/scalar.stderr.txt",
+      "sha256": "6efbeaf9ff3ac9b9bc07f75087e7a761a85ac07d633b5462f7517d151f1c2bdf",
+      "bytes": 352868
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/feasibility/attempt-2/calls/scalar.stdout.json",
+      "originalPath": "build/vo1430-feasibility-3f2de27-r2-calls/scalar.stdout.json",
+      "sha256": "b4bbcd51e6a3fe2edbc03e3a9ba016e1028bb08bdc00428e5f05fdd57f51e298",
+      "bytes": 176948
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-source-entry.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/helpers/scalar-fin-source-entry.mjs",
+      "sha256": "ae1c2281c60c440db198f7c594d7d48108d731fb5dc0053ea04d47dce1c50208",
+      "bytes": 11199
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-source-entry-tests.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/helpers/scalar-fin-source-entry-tests.mjs",
+      "sha256": "f7b0acdecfda6c54a078c670f5e0bb9ea29194348bd3185c0b389361237cade0",
+      "bytes": 16743
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/scalar-fin-rejection-packages.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/helpers/scalar-fin-rejection-packages.mjs",
+      "sha256": "2f0c75acef03944d44104f7af397ed9bff9f1ada3b7a2ff7a993a0496ab93bf9",
+      "bytes": 13172
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/refinement-engine.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+      "bytes": 1655
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/helpers/lake-workspace.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+      "bytes": 9902
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/scalar-fin-rejection.test.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/scalar-fin-rejection.test.mjs",
+      "sha256": "299543a39ae61f3bdb22818db8355251d677de3b2bfb07ad6f69b2001b028c35",
+      "bytes": 3525
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/OnboardingSmall.lean.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/fixtures/documentation/lean-author/OnboardingSmall.lean",
+      "sha256": "d4f4b4fe9141a24726b11bc665420909f4ab3aa875c661e1371a66d4c2af2816",
+      "bytes": 425
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/lakefile.toml.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/fixtures/documentation/lean-author/lakefile.toml",
+      "sha256": "9e1cbd2a7a690c0d0e5e04da187b9908a877d5d9d42f4d73a12bdc530350cd4b",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/lean-toolchain.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/fixtures/documentation/lean-author/lean-toolchain",
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/tests/fixtures/documentation/lean-author/package.json.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:tests/fixtures/documentation/lean-author/package.json",
+      "sha256": "da95e2337da313ce561e519365e3d7279532abcfe0bb1d59946269d4a5e92187",
+      "bytes": 21
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/build/component-side-linker.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:src/build/component-side-linker.mjs",
+      "sha256": "b8771cd18329981fff3dac7b30d29b7817f5ddf7d06078f27937e28718ca5318",
+      "bytes": 17147
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/sources/3f2de27/src/release/component-npm-package.mjs.txt",
+      "originalPath": "git:3f2de27757b1c5f570ae8c505f9f16e5fa240e0e:src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4",
+      "bytes": 25664
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/scalar.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"scalar\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "b3fa78479e21587c939c050ed562a52d0649031a78c17ed5728ad58ad2367268",
+      "bytes": 1133
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/scalar.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"scalar\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "83a9cede6c858d5978dd570ad2ffae40a55422ac165638d520474bf348ba0f66",
+      "bytes": 4379
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/callable.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"callable\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "8ff33340aeef1d285936a8642e0bd4756e716b2db205df16975aa3cc92bf9fa7",
+      "bytes": 1249
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/callable.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"callable\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "3546d2e77d1df1578115b822b14f0178e24de569b656d2667d1856740e8721b1",
+      "bytes": 4730
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/copied.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"copied\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "88d2719407833ab744e7cedbbff87d5540f1d00d64ddbd79bdc4decbc4460da4",
+      "bytes": 1260
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/copied.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"copied\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "33052a11acc443b670f7166d72e59705e77788683ec01eb7b8e4c80d463ae61c",
+      "bytes": 4585
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/record.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"record\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "dc756b82cdebc16ced0308a89cf4869e8a589a530909da09e33fe9e22e6161d2",
+      "bytes": 1307
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/record.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"record\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "c247270143670b6678b169d14d86aa4349a13510261a124cf15246cd7b82df61",
+      "bytes": 4612
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/compound.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"compound\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "5c140edb515ede0892a5c2061cdaeae3ec7a18fe97dbda11b1f176e62309c415",
+      "bytes": 1267
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/compound.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"compound\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "2215ea6c4cc3299e59bd6ab27aeef4cb348bfdf03fd4ff58a7b6abfae83e9142",
+      "bytes": 4658
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/nominal.lean.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"nominal\", scalarFinSourceEntryProbe(null)).lean",
+      "sha256": "513c2e165ef04816967fa5ec72cf06275df4fbe258c225e74ee8a221d60b4cb9",
+      "bytes": 1294
+    },
+    {
+      "path": "docs/evidence/scalar-fin-source-entry-20261008/inputs/nominal.consumer.mjs.txt",
+      "originalPath": "generated at 3f2de27: scalarFinRejectionInputs(\"nominal\", scalarFinSourceEntryProbe(null)).consumer",
+      "sha256": "f97703d1544d65fa5ae597c16aa170287fcde6a5fe95e88681bfb2f4b39184f5",
+      "bytes": 4604
+    }
+  ],
+  "remaining": [
+    "Main integration of the probe source, CI wiring and source history.",
+    "Browser and native-host source entry are not measured by this archive.",
+    "These instrumented packages do not establish identity with uninstrumented or hosted archives.",
+    "Any #1430 closure decision is separate."
+  ]
+}

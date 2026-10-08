@@ -1,0 +1,67 @@
+{
+  "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+  "observation": {
+    "abi": "scalar",
+    "archiveSha256": "b2f9631d454c384b564e842709d9371f065451ed983cf68b3d616202ee062905",
+    "checks": 1545,
+    "privateAbi": 2,
+    "rejections": 2546,
+    "runtimeArchiveSha256": "74b3621108fc502c402b9d866b97531206e0c07851d957512c532439235a7c09",
+    "sourceEntry": {
+      "calls": 5094,
+      "consumerSha256": "83a9cede6c858d5978dd570ad2ffae40a55422ac165638d520474bf348ba0f66",
+      "entered": 2548,
+      "exports": {
+        "huge": {
+          "entered": 10,
+          "rejected": 10
+        },
+        "mirror": {
+          "entered": 2018,
+          "rejected": 2012
+        },
+        "mix": {
+          "entered": 502,
+          "rejected": 504
+        },
+        "never": {
+          "entered": 0,
+          "rejected": 8
+        },
+        "one": {
+          "entered": 4,
+          "rejected": 8
+        },
+        "pair": {
+          "entered": 2,
+          "rejected": 4
+        },
+        "tenth": {
+          "entered": 2,
+          "rejected": 0
+        },
+        "traceNat": {
+          "entered": 10,
+          "rejected": 0
+        }
+      },
+      "instrumentation": "probe build: dbgTrace markers in the fixture source and call brackets in the consumer; not the unmodified packages of the rejection suite",
+      "leanSha256": "b3fa78479e21587c939c050ed562a52d0649031a78c17ed5728ad58ad2367268",
+      "rejected": 2546,
+      "retained": {
+        "stderr.txt": {
+          "bytes": 352868,
+          "path": "/app/build/vo1430-feasibility-3f2de27-r2-calls/scalar.stderr.txt",
+          "sha256": "6efbeaf9ff3ac9b9bc07f75087e7a761a85ac07d633b5462f7517d151f1c2bdf"
+        },
+        "stdout.json": {
+          "bytes": 176948,
+          "path": "/app/build/vo1430-feasibility-3f2de27-r2-calls/scalar.stdout.json",
+          "sha256": "b4bbcd51e6a3fe2edbc03e3a9ba016e1028bb08bdc00428e5f05fdd57f51e298"
+        }
+      }
+    }
+  },
+  "schemaVersion": 1,
+  "scope": "feasibility: scalar private ABI 2 only, one build"
+}

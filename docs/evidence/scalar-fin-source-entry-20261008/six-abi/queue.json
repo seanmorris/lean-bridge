@@ -1,0 +1,44 @@
+{
+  "node": 1430,
+  "kind": "six-ABI source-entry probe, instrumented packages",
+  "revision": "3f2de27757b1c5f570ae8c505f9f16e5fa240e0e",
+  "selection": "tests/scalar-fin-rejection.test.mjs --test-name-pattern=\"^installed scalar Fin rejections never enter the Lean source on any private ABI$\"",
+  "producerSources": {
+    "tests/helpers/scalar-fin-source-entry.mjs": "ae1c2281c60c440db198f7c594d7d48108d731fb5dc0053ea04d47dce1c50208",
+    "tests/helpers/scalar-fin-rejection-packages.mjs": "2f0c75acef03944d44104f7af397ed9bff9f1ada3b7a2ff7a993a0496ab93bf9",
+    "tests/helpers/refinement-engine.mjs": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+    "tests/scalar-fin-rejection.test.mjs": "299543a39ae61f3bdb22818db8355251d677de3b2bfb07ad6f69b2001b028c35"
+  },
+  "environmentRepair": {
+    "symlink": "/app/build/worktrees/scalar-fin-source-entry-vo1430/build/lean-runtime",
+    "target": "/app/build/lean-runtime"
+  },
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "cwd": "/app/build/worktrees/scalar-fin-source-entry-vo1430",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_LAKE_WASM_TEST": "1",
+    "LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY": "1",
+    "LEAN_BRIDGE_LAKE_RUNTIME_ROOT": "/app/build/lean-link-spike/lazy",
+    "LEAN_BRIDGE_SCALAR_FIN_SOURCE_ENTRY_REPORT": "/app/build/vo1430-source-entry-3f2de27/report.json",
+    "LEAN_BRIDGE_LAKE_ENGINE": "(unset: in-process engine)"
+  },
+  "runtimeRoot": {
+    "path": "/app/build/lean-link-spike/lazy",
+    "mainMjsSha256": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+    "mainWasmSha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)"
+  },
+  "freeSpace": "2374M",
+  "freeSpaceFloor": "1024M (watchdog stops the run below it)",
+  "tap": "/app/build/vo1430-source-entry-3f2de27/run.tap",
+  "report": "/app/build/vo1430-source-entry-3f2de27/report.json",
+  "retained": "/app/build/vo1430-source-entry-3f2de27/calls/",
+  "end": "/app/build/vo1430-source-entry-3f2de27/end.txt",
+  "startedAt": "2026-10-08T20:09:04.673Z"
+}
