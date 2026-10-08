@@ -471,13 +471,14 @@ test("fresh Lean admits every checked host reply family and compiles each typed 
 	const fixtureSource = await readFile("tests/fixtures/onboarding/native-fin-replies/FinReplies.lean", "utf8");
 	const body = fixtureSource.replace("namespace FinReplies\n", "").replace("end FinReplies\n", "");
 	const source = `namespace FinCallbacks\n${body}end FinCallbacks\n`;
-	const names = ["aliased", "digits", "empty0", "failure", "late", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
+	const names = ["aliased", "digits", "empty0", "failure", "late", "listed", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
 	const { model, adapters } = await elaborate(t, { exports: names.map(name => `FinCallbacks.${name}`) }, source);
 	const reply = name => model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type.reply;
 	const fin = bound => ({ kind: "fin", bound });
 	assert.deepEqual(reply("maybe"), { kind: "option", arguments: [fin("5")] });
 	assert.deepEqual(reply("aliased"), { kind: "option", arguments: [fin("5")] });
 	assert.deepEqual(reply("empty0"), { kind: "list", arguments: [fin("0")] });
+	assert.deepEqual(reply("listed"), { kind: "list", arguments: [fin("3")] });
 	assert.deepEqual(reply("none0"), { kind: "option", arguments: [fin("0")] });
 	assert.deepEqual(reply("wide"), { kind: "option", arguments: [fin("184467440737095516170")] });
 	assert.deepEqual(reply("failure"), { kind: "result", arguments: [null, fin("7")] });

@@ -60,5 +60,7 @@ structure Slot where
   count : Nat
 def slotted (host : Nat → Slot) : Nat := (host 0).count
 def success (host : Nat → Except Nat (Array (Fin 3))) : Nat := match host 0 with | .ok values => values.size | .error n => n
+/-- A nonempty list reply: each element indexes its table. -/
+def listed (host : Nat → List (Fin 3)) : Nat := (host 0).foldl (fun acc d => acc * 10 + table3.get d) 0
 
 end FinReplies

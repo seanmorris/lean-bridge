@@ -38,6 +38,7 @@ const expectedChecks = 27;
  * @param run - Command to run.
  */
 export const retainFailure = (path, run) => run().catch(async error => {
+	await mkdir(dirname(path), { recursive: true });
 	// Long output keeps its first and last 4000 characters: a linker's first diagnostics and its last.
 	const bounded = value => typeof value !== "string" ? "" : value.length <= 8000 ? value : `${value.slice(0, 4000)}\n[...]\n${value.slice(-4000)}`;
 	const output = error.details ?? error;
@@ -73,6 +74,10 @@ test("a failed harness command keeps its structured output beside the report", a
 	const path = join(directory, "failure.json");
 	await assert.rejects(() => retainFailure(path, () => runCopied("/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], directory, { PATH: "/usr/bin:/bin" })));
 	const record = JSON.parse(await readFile(path, "utf8"));
+	// A record under directories that do not exist yet keeps the original failure, never ENOENT.
+	const nested = join(directory, "missing", "deeper", "failure.json");
+	await assert.rejects(() => retainFailure(nested, () => Promise.reject(Object.assign(new Error("first build failed"), { code: "build-command-failed" }))), { message: "first build failed" });
+	assert.deepEqual(JSON.parse(await readFile(nested, "utf8")).code, "build-command-failed");
 	assert.deepEqual([record.command, record.args, record.stdout, record.stderr], ["/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], "out\n", "err\n"]);
 	// A coded build error without process output keeps its code and bounded message.
 	const long = `${"h".repeat(4000)}${"m".repeat(1000)}${"t".repeat(4000)}`;

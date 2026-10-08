@@ -26,6 +26,14 @@ template<class Call> static bool refused(Call&& call, const std::string& message
 }
 static std::vector<Nat> nats(std::initializer_list<unsigned> values) { std::vector<Nat> result; for (unsigned value : values) result.emplace_back(value); return result; }
 
+// One bounded leaf: `call(v)` replies with v at that leaf. n - 1 gives `expected`; n and n + 1 are refused naming Fin n.
+template<class Call> static int leaf_bounds(Call&& call, unsigned n, const Nat& expected) {
+  const std::string text = std::to_string(n);
+  CHECK(call(n - 1) == expected);
+  for (unsigned value : {n, n + 1}) CHECK(refused([&] { return call(value); }, bound(text.c_str())));
+  return 0;
+}
+
 static int check_maybe() {
   unsigned calls = 0;
   auto replying = [&](long at, unsigned value) { return [&calls, at, value](Nat n) { ++calls; return std::optional<Nat>(n == at ? Nat(value) : n); }; };
@@ -77,9 +85,8 @@ static int check_results() {
   CHECK(refused([] { return fr::failure([](Nat) { return Failure{fr::Err<Nat>{Nat(7)}}; }); }, bound("7")));
   CHECK(refused([] { return fr::failure([](Nat) { return Failure{fr::Err<Nat>{Nat(8)}}; }); }, bound("7")));
   using Success = fr::Result<std::vector<Nat>, Nat>;
-  CHECK(fr::success([](Nat) { return Success{fr::Ok<std::vector<Nat>>{nats({0, 1})}}; }) == 2);
+  RUN(leaf_bounds([](unsigned v) { return fr::success([v](Nat) { return Success{fr::Ok<std::vector<Nat>>{nats({0, v})}}; }); }, 3, 2));
   CHECK(fr::success([](Nat) { return Success{fr::Err<Nat>{Nat(1000000)}}; }) == 1000000);
-  CHECK(refused([] { return fr::success([](Nat) { return Success{fr::Ok<std::vector<Nat>>{nats({0, 3})}}; }); }, bound("3")));
   return 0;
 }
 
@@ -93,19 +100,26 @@ static int check_late() {
 }
 
 static int check_composites() {
-  CHECK(fr::maybe_tile([](Nat) { return std::optional<fr::Tile>(fr::Tile{Nat(4), Nat(5)}); }) == 50 + 5);
+  RUN(leaf_bounds([](unsigned v) { return fr::maybe_tile([v](Nat) { return std::optional<fr::Tile>(fr::Tile{Nat(v), Nat(5)}); }); }, 5, 50 + 5));
   CHECK(fr::maybe_tile([](Nat) { return std::optional<fr::Tile>{}; }) == 3);
-  CHECK(refused([] { return fr::maybe_tile([](Nat) { return std::optional<fr::Tile>(fr::Tile{Nat(5), Nat(5)}); }); }, bound("5")));
   using Pair = std::pair<std::optional<Nat>, Nat>;
-  CHECK(fr::product([](Nat) { return Pair{Nat(4), Nat(9)}; }) == 9);
-  CHECK(refused([] { return fr::product([](Nat) { return Pair{Nat(5), Nat(9)}; }); }, bound("5")));
-  CHECK(fr::slotted([](Nat) { return fr::Slot{Nat(4), Nat(9)}; }) == 9);
-  CHECK(refused([] { return fr::slotted([](Nat) { return fr::Slot{Nat(6), Nat(9)}; }); }, bound("5")));
-  CHECK(fr::aliased([](Nat) { return fr::MaybeDigit(Nat(4)); }) == 4);
-  CHECK(refused([] { return fr::aliased([](Nat) { return fr::MaybeDigit(Nat(5)); }); }, bound("5")));
-  CHECK(fr::nested([](Nat) { return std::optional<std::vector<Nat>>(nats({0, 1, 2})); }) == 3);
+  RUN(leaf_bounds([](unsigned v) { return fr::product([v](Nat) { return Pair{Nat(v), Nat(9)}; }); }, 5, 9));
+  CHECK(fr::product([](Nat) { return Pair{std::nullopt, Nat(9)}; }) == 9);
+  RUN(leaf_bounds([](unsigned v) { return fr::slotted([v](Nat) { return fr::Slot{Nat(v), Nat(9)}; }); }, 5, 9));
+  CHECK(fr::slotted([](Nat) { return fr::Slot{std::nullopt, Nat(9)}; }) == 9);
+  RUN(leaf_bounds([](unsigned v) { return fr::aliased([v](Nat) { return fr::MaybeDigit(Nat(v)); }); }, 5, 4));
+  RUN(leaf_bounds([](unsigned v) { return fr::nested([v](Nat) { return std::optional<std::vector<Nat>>(nats({0, v})); }); }, 3, 2));
   CHECK(fr::nested([](Nat) { return std::optional<std::vector<Nat>>{}; }) == 2);
-  CHECK(refused([] { return fr::nested([](Nat) { return std::optional<std::vector<Nat>>(nats({0, 3})); }); }, bound("3")));
+  return 0;
+}
+
+// A nonempty List (Fin 3): valid values, then each of the first, middle and last leaves at its bounds.
+static int check_listed() {
+  CHECK(fr::listed([](Nat) { return nats({0, 1, 2}); }) == 123);
+  RUN(leaf_bounds([](unsigned v) { return fr::listed([v](Nat) { return nats({v, 1, 2}); }); }, 3, 323));
+  RUN(leaf_bounds([](unsigned v) { return fr::listed([v](Nat) { return nats({0, v, 2}); }); }, 3, 133));
+  RUN(leaf_bounds([](unsigned v) { return fr::listed([v](Nat) { return nats({0, 1, v}); }); }, 3, 123));
+  CHECK(fr::listed([](Nat) { return std::vector<Nat>{}; }) == 0);
   return 0;
 }
 
@@ -129,7 +143,7 @@ static int check_reentry() {
 
 int main() {
   RUN(check_maybe()); RUN(check_digits()); RUN(check_zero()); RUN(check_wide()); RUN(check_results());
-  RUN(check_late()); RUN(check_composites()); RUN(check_twice()); RUN(check_reentry());
+  RUN(check_late()); RUN(check_composites()); RUN(check_listed()); RUN(check_twice()); RUN(check_reentry());
   CHECK(fr::plain(Nat(41)) == 42);
   int thread_result = -1;
   std::thread([&] {

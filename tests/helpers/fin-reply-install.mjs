@@ -11,10 +11,10 @@ import { installCopiedConsumer } from "./copied-fixture-install.mjs";
 const coordinate = { name: "finreplies", version: "1.0.0" };
 /** C and C++ check Fin in host replies; other native hosts refuse them when the package is built. */
 export const finReplyTargets = Object.freeze({ c: ["c", coordinate], cpp: ["cpp", coordinate] });
-const exported = ["aliased", "digits", "empty0", "failure", "late", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
+const exported = ["aliased", "digits", "empty0", "failure", "late", "listed", "maybe", "maybeTile", "nested", "none0", "plain", "product", "slotted", "success", "twice", "wide"];
 export const finReplyExports = Object.freeze(exported.map(name => `FinReplies.${name}`));
 /** Every CHECK each consumer executes on success, including its second thread's and its fork check. */
-export const finReplyExpectedChecks = Object.freeze({ c: 62, cpp: 55 });
+export const finReplyExpectedChecks = Object.freeze({ c: 81, cpp: 74 });
 
 /**
  * Name each host callback type the C consumer uses, from the installed Binding IR.
@@ -31,7 +31,7 @@ export const finReplyConsumerNames = ir => {
 			if(surface.callbacks.has(parameter.type.id)) names[`HOST_${name}${index ? "_second" : ""}`] = `${surface.prefix}_${surface.callbacks.get(parameter.type.id).field}`;
 		});
 	}
-	assert.equal(Object.keys(names).length, 15);
+	assert.equal(Object.keys(names).length, 16);
 	return names;
 };
 
@@ -54,6 +54,7 @@ export const finReplyConsumerSource = async (profile, extension, names) => {
  * @param stdout - Consumer output.
  */
 export const parseFinReplyResult = (profile, stdout) => {
+	assert.ok(Object.hasOwn(finReplyExpectedChecks, profile), `Unknown Fin reply profile ${profile}`);
 	const lines = stdout.trim().split("\n");
 	assert.equal(lines.length, 2, stdout);
 	const fork = /^fork-status (\d+) 0$/u.exec(lines[0]);

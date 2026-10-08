@@ -151,6 +151,29 @@ static finreplies_status second_host(void *context, mpz_srcptr arg0, mpz_ptr rep
 static finreplies_error error;
 #define CALL(name, host, state) finreplies_##name(&(HOST_##name){.call = host, .context = &(state)}, out, &error)
 
+/* One bounded leaf: the reply `format` filled with n - 1 is accepted as `expected`; with n and n + 1
+   it is refused naming Fin n. Host-owned spans are released exactly once either way. */
+typedef finreplies_status (*caller)(host_state *);
+static int leaf_bounds(caller call, const char *format, unsigned n, long at, unsigned long expected, int spans) {
+  char reply[64], text[8];
+  snprintf(text, sizeof text, "%u", n);
+  for (unsigned value = n - 1; value <= n + 1; ++value) {
+    snprintf(reply, sizeof reply, format, value);
+    host_state state = {.at = at, .reply = reply}; preset();
+    finreplies_status status = call(&state);
+    if (value == n - 1) CHECK(accepted(status, expected) && (!spans || state.released == 1));
+    else CHECK(refused(status, &error, bound(text)) && state.calls == 1 && (!spans || state.released == 1));
+  }
+  return 0;
+}
+static finreplies_status call_tile(host_state *state) { return CALL(maybe_tile, tile_host, *state); }
+static finreplies_status call_product(host_state *state) { return CALL(product, product_host, *state); }
+static finreplies_status call_slot(host_state *state) { return CALL(slotted, slot_host, *state); }
+static finreplies_status call_aliased(host_state *state) { return CALL(aliased, option_host, *state); }
+static finreplies_status call_nested(host_state *state) { return CALL(nested, nested_host, *state); }
+static finreplies_status call_success(host_state *state) { return CALL(success, success_host, *state); }
+static finreplies_status call_listed(host_state *state) { return CALL(listed, list_host, *state); }
+
 /* maybe: 10 + 20 + 30 + 40 for replies 0..3; a refused reply at call `at` stops the host there. */
 static int check_maybe(void) {
   host_state ok = {.at = -1}; preset();
@@ -230,12 +253,9 @@ static int check_failure(void) {
   }
   host_state malformed = {.malformed = 1}; preset();
   CHECK(refused(CALL(failure, failure_host, malformed), &error, MALFORMED));
-  host_state okSpan = {.reply = "ok:0,1"}; preset();
-  CHECK(accepted(CALL(success, success_host, okSpan), 2) && okSpan.released == 1);
+  RUN(leaf_bounds(call_success, "ok:0,%u", 3, -1, 2, 1));
   host_state errorBranch = {.reply = "error:1000000"}; preset();
   CHECK(accepted(CALL(success, success_host, errorBranch), 1000000));
-  host_state badSpan = {.reply = "ok:0,3"}; preset();
-  CHECK(refused(CALL(success, success_host, badSpan), &error, bound("3")) && badSpan.released == 1);
   return 0;
 }
 
@@ -255,34 +275,35 @@ static int check_late(void) {
   return 0;
 }
 
-/* Records and products whose stand-in holds no Fin. */
+/* Records, products, aliases and nested spans whose stand-in holds no Fin, at n - 1, n and n + 1. */
 static int check_composites(void) {
-  host_state tile = {.reply = "4:5"}; preset();
-  CHECK(accepted(CALL(maybe_tile, tile_host, tile), 50 + 5));
+  RUN(leaf_bounds(call_tile, "%u:5", 5, -1, 50 + 5, 0));
   host_state noTile = {.reply = "none"}; preset();
   CHECK(accepted(CALL(maybe_tile, tile_host, noTile), 3));
-  host_state badTile = {.reply = "5:5"}; preset();
-  CHECK(refused(CALL(maybe_tile, tile_host, badTile), &error, bound("5")));
-  host_state pair = {.reply = "4"}; preset();
-  CHECK(accepted(CALL(product, product_host, pair), 9));
-  host_state badPair = {.reply = "5"}; preset();
-  CHECK(refused(CALL(product, product_host, badPair), &error, bound("5")));
-  host_state slot = {.reply = "4"}; preset();
-  CHECK(accepted(CALL(slotted, slot_host, slot), 9));
-  host_state badSlot = {.reply = "6"}; preset();
-  CHECK(refused(CALL(slotted, slot_host, badSlot), &error, bound("5")));
+  RUN(leaf_bounds(call_product, "%u", 5, -1, 9, 0));
+  host_state noPair = {.reply = "none"}; preset();
+  CHECK(accepted(CALL(product, product_host, noPair), 9));
+  RUN(leaf_bounds(call_slot, "%u", 5, -1, 9, 0));
+  host_state noSlot = {.reply = "none"}; preset();
+  CHECK(accepted(CALL(slotted, slot_host, noSlot), 9));
   host_state malformedSlot = {.malformed = 1}; preset();
   CHECK(refused(CALL(slotted, slot_host, malformedSlot), &error, MALFORMED));
-  host_state alias = {.at = 0, .reply = "4"}; preset();
-  CHECK(accepted(CALL(aliased, option_host, alias), 4));
-  host_state badAlias = {.at = 0, .reply = "5"}; preset();
-  CHECK(refused(CALL(aliased, option_host, badAlias), &error, bound("5")));
-  host_state nested = {.reply = "0,1,2"}; preset();
-  CHECK(accepted(CALL(nested, nested_host, nested), 3) && nested.released == 1);
+  RUN(leaf_bounds(call_aliased, "%u", 5, 0, 4, 0));
+  RUN(leaf_bounds(call_nested, "0,%u", 3, -1, 2, 1));
   host_state noNested = {.reply = "none"}; preset();
   CHECK(accepted(CALL(nested, nested_host, noNested), 2));
-  host_state badNested = {.reply = "0,3"}; preset();
-  CHECK(refused(CALL(nested, nested_host, badNested), &error, bound("3")) && badNested.released == 1);
+  return 0;
+}
+
+/* A nonempty List (Fin 3): valid values, then each of the first, middle and last leaves at its bounds. */
+static int check_listed(void) {
+  host_state ok = {.reply = "0,1,2"}; preset();
+  CHECK(accepted(CALL(listed, list_host, ok), 123) && ok.released == 1);
+  RUN(leaf_bounds(call_listed, "%u,1,2", 3, -1, 323, 1));
+  RUN(leaf_bounds(call_listed, "0,%u,2", 3, -1, 133, 1));
+  RUN(leaf_bounds(call_listed, "0,1,%u", 3, -1, 123, 1));
+  host_state empty = {.reply = ""}; preset();
+  CHECK(accepted(CALL(listed, list_host, empty), 0) && empty.released == 1);
   return 0;
 }
 
@@ -331,7 +352,7 @@ static void *other_thread(void *unused) {
 int main(void) {
   mpz_init(out);
   RUN(check_maybe()); RUN(check_digits()); RUN(check_zero()); RUN(check_wide()); RUN(check_failure());
-  RUN(check_late()); RUN(check_composites()); RUN(check_twice()); RUN(check_reentry());
+  RUN(check_late()); RUN(check_composites()); RUN(check_listed()); RUN(check_twice()); RUN(check_reentry());
   mpz_t forty_one; mpz_init_set_ui(forty_one, 41); preset();
   CHECK(finreplies_plain(forty_one, out, &error) == FINREPLIES_STATUS_OK && mpz_cmp_ui(out, 42) == 0);
   mpz_clear(forty_one);

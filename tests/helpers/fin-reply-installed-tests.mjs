@@ -7,7 +7,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -25,14 +25,17 @@ assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin reply profi
 assert.ok(profiles.every(profile => Object.hasOwn(finReplyTargets, profile)), "Fin in host replies is checked by C and C++ packages only");
 
 test("the installed result parser accepts only the fixed check count and a forked child that never reached the host", () => {
-	assert.deepEqual(parseFinReplyResult("c", "fork-status 5 0\nfin-reply-ok c 62\n"), { checks: 62, forkStatus: 5, forkHostCalls: 0 });
+	assert.deepEqual(parseFinReplyResult("c", "fork-status 5 0\nfin-reply-ok c 81\n"), { checks: 81, forkStatus: 5, forkHostCalls: 0 });
+	assert.deepEqual(parseFinReplyResult("cpp", "fork-status 5 0\nfin-reply-ok cpp 74\n"), { checks: 74, forkStatus: 5, forkHostCalls: 0 });
 	const rejected = [
-		["c", "fork-status 5 0\nfin-reply-ok c 61\n"]
-		, ["cpp", "fork-status 5 0\nfin-reply-ok cpp 62\n"]
-		, ["c", "fork-status 5 1\nfin-reply-ok c 62\n"]
-		, ["c", "fork-status 0 0\nfin-reply-ok c 62\n"]
-		, ["c", "fin-reply-ok c 62\n"]
-		, ["c", "fork-status 5 0\nextra\nfin-reply-ok c 62\n"]
+		["c", "fork-status 5 0\nfin-reply-ok c 80\n"]
+		, ["cpp", "fork-status 5 0\nfin-reply-ok cpp 81\n"]
+		, ["c", "fork-status 5 1\nfin-reply-ok c 81\n"]
+		, ["c", "fork-status 0 0\nfin-reply-ok c 81\n"]
+		, ["c", "fin-reply-ok c 81\n"]
+		, ["c", "fork-status 5 0\nextra\nfin-reply-ok c 81\n"]
+		, ["undefined", "fork-status 5 0\nfin-reply-ok undefined undefined\n"]
+		, ["perl", "fork-status 5 0\nfin-reply-ok perl 1\n"]
 	];
 	for(const [profile, stdout] of rejected) assert.throws(() => parseFinReplyResult(profile, stdout), assert.AssertionError, stdout);
 });
@@ -42,6 +45,7 @@ test("relocated source-free C and C++ packages check every host reply bound and 
 	const targets = Object.fromEntries(profiles.map(profile => finReplyTargets[profile]));
 	const environment = finCallbackEnvironment(profiles);
 	const reportPath = resolve(process.env.LEAN_BRIDGE_FIN_REPLY_REPORT ?? `build/native-fin-replies/installed-${profiles.join("-")}.json`);
+	await mkdir(dirname(reportPath), { recursive: true });
 	for(const attempt of [0, 1])
 	{
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-replies-author-"));
