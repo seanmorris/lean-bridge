@@ -1,20 +1,18 @@
 /**
- * Preserve exact source predecessors of the Subtype alias position change (#1220).
+ * Preserve exact source predecessors of the Fin callback diagnostic change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinCallbackDiagnosticSource } from "./fin-callback-diagnostic-source-history.mjs";
 
-export const subtypeAliasPositionHistoryPath = "docs/evidence/subtype-alias-position-source-history-20261008.json";
-export const subtypeAliasPositionChangedPaths = [
-	"src/analyze/NativeExports.lean"
-	, "tests/native-subtype.test.mjs"
+export const finCallbackDiagnosticHistoryPath = "docs/evidence/fin-callback-diagnostic-source-history-20261008.json";
+export const finCallbackDiagnosticChangedPaths = [
+	"tests/native-fin.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-api-promotion-source-history.mjs"
-	, "tests/helpers/reviewed-api-promotion-source-history-tests.mjs"
+	, "tests/helpers/subtype-alias-position-source-history.mjs"
+	, "tests/helpers/subtype-alias-position-source-history-tests.mjs"
 	, "docs/type-surface.v1.json"
 ];
 let history;
@@ -25,8 +23,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseSubtypeAliasPositionUpdate = (source, update) => {
-	assert.ok(subtypeAliasPositionChangedPaths.includes(update.path));
+export const reverseFinCallbackDiagnosticUpdate = (source, update) => {
+	assert.ok(finCallbackDiagnosticChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -52,12 +50,11 @@ export const reverseSubtypeAliasPositionUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeSubtypeAliasPositionSource = (path, source, expected) => {
-	source = beforeFinCallbackDiagnosticSource(path, source, expected);
-	if(typeof source !== "string" || !subtypeAliasPositionChangedPaths.includes(path)) return source;
+export const beforeFinCallbackDiagnosticSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finCallbackDiagnosticChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(subtypeAliasPositionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finCallbackDiagnosticHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseSubtypeAliasPositionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinCallbackDiagnosticUpdate(source, update) : source;
 };

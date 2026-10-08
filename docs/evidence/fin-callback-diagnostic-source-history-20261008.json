@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-callback-diagnostic-v1",
+  "predecessorCommit": "e44033250f1e339a3eff3ce52b777e2eff2013e4",
+  "updates": [
+    {
+      "path": "tests/native-fin.test.mjs",
+      "currentSha256": "c47cb17202f974137f4efe127c925ca4f6ee999f2b60093c0a9989fbaf537d88",
+      "previousSha256": "4822735a54d9c3206f506f2f609bdfafbe9d0ec0e561a30f91187c84809c79ff",
+      "edits": [
+        {
+          "start": 1590,
+          "previous": "",
+          "current": "import \"./helpers/fin-callback-diagnostic-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 12250,
+          "previous": "\t\tawait assert.rejects(() => component(nested, true), error => pattern.test(JSON.stringify(error.details ?? error.message)), name);\n",
+          "current": "\t\tawait assert.rejects(() => component(nested, true), error => {\n\t\t\t// Model refusals name the declaration in details and put the diagnostic in message.\n\t\t\t// Extractor refusals put their source projection in details. Retain both envelopes.\n\t\t\tif(name === \"callback\")\n\t\t\t{\n\t\t\t\tassert.equal(error.code, \"native-refinements-unsupported\");\n\t\t\t\tassert.deepEqual(error.details, { declaration: \"NativeFin.callbackSite\" });\n\t\t\t}\n\t\t\tassert.match(JSON.stringify({ message: error.message, details: error.details }), pattern, name);\n\t\t\treturn true;\n\t\t});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "876ea90cda4c3df124b518554cf4ac3a0eb727b358678b81807ea1f9e35c91c5",
+      "previousSha256": "0dfd2f3d43c4addc562e532c943fbed7078132a36b188e4fea165def15930810",
+      "edits": [
+        {
+          "start": 8510,
+          "previous": "",
+          "current": "import { finCallbackDiagnosticChangedPaths } from \"./fin-callback-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 45095,
+          "previous": "",
+          "current": "\t, ...finCallbackDiagnosticChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/subtype-alias-position-source-history.mjs",
+      "currentSha256": "0f011d61f919627decd85def4dfc6485a1cd7c557b8b680eec180ef4e3ee2454",
+      "previousSha256": "aae9c456c04212864046a11e9b0ed79a93f8ef64e93d59b00e1e1e01486fc94a",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforeFinCallbackDiagnosticSource } from \"./fin-callback-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 2266,
+          "previous": "",
+          "current": "\tsource = beforeFinCallbackDiagnosticSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/subtype-alias-position-source-history-tests.mjs",
+      "currentSha256": "da10b307594efa93826603f9ba790a9cff7e09f3ec5c16d9408dd2990db556b7",
+      "previousSha256": "18a4f4a1cca4752421ae4c5ac94a273add04f45e2ae7a9a384717b4749fc2cb1",
+      "edits": [
+        {
+          "start": 352,
+          "previous": "",
+          "current": "import { beforeFinCallbackDiagnosticSource } from \"./fin-callback-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 1044,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinCallbackDiagnosticSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "68bd931914040761a1a555160341fd482c2ebd91ec9e230a55fa13033294ddb6",
+      "previousSha256": "d68ca681bc8718bad1adcd0d088970f452f62228366fdcf63fe9d307545ea622",
+      "edits": [
+        {
+          "start": 25464,
+          "previous": "          \"sha256\": \"4822735a54d9c3206f506f2f609bdfafbe9d0ec0e561a30f91187c84809c79ff\"\n",
+          "current": "          \"sha256\": \"c47cb17202f974137f4efe127c925ca4f6ee999f2b60093c0a9989fbaf537d88\"\n"
+        },
+        {
+          "start": 1495555,
+          "previous": "          \"sha256\": \"4822735a54d9c3206f506f2f609bdfafbe9d0ec0e561a30f91187c84809c79ff\"\n",
+          "current": "          \"sha256\": \"c47cb17202f974137f4efe127c925ca4f6ee999f2b60093c0a9989fbaf537d88\"\n"
+        }
+      ]
+    }
+  ]
+}

@@ -22,6 +22,7 @@ import { supportsNativeRefinementTargets } from "../src/build/native-project.mjs
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { nativeFinReviewedIr } from "./helpers/reviewed-fin-fixture.mjs";
+import "./helpers/fin-callback-diagnostic-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_FIN_TEST === "1";
 const huge = "1180591620717411303424";
@@ -162,7 +163,17 @@ test("native builds reject Fin inside callbacks and generic record instantiation
 	for(const [name, source, pattern] of sites)
 	{
 		const nested = await project(t, `namespace NativeFin\n${source}\nend NativeFin\n`);
-		await assert.rejects(() => component(nested, true), error => pattern.test(JSON.stringify(error.details ?? error.message)), name);
+		await assert.rejects(() => component(nested, true), error => {
+			// Model refusals name the declaration in details and put the diagnostic in message.
+			// Extractor refusals put their source projection in details. Retain both envelopes.
+			if(name === "callback")
+			{
+				assert.equal(error.code, "native-refinements-unsupported");
+				assert.deepEqual(error.details, { declaration: "NativeFin.callbackSite" });
+			}
+			assert.match(JSON.stringify({ message: error.message, details: error.details }), pattern, name);
+			return true;
+		});
 	}
 });
 

@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinCallbackDiagnosticSource } from "./fin-callback-diagnostic-source-history.mjs";
 import { beforeSubtypeAliasPositionSource, subtypeAliasPositionChangedPaths, subtypeAliasPositionHistoryPath, reverseSubtypeAliasPositionUpdate } from "./subtype-alias-position-source-history.mjs";
 
 test("Subtype alias position authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Subtype alias position authenticates each exact source predecessor", async
 	assert.deepEqual(record.updates.map(update => update.path), subtypeAliasPositionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinCallbackDiagnosticSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseSubtypeAliasPositionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeAliasPositionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeAliasPositionSource(update.path, source, update.currentSha256), source);
