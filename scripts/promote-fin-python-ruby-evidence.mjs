@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { sha256 } from "../src/capsule/node.mjs";
 import { finPythonRubyPromotionReferences, finPythonRubyReceiptPath } from "../tests/helpers/fin-python-ruby-promotion-references.mjs";
+import { refineFinPythonRubyPromotionNotes } from "../tests/helpers/fin-python-ruby-promotion-notes.mjs";
 
 const path = "docs/type-surface.v1.json", inventory = JSON.parse(await readFile(path, "utf8"));
 const references = await finPythonRubyPromotionReferences();
@@ -71,5 +72,6 @@ for(const profile of ["python", "ruby"])
 			, conversionNotes: { fin: conversion[profile] } });
 	}
 }
+refineFinPythonRubyPromotionNotes(inventory);
 await writeFile(path, JSON.stringify(inventory, null, 2) + "\n");
 process.stdout.write("Promoted 18 Python/Ruby reports, four field cells and eight supplemental parameter/result cells.\n");

@@ -11,8 +11,33 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { finPythonRubyPromotionReferences, finPythonRubyReceiptPath } from "./fin-python-ruby-promotion-references.mjs";
 import { beforeFinPythonRubyPromotionSource } from "./fin-python-ruby-promotion-source-history.mjs";
 import "./fin-python-ruby-promotion-source-history-tests.mjs";
+import "./fin-python-ruby-host-notes-source-history-tests.mjs";
 
 const previousSurface = async () => JSON.parse(beforeFinPythonRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+
+test("Python/Ruby promotion notes preserve host-specific runtime and earlier observation facts", async () => {
+	const { document } = await readTypeSurface();
+	for(const profile of ["python", "ruby"])
+		for(const source of ["ordinary-source", "reviewed-ir"])
+		{
+			const id = source === "ordinary-source" ? `native-fin-${profile}-ordinary-source` : `reviewed-fin-${profile}-scalar-containers`;
+			for(const name of [id, `native-nominal-fin-${profile}-${source}`])
+			{
+				const entry = document.observations.find(item => item.id === name);
+				assert.match(entry.stages.packaging.note, profile === "python" ? /original wheel/u : /original gem/u);
+				assert.match(entry.stages.installedExecution.note, profile === "python" ? /Python 3\.11\.16 and 3\.12\.14/u : /Ruby 3\.3\.12/u);
+				assert.doesNotMatch(entry.stages.installedExecution.note, profile === "python" ? /Ruby/u : /Python/u);
+				assert.match(entry.stages.installedExecution.note, /these runs do not measure dispatch/u);
+			}
+		}
+	const python = document.observations.find(item => item.id === "native-fin-python-ordinary-source");
+	assert.match(python.stages.installedExecution.note, /earlier container checks run in the CI Python environment/u);
+	assert.match(python.stages.packaging.note, /compare bundled C libraries and verify receipts/u);
+	const ruby = document.observations.find(item => item.id === "native-fin-ruby-ordinary-source");
+	assert.match(ruby.limitations[1], /Ordinary Ruby dispatch is not counted/u);
+	assert.match(ruby.stages.installedExecution.note, /RangeError naming the parameter and bound/u);
+	assert.match(ruby.stages.installedExecution.note, /non-Integer input raises TypeError/u);
+});
 
 test("Python/Ruby promotion authenticates 18 reports with separate interpreter execution evidence", async () => {
 	const references = await finPythonRubyPromotionReferences();

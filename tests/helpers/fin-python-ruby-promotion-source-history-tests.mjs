@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinPythonRubyHostNotesSource } from "./fin-python-ruby-host-notes-source-history.mjs";
 import { beforeFinPythonRubyPromotionSource, finPythonRubyPromotionChangedPaths, finPythonRubyPromotionHistoryPath, reverseFinPythonRubyPromotionUpdate } from "./fin-python-ruby-promotion-source-history.mjs";
 
 test("Python/Ruby Fin promotion authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Python/Ruby Fin promotion authenticates each exact source predecessor", as
 	assert.deepEqual(record.updates.map(update => update.path), finPythonRubyPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinPythonRubyHostNotesSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinPythonRubyPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinPythonRubyPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinPythonRubyPromotionSource(update.path, source, update.currentSha256), source);

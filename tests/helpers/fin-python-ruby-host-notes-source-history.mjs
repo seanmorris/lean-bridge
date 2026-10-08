@@ -1,23 +1,19 @@
 /**
- * Preserve exact source predecessors of the Python/Ruby Fin promotion change (#1220).
+ * Preserve exact source predecessors of the Python/Ruby host notes change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinPythonRubyHostNotesSource } from "./fin-python-ruby-host-notes-source-history.mjs";
 
-export const finPythonRubyPromotionHistoryPath = "docs/evidence/fin-python-ruby-promotion-source-history-20261008.json";
-export const finPythonRubyPromotionChangedPaths = [
+export const finPythonRubyHostNotesHistoryPath = "docs/evidence/fin-python-ruby-host-notes-source-history-20261008.json";
+export const finPythonRubyHostNotesChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "docs/consume/python.md"
-	, "docs/consume/ruby.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "tests/fin-python-ruby-evidence.test.mjs"
-	, "tests/type-surface.test.mjs"
-	, "tests/helpers/fin-runtime-provenance-source-history.mjs"
-	, "tests/helpers/fin-runtime-provenance-source-history-tests.mjs"
+	, "scripts/promote-fin-python-ruby-evidence.mjs"
+	, "tests/helpers/fin-python-ruby-promotion-tests.mjs"
+	, "tests/helpers/fin-python-ruby-promotion-source-history.mjs"
+	, "tests/helpers/fin-python-ruby-promotion-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 ];
 let history;
@@ -28,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinPythonRubyPromotionUpdate = (source, update) => {
-	assert.ok(finPythonRubyPromotionChangedPaths.includes(update.path));
+export const reverseFinPythonRubyHostNotesUpdate = (source, update) => {
+	assert.ok(finPythonRubyHostNotesChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -55,12 +51,11 @@ export const reverseFinPythonRubyPromotionUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinPythonRubyPromotionSource = (path, source, expected) => {
-	source = beforeFinPythonRubyHostNotesSource(path, source, expected);
-	if(typeof source !== "string" || !finPythonRubyPromotionChangedPaths.includes(path)) return source;
+export const beforeFinPythonRubyHostNotesSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finPythonRubyHostNotesChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finPythonRubyPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finPythonRubyHostNotesHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinPythonRubyPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinPythonRubyHostNotesUpdate(source, update) : source;
 };
