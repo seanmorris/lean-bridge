@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "milestone": "wit-dependency-v1",
+  "predecessorCommit": "ea43059c0983ac9bd889dc9a0513be4105a0e6bf",
+  "updates": [
+    {
+      "path": "tests/helpers/wit-owned-package-evidence.mjs",
+      "currentSha256": "dc53fd99dc9f1ba3cbd373da1133d0d84d3a285a0146dfad44035d88d8465e52",
+      "previousSha256": "1d27e2240ef1c8508bf5c610ae50b642e80be5aa8a2425940e8e258e8a469480",
+      "edits": [
+        {
+          "start": 5035,
+          "previous": "\tconst setup = step(job, \"Compile ordinary Lean APIs and consume relocated WIT packages\");\n\tassert.match(setup, /sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep/u);\n",
+          "current": "\tconst policyName = \"Bound apt network waits\", dependencyName = \"Install dependencies for ordinary_wit\";\n\tconst setupName = \"Compile ordinary Lean APIs and consume relocated WIT packages\";\n\tconst policy = step(job, policyName), dependencies = step(job, dependencyName);\n\tassert.match(policy, /^ {8}uses: \\.\\/\\.github\\/actions\\/bounded-apt$/mu);\n\tassert.match(policy, /^ {8}timeout-minutes: 1$/mu);\n\tassert.match(dependencies, /^ {8}timeout-minutes: 20$/mu);\n\tfor(const required of [policy, dependencies]) assert.doesNotMatch(required, /^ {8}(?:if|continue-on-error):/mu);\n\tassert.match(dependencies, /^ {10}sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep$/mu);\n\tassert.ok(job.indexOf(policyName) < job.indexOf(dependencyName));\n\tassert.ok(job.indexOf(dependencyName) < job.indexOf(setupName));\n\tassert.doesNotMatch(step(job, setupName), /apt-get/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wit-owned-package-evidence.test.mjs",
+      "currentSha256": "7cc1f7d13b5e254412d53438ca94621bb87226bc053366311b212f3725c8ed84",
+      "previousSha256": "e51a7b2258d742770626fe80d2f21137b04fac91f05513435e6d56678e23c3d7",
+      "edits": [
+        {
+          "start": 219,
+          "previous": "",
+          "current": "import \"./helpers/wit-dependency-ci-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "a7c1b42a98217805878e97f9a844b73573f019d7bc1d27bc930f05976f7b59f7",
+      "previousSha256": "1561f1134e1236f93b1bf5116d9703b7237d7b4269a427b86810a45abb3a0477",
+      "edits": [
+        {
+          "start": 6083,
+          "previous": "",
+          "current": "import { witDependencyChangedPaths } from \"./wit-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 41656,
+          "previous": "",
+          "current": "\t, ...witDependencyChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-decisions-source-history.mjs",
+      "currentSha256": "8a2596326fe6daeb05fce09973116ad55437b18476b6d22a26f5c3ef4a4e7151",
+      "previousSha256": "0c076ee6dcae64d26fbe5cd7237270e31f654a3fa8b561ce4a92b19a065f24c2",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforeWitDependencySource } from \"./wit-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 2207,
+          "previous": "",
+          "current": "\tsource = beforeWitDependencySource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-decisions-source-history-tests.mjs",
+      "currentSha256": "1a050e2b3d8c7254240c57219aff0e52cbb26e391639deb281d9e8d5ac0390f6",
+      "previousSha256": "cc51b33318887942b11b829c911e0204297c252c61f1c29541238e2a79dd4410",
+      "edits": [
+        {
+          "start": 275,
+          "previous": "",
+          "current": "import { beforeWitDependencySource } from \"./wit-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 1063,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeWitDependencySource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

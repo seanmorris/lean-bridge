@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/wit-dependency-ci-tests.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeOwnedWitBuildRepair, ownedWitBuildRepairHistoricalBytes } from "./helpers/wit-owned-build-repair-history.mjs";
 import { assertOwnedWitPackageCi, assertOwnedWitPackageExecution } from "./helpers/wit-owned-package-evidence.mjs";
