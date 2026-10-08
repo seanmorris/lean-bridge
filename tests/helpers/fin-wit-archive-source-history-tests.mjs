@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinWitArchiveSource, finWitArchiveChangedPaths, finWitArchiveHistoryPath, reverseFinWitArchiveUpdate } from "./fin-wit-archive-source-history.mjs";
+import { beforeJvmShardSource } from "./jvm-shard-source-history.mjs";
 
 test("WIT record evidence archive authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(finWitArchiveHistoryPath, "utf8"));
@@ -16,7 +17,7 @@ test("WIT record evidence archive authenticates each exact source predecessor", 
 	assert.deepEqual(record.updates.map(update => update.path), finWitArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeJvmShardSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinWitArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinWitArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinWitArchiveSource(update.path, source, update.currentSha256), source);

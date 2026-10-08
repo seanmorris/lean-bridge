@@ -3495,80 +3495,6 @@ jobs:
           LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs
           test -s build/recursive-callables/jvm-recursive.json
           test -s build/recursive-callables/jvm-mixed.json
-          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs
-          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs
-          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs
-          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs
-          npm run test:owned-jvm-transfers
-          test -s build/owned-jvm-transfers/ordinary.json
-          test -s build/owned-jvm-transfers/reviewed.json
-          test -s build/owned-jvm-transfer-packaging/ordinary.json
-          test -s build/owned-jvm-transfer-packaging/reviewed.json
-          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1
-          cat build/owned-jvm-borrows.log
-          rg '^# pass 8$' build/owned-jvm-borrows.log
-          rg '^# fail 0$' build/owned-jvm-borrows.log
-          rg '^# skipped 0$' build/owned-jvm-borrows.log
-          test -s build/owned-jvm-borrows/ordinary.json
-          test -s build/owned-jvm-borrows/reviewed.json
-          test -s build/owned-jvm-borrows/borrow-only.json
-          test -s build/owned-jvm-borrows/ordinary-installed.json
-          test -s build/owned-jvm-borrows/reviewed-installed.json
-          npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1
-          cat build/owned-jvm-receivers.log
-          rg '^# tests 15$' build/owned-jvm-receivers.log
-          rg '^# pass 15$' build/owned-jvm-receivers.log
-          rg '^# fail 0$' build/owned-jvm-receivers.log
-          rg '^# cancelled 0$' build/owned-jvm-receivers.log
-          rg '^# skipped 0$' build/owned-jvm-receivers.log
-          test -s build/owned-jvm-receiver-core/ordinary.json
-          test -s build/owned-jvm-receiver-core/reviewed.json
-          test -s build/owned-jvm-receiver-core/ordinary-plain.json
-          test -s build/owned-jvm-receiver-core/reviewed-plain.json
-          test -s build/owned-jvm-receiver-core/ordinary-consuming.json
-          test -s build/owned-jvm-receiver-core/reviewed-consuming.json
-          test -s build/owned-jvm-receiver-core/ordinary-unanchored.json
-          test -s build/owned-jvm-receiver-core/reviewed-unanchored.json
-          test -s build/owned-jvm-receiver-core/ordinary-package.json
-          test -s build/owned-jvm-receiver-core/reviewed-package.json
-          test -s build/owned-jvm-receiver-core/ordinary-resource-package.json
-          test -s build/owned-jvm-receiver-core/reviewed-resource-package.json
-          npm run test:owned-jvm-receiver-gc > build/owned-jvm-receiver-gc.log 2>&1
-          cat build/owned-jvm-receiver-gc.log
-          rg '^# tests 2$' build/owned-jvm-receiver-gc.log
-          rg '^# pass 2$' build/owned-jvm-receiver-gc.log
-          rg '^# fail 0$' build/owned-jvm-receiver-gc.log
-          rg '^# cancelled 0$' build/owned-jvm-receiver-gc.log
-          rg '^# skipped 0$' build/owned-jvm-receiver-gc.log
-          test -s build/owned-jvm-receiver-gc/ordinary.json
-          test -s build/owned-jvm-receiver-gc/reviewed.json
-          test -s build/owned-jvm-thread-exit/ordinary.json
-          test -s build/owned-jvm-thread-exit/reviewed.json
-          test -s build/owned-jvm-runtime/ordinary.json
-          test -s build/owned-jvm-runtime/reviewed.json
-          test -s build/owned-jvm-values/public.json
-          test -s build/owned-jvm-layout/ordinary.json
-          test -s build/owned-jvm-layout/reviewed.json
-          test -s build/owned-jvm-layout/scalars-ordinary.json
-          test -s build/owned-jvm-layout/scalars-reviewed.json
-          test -s build/owned-jvm-kotlin/composed.json
-          test -s build/owned-jvm-kotlin/scalars.json
-          test -s build/owned-jvm-conversions/ordinary.json
-          test -s build/owned-jvm-conversions/reviewed.json
-          test -s build/owned-jvm-conversions/scalars-ordinary.json
-          test -s build/owned-jvm-conversions/scalars-reviewed.json
-          test -s build/owned-jvm-calls/values-ordinary.json
-          test -s build/owned-jvm-calls/values-reviewed.json
-          test -s build/owned-jvm-calls/scalars-ordinary.json
-          test -s build/owned-jvm-calls/scalars-reviewed.json
-          test -s build/owned-jvm-calls/signatures-ordinary.json
-          test -s build/owned-jvm-calls/signatures-reviewed.json
-          test -s build/owned-jvm-packaging/callbacks-ordinary.json
-          test -s build/owned-jvm-packaging/callbacks-reviewed.json
-          test -s build/owned-jvm-packaging/scalars-ordinary.json
-          test -s build/owned-jvm-packaging/scalars-reviewed.json
-          test -s build/owned-jvm-packaging/coexistence.json
-          test -s build/owned-jvm-packaging/documentation.json
           LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs
           test -s build/compounds/jvm.json
           LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs
@@ -3636,22 +3562,6 @@ jobs:
             build/structured-callables/jvm.json
             build/recursive-callables/jvm-recursive.json
             build/recursive-callables/jvm-mixed.json
-            build/owned-jvm-runtime/
-            build/owned-jvm-values/
-            build/owned-jvm-layout/
-            build/owned-jvm-kotlin/
-            build/owned-jvm-conversions/
-            build/owned-jvm-calls/
-            build/owned-jvm-thread-exit/
-            build/owned-jvm-packaging/
-            build/owned-jvm-transfers/
-            build/owned-jvm-transfer-packaging/
-            build/owned-jvm-borrows/
-            build/owned-jvm-borrows.log
-            build/owned-jvm-receiver-core/
-            build/owned-jvm-receivers.log
-            build/owned-jvm-receiver-gc/
-            build/owned-jvm-receiver-gc.log
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
@@ -3906,14 +3816,6 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs"
-              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs"
-              consumer_command="$consumer_command && npm run test:owned-jvm-transfers"
-              consumer_command="$consumer_command && npm run test:owned-jvm-borrows"
-              consumer_command="$consumer_command && npm run test:owned-jvm-receivers"
-              consumer_command="$consumer_command && npm run test:owned-jvm-receiver-gc"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
@@ -3983,6 +3885,175 @@ jobs:
       - name: Enforce managed consumer support
         if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
         run: exit 1
+
+  owned-jvm-values:
+    name: Owned JVM values, transfers, borrows and receivers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install apt dependencies for Prepare the pinned native compiler
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential zstd m4
+      - name: Prepare the pinned native compiler
+        run: |
+          bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Install the TAP log verifier
+        timeout-minutes: 20
+        run: sudo apt-get install -y ripgrep
+      - name: Install C# for the combined Maven receiver build
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
+      - name: Install Ruby for the combined Maven receiver build
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Install the ordinary Java compiler
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install Maven and the corpus helper packages
+        timeout-minutes: 20
+        run: |
+          sudo apt-get install -y maven unzip python3-venv pkg-config
+      - name: Install the pinned Kotlin compiler
+        run: |
+          mkdir -p build
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Verify owned JVM values, transfers, borrows and receivers
+        run: |
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+          export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+          export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+          export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+          export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+          export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          source scripts/env.sh
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs
+          npm run test:owned-jvm-transfers
+          test -s build/owned-jvm-transfers/ordinary.json
+          test -s build/owned-jvm-transfers/reviewed.json
+          test -s build/owned-jvm-transfer-packaging/ordinary.json
+          test -s build/owned-jvm-transfer-packaging/reviewed.json
+          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1
+          cat build/owned-jvm-borrows.log
+          rg '^# pass 8$' build/owned-jvm-borrows.log
+          rg '^# fail 0$' build/owned-jvm-borrows.log
+          rg '^# skipped 0$' build/owned-jvm-borrows.log
+          test -s build/owned-jvm-borrows/ordinary.json
+          test -s build/owned-jvm-borrows/reviewed.json
+          test -s build/owned-jvm-borrows/borrow-only.json
+          test -s build/owned-jvm-borrows/ordinary-installed.json
+          test -s build/owned-jvm-borrows/reviewed-installed.json
+          npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1
+          cat build/owned-jvm-receivers.log
+          rg '^# tests 15$' build/owned-jvm-receivers.log
+          rg '^# pass 15$' build/owned-jvm-receivers.log
+          rg '^# fail 0$' build/owned-jvm-receivers.log
+          rg '^# cancelled 0$' build/owned-jvm-receivers.log
+          rg '^# skipped 0$' build/owned-jvm-receivers.log
+          test -s build/owned-jvm-receiver-core/ordinary.json
+          test -s build/owned-jvm-receiver-core/reviewed.json
+          test -s build/owned-jvm-receiver-core/ordinary-plain.json
+          test -s build/owned-jvm-receiver-core/reviewed-plain.json
+          test -s build/owned-jvm-receiver-core/ordinary-consuming.json
+          test -s build/owned-jvm-receiver-core/reviewed-consuming.json
+          test -s build/owned-jvm-receiver-core/ordinary-unanchored.json
+          test -s build/owned-jvm-receiver-core/reviewed-unanchored.json
+          test -s build/owned-jvm-receiver-core/ordinary-package.json
+          test -s build/owned-jvm-receiver-core/reviewed-package.json
+          test -s build/owned-jvm-receiver-core/ordinary-resource-package.json
+          test -s build/owned-jvm-receiver-core/reviewed-resource-package.json
+          npm run test:owned-jvm-receiver-gc > build/owned-jvm-receiver-gc.log 2>&1
+          cat build/owned-jvm-receiver-gc.log
+          rg '^# tests 2$' build/owned-jvm-receiver-gc.log
+          rg '^# pass 2$' build/owned-jvm-receiver-gc.log
+          rg '^# fail 0$' build/owned-jvm-receiver-gc.log
+          rg '^# cancelled 0$' build/owned-jvm-receiver-gc.log
+          rg '^# skipped 0$' build/owned-jvm-receiver-gc.log
+          test -s build/owned-jvm-receiver-gc/ordinary.json
+          test -s build/owned-jvm-receiver-gc/reviewed.json
+          test -s build/owned-jvm-thread-exit/ordinary.json
+          test -s build/owned-jvm-thread-exit/reviewed.json
+          test -s build/owned-jvm-runtime/ordinary.json
+          test -s build/owned-jvm-runtime/reviewed.json
+          test -s build/owned-jvm-values/public.json
+          test -s build/owned-jvm-layout/ordinary.json
+          test -s build/owned-jvm-layout/reviewed.json
+          test -s build/owned-jvm-layout/scalars-ordinary.json
+          test -s build/owned-jvm-layout/scalars-reviewed.json
+          test -s build/owned-jvm-kotlin/composed.json
+          test -s build/owned-jvm-kotlin/scalars.json
+          test -s build/owned-jvm-conversions/ordinary.json
+          test -s build/owned-jvm-conversions/reviewed.json
+          test -s build/owned-jvm-conversions/scalars-ordinary.json
+          test -s build/owned-jvm-conversions/scalars-reviewed.json
+          test -s build/owned-jvm-calls/values-ordinary.json
+          test -s build/owned-jvm-calls/values-reviewed.json
+          test -s build/owned-jvm-calls/scalars-ordinary.json
+          test -s build/owned-jvm-calls/scalars-reviewed.json
+          test -s build/owned-jvm-calls/signatures-ordinary.json
+          test -s build/owned-jvm-calls/signatures-reviewed.json
+          test -s build/owned-jvm-packaging/callbacks-ordinary.json
+          test -s build/owned-jvm-packaging/callbacks-reviewed.json
+          test -s build/owned-jvm-packaging/scalars-ordinary.json
+          test -s build/owned-jvm-packaging/scalars-reviewed.json
+          test -s build/owned-jvm-packaging/coexistence.json
+          test -s build/owned-jvm-packaging/documentation.json
+      - name: Preserve owned JVM value acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-jvm-values-${{ github.sha }}
+          path: |
+            build/owned-jvm-runtime/
+            build/owned-jvm-values/
+            build/owned-jvm-layout/
+            build/owned-jvm-kotlin/
+            build/owned-jvm-conversions/
+            build/owned-jvm-calls/
+            build/owned-jvm-thread-exit/
+            build/owned-jvm-packaging/
+            build/owned-jvm-transfers/
+            build/owned-jvm-transfer-packaging/
+            build/owned-jvm-borrows/
+            build/owned-jvm-borrows.log
+            build/owned-jvm-receiver-core/
+            build/owned-jvm-receivers.log
+            build/owned-jvm-receiver-gc/
+            build/owned-jvm-receiver-gc.log
+          if-no-files-found: error
+          retention-days: 30
 
   owned-wit-receivers:
     name: WIT receiver methods and properties
@@ -4515,6 +4586,7 @@ jobs:
       - php-wasm-receivers
       - native-consumers
       - managed-consumers
+      - owned-jvm-values
       - perl-consumer
       - wasi-consumer
       - owned-wit-receivers
@@ -4560,6 +4632,9 @@ jobs:
         run: exit 1
       - name: Enforce JVM callback-result acceptance
         if: needs.owned-jvm-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce owned JVM value acceptance
+        if: needs.owned-jvm-values.result != 'success'
         run: exit 1
       - name: Enforce Perl callback-result acceptance
         if: needs.owned-perl-callback-results.result != 'success'

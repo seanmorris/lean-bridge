@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { assertOwnedJvmReceiverCi } from "./owned-jvm-receiver-ci.mjs";
 
 export const ownedJvmReceiverGcScript = "LEAN_BRIDGE_OWNED_JVM_RECEIVER_GC_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-receiver-gc.test.mjs";
@@ -24,12 +25,12 @@ export const ownedJvmReceiverGcLines = [
 export const assertOwnedJvmReceiverGcCi = (workflow, manifest) => {
 	assertOwnedJvmReceiverCi(workflow, manifest);
 	assert.equal(manifest.scripts["test:owned-jvm-receiver-gc"], ownedJvmReceiverGcScript);
-	const steps = workflow.split("      - name: ").filter(section => section.split("\n").includes("        id: type_corpus_jvm"));
-	assert.equal(steps.length, 1); const [step] = steps;
+	const step = ownedJvmStep(workflow);
+	assert.ok(step);
 	for(const line of ownedJvmReceiverGcLines) assert.ok(step.split("\n").includes("          " + line), line);
-	const upload = workflow.split("      - name: Upload installed Java and Kotlin corpus observations\n")[1]?.split("      - name: ")[0];
-	assert.match(upload ?? "", /^ {8}if: always\(\) && matrix\.profile == 'jvm'$/mu);
+	const upload = ownedJvmUpload(workflow);
+	assertOwnedJvmEnforced(workflow);
 	for(const path of ["build/owned-jvm-receiver-gc/", "build/owned-jvm-receiver-gc.log"])
 		assert.ok(upload.split("\n").includes("            " + path), path);
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-receiver-gc"'));
+	assert.ok(!workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-receiver-gc"'));
 };

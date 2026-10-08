@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
@@ -26,25 +27,21 @@ const normalCounts = {
 };
 
 /**
- * Require an enabled test, retained reports and propagated JVM job failures.
+ * Require an enabled test, retained reports and an enforced owned JVM job.
  *
  * @param workflow - Complete consumer-matrix workflow text.
  */
 export const assertJvmThreadExitCi = workflow => {
-	const step = workflow.split("        id: type_corpus_jvm\n")[1]?.split("      - name:")[0];
+	const step = ownedJvmStep(workflow);
 	assert.ok(step?.includes("          " + jvmThreadExitRepairCommands.gated + "\n"));
 	for(const mode of ["ordinary", "reviewed"])
 		assert.ok(step.includes(`          test -s build/owned-jvm-thread-exit/${mode}.json\n`));
-	const upload = workflow.split("      - name: Upload installed Java and Kotlin corpus observations\n")[1]?.split("      - name:")[0];
-	assert.ok(upload?.includes("        if: always() && matrix.profile == 'jvm'\n"));
-	assert.ok(upload.includes("            build/owned-jvm-thread-exit/\n"));
-	assert.ok(upload.includes("          if-no-files-found: error\n"));
+	const upload = ownedJvmUpload(workflow);
+	assert.ok(upload?.includes("            build/owned-jvm-thread-exit/\n"));
+	// A failure fails the owned job, and the published summary requires that job to succeed.
+	assertOwnedJvmEnforced(workflow);
 	const route = workflow.split('if [ "$consumer" = jvm ]; then\n')[1]?.split('if [ "$consumer" = ruby ]; then\n')[0];
-	assert.ok(route?.includes('consumer_command="$consumer_command && ' + jvmThreadExitRepairCommands.gated + '"\n'));
-	assert.ok(route.includes('[ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then\n                test_result=failed\n                executed=false'));
-	const enforcement = workflow.split("      - name: Enforce managed consumer support\n")[1]?.split("\n\n")[0];
-	assert.ok(enforcement?.includes("steps.type_corpus_jvm.outcome != 'success'"));
-	assert.match(enforcement, /^ {8}run: exit 1$/mu);
+	assert.ok(!route?.includes(jvmThreadExitRepairCommands.gated));
 };
 
 /**

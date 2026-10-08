@@ -1,0 +1,934 @@
+{
+  "schemaVersion": 1,
+  "milestone": "jvm-shard-v1",
+  "predecessorCommit": "ff6c0ef943d5d2bf40a937b970a8c3d71eb383f4",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "a1e513c9db332595e3ab8e4b27cc330eb88ca5899d7a3833757eacee532413eb",
+      "previousSha256": "b6f53d89d85b5c72e4f0d86baf649e3ee0e9c2590395932b901bef38bd60af40",
+      "edits": [
+        {
+          "start": 77359,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 94554,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 110855,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 125623,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 134905,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 144530,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 167914,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 180883,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 195778,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 208562,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 221782,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 230315,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 238745,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 247762,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 256136,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 275416,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 285255,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 297390,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 315988,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 325284,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 337967,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 347222,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 356505,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 365638,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 374497,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 381884,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 389808,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 400454,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 414560,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 421658,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 431887,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 439631,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 446005,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 452168,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 458265,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 464786,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 472452,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 481746,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 492968,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 502665,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 523800,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 532365,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 543373,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 575258,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 581887,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 592146,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 613019,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 621542,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 632492,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 664010,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 673229,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 680569,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 692852,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 699712,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 708740,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 722766,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 733808,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 747856,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 758602,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 770673,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 781961,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 790544,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 797002,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 805388,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 813196,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 822978,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 831571,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 843974,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 899315,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1011377,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1057778,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1071618,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1074895,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1079012,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1082669,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1085610,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1088101,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1092712,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1095202,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1100212,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1102368,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1107262,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1109425,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1114872,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1117677,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1127140,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1136846,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1144151,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1148733,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1151226,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1156604,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1159123,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1166569,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1170003,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1176683,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1182165,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1188444,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1205691,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1221005,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1237046,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1251284,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1269846,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1284270,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1304946,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1324071,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1335792,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1350647,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1359089,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1373184,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1380980,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1392851,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1401053,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1416239,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1420833,
+          "previous": "          \"sha256\": \"66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4\"\n",
+          "current": "          \"sha256\": \"754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f\"\n"
+        },
+        {
+          "start": 1427867,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        },
+        {
+          "start": 1451013,
+          "previous": "          \"sha256\": \"a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23\"\n",
+          "current": "          \"sha256\": \"76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3\"\n"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "76b9ad4507eeb38a75babc4934abc8a83e9197b9a8f882b06d35cf3a9eb79fe3",
+      "previousSha256": "a010d6014c4dc56c802503f414f6afd543451781b14a06d5037ded0ed4537a23",
+      "edits": [
+        {
+          "start": 205890,
+          "previous": "          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs\n          npm run test:owned-jvm-transfers\n          test -s build/owned-jvm-transfers/ordinary.json\n          test -s build/owned-jvm-transfers/reviewed.json\n          test -s build/owned-jvm-transfer-packaging/ordinary.json\n          test -s build/owned-jvm-transfer-packaging/reviewed.json\n          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1\n          cat build/owned-jvm-borrows.log\n          rg '^# pass 8$' build/owned-jvm-borrows.log\n          rg '^# fail 0$' build/owned-jvm-borrows.log\n          rg '^# skipped 0$' build/owned-jvm-borrows.log\n          test -s build/owned-jvm-borrows/ordinary.json\n          test -s build/owned-jvm-borrows/reviewed.json\n          test -s build/owned-jvm-borrows/borrow-only.json\n          test -s build/owned-jvm-borrows/ordinary-installed.json\n          test -s build/owned-jvm-borrows/reviewed-installed.json\n          npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1\n          cat build/owned-jvm-receivers.log\n          rg '^# tests 15$' build/owned-jvm-receivers.log\n          rg '^# pass 15$' build/owned-jvm-receivers.log\n          rg '^# fail 0$' build/owned-jvm-receivers.log\n          rg '^# cancelled 0$' build/owned-jvm-receivers.log\n          rg '^# skipped 0$' build/owned-jvm-receivers.log\n          test -s build/owned-jvm-receiver-core/ordinary.json\n          test -s build/owned-jvm-receiver-core/reviewed.json\n          test -s build/owned-jvm-receiver-core/ordinary-plain.json\n          test -s build/owned-jvm-receiver-core/reviewed-plain.json\n          test -s build/owned-jvm-receiver-core/ordinary-consuming.json\n          test -s build/owned-jvm-receiver-core/reviewed-consuming.json\n          test -s build/owned-jvm-receiver-core/ordinary-unanchored.json\n          test -s build/owned-jvm-receiver-core/reviewed-unanchored.json\n          test -s build/owned-jvm-receiver-core/ordinary-package.json\n          test -s build/owned-jvm-receiver-core/reviewed-package.json\n          test -s build/owned-jvm-receiver-core/ordinary-resource-package.json\n          test -s build/owned-jvm-receiver-core/reviewed-resource-package.json\n          npm run test:owned-jvm-receiver-gc > build/owned-jvm-receiver-gc.log 2>&1\n          cat build/owned-jvm-receiver-gc.log\n          rg '^# tests 2$' build/owned-jvm-receiver-gc.log\n          rg '^# pass 2$' build/owned-jvm-receiver-gc.log\n          rg '^# fail 0$' build/owned-jvm-receiver-gc.log\n          rg '^# cancelled 0$' build/owned-jvm-receiver-gc.log\n          rg '^# skipped 0$' build/owned-jvm-receiver-gc.log\n          test -s build/owned-jvm-receiver-gc/ordinary.json\n          test -s build/owned-jvm-receiver-gc/reviewed.json\n          test -s build/owned-jvm-thread-exit/ordinary.json\n          test -s build/owned-jvm-thread-exit/reviewed.json\n          test -s build/owned-jvm-runtime/ordinary.json\n          test -s build/owned-jvm-runtime/reviewed.json\n          test -s build/owned-jvm-values/public.json\n          test -s build/owned-jvm-layout/ordinary.json\n          test -s build/owned-jvm-layout/reviewed.json\n          test -s build/owned-jvm-layout/scalars-ordinary.json\n          test -s build/owned-jvm-layout/scalars-reviewed.json\n          test -s build/owned-jvm-kotlin/composed.json\n          test -s build/owned-jvm-kotlin/scalars.json\n          test -s build/owned-jvm-conversions/ordinary.json\n          test -s build/owned-jvm-conversions/reviewed.json\n          test -s build/owned-jvm-conversions/scalars-ordinary.json\n          test -s build/owned-jvm-conversions/scalars-reviewed.json\n          test -s build/owned-jvm-calls/values-ordinary.json\n          test -s build/owned-jvm-calls/values-reviewed.json\n          test -s build/owned-jvm-calls/scalars-ordinary.json\n          test -s build/owned-jvm-calls/scalars-reviewed.json\n          test -s build/owned-jvm-calls/signatures-ordinary.json\n          test -s build/owned-jvm-calls/signatures-reviewed.json\n          test -s build/owned-jvm-packaging/callbacks-ordinary.json\n          test -s build/owned-jvm-packaging/callbacks-reviewed.json\n          test -s build/owned-jvm-packaging/scalars-ordinary.json\n          test -s build/owned-jvm-packaging/scalars-reviewed.json\n          test -s build/owned-jvm-packaging/coexistence.json\n          test -s build/owned-jvm-packaging/documentation.json\n",
+          "current": ""
+        },
+        {
+          "start": 210850,
+          "previous": "            build/owned-jvm-runtime/\n            build/owned-jvm-values/\n            build/owned-jvm-layout/\n            build/owned-jvm-kotlin/\n            build/owned-jvm-conversions/\n            build/owned-jvm-calls/\n            build/owned-jvm-thread-exit/\n            build/owned-jvm-packaging/\n            build/owned-jvm-transfers/\n            build/owned-jvm-transfer-packaging/\n            build/owned-jvm-borrows/\n            build/owned-jvm-borrows.log\n            build/owned-jvm-receiver-core/\n            build/owned-jvm-receivers.log\n            build/owned-jvm-receiver-gc/\n            build/owned-jvm-receiver-gc.log\n",
+          "current": ""
+        },
+        {
+          "start": 229138,
+          "previous": "              consumer_command=\"$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs\"\n              consumer_command=\"$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs\"\n              consumer_command=\"$consumer_command && npm run test:owned-jvm-transfers\"\n              consumer_command=\"$consumer_command && npm run test:owned-jvm-borrows\"\n              consumer_command=\"$consumer_command && npm run test:owned-jvm-receivers\"\n              consumer_command=\"$consumer_command && npm run test:owned-jvm-receiver-gc\"\n",
+          "current": ""
+        },
+        {
+          "start": 238283,
+          "previous": "",
+          "current": "  owned-jvm-values:\n    name: Owned JVM values, transfers, borrows and receivers\n    runs-on: ubuntu-24.04\n    timeout-minutes: 240\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install Nix\n        uses: cachix/install-nix-action@v31\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install apt dependencies for Prepare the pinned native compiler\n        timeout-minutes: 20\n        run: |\n          sudo apt-get update && sudo apt-get install -y build-essential zstd m4\n      - name: Prepare the pinned native compiler\n        run: |\n          bash scripts/bootstrap-toolchains.sh --lean-only\n      - name: Install the TAP log verifier\n        timeout-minutes: 20\n        run: sudo apt-get install -y ripgrep\n      - name: Install C# for the combined Maven receiver build\n        uses: actions/setup-dotnet@v6\n        with:\n          dotnet-version: '8.0.424'\n      - name: Install Ruby for the combined Maven receiver build\n        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n      - name: Install the ordinary Java compiler\n        uses: actions/setup-java@v4\n        with:\n          distribution: temurin\n          java-version: '22.0.2'\n      - name: Install Maven and the corpus helper packages\n        timeout-minutes: 20\n        run: |\n          sudo apt-get install -y maven unzip python3-venv pkg-config\n      - name: Install the pinned Kotlin compiler\n        run: |\n          mkdir -p build\n          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools\n      - name: Verify owned JVM values, transfers, borrows and receivers\n        run: |\n          bash scripts/bootstrap-rust-ci.sh\n          export LEAN_BRIDGE_RUSTC=\"$PWD/.toolchains/rust-1.90.0/bin/rustc\"\n          export LEAN_BRIDGE_CARGO=\"$PWD/.toolchains/rust-1.90.0/bin/cargo\"\n          export CARGO_HOME=\"${CARGO_HOME:-$HOME/.cargo}\"\n          export LEAN_BRIDGE_PYTHON=\"$(command -v python3)\"\n          export LEAN_BRIDGE_RUBY=\"$(command -v ruby)\"\n          export LEAN_BRIDGE_GEM=\"$(command -v gem)\"\n          export LEAN_BRIDGE_DOTNET=\"$(command -v dotnet)\"\n          export LEAN_BRIDGE_JAVAC=\"$JAVA_HOME/bin/javac\"\n          export LEAN_BRIDGE_JAVA=\"$JAVA_HOME/bin/java\"\n          export LEAN_BRIDGE_MAVEN=\"$(command -v mvn)\"\n          export LEAN_BRIDGE_KOTLINC=\"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\"\n          source scripts/env.sh\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs\n          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs\n          npm run test:owned-jvm-transfers\n          test -s build/owned-jvm-transfers/ordinary.json\n          test -s build/owned-jvm-transfers/reviewed.json\n          test -s build/owned-jvm-transfer-packaging/ordinary.json\n          test -s build/owned-jvm-transfer-packaging/reviewed.json\n          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1\n          cat build/owned-jvm-borrows.log\n          rg '^# pass 8$' build/owned-jvm-borrows.log\n          rg '^# fail 0$' build/owned-jvm-borrows.log\n          rg '^# skipped 0$' build/owned-jvm-borrows.log\n          test -s build/owned-jvm-borrows/ordinary.json\n          test -s build/owned-jvm-borrows/reviewed.json\n          test -s build/owned-jvm-borrows/borrow-only.json\n          test -s build/owned-jvm-borrows/ordinary-installed.json\n          test -s build/owned-jvm-borrows/reviewed-installed.json\n          npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1\n          cat build/owned-jvm-receivers.log\n          rg '^# tests 15$' build/owned-jvm-receivers.log\n          rg '^# pass 15$' build/owned-jvm-receivers.log\n          rg '^# fail 0$' build/owned-jvm-receivers.log\n          rg '^# cancelled 0$' build/owned-jvm-receivers.log\n          rg '^# skipped 0$' build/owned-jvm-receivers.log\n          test -s build/owned-jvm-receiver-core/ordinary.json\n          test -s build/owned-jvm-receiver-core/reviewed.json\n          test -s build/owned-jvm-receiver-core/ordinary-plain.json\n          test -s build/owned-jvm-receiver-core/reviewed-plain.json\n          test -s build/owned-jvm-receiver-core/ordinary-consuming.json\n          test -s build/owned-jvm-receiver-core/reviewed-consuming.json\n          test -s build/owned-jvm-receiver-core/ordinary-unanchored.json\n          test -s build/owned-jvm-receiver-core/reviewed-unanchored.json\n          test -s build/owned-jvm-receiver-core/ordinary-package.json\n          test -s build/owned-jvm-receiver-core/reviewed-package.json\n          test -s build/owned-jvm-receiver-core/ordinary-resource-package.json\n          test -s build/owned-jvm-receiver-core/reviewed-resource-package.json\n          npm run test:owned-jvm-receiver-gc > build/owned-jvm-receiver-gc.log 2>&1\n          cat build/owned-jvm-receiver-gc.log\n          rg '^# tests 2$' build/owned-jvm-receiver-gc.log\n          rg '^# pass 2$' build/owned-jvm-receiver-gc.log\n          rg '^# fail 0$' build/owned-jvm-receiver-gc.log\n          rg '^# cancelled 0$' build/owned-jvm-receiver-gc.log\n          rg '^# skipped 0$' build/owned-jvm-receiver-gc.log\n          test -s build/owned-jvm-receiver-gc/ordinary.json\n          test -s build/owned-jvm-receiver-gc/reviewed.json\n          test -s build/owned-jvm-thread-exit/ordinary.json\n          test -s build/owned-jvm-thread-exit/reviewed.json\n          test -s build/owned-jvm-runtime/ordinary.json\n          test -s build/owned-jvm-runtime/reviewed.json\n          test -s build/owned-jvm-values/public.json\n          test -s build/owned-jvm-layout/ordinary.json\n          test -s build/owned-jvm-layout/reviewed.json\n          test -s build/owned-jvm-layout/scalars-ordinary.json\n          test -s build/owned-jvm-layout/scalars-reviewed.json\n          test -s build/owned-jvm-kotlin/composed.json\n          test -s build/owned-jvm-kotlin/scalars.json\n          test -s build/owned-jvm-conversions/ordinary.json\n          test -s build/owned-jvm-conversions/reviewed.json\n          test -s build/owned-jvm-conversions/scalars-ordinary.json\n          test -s build/owned-jvm-conversions/scalars-reviewed.json\n          test -s build/owned-jvm-calls/values-ordinary.json\n          test -s build/owned-jvm-calls/values-reviewed.json\n          test -s build/owned-jvm-calls/scalars-ordinary.json\n          test -s build/owned-jvm-calls/scalars-reviewed.json\n          test -s build/owned-jvm-calls/signatures-ordinary.json\n          test -s build/owned-jvm-calls/signatures-reviewed.json\n          test -s build/owned-jvm-packaging/callbacks-ordinary.json\n          test -s build/owned-jvm-packaging/callbacks-reviewed.json\n          test -s build/owned-jvm-packaging/scalars-ordinary.json\n          test -s build/owned-jvm-packaging/scalars-reviewed.json\n          test -s build/owned-jvm-packaging/coexistence.json\n          test -s build/owned-jvm-packaging/documentation.json\n      - name: Preserve owned JVM value acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: owned-jvm-values-${{ github.sha }}\n          path: |\n            build/owned-jvm-runtime/\n            build/owned-jvm-values/\n            build/owned-jvm-layout/\n            build/owned-jvm-kotlin/\n            build/owned-jvm-conversions/\n            build/owned-jvm-calls/\n            build/owned-jvm-thread-exit/\n            build/owned-jvm-packaging/\n            build/owned-jvm-transfers/\n            build/owned-jvm-transfer-packaging/\n            build/owned-jvm-borrows/\n            build/owned-jvm-borrows.log\n            build/owned-jvm-receiver-core/\n            build/owned-jvm-receivers.log\n            build/owned-jvm-receiver-gc/\n            build/owned-jvm-receiver-gc.log\n          if-no-files-found: error\n          retention-days: 30\n\n"
+        },
+        {
+          "start": 278500,
+          "previous": "",
+          "current": "      - owned-jvm-values\n"
+        },
+        {
+          "start": 280351,
+          "previous": "",
+          "current": "      - name: Enforce owned JVM value acceptance\n        if: needs.owned-jvm-values.result != 'success'\n        run: exit 1\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "754c9b62f6e995e870d2d824db19dbc3499655c5b94889163781c8cf85df516f",
+      "previousSha256": "66b3f00d48d1d9428b5c39a989d2fb83fd3623b771d95ab406097730fdd780f4",
+      "edits": [
+        {
+          "start": 3953,
+          "previous": "\tconst step = workflow.split(\"- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\\n\")[1].split(\"      - name:\")[0];\n",
+          "current": "\tconst step = workflow.split(\"      - name: Verify owned JVM values, transfers, borrows and receivers\\n\")[1].split(\"      - name:\")[0];\n"
+        },
+        {
+          "start": 58838,
+          "previous": "",
+          "current": "  // Owned JVM layers run and upload in their own bounded job (#1449).\n  const ownedJvmUpload = workflow.split(\"      - name: Preserve owned JVM value acceptance\\n\")[1].split(\"      - name:\")[0];\n  const ownedJvmReports = ownedJvmUpload.split(\"          path: |\\n\")[1].split(\"          if-no-files-found:\")[0].trim().split(\"\\n\").map(line => line.trim());\n  assert.deepEqual(ownedJvmReports, [\n    ...[\"runtime\", \"values\", \"layout\", \"kotlin\", \"conversions\", \"calls\", \"thread-exit\", \"packaging\", \"transfers\", \"transfer-packaging\", \"borrows\"].map(name => `build/owned-jvm-${name}/`)\n    , \"build/owned-jvm-borrows.log\"\n    , \"build/owned-jvm-receiver-core/\", \"build/owned-jvm-receivers.log\"\n    , \"build/owned-jvm-receiver-gc/\", \"build/owned-jvm-receiver-gc.log\"\n  ]);\n  const ownedJvmJob = workflow.split(\"\\n  owned-jvm-values:\\n\")[1].split(\"\\n  owned-wit-receivers:\\n\")[0];\n  assert.match(ownedJvmJob, /^ {4}timeout-minutes: 240$/m);\n"
+        },
+        {
+          "start": 60439,
+          "previous": "    , ...[\"runtime\", \"values\", \"layout\", \"kotlin\", \"conversions\", \"calls\", \"thread-exit\", \"packaging\", \"transfers\", \"transfer-packaging\", \"borrows\"].map(name => `build/owned-jvm-${name}/`)\n    , \"build/owned-jvm-borrows.log\"\n    , \"build/owned-jvm-receiver-core/\", \"build/owned-jvm-receivers.log\"\n    , \"build/owned-jvm-receiver-gc/\", \"build/owned-jvm-receiver-gc.log\"\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-thread-exit-repair-evidence.mjs",
+      "currentSha256": "ca3f17a27c932bf5cde6905318faf8155674479ee8e7d1cb9a7d64242346b55a",
+      "previousSha256": "166f45d596f60e82fc1b5a7c67e6c7f114749da801c235f25b846d89c119826c",
+      "edits": [
+        {
+          "start": 138,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 1368,
+          "previous": " * Require an enabled test, retained reports and propagated JVM job failures.\n",
+          "current": " * Require an enabled test, retained reports and an enforced owned JVM job.\n"
+        },
+        {
+          "start": 1563,
+          "previous": "\tconst step = workflow.split(\"        id: type_corpus_jvm\\n\")[1]?.split(\"      - name:\")[0];\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n"
+        },
+        {
+          "start": 1823,
+          "previous": "\tconst upload = workflow.split(\"      - name: Upload installed Java and Kotlin corpus observations\\n\")[1]?.split(\"      - name:\")[0];\n\tassert.ok(upload?.includes(\"        if: always() && matrix.profile == 'jvm'\\n\"));\n\tassert.ok(upload.includes(\"            build/owned-jvm-thread-exit/\\n\"));\n\tassert.ok(upload.includes(\"          if-no-files-found: error\\n\"));\n",
+          "current": "\tconst upload = ownedJvmUpload(workflow);\n\tassert.ok(upload?.includes(\"            build/owned-jvm-thread-exit/\\n\"));\n\t// A failure fails the owned job, and the published summary requires that job to succeed.\n\tassertOwnedJvmEnforced(workflow);\n"
+        },
+        {
+          "start": 2184,
+          "previous": "\tassert.ok(route?.includes('consumer_command=\"$consumer_command && ' + jvmThreadExitRepairCommands.gated + '\"\\n'));\n\tassert.ok(route.includes('[ \"${{ steps.type_corpus_jvm.outcome }}\" != success ]; then\\n                test_result=failed\\n                executed=false'));\n\tconst enforcement = workflow.split(\"      - name: Enforce managed consumer support\\n\")[1]?.split(\"\\n\\n\")[0];\n\tassert.ok(enforcement?.includes(\"steps.type_corpus_jvm.outcome != 'success'\"));\n\tassert.match(enforcement, /^ {8}run: exit 1$/mu);\n",
+          "current": "\tassert.ok(!route?.includes(jvmThreadExitRepairCommands.gated));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-borrow-evidence.mjs",
+      "currentSha256": "6e311199ced1875a51f2b52fc041d682229b388ea6315abd5be22298874922b6",
+      "previousSha256": "c31b9468637a6387b4f55b12dcb156ce9f9f6c4b9bc76423cb6f05249721fd41",
+      "edits": [
+        {
+          "start": 145,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 23392,
+          "previous": "\tconst step = workflow.split(\"- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\\n\")[1]?.split(\"      - name:\")[0];\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n"
+        },
+        {
+          "start": 23957,
+          "previous": "\t\tassert.ok(workflow.includes(`            ${path}\\n`));\n\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-borrows\"'));\n\tassert.ok(workflow.includes(\"steps.type_corpus_jvm.outcome != 'success'\"));\n",
+          "current": "\t\tassert.ok(ownedJvmUpload(workflow)?.includes(`            ${path}\\n`));\n\tassertOwnedJvmEnforced(workflow);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-ci.mjs",
+      "currentSha256": "f060f8b63dcfc0dd55a0414bae723e46dc64ae9930fdfeb025d95592d5329883",
+      "previousSha256": "b55b0ffd580c3f8c7741804bc46a6634733cb514d9ff43580b17db86ac00e55e",
+      "edits": [
+        {
+          "start": 143,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 1288,
+          "previous": " * Validate live acceptance commands and their separately recorded Docker route.\n",
+          "current": " * Validate live acceptance commands in the owned JVM job and its mandatory summary enforcement.\n"
+        },
+        {
+          "start": 1491,
+          "previous": "\tconst step = workflow.match(/^ {6}- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\\n([^]*?)(?=^ {6}- name: )/mu)?.[0];\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n"
+        },
+        {
+          "start": 1547,
+          "previous": "\tassert.match(step, /^ {8}if: matrix.profile == 'jvm'$/mu);\n\tassert.match(step, /^ {8}id: type_corpus_jvm$/mu);\n",
+          "current": "\tassertOwnedJvmEnforced(workflow);\n\t// The managed JVM record lists only its own job's commands; owned layers run in their own job.\n"
+        },
+        {
+          "start": 2083,
+          "previous": "\t\tassert.ok(route.includes('consumer_command=\"$consumer_command && ' + command + '\"\\n'));\n",
+          "current": "\t\tassert.ok(!route.includes(command), group.join(\",\"));\n"
+        },
+        {
+          "start": 2142,
+          "previous": "\tconst upload = workflow.match(/^ {6}- name: Upload installed Java and Kotlin corpus observations\\n([^]*?)(?=^ {6}- name: )/mu)?.[0];\n",
+          "current": "\tconst upload = ownedJvmUpload(workflow);\n"
+        },
+        {
+          "start": 2204,
+          "previous": "\tassert.match(upload, /^ {8}if: always\\(\\) && matrix.profile == 'jvm'$/mu);\n\tassert.match(upload, /^ {10}if-no-files-found: error$/mu);\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-receiver-ci.mjs",
+      "currentSha256": "9b0fc784101ed7b1f126d6b1545da51dd446aa3d32a6215a831d52557638aaab",
+      "previousSha256": "d139463ef040743cad8f6b0a06c089b1102d239c9446c75bf49cc7907fd23884",
+      "edits": [
+        {
+          "start": 137,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 1386,
+          "previous": "\tconst steps = workflow.split(\"      - name: \").filter(section => section.split(\"\\n\").includes(\"        id: type_corpus_jvm\"));\n\tassert.equal(steps.length, 1); const [step] = steps;\n\tassert.match(step, /^ {8}if: matrix\\.profile == 'jvm'$/mu);\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n\tassert.ok(step);\n\tassertOwnedJvmEnforced(workflow);\n"
+        },
+        {
+          "start": 2092,
+          "previous": "\tconst upload = workflow.split(\"      - name: Upload installed Java and Kotlin corpus observations\\n\")[1]?.split(\"      - name: \")[0];\n\tassert.match(upload ?? \"\", /^ {10}if-no-files-found: error$/mu);\n",
+          "current": "\tconst upload = ownedJvmUpload(workflow);\n"
+        },
+        {
+          "start": 2287,
+          "previous": "\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-receivers\"'));\n",
+          "current": "\tassert.ok(!workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-receivers\"'));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-receiver-gc-ci.mjs",
+      "currentSha256": "2c5e71cd27333397d54d8bf588274905eb46a296a9f872a1d1724179c4a72381",
+      "previousSha256": "da0bf852e5076c60392be26da1b078a8c59c66bf0a0b80c96aa3c416f5918e3f",
+      "edits": [
+        {
+          "start": 139,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 1338,
+          "previous": "\tconst steps = workflow.split(\"      - name: \").filter(section => section.split(\"\\n\").includes(\"        id: type_corpus_jvm\"));\n\tassert.equal(steps.length, 1); const [step] = steps;\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n\tassert.ok(step);\n"
+        },
+        {
+          "start": 1503,
+          "previous": "\tconst upload = workflow.split(\"      - name: Upload installed Java and Kotlin corpus observations\\n\")[1]?.split(\"      - name: \")[0];\n\tassert.match(upload ?? \"\", /^ {8}if: always\\(\\) && matrix\\.profile == 'jvm'$/mu);\n",
+          "current": "\tconst upload = ownedJvmUpload(workflow);\n\tassertOwnedJvmEnforced(workflow);\n"
+        },
+        {
+          "start": 1739,
+          "previous": "\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-receiver-gc\"'));\n",
+          "current": "\tassert.ok(!workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-receiver-gc\"'));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-transfer-evidence.mjs",
+      "currentSha256": "3651967aa397a83ba3d000c332c4c70f2e44b537cb4d599390e30a7b516ce712",
+      "previousSha256": "5afb9fc5c88fd5cf4bb5867da21799b1efcf437174cbc571a90fff2a09dc9ae2",
+      "edits": [
+        {
+          "start": 148,
+          "previous": "",
+          "current": "import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from \"./owned-jvm-job.mjs\";\n"
+        },
+        {
+          "start": 18626,
+          "previous": " * Require the enabled JVM shard, all reports and recorded consumer command.\n",
+          "current": " * Require the owned JVM job's transfer gate, all reports and summary enforcement.\n"
+        },
+        {
+          "start": 18828,
+          "previous": "\tconst step = workflow.split(\"- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\\n\")[1]?.split(\"      - name:\")[0];\n",
+          "current": "\tconst step = ownedJvmStep(workflow);\n"
+        },
+        {
+          "start": 18942,
+          "previous": "\tassert.ok(workflow.includes('consumer_command=\"$consumer_command && npm run test:owned-jvm-transfers\"'));\n",
+          "current": "\tassertOwnedJvmEnforced(workflow);\n"
+        },
+        {
+          "start": 19061,
+          "previous": "\t\tassert.ok(workflow.includes(`            build/${directory}/\\n`));\n",
+          "current": "\t\tassert.ok(ownedJvmUpload(workflow)?.includes(`            build/${directory}/\\n`));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-thread-exit-repair-evidence.test.mjs",
+      "currentSha256": "ffac8a9eb3f2b406ec4cf46e4ab15bfb59ef7ebb07321b3d0bb2fa7a58f3fe03",
+      "previousSha256": "7a994210e99e5201e8865e4bb8e894ffbee71982a6fe91dfa3cbb1b4b4b3050b",
+      "edits": [
+        {
+          "start": 5925,
+          "previous": "\t\t, 'consumer_command=\"$consumer_command && ' + jvmThreadExitRepairCommands.gated + '\"\\n'\n\t\t, \"steps.type_corpus_jvm.outcome != 'success'\"\n",
+          "current": "\t\t, \"      - owned-jvm-values\\n\"\n\t\t, \"        if: needs.owned-jvm-values.result != 'success'\\n\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-jvm-ci.test.mjs",
+      "currentSha256": "d02022ec27a81f34db2185e1b924ff71e46db0a47cbae2dda80d599209bb2ca6",
+      "previousSha256": "0cb21b80dab61b11b9e7f38c0f82b1d09d2d13b08929a32b22fe946ad8e93a85",
+      "edits": [
+        {
+          "start": 1238,
+          "previous": "\t\t, ['consumer_command=\"$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs'\n\t\t\t, 'consumer_command=\"$consumer_command && node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs']\n",
+          "current": "\t\t, [\"      - name: Enforce owned JVM value acceptance\\n\", \"      - name: Report owned JVM value acceptance\\n\"]\n\t\t, [\"      - owned-jvm-values\\n\", \"\"]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+      "currentSha256": "ec972c2b2f475b86518701583525f2159af95456dbcc5b07410d775e482b38fa",
+      "previousSha256": "ee90f6b0edb93a0866f151cc6b2aa8a302310c7dfa3d91a24287e8fe8340c660",
+      "edits": [
+        {
+          "start": 662,
+          "previous": "",
+          "current": "import \"./helpers/jvm-shard-ci-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-jvm-receiver-gc-ci.test.mjs",
+      "currentSha256": "ddcf78c340c71406812346981b9bd3506020b8915ce596d04c32ed3fac09b4f2",
+      "previousSha256": "52652d789b4db22403ee5e3552178304e22df3a10f8e2c6581ba46212152b609",
+      "edits": [
+        {
+          "start": 1329,
+          "previous": "\t\t, '              consumer_command=\"$consumer_command && npm run test:owned-jvm-receiver-gc\"'\n",
+          "current": "\t\t, \"        if: needs.owned-jvm-values.result != 'success'\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-wit-archive-source-history.mjs",
+      "currentSha256": "347bcf183b2de962e9f976c122bfe160035725905c686364e0627d973d825881",
+      "previousSha256": "ed4de4143f158935f993e7f682750822bd5dbf18dd114a4c70ab2eb9a84f703d",
+      "edits": [
+        {
+          "start": 244,
+          "previous": "",
+          "current": "import { beforeJvmShardSource } from \"./jvm-shard-source-history.mjs\";\n"
+        },
+        {
+          "start": 2125,
+          "previous": "",
+          "current": "\tsource = beforeJvmShardSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-wit-archive-source-history-tests.mjs",
+      "currentSha256": "8a69aabd6f242557491254fded5e1e9a589e3f579ad7b079cbe65f8d4db936ee",
+      "previousSha256": "a6ea6c8d4b321833d2fd9ad4d0ca4eebbc155646eefce24360ed3b1b83ee8d2f",
+      "edits": [
+        {
+          "start": 520,
+          "previous": "",
+          "current": "import { beforeJvmShardSource } from \"./jvm-shard-source-history.mjs\";\n"
+        },
+        {
+          "start": 978,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeJvmShardSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "2c89fb1d54bf9523787b52c01a779c3d91a18f03ea57419af2ca704fc1637f6e",
+      "previousSha256": "f59adf0e4c02f137d20c2a8e26c4b9fae88ecc0c5cd0a248bbf9983826affa6c",
+      "edits": [
+        {
+          "start": 9450,
+          "previous": "",
+          "current": "import { jvmShardChangedPaths } from \"./jvm-shard-source-history.mjs\";\n"
+        },
+        {
+          "start": 46386,
+          "previous": "",
+          "current": "\t, ...jvmShardChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

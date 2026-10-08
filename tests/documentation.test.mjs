@@ -81,7 +81,7 @@ test("owned Perl transfer docs and CI require installed CPAN consumers", async (
 
 test("owned JVM transfer docs and CI require installed Java and Kotlin consumers", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	const step = workflow.split("- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n")[1].split("      - name:")[0];
+	const step = workflow.split("      - name: Verify owned JVM values, transfers, borrows and receivers\n")[1].split("      - name:")[0];
 	assert.ok(step.includes("          npm run test:owned-jvm-transfers\n"));
 	for(const directory of ["transfers", "transfer-packaging"])
 	{
@@ -828,6 +828,17 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/equality\/jvm\.json/);
   assert.match(workflow, /test -s build\/collections\/jvm-conversions\.json/);
   assert.match(workflow, /test -s build\/collections\/jvm\.json/);
+  // Owned JVM layers run and upload in their own bounded job (#1449).
+  const ownedJvmUpload = workflow.split("      - name: Preserve owned JVM value acceptance\n")[1].split("      - name:")[0];
+  const ownedJvmReports = ownedJvmUpload.split("          path: |\n")[1].split("          if-no-files-found:")[0].trim().split("\n").map(line => line.trim());
+  assert.deepEqual(ownedJvmReports, [
+    ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging", "borrows"].map(name => `build/owned-jvm-${name}/`)
+    , "build/owned-jvm-borrows.log"
+    , "build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"
+    , "build/owned-jvm-receiver-gc/", "build/owned-jvm-receiver-gc.log"
+  ]);
+  const ownedJvmJob = workflow.split("\n  owned-jvm-values:\n")[1].split("\n  owned-wit-receivers:\n")[0];
+  assert.match(ownedJvmJob, /^ {4}timeout-minutes: 240$/m);
   const jvmUpload = workflow.split("- name: Upload installed Java and Kotlin corpus observations\n")[1].split("      - name:")[0];
   const jvmReports = jvmUpload.split("          path: |\n")[1].split("          if-no-files-found:")[0].trim().split("\n").map(line => line.trim());
   assert.deepEqual(jvmReports, [
@@ -837,10 +848,6 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , "build/callables/jvm.json", "build/structured-callables/jvm.json"
     , "build/recursive-callables/jvm-recursive.json"
     , "build/recursive-callables/jvm-mixed.json"
-    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging", "borrows"].map(name => `build/owned-jvm-${name}/`)
-    , "build/owned-jvm-borrows.log"
-    , "build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"
-    , "build/owned-jvm-receiver-gc/", "build/owned-jvm-receiver-gc.log"
     , ...["compounds", "lists", "aliases"].map(name => `build/${name}/jvm.json`)
     , "build/native-fin/jvm.json"
     , "build/native-fin/jvm-reviewed.json"

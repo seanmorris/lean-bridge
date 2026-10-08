@@ -25,7 +25,7 @@ test("JVM receiver GC CI rejects omitted gates, reports and container execution"
 		...ownedJvmReceiverGcLines.map(value => "          " + value)
 		, "            build/owned-jvm-receiver-gc/"
 		, "            build/owned-jvm-receiver-gc.log"
-		, '              consumer_command="$consumer_command && npm run test:owned-jvm-receiver-gc"'
+		, "        if: needs.owned-jvm-values.result != 'success'"
 	]) {
 		assert.equal(workflow.split(line + "\n").length, 2, line);
 		assert.throws(() => assertOwnedJvmReceiverGcCi(workflow.replace(line + "\n", ""), manifest), undefined, line);

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -263,17 +264,17 @@ export const assertOwnedJvmTransferExecution = async record => {
 };
 
 /**
- * Require the enabled JVM shard, all reports and recorded consumer command.
+ * Require the owned JVM job's transfer gate, all reports and summary enforcement.
  *
  * @param workflow - Complete downstream workflow source.
  */
 export const assertOwnedJvmTransferCi = workflow => {
-	const step = workflow.split("- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n")[1]?.split("      - name:")[0];
+	const step = ownedJvmStep(workflow);
 	assert.ok(step?.includes("          npm run test:owned-jvm-transfers\n"));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-transfers"'));
+	assertOwnedJvmEnforced(workflow);
 	for(const directory of ["owned-jvm-transfers", "owned-jvm-transfer-packaging"])
 	{
-		assert.ok(workflow.includes(`            build/${directory}/\n`));
+		assert.ok(ownedJvmUpload(workflow)?.includes(`            build/${directory}/\n`));
 		for(const mode of ["ordinary", "reviewed"]) assert.ok(step.includes(`          test -s build/${directory}/${mode}.json\n`));
 	}
 };

@@ -1,18 +1,29 @@
 /**
- * Preserve exact source predecessors of the WIT record evidence archive change (#1220).
+ * Preserve exact source predecessors of the JVM acceptance shard change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeJvmShardSource } from "./jvm-shard-source-history.mjs";
 
-export const finWitArchiveHistoryPath = "docs/evidence/fin-wit-archive-source-history-20261008.json";
-export const finWitArchiveChangedPaths = [
-	"tests/native-fin-records.test.mjs"
-	, "tests/helpers/browser-install-source-history.mjs"
-	, "tests/helpers/browser-install-source-history-tests.mjs"
+export const jvmShardHistoryPath = "docs/evidence/jvm-shard-source-history-20261008.json";
+export const jvmShardChangedPaths = [
+	"docs/type-surface.v1.json"
+	, ".github/workflows/consumer-matrix.yml"
+	, "tests/documentation.test.mjs"
+	, "tests/helpers/jvm-thread-exit-repair-evidence.mjs"
+	, "tests/helpers/owned-jvm-borrow-evidence.mjs"
+	, "tests/helpers/owned-jvm-ci.mjs"
+	, "tests/helpers/owned-jvm-receiver-ci.mjs"
+	, "tests/helpers/owned-jvm-receiver-gc-ci.mjs"
+	, "tests/helpers/owned-jvm-transfer-evidence.mjs"
+	, "tests/jvm-thread-exit-repair-evidence.test.mjs"
+	, "tests/owned-jvm-ci.test.mjs"
+	, "tests/owned-jvm-receiver-evidence.test.mjs"
+	, "tests/owned-jvm-receiver-gc-ci.test.mjs"
+	, "tests/helpers/fin-wit-archive-source-history.mjs"
+	, "tests/helpers/fin-wit-archive-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 ];
 let history;
@@ -23,8 +34,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinWitArchiveUpdate = (source, update) => {
-	assert.ok(finWitArchiveChangedPaths.includes(update.path));
+export const reverseJvmShardUpdate = (source, update) => {
+	assert.ok(jvmShardChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -50,12 +61,11 @@ export const reverseFinWitArchiveUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinWitArchiveSource = (path, source, expected) => {
-	source = beforeJvmShardSource(path, source, expected);
-	if(typeof source !== "string" || !finWitArchiveChangedPaths.includes(path)) return source;
+export const beforeJvmShardSource = (path, source, expected) => {
+	if(typeof source !== "string" || !jvmShardChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finWitArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(jvmShardHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinWitArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseJvmShardUpdate(source, update) : source;
 };

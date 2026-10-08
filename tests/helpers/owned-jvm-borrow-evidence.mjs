@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -329,13 +330,12 @@ export const assertOwnedJvmBorrowExecution = async record => {
  */
 export const assertOwnedJvmBorrowCi = (workflow, manifest) => {
 	assert.equal(manifest.scripts["test:owned-jvm-borrows"], ownedJvmBorrowScript);
-	const step = workflow.split("- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n")[1]?.split("      - name:")[0];
+	const step = ownedJvmStep(workflow);
 	assert.ok(step?.includes("          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1\n"));
 	for(const summary of ["pass 8", "fail 0", "skipped 0"]) assert.ok(step.includes(`          rg '^# ${summary}$' build/owned-jvm-borrows.log\n`));
 	for(const name of ["ordinary", "reviewed", "borrow-only", "ordinary-installed", "reviewed-installed"])
 		assert.ok(step.includes(`          test -s build/owned-jvm-borrows/${name}.json\n`));
 	for(const path of ["build/owned-jvm-borrows/", "build/owned-jvm-borrows.log"])
-		assert.ok(workflow.includes(`            ${path}\n`));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-borrows"'));
-	assert.ok(workflow.includes("steps.type_corpus_jvm.outcome != 'success'"));
+		assert.ok(ownedJvmUpload(workflow)?.includes(`            ${path}\n`));
+	assertOwnedJvmEnforced(workflow);
 };

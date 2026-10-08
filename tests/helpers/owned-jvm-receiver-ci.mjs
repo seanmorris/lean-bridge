@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 import { assertOwnedDotnetReceiverCi } from "./owned-dotnet-receiver-ci.mjs";
 import { assertOwnedJvmBorrowCi } from "./owned-jvm-borrow-evidence.mjs";
 
@@ -20,9 +21,9 @@ export const ownedJvmReceiverReports = ["ordinary", "reviewed"].flatMap(mode =>
 export const assertOwnedJvmReceiverCi = (workflow, manifest) => {
 	assertOwnedDotnetReceiverCi(workflow, manifest); assertOwnedJvmBorrowCi(workflow, manifest);
 	assert.equal(manifest.scripts["test:owned-jvm-receivers"], ownedJvmReceiverScript);
-	const steps = workflow.split("      - name: ").filter(section => section.split("\n").includes("        id: type_corpus_jvm"));
-	assert.equal(steps.length, 1); const [step] = steps;
-	assert.match(step, /^ {8}if: matrix\.profile == 'jvm'$/mu);
+	const step = ownedJvmStep(workflow);
+	assert.ok(step);
+	assertOwnedJvmEnforced(workflow);
 	for(const line of [
 		"bash scripts/bootstrap-rust-ci.sh"
 		, "npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1"
@@ -32,9 +33,8 @@ export const assertOwnedJvmReceiverCi = (workflow, manifest) => {
 	]) assert.ok(step.split("\n").includes("          " + line), line);
 	for(const name of ["RUSTC", "CARGO", "PYTHON", "RUBY", "GEM", "DOTNET", "JAVA", "JAVAC", "KOTLINC", "MAVEN"])
 		assert.ok(step.includes(`export LEAN_BRIDGE_${name}=`), name);
-	const upload = workflow.split("      - name: Upload installed Java and Kotlin corpus observations\n")[1]?.split("      - name: ")[0];
-	assert.match(upload ?? "", /^ {10}if-no-files-found: error$/mu);
+	const upload = ownedJvmUpload(workflow);
 	for(const path of ["build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"])
 		assert.ok(upload.split("\n").includes("            " + path));
-	assert.ok(workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-receivers"'));
+	assert.ok(!workflow.includes('consumer_command="$consumer_command && npm run test:owned-jvm-receivers"'));
 };

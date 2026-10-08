@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertOwnedJvmEnforced, ownedJvmStep, ownedJvmUpload } from "./owned-jvm-job.mjs";
 
 export const ownedJvmCiGroups = [
 	["owned-jvm-runtime", "owned-jvm-values", "owned-jvm-layout"
@@ -23,15 +24,15 @@ export const ownedJvmCiReports = Object.entries({
 }).flatMap(([directory, names]) => names.map(name => "build/" + directory + "/" + name + ".json"));
 
 /**
- * Validate live acceptance commands and their separately recorded Docker route.
+ * Validate live acceptance commands in the owned JVM job and its mandatory summary enforcement.
  *
  * @param workflow - Complete current workflow text.
  */
 export const assertOwnedJvmCi = workflow => {
-	const step = workflow.match(/^ {6}- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
+	const step = ownedJvmStep(workflow);
 	assert.ok(step);
-	assert.match(step, /^ {8}if: matrix.profile == 'jvm'$/mu);
-	assert.match(step, /^ {8}id: type_corpus_jvm$/mu);
+	assertOwnedJvmEnforced(workflow);
+	// The managed JVM record lists only its own job's commands; owned layers run in their own job.
 	const route = workflow.split('if [ "$consumer" = jvm ]; then\n')[1]?.split('if [ "$consumer" = ruby ]; then\n')[0];
 	assert.ok(route);
 	for(const group of ownedJvmCiGroups)
@@ -39,12 +40,10 @@ export const assertOwnedJvmCi = workflow => {
 		const command = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 "
 			+ group.map(name => "tests/" + name + ".test.mjs").join(" ");
 		assert.ok(step.includes("          " + command + "\n"), group.join(","));
-		assert.ok(route.includes('consumer_command="$consumer_command && ' + command + '"\n'));
+		assert.ok(!route.includes(command), group.join(","));
 	}
-	const upload = workflow.match(/^ {6}- name: Upload installed Java and Kotlin corpus observations\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
+	const upload = ownedJvmUpload(workflow);
 	assert.ok(upload);
-	assert.match(upload, /^ {8}if: always\(\) && matrix.profile == 'jvm'$/mu);
-	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
 	for(const path of ownedJvmCiReports)
 	{
 		assert.ok(step.includes("          test -s " + path + "\n"), path);

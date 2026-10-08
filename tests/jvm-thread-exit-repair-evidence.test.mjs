@@ -93,7 +93,7 @@ test("CI requires both forced-cleanup reports, retained artifacts and propagated
 		, "          test -s build/owned-jvm-thread-exit/ordinary.json\n"
 		, "          test -s build/owned-jvm-thread-exit/reviewed.json\n"
 		, "            build/owned-jvm-thread-exit/\n"
-		, 'consumer_command="$consumer_command && ' + jvmThreadExitRepairCommands.gated + '"\n'
-		, "steps.type_corpus_jvm.outcome != 'success'"
+		, "      - owned-jvm-values\n"
+		, "        if: needs.owned-jvm-values.result != 'success'\n"
 	]) assert.throws(() => assertJvmThreadExitCi(workflow.replace(fragment, "")), fragment);
 });
