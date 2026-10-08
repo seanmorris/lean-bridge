@@ -6,9 +6,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
@@ -28,7 +28,14 @@ import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.m
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
+import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { assertJsonSchema, jsonSchemaErrors } from "./helpers/json-schema.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
+import { checkCheckedRecordNpmPackages } from "./helpers/checked-record-packages.mjs";
 import { checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
 const lean = process.env.LEAN_BRIDGE_CHECKED_RECORD_LEAN_TEST === "1";
@@ -360,4 +367,69 @@ test("a package whose only checked record is a Lean-produced result still regist
 	assert.match(source, /structure LbErased\.CheckedRecords\.Triple where/u);
 	assert.match(source, /: \(_root_\.Array LbErased\.CheckedRecords\.Triple\) :=\n {2}carrierResult \(do\n {4}let a0 ← carrierValue a0\n {4}pure \(\(let _bridgeResult := _root_\.CheckedRecords\.repeated a0; \(LbErased\.CheckedRecords\.Triple\.erase/u);
 	assert.doesNotMatch(source, /via_[0-9a-f]{16}|_refinement_/u);
+});
+
+const profiles = process.env.LEAN_BRIDGE_CHECKED_RECORD_PROFILES?.split(",").sort() ?? [];
+assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Checked-record acceptance covers C and C++ first");
+assert.equal(new Set(profiles).size, profiles.length, "Duplicate checked-record profile");
+const coordinate = { name: "checkedrecords", version: "1.0.0" };
+const targets = { c: ["c", coordinate], cpp: ["cpp", coordinate] };
+
+test("relocated source-free C and C++ packages build checked records only through each site's constructor", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const reports = [], archives = [], identities = [];
+	const selected = Object.fromEntries(profiles.map(profile => targets[profile]));
+	const environment = nativeFixtureEnvironment(profiles);
+	const contracts = checkedRecordContracts();
+	for(const attempt of [0, 1])
+	{
+		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-author-"));
+		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-consumer-"));
+		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
+		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
+		await cp(checkedRecordFixture, projectRoot, { recursive: true });
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [module], exports: Object.keys(contracts), contracts, targets: selected }));
+		t.diagnostic(`build ${attempt}: ${profiles.join(", ")}`);
+		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(selected), environment }).catch(error => {
+			error.message += `: ${JSON.stringify(error.details)}`; throw error;
+		});
+		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		assert.equal(reviewedContractDifference(checkedRecordReview(), model.bindingIr), null);
+		identities.push({ bindingIrSha256: built.bindingIrSha256, modelBindingIrSha256: hashBindingIr(model.bindingIr), modelSha256: sha256(canonicalJson(model)) });
+		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		// Install from prepared archives only. No author workspace or build staging remains.
+		await rm(directory, { recursive: true, force: true });
+		await assert.rejects(lstat(directory), { code: "ENOENT" });
+		if(attempt === 1) break;
+		for(const profile of profiles)
+		{
+			t.diagnostic(`installing and checking ${profile}`);
+			const packages = receipt.packages.filter(pkg => pkg.target === targets[profile][0]);
+			const source = (name, extension) => readFile(`tests/fixtures/checked-record-consumers/${name}.${extension}`, "utf8");
+			const observation = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture: { source, wit: [], success: "checked-record-ok" } });
+			delete observation.command;
+			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+			reports.push({ profile, path: "ordinary-source", ...observation, packages, ...identities[0], receiptSha256, sourceRemovedBeforeInstallation: true });
+			await rm(join(consumer, profile), { recursive: true, force: true });
+		}
+		await rm(consumer, { recursive: true, force: true });
+	}
+	// Two independent author roots give byte-identical archives and the same model.
+	assert.deepEqual(archives[1], archives[0]);
+	assert.deepEqual(identities[1], identities[0]);
+	const reportPath = resolve(process.env.LEAN_BRIDGE_CHECKED_RECORD_REPORT ?? `build/checked-records/${profiles.join("-")}.json`);
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, contracts, reports, archives: archives[0], reproducible: true, independentBuilds: 2 }));
+});
+
+const npm = process.env.LEAN_BRIDGE_CHECKED_RECORD_NPM_TEST === "1";
+const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
+
+test("a relocated source-free npm package builds checked records only through each site's constructor", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
+	// Only the Nix command transport is substituted: the locked engine when configured, else the pinned local engine.
+	const build = (projectRoot, outputRoot) => buildCanonicalProject({ projectRoot, outputRoot, engineRoot: process.cwd(), environment, targets: ["npm"], runner: refinementEngineTransport() });
+	const observation = await checkCheckedRecordNpmPackages(t, { build, runtimeRoot, engineRoot: process.cwd() });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_CHECKED_RECORD_NPM_REPORT ?? "build/checked-records/npm.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "ordinary-source", contracts: checkedRecordContracts("OnboardingSmall"), ...observation }));
 });
