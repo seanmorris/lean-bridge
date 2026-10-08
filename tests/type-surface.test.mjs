@@ -355,9 +355,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const variantEvidence = ["java", "kotlin"].includes(profile) ? "jvm-variants-installed" : `${profile}-variants-installed`;
 	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
-	// Checked Fin is promoted per host by its own receipt, at top-level parameters and results only.
+	// Scalar/container and nominal Fin positions cite separate host/runtime receipts.
 	const finEvidence = { python: "python-fin-installed", rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
 	const fins = finEvidence ? ["fin"] : [];
+	const finRuntimes = { python: ["python311", "python312"], ruby: ["ruby33"] }[profile] ?? [];
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
@@ -370,19 +371,22 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}[profile] ?? [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
 	const subtypes = specializationEvidence ? ["subtype"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length);
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (finRuntimes.length ? 1 : 0));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if(cell.shape === "fin" || cell.shape === "subtype") assert.notEqual(cell.position, "field");
+		if(cell.shape === "subtype" || (cell.shape === "fin" && !finRuntimes.length)) assert.notEqual(cell.position, "field");
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			// Scalar Fin cells cite their host receipt and, since VO #1427, the container receipt of the same build group.
+			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
 			if(cell.shape === "fin")
 			{
-				assert.deepEqual(stage.evidence, [finEvidence, `native-fin-containers-${specializationEvidence}-installed`]);
+				assert.deepEqual(stage.evidence, cell.position === "field"
+					? finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`)
+					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
+						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))]);
 				continue;
 			}
 			if(cell.shape === "subtype")

@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinPythonRubyPromotionSource } from "./fin-python-ruby-promotion-source-history.mjs";
 import { beforeFinRuntimeProvenanceSource, finRuntimeProvenanceChangedPaths, finRuntimeProvenanceHistoryPath, reverseFinRuntimeProvenanceUpdate } from "./fin-runtime-provenance-source-history.mjs";
 
 test("Fin runtime provenance authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Fin runtime provenance authenticates each exact source predecessor", async
 	assert.deepEqual(record.updates.map(update => update.path), finRuntimeProvenanceChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinPythonRubyPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinRuntimeProvenanceUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinRuntimeProvenanceSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinRuntimeProvenanceSource(update.path, source, update.currentSha256), source);

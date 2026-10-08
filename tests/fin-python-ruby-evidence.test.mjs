@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { assertFinPythonRubyExecution, assertFinPythonRubyReport, finPythonRubyDirectory, finPythonRubyRevision, finPythonRubyRuntimes, finPythonRubySourcePaths, finPythonRubySteps } from "./helpers/fin-python-ruby-evidence.mjs";
 import "./helpers/fin-python-ruby-archive-source-history-tests.mjs";
 import "./helpers/fin-runtime-provenance-source-history-tests.mjs";
+import "./helpers/fin-python-ruby-promotion-tests.mjs";
 
 const receipt = async () => {
 	const bytes = await readFile(`${finPythonRubyDirectory}/receipt-v2.json`);

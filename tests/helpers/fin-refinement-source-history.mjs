@@ -101,6 +101,7 @@ import { subtypeXsArchiveChangedPaths } from "./subtype-xs-archive-source-histor
 import { checkedRecordAdmissionChangedPaths } from "./checked-record-admission-source-history.mjs";
 import { finPythonRubyArchiveChangedPaths } from "./fin-python-ruby-archive-source-history.mjs";
 import { finRuntimeProvenanceChangedPaths } from "./fin-runtime-provenance-source-history.mjs";
+import { finPythonRubyPromotionChangedPaths } from "./fin-python-ruby-promotion-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -666,6 +667,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...checkedRecordAdmissionChangedPaths
 	, ...finPythonRubyArchiveChangedPaths
 	, ...finRuntimeProvenanceChangedPaths
+	, ...finPythonRubyPromotionChangedPaths
 ])].sort());
 
 /**
