@@ -52,6 +52,8 @@ Test mismatched bounds, substituted constructors, changed source modules, fabric
 
 A changed review can legitimately select another well-typed constructor or specialization. Rejection tests must establish a contradiction with the compiled signature, selected source closure or independently authenticated expected review. A different valid author decision alone is not a reconciliation failure.
 
+VO #1444 adds [constructor-decision mapping](../../src/analyze/reviewed-subtypes.mjs) and independent tests. It derives contracts only for top-level primitive Subtype leaves, preserves other sites in mixed signatures and adds no selection for Fin-only exports. Reviewed builds still reject Subtype. The next milestone must connect this helper to analysis, build and target recompilation, validate each constructor against fresh Lean, and add the module to the published package and Nix source boundaries. This preparatory change adds no installed support claim.
+
 ## Remaining rows and owners
 
 | Row | Owner | Next task or decision |
@@ -62,7 +64,7 @@ A changed review can legitimately select another well-typed constructor or speci
 | Native Fin inside Prod, Except and Array of products | Claude, Codex integration | VO #1441 C/C++ archives include measured Array dispatch on both source routes. Finish other host executions. The product fixture now calls its Fin 0 export `absentOnly`; the complete case remains. The [historical fixture reference](native-fin-products-20261007/original-fixture-reference.json) and exact source-history checks preserve the original C/C++ receipts without claiming those runs used the renamed fixture. |
 | Native refined record and variant fields | Claude, Codex integration | VO #1442 expanded ordinary and reviewed C/C++ field cells are promoted with exact fixture and report hashes. Execute the other native hosts. The earlier development run covers fewer exports and remains separate. |
 | Native callback and closure refinements | Unassigned | Separate ABI and lifetime work, coordinated with #1221. |
-| Reviewed-IR Subtype, specializations and generic instantiations | Claude: finite-specialization design; Subtype unassigned | Admit closed specialization decisions from reviewed IR and reconcile them with fresh Lean elaboration. Configuration overrides remain forbidden. Start with independently authored C/C++ and npm/strict TypeScript acceptance. |
+| Reviewed-IR Subtype, specializations and generic instantiations | Claude: finite specializations; Codex: Subtype (#1444) | The Subtype constructor-mapping helper is preparatory; reviewed build admission remains closed. Wire each decision through analysis and compilation, then reconcile fresh Lean elaboration. Configuration overrides remain forbidden. Start with independently authored C/C++ and npm/strict TypeScript acceptance. |
 | Browser and PHP-Wasm generic records | Claude, Codex integration | The PHP-Wasm direct-record gate passed on `d40fd3b`: two tests, no failures or skips, twelve installed tuples and 1021 checks per tuple. Browser page/React/worker acceptance is assigned, including the original Array-field requirement. Neither route inherits installed claims from native hosts. |
 | Reviewed-IR generic records; recursive, indexed, inherited and refined generic records | Unassigned | Original #1220 requirements; not covered by the native rollout. |
 | PHP-Wasm refinements | Claude | VO #1443: ordinary plain-copied Fin, then checked Subtype and reviewed contracts, with separate Node/browser Wasm evidence and measured dispatch controls. |

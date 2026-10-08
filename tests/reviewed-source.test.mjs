@@ -13,6 +13,7 @@ import { createNativeModel } from "../src/build/native-model.mjs";
 import { validateReviewedSource, verifyReviewedSourceInputs } from "../src/analyze/reviewed-source.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import "./helpers/reviewed-semantic-decisions-tests.mjs";
+import "./helpers/reviewed-subtype-decisions-tests.mjs";
 import "./helpers/reviewed-fin-tests.mjs";
 import "./helpers/reviewed-fin-evidence-tests.mjs";
 import "./helpers/reviewed-fin-evidence-source-history-tests.mjs";

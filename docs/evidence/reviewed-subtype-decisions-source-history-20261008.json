@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "milestone": "reviewed-subtype-decisions-v1",
+  "predecessorCommit": "b1199d39025fc12786a24bffdc7f412ea2a2b106",
+  "updates": [
+    {
+      "path": "tests/reviewed-source.test.mjs",
+      "currentSha256": "69f331ff50043d5ea7456db77f60df4b00d9910953d19bcc71b77648ed4e74c9",
+      "previousSha256": "27563e93416b0d58e81e36f3bc223538960de4735f6ae02fef2ca8ff09bb8fbe",
+      "edits": [
+        {
+          "start": 754,
+          "previous": "",
+          "current": "import \"./helpers/reviewed-subtype-decisions-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "1561f1134e1236f93b1bf5116d9703b7237d7b4269a427b86810a45abb3a0477",
+      "previousSha256": "f94f462e8fab622496c7a45cd51fa6d85d5b61ec45c3ba9e56f6d4c6800f03be",
+      "edits": [
+        {
+          "start": 5979,
+          "previous": "",
+          "current": "import { reviewedSubtypeDecisionsChangedPaths } from \"./reviewed-subtype-decisions-source-history.mjs\";\n"
+        },
+        {
+          "start": 41532,
+          "previous": "",
+          "current": "\t, ...reviewedSubtypeDecisionsChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-promotion-source-history.mjs",
+      "currentSha256": "0fb566f84b7846ade32fb80e0b317ecc59d4f07d66e866a685ca6b00613e2136",
+      "previousSha256": "98d5cef99d168a07f0ffea3dbea1adda6dffa3e55c96378a516f2549cd19af28",
+      "edits": [
+        {
+          "start": 237,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeDecisionsSource } from \"./reviewed-subtype-decisions-source-history.mjs\";\n"
+        },
+        {
+          "start": 2598,
+          "previous": "",
+          "current": "\tsource = beforeReviewedSubtypeDecisionsSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-promotion-source-history-tests.mjs",
+      "currentSha256": "2b7f06997e7b0ae9913a378382be62473a281b71878e7976272035965e5c262a",
+      "previousSha256": "9255e8424f78d21da99cb8d46e056edb3e38ef7aa4d9eb31257fbd014a96b8c2",
+      "edits": [
+        {
+          "start": 269,
+          "previous": "",
+          "current": "import { beforeReviewedSubtypeDecisionsSource } from \"./reviewed-subtype-decisions-source-history.mjs\";\n"
+        },
+        {
+          "start": 1032,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeReviewedSubtypeDecisionsSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

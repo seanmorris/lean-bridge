@@ -71,6 +71,7 @@ import { ciDependencyTimeoutChangedPaths } from "./ci-dependency-timeout-source-
 import { finProductPhpNameChangedPaths } from "./fin-product-php-name-source-history.mjs";
 import { phpReceiverDependencyChangedPaths } from "./php-receiver-dependency-source-history.mjs";
 import { nativeFinPromotionChangedPaths } from "./native-fin-promotion-source-history.mjs";
+import { reviewedSubtypeDecisionsChangedPaths } from "./reviewed-subtype-decisions-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -606,6 +607,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...finProductPhpNameChangedPaths
 	, ...phpReceiverDependencyChangedPaths
 	, ...nativeFinPromotionChangedPaths
+	, ...reviewedSubtypeDecisionsChangedPaths
 ])].sort());
 
 /**
