@@ -80,6 +80,14 @@ test("a failed harness command keeps its structured output beside the report", a
 	const coded = JSON.parse(await readFile(path, "utf8"));
 	assert.deepEqual([coded.code, coded.command, coded.stdout], ["unsupported-native-c-signature", null, ""]);
 	assert.equal(coded.message, `${"h".repeat(4000)}\n[...]\n${"t".repeat(4000)}`);
+	// Boundaries: 8000 characters stay whole; 8001 lose exactly the one middle character.
+	for(const [text, expected] of [["a".repeat(7999) + "z", "a".repeat(7999) + "z"], [`${"h".repeat(4000)}X${"t".repeat(4000)}`, `${"h".repeat(4000)}\n[...]\n${"t".repeat(4000)}`]])
+	{
+		await assert.rejects(() => retainFailure(path, () => Promise.reject(Object.assign(new Error(text), { details: { command: "/bin/true", args: [], stdout: text, stderr: text } }))));
+		const record = JSON.parse(await readFile(path, "utf8"));
+		assert.deepEqual([record.message, record.stdout, record.stderr], [expected, expected, expected]);
+		assert.equal(record.stdout.includes("X"), false);
+	}
 	// A successful command leaves no record.
 	await rm(path);
 	await retainFailure(path, () => runCopied("/bin/sh", ["-c", "true"], directory, { PATH: "/usr/bin:/bin" }));
