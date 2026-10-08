@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeBrowserGenericPromotionSource } from "./browser-generic-promotion-source-history.mjs";
 
 export const nativeReplyRefusalHistoryPath = "docs/evidence/native-reply-refusal-source-history-20261008.json";
 export const nativeReplyRefusalProducerCommit = "190c8fd76774c1e767b7d03f6b0ec40bebabe9f0";
@@ -52,6 +53,7 @@ export const reverseNativeReplyRefusalUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeNativeReplyRefusalSource = (path, source, expected) => {
+	source = beforeBrowserGenericPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !nativeReplyRefusalChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

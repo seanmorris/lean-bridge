@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeBrowserGenericPromotionSource } from "./browser-generic-promotion-source-history.mjs";
 import { beforeNativeReplyRefusalSource, nativeReplyRefusalChangedPaths, nativeReplyRefusalHistoryPath, nativeReplyRefusalProducerCommit, nativeReplyRefusalProducerTestSha256, reverseNativeReplyRefusalUpdate } from "./native-reply-refusal-source-history.mjs";
 
 test("native reply refusal history restores the exact executed intermediate only on an explicit identity request", async () => {
@@ -19,7 +20,7 @@ test("native reply refusal history restores the exact executed intermediate only
 	assert.equal(record.producerUpdates.length, 1);
 	const [update] = record.producerUpdates, path = "tests/native-fin-callbacks.test.mjs";
 	assert.equal(update.path, path); assert.equal(update.previousSha256, nativeReplyRefusalProducerTestSha256);
-	const source = await readFile(path, "utf8");
+	const source = beforeBrowserGenericPromotionSource(path, await readFile(path, "utf8"));
 	const restored = beforeNativeReplyRefusalSource(path, source, update.previousSha256);
 	assert.equal(sha256(restored), nativeReplyRefusalProducerTestSha256);
 	assert.equal(reverseNativeReplyRefusalUpdate(source, update), restored);
@@ -37,7 +38,7 @@ test("Native reply refusal coverage authenticates each exact source predecessor"
 	assert.deepEqual(record.updates.map(update => update.path), nativeReplyRefusalChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeBrowserGenericPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeReplyRefusalUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeReplyRefusalSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeReplyRefusalSource(update.path, source, update.currentSha256), source);
@@ -50,7 +51,7 @@ test("Native reply refusal coverage authenticates each exact source predecessor"
 });
 
 test("Native reply refusal coverage source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeBrowserGenericPromotionSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(text), previous = JSON.parse(beforeNativeReplyRefusalSource(path, text));
 	const record = JSON.parse(await readFile(nativeReplyRefusalHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
@@ -60,7 +61,7 @@ test("Native reply refusal coverage source pins do not change observations or ot
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(await readFile(file.path, "utf8")), update.currentSha256);
+			assert.equal(sha256(beforeBrowserGenericPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

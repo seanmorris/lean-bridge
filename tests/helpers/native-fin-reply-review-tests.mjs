@@ -12,11 +12,14 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { nativeFinReplyPromotionId } from "./native-fin-reply-promotion-references.mjs";
 import { clarifyNativeReplyEvidence, clarifyNativeReplyObservation, nativeReplyReviewDispatch, nativeReplyReviewEarlierShapes, nativeReplyReviewObservationIds, nativeReplyReviewPattern, nativeReplyReviewValidator } from "./native-fin-reply-review-notes.mjs";
 import { beforeNativeReplyReviewSource } from "./native-reply-review-source-history.mjs";
+import { beforeBrowserGenericPromotionSource } from "./browser-generic-promotion-source-history.mjs";
 
 const previous = async () => JSON.parse(beforeNativeReplyReviewSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
 test("reply review clarifies four existing observations without changing any accepted cell", async () => {
-	const { document, ...contracts } = await readTypeSurface(), baseline = await previous();
+	const { document: live, ...contracts } = await readTypeSurface(), baseline = await previous();
+	// Compare this historical clarification at its own epoch, before browser signature additions.
+	const document = JSON.parse(beforeBrowserGenericPromotionSource("docs/type-surface.v1.json", JSON.stringify(live, null, 2) + "\n"));
 	assert.equal(document.observations.length, 490); assert.equal(document.evidence.length, 265);
 	assert.deepEqual(document.observations, baseline.observations.map(item => nativeReplyReviewObservationIds.includes(item.id) ? clarifyNativeReplyObservation(item) : item));
 	const oldCells = typeSurfaceCells(baseline, contracts), cells = typeSurfaceCells(document, contracts);
