@@ -121,11 +121,14 @@ console.log(JSON.stringify({ checks, rejections }));
  * @param options.runtimeRoot - Prepared shared runtime root.
  * @param options.engineRoot - Checkout containing the TypeScript compiler.
  * @param options.specialized - Optional additional source, configured exports and public caller checks.
+ * @param options.review - Optional reviewed Binding IR that supplies every export decision instead.
  */
-export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized }) => {
+export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized, review }) => {
 	const { directory, root } = await project(t);
 	await saveLakeFile(root, "OnboardingSmall.lean", specialized ? await specialized.source("OnboardingSmall") : await genericRecordSource("OnboardingSmall"));
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")), ...specialized?.configuration("OnboardingSmall") }));
+	const exports = review ? {} : { exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")) };
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], ...exports, ...specialized?.configuration("OnboardingSmall") }));
+	if(review) await saveLakeFile(root, "api.binding-ir.json", canonicalJson(review));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	for(const [index, projectRoot] of [root, moved].entries())

@@ -9,39 +9,48 @@ import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { genericRecordInstantiations, genericRecordProvenanceOnly } from "./generic-record-packages.mjs";
 
 export const instantiationKey = "lean-lang.org/instantiation";
-const module = "GenericRecords";
 const box = value => ({ value, count: "nat" });
-const record = (name, fields) => ({ record: `${module}.${name}`, fields });
-const natBox = record("NatBox", box("nat"));
-const textBox = record("TextBox", box("string"));
-const wordPair = record("WordPair", { first: "string", second: "nat" });
-const natBoxAgain = record("NatBoxAgain", box("nat"));
-const maybeBox = record("MaybeBox", box({ option: "nat" }));
-const boxPair = record("BoxPair", { first: natBox, second: textBox });
-const taggedNat = record("TaggedNat", { tag: "string", payload: "nat" });
-const markerTag = record("MarkerTag", { label: "string" });
-// The placeholder record becomes the transparent Boxes alias below.
-const boxes = record("Boxes", {});
 
-/** Public signatures of the ten exports, in the fixture's own types. */
-export const reviewedGenericRecordSignatures = Object.freeze([
-	["swapNamed", [wordPair], wordPair]
-	, ["bump", [natBox], natBox]
-	, ["shout", [textBox], textBox]
-	, ["again", [natBoxAgain], natBoxAgain]
-	, ["orZero", [maybeBox], "nat"]
-	, ["total", [boxes], "nat"]
-	, ["firstBoxes", ["nat"], { option: boxes }]
-	, ["unpair", [boxPair], "nat"]
-	, ["retag", [taggedNat], taggedNat]
-	, ["relabel", [markerTag], markerTag]].map(([name, parameters, result]) => ({ name: `${module}.${name}`, parameters, result })));
+/**
+ * Public signatures of the ten exports, in the fixture's own types.
+ *
+ * @param module - Lean module and namespace name.
+ */
+const signatures = module => {
+	const record = (name, fields) => ({ record: `${module}.${name}`, fields });
+	const natBox = record("NatBox", box("nat")), textBox = record("TextBox", box("string"));
+	const wordPair = record("WordPair", { first: "string", second: "nat" });
+	const natBoxAgain = record("NatBoxAgain", box("nat"));
+	const maybeBox = record("MaybeBox", box({ option: "nat" }));
+	const boxPair = record("BoxPair", { first: natBox, second: textBox });
+	const taggedNat = record("TaggedNat", { tag: "string", payload: "nat" });
+	const markerTag = record("MarkerTag", { label: "string" });
+	// The placeholder record becomes the transparent Boxes alias below.
+	const boxes = record("Boxes", {});
+	return [["swapNamed", [wordPair], wordPair]
+		, ["bump", [natBox], natBox]
+		, ["shout", [textBox], textBox]
+		, ["again", [natBoxAgain], natBoxAgain]
+		, ["orZero", [maybeBox], "nat"]
+		, ["total", [boxes], "nat"]
+		, ["firstBoxes", ["nat"], { option: boxes }]
+		, ["unpair", [boxPair], "nat"]
+		, ["retag", [taggedNat], taggedNat]
+		, ["relabel", [markerTag], markerTag]].map(([name, parameters, result]) => ({ name: `${module}.${name}`, parameters, result }));
+};
+export const reviewedGenericRecordSignatures = Object.freeze(signatures("GenericRecords"));
 
-const qualify = argument => argument.kind === "named" ? { kind: "named", id: `lean:${module}.${argument.id}` }
-	: argument.kind === "apply" ? { ...argument, arguments: argument.arguments.map(qualify) } : argument;
-
-/** Describe every export, alias-named record and phantom argument before Lean runs. */
-export const genericRecordInstantiationReview = () => {
-	const ir = corpusReviewedIr({ id: "genericrecords" }, reviewedGenericRecordSignatures);
+/**
+ * Describe every export, alias-named record and phantom argument before Lean runs.
+ *
+ * @param options - Fixture identity.
+ * @param options.module - Lean module and namespace name.
+ * @param options.component - Component name of the Lake package.
+ */
+export const genericRecordInstantiationReview = ({ module = "GenericRecords", component = "genericrecords" } = {}) => {
+	const qualify = argument => argument.kind === "named" ? { kind: "named", id: `lean:${module}.${argument.id}` }
+		: argument.kind === "apply" ? { ...argument, arguments: argument.arguments.map(qualify) } : argument;
+	const ir = corpusReviewedIr({ id: component }, signatures(module));
 	for(const declaration of ir.declarations) declaration.parameters.forEach((parameter, position) => { parameter.name = `arg${position}`; });
 	const types = new Map(ir.types.map(type => [type.id, type]));
 	const alias = types.get(`lean:${module}.Boxes`);

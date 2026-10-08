@@ -16,13 +16,14 @@ import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.m
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
+import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { readReviewedSource, reviewedContractDifference, reviewedSourceSelection, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { genericRecordInstantiationReview, instantiationKey, reviewedGenericRecordSignatures } from "./helpers/reviewed-instantiation-fixture.mjs";
-import { genericRecordEnvironment, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
+import { checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const reviewInput = document => {
 	const source = canonicalJson(document);
@@ -244,4 +245,24 @@ test("independently reviewed C and C++ packages install every alias-named generi
 	assert.deepEqual(archives[1], archives[0]);
 	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_REPORT ?? `build/reviewed-instantiations/${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
+});
+
+const npm = process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_TEST === "1";
+const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
+const npmFixture = async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-instantiation-npm-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const root = join(directory, "project");
+	await cp("tests/fixtures/documentation/lean-author", root, { recursive: true });
+	return { directory, root };
+};
+
+test("an independently reviewed npm package keeps every alias-named record for Node and strict TypeScript", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
+	const build = (projectRoot, outputRoot) => buildCanonicalProject({ projectRoot, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() });
+	const review = genericRecordInstantiationReview({ module: "OnboardingSmall", component: "onboarding-small" });
+	// The same Node and TypeScript callers as the configured build: the review changes no public name.
+	const observation = await checkGenericRecordNpmPackages(t, { fixture: npmFixture, build, runtimeRoot, engineRoot, review });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_REPORT ?? "build/reviewed-instantiations/npm.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", reviewedBindingIrSha256: hashBindingIr(review), instantiations: genericRecordInstantiations, ...observation }));
 });
