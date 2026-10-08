@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeReviewedSubtypeArchiveSource } from "./reviewed-subtype-archive-source-history.mjs";
 import { beforeInheritanceSubtypeHarnessSource, inheritanceSubtypeHarnessChangedPaths, inheritanceSubtypeHarnessHistoryPath, reverseInheritanceSubtypeHarnessUpdate } from "./inheritance-subtype-harness-source-history.mjs";
 
 test("Inheritance and Subtype harness integration authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Inheritance and Subtype harness integration authenticates each exact sourc
 	assert.deepEqual(record.updates.map(update => update.path), inheritanceSubtypeHarnessChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeReviewedSubtypeArchiveSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseInheritanceSubtypeHarnessUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeInheritanceSubtypeHarnessSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeInheritanceSubtypeHarnessSource(update.path, source, update.currentSha256), source);

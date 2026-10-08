@@ -1,0 +1,78 @@
+{
+  "archives": {
+    "archives/subtypes-1.0.0-c.tar.gz": "078b78ca5ba150aa3668a98b5a4b6fc7f31138dc4ec491067e07d3a15b83d085",
+    "archives/subtypes-1.0.0-cpp.tar.gz": "0478ce9256c7035f1984d5ab1904d8eb61dd9c5137e19d9adf2395ceade56d31"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "59eb0b7da11e84148b2c9dd57547bf5bd46e9d24a9fe60825730f5f0a500e08e",
+      "checks": 2033,
+      "compilerFreePath": true,
+      "consumerSha256": "51d81329edb7af6bd9f8bd288da810c5f642a584338c40a17c1039d53f5a4201",
+      "dispatch": "not measured",
+      "modelSha256": "035ac17dc15598e6b009cf103aecca3ef7d8d85b3ac411c2f909c9e0f31fedf9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53847184,
+              "path": "archives/subtypes-1.0.0-c.tar.gz",
+              "sha256": "078b78ca5ba150aa3668a98b5a4b6fc7f31138dc4ec491067e07d3a15b83d085"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "subtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "c",
+      "receiptSha256": "73cf5461c60c3dc5e6f4ad80135c66103ab1caba9417b3d4a25f6dcb72b18946",
+      "reviewedBindingIrSha256": "77e471929504f77c3aad114b39374e09a84b1abedd80d9b3d1531cc78d5acd4a",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "59eb0b7da11e84148b2c9dd57547bf5bd46e9d24a9fe60825730f5f0a500e08e",
+      "checks": 2026,
+      "compilerFreePath": true,
+      "consumerSha256": "81c74412eca6dbf9ffe4343633f22a007dc833ae83aec6105ff17a21d4bd3a6f",
+      "dispatch": "not measured",
+      "modelSha256": "035ac17dc15598e6b009cf103aecca3ef7d8d85b3ac411c2f909c9e0f31fedf9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51777790,
+              "path": "archives/subtypes-1.0.0-cpp.tar.gz",
+              "sha256": "0478ce9256c7035f1984d5ab1904d8eb61dd9c5137e19d9adf2395ceade56d31"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "subtypes",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-source",
+      "profile": "cpp",
+      "receiptSha256": "73cf5461c60c3dc5e6f4ad80135c66103ab1caba9417b3d4a25f6dcb72b18946",
+      "reviewedBindingIrSha256": "77e471929504f77c3aad114b39374e09a84b1abedd80d9b3d1531cc78d5acd4a",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

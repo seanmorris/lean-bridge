@@ -1,0 +1,5 @@
+revision=a22a4dac524fd2a3dc754ca80105c4cdb64e744c
+start=2026-10-08T05:35:29Z free=4729MiB node=v22.23.3 cpu=3 concurrency=1 queue=c-cpp,npm build/lean-runtime=/app/build/lean-runtime
+start c-cpp 2026-10-08T05:35:29Z pattern=^source-free reviewed C and C env=LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_SUBTYPE_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT=/app/build/vo1444-reviewed-subtype-c-cpp-a22a4da.json
+end c-cpp 2026-10-08T05:38:41Z exit=1
+stopped at c-cpp

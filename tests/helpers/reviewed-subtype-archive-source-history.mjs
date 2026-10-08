@@ -1,21 +1,20 @@
 /**
- * Preserve exact source predecessors of the Inheritance and Subtype harness integration change (#1220).
+ * Preserve exact source predecessors of the Reviewed Subtype archive change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeReviewedSubtypeArchiveSource } from "./reviewed-subtype-archive-source-history.mjs";
 
-export const inheritanceSubtypeHarnessHistoryPath = "docs/evidence/inheritance-subtype-harness-source-history-20261008.json";
-export const inheritanceSubtypeHarnessChangedPaths = [
+export const reviewedSubtypeArchiveHistoryPath = "docs/evidence/reviewed-subtype-archive-source-history-20261008.json";
+export const reviewedSubtypeArchiveChangedPaths = [
 	"src/adoption/test-profiles.mjs"
-	, "tests/helpers/reviewed-subtype-installed-fixture.mjs"
-	, "tests/reviewed-subtype-installed.test.mjs"
+	, "docs/lean/existing-package.md"
+	, "docs/evidence/refinement-closure-audit-20261007.md"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/inherited-records-source-history.mjs"
-	, "tests/helpers/inherited-records-source-history-tests.mjs"
+	, "tests/helpers/inheritance-subtype-harness-source-history.mjs"
+	, "tests/helpers/inheritance-subtype-harness-source-history-tests.mjs"
 	, "docs/type-surface.v1.json"
 ];
 let history;
@@ -26,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseInheritanceSubtypeHarnessUpdate = (source, update) => {
-	assert.ok(inheritanceSubtypeHarnessChangedPaths.includes(update.path));
+export const reverseReviewedSubtypeArchiveUpdate = (source, update) => {
+	assert.ok(reviewedSubtypeArchiveChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -53,12 +52,11 @@ export const reverseInheritanceSubtypeHarnessUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeInheritanceSubtypeHarnessSource = (path, source, expected) => {
-	source = beforeReviewedSubtypeArchiveSource(path, source, expected);
-	if(typeof source !== "string" || !inheritanceSubtypeHarnessChangedPaths.includes(path)) return source;
+export const beforeReviewedSubtypeArchiveSource = (path, source, expected) => {
+	if(typeof source !== "string" || !reviewedSubtypeArchiveChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(inheritanceSubtypeHarnessHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(reviewedSubtypeArchiveHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseInheritanceSubtypeHarnessUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseReviewedSubtypeArchiveUpdate(source, update) : source;
 };

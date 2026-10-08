@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1444,
+  "execution": "local",
+  "revision": "145c0f93aaef8d39ccc134c13bedf166822b35b7",
+  "scope": {
+    "sourcePath": "reviewed-source",
+    "profiles": [
+      "c",
+      "cpp",
+      "npm"
+    ],
+    "exports": 12,
+    "features": [
+      "independently reviewed checked constructors",
+      "distinct constructor choices for two specializations of one generic",
+      "zero-argument refined result",
+      "normalizing constructors without caller mutation",
+      "public and raw npm rejection checks",
+      "two-root archive reproduction",
+      "source-free offline installation",
+      "strict TypeScript consumer"
+    ],
+    "privateNpmAbi": 2,
+    "dispatch": "not measured",
+    "browserExecution": false,
+    "otherNativeHosts": false,
+    "nestedSubtypes": false
+  },
+  "producerEnvironment": {
+    "nodeVersion": "v22.23.3",
+    "nativeGlibcFloor": "2.36",
+    "cpu": 3,
+    "concurrency": 1
+  },
+  "sourceFiles": [
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "9f0f4466daeb2292f51ae1063e06b46f7687829183657ae824682a6e06359c3a"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "aef96db05fa494f05765babc2ce3108b794fa486f5c0466d69dcec2a8a00967e"
+    },
+    {
+      "path": "src/analyze/reviewed-subtypes.mjs",
+      "sha256": "c3777a8e29de8eb601698d7e35674343f659f3e91e97d11fc8a2e3c4c9556db9"
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "sha256": "bcb31c9f3eceedec76a42eceab6c6c47ec0241c7f126b1d6592ad629be54e807"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "0b2ad37a60f13d240c826ae611b00e2c0725835308a48a5dbb2f3eac526c972d"
+    },
+    {
+      "path": "src/backends/c/native-copied-values.mjs",
+      "sha256": "770e83cd1348808616b406fbbc1ba05e6acb9e7560ba94a1ecdac3077113815c"
+    },
+    {
+      "path": "src/build/component-refinements.mjs",
+      "sha256": "08910b037ac061c4f9690bab8db8b1e79f3d3b55be5a63cb93657920b12bac11"
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "sha256": "2159630ec3ec47351890170579b1385c9884556b1d27aeabb441296e64324c04"
+    },
+    {
+      "path": "src/build/lean-component-compiler.mjs",
+      "sha256": "5c154dcbb8ee1816b98e0e7dafe91218c9048addae880d2d387bb707e18df078"
+    },
+    {
+      "path": "src/release/component-npm-package.mjs",
+      "sha256": "f7c4e8196814cdb6dafe16173740f762c9bf2208b6fa10650be8855f12b1b3c4"
+    },
+    {
+      "path": "tests/reviewed-subtype-installed.test.mjs",
+      "sha256": "255ab8fbb45161cd7ba41d3fa50483f086ce1d61551848acb4066ca1bc011631"
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-installed-fixture.mjs",
+      "sha256": "81ccd2fa3d62bc9d7e4061898dc262d8d5276e71e42ea142ac2f63b2317e781d"
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-fixture.mjs",
+      "sha256": "98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197"
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-npm-tests.mjs",
+      "sha256": "8a8134844eb60d641512a33e534e503dc4c1e22637b47d4515640a07cc071d2b"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "tests/helpers/native-subtype-install.mjs",
+      "sha256": "de04a98b9e2152343de92cf77ef71f89f96babfce3c7a9e6602f5f041c8fa841"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+    },
+    {
+      "path": "tests/fixtures/subtype-consumers/c.c",
+      "sha256": "5cb1d652567ca46ed50a79ed436d1d771650d8290b181afc68fc92e2464f970a"
+    },
+    {
+      "path": "tests/fixtures/subtype-consumers/cpp.cpp",
+      "sha256": "5ff52ef94eb1209e65bc5e2d70ba2668535167f2404129cf000b9b5d5aad11d6"
+    },
+    {
+      "path": "tests/fixtures/reviewed-subtype-consumers/javascript.mjs",
+      "sha256": "89101f60207834d46cdd977a49ce9fb5f4116940988eeed013910daf0cce0e16"
+    },
+    {
+      "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/c-cpp.json",
+      "sha256": "5c18618283df36687bc2da3bc08ce89dd978ef78715dcac4b7c219b9528a0031"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/npm.json",
+      "sha256": "ea492029860f23e89a95f92fa73e881c8f57adab787417b658086b2eaa92bb6b"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/ordinary.tap",
+      "sha256": "d4d1ecc3488e55df20671fbcb06fe44edd36c383394d4d7730dc098d582bb2cc"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/ordinary.queue",
+      "sha256": "b1a0a9a1bb10d2c88e3cf79d56979f4f8cc0b5c3840fbf73776a06474be13c02"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/failed-link.tap",
+      "sha256": "88afcb627d1c6dbeaff3becdfd01fe1e3f767fd6a10c8d853ffb7278b936dceb"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/failed-link.queue",
+      "sha256": "d370e1fd2f7fe1af888f49b910325d79e6b48bf702dd4ebc69083a10a9f45466"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/failed-label.tap",
+      "sha256": "c1b7b43917d35e048be0a0dae5ac0b4f84cc8d88c84729028931840a733efcc2"
+    },
+    {
+      "path": "docs/evidence/reviewed-subtype-20261008/failed-label.queue",
+      "sha256": "2c5ce4fafaf4e73f41387415033c90f2cdb150a528a561f812b93182dbd53b81"
+    }
+  ],
+  "results": {
+    "c": {
+      "checks": 2033
+    },
+    "cpp": {
+      "checks": 2026
+    },
+    "npm": {
+      "checks": 2036,
+      "rejections": 2024,
+      "strictTypescript": true,
+      "skipLibCheck": false
+    }
+  },
+  "logs": {
+    "native": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "npm": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "predecessors": [
+    {
+      "revision": "f9cda04",
+      "result": "failed before installation",
+      "reason": "The installed fixture retained an undefined foreign-symbol refusal control.",
+      "artifacts": [
+        "failed-link.tap",
+        "failed-link.queue"
+      ],
+      "npmExecuted": false
+    },
+    {
+      "revision": "a22a4da",
+      "result": "failed in the installed C consumer",
+      "reason": "The ordinary consumer expected arg0/arg1 diagnostic labels; the independently reviewed API uses value0/value1.",
+      "artifacts": [
+        "failed-label.tap",
+        "failed-label.queue"
+      ],
+      "npmExecuted": false
+    }
+  ],
+  "remaining": [
+    "Other native hosts and browser execution need separate reviewed Subtype observations.",
+    "Nested Subtype and checked-record transports require separate acceptance.",
+    "Local installed execution does not establish release-floor or hosted-CI acceptance.",
+    "Value and rejection checks do not establish measured dispatch counters."
+  ]
+}

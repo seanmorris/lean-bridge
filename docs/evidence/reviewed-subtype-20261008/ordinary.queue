@@ -1,0 +1,7 @@
+revision=145c0f93aaef8d39ccc134c13bedf166822b35b7
+start=2026-10-08T05:51:47Z free=4154MiB node=v22.23.3 cpu=3 concurrency=1 queue=c-cpp,npm build/lean-runtime=/app/build/lean-runtime
+start c-cpp 2026-10-08T05:51:47Z pattern=^source-free reviewed C and C env=LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_REVIEWED_SUBTYPE_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_SUBTYPE_REPORT=/app/build/vo1444-reviewed-subtype-c-cpp-145c0f9.json
+end c-cpp 2026-10-08T05:58:46Z exit=0
+start npm 2026-10-08T05:58:46Z pattern=^source-free reviewed npm archives env=LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_TEST=1 LEAN_BRIDGE_LAKE_RUNTIME_ROOT=/app/build/lean-link-spike/lazy LEAN_BRIDGE_REVIEWED_SUBTYPE_NPM_REPORT=/app/build/vo1444-reviewed-subtype-npm-145c0f9.json
+end npm 2026-10-08T06:00:15Z exit=0
+all steps passed 2026-10-08T06:00:15Z
