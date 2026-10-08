@@ -1,24 +1,20 @@
 /**
- * Preserve exact source predecessors of the native Fin reply promotion (#1220).
+ * Preserve exact source predecessors of the Node consumer budget (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeNodeConsumerBudgetSource } from "./node-consumer-budget-source-history.mjs";
 
-export const nativeFinReplyPromotionHistoryPath = "docs/evidence/native-fin-reply-promotion-source-history-20261008.json";
-export const nativeFinReplyPromotionChangedPaths = [
+export const nodeConsumerBudgetHistoryPath = "docs/evidence/node-consumer-budget-source-history-20261008.json";
+export const nodeConsumerBudgetChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "docs/consume/c.md"
-	, "docs/consume/cpp.md"
-	, "tests/native-fin-callbacks.test.mjs"
-	, "tests/helpers/nominal-fin-contract-tests.mjs"
-	, "tests/helpers/php-wasm-fin-promotion-tests.mjs"
+	, ".github/workflows/consumer-matrix.yml"
+	, "tests/documentation.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-fin-reply-archive-source-history.mjs"
-	, "tests/helpers/native-fin-reply-archive-source-history-tests.mjs"
+	, "tests/helpers/native-fin-reply-promotion-source-history.mjs"
+	, "tests/helpers/native-fin-reply-promotion-source-history-tests.mjs"
 ];
 let history;
 
@@ -28,8 +24,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseNativeFinReplyPromotionUpdate = (source, update) => {
-	assert.ok(nativeFinReplyPromotionChangedPaths.includes(update.path));
+export const reverseNodeConsumerBudgetUpdate = (source, update) => {
+	assert.ok(nodeConsumerBudgetChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -49,18 +45,17 @@ export const reverseNativeFinReplyPromotionUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the native Fin reply promotion, stopping at an explicitly requested identity.
+ * Restore the source before the Node consumer budget, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNativeFinReplyPromotionSource = (path, source, expected) => {
-	source = beforeNodeConsumerBudgetSource(path, source, expected);
-	if(typeof source !== "string" || !nativeFinReplyPromotionChangedPaths.includes(path)) return source;
+export const beforeNodeConsumerBudgetSource = (path, source, expected) => {
+	if(typeof source !== "string" || !nodeConsumerBudgetChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nativeFinReplyPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(nodeConsumerBudgetHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNativeFinReplyPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseNodeConsumerBudgetUpdate(source, update) : source;
 };

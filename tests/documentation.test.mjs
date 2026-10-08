@@ -8,6 +8,8 @@ import assert from "node:assert/strict";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
+import "./helpers/node-consumer-budget-ci-tests.mjs";
+import "./helpers/node-consumer-budget-source-history-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
@@ -621,7 +623,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(toolchainBootstrap, /local partial="\$destination\.part"/);
   assert.match(toolchainBootstrap, /mv "\$partial" "\$destination"/);
   const nodeJob = workflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
-  assert.match(nodeJob, /^ {4}timeout-minutes: 180$/m);
+  assert.match(nodeJob, /^ {4}timeout-minutes: 330$/m);
   assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);
   assert.match(nodeJob, /--backend nix --browsers chromium,firefox,webkit/);
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];

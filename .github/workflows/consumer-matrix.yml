@@ -1215,9 +1215,9 @@ jobs:
   node-consumers:
     name: Node and browser npm consumers
     runs-on: ubuntu-24.04
-    # The full type corpus plus installed multi-profile/CLI acceptance exceeds
-    # two hours on cold runners. Keep the final registry/browser gate enabled.
-    timeout-minutes: 180
+    # Run 37805067353 hit three hours during the corpus. Leave time for the
+    # remaining multi-profile, installed CLI and registry/browser gates.
+    timeout-minutes: 330
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
