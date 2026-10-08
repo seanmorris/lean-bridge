@@ -152,15 +152,17 @@ test("real Lean extraction keeps exact Fin bounds and checks them in the exporte
 });
 
 // Arrays, lists and options of Fin are checked containers since VO #1427, products and results since
-// VO #1441 and plain record and variant fields since VO #1442; other positions stay rejected.
+// VO #1441 and plain record and variant fields since VO #1442. Since VO #1445 a host callback's
+// arguments carry Lean's own bounds where every package checks Fin in callbacks (C and C++); this
+// component has no such capability. A host callback's result and generic instantiations stay rejected.
 test("native builds reject Fin inside callbacks and generic record instantiations", { skip: !enabled, timeout: 900_000 }, async t => {
-	const sites = [["callback", "def callbackSite (value : Fin 5 → Nat) : Nat := value 0"]
-		, ["except callback", "def exceptSite (value : Nat → Except String (Fin 5)) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]
-		, ["generic field", "structure Holder (α : Type) where\n  digit : Fin 5\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digit.val"]];
-	for(const [name, source] of sites)
+	const sites = [["callback", "def callbackSite (value : Fin 5 → Nat) : Nat := value 0", /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/]
+		, ["except callback", "def exceptSite (value : Nat → Except String (Fin 5)) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0", /Fin refinements in a host callback result are refused: the host produces the value while Lean runs/]
+		, ["generic field", "structure Holder (α : Type) where\n  digit : Fin 5\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digit.val", /Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations/]];
+	for(const [name, source, pattern] of sites)
 	{
 		const nested = await project(t, `namespace NativeFin\n${source}\nend NativeFin\n`);
-		await assert.rejects(() => component(nested, true), error => /Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations/.test(JSON.stringify(error.details ?? error.message)), name);
+		await assert.rejects(() => component(nested, true), error => pattern.test(JSON.stringify(error.details ?? error.message)), name);
 	}
 });
 

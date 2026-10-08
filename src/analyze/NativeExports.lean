@@ -161,10 +161,14 @@ def genericStructure? (env : Environment) (name : Name) : Option StructureInfo :
   if structuralConstructors.contains name then none else getStructureInfo? env name
 
 /-- `structural` stays true while only arrays, lists, options, products, results, aliases and
-plain record and variant fields separate a position from its top-level parameter or result. -/
+plain record and variant fields separate a position from its top-level parameter or result.
+`callbackSite` marks a top-level export site: `some false` for a parameter, where a callback is
+the host's, and `some true` for the result, where a callback is a Lean closure leased to the host.
+`hostReply` marks positions the host produces while Lean runs: a host callback's result. -/
 partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option String := none)
-    (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none) : ShapeM Json := do
+    (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none)
+    (callbackSite : Option Bool := none) (hostReply : Bool := false) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -174,9 +178,13 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     if (depth != 0 || copied) && !containerFin then
       reject e "Fin refinements require a top-level or structural-container parameter or result"
     -- Native libraries check bounds around top-level parameters and results, inside their
-    -- structural containers and in plain record and variant fields; callbacks and generic
-    -- record instantiations stay unchecked.
+    -- structural containers, in plain record and variant fields, in the arguments of a Lean
+    -- closure leased to the host, and where Lean itself produces the value for the host.
+    -- A host callback's result would reach running Lean code before any check could refuse
+    -- it, and native packages never substitute a value, so it stays refused.
     if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && !structural then
+      if hostReply then
+        reject e "Fin refinements in a host callback result are refused: the host produces the value while Lean runs"
       reject e "Fin refinements are not implemented by the native-library profile inside callbacks or generic record instantiations"
     let bound ← whnf e.appArg!
     let .lit (.natVal bound) := bound
@@ -238,7 +246,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               -- A closed application of a generic structure becomes a record named by this alias.
               let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
                 (genericStructure? (← getEnv) definition.value.getAppFn.constName!).isSome
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none)
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply
               if ["resource", "callback", "refinement"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
               if (target.getObjValAs? String "kind").toOption == some "reference" &&
@@ -250,17 +258,17 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   -- Established structural constructors keep their mappings ahead of generic-record admission.
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural (hostReply := hostReply)), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural (hostReply := hostReply)), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true none containerFin structural (hostReply := hostReply)), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
     -- Products and results are structural containers: native packages check Fin in both
     -- components and in the active branch.
-    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin structural
-    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin structural
+    let first ← shapeTree request args[0]! seen (depth + 1) true none containerFin structural (hostReply := hostReply)
+    let second ← shapeTree request args[1]! seen (depth + 1) true none containerFin structural (hostReply := hostReply)
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     let result := e.isAppOfArity ``Except 2
     return obj [("kind", str (if result then "result" else "tuple")),
@@ -418,13 +426,17 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin false)
+        -- Arguments of a top-level callback are checked before a leased closure runs, or come
+        -- from Lean when the host is called; a callback nested in a callback stays unchecked.
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin callbackSite.isSome)
         result := rest
       | _ => break
+    -- A leased closure's result comes from Lean; a host callback's result is a host reply.
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1) false none containerFin false), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1) false none containerFin (callbackSite == some true)
+        (hostReply := callbackSite == some false)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply)
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has
@@ -521,12 +533,13 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
       (a.getObjValAs? String "name").toOption.getD "" < (b.getObjValAs? String "name").toOption.getD "")),
     ("abi", ← ofExcept <| value.getObjVal? "abi")]
 
-def shape (request : Request) (e : Expr) (checked : Option String := none) : MetaM Json := do
+def shape (request : Request) (e : Expr) (checked : Option String := none)
+    (callbackSite : Option Bool := none) : MetaM Json := do
   if let some policy := request.ownedAggregates then
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
-  let (value, state) ← (shapeTree request e (checked := checked)).run {}
+  let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)).run {}
   finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
@@ -536,10 +549,10 @@ partial def signature (request : Request) (e : Expr) (limit : Nat)
   if index < limit then
     if let .forallE _ argument result binder := reduced then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
-      let parameter ← shape request argument (checkedParameters[index]?.join)
+      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false)
       let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1)
       return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
-  return (#[], ← shape request e checkedResult)
+  return (#[], ← shape request e checkedResult (callbackSite := some true))
 
 def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do

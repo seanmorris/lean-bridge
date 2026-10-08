@@ -38,6 +38,60 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
 }`;
 
 /**
+ * Compare every Fin site of one argument with its bound on caller limbs, before any Lean
+ * value exists: each element of an array or list, a present option value, both product
+ * components, the active Except branch, each record field and the active variant case's fields.
+ *
+ * @param options - One argument's refinement tree and its copied C value.
+ * @param options.refinement - Validated refinement tree for the argument.
+ * @param options.type - Native representation of the argument.
+ * @param options.value - C expression addressing the copied value.
+ * @param options.constant - Name of the first bound constant; later sites are numbered.
+ * @param options.label - Argument name used in rejection messages.
+ * @param options.copy - Copied C type for a native representation.
+ * @param options.bounds - Receives static bound constant definitions.
+ * @param options.reject - Statement rejecting the call with a quoted message.
+ */
+export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
+	let sites = 0;
+	const check = (site, type, value, indent) => {
+		if(type.kind === "alias") return check(site, type.target, value, indent);
+		if(site.kind === "fin")
+		{
+			// A top-level scalar keeps its historical constant name; nested sites are numbered.
+			const limbs = finBoundLimbs(site.bound), name = sites === 0 && refinement.kind === "fin" ? constant : `${constant}_${sites}`;
+			sites += 1;
+			if(limbs.length) bounds.push(`static const uint32_t ${name}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
+			// The message names the leaf that failed, with its own bound.
+			return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) ${reject(JSON.stringify(`${label} is not below its Fin ${site.bound} bound`))}`];
+		}
+		const fields = copy(type).fields;
+		if(site.kind === "array" || site.kind === "list")
+		{
+			const index = `k${indent.length}`;
+			return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `), `${indent}}`];
+		}
+		// A record checks each refined field in declaration order; a variant only its active case.
+		if(site.kind === "record")
+			return site.arguments.flatMap((child, index) => child === null ? [] : check(child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent));
+		if(site.kind === "variant")
+		{
+			const cases = copy(type).cases;
+			return site.cases.flatMap(({ arguments: children }, index) => children.every(child => child === null) ? [] : [`${indent}if (${value}->kind == ${index}u) {`
+				, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `))
+				, `${indent}}`]);
+		}
+		const flag = { option: "has_value", result: "is_ok" }[site.kind];
+		return site.arguments.flatMap((child, index) => {
+			if(child === null) return [];
+			const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent);
+			return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
+		});
+	};
+	return check(refinement, root, argument, "  ");
+};
+
+/**
  * Render recursive validation, conversion and typed calls.
  *
  * @param model - Verified native compiler model.
@@ -200,42 +254,9 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		// record fields and the active variant case.
 		refinements.forEach((refinement, i) => {
 			if(!refinement || refinement.kind === "subtype") return;
-			let sites = 0;
-			const check = (site, type, value, indent) => {
-				if(type.kind === "alias") return check(site, type.target, value, indent);
-				if(site.kind === "fin")
-				{
-					// A top-level scalar keeps its historical constant name; nested sites are numbered.
-					const limbs = finBoundLimbs(site.bound), name = sites === 0 && refinement.kind === "fin" ? `lb_fin_${fn.field}_${i}` : `lb_fin_${fn.field}_${i}_${sites}`;
-					sites += 1;
-					if(limbs.length) bounds.push(`static const uint32_t ${name}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
-					// The message names the leaf that failed, with its own bound.
-					return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) return lb_invalid(error, ${JSON.stringify(`${fn.parameters[i].name} is not below its Fin ${site.bound} bound`)});`];
-				}
-				const fields = copy(type).fields;
-				if(site.kind === "array" || site.kind === "list")
-				{
-					const index = `k${indent.length}`;
-					return [`${indent}for (size_t ${index} = 0; ${index} < ${value}->length; ++${index}) {`, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `), `${indent}}`];
-				}
-				// A record checks each refined field in declaration order; a variant only its active case.
-				if(site.kind === "record")
-					return site.arguments.flatMap((child, index) => child === null ? [] : check(child, type.fields[index].type, `(&${value}->${fields[index].name})`, indent));
-				if(site.kind === "variant")
-				{
-					const cases = copy(type).cases;
-					return site.cases.flatMap(({ arguments: children }, index) => children.every(child => child === null) ? [] : [`${indent}if (${value}->kind == ${index}u) {`
-						, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `))
-						, `${indent}}`]);
-				}
-				const flag = { option: "has_value", result: "is_ok" }[site.kind];
-				return site.arguments.flatMap((child, index) => {
-					if(child === null) return [];
-					const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent);
-					return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
-				});
-			};
-			lines.push(...check(refinement, native.parameters[i].type, copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`, "  "));
+			const value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
+			const reject = message => `return lb_invalid(error, ${message});`;
+			lines.push(...finRefinementWalk({ refinement, type: native.parameters[i].type, value, constant: `lb_fin_${fn.field}_${i}`, label: fn.parameters[i].name, copy, bounds, reject }));
 		});
 		// Author-checked constructors run only after every structural and Fin check, on a fresh
 		// conversion that the exported validator owns and releases; the call converts again.
@@ -266,6 +287,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");
 		return lines.join("\n");
 	});
-	const fin = bounds.length || model.exports.some(item => item.refinements?.parameters.some(Boolean)) ? [finBelow, ...bounds].join("\n") + "\n\n" : "";
+	// A leased closure's checked arguments use the same comparison in the callable section below.
+	const fin = bounds.length || model.exports.some(item => item.refinements?.parameters.some(Boolean)) || model.types.some(type => type.checked) ? [finBelow, ...bounds].join("\n") + "\n\n" : "";
 	return `${definitions.join("\n\n")}\n\n${fin}${calls.join("\n\n")}`;
 };

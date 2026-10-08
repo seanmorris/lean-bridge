@@ -48,7 +48,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Unsupported native C-family target");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { copiedGraphs: true, nativeRefinements: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { copiedGraphs: true, nativeRefinements: true, nativeCallbackRefinements: true });
 	const graph = model.copiedGraph ? model.copiedGraph.callbacks
 		? compileCallableGraphPackageModel(model.bindingIr, [target])
 		: compileCopiedGraphPackageModel(model.bindingIr, [target]) : null;

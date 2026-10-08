@@ -119,12 +119,12 @@ export const generateCompiledCallbacks = model => {
  * @param options - Source selection, pinned compiler and native runtime paths.
  */
 export const buildNativeComponent = async options => {
-	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false } = options;
+	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false, nativeRefinements = false, nativeCallbackRefinements = false } = options;
 	const runtime = resolve(runtimeRoot);
 	const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 	if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
 	const createModel = input => {
-		const model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults, ownedReceiverExports, ownedCallbackResultAnchors, nativeRefinements });
+		const model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults, ownedReceiverExports, ownedCallbackResultAnchors, nativeRefinements, nativeCallbackRefinements });
 		if(model.copiedGraph && !copiedGraphs) throw Object.assign(new TypeError("Native graph components require a graph-capable host adapter"), { code: "native-graph-projection-unavailable" });
 		return model;
 	};

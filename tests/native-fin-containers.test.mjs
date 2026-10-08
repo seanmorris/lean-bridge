@@ -117,13 +117,15 @@ test("every native profile has a Fin container consumer", async () => {
 	for(const [profile, extension] of Object.entries(extensions)) await access(`tests/fixtures/fin-container-consumers/${profile}.${extension}`);
 });
 
+// Since VO #1445 C packages admit Fin in a host callback's arguments (Lean produces them); a callback
+// nested in a callback, a host callback's result and generic instantiations stay rejected.
 test("native builds still reject Fin in callbacks and generic record instantiations, including containers there", { skip: !profiles.includes("c"), timeout: 1_800_000 }, async t => {
-	const pattern = /inside callbacks or generic record instantiations/;
+	const unchecked = /inside callbacks or generic record instantiations/;
 	const cases = [
-		["callback", "def callbackSite (value : Array (Fin 5) → Nat) : Nat := value #[]"]
-		, ["result callback", "def resultSite (value : Nat → Except String (Array (Fin 5))) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0"]
-		, ["generic field", "structure Holder (α : Type) where\n  digits : Array (Fin 5)\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digits.size"]];
-	for(const [name, source] of cases)
+		["nested callback", "def callbackSite (value : (Array (Fin 5) → Nat) → Nat) : Nat := value (fun digits => digits.size)", unchecked]
+		, ["result callback", "def resultSite (value : Nat → Except String (Array (Fin 5))) : Nat := match value 0 with | .ok _ => 1 | .error _ => 0", /Fin refinements in a host callback result are refused: the host produces the value while Lean runs/]
+		, ["generic field", "structure Holder (α : Type) where\n  digits : Array (Fin 5)\n  value : α\nabbrev NatHolder := Holder Nat\ndef genericSite (value : NatHolder) : Nat := value.digits.size", unchecked]];
+	for(const [name, source, pattern] of cases)
 	{
 		const directory = await mkdtemp(join(tmpdir(), `lean-bridge-fin-container-${name}-`));
 		t.after(() => rm(directory, { recursive: true, force: true }));

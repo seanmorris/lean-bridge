@@ -47,9 +47,15 @@ const representation = type => {
  * @param type - Checked native type and compiler representation.
  * @param depth - Current recursive type-validation depth.
  * @param copied - Whether this position forbids retained identity.
+ * @param site - Top-level export site, "parameter" or "result", that fixes a callback's checked directions.
  */
 // A caller-supplied depth or copied position is never a top-level site, so a refinement there is rejected.
-export const validateNativeType = (type, depth = 0, copied = false) => validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied);
+// A top-level site names its role: a parameter's callback is the host's, whose arguments Lean produces;
+// a result's callback is a Lean closure leased to the host, whose arguments are checked before it runs.
+export const validateNativeType = (type, depth = 0, copied = false, site = undefined) => {
+	if(site !== undefined && (!["parameter", "result"].includes(site) || depth !== 0 || copied)) fail("invalid native callback site");
+	return validate(type, depth, copied, undefined, undefined, false, depth === 0 && !copied, site);
+};
 
 /**
  * Admit ownership-aware metadata only with an independently authorized policy.
@@ -64,7 +70,7 @@ export const validateOwnedNativeType = (type, policy) => {
 
 // `structural` stays true while only arrays, lists, options, products, results and aliases separate a
 // position from its top-level parameter or result.
-const validate = (type, depth, copied, references, policy, owned = false, structural = true) => {
+const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	if(!Object.hasOwn(Object.getOwnPropertyDescriptor(type, "kind") ?? {}, "value")) fail("type kind must be a data field");
 	if(type.kind === "owned-graph")
@@ -193,7 +199,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(copied) fail("callbacks inside copied values require a retention policy");
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
-		type.parameters.forEach(parameter => recurse(parameter, copied, false)); recurse(type.result, copied, false);
+		// Only a host callback's result is produced by the host while Lean runs; it stays unchecked.
+		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined)); recurse(type.result, copied, site === "result");
 	} else fail(`unsupported type kind ${type.kind}`);
 	return type;
 };
