@@ -5,21 +5,24 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareLakeEntryIntent } from "../src/build/lake-entry-intent.mjs";
 import { resolveLakeBuildWorkspace } from "../src/build/lake-build-workspace.mjs";
 import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
+import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { readReviewedSource, reviewedContractDifference, reviewedSourceSelection, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { genericRecordInstantiationReview, instantiationKey, reviewedGenericRecordSignatures } from "./helpers/reviewed-instantiation-fixture.mjs";
-import { genericRecordInstantiations } from "./helpers/generic-record-packages.mjs";
+import { genericRecordEnvironment, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const reviewInput = document => {
 	const source = canonicalJson(document);
@@ -185,4 +188,60 @@ test("fresh Lean contradictions stop a reviewed instantiation at the exact decis
 			validateReviewedSource(reviewInput(review));
 			await assert.rejects(async () => inspect(await project(t, review)), mismatch(name, field));
 		});
+});
+
+const profiles = process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_PROFILES?.split(",").sort() ?? [];
+assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Reviewed instantiation acceptance covers C and C++ first");
+
+test("independently reviewed C and C++ packages install every alias-named generic record from source-free archives", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+	const reports = [], archives = [];
+	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
+	const environment = genericRecordEnvironment(profiles);
+	const review = genericRecordInstantiationReview();
+	for(const attempt of [0, 1])
+	{
+		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-instantiation-author-"));
+		const consumer = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-instantiation-consumer-"));
+		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
+		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
+		await cp("tests/fixtures/onboarding/generic-records", projectRoot, { recursive: true });
+		// Modules and package targets only: every export decision comes from the review.
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], targets }));
+		await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(review));
+		t.diagnostic(`reviewed build ${attempt}: ${profiles.join(", ")}`);
+		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
+			error.message += `: ${JSON.stringify(error.details)}`; throw error;
+		});
+		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		// The native model keeps each alias-named record with the structure fresh Lean resolved.
+		const records = model.types.filter(item => item.kind === "record");
+		assert.deepEqual(records.map(item => item.name).sort(), Object.keys(genericRecordInstantiations).map(name => `GenericRecords.${name}`).sort());
+		for(const item of records) assert.equal(item.provenance.structure, `GenericRecords.${genericRecordInstantiations[item.name.slice("GenericRecords.".length)].structure}`, item.name);
+		for(const name of genericRecordProvenanceOnly) assert.ok(!model.types.some(item => item.name === `GenericRecords.${name}`), name);
+		for(const name of Object.keys(genericRecordInstantiations))
+			assert.deepEqual(type(model.bindingIr, name).source.extensions[instantiationKey], type(review, name).source.extensions[instantiationKey], name);
+		assert.deepEqual(model.bindingIr.declarations.map(item => item.id.slice("lean:".length)).sort(), exports);
+		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		// Install from prepared archives only. No author workspace or build staging remains.
+		await rm(directory, { recursive: true, force: true });
+		if(attempt === 1) break;
+		for(const profile of profiles)
+		{
+			t.diagnostic(`installing and checking reviewed ${profile}`);
+			const packages = receipt.packages.filter(pkg => pkg.target === genericRecordTargets[profile][0]);
+			// The same public consumers as the configured build: the review changes no public name.
+			const observation = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment });
+			delete observation.command;
+			const identities = { bindingIrSha256: built.bindingIrSha256, reviewedBindingIrSha256: hashBindingIr(review), modelSha256: sha256(canonicalJson(model)) };
+			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+			reports.push({ profile, path: "reviewed-source", ...observation, packages, instantiations: genericRecordInstantiations, ...identities, receiptSha256, sourceRemovedBeforeInstallation: true });
+			await rm(join(consumer, profile), { recursive: true, force: true });
+		}
+		await rm(consumer, { recursive: true, force: true });
+	}
+	assert.deepEqual(archives[1], archives[0]);
+	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_REPORT ?? `build/reviewed-instantiations/${profiles.join("-")}.json`);
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
 });
