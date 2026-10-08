@@ -126,8 +126,8 @@ console.log(JSON.stringify({ checks, rejections }));
 export const checkGenericRecordNpmPackages = async (t, { fixture: project, build, runtimeRoot, engineRoot, specialized, review }) => {
 	const { directory, root } = await project(t);
 	await saveLakeFile(root, "OnboardingSmall.lean", specialized ? await specialized.source("OnboardingSmall") : await genericRecordSource("OnboardingSmall"));
-	const exports = review ? {} : { exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")) };
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], ...exports, ...specialized?.configuration("OnboardingSmall") }));
+	const exports = review ? {} : { exports: genericRecordExports.map(name => name.replace("GenericRecords.", "OnboardingSmall.")), ...specialized?.configuration("OnboardingSmall") };
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], ...exports }));
 	if(review) await saveLakeFile(root, "api.binding-ir.json", canonicalJson(review));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });

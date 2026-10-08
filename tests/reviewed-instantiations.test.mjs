@@ -22,7 +22,8 @@ import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { readReviewedSource, reviewedContractDifference, reviewedSourceSelection, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { genericRecordInstantiationReview, instantiationKey, reviewedGenericRecordSignatures } from "./helpers/reviewed-instantiation-fixture.mjs";
+import { composedGenericRecordReview, genericRecordInstantiationReview, instantiationKey, reviewedGenericRecordSignatures } from "./helpers/reviewed-instantiation-fixture.mjs";
+import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
 import { checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 const reviewInput = document => {
@@ -181,11 +182,12 @@ const inspect = async root => {
 	finally
 	{ await workspace.dispose(); }
 };
-const project = async (t, review = genericRecordInstantiationReview()) => {
+const project = async (t, review = genericRecordInstantiationReview(), composed = false) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-instantiation-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const root = join(directory, "project");
 	await cp("tests/fixtures/onboarding/generic-records", root, { recursive: true });
+	if(composed) await saveLakeFile(root, "GenericRecords.lean", await specializedGenericRecordCase.source());
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"] }));
 	await saveLakeFile(root, "api.binding-ir.json", canonicalJson(review));
 	return root;
@@ -225,14 +227,34 @@ test("fresh Lean contradictions stop a reviewed instantiation at the exact decis
 		});
 });
 
+test("a composed review specializes generics over alias-instantiated records, and Lean receives only closed names", { skip: !enabled, timeout: 1_200_000 }, async t => {
+	const result = await inspect(await project(t, composedGenericRecordReview(), true));
+	assert.deepEqual(result.adapterHints, []);
+	const request = result.elaboration.request;
+	assert.deepEqual(request.specializations, genericRecordSpecializations().toSorted((a, b) => a.name < b.name ? -1 : 1));
+	assert.ok(!/instantiation|@_root_/u.test(canonicalJson(request)));
+	// The namespaces keep two identities over one origin; the phantom Marker stays only an origin.
+	specializedGenericRecordCase.assertIr(result.bindingIr.document, "GenericRecords");
+	const review = composedGenericRecordReview();
+	for(const item of result.bindingIr.document.declarations.filter(entry => entry.source.extensions["lean-lang.org/specialization"]))
+		assert.deepEqual(item.source.extensions["lean-lang.org/specialization"], review.declarations.find(entry => entry.id === item.id).source.extensions["lean-lang.org/specialization"], item.id);
+	// A namespaced alias restated over another argument stops at its own instantiation.
+	const changed = composedGenericRecordReview();
+	type(changed, "Left.LeftBox").source.extensions[instantiationKey].arguments = [{ kind: "primitive", name: "string" }];
+	const index = changed.types.toSorted((a, b) => a.id.localeCompare(b.id)).findIndex(item => item.id === "lean:GenericRecords.Left.LeftBox");
+	await assert.rejects(async () => inspect(await project(t, changed, true)), error => error.code === "reviewed-ir-source-mismatch"
+		&& error.details.field === `bindingIr.types[${index}].source.extensions.${instantiationKey}.arguments[0].name`);
+});
+
 const profiles = process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_PROFILES?.split(",").sort() ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)), "Reviewed instantiation acceptance covers C and C++ first");
 
-test("independently reviewed C and C++ packages install every alias-named generic record from source-free archives", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
+const checkReviewedNative = async (t, composed) => {
 	const reports = [], archives = [];
 	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
 	const environment = genericRecordEnvironment(profiles);
-	const review = genericRecordInstantiationReview();
+	const review = composed ? composedGenericRecordReview() : genericRecordInstantiationReview();
+	const instantiated = { ...genericRecordInstantiations, ...composed ? { "Left.LeftBox": { structure: "Box" }, "Right.RightBox": { structure: "Box" } } : {} };
 	for(const attempt of [0, 1])
 	{
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-instantiation-author-"));
@@ -240,6 +262,7 @@ test("independently reviewed C and C++ packages install every alias-named generi
 		t.after(() => Promise.all([directory, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(directory, "project"), outputRoot = join(directory, "release"), handoff = join(consumer, "handoff");
 		await cp("tests/fixtures/onboarding/generic-records", projectRoot, { recursive: true });
+		if(composed) await saveLakeFile(projectRoot, "GenericRecords.lean", await specializedGenericRecordCase.source());
 		// Modules and package targets only: every export decision comes from the review.
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["GenericRecords"], targets }));
 		await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(review));
@@ -250,12 +273,13 @@ test("independently reviewed C and C++ packages install every alias-named generi
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		// The native model keeps each alias-named record with the structure fresh Lean resolved.
 		const records = model.types.filter(item => item.kind === "record");
-		assert.deepEqual(records.map(item => item.name).sort(), Object.keys(genericRecordInstantiations).map(name => `GenericRecords.${name}`).sort());
-		for(const item of records) assert.equal(item.provenance.structure, `GenericRecords.${genericRecordInstantiations[item.name.slice("GenericRecords.".length)].structure}`, item.name);
+		assert.deepEqual(records.map(item => item.name).sort(), Object.keys(instantiated).map(name => `GenericRecords.${name}`).sort());
+		for(const item of records) assert.equal(item.provenance.structure, `GenericRecords.${instantiated[item.name.slice("GenericRecords.".length)].structure}`, item.name);
 		for(const name of genericRecordProvenanceOnly) assert.ok(!model.types.some(item => item.name === `GenericRecords.${name}`), name);
-		for(const name of Object.keys(genericRecordInstantiations))
+		for(const name of Object.keys(instantiated))
 			assert.deepEqual(type(model.bindingIr, name).source.extensions[instantiationKey], type(review, name).source.extensions[instantiationKey], name);
-		assert.deepEqual(model.bindingIr.declarations.map(item => item.id.slice("lean:".length)).sort(), exports);
+		assert.deepEqual(model.bindingIr.declarations.map(item => item.id).sort(), review.declarations.map(item => item.id).sort());
+		if(composed) specializedGenericRecordCase.assertIr(model.bindingIr, "GenericRecords");
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
@@ -267,19 +291,24 @@ test("independently reviewed C and C++ packages install every alias-named generi
 			t.diagnostic(`installing and checking reviewed ${profile}`);
 			const packages = receipt.packages.filter(pkg => pkg.target === genericRecordTargets[profile][0]);
 			// The same public consumers as the configured build: the review changes no public name.
-			const observation = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment });
+			const observation = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment, ...composed ? { specialized: true, source: specializedGenericRecordConsumer } : {} });
 			delete observation.command;
 			const identities = { bindingIrSha256: built.bindingIrSha256, reviewedBindingIrSha256: hashBindingIr(review), modelSha256: sha256(canonicalJson(model)) };
 			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
-			reports.push({ profile, path: "reviewed-source", ...observation, packages, instantiations: genericRecordInstantiations, ...identities, receiptSha256, sourceRemovedBeforeInstallation: true });
+			const decisions = { instantiations: genericRecordInstantiations, ...composed ? { specializations: genericRecordSpecializations() } : {} };
+			reports.push({ profile, path: "reviewed-source", ...observation, packages, ...decisions, ...identities, receiptSha256, sourceRemovedBeforeInstallation: true });
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.deepEqual(archives[1], archives[0]);
-	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_REPORT ?? `build/reviewed-instantiations/${profiles.join("-")}.json`);
+	const variable = composed ? "LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_REPORT" : "LEAN_BRIDGE_REVIEWED_INSTANTIATION_REPORT";
+	const reportPath = resolve(process.env[variable] ?? `build/reviewed-instantiations/${composed ? "specialized-" : ""}${profiles.join("-")}.json`);
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports, archives: archives[0], reproducible: true }));
-});
+};
+
+test("independently reviewed C and C++ packages install every alias-named generic record from source-free archives", { skip: !profiles.length, timeout: 2_400_000 }, t => checkReviewedNative(t, false));
+test("a composed review installs C and C++ specializations over alias-instantiated records in two namespaces", { skip: !profiles.length, timeout: 2_400_000 }, t => checkReviewedNative(t, true));
 
 const npm = process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_TEST === "1";
 const runtimeRoot = resolve(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT ?? "build/lean-link-spike/lazy");
@@ -299,4 +328,14 @@ test("an independently reviewed npm package keeps every alias-named record for N
 	const observation = await checkGenericRecordNpmPackages(t, { fixture: npmFixture, build, runtimeRoot, engineRoot, review });
 	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_NPM_REPORT ?? "build/reviewed-instantiations/npm.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", reviewedBindingIrSha256: hashBindingIr(review), instantiations: genericRecordInstantiations, ...observation }));
+});
+
+test("a composed review keeps npm specializations over alias-instantiated records for Node and strict TypeScript", { skip: !npm, timeout: 3_600_000 }, async t => {
+	const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix", LEAN_BRIDGE_RUNTIME_ROOT: runtimeRoot };
+	const build = (projectRoot, outputRoot) => buildCanonicalProject({ projectRoot, outputRoot, engineRoot, environment, targets: ["npm"], runner: refinementEngineTransport() });
+	const review = composedGenericRecordReview({ module: "OnboardingSmall", component: "onboarding-small" });
+	const observation = await checkGenericRecordNpmPackages(t, { fixture: npmFixture, build, runtimeRoot, engineRoot, review, specialized: specializedGenericRecordCase });
+	const reportPath = resolve(process.env.LEAN_BRIDGE_REVIEWED_INSTANTIATION_COMPOSED_NPM_REPORT ?? "build/reviewed-instantiations/specialized-npm.json");
+	const decisions = { instantiations: genericRecordInstantiations, specializations: genericRecordSpecializations("OnboardingSmall") };
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profile: "npm", path: "reviewed-source", reviewedBindingIrSha256: hashBindingIr(review), ...decisions, ...observation }));
 });
