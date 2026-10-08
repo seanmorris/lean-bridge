@@ -22,7 +22,8 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finCallbackArities, finCallbackConsumerNames, finCallbackEnvironment, finCallbackExports, finCallbackTargets, installFinCallbackConsumer } from "./helpers/fin-callback-install.mjs";
 import { finCallbackDispatchExpected, finCallbackDispatchInterposer, finCallbackDispatchProbe, finCallbackDispatchSymbols } from "./helpers/fin-callback-dispatch.mjs";
-import { generateNativeLeanAdapters, nativeTypeKey } from "../src/build/native-model.mjs";
+import { generateNativeLeanAdapters, nativeReplyRejectedSymbol, nativeTypeKey } from "../src/build/native-model.mjs";
+import { generateCompiledCallbacks } from "../src/build/native-component.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
@@ -233,22 +234,146 @@ test("C and C++ READMEs document only the callable bounds a package admits, and 
 	assert.equal(source.split("${copiedGuide}${graph ? \"\" : nativeCallbackFinGuide(model, target)}\\n\\n${exports.join").length, 2);
 });
 
-test("host replies, nested callbacks, mixed bounds and packages without callback checks stay refused", () => {
+test("host replies without a Fin-free failure value, nested callbacks, mixed bounds and packages without callback checks stay refused", () => {
 	const { nat, scaler } = { nat: finCallbackNat, scaler: finCallbackSignatures.scaler };
 	const refused = [
-		["a host callback's result", { reply: [finCallback([nat], finCallbackBound("5")), nat] }, true, /Fin refinements require a top-level native parameter or result/u]
-		, ["a host callback's result inside a container", { reply: [finCallback([nat], { kind: "array", element: finCallbackBound("5"), abi: nat.abi }), nat] }, true, /Fin refinements require a top-level native parameter or result/u]
+		["a host callback's result", { reply: [finCallback([nat], finCallbackBound("5")), nat] }, true, /a host callback result needs a Fin-free failure value/u]
+		, ["a package set beyond C and C++ with a contained reply", { reply: [finCallback([nat], { kind: "option", element: finCallbackBound("5"), abi: nat.abi }), nat] }, false, /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/u]
 		, ["a callback inside a leased closure's argument", { nested: [nat, finCallback([finCallback([finCallbackBound("5")], nat)], nat)] }, true, /Fin refinements require a top-level native parameter or result|callbacks inside copied values/u]
 		, ["an ordinary bound beside a callback", { mixed: [finCallbackBound("5"), finCallback([finCallbackBound("10")], nat)] }, true, /checked Fin refinements cannot share a native export with callbacks/u]
 		, ["a package set beyond C and C++", { scaler }, false, /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/u]
 		// A record's field is structural wherever the record appears, so the host-reply rule is the model's.
-		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /Fin refinements in a host callback result are refused/u]];
+		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]];
 	for(const [label, signatures, callbacks, pattern] of refused)
 		assert.throws(() => finCallbackCompilerModel(signatures, callbacks), error => pattern.test(error.message), label);
 	// Callback shapes without any bound keep their unchecked representation and entries.
 	const plain = finCallbackCompilerModel({ scaler: [nat, finCallback([nat], nat)], visit: [finCallback([nat], nat), nat] });
 	assert.ok(plain.exports.every(item => item.refinements === undefined && item.result.checked === undefined));
 	assert.doesNotMatch(generateNativeLeanAdapters(plain).leanSource, /_bridgeClosure|_bridgeArg/u);
+});
+
+// Host replies, each alone in an export taking the host callback, as the extractor reports them.
+const replyShapes = () => {
+	const nat = finCallbackNat, fin = finCallbackBound, heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const option = element => ({ kind: "option", element, abi: heap }), array = element => ({ kind: "array", element, abi: heap });
+	const text = { kind: "primitive", name: "string", lean: "String", abi: heap };
+	const cases = [{ name: "label", constructor: "FinCallbacks.Late.label", fields: [{ name: "text", type: text }] }
+		, { name: "digit", constructor: "FinCallbacks.Late.digit", fields: [{ name: "value", type: fin("10") }] }];
+	const late = { kind: "variant", name: "FinCallbacks.Late", lean: "FinCallbacks.Late", cases, abi: heap };
+	const alias = { kind: "alias", name: "FinCallbacks.MaybeDigit", lean: "FinCallbacks.MaybeDigit", target: option(fin("5")), abi: heap };
+	return {
+		// None, an empty collection, the ok branch and the first case: none of these failure values holds a Fin.
+		admitted: {
+			maybe: option(fin("5"))
+			, digits: array(fin("3"))
+			, none0: option(fin("0"))
+			, empty0: { kind: "list", element: fin("0"), abi: heap }
+			, wide: option(fin("184467440737095516170"))
+			, failure: { kind: "result", arguments: [nat, fin("7")], abi: heap }
+			, trailing: late
+			, maybeTile: option(finCallbackTile)
+			, aliased: alias
+			, nested: option(array(fin("3")))
+		}
+		, refused: {
+			scalar: fin("5")
+			, zero: fin("0")
+			, tile: finCallbackTile
+			, pair: { kind: "tuple", arguments: [fin("5"), nat], abi: heap }
+			, success: { kind: "result", arguments: [fin("7"), nat], abi: heap }
+			, first: { ...late, cases: [...cases].reverse() }
+			, aliasedScalar: { ...alias, target: fin("5"), abi: nat.abi }
+		}
+	};
+};
+const replyModel = signatures => finCallbackCompilerModel(Object.fromEntries(Object.entries(signatures)
+	.map(([name, type]) => [name, [finCallback([finCallbackNat], type), finCallbackNat]])));
+const replySurface = model => compilePrimitiveCSurface(model.bindingIr, { wordBits: model.pointerBits, callables: true, structuredCallables: true, compounds: true, lists: true, variants: true });
+const section = (text, start, end = "\n}\n") => text.slice(text.indexOf(start), text.indexOf(end, text.indexOf(start)));
+
+test("host replies are admitted only when their failure value holds no Fin, and Lean rebuilds each Fin from its decidable proof", () => {
+	for(const [name, type] of Object.entries(replyShapes().admitted))
+	{
+		const model = replyModel({ [name]: type }), item = model.exports[0], host = item.parameters[0].type, key = nativeTypeKey(host);
+		assert.deepEqual(host.reply, item.refinements.parameters[0].result, name);
+		const lean = generateNativeLeanAdapters(model).leanSource;
+		const reject = lean.indexOf(`@[extern "lb_t${key}_reply_reject"]\nopaque reply_reject_${key} (reply : `);
+		assert.ok(reject >= 0 && reject < lean.indexOf(`def f_${item.symbol}`), name);
+		assert.match(lean, new RegExp(`let _bridgeReply := a0 \\(_bridgeArg0\\); match .*(?:if proof : |LbErased\\.[\\w.]+\\.check ).* \\| \\.some _bridgeChecked => _bridgeChecked \\| \\.none => reply_reject_${key} _bridgeReply\\)`, "u"), name);
+		// Records and variants convert through their mirror's check, which holds the decidable test.
+		assert.match(lean, /if proof : /u, name);
+		assert.doesNotMatch(lean, /\b(?:panic!|sorry|default|Fin\.ofNat|unsafeCast)\b/u, name);
+		// The C walk compares the reply on host limbs after its shape check and before any Lean value exists.
+		const source = generateNativeCallables(model, replySurface(model)).source, trampoline = section(source, `lb_invoke_${key}(`);
+		const walk = trampoline.indexOf("lb_fin_below(");
+		assert.ok(trampoline.indexOf("_check(&returned") < walk && walk < trampoline.indexOf("_in(&returned)"), name);
+		assert.match(trampoline, /lb_record\(frame, FINCALLBACKS_STATUS_INVALID_ARGUMENT, NULL, "callback result is not below its Fin \d+ bound"\); goto done; \}/u, name);
+		// A reply Lean rejected suppresses later host callbacks and reaches the frame at reentry and leave.
+		const flag = `if (${nativeReplyRejectedSymbol(model)}()) lb_record(`;
+		assert.ok(trampoline.indexOf(flag) >= 0 && trampoline.indexOf(flag) < trampoline.indexOf("if (frame->status != FINCALLBACKS_STATUS_OK) goto done;"), name);
+		assert.ok(section(source, "static void lb_observe(").includes(flag), name);
+		const component = generateCompiledCallbacks(model);
+		assert.ok(component.includes(`lean_object *lb_t${key}_reply_reject(lean_object *reply) {\n  lean_dec(reply);\n  lb_reply_rejected = 1;\n  return lb_t${key}_reply_fallback(lean_box(0));\n}\n`), name);
+		// The fallback is a Lean definition over source constructors, exported beside its prototype.
+		const fallback = lean.indexOf(`@[export lb_t${key}_reply_fallback]\ndef reply_fallback_${key} (_unit : _root_.Unit) : `);
+		assert.ok(fallback >= 0 && fallback < reject, name);
+		assert.ok(generateNativeLeanAdapters(model).header.includes(`lean_object * lb_t${key}_reply_fallback(lean_object * unit);`), name);
+		assert.doesNotMatch(lean.slice(fallback, lean.indexOf("\n\n", fallback)), /LbErased/u, name);
+		assert.ok(component.includes(`int ${nativeReplyRejectedSymbol(model)}(void) { int value = lb_reply_rejected; lb_reply_rejected = 0; return value; }`), name);
+	}
+	for(const [name, type] of Object.entries(replyShapes().refused))
+		assert.throws(() => replyModel({ [name]: type }), /a host callback result needs a Fin-free failure value/u, name);
+});
+
+test("checked host replies keep distinct identities in either declaration order", () => {
+	const { maybe } = replyShapes().admitted, five = maybe, three = { ...maybe, element: finCallbackBound("3") };
+	const plain = { ...maybe, element: finCallbackNat };
+	const keys = order => {
+		const model = replyModel(Object.fromEntries(order.map(([name, type]) => [name, type])));
+		return Object.fromEntries(model.exports.map(item => [item.name, nativeTypeKey(item.parameters[0].type)]));
+	};
+	const forward = keys([["a", three], ["b", five], ["c", plain]]), reverse = keys([["a", plain], ["b", five], ["c", three]]);
+	assert.equal(new Set(Object.values(forward)).size, 3);
+	assert.deepEqual([forward["Sample.a"], forward["Sample.b"], forward["Sample.c"]], [reverse["Sample.c"], reverse["Sample.b"], reverse["Sample.a"]]);
+	// The unchecked callback with the same representation keeps no reply and no reject.
+	const model = replyModel({ a: three, b: five, c: plain }), lean = generateNativeLeanAdapters(model).leanSource;
+	const unchecked = model.types.find(type => type.kind === "callback" && nativeTypeKey(type) === forward["Sample.c"]);
+	assert.equal(unchecked.reply, undefined);
+	assert.ok(!lean.includes(`reply_reject_${unchecked.key}`));
+	// Each checked trampoline compares its own bound.
+	const source = generateNativeCallables(model, replySurface(model)).source;
+	assert.match(section(source, `lb_invoke_${forward["Sample.a"]}(`), /"callback result is not below its Fin 3 bound"/u);
+	assert.match(section(source, `lb_invoke_${forward["Sample.b"]}(`), /"callback result is not below its Fin 5 bound"/u);
+	assert.doesNotMatch(section(source, `lb_invoke_${forward["Sample.c"]}(`), /lb_fin_below/u);
+});
+
+test("the C reply walk and Lean's reconstruction are independent, and packages without replies keep their sources", () => {
+	const model = replyModel({ maybe: replyShapes().admitted.maybe }), host = model.exports[0].parameters[0].type, key = nativeTypeKey(host);
+	const source = generateNativeCallables(model, replySurface(model)).source;
+	assert.ok(source.includes(`static const uint32_t lb_fin_reply_${key}_0[1] = {0x5u};`));
+	// Weakening the bound changes the compared constant and the identity, so a pinned constant detects it.
+	const weakened = replyModel({ maybe: { ...replyShapes().admitted.maybe, element: finCallbackBound("6") } });
+	const loose = nativeTypeKey(weakened.exports[0].parameters[0].type), looseSource = generateNativeCallables(weakened, replySurface(weakened)).source;
+	assert.notEqual(loose, key);
+	assert.ok(looseSource.includes(`static const uint32_t lb_fin_reply_${loose}_0[1] = {0x6u};`) && !looseSource.includes("= {0x5u};"));
+	// Without the C walk the Lean reconstruction still refuses through its decidable check.
+	const unwalked = structuredClone(model);
+	for(const type of [...unwalked.types, ...unwalked.exports.flatMap(item => item.parameters.map(parameter => parameter.type))]) delete type.reply;
+	for(const type of unwalked.types) type.key = nativeTypeKey(type);
+	assert.doesNotMatch(generateNativeCallables(unwalked, replySurface(unwalked)).source, /lb_fin_reply_|_reply_take_rejected/u);
+	assert.match(generateNativeLeanAdapters(model).leanSource, /if proof : .* < 5 then .* \| \.none => reply_reject_/u);
+	// Packages without checked replies emit no reply walk, flag or reject.
+	const fixture = finCallbackCompilerModel();
+	assert.doesNotMatch(generateNativeCallables(fixture, replySurface(fixture)).source, /lb_fin_reply_|_reply_take_rejected|Lean rejected a host callback result/u);
+	assert.doesNotMatch(generateCompiledCallbacks(fixture), /reply_reject|lb_reply_rejected/u);
+	assert.doesNotMatch(generateNativeLeanAdapters(fixture).leanSource, /reply_reject_|_bridgeReply/u);
+	// The README describes checked replies only where a package has them.
+	for(const target of ["c", "cpp"])
+	{
+		const guide = nativeCallbackFinGuide(model, target);
+		assert.match(guide, /A host callback's result is compared with its Fin bounds before Lean uses it\./u);
+		assert.doesNotMatch(guide, /cannot carry a Fin bound|rolled back|no Lean code runs/u);
+	}
 });
 
 const lean = process.env.LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST === "1";

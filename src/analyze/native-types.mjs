@@ -226,8 +226,9 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(copied) fail("callbacks inside copied values require a retention policy");
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
-		// Only a host callback's result is produced by the host while Lean runs; it stays unchecked.
-		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined)); recurse(type.result, copied, site === "result");
+		// A host callback's result is produced by the host while Lean runs; the native model admits
+		// its bounds only when its failure value holds no Fin.
+		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined)); recurse(type.result, copied, site !== undefined);
 	} else fail(`unsupported type kind ${type.kind}`);
 	return type;
 };

@@ -8,7 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { nativeCType, nativeCallbackDefault } from "./native-model.mjs";
+import { nativeCType, nativeCallbackDefault, nativeReplyRejectedSymbol } from "./native-model.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "./native-graph-model.mjs";
 import { generateNativeCallableGraphTrampolines } from "./native-callable-graph.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
@@ -105,8 +105,15 @@ export const generateCompiledCallbacks = model => {
 	if(model.copiedGraph?.callbacks)
 		return generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model));
 	let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
+	// Lean reaches a reply's reject only after its own decidable check fails. The reject consumes
+	// the reply, flags the call for the package frame and returns the Fin-free failure value that
+	// Lean builds with source constructors.
+	if(model.types.some(t => t.kind === "callback" && t.reply))
+		callbacks += `static _Thread_local int lb_reply_rejected;\nint ${nativeReplyRejectedSymbol(model)}(void) { int value = lb_reply_rejected; lb_reply_rejected = 0; return value; }\n`;
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
+		if(type.reply)
+			callbacks += `lean_object *lb_t${type.key}_reply_reject(lean_object *reply) {\n  lean_dec(reply);\n  lb_reply_rejected = 1;\n  return lb_t${type.key}_reply_fallback(lean_box(0));\n}\n`;
 		const result = nativeCType(type.result), arguments_ = type.parameters.map((_, i) => `value${i}`).join(", ");
 		callbacks += `${result} lb_t${type.key}_invoke(size_t token, ${type.parameters.map((p, i) => `${nativeCType(p)} value${i}`).join(", ")}) {\n  lb_native_callback cb = lb_native_callback_lookup(token);\n  if (!cb.invoke) { ${type.parameters.map((p, i) => nativeCType(p) === "lean_object *" ? `lean_dec(value${i});` : "").join(" ")} return ${callbackDefault(type.result)}; }\n  return ((${result} (*)(void *, ${type.parameters.map(nativeCType).join(", ")}))cb.invoke)(cb.context, ${arguments_});\n}\n`;
 	}
