@@ -38,8 +38,9 @@ const expectedChecks = 27;
  * @param run - Command to run.
  */
 export const retainFailure = (path, run) => run().catch(async error => {
-	const output = error.details ?? error;
-	await writeFile(path, canonicalJson({ command: output.command ?? null, args: output.args ?? [], stdout: output.stdout ?? "", stderr: output.stderr ?? "", message: error.message }));
+	const output = error.details ?? error, bounded = value => typeof value === "string" ? value.slice(-8000) : "";
+	const captured = { command: output.command ?? null, args: output.args ?? [], stdout: bounded(output.stdout), stderr: bounded(output.stderr) };
+	await writeFile(path, canonicalJson({ code: error.code ?? null, ...captured, message: bounded(error.message) }));
 	throw error;
 });
 
@@ -71,6 +72,10 @@ test("a failed harness command keeps its structured output beside the report", a
 	await assert.rejects(() => retainFailure(path, () => runCopied("/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], directory, { PATH: "/usr/bin:/bin" })));
 	const record = JSON.parse(await readFile(path, "utf8"));
 	assert.deepEqual([record.command, record.args, record.stdout, record.stderr], ["/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], "out\n", "err\n"]);
+	// A coded build error without process output keeps its code and bounded message.
+	await assert.rejects(() => retainFailure(path, () => Promise.reject(Object.assign(new Error("x".repeat(9000)), { code: "unsupported-native-c-signature", details: { declaration: "lean:FinReplies.late" } }))));
+	const coded = JSON.parse(await readFile(path, "utf8"));
+	assert.deepEqual([coded.code, coded.command, coded.stdout, coded.message.length], ["unsupported-native-c-signature", null, "", 8000]);
 	// A successful command leaves no record.
 	await rm(path);
 	await retainFailure(path, () => runCopied("/bin/sh", ["-c", "true"], directory, { PATH: "/usr/bin:/bin" }));
@@ -101,9 +106,12 @@ test("generated C wrapper execution: C reply walks and Lean's own reconstruction
 	await cp(fixture, projectRoot, { recursive: true });
 	await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["FinReplies"], exports, targets: { c: { name: "finreplies", version: "1.0.0" } } }));
 	const environment = finCallbackEnvironment(["c"]);
-	await buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment }).catch(error => {
+	const reportPath = resolve(process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_REPORT ?? "build/native-fin-replies/c-bypass.json");
+	await mkdir(dirname(reportPath), { recursive: true });
+	// The package build keeps its own failure record too: a refusal there precedes every relink.
+	await retainFailure(`${reportPath}.build.failure.json`, () => buildCanonicalProject({ projectRoot, outputRoot, targets: ["c"], environment }).catch(error => {
 		error.message += `: ${JSON.stringify(error.details)}`; throw error;
-	});
+	}));
 	const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 	const declaration = name => model.exports.find(item => item.name === `FinReplies.${name}`);
 	// Every admitted reply shape reached the model as a checked reply.
@@ -125,8 +133,7 @@ test("generated C wrapper execution: C reply walks and Lean's own reconstruction
 		.map(([macro, name, index]) => [macro, `${surface.prefix}_${surface.callbacks.get(model.bindingIr.declarations.find(item => item.id === `lean:FinReplies.${name}`).parameters[index].type.id).field}`]));
 	const harness = `${Object.entries(names).map(([macro, value]) => `#define ${macro} ${value}`).join("\n")}\n${await readFile("tests/fixtures/fin-reply-consumers/bypass.c", "utf8")}`;
 	const consumerFlags = ["-std=c11", "-Wall", "-Wextra", "-Werror", ...sanitizers, "-pthread"];
-	const runs = {}, reportPath = resolve(process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_REPORT ?? "build/native-fin-replies/c-bypass.json");
-	await mkdir(dirname(reportPath), { recursive: true });
+	const runs = {};
 	const retained = (label, command, args, cwd, environment) => retainFailure(`${reportPath}.${label}.failure.json`, () => runCopied(command, args, cwd, environment));
 	const compilerVersion = (await runCopied("/usr/bin/cc", ["--version"], directory, env)).stdout.split("\n")[0];
 	const libraries = { wrapperSha256: sha256(await readFile(join(binding, "lib", `lib${surface.prefix}.so`))), componentSha256: sha256(await readFile(join(component, receipt.library))) };
