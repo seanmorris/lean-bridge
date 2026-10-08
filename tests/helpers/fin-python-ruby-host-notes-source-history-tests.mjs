@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinRecordWitFormatSource } from "./fin-record-wit-format-source-history.mjs";
 import { beforeFinPythonRubyHostNotesSource, finPythonRubyHostNotesChangedPaths, finPythonRubyHostNotesHistoryPath, reverseFinPythonRubyHostNotesUpdate } from "./fin-python-ruby-host-notes-source-history.mjs";
 
 test("Python/Ruby host notes authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Python/Ruby host notes authenticates each exact source predecessor", async
 	assert.deepEqual(record.updates.map(update => update.path), finPythonRubyHostNotesChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinRecordWitFormatSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseFinPythonRubyHostNotesUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinPythonRubyHostNotesSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinPythonRubyHostNotesSource(update.path, source, update.currentSha256), source);

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-record-wit-format-v1",
+  "predecessorCommit": "190970165431b3c25e91c6186e47beef2409e014",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "497caa6a1b0ff8e0791a575550c70cd7970abe2e5a8060bbf852b0ff4274d30b",
+      "previousSha256": "f2231ec350397b514f83a1d54f0785141a36870024e5f3bc6b9718dfcdbb0ba0",
+      "edits": [
+        {
+          "start": 1706698,
+          "previous": "          \"sha256\": \"7e6cf945e43c2a3eb660627e8d85a7299800c026b860b2d784d5e07689e77091\"\n",
+          "current": "          \"sha256\": \"b0dcfb86de0bef706050484d6a8f87f60c8140bfe09f36a10b24fd921060c5c3\"\n"
+        },
+        {
+          "start": 1710250,
+          "previous": "          \"sha256\": \"7e6cf945e43c2a3eb660627e8d85a7299800c026b860b2d784d5e07689e77091\"\n",
+          "current": "          \"sha256\": \"b0dcfb86de0bef706050484d6a8f87f60c8140bfe09f36a10b24fd921060c5c3\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-install.mjs",
+      "currentSha256": "f47a2cf7290887d2ac09a37e873d89fa575687ec5d9228c05ce904de35259227",
+      "previousSha256": "4a134721d50d43d52ebbefde9f7ee99c4186af873f70cd569d95a6eac03bc3e1",
+      "edits": [
+        {
+          "start": 3183,
+          "previous": "export const finRecordWitPatterns = Object.freeze([/type (bridge-value-\\d+) = list<u32>;[^]*record tile \\{ digit: \\1, count: \\1 \\}[^]*record nest \\{ inner: tile, tag: \\1 \\}[^]*nest-sum: func\\(arg0: nest\\) -> \\1;/u\n\t, /record shape-circle-fields \\{ radius: (bridge-value-\\d+) \\}[^]*variant shape \\{ circle\\(shape-circle-fields\\), label\\(shape-label-fields\\), empty \\}[^]*shape-size: func\\(arg0: shape\\) -> \\1;/u\n\t, /variant gate \\{ closed, never\\(gate-never-fields\\) \\}/u]);\n",
+          "current": "export const finRecordWitPatterns = Object.freeze([/type (bridge-value-\\d+) = list<u32>;[^]*record tile \\{\\s*digit: \\1,\\s*count: \\1,?\\s*\\}[^]*record nest \\{\\s*inner: tile,\\s*tag: \\1,?\\s*\\}[^]*nest-sum: func\\(arg0: nest\\) -> \\1;/u\n\t, /record shape-circle-fields \\{\\s*radius: (bridge-value-\\d+),?\\s*\\}[^]*variant shape \\{\\s*circle\\(shape-circle-fields\\),\\s*label\\(shape-label-fields\\),\\s*empty,?\\s*\\}[^]*shape-size: func\\(arg0: shape\\) -> \\1;/u\n\t, /variant gate \\{\\s*closed,\\s*never\\(gate-never-fields\\),?\\s*\\}/u]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-evidence-tests.mjs",
+      "currentSha256": "b0dcfb86de0bef706050484d6a8f87f60c8140bfe09f36a10b24fd921060c5c3",
+      "previousSha256": "7e6cf945e43c2a3eb660627e8d85a7299800c026b860b2d784d5e07689e77091",
+      "edits": [
+        {
+          "start": 285,
+          "previous": "",
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 3619,
+          "previous": "\tfor(const source of receipt.sourceFiles) assert.equal(sha256(await readFile(source.path)), source.sha256, source.path);\n",
+          "current": "\tfor(const source of receipt.sourceFiles)\n\t\tassert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path), source.sha256)), source.sha256, source.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-records.test.mjs",
+      "currentSha256": "f6681d83fc4179a13809ab1ad8a77c31e22b423edac2e8e00de1f177e9690b41",
+      "previousSha256": "5c779661b09a0cbbddf08501315800c84100a8f03a3caf150979b9d88b5f54b7",
+      "edits": [
+        {
+          "start": 422,
+          "previous": "",
+          "current": "import \"./helpers/fin-record-wit-format-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-host-notes-source-history.mjs",
+      "currentSha256": "c7bc6d3102a97aa4023e327180b61fc77f63f49bf5ae4e0014766f2911d518e1",
+      "previousSha256": "ab9d0bb68cac5b2eecda5ee5a1d179f214ca8cd54e577208e2f257c286b2171e",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforeFinRecordWitFormatSource } from \"./fin-record-wit-format-source-history.mjs\";\n"
+        },
+        {
+          "start": 2315,
+          "previous": "",
+          "current": "\tsource = beforeFinRecordWitFormatSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-host-notes-source-history-tests.mjs",
+      "currentSha256": "4805921ab56989f1741c383af04454a0c9b6abd078fd90280d4eee83bdf03e91",
+      "previousSha256": "d10790fefa9abcf306bef28b9d194ef63a53d5a0be3861072b9eb7b223959ea8",
+      "edits": [
+        {
+          "start": 352,
+          "previous": "",
+          "current": "import { beforeFinRecordWitFormatSource } from \"./fin-record-wit-format-source-history.mjs\";\n"
+        },
+        {
+          "start": 1055,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinRecordWitFormatSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "9191bcb11d4cbe3727ba08529d1300951b85fa5c0c2aabadf73ee42aabe167d1",
+      "previousSha256": "a7547976aa990c69082bebd027b7cbb483a473a1641e364f2958dc6c43ee2557",
+      "edits": [
+        {
+          "start": 9192,
+          "previous": "",
+          "current": "import { finRecordWitFormatChangedPaths } from \"./fin-record-wit-format-source-history.mjs\";\n"
+        },
+        {
+          "start": 46048,
+          "previous": "",
+          "current": "\t, ...finRecordWitFormatChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

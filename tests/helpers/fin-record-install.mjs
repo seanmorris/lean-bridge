@@ -44,9 +44,9 @@ export const finRecordRefinements = Object.freeze({
 	, "FinRecords.tiles": { parameters: [{ kind: "array", arguments: [tile] }], result: null } });
 
 /** WIT keeps Nat's limb list inside named records and variant case records. */
-export const finRecordWitPatterns = Object.freeze([/type (bridge-value-\d+) = list<u32>;[^]*record tile \{ digit: \1, count: \1 \}[^]*record nest \{ inner: tile, tag: \1 \}[^]*nest-sum: func\(arg0: nest\) -> \1;/u
-	, /record shape-circle-fields \{ radius: (bridge-value-\d+) \}[^]*variant shape \{ circle\(shape-circle-fields\), label\(shape-label-fields\), empty \}[^]*shape-size: func\(arg0: shape\) -> \1;/u
-	, /variant gate \{ closed, never\(gate-never-fields\) \}/u]);
+export const finRecordWitPatterns = Object.freeze([/type (bridge-value-\d+) = list<u32>;[^]*record tile \{\s*digit: \1,\s*count: \1,?\s*\}[^]*record nest \{\s*inner: tile,\s*tag: \1,?\s*\}[^]*nest-sum: func\(arg0: nest\) -> \1;/u
+	, /record shape-circle-fields \{\s*radius: (bridge-value-\d+),?\s*\}[^]*variant shape \{\s*circle\(shape-circle-fields\),\s*label\(shape-label-fields\),\s*empty,?\s*\}[^]*shape-size: func\(arg0: shape\) -> \1;/u
+	, /variant gate \{\s*closed,\s*never\(gate-never-fields\),?\s*\}/u]);
 
 /**
  * Install and exercise the record exports through public host APIs.

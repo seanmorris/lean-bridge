@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { finRecordRefinements } from "./fin-record-install.mjs";
 import { finRecordDispatchColumns, finRecordDispatchExpected } from "./fin-record-dispatch.mjs";
 import { finRecordReviewedIr } from "./reviewed-fin-record-fixture.mjs";
@@ -66,7 +67,8 @@ test("record archives bind the expanded frozen fixture, original packages and C 
 	assert.deepEqual(receipt.scope.dispatchProfiles, ["c"]);
 	assert.deepEqual(receipt.scope.unmeasuredDispatchProfiles, ["cpp"]);
 	assert.equal(receipt.sourceFiles.length, 6);
-	for(const source of receipt.sourceFiles) assert.equal(sha256(await readFile(source.path)), source.sha256, source.path);
+	for(const source of receipt.sourceFiles)
+		assert.equal(sha256(beforeFinRefinementSource(source.path, await readFile(source.path), source.sha256)), source.sha256, source.path);
 	assert.deepEqual(receipt.runs.map(run => run.id), identities.map(([id]) => id));
 	for(const [id, path, reportDigest, logDigest, passed, skipped] of identities)
 	{

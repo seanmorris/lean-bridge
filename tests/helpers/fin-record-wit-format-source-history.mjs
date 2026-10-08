@@ -1,20 +1,20 @@
 /**
- * Preserve exact source predecessors of the Python/Ruby host notes change (#1220).
+ * Preserve exact source predecessors of the Fin record WIT formatting change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinRecordWitFormatSource } from "./fin-record-wit-format-source-history.mjs";
 
-export const finPythonRubyHostNotesHistoryPath = "docs/evidence/fin-python-ruby-host-notes-source-history-20261008.json";
-export const finPythonRubyHostNotesChangedPaths = [
+export const finRecordWitFormatHistoryPath = "docs/evidence/fin-record-wit-format-source-history-20261008.json";
+export const finRecordWitFormatChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "scripts/promote-fin-python-ruby-evidence.mjs"
-	, "tests/helpers/fin-python-ruby-promotion-tests.mjs"
-	, "tests/helpers/fin-python-ruby-promotion-source-history.mjs"
-	, "tests/helpers/fin-python-ruby-promotion-source-history-tests.mjs"
+	, "tests/helpers/fin-record-install.mjs"
+	, "tests/helpers/fin-record-evidence-tests.mjs"
+	, "tests/native-fin-records.test.mjs"
+	, "tests/helpers/fin-python-ruby-host-notes-source-history.mjs"
+	, "tests/helpers/fin-python-ruby-host-notes-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 ];
 let history;
@@ -25,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseFinPythonRubyHostNotesUpdate = (source, update) => {
-	assert.ok(finPythonRubyHostNotesChangedPaths.includes(update.path));
+export const reverseFinRecordWitFormatUpdate = (source, update) => {
+	assert.ok(finRecordWitFormatChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -52,12 +52,11 @@ export const reverseFinPythonRubyHostNotesUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeFinPythonRubyHostNotesSource = (path, source, expected) => {
-	source = beforeFinRecordWitFormatSource(path, source, expected);
-	if(typeof source !== "string" || !finPythonRubyHostNotesChangedPaths.includes(path)) return source;
+export const beforeFinRecordWitFormatSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finRecordWitFormatChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(finPythonRubyHostNotesHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finRecordWitFormatHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseFinPythonRubyHostNotesUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinRecordWitFormatUpdate(source, update) : source;
 };
