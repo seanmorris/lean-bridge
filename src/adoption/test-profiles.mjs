@@ -792,6 +792,7 @@ const profileManifest = Object.freeze({
 		, "native-specializations"
 		, "reviewed-specializations"
 		, "reviewed-instantiations"
+		, "reviewed-npm-packaging"
 		, "native-fin-containers"
 		, "native-fin-products"
 		, "native-fin-product-arrays"
