@@ -13,7 +13,7 @@ import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { genericRecordInstantiations, genericRecordProvenanceOnly } from "./helpers/generic-record-packages.mjs";
-import { checkGenericRecordBrowserPackages, genericRecordArrayExports, genericRecordArrayInstantiations, genericRecordBrowserExpected, genericRecordBrowserInstantiations, genericRecordBrowserProfiles, genericRecordBrowserSource, validateGenericRecordBrowserObservation } from "./helpers/generic-record-browser.mjs";
+import { checkGenericRecordBrowserPackages, genericRecordArrayExports, genericRecordArrayInstantiations, genericRecordBrowserConfiguration, genericRecordBrowserExpected, genericRecordBrowserInstantiations, genericRecordBrowserProfiles, genericRecordBrowserSource, genericRecordBrowserSpecializations, validateGenericRecordBrowserObservation } from "./helpers/generic-record-browser.mjs";
 import { executeCorpus } from "./fixtures/generic-record-browser/javascript.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_GENERIC_RECORD_BROWSER_TEST === "1";
@@ -39,6 +39,8 @@ const record = fields => value => {
 const array = element => value => { if(!Array.isArray(value)) throw new TypeError("Array"); return value.map(element); };
 const option = element => value => value?.tag === "none" ? value : value?.tag === "some" ? { tag: "some", value: element(value.value) } : (() => { throw new TypeError("Option"); })();
 const natBox = record({ value: natural, count: natural }), textBox = record({ value: string, count: natural });
+const specializedEcho = { echoNatBox: natBox, echoAgain: natBox, echoTextBox: textBox, echoLeft: natBox, echoRight: natBox };
+Object.assign(specializedEcho, { echoBoxes: array(natBox), echoOptionalBoxes: option(array(natBox)), echoNats: array(natural), echoOptionalNat: option(natural) });
 const faithfulApi = () => ({
 	bump: value => (box => ({ value: box.value + 1n, count: box.count + 1n }))(natBox(value))
 	, again: value => (box => ({ value: box.value * 2n, count: box.count }))(natBox(value))
@@ -53,20 +55,26 @@ const faithfulApi = () => ({
 	, pushCount: value => (box => ({ value: [...box.value, box.count], count: box.count + 1n }))(record({ value: array(natural), count: natural })(value))
 	, rowTotal: value => array(natBox)(value).reduce((sum, box) => sum + box.value * box.count, 0n)
 	, rowOf: count => Array.from({ length: Number(natural(count)) }, (_, n) => ({ value: BigInt(n), count }))
-	, rowBoxSum: value => (box => box.value.reduce((sum, item) => sum + item.value, box.count))(record({ value: array(natBox), count: natural })(value)) });
+	, rowBoxSum: value => (box => box.value.reduce((sum, item) => sum + item.value, box.count))(record({ value: array(natBox), count: natural })(value))
+	// Each specialization of echo returns its checked argument.
+	, ...specializedEcho });
 // The descriptor's record definitions, as the compiler emits them for this fixture.
 const descriptor = () => {
 	const fields = () => [{ name: "value" }, { name: "count" }];
 	const extensions = instantiation => instantiation ? { "lean-lang.org/instantiation": instantiation } : {};
 	const types = Object.entries(genericRecordBrowserInstantiations()).map(([id, instantiation]) => ({ id, kind: "record", fields: fields(), source: { extensions: extensions(instantiation) } }));
-	const declarations = [{ parameters: [{ type: { kind: "named", id: "lean:OnboardingSmall.MarkerTag" } }], result: { type: { kind: "named", id: "lean:OnboardingSmall.MarkerTag" } } }];
+	const site = type => ({ type });
+	const tag = { kind: "named", id: "lean:OnboardingSmall.MarkerTag" };
+	const marker = { id: "lean:OnboardingSmall.relabel", typeParameters: [], source: { declaration: "OnboardingSmall.relabel" }, parameters: [site(tag)], result: site(tag) };
+	const specialized = Object.entries(genericRecordBrowserSpecializations()).map(([id, type]) => ({ id, typeParameters: [], source: { declaration: "OnboardingSmall.echo" }, parameters: [site(type)], result: site(type) }));
+	const declarations = [marker, ...specialized];
 	return { bindingIr: { types, declarations } };
 };
 
 test("the shared browser generic-record checks fail on a permissive API, wrong values or a changed origin", () => {
 	const request = { module: "onboarding-small" };
 	const result = executeCorpus(request, { ...faithfulApi(), descriptor: descriptor() });
-	assert.deepEqual(result, { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations() });
+	assert.deepEqual(result, { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations(), specializations: genericRecordBrowserSpecializations() });
 	// Every rejection must come from the package: an API that accepts anything fails the first check.
 	const permissive = new Proxy({}, { get: (_, name) => name === "descriptor" ? descriptor() : () => 0n });
 	assert.throws(() => executeCorpus(request, permissive), /failed: bump/u);
@@ -79,13 +87,16 @@ test("the shared browser generic-record checks fail on a permissive API, wrong v
 	const drifted = descriptor();
 	drifted.bindingIr.types.find(type => type.id.endsWith(".NatBoxAgain")).fields.reverse();
 	assert.throws(() => executeCorpus(request, { ...faithfulApi(), descriptor: drifted }), /failed: two aliases of one application keep two definitions/u);
+	const generic = descriptor();
+	generic.bindingIr.declarations.push({ ...generic.bindingIr.declarations[1], id: "lean:OnboardingSmall.echo" });
+	assert.throws(() => executeCorpus(request, { ...faithfulApi(), descriptor: generic }), /failed: the generic declaration is not exported/u);
 	const exposed = descriptor();
 	exposed.bindingIr.declarations[0].parameters[0].type.id = "lean:OnboardingSmall.Marker";
 	assert.throws(() => executeCorpus(request, { ...faithfulApi(), descriptor: exposed }), /failed: the phantom argument is never a signature type/u);
 });
 
 test("each browser observation must carry every record's exact origin from its own realm", () => {
-	const results = { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations() };
+	const results = { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations(), specializations: genericRecordBrowserSpecializations() };
 	for(const profile of genericRecordBrowserProfiles)
 	{
 		const realm = profile === "browser-worker" ? "dedicated-worker" : "window";
@@ -99,7 +110,12 @@ test("each browser observation must carry every record's exact origin from its o
 	}
 	// The expected origins name every fixture alias, both Array-field aliases and the phantom-only Marker.
 	assert.deepEqual(Object.keys(genericRecordBrowserInstantiations()).map(id => id.split(".").at(-1)).sort()
-		, [...Object.keys(genericRecordInstantiations), ...Object.keys(genericRecordArrayInstantiations), ...genericRecordProvenanceOnly].sort());
+		, [...Object.keys(genericRecordInstantiations), "LeftBox", "RightBox", ...Object.keys(genericRecordArrayInstantiations), ...genericRecordProvenanceOnly].sort());
+	// Every configured specialization is a public export, and its observed closed type is pinned.
+	const configuration = genericRecordBrowserConfiguration("OnboardingSmall");
+	assert.deepEqual(Object.keys(genericRecordBrowserSpecializations()), configuration.specializations.map(item => `lean:${item.name}`).sort());
+	assert.ok(configuration.specializations.every(item => configuration.exports.includes(item.name)));
+	assert.ok(genericRecordArrayExports.every(name => configuration.exports.includes(`OnboardingSmall.${name}`)));
 });
 
 test("the Array-field declarations extend the shared fixture without changing it", async () => {

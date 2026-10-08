@@ -13,7 +13,8 @@ import { verifyComponentPackageReceipt } from "../../src/release/component-packa
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { browserFrameworkArchives, installedBrowserCorpus } from "./type-corpus-browser.mjs";
 import { corpusBrowserSelection } from "./type-corpus.mjs";
-import { assertGenericRecordIr, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource } from "./generic-record-packages.mjs";
+import { genericRecordInstantiations, genericRecordProvenanceOnly } from "./generic-record-packages.mjs";
+import { genericRecordSpecializations, specializedGenericRecordCase } from "./generic-record-specializations.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/generic-record-browser");
@@ -21,7 +22,7 @@ const module = "OnboardingSmall";
 /** Every browser context the acceptance requires; none may be skipped. */
 export const genericRecordBrowserProfiles = Object.freeze(["browser-javascript", "browser-react", "browser-worker"]);
 /** Checks and rejections each context must report, pinned so a silent skip is visible. */
-export const genericRecordBrowserExpected = Object.freeze({ checks: 1018, rejections: 1018 });
+export const genericRecordBrowserExpected = Object.freeze({ checks: 1025, rejections: 1023 });
 const named = name => ({ kind: "named", id: `lean:${module}.${name}` });
 const nat = { kind: "primitive", name: "nat" };
 const array = element => ({ kind: "apply", constructor: "array", arguments: [element] });
@@ -30,6 +31,12 @@ export const genericRecordArrayInstantiations = Object.freeze({
 	ArrayBox: { structure: "Box", arguments: [array(nat)] }
 	, RowBox: { structure: "Box", arguments: [array(named("NatBox"))] } });
 export const genericRecordArrayExports = Object.freeze(["pushCount", "rowTotal", "rowOf", "rowBoxSum"]);
+// The specialization fixture's second and third aliases of Box Nat, in their own namespaces.
+const namespaced = Object.freeze({ "Left.LeftBox": { structure: "Box", arguments: [nat] }, "Right.RightBox": { structure: "Box", arguments: [nat] } });
+
+/** Each specialized export's closed type, as the descriptor's parameter and result carry it. */
+export const genericRecordBrowserSpecializations = () => Object.fromEntries(genericRecordSpecializations(module)
+	.map(({ name, types: [type] }) => [`lean:${name}`, { kind: "named", id: `lean:${type}` }]).sort(([a], [b]) => a < b ? -1 : 1));
 
 /**
  * The instantiation each record must carry in the descriptor the installed runtime loads: the
@@ -38,18 +45,29 @@ export const genericRecordArrayExports = Object.freeze(["pushCount", "rowTotal",
 export const genericRecordBrowserInstantiations = () => {
 	const qualify = argument => argument.kind === "named" ? named(argument.id.replace(/^lean:[^.]+\./u, ""))
 		: argument.kind === "apply" ? { ...argument, arguments: argument.arguments.map(qualify) } : argument;
-	const entries = Object.entries({ ...genericRecordInstantiations, ...genericRecordArrayInstantiations })
+	const entries = Object.entries({ ...genericRecordInstantiations, ...namespaced, ...genericRecordArrayInstantiations })
 		.map(([name, { structure, arguments: args }]) => [`lean:${module}.${name}`, { structure: `${module}.${structure}`, arguments: args.map(qualify) }]);
 	for(const name of genericRecordProvenanceOnly) entries.push([`lean:${module}.${name}`, null]);
 	return Object.fromEntries(entries.sort(([a], [b]) => a < b ? -1 : 1));
 };
 
 /**
- * The shared fixture with the Array-field declarations appended, under the npm module name.
+ * The shared generic-record and finite-specialization fixtures with the Array-field declarations
+ * appended, under the npm module name.
  *
  * @param name - Lean module and namespace name.
  */
-export const genericRecordBrowserSource = async (name = module) => `${await genericRecordSource(name)}\n${(await readFile(join(fixtures, "GenericRecordArrays.lean"), "utf8")).replaceAll("GenericRecords", name)}`;
+export const genericRecordBrowserSource = async (name = module) => `${await specializedGenericRecordCase.source(name)}\n${(await readFile(join(fixtures, "GenericRecordArrays.lean"), "utf8")).replaceAll("GenericRecords", name)}`;
+
+/**
+ * The specialization fixture's exports and decisions, plus the Array-field exports.
+ *
+ * @param name - Lean module and namespace name.
+ */
+export const genericRecordBrowserConfiguration = (name = module) => {
+	const configuration = specializedGenericRecordCase.configuration(name);
+	return { ...configuration, exports: [...configuration.exports, ...genericRecordArrayExports.map(item => `${name}.${item}`)] };
+};
 
 /**
  * Require the fixture's records with their provenance, plus each Array-field instantiation.
@@ -58,7 +76,8 @@ export const genericRecordBrowserSource = async (name = module) => `${await gene
  */
 export const assertGenericRecordBrowserIr = ir => {
 	const extras = Object.keys(genericRecordArrayInstantiations).map(name => `lean:${module}.${name}`);
-	assertGenericRecordIr({ ...ir, types: ir.types.filter(type => !extras.includes(type.id)) }, module);
+	// The specialization fixture's own check covers every original alias, both namespaces and each concrete export.
+	specializedGenericRecordCase.assertIr({ ...ir, types: ir.types.filter(type => !extras.includes(type.id)), declarations: ir.declarations.filter(item => !genericRecordArrayExports.some(name => item.id === `lean:${module}.${name}`)) }, module);
 	const expected = genericRecordBrowserInstantiations();
 	for(const id of extras)
 	{
@@ -82,7 +101,7 @@ export const validateGenericRecordBrowserObservation = (result, profile) => {
 	assert.deepEqual(result, {
 		schemaVersion: 1, profile, module: "onboarding-small"
 		, realm: profile === "browser-worker" ? "dedicated-worker" : "window"
-		, results: { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations() }
+		, results: { module: "onboarding-small", ...genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations(), specializations: genericRecordBrowserSpecializations() }
 		, hostVersion: result.hostVersion
 	});
 };
@@ -141,8 +160,7 @@ const install = async (root, release, profile) => {
 export const checkGenericRecordBrowserPackages = async (t, { fixture, build, runtimeRoot }) => {
 	const { directory, root } = await fixture(t);
 	await saveLakeFile(root, `${module}.lean`, await genericRecordBrowserSource());
-	const exports = [...genericRecordExports.map(name => name.replace("GenericRecords.", `${module}.`)), ...genericRecordArrayExports.map(name => `${module}.${name}`)];
-	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [module], exports }));
+	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: [module], ...genericRecordBrowserConfiguration() }));
 	const moved = join(directory, "moved"), releases = [];
 	await cp(root, moved, { recursive: true });
 	for(const [index, projectRoot] of [root, moved].entries())
@@ -177,6 +195,6 @@ export const checkGenericRecordBrowserPackages = async (t, { fixture, build, run
 	}
 	t.diagnostic(`Browser generic-record archives: ${canonicalJson(archives).trim()}`);
 	const requestedEngines = corpusBrowserSelection(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS);
-	const identity = { expected: genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations() };
+	const identity = { expected: genericRecordBrowserExpected, instantiations: genericRecordBrowserInstantiations(), specializations: genericRecordBrowserSpecializations() };
 	return { archives, requestedEngines, ...identity, observations, sourceRemovedBeforeInstallation: true, externalNetworkBlocked: true };
 };

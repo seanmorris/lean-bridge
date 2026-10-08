@@ -37,6 +37,14 @@ export const executeCorpus = (request, api) => {
 	same(api.unpair({ first: box(3n, 0n), second: box("abcd", 0n) }), 7n, "unpair");
 	same(api.retag({ tag: "t", payload: 1n }), { tag: "t#", payload: 2n }, "retag");
 	same(api.relabel({ label: "m" }), { label: "m?" }, "relabel");
+	// Finite specializations of one generic echo: a second alias, two namespaces, lists and options.
+	same([api.echoNatBox(box(4n, 1n)), api.echoAgain(box(4n, 1n)), api.echoTextBox(box("héllo 🙂", 1n))], [box(4n, 1n), box(4n, 1n), box("héllo 🙂", 1n)], "echo records");
+	same([api.echoLeft(box(5n, 2n)), api.echoRight(box(6n, 3n))], [box(5n, 2n), box(6n, 3n)], "echo namespaces");
+	same([api.echoBoxes([box(wide, 0n)]), api.echoBoxes([])], [[box(wide, 0n)], []], "echoBoxes");
+	const optionalBoxes = [{ tag: "some", value: [box(3n, 0n)] }, { tag: "none" }, { tag: "some", value: [] }];
+	same(optionalBoxes.map(value => api.echoOptionalBoxes(value)), optionalBoxes, "echoOptionalBoxes");
+	same([api.echoNats([0n, wide]), api.echoNats([]), api.echoOptionalNat({ tag: "some", value: wide }), api.echoOptionalNat({ tag: "none" })]
+		, [[0n, wide], [], { tag: "some", value: wide }, { tag: "none" }], "echo containers");
 	// Array fields: an Array argument, an Array of named records, and a record over one.
 	const row = Object.freeze([box(2n, 3n), box(wide, 1n), box(0n, 7n)].map(Object.freeze));
 	const arrayBox = Object.freeze(box(Object.freeze([1n, wide]), 3n));
@@ -52,6 +60,11 @@ export const executeCorpus = (request, api) => {
 	rejected(() => api.total([{ value: 1n }]), "list element missing field");
 	rejected(() => api.retag({ tag: 1n, payload: 1n }), "wrong instantiated field");
 	rejected(() => api.relabel({ label: "m", id: 1n }), "phantom argument field");
+	rejected(() => api.echoLeft({ value: -1n, count: 0n }), "negative specialized field");
+	rejected(() => api.echoRight({ value: 1n }), "missing specialized field");
+	rejected(() => api.echoBoxes([{ value: 1, count: 0n }]), "invalid specialized list element");
+	rejected(() => api.echoOptionalBoxes({ tag: "some", value: [{}] }), "invalid specialized nested record");
+	rejected(() => api.echoOptionalNat({ tag: "some", value: 1 }), "invalid specialized option element");
 	// The first, middle and last element of each Array is checked.
 	for(const index of [0, 1, 2])
 	{
@@ -74,7 +87,12 @@ export const executeCorpus = (request, api) => {
 	check(natBox && again && natBox.id !== again.id && text(natBox.fields) === text(again.fields), "two aliases of one application keep two definitions");
 	check(text(natBox.source.extensions["lean-lang.org/instantiation"]) === text(again.source.extensions["lean-lang.org/instantiation"]), "two aliases share one origin");
 	check(!api.descriptor.bindingIr.declarations.some(item => item.parameters.concat([item.result]).some(site => text(site.type).includes("OnboardingSmall.Marker\""))), "the phantom argument is never a signature type");
+	// Each specialization is its own export over the one generic, which is never exported itself.
+	const declarations = api.descriptor.bindingIr.declarations, specialized = declarations.filter(item => item.source.declaration === "OnboardingSmall.echo");
+	check(specialized.length > 0 && !declarations.some(item => item.id === "lean:OnboardingSmall.echo"), "the generic declaration is not exported");
+	check(specialized.every(item => item.typeParameters.length === 0 && text(item.parameters[0].type) === text(item.result.type)), "specializations are closed and keep their type");
+	const specializations = Object.fromEntries(specialized.map(item => [item.id, item.parameters[0].type]).sort(([a], [b]) => a < b ? -1 : 1));
 	const instantiations = Object.fromEntries(records.map(type => [type.id, type.source.extensions?.["lean-lang.org/instantiation"] ?? null])
 		.sort(([a], [b]) => a < b ? -1 : 1));
-	return { module: request.module, checks, rejections, instantiations };
+	return { module: request.module, checks, rejections, instantiations, specializations };
 };
