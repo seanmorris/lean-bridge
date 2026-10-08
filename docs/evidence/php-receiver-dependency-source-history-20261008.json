@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-receiver-dependency-v1",
+  "predecessorCommit": "c391e58a1fcfa9a3c137f1ca4b4fb8a49fc77dda",
+  "updates": [
+    {
+      "path": "tests/helpers/owned-php-wasm-receiver-ci.mjs",
+      "currentSha256": "6832106d0ac8c62449772df1d0043326082614ac870c0d2619cc16cad752a23a",
+      "previousSha256": "006ffdc257e8129ec14f54645fb04cf789a806e0eb53cc0eab0f31ca76c5962e",
+      "edits": [
+        {
+          "start": 1760,
+          "previous": "",
+          "current": "\tconst runtimeSteps = prepare.split(\"      - name: Build the pinned PHP-Wasm runtime and browser host\\n\");\n\tassert.equal(runtimeSteps.length, 2);\n\tconst browserSteps = runtimeSteps[0].split(\"      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host\\n\");\n\tassert.equal(browserSteps.length, 2);\n\tassert.equal(browserSteps[1], \"        timeout-minutes: 20\\n        run: |\\n          npx playwright install --with-deps chromium\\n\");\n\tconst runtime = runtimeSteps[1];\n\tassert.doesNotMatch(runtime, /^ {8}(?:if|continue-on-error):/mu);\n"
+        },
+        {
+          "start": 2381,
+          "previous": "\t\t, \"npx playwright install --with-deps chromium\"\n",
+          "current": ""
+        },
+        {
+          "start": 2988,
+          "previous": "\t\tconst index = prepare.indexOf(\"          \" + command + \"\\n\");\n",
+          "current": "\t\tconst index = runtime.indexOf(\"          \" + command + \"\\n\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-php-wasm-receiver-ci.test.mjs",
+      "currentSha256": "01a9e7a3ae86c5a50eb26556347099c7940b86f508baf4ddd5bb7e84e4236634",
+      "previousSha256": "d986c1746c999489364f8bf85918f85d444ddc2971c9bfe2b6b41d7752631eb5",
+      "edits": [
+        {
+          "start": 335,
+          "previous": "",
+          "current": "import \"./helpers/php-receiver-dependency-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 2296,
+          "previous": "",
+          "current": "\ntest(\"PHP-Wasm receiver CI bounds browser dependencies before compiler preparation\", async () => {\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst manifest = JSON.parse(await readFile(\"package.json\", \"utf8\"));\n\tconst name = \"      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host\\n\";\n\tconst dependency = \"        timeout-minutes: 20\\n        run: |\\n          npx playwright install --with-deps chromium\\n\";\n\tassert.ok(workflow.includes(name + dependency));\n\tconst alternatives = [\"\"\n\t\t, dependency.replace(\"timeout-minutes: 20\\n\", \"timeout-minutes: 240\\n\")\n\t\t, dependency.replace(\"        timeout-minutes: 20\\n\", \"\")\n\t\t, \"        if: false\\n\" + dependency\n\t\t, \"        continue-on-error: true\\n\" + dependency\n\t\t, dependency.replace(\"--with-deps chromium\", \"--with-deps chromium || true\")\n\t];\n\tfor(const alternative of alternatives)\n\t\tassert.throws(() => assertOwnedPhpWasmReceiverCi(workflow.replace(name + dependency, name + alternative), manifest));\n\tconst runtimeName = \"      - name: Build the pinned PHP-Wasm runtime and browser host\\n\";\n\tconst late = workflow.replace(name + dependency, \"\").replace(runtimeName, runtimeName + name + dependency);\n\tassert.throws(() => assertOwnedPhpWasmReceiverCi(late, manifest));\n\tfor(const line of [\"        if: false\\n\", \"        continue-on-error: true\\n\"])\n\t\tassert.throws(() => assertOwnedPhpWasmReceiverCi(workflow.replace(runtimeName, runtimeName + line), manifest));\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "5c66f33eacbb534036ce051e514fcf629311507f77ad0252c2778a5ac3f99d7f",
+      "previousSha256": "9df29a1e141230ff0513f48b4368d3f003bf8d0cf188d1efce637dd99d8b8aa2",
+      "edits": [
+        {
+          "start": 5789,
+          "previous": "",
+          "current": "import { phpReceiverDependencyChangedPaths } from \"./php-receiver-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 41259,
+          "previous": "",
+          "current": "\t, ...phpReceiverDependencyChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-product-php-name-source-history.mjs",
+      "currentSha256": "94694a3cbad9a04f1d1e8c9fabf7002fce86690443ab3cf461132288504e3964",
+      "previousSha256": "9d4c56310a98ff779a130f7e6c1ac8098d5ffdb096bde81fa9798e624a69b152",
+      "edits": [
+        {
+          "start": 238,
+          "previous": "",
+          "current": "import { beforePhpReceiverDependencySource } from \"./php-receiver-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 3040,
+          "previous": "",
+          "current": "\tsource = beforePhpReceiverDependencySource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-product-php-name-source-history-tests.mjs",
+      "currentSha256": "1ebecb175ff6383057b79c3b9d3615c75334a059efcbc8446645c1aabea69c40",
+      "previousSha256": "de417127a3e72c18b5a7f08956995065b89c30da7ce183b236b6dfb622bdcaba",
+      "edits": [
+        {
+          "start": 270,
+          "previous": "",
+          "current": "import { beforePhpReceiverDependencySource } from \"./php-receiver-dependency-source-history.mjs\";\n"
+        },
+        {
+          "start": 1022,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePhpReceiverDependencySource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    }
+  ]
+}

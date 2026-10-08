@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpReceiverDependencySource } from "./php-receiver-dependency-source-history.mjs";
 
 export const finProductPhpNameHistoryPath = "docs/evidence/fin-product-php-name-source-history-20261007.json";
 export const finProductPhpNameChangedPaths = [
@@ -67,6 +68,7 @@ export const reverseFinProductPhpNameUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeFinProductPhpNameSource = (path, source, expected) => {
+	source = beforePhpReceiverDependencySource(path, source, expected);
 	if(typeof source !== "string" || !finProductPhpNameChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

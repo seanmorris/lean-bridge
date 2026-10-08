@@ -26,8 +26,14 @@ export const assertOwnedPhpWasmReceiverCi = (workflow, manifest) => {
 	assert.doesNotMatch(job, /^ {4,8}(?:if|continue-on-error): (?:false|true)/mu);
 	const gates = job.split("      - name: Verify PHP-Wasm receivers and installed npm and Composer packages\n");
 	assert.equal(gates.length, 2); const prepare = gates[0], gate = gates[1].split("      - name: ")[0];
+	const runtimeSteps = prepare.split("      - name: Build the pinned PHP-Wasm runtime and browser host\n");
+	assert.equal(runtimeSteps.length, 2);
+	const browserSteps = runtimeSteps[0].split("      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host\n");
+	assert.equal(browserSteps.length, 2);
+	assert.equal(browserSteps[1], "        timeout-minutes: 20\n        run: |\n          npx playwright install --with-deps chromium\n");
+	const runtime = runtimeSteps[1];
+	assert.doesNotMatch(runtime, /^ {8}(?:if|continue-on-error):/mu);
 	const commands = ["bash scripts/bootstrap-php-wasm-ci.sh"
-		, "npx playwright install --with-deps chromium"
 		, "bash scripts/bootstrap-toolchains.sh"
 		, 'export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"'
 		, "bash scripts/build-lean-runtime.sh"
@@ -39,7 +45,7 @@ export const assertOwnedPhpWasmReceiverCi = (workflow, manifest) => {
 	let previous = -1;
 	for(const command of commands)
 	{
-		const index = prepare.indexOf("          " + command + "\n");
+		const index = runtime.indexOf("          " + command + "\n");
 		assert.ok(index > previous, command); previous = index;
 	}
 	assert.match(gate, /^ {10}LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build\/php-wasm-receiver-input\/php-wasm-runtime$/mu);

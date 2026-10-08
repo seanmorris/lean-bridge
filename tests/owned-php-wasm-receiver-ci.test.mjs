@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertOwnedPhpWasmReceiverCi, ownedPhpWasmReceiverReports } from "./helpers/owned-php-wasm-receiver-ci.mjs";
+import "./helpers/php-receiver-dependency-source-history-tests.mjs";
 
 test("PHP-Wasm receiver CI requires all seventeen tests and thirteen reports", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
@@ -35,4 +36,26 @@ test("PHP-Wasm receiver CI requires all seventeen tests and thirteen reports", a
 	const changed = structuredClone(manifest);
 	changed.scripts["test:owned-php-wasm-receivers"] += " --test-name-pattern=model";
 	assert.throws(() => assertOwnedPhpWasmReceiverCi(workflow, changed));
+});
+
+test("PHP-Wasm receiver CI bounds browser dependencies before compiler preparation", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const manifest = JSON.parse(await readFile("package.json", "utf8"));
+	const name = "      - name: Install dependencies for Build the pinned PHP-Wasm runtime and browser host\n";
+	const dependency = "        timeout-minutes: 20\n        run: |\n          npx playwright install --with-deps chromium\n";
+	assert.ok(workflow.includes(name + dependency));
+	const alternatives = [""
+		, dependency.replace("timeout-minutes: 20\n", "timeout-minutes: 240\n")
+		, dependency.replace("        timeout-minutes: 20\n", "")
+		, "        if: false\n" + dependency
+		, "        continue-on-error: true\n" + dependency
+		, dependency.replace("--with-deps chromium", "--with-deps chromium || true")
+	];
+	for(const alternative of alternatives)
+		assert.throws(() => assertOwnedPhpWasmReceiverCi(workflow.replace(name + dependency, name + alternative), manifest));
+	const runtimeName = "      - name: Build the pinned PHP-Wasm runtime and browser host\n";
+	const late = workflow.replace(name + dependency, "").replace(runtimeName, runtimeName + name + dependency);
+	assert.throws(() => assertOwnedPhpWasmReceiverCi(late, manifest));
+	for(const line of ["        if: false\n", "        continue-on-error: true\n"])
+		assert.throws(() => assertOwnedPhpWasmReceiverCi(workflow.replace(runtimeName, runtimeName + line), manifest));
 });
