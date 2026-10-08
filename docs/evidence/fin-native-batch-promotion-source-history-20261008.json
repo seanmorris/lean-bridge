@@ -1,0 +1,884 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-native-batch-promotion-v1",
+  "predecessorCommit": "e3dcf141d7efa555eba77c75b6fe6d9750bbe3c1",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "36a5e8609620a0a25e562cbd4f261457bbf604b225a4e4b5ad325656be897fe0",
+      "previousSha256": "d48832f354435d38cf340614b4c2075a4506e1b72d7917e7ca0b67bb1052212c",
+      "edits": [
+        {
+          "start": 46698,
+          "previous": "          \"sha256\": \"3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07\"\n",
+          "current": "          \"sha256\": \"01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341\"\n"
+        },
+        {
+          "start": 50371,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 168068,
+          "previous": "          \"sha256\": \"c413a56f3b1470fb6f8c2d09195dc363eced3727d051cbbfa00e3e6254d42a72\"\n",
+          "current": "          \"sha256\": \"1f2144faa4a2ad3d45ddec2a44cebe638f1af813aa096afb415ead1a676da9bf\"\n"
+        },
+        {
+          "start": 221932,
+          "previous": "          \"sha256\": \"140dcc19be10aa47a03a0e78c02cf2995e10b20680b3607207d8840ed0d97f32\"\n",
+          "current": "          \"sha256\": \"2005fef09eca3992bd07d44587f7a180d614d9da281708de738e1363c20440ab\"\n"
+        },
+        {
+          "start": 238897,
+          "previous": "          \"sha256\": \"3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07\"\n",
+          "current": "          \"sha256\": \"01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341\"\n"
+        },
+        {
+          "start": 707195,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 721226,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 732601,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 746821,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 758275,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 770346,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 781634,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 790217,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 796675,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 805061,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 813038,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 835968,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1077561,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1084259,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1091262,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1098768,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1105722,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1113356,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1122594,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1131721,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1146656,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1154703,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1163675,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1173066,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1186089,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1219201,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1249445,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1282381,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1321684,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1348225,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1351449,
+          "previous": "          \"sha256\": \"3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07\"\n",
+          "current": "          \"sha256\": \"01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341\"\n"
+        },
+        {
+          "start": 1370605,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1373827,
+          "previous": "          \"sha256\": \"3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07\"\n",
+          "current": "          \"sha256\": \"01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341\"\n"
+        },
+        {
+          "start": 1390497,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1393494,
+          "previous": "          \"sha256\": \"3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07\"\n",
+          "current": "          \"sha256\": \"01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341\"\n"
+        },
+        {
+          "start": 1411950,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1416884,
+          "previous": "          \"sha256\": \"c413a56f3b1470fb6f8c2d09195dc363eced3727d051cbbfa00e3e6254d42a72\"\n",
+          "current": "          \"sha256\": \"1f2144faa4a2ad3d45ddec2a44cebe638f1af813aa096afb415ead1a676da9bf\"\n"
+        },
+        {
+          "start": 1424969,
+          "previous": "          \"sha256\": \"478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d\"\n",
+          "current": "          \"sha256\": \"da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187\"\n"
+        },
+        {
+          "start": 1732695,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1733230,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1736001,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1736536,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1739327,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1739862,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1742684,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1743219,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1745985,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1746520,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1749288,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1749823,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1752570,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1753105,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1755876,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1756411,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1759202,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1759737,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1762559,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1763094,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1765860,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1766395,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1769163,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1769698,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1772474,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1773009,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1775776,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1776311,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1779098,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1779633,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1782451,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1782986,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1785748,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1786283,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1789047,
+          "previous": "          \"sha256\": \"b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6\"\n",
+          "current": "          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n"
+        },
+        {
+          "start": 1789582,
+          "previous": "          \"sha256\": \"c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a\"\n",
+          "current": "          \"sha256\": \"7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526\"\n"
+        },
+        {
+          "start": 1790671,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"fin-batch-rust-product-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_FIN_PRODUCT_REPORT=/app/build/vo1441-rust-product-ordinary-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^relocated source-free native packages check Fin inside products' tests/native-fin-products.test.mjs\",\n      \"scope\": \"ordinary-source rust product Fin: 2039 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-product-ordinary.json\",\n          \"sha256\": \"0b03b8d917018933f947372d0e7cb7e391a55df2c373c380859ed43bf3877709\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-product-ordinary-installed/archives/finproducts-1.0.0.crate\",\n          \"sha256\": \"2379501dcdd731c35cc2930c08512a14156c15b5e9bf20324b4f3537bc70bc12\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-rust-product-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_REPORT=/app/build/vo1441-rust-product-reviewed-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^independently reviewed native packages check product and Except bounds' tests/native-fin-products.test.mjs\",\n      \"scope\": \"reviewed-ir rust product Fin: 2039 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-product-reviewed.json\",\n          \"sha256\": \"e59a8fab193d7b4bb9ae63e7d30faa67843e99718a9cbeebb2eb97a903b38b6e\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-product-reviewed-installed/archives/finproducts-1.0.0.crate\",\n          \"sha256\": \"577d05d46329eedcfc603980798768de086dae80c01f09e33d7db97223d5b848\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-rust-product-array-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=rust LEAN_BRIDGE_FIN_PRODUCT_ARRAY_REPORT=/app/build/vo1441-rust-product-array-ordinary-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^relocated source-free native packages check Fin inside every element' tests/native-fin-product-arrays.test.mjs\",\n      \"scope\": \"ordinary-source rust product-array Fin: 2010 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-product-array-ordinary.json\",\n          \"sha256\": \"1295e9288b6ebc2b9e5ee86ab0e342d68be4a1234cbce6761c7fa085ae44b232\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-product-array-ordinary-installed/archives/finproductarrays-1.0.0.crate\",\n          \"sha256\": \"4b1f558ff5a9a45d8eddbeb7fc8fe19a5dad11f1bdf3ab1ab67d1b747607e47e\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-rust-product-array-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_REPORT=/app/build/vo1441-rust-product-array-reviewed-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^independently reviewed native packages check array-of-product bounds' tests/native-fin-product-arrays.test.mjs\",\n      \"scope\": \"reviewed-ir rust product-array Fin: 2010 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-product-array-reviewed.json\",\n          \"sha256\": \"a9f938ef745033df114ddd35b7f89a67f9be3bbfc3cceba580c7a084f17c4113\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-product-array-reviewed-installed/archives/finproductarrays-1.0.0.crate\",\n          \"sha256\": \"b4db51eec1d2823c44653dc4fb9f31369dad7d94495ce2a2380acef0727e0f33\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-rust-record-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_FIN_RECORD_PROFILES=rust LEAN_BRIDGE_FIN_RECORD_REPORT=/app/build/vo1441-rust-record-ordinary-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^relocated source-free native packages check Fin inside record fields' tests/native-fin-records.test.mjs\",\n      \"scope\": \"ordinary-source rust record Fin: 2053 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-record-ordinary.json\",\n          \"sha256\": \"bc3ac9eecd57100e52ffd27cd6acc932f1646208d1d959331779df719983d297\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-record-ordinary-installed/archives/finrecords-1.0.0.crate\",\n          \"sha256\": \"695fafcf3f876ef7c5a1f956d8fd7eaa0ec1a3e1750651157394f0454ed6d321\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-rust-record-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"78a4d3da45754f3e425faafdadc9e959cee65bc5\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_CARGO=/app/.toolchains/rust-1.90.0/bin/cargo LEAN_BRIDGE_RUSTC=/app/.toolchains/rust-1.90.0/bin/rustc LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=rust LEAN_BRIDGE_REVIEWED_FIN_RECORD_REPORT=/app/build/vo1441-rust-record-reviewed-78a4d3d.json taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^independently reviewed native packages check record and variant field bounds' tests/native-fin-records.test.mjs\",\n      \"scope\": \"reviewed-ir rust record Fin: 2053 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence.mjs\",\n          \"sha256\": \"b20178848d36f7ccc59d504a1f83e872f0bbc596e320e5e6c5d52673338fcf08\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-rust-evidence-tests.mjs\",\n          \"sha256\": \"383e51c6ee018a9a035819d8df735d9f0260961a5141562e924e31e5d22d978a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/receipt-v2.json\",\n          \"sha256\": \"d9cbfdde08a69d7c6e77e9ebb16cfd42b5322ff38a96efaa694f8d1e31471b7a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190-record-reviewed.json\",\n          \"sha256\": \"31964c8c3a4534cad7fb9a3bb7560a440bb80ceed0194d5ece8726d6eb90852a\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.tap\",\n          \"sha256\": \"add05b3f44d246a6673e604e6c7878a008b93a5f83ae474d901ff5c665a6ecaf\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.queue\",\n          \"sha256\": \"260bc81f036e57f232e9566e6667ef42fe328000a4567c3c098a3afac4de3e02\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-rust-20261008/rust190.runner.mjs.txt\",\n          \"sha256\": \"ecef73d33964fead60311b769461ad9ae72c0f2871ea44262172549da6a8e0a7\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-rust-record-reviewed-installed/archives/finrecords-1.0.0.crate\",\n          \"sha256\": \"af13ce635d03606d4640023b7d61480725ad85b7ba72a7ee5f7549d87e6dae01\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-product-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs\",\n      \"scope\": \"ordinary-source dotnet product Fin: 2039 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/product-ordinary.json\",\n          \"sha256\": \"083b184e5366759b010418e033253a01682d0dbb6846cf1f3a7f00dc9867e233\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-product-ordinary-installed/archives/FinProducts.Api.1.0.0.nupkg\",\n          \"sha256\": \"4e01c3fc7675c4be44d44590bff5403dc0f3f8f262dc31fb654be66bb0d2a39e\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-product-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_PRODUCT_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=dotnet node --test tests/native-fin-products.test.mjs\",\n      \"scope\": \"reviewed-ir dotnet product Fin: 2039 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/product-reviewed.json\",\n          \"sha256\": \"f6f02915df66747a653ee0dcfa95551ed5006df33a671adc80bea0137ba5224c\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-product-reviewed-installed/archives/FinProducts.Api.1.0.0.nupkg\",\n          \"sha256\": \"7681e4c79abfed92e93b3ccf4ceb936012ee78693dbf04d4badd77f79fd12757\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-product-array-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs\",\n      \"scope\": \"ordinary-source dotnet product-array Fin: 2010 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/product-array-ordinary.json\",\n          \"sha256\": \"a44c6e393b6297f6af133bc9bd28fefb8a18491e3d703ba80f347c60b6791097\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-product-array-ordinary-installed/archives/FinProductArrays.Api.1.0.0.nupkg\",\n          \"sha256\": \"a2921be19d1ca6c977abb9a922fac24798bac8f3de0f8d752805e10d9bee1493\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-product-array-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=dotnet node --test tests/native-fin-product-arrays.test.mjs\",\n      \"scope\": \"reviewed-ir dotnet product-array Fin: 2010 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/product-array-reviewed.json\",\n          \"sha256\": \"065c130c2a13f19c4389db7aaf37627b411785d16113e223382858c72dea481e\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-product-array-reviewed-installed/archives/FinProductArrays.Api.1.0.0.nupkg\",\n          \"sha256\": \"09c981035fd51a0020fb9d950eb648957cce5247f805a74b94206b29e477cdc2\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-record-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs\",\n      \"scope\": \"ordinary-source dotnet record Fin: 2053 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/record-ordinary.json\",\n          \"sha256\": \"e7958865994be626479401be69f704223bd9622db7f5d4f00591cd36c78a8e52\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-record-ordinary-installed/archives/FinRecords.Api.1.0.0.nupkg\",\n          \"sha256\": \"75a3ea4c62630b44bb7b12ed66cc859bbadabaac8b8c9f61841c07738012eb02\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-dotnet-record-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"f9d5ce96eb04ec800209c6a6863092b3bdea6e85\",\n      \"command\": \"LEAN_BRIDGE_FIN_RECORD_PROFILES=dotnet LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=dotnet node --test tests/native-fin-records.test.mjs\",\n      \"scope\": \"reviewed-ir dotnet record Fin: 2053 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence.mjs\",\n          \"sha256\": \"913e302fc5fa26f778e7a312f24d5c2e60423d62bbca9d1dfc3178d8d0036efa\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dotnet-hosted-evidence-tests.mjs\",\n          \"sha256\": \"a4a3b4cc1682c3eacca0ed03655ae064dc89e2d60db19e035636d02dd4152abc\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/receipt.json\",\n          \"sha256\": \"12f88711ff9cba2950e7133d62b6274e87e6df14d40591af130fdb5355732124\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/record-reviewed.json\",\n          \"sha256\": \"e576bccc33b4e4e9749bcc9e6d0c5a48d144959c2c1d74593831a83163eb5a44\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.log\",\n          \"sha256\": \"7f3fb1f343d8662152ae4677314b093be300a7fc1f15bd4efa5fb78d245fb9d4\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/job-113176414688.json\",\n          \"sha256\": \"e1606595535cb1e74bb0d90f2a64b4d7f61f490454beabd93c462c4f597c4341\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-dotnet-hosted-20261008/artifact-11538793507.json\",\n          \"sha256\": \"8faf77d477f88b777a6a70af56912bc1fbd813bda8f064ee3a78823478872329\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-dotnet-record-reviewed-installed/archives/FinRecords.Api.1.0.0.nupkg\",\n          \"sha256\": \"88177fb5d57674b6003b149c531e2f828f58bbafbf1f9dc7119506227b0e833d\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-wit-wasi-record-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"738d41764dcaa3f689a628ea18f7c292b2f2e8bd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_BRIDGE_WASM_TOOLS=/app/.toolchains/wasm-tools/bin/wasm-tools LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_REPORT=/app/build/vo1448-wit-records-738d417-ordinary.json taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='^relocated source-free native packages check Fin inside record fields' tests/native-fin-records.test.mjs\",\n      \"scope\": \"ordinary-source wit-wasi record Fin: 2056 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-wit-record-evidence.mjs\",\n          \"sha256\": \"6b2dd5150146ef5e97839bf12966e07145b0372c7569260f03b32fd44e6bac90\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-wit-record-evidence-tests.mjs\",\n          \"sha256\": \"d1b1648b668d820aa3e8c0ac2cbb912b910a70238723f5199f51f5851668797b\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/receipt.json\",\n          \"sha256\": \"d4a42fa144f5432cf731f5a3b81ea0dc9514c6464955b18d7bc8ba6287974779\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/ordinary.json\",\n          \"sha256\": \"885534859c25d9380b5434eeeabfd051a10fd0d6ad34b1b2d1df713ac73f6910\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.tap\",\n          \"sha256\": \"771f161a60c7f6da6c42dcc91709b9a8c61fa8a1d3c90f209a5ee0cd7020d269\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.queue\",\n          \"sha256\": \"793a1dfbd9db6c9b9583161a21f5b46943389db7800c39a74138f78f23a6ffc2\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.runner.mjs.txt\",\n          \"sha256\": \"dc21a0311702c57a4f2dfdb95502351a9683836dc84b53807c6725364e6576f6\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/canonical-wit-baseline.log\",\n          \"sha256\": \"b6316e8928404c98dbf3d8bcc766cf14eb53dd5331ae8edc09103121f7b196ac\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/hosted-f9d5ce9-failure.log\",\n          \"sha256\": \"54979a3114c03c40a6d6764cc5a18616cd250c808aa6311b70945f651bf6ec6f\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-wit-wasi-record-ordinary-installed/archives/finrecords-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"053a956f824b6fcd0df408876b007fb9730d4748dc1f9832f6da3600d4ce87bb\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-batch-wit-wasi-record-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"738d41764dcaa3f689a628ea18f7c292b2f2e8bd\",\n      \"command\": \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_LEAN_PREFIX=/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2 LEAN_BRIDGE_WASM_TOOLS=/app/.toolchains/wasm-tools/bin/wasm-tools LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_REPORT=/app/build/vo1448-wit-records-738d417-reviewed.json taskset -c 3 node --test --test-concurrency=1 --test-name-pattern='^independently reviewed native packages check record and variant field bounds' tests/native-fin-records.test.mjs\",\n      \"scope\": \"reviewed-ir wit-wasi record Fin: 2056 checks. Two-root reproducible packages, deleted author/build roots and offline installation. Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes. Dispatch is unmeasured in these reports. Source pins are selected identities, not a complete dependency closure. No other host, source path, callback, Subtype or recursive/generic/indexed/inherited field coverage is inferred.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-python-ruby-evidence.test.mjs\",\n          \"sha256\": \"fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-references.mjs\",\n          \"sha256\": \"49504e3cd68dc4028244901a00f09ce2ab767f5b90fb027d8c77805ae48e9351\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-native-batch-promotion-tests.mjs\",\n          \"sha256\": \"9f49b96c08e239bd22cae4811c4ad4a44a218881403de623f93dc72026622296\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-wit-record-evidence.mjs\",\n          \"sha256\": \"6b2dd5150146ef5e97839bf12966e07145b0372c7569260f03b32fd44e6bac90\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-wit-record-evidence-tests.mjs\",\n          \"sha256\": \"d1b1648b668d820aa3e8c0ac2cbb912b910a70238723f5199f51f5851668797b\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/receipt.json\",\n          \"sha256\": \"d4a42fa144f5432cf731f5a3b81ea0dc9514c6464955b18d7bc8ba6287974779\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/reviewed.json\",\n          \"sha256\": \"e9919ffabe7840b17e7ad7723a44e7cd6d2a8df9ecd228ee77b4149aa719a5e5\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.tap\",\n          \"sha256\": \"771f161a60c7f6da6c42dcc91709b9a8c61fa8a1d3c90f209a5ee0cd7020d269\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.queue\",\n          \"sha256\": \"793a1dfbd9db6c9b9583161a21f5b46943389db7800c39a74138f78f23a6ffc2\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/execution.runner.mjs.txt\",\n          \"sha256\": \"dc21a0311702c57a4f2dfdb95502351a9683836dc84b53807c6725364e6576f6\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/canonical-wit-baseline.log\",\n          \"sha256\": \"b6316e8928404c98dbf3d8bcc766cf14eb53dd5331ae8edc09103121f7b196ac\"\n        },\n        {\n          \"path\": \"docs/evidence/fin-wit-records-20261008/hosted-f9d5ce9-failure.log\",\n          \"sha256\": \"54979a3114c03c40a6d6764cc5a18616cd250c808aa6311b70945f651bf6ec6f\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-batch-wit-wasi-record-reviewed-installed/archives/finrecords-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"b872e5ec581fdf5f6fcb78fc79c1ccdc93751955d23cc2fea28ffcfa9f14d0b1\"\n        }\n      ]\n"
+        },
+        {
+          "start": 4100172,
+          "previous": "      \"scope\": \"Ordinary-source Rust exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal, callback, product, result and reviewed-IR positions are not promoted.\",\n",
+          "current": "      \"scope\": \"ordinary-source rust Fin parameters and results retain closed bounds through Array/List/Option/Prod/Except compositions and transparent aliases. Installed consumers reject invalid active leaves and recover; nominal fields are recorded separately.\",\n"
+        },
+        {
+          "start": 4100746,
+          "previous": "            \"native-fin-containers-rust-installed\"\n",
+          "current": "            \"native-fin-containers-rust-installed\",\n            \"fin-batch-rust-product-ordinary-installed\",\n            \"fin-batch-rust-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4100930,
+          "previous": "          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected. Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected.\"\n",
+          "current": "          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n"
+        },
+        {
+          "start": 4101198,
+          "previous": "            \"native-fin-containers-rust-installed\"\n",
+          "current": "            \"native-fin-containers-rust-installed\",\n            \"fin-batch-rust-product-ordinary-installed\",\n            \"fin-batch-rust-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4101382,
+          "previous": "          \"note\": \"The native model retains bounds beside the Nat transport. Rustdoc and the crate README state each bound from the checked refinement metadata. The native model retains every refinement tree beside the Nat transport; generated documentation writes element bounds as name[*] and present option values as name?. The native model retains every refinement tree beside the Nat transport; generated documentation writes element bounds as name[*] and present option values as name?.\"\n",
+          "current": "          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n"
+        },
+        {
+          "start": 4101666,
+          "previous": "            \"native-fin-containers-rust-installed\"\n",
+          "current": "            \"native-fin-containers-rust-installed\",\n            \"fin-batch-rust-product-ordinary-installed\",\n            \"fin-batch-rust-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4101850,
+          "previous": "          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch. Lean constructs each Fin inside a decidable check (mapM over arrays and lists, match over options) and returns none otherwise; the bundled runtime compares every present leaf with its bound before any Lean allocation. Lean constructs each Fin inside a decidable check (mapM over arrays and lists, match over options) and returns none otherwise; the bundled runtime compares every present leaf with its bound before any Lean allocation.\"\n",
+          "current": "          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n"
+        },
+        {
+          "start": 4102112,
+          "previous": "            \"native-fin-containers-rust-installed\"\n",
+          "current": "            \"native-fin-containers-rust-installed\",\n            \"fin-batch-rust-product-ordinary-installed\",\n            \"fin-batch-rust-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4102296,
+          "previous": "          \"note\": \"Two clean roots reproduce the Rust and C archives and verify the package-set receipt.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce the crate; author/build roots are deleted before offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n"
+        },
+        {
+          "start": 4102817,
+          "previous": "            \"native-fin-containers-rust-installed\"\n",
+          "current": "            \"native-fin-containers-rust-installed\",\n            \"fin-batch-rust-product-ordinary-installed\",\n            \"fin-batch-rust-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4103001,
+          "previous": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is Err(Error::Native { code: 1, .. }) naming the parameter and bound. Signed and machine-word arguments are compile errors. An LD_PRELOAD probe in the consumer process counts dispatch: valid calls reach the adapter and source, rejected public calls reach neither, and a raw invalid adapter call reaches only the adapter. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged.\"\n",
+          "current": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is Err(Error::Native { code: 1, .. }) naming the parameter and bound. Signed and machine-word arguments are compile errors. An LD_PRELOAD probe in the consumer process counts dispatch: valid calls reach the adapter and source, rejected public calls reach neither, and a raw invalid adapter call reaches only the adapter. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Installed rust consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n"
+        },
+        {
+          "start": 4104102,
+          "previous": "        \"Ordinary-source Rust top-level parameters and results, alone or inside Array, List and Option; no nominal, callback, product, result or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\"\n",
+          "current": "        \"Only the named host, source path and parameter/result positions; nominal fields are recorded separately. No callback or Subtype coverage is added.\",\n        \"The new product and Array-of-product reports have no dispatch observations. Earlier scalar/container dispatch remains scoped to its original reports.\",\n        \"Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n"
+        },
+        {
+          "start": 4104740,
+          "previous": "        \"fin\": \"Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin.\"\n",
+          "current": "        \"fin\": \"Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n"
+        },
+        {
+          "start": 4109827,
+          "previous": "      \"scope\": \"Ordinary-source .NET exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal, callback, product, result and reviewed-IR positions are not promoted.\",\n",
+          "current": "      \"scope\": \"ordinary-source dotnet Fin parameters and results retain closed bounds through Array/List/Option/Prod/Except compositions and transparent aliases. Installed consumers reject invalid active leaves and recover; nominal fields are recorded separately.\",\n"
+        },
+        {
+          "start": 4110426,
+          "previous": "            \"native-fin-containers-dotnet-installed\"\n",
+          "current": "            \"native-fin-containers-dotnet-installed\",\n            \"fin-batch-dotnet-product-ordinary-installed\",\n            \"fin-batch-dotnet-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4110616,
+          "previous": "          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected. Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected.\"\n",
+          "current": "          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n"
+        },
+        {
+          "start": 4110886,
+          "previous": "            \"native-fin-containers-dotnet-installed\"\n",
+          "current": "            \"native-fin-containers-dotnet-installed\",\n            \"fin-batch-dotnet-product-ordinary-installed\",\n            \"fin-batch-dotnet-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4111076,
+          "previous": "          \"note\": \"The native model retains bounds beside the Nat transport. XML documentation remarks and the package README state each bound from the checked refinement metadata. The native model retains every refinement tree beside the Nat transport; generated documentation writes element bounds as name[*] and present option values as name?. The native model retains every refinement tree beside the Nat transport; generated documentation writes element bounds as name[*] and present option values as name?.\"\n",
+          "current": "          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n"
+        },
+        {
+          "start": 4111362,
+          "previous": "            \"native-fin-containers-dotnet-installed\"\n",
+          "current": "            \"native-fin-containers-dotnet-installed\",\n            \"fin-batch-dotnet-product-ordinary-installed\",\n            \"fin-batch-dotnet-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4111552,
+          "previous": "          \"note\": \"Lean constructs Fin only inside a decidable bound check and returns none otherwise. The bundled runtime compares caller limbs with the exact bound before conversion or dispatch. Lean constructs each Fin inside a decidable check (mapM over arrays and lists, match over options) and returns none otherwise; the bundled runtime compares every present leaf with its bound before any Lean allocation. Lean constructs each Fin inside a decidable check (mapM over arrays and lists, match over options) and returns none otherwise; the bundled runtime compares every present leaf with its bound before any Lean allocation.\"\n",
+          "current": "          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n"
+        },
+        {
+          "start": 4111816,
+          "previous": "            \"native-fin-containers-dotnet-installed\"\n",
+          "current": "            \"native-fin-containers-dotnet-installed\",\n            \"fin-batch-dotnet-product-ordinary-installed\",\n            \"fin-batch-dotnet-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4112006,
+          "previous": "          \"note\": \"Two clean roots reproduce the .NET and C archives and verify the package-set receipt.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce the NuGet package; author/build roots are deleted before offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n"
+        },
+        {
+          "start": 4112662,
+          "previous": "            \"native-fin-containers-dotnet-installed\"\n",
+          "current": "            \"native-fin-containers-dotnet-installed\",\n            \"fin-batch-dotnet-product-ordinary-installed\",\n            \"fin-batch-dotnet-product-array-ordinary-installed\"\n"
+        },
+        {
+          "start": 4112852,
+          "previous": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is ArgumentException naming the parameter and bound. Negative values throw the Nat ArgumentOutOfRangeException. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged.\"\n",
+          "current": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is ArgumentException naming the parameter and bound. Negative values throw the Nat ArgumentOutOfRangeException. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n"
+        },
+        {
+          "start": 4113746,
+          "previous": "        \"Ordinary-source .NET top-level parameters and results, alone or inside Array, List and Option; no nominal, callback, product, result or reviewed-IR claim.\",\n        \"Closed natural-number bounds only. Fin 0 parameters reject every input.\",\n        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n",
+          "current": "        \"Only the named host, source path and parameter/result positions; nominal fields are recorded separately. No callback or Subtype coverage is added.\",\n        \"The new product and Array-of-product reports have no dispatch observations. Earlier scalar/container dispatch remains scoped to its original reports.\",\n        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\",\n        \"Earlier ordinary scalar/container .NET evidence compares the privately loaded libraries with the C archive from the same build; it does not count dispatch in the .NET process.\"\n"
+        },
+        {
+          "start": 4114696,
+          "previous": "        \"fin\": \"Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin.\"\n",
+          "current": "        \"fin\": \"Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n"
+        },
+        {
+          "start": 4158972,
+          "previous": "      \"scope\": \"Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.\",\n",
+          "current": "      \"scope\": \"reviewed-ir rust Fin parameters and results retain closed bounds through Array/List/Option/Prod/Except compositions and transparent aliases. Installed consumers reject invalid active leaves and recover; nominal fields are recorded separately.\",\n"
+        },
+        {
+          "start": 4159573,
+          "previous": "            \"reviewed-scalar-hosts-rust-installed\"\n",
+          "current": "            \"reviewed-scalar-hosts-rust-installed\",\n            \"fin-batch-rust-product-reviewed-installed\",\n            \"fin-batch-rust-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4159757,
+          "previous": "          \"note\": \"Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites.\"\n",
+          "current": "          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n"
+        },
+        {
+          "start": 4160056,
+          "previous": "            \"reviewed-scalar-hosts-rust-installed\"\n",
+          "current": "            \"reviewed-scalar-hosts-rust-installed\",\n            \"fin-batch-rust-product-reviewed-installed\",\n            \"fin-batch-rust-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4160240,
+          "previous": "          \"note\": \"Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers.\"\n",
+          "current": "          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n"
+        },
+        {
+          "start": 4160555,
+          "previous": "            \"reviewed-scalar-hosts-rust-installed\"\n",
+          "current": "            \"reviewed-scalar-hosts-rust-installed\",\n            \"fin-batch-rust-product-reviewed-installed\",\n            \"fin-batch-rust-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4160739,
+          "previous": "          \"note\": \"Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports.\"\n",
+          "current": "          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n"
+        },
+        {
+          "start": 4161032,
+          "previous": "            \"reviewed-scalar-hosts-rust-installed\"\n",
+          "current": "            \"reviewed-scalar-hosts-rust-installed\",\n            \"fin-batch-rust-product-reviewed-installed\",\n            \"fin-batch-rust-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4161216,
+          "previous": "          \"note\": \"Two independent author roots reproduce the original archives, verified before offline installation.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce the crate; author/build roots are deleted before offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n"
+        },
+        {
+          "start": 4161768,
+          "previous": "            \"reviewed-scalar-hosts-rust-installed\"\n",
+          "current": "            \"reviewed-scalar-hosts-rust-installed\",\n            \"fin-batch-rust-product-reviewed-installed\",\n            \"fin-batch-rust-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4161952,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Installed rust consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n"
+        },
+        {
+          "start": 4162356,
+          "previous": "        \"Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.\",\n        \"Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.\",\n        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Only the named host, source path and parameter/result positions; nominal fields are recorded separately. No callback or Subtype coverage is added.\",\n        \"The new product and Array-of-product reports have no dispatch observations. Earlier scalar/container dispatch remains scoped to its original reports.\",\n        \"Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n"
+        },
+        {
+          "start": 4162994,
+          "previous": "        \"fin\": \"Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected.\"\n",
+          "current": "        \"fin\": \"Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n"
+        },
+        {
+          "start": 4163598,
+          "previous": "      \"scope\": \"Reviewed scalar and Array/List/Option/alias parameter and result signatures execute in the named native consumer, with exact bounds, invalid inputs and recovery.\",\n",
+          "current": "      \"scope\": \"reviewed-ir dotnet Fin parameters and results retain closed bounds through Array/List/Option/Prod/Except compositions and transparent aliases. Installed consumers reject invalid active leaves and recover; nominal fields are recorded separately.\",\n"
+        },
+        {
+          "start": 4164229,
+          "previous": "            \"reviewed-scalar-rollout-dotnet-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-dotnet-installed\",\n            \"fin-batch-dotnet-product-reviewed-installed\",\n            \"fin-batch-dotnet-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4164421,
+          "previous": "          \"note\": \"Independent reviewed constraints reconcile with fresh Lean metadata at the exact parameter and result sites.\"\n",
+          "current": "          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n"
+        },
+        {
+          "start": 4164727,
+          "previous": "            \"reviewed-scalar-rollout-dotnet-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-dotnet-installed\",\n            \"fin-batch-dotnet-product-reviewed-installed\",\n            \"fin-batch-dotnet-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4164919,
+          "previous": "          \"note\": \"Generated host values retain the closed bound beside their Nat transport; constraints are not replaced with unchecked integers.\"\n",
+          "current": "          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n"
+        },
+        {
+          "start": 4165241,
+          "previous": "            \"reviewed-scalar-rollout-dotnet-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-dotnet-installed\",\n            \"fin-batch-dotnet-product-reviewed-installed\",\n            \"fin-batch-dotnet-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4165433,
+          "previous": "          \"note\": \"Compiled adapters check incoming bounds before constructing the Fin value; host-specific dispatch observations remain in the reports.\"\n",
+          "current": "          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n"
+        },
+        {
+          "start": 4165733,
+          "previous": "            \"reviewed-scalar-rollout-dotnet-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-dotnet-installed\",\n            \"fin-batch-dotnet-product-reviewed-installed\",\n            \"fin-batch-dotnet-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4165925,
+          "previous": "          \"note\": \"Two independent author roots reproduce the original archives, verified before offline installation.\"\n",
+          "current": "          \"note\": \"Two author roots reproduce the NuGet package; author/build roots are deleted before offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n"
+        },
+        {
+          "start": 4166617,
+          "previous": "            \"reviewed-scalar-rollout-dotnet-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-dotnet-installed\",\n            \"fin-batch-dotnet-product-reviewed-installed\",\n            \"fin-batch-dotnet-product-array-reviewed-installed\"\n"
+        },
+        {
+          "start": 4166809,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n"
+        },
+        {
+          "start": 4167215,
+          "previous": "        \"Only Fin parameters/results, scalar or inside Array/List/Option and transparent aliases. No nominal-field, callback, product, Except, Subtype or PHP-Wasm promotion.\",\n        \"Local glibc 2.36 acceptance is separate from release-floor and integrated hosted CI.\",\n        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Only the named host, source path and parameter/result positions; nominal fields are recorded separately. No callback or Subtype coverage is added.\",\n        \"The new product and Array-of-product reports have no dispatch observations. Earlier scalar/container dispatch remains scoped to its original reports.\",\n        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n"
+        },
+        {
+          "start": 4167978,
+          "previous": "        \"fin\": \"Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected.\"\n",
+          "current": "        \"fin\": \"Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n"
+        },
+        {
+          "start": 4224725,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"native-nominal-fin-rust-ordinary-source\",\n      \"profiles\": [\n        \"rust\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"ordinary-source rust nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2053 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"BigUint checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-ordinary-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-ordinary-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-ordinary-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the crate; author/build roots are deleted before offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-ordinary-installed\"\n          ],\n          \"note\": \"Installed rust consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n      }\n    },\n    {\n      \"id\": \"native-nominal-fin-rust-reviewed-ir\",\n      \"profiles\": [\n        \"rust\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"reviewed-ir rust nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2053 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"BigUint checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-reviewed-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-reviewed-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-reviewed-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-reviewed-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the crate; author/build roots are deleted before offline installation. Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-rust-record-reviewed-installed\"\n          ],\n          \"note\": \"Installed rust consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Local Rust 1.90.0 and cargo 1.90.0 were measured by the runner, as were Node 22.23.3, Lean 4.32.2 and host glibc 2.36. The configured package floor is 2.36. The consumer compiles offline with cargo; compilerFreePath excludes Lean and producer tools, not the Rust compiler.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n      }\n    },\n    {\n      \"id\": \"native-nominal-fin-dotnet-ordinary-source\",\n      \"profiles\": [\n        \"dotnet\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"ordinary-source dotnet nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2053 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"System.Numerics.BigInteger checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-ordinary-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-ordinary-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-ordinary-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the NuGet package; author/build roots are deleted before offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-ordinary-installed\"\n          ],\n          \"note\": \"Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n      }\n    },\n    {\n      \"id\": \"native-nominal-fin-dotnet-reviewed-ir\",\n      \"profiles\": [\n        \"dotnet\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"reviewed-ir dotnet nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2053 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"System.Numerics.BigInteger checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-reviewed-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-reviewed-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-reviewed-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-reviewed-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the NuGet package; author/build roots are deleted before offline installation. Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-dotnet-record-reviewed-installed\"\n          ],\n          \"note\": \"Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected.\"\n      }\n    },\n    {\n      \"id\": \"native-nominal-fin-wit-wasi-ordinary-source\",\n      \"profiles\": [\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"ordinary-source wit-wasi nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2056 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"list<u32> little-endian limbs checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-ordinary-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-ordinary-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-ordinary-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the WIT component package; author/build roots are deleted before offline installation. Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-ordinary-installed\"\n          ],\n          \"note\": \"Installed wit-wasi consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"A Fin field uses the Nat carrier, a list<u32> of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound.\"\n      }\n    },\n    {\n      \"id\": \"native-nominal-fin-wit-wasi-reviewed-ir\",\n      \"profiles\": [\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"reviewed-ir wit-wasi nonrecursive, nongeneric record and active variant fields retain closed Fin bounds through Array/List/Option/Prod/Except compositions. The installed route executes 2056 checks across all 13 fixture exports.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"list<u32> little-endian limbs checked against the field's closed bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-reviewed-installed\"\n          ],\n          \"note\": \"Fresh Lean preserves each closed Fin bound. Independently reviewed constraints reconcile with the exact compiler-owned trees.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-reviewed-installed\"\n          ],\n          \"note\": \"The native model retains bounds beside the Nat carriers through Array/List/Option/Prod/Except and supported record or active variant fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-reviewed-installed\"\n          ],\n          \"note\": \"Generated Lean checks incoming leaves before constructing Fin. The new structural/field reports do not measure dispatch.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-reviewed-installed\"\n          ],\n          \"note\": \"Two author roots reproduce the WIT component package; author/build roots are deleted before offline installation. Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"fin-batch-wit-wasi-record-reviewed-installed\"\n          ],\n          \"note\": \"Installed wit-wasi consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n        }\n      },\n      \"limitations\": [\n        \"Only the named host and source path. No recursive, generic, indexed or inherited refined record coverage.\",\n        \"No callback, Subtype, browser, PHP-Wasm or other host acceptance is inferred. Dispatch is unmeasured.\",\n        \"Local runner measured Node 22.23.2, Lean 4.32.2, wasm-tools 1.245.1 and host glibc 2.36; configured package floor is 2.36. The receipt pins the Wasmtime library bytes but its version was not queried. The C host caller still compiles with the system compiler. The earlier hosted WIT failure remains separate from these repaired local passes.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"A Fin field uses the Nat carrier, a list<u32> of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound.\"\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "currentSha256": "2005fef09eca3992bd07d44587f7a180d614d9da281708de738e1363c20440ab",
+      "previousSha256": "140dcc19be10aa47a03a0e78c02cf2995e10b20680b3607207d8840ed0d97f32",
+      "edits": [
+        {
+          "start": 32279,
+          "previous": "A Lean `Fin n` parameter is a `&BigUint` and a `Fin n` result is a `BigUint`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(&BigUint::from(3u8))` returns `Ok` with 6. `mirror(&BigUint::from(10u8))` returns `Err(Error::Native { code: 1, message })` with the message `arg0 is not below its Fin 10 bound`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Rustdoc on each function and the crate README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "A Lean `Fin n` parameter is a `&BigUint` and a `Fin n` result is a `BigUint`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(&BigUint::from(3u8))` returns `Ok` with 6. `mirror(&BigUint::from(10u8))` returns `Err(Error::Native { code: 1, message })` with the message `arg0 is not below its Fin 10 bound`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Rustdoc on each function and the crate README state the bound.\n\nBoth ordinary-source and reviewed-IR packages support Fin through Array/List/Option/Prod/Except compositions, including nonrecursive, nongeneric record and active variant fields. Rust products use binary tuples and Except uses Result; arrays and lists borrow slices and return owned vectors. Every present bounded leaf is checked. Empty containers, absent options and inactive branches are valid with Fin 0 payload types; a present Fin 0 value is rejected. These runs do not establish callback, recursive, generic, indexed or inherited Fin-field support. See the [structural Fin checks](../evidence/fin-rust-20261008/receipt-v2.json), [scalar checks](../evidence/native-fin-hosts-20261006.md) and [container checks](../evidence/native-fin-containers-20261006.md).\n"
+        },
+        {
+          "start": 50891,
+          "previous": "| `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result); `BigUint checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "currentSha256": "01bf92ba8adf8bfe6b6909933c406c7ad5fd3c9e73416d75ea4ba26734087341",
+      "previousSha256": "3fbb66139fbfe303ec081c9bddfc1f712b43b39e20cf01bd52d2c1555c5a0b07",
+      "edits": [
+        {
+          "start": 34883,
+          "previous": "A Lean `Fin n` parameter or result is a `System.Numerics.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Mirror(3)` returns `6`. `Mirror(10)` throws `ArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws `ArgumentOutOfRangeException`, as it does for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. XML documentation remarks on each method and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "A Lean `Fin n` parameter or result is a `System.Numerics.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Mirror(3)` returns `6`. `Mirror(10)` throws `ArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws `ArgumentOutOfRangeException`, as it does for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. XML documentation remarks on each method and the package README state the bound.\n\nBoth ordinary-source and reviewed-IR packages support Fin through Array/List/Option/Prod/Except compositions, including nonrecursive, nongeneric record and active variant fields. C# products use binary tuples and Except uses generated Result; arrays and lists use typed arrays. Every present bounded leaf is checked. Empty containers, absent options and inactive branches are valid with Fin 0 payload types; a present Fin 0 value is rejected. These runs do not establish callback, recursive, generic, indexed or inherited Fin-field support. See the [structural Fin checks](../evidence/fin-dotnet-hosted-20261008/receipt.json), [scalar checks](../evidence/native-fin-hosts-20261006.md) and [container checks](../evidence/native-fin-containers-20261006.md).\n"
+        },
+        {
+          "start": 52845,
+          "previous": "| `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `System.Numerics.BigInteger checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "1f2144faa4a2ad3d45ddec2a44cebe638f1af813aa096afb415ead1a676da9bf",
+      "previousSha256": "c413a56f3b1470fb6f8c2d09195dc363eced3727d051cbbfa00e3e6254d42a72",
+      "edits": [
+        {
+          "start": 45431,
+          "previous": "A Lean `Fin n` parameter or result uses the `Nat` representation: `list<u32>` little-endian limbs. The WIT text is the same with or without the bound. For `Library.mirror (value : Fin 10) : Fin 10`, calling `mirror` with `[3]` returns `[6]`. Calling it with `[10]` fails the Wasmtime call with an error whose message is `arg0 is not below its Fin 10 bound`, and the result slot is unchanged. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README lists each export's bounds. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "A Lean `Fin n` parameter or result uses the `Nat` representation: `list<u32>` little-endian limbs. The WIT text is the same with or without the bound. For `Library.mirror (value : Fin 10) : Fin 10`, calling `mirror` with `[3]` returns `[6]`. Calling it with `[10]` fails the Wasmtime call with an error whose message is `arg0 is not below its Fin 10 bound`, and the result slot is unchanged. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README lists each export's bounds.\n\nBoth ordinary-source and reviewed-IR packages support Fin in nonrecursive, nongeneric record and active variant fields, including Array/List/Option/Prod/Except compositions. Scalar and Array/List/Option parameter/result checks remain recorded separately. WIT record and variant fields use the ordinary Nat limb carrier; the generated adapter enforces the bound, which WIT text does not express. Every present bounded leaf is checked. Empty containers, absent options and inactive branches are valid with Fin 0 payload types; a present Fin 0 value is rejected. These runs do not establish callback, recursive, generic, indexed or inherited Fin-field support. See the [structural Fin checks](../evidence/fin-wit-records-20261008/receipt.json), [scalar checks](../evidence/native-fin-hosts-20261006.md) and [container checks](../evidence/native-fin-containers-20261006.md).\n"
+        },
+        {
+          "start": 66242,
+          "previous": "| `Fin n` | `list<u32> little-endian limbs checked against the declared bound` (input); `list<u32> limbs below the declared bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `list<u32> little-endian limbs checked against the declared bound` (input); `list<u32> limbs below the declared bound` (result); `list<u32> little-endian limbs checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. A Fin field uses the Nat carrier, a list<u32> of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "03228467b70fa68a3adf856c51d519096ef4aa02f01c00d4418d5138850ea5a3",
+      "previousSha256": "b99a74c4a9bbbfe6ab34a769858a2311cb1b360870dacbc6ef0f8876a6defac7",
+      "edits": [
+        {
+          "start": 1512,
+          "previous": "| Fin inside products and Except | Ordinary and reviewed C/C++, Python and Ruby parameter/result observations cite the original reports. C/C++ retain their [product](native-fin-products-20261007/receipt.json), [Array-of-product](native-fin-product-arrays-20261007/receipt.json) and separate [Array dispatch](native-fin-product-array-dispatch-20261007/receipt.json) runs. The [Python/Ruby receipt](fin-python-ruby-20261008/receipt-v2.json) records Python 3.11.16, Python 3.12.14 and Ruby 3.3.12 separately: Python executes 2038 product and 2014 Array checks; Ruby executes 2039 and 2010. | None for these Python/Ruby reports. | VO #1441: archive the completed Rust and hosted runs, then fill remaining host/runtime evidence gaps without repeating completed executions. C measures source and raw-adapter dispatch for `rows`; C++, Python, Ruby and `reversed` do not have independent counters in these reports. |\n| Fin nominal fields | Ordinary-source Node JavaScript/TypeScript, including the recorded alias and finite recursive cases. Ordinary and reviewed C/C++ cite the expanded [record reports](native-fin-records-20261007/receipt.json) from `3ece09f`, including Array/List/Option/Prod/Except compositions. C executes 2064 checks and C++ 2053; only C measures dispatch.  The [Python/Ruby receipt](fin-python-ruby-20261008/receipt-v2.json) also supports ordinary/reviewed record and variant fields on both Python versions and Ruby 3.3.12, with 2053 checks and all 13 exports per run. | None for these Python/Ruby reports. | VO #1442: archive completed Rust and hosted runs, then finish remaining host/runtime gaps and browser field acceptance. These nonrecursive, nongeneric native fixtures do not extend npm's recursive coverage to native packages. |\n",
+          "current": "| Fin inside products and Except | Ordinary and reviewed C/C++, Python, Ruby, Rust and .NET parameter/result observations cite their original reports. Rust's [local receipt](fin-rust-20261008/receipt-v2.json) records cargo/rustc 1.90.0 and measured host glibc 2.36. The [.NET receipt](fin-dotnet-hosted-20261008/receipt.json) records successful hosted job 113176414688, SDK 8.0.424 and declared floor 2.38; host glibc was not measured. Existing C/C++ and Python/Ruby provenance remains unchanged. | Other authenticated hosted selections await durable archival and exact promotion. | Remaining hosts and runtime-floor acceptance stay separate. New Rust/.NET reports do not measure dispatch. |\n| Fin nominal fields | Ordinary and reviewed C/C++, Python, Ruby, Rust, .NET and WIT/WASI field observations are promoted. The Rust/.NET [archive batch](archive-batch-source-history-20261008.json) retains six selections per host; [WIT record evidence](fin-wit-records-20261008/receipt.json) retains two repaired local routes with 2056 checks each. Earlier Node JavaScript/TypeScript, C/C++ and Python/Ruby observations remain distinct. | Other host reports await archival and promotion; ordinary PHP-Wasm and browser observations remain separate. | Remaining hosts, recursive/generic/indexed/inherited fields, Subtype and callback combinations remain open. No dispatch is inferred for the new hosts. |\n"
+        },
+        {
+          "start": 18162,
+          "previous": "VO #1446 adds checked records through typed, proof-free carriers for C/C++ and npm ABI 8. Each checked input selects a safe constructor over its payload fields; Lean-produced results erase proofs without selecting a constructor. The schemas and independent reviewed source retain erased field names, closed `Nat` indices and per-site constructor choices. [Source checks](../../tests/checked-records.test.mjs) compile generated native/npm Lean and cover normalization, wrong constructors, index mismatches and a standalone result-only package. Ordinary and reviewed C/C++ installed gates passed at `78a4d3d` with 2020 C checks and 2018 C++ checks each; the standalone result-only gate passed 1001 checks per consumer. npm and strict TypeScript passed all three routes at the same revision: ordinary/reviewed each execute 1011 checks and 1009 rejections; result-only executes 1001 checks. These six original reports await archival and exact support promotion. Nested checked records, other hosts, recursive and value-dependent runtime payloads remain original #1220 requirements.\n",
+          "current": "VO #1446 adds checked records through typed, proof-free carriers for C/C++ and npm ABI 8. Each checked input selects a safe constructor over its payload fields; Lean-produced results erase proofs without selecting a constructor. The schemas and independent reviewed source retain erased field names, closed `Nat` indices and per-site constructor choices. [Source checks](../../tests/checked-records.test.mjs) compile generated native/npm Lean and cover normalization, wrong constructors, index mismatches and a standalone result-only package. Ordinary and reviewed C/C++ installed gates passed at `78a4d3d` with 2020 C checks and 2018 C++ checks each; the standalone result-only gate passed 1001 checks per consumer. npm and strict TypeScript passed all three routes at the same revision: ordinary/reviewed each execute 1011 checks and 1009 rejections; result-only executes 1001 checks. These six original reports are [archived](checked-records-20261008/receipt.json) and await exact support promotion. Nested checked records, other hosts, recursive and value-dependent runtime payloads remain original #1220 requirements.\n"
+        },
+        {
+          "start": 20053,
+          "previous": "| Native Fin inside Prod, Except and Array of products | Claude, Codex integration | VO #1441 C/C++ archives include measured Array dispatch on both source routes. Python/Ruby structural observations are promoted with separate runtime logs. Archive completed Rust and hosted reports before scheduling missing host executions. The product fixture now calls its Fin 0 export `absentOnly`; the complete case remains. The [historical fixture reference](native-fin-products-20261007/original-fixture-reference.json) and exact source-history checks preserve the original C/C++ receipts without claiming those runs used the renamed fixture. |\n| Native refined record and variant fields | Claude, Codex integration | VO #1442 expanded ordinary and reviewed C/C++, Python and Ruby field cells are promoted with exact fixture and report hashes. Archive completed Rust and hosted reports, then execute remaining gaps. The earlier development run covers fewer exports and remains separate. |\n",
+          "current": "| Native Fin inside Prod, Except and Array of products | Claude, Codex integration | VO #1441 C/C++ archives include measured Array dispatch on both source routes. Python/Ruby structural observations are promoted with separate runtime logs. Rust and hosted .NET structural Fin archives are promoted. Archive other hosted reports before scheduling missing host executions. The product fixture now calls its Fin 0 export `absentOnly`; the complete case remains. The [historical fixture reference](native-fin-products-20261007/original-fixture-reference.json) and exact source-history checks preserve the original C/C++ receipts without claiming those runs used the renamed fixture. |\n| Native refined record and variant fields | Claude, Codex integration | VO #1442 expanded ordinary and reviewed C/C++, Python and Ruby field cells are promoted with exact fixture and report hashes. Rust, hosted .NET and local WIT field archives are promoted. Archive the remaining hosted reports, then execute missing coverage. The earlier development run covers fewer exports and remains separate. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fin-python-ruby-evidence.test.mjs",
+      "currentSha256": "fe25100088561501b72f16900ab1de7d59ced300111c62381dd9603a703d78f2",
+      "previousSha256": "b64529446b3ce8094e14a465dce1a7f4d58f36423a87b1261acfea2a33d71de6",
+      "edits": [
+        {
+          "start": 1009,
+          "previous": "",
+          "current": "import \"./helpers/fin-native-batch-promotion-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
+      "currentSha256": "7381ba256786c16ded13195bd31fa99a67af7ece789a7731c1f285d92630d526",
+      "previousSha256": "c3453e5ebb430ac15e9221395353d71cf85b3580b7c21f3956ff2bca712ba40a",
+      "edits": [
+        {
+          "start": 711,
+          "previous": "",
+          "current": "import { beforeFinNativeBatchPromotionSource } from \"./fin-native-batch-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 981,
+          "previous": "",
+          "current": "const readPromotedSurface = async () => {\n\tconst result = await readTypeSurface();\n\tresult.document = JSON.parse(beforeFinNativeBatchPromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(result.document, null, 2) + \"\\n\"));\n\treturn result;\n};\n"
+        },
+        {
+          "start": 1341,
+          "previous": "\tconst { document } = await readTypeSurface();\n",
+          "current": "\tconst { document } = await readPromotedSurface();\n"
+        },
+        {
+          "start": 3123,
+          "previous": "\tconst { document } = await readTypeSurface(), previous = await previousSurface();\n",
+          "current": "\tconst { document } = await readPromotedSurface(), previous = await previousSurface();\n"
+        },
+        {
+          "start": 4337,
+          "previous": "\t\tfor(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t\tfor(const file of entry.files) assert.equal(sha256(beforeFinNativeBatchPromotionSource(file.path, await readFile(file.path, \"utf8\"), file.sha256)), file.sha256, file.path);\n"
+        },
+        {
+          "start": 5345,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previous = await previousSurface();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface(), previous = await previousSurface();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/archive-batch-source-history.mjs",
+      "currentSha256": "7c3cd93ca29e200b3c0b2bde0bf19fcafce777c3e0662e5bb004abf2e63411a7",
+      "previousSha256": "8595d97ee6601152630bde2a3799c9d6a9e4fd645eeb5e8c306b61468e2b7d85",
+      "edits": [
+        {
+          "start": 252,
+          "previous": "",
+          "current": "import { beforeFinNativeBatchPromotionSource } from \"./fin-native-batch-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2183,
+          "previous": "",
+          "current": "\tsource = beforeFinNativeBatchPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/archive-batch-source-history-tests.mjs",
+      "currentSha256": "e8ed8082bd467c4f0438565d3880bd4b2542c7258efa2d9a3d4013304d715a34",
+      "previousSha256": "936720a936be206335fe628e9ac2ce1608bb57e1c0aefce7971b25e55c676abf",
+      "edits": [
+        {
+          "start": 365,
+          "previous": "",
+          "current": "import { beforeFinNativeBatchPromotionSource } from \"./fin-native-batch-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 1018,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeFinNativeBatchPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "8843f46efc042bfd210f92f22577f052cf2ce5fc23a539adeb2ee4825649ac61",
+      "previousSha256": "1d4dc9b9267a610a6024137f89b529cbee0148fa0838cd7ab97b226d3068c228",
+      "edits": [
+        {
+          "start": 9600,
+          "previous": "",
+          "current": "import { finNativeBatchPromotionChangedPaths } from \"./fin-native-batch-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 46626,
+          "previous": "",
+          "current": "\t, ...finNativeBatchPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "da331aad78b08b4e0935081d71be4c2ab208c94f1053c8f7c149000a07dc4187",
+      "previousSha256": "478ccaae82db49cb32442647939fefec1b44b57c8eea7723a8f4e3c7a248b80d",
+      "edits": [
+        {
+          "start": 24224,
+          "previous": "",
+          "current": "\tconst finBatch = [\"rust\", \"dotnet\", \"wit-wasi\"].includes(profile);\n\tconst nominalFin = finRuntimes.length > 0 || finBatch;\n"
+        },
+        {
+          "start": 25255,
+          "previous": "\tassert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (finRuntimes.length ? 1 : 0));\n",
+          "current": "\tassert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (nominalFin ? 1 : 0));\n"
+        },
+        {
+          "start": 25867,
+          "previous": "\t\tif(cell.shape === \"subtype\" || (cell.shape === \"fin\" && !finRuntimes.length)) assert.notEqual(cell.position, \"field\");\n",
+          "current": "\t\tif(cell.shape === \"subtype\" || (cell.shape === \"fin\" && !nominalFin)) assert.notEqual(cell.position, \"field\");\n"
+        },
+        {
+          "start": 26270,
+          "previous": "\t\t\t\t\t? finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`)\n",
+          "current": "\t\t\t\t\t? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))\n"
+        },
+        {
+          "start": 26495,
+          "previous": "\t\t\t\t\t\t, ...finRuntimes.flatMap(runtime => [\"product\", \"product-array\"].map(family => `fin-${runtime}-${family}-ordinary-installed`))]);\n",
+          "current": "\t\t\t\t\t\t, ...finRuntimes.flatMap(runtime => [\"product\", \"product-array\"].map(family => `fin-${runtime}-${family}-ordinary-installed`))\n\t\t\t\t\t\t, ...([\"rust\", \"dotnet\"].includes(profile) ? [\"product\", \"product-array\"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])]);\n"
+        }
+      ]
+    }
+  ]
+}

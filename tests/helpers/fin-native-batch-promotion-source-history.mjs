@@ -1,20 +1,25 @@
 /**
- * Preserve exact source predecessors of the Native acceptance evidence archives change (#1220).
+ * Preserve exact source predecessors of the Rust/.NET structural and WIT field promotion change (#1220).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
 
-export const archiveBatchHistoryPath = "docs/evidence/archive-batch-source-history-20261008.json";
-export const archiveBatchChangedPaths = [
+export const finNativeBatchPromotionHistoryPath = "docs/evidence/fin-native-batch-promotion-source-history-20261008.json";
+export const finNativeBatchPromotionChangedPaths = [
 	"docs/type-surface.v1.json"
+	, "docs/consume/rust.md"
+	, "docs/consume/dotnet.md"
+	, "docs/consume/wit-wasi.md"
+	, "docs/evidence/refinement-closure-audit-20261007.md"
 	, "tests/fin-python-ruby-evidence.test.mjs"
-	, "tests/helpers/jvm-shard-source-history.mjs"
-	, "tests/helpers/jvm-shard-source-history-tests.mjs"
+	, "tests/helpers/fin-python-ruby-promotion-tests.mjs"
+	, "tests/helpers/archive-batch-source-history.mjs"
+	, "tests/helpers/archive-batch-source-history-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
+	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -24,8 +29,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseArchiveBatchUpdate = (source, update) => {
-	assert.ok(archiveBatchChangedPaths.includes(update.path));
+export const reverseFinNativeBatchPromotionUpdate = (source, update) => {
+	assert.ok(finNativeBatchPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +56,11 @@ export const reverseArchiveBatchUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeArchiveBatchSource = (path, source, expected) => {
-	source = beforeFinNativeBatchPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !archiveBatchChangedPaths.includes(path)) return source;
+export const beforeFinNativeBatchPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !finNativeBatchPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(archiveBatchHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finNativeBatchPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseArchiveBatchUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinNativeBatchPromotionUpdate(source, update) : source;
 };

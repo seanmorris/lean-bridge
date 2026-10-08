@@ -12,11 +12,17 @@ import { finPythonRubyPromotionReferences, finPythonRubyReceiptPath } from "./fi
 import { beforeFinPythonRubyPromotionSource } from "./fin-python-ruby-promotion-source-history.mjs";
 import "./fin-python-ruby-promotion-source-history-tests.mjs";
 import "./fin-python-ruby-host-notes-source-history-tests.mjs";
+import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
 
 const previousSurface = async () => JSON.parse(beforeFinPythonRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforeFinNativeBatchPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
 
 test("Python/Ruby promotion notes preserve host-specific runtime and earlier observation facts", async () => {
-	const { document } = await readTypeSurface();
+	const { document } = await readPromotedSurface();
 	for(const profile of ["python", "ruby"])
 		for(const source of ["ordinary-source", "reviewed-ir"])
 		{
@@ -42,7 +48,7 @@ test("Python/Ruby promotion notes preserve host-specific runtime and earlier obs
 test("Python/Ruby promotion authenticates 18 reports with separate interpreter execution evidence", async () => {
 	const references = await finPythonRubyPromotionReferences();
 	assert.equal(references.length, 18);
-	const { document } = await readTypeSurface(), previous = await previousSurface();
+	const { document } = await readPromotedSurface(), previous = await previousSurface();
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	for(const reference of references)
 	{
@@ -56,7 +62,7 @@ test("Python/Ruby promotion authenticates 18 reports with separate interpreter e
 		assert.ok(entry.files.some(file => file.path === finPythonRubyReceiptPath));
 		for(const execution of reference.executionFiles)
 			assert.ok(entry.files.some(file => file.path === execution.path && file.sha256 === execution.sha256), execution.path);
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeFinNativeBatchPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
 		assert.ok(entry.scope.includes(reference.version));
 		assert.match(entry.scope, /consumer did not print its version/u);
 		assert.match(entry.scope, /host glibc and Lean version were not measured/u);
@@ -73,7 +79,7 @@ test("Python/Ruby promotion authenticates 18 reports with separate interpreter e
 });
 
 test("Python/Ruby promotion adds four field cells and supplements eight structural cells only", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await previousSurface();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await previousSurface();
 	const references = await finPythonRubyPromotionReferences();
 	const added = document.observations.slice(previous.observations.length);
 	assert.equal(added.length, 4);

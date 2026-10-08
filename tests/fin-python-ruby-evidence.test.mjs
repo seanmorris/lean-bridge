@@ -16,6 +16,7 @@ import "./helpers/fin-rust-evidence-tests.mjs";
 import "./helpers/checked-record-evidence-tests.mjs";
 import "./helpers/fin-dotnet-hosted-evidence-tests.mjs";
 import "./helpers/archive-batch-source-history-tests.mjs";
+import "./helpers/fin-native-batch-promotion-tests.mjs";
 
 const receipt = async () => {
 	const bytes = await readFile(`${finPythonRubyDirectory}/receipt-v2.json`);

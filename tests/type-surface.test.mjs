@@ -359,6 +359,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const finEvidence = { python: "python-fin-installed", rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
 	const fins = finEvidence ? ["fin"] : [];
 	const finRuntimes = { python: ["python311", "python312"], ruby: ["ruby33"] }[profile] ?? [];
+	const finBatch = ["rust", "dotnet", "wit-wasi"].includes(profile);
+	const nominalFin = finRuntimes.length > 0 || finBatch;
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
@@ -371,12 +373,12 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}[profile] ?? [];
 	// Author-checked Subtype cells are promoted per build group by their own receipt, at top-level parameters and results.
 	const subtypes = specializationEvidence ? ["subtype"] : [];
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (finRuntimes.length ? 1 : 0));
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + specialized.length + (nominalFin ? 1 : 0));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...specialized].sort());
 	for(const cell of observed)
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
-		if(cell.shape === "subtype" || (cell.shape === "fin" && !finRuntimes.length)) assert.notEqual(cell.position, "field");
+		if(cell.shape === "subtype" || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
@@ -384,9 +386,10 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			if(cell.shape === "fin")
 			{
 				assert.deepEqual(stage.evidence, cell.position === "field"
-					? finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`)
+					? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))
 					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
-						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))]);
+						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))
+						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])]);
 				continue;
 			}
 			if(cell.shape === "subtype")

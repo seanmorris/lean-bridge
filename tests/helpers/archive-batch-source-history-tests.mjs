@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
 import { beforeArchiveBatchSource, archiveBatchChangedPaths, archiveBatchHistoryPath, reverseArchiveBatchUpdate } from "./archive-batch-source-history.mjs";
 
 test("Native acceptance evidence archives authenticates each exact source predecessor", async () => {
@@ -16,7 +17,7 @@ test("Native acceptance evidence archives authenticates each exact source predec
 	assert.deepEqual(record.updates.map(update => update.path), archiveBatchChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeFinNativeBatchPromotionSource(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseArchiveBatchUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeArchiveBatchSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeArchiveBatchSource(update.path, source, update.currentSha256), source);
