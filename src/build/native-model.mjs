@@ -10,7 +10,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
-import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards } from "./component-refinements.mjs";
+import { checkedRecordVia, componentRefinedCall, componentRefinementConversion, componentRefinementGuards } from "./component-refinements.mjs";
 
 export { validateNativeType };
 
@@ -159,6 +159,12 @@ const nativeRefinements = (declaration, callbacks = false) => {
 		}
 		if(type.kind === "refinement")
 		{
+			// Only the site's checked constructor builds a record with erased proofs, from its payload mirror.
+			if(type.predicate.kind === "checked-record")
+			{
+				if(!top || site !== "parameter") throw unsupported("checked records cross only at a top-level parameter or result");
+				return { kind: "checked-record", definition: type.base.lean, constructor: type.predicate.constructor, fields: type.base.fields.map(field => field.name) };
+			}
 			if(type.predicate.kind === "subtype")
 			{
 				if(!top) throw Object.assign(new TypeError(`${declaration.name}: checked Subtype refinements inside containers are not supported by native packages`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
@@ -177,6 +183,12 @@ const nativeRefinements = (declaration, callbacks = false) => {
 		{
 			const children = type.arguments.map(child => tree(child, false));
 			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
+		}
+		// A Lean-produced record with erased proofs is projected to its payload mirror; no constructor runs.
+		if(type.kind === "record" && Object.hasOwn(type, "erased"))
+		{
+			if(!top || site !== "result") throw unsupported("checked records cross only at a top-level parameter or result");
+			return { kind: "checked-record", definition: type.lean, constructor: null, fields: type.fields.map(field => field.name) };
 		}
 		// A plain record or variant names its definition and carries every field's tree in
 		// declaration order; a variant checks only its active case. Definitions are acyclic here.
@@ -360,7 +372,7 @@ const nativeErasedMirrors = model => {
 	const names = new Set();
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
-		if(["record", "variant"].includes(tree.kind)) names.add(tree.definition);
+		if(["record", "variant", "checked-record"].includes(tree.kind)) names.add(tree.definition);
 		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
@@ -374,10 +386,12 @@ const nativeErasedMirrors = model => {
  * @param mirrors - Lean names of the mirrored definitions.
  */
 const renderErasedMirrors = (model, mirrors) => {
-	const trees = new Map();
+	const trees = new Map(), constructors = new Map();
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind) && !trees.has(tree.definition)) trees.set(tree.definition, tree);
+		if(tree.kind === "checked-record" && tree.constructor !== null)
+			constructors.set(tree.definition, new Set([...constructors.get(tree.definition) ?? [], tree.constructor]));
 		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
@@ -387,6 +401,18 @@ const renderErasedMirrors = (model, mirrors) => {
 		if(!["record", "variant"].includes(type.kind) || !mirrors.has(type.lean) || done.has(type.lean)) continue;
 		done.add(type.lean);
 		const mirror = erasedMirror(type.lean), tree = trees.get(type.lean), source = `_root_.${type.lean}`;
+		// A checked record's mirror holds only its payload. Lean-produced values are projected to it;
+		// each site's constructor alone builds the source value back from it, so no carrier can.
+		if(type.kind === "record" && Object.hasOwn(type, "erased"))
+		{
+			lines.push(`structure ${mirror} where`, ...type.fields.map(field => `  «${field.name}» : ${absoluteLeanType(field.type, mirrors)}`), "");
+			lines.push(`def ${mirror}.erase (value : ${source}) : ${mirror} :=`
+				, `  ${mirror}.mk ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
+			for(const constructor of [...constructors.get(type.lean) ?? []].sort())
+				lines.push(`def ${mirror}.${checkedRecordVia(constructor)} (value : ${mirror}) : _root_.Option ${source} :=`
+					, `  _root_.${constructor} ${type.fields.map(field => `value.«${field.name}»`).join(" ")}`, "");
+			continue;
+		}
 		const convert = (refinement, value, checked) => componentRefinementConversion(refinement, value, checked);
 		if(type.kind === "record")
 		{
@@ -483,9 +509,9 @@ export const generateNativeLeanAdapters = model => {
 			, componentRefinementGuards(guards, `_root_.Option.some (${call})`, "_root_.Option.none").replaceAll("\n", "\n  "));
 		// One validator per author-constructed parameter lets the C adapter name the rejected site before dispatch.
 		item.refinements.parameters.forEach((refinement, i) => {
-			if(refinement?.kind !== "subtype") return;
+			if(!["subtype", "checked-record"].includes(refinement?.kind)) return;
 			emit(`${item.symbol}_refinement_${i}`, [{ name: "value", type: item.parameters[i].type }], { kind: "primitive", name: "uint8", lean: "UInt8", abi: { cType: "uint8_t", box: "lean_box", unbox: "lean_unbox", heap: false } }
-				, `match _root_.${refinement.constructor} value with\n  | .some _ => 1\n  | .none => 0`);
+				, `match ${refinement.kind === "subtype" ? `_root_.${refinement.constructor} value` : componentRefinementConversion(refinement, "value")} with\n  | .some _ => 1\n  | .none => 0`);
 		});
 	}
 	for(const type of model.types)

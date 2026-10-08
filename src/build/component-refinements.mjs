@@ -4,6 +4,15 @@
  *
  * @file
  */
+import { sha256 } from "../capsule/node.mjs";
+
+/**
+ * Name the conversion that builds a checked record from its payload mirror with one constructor.
+ * Each site chooses its constructor, so a mirror carries one conversion per constructor in use.
+ *
+ * @param constructor - Fully qualified Lean checked constructor.
+ */
+export const checkedRecordVia = constructor => `via_${sha256(constructor).slice(0, 16)}`;
 
 const refinements = (item, count) => item.refinements ?? {
 	parameters: Array.from({ length: count }, () => null)
@@ -26,6 +35,13 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
 		: `${input}.val`;
 	if(refinement.kind === "subtype") return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+	// A checked record crosses as its payload mirror: only the site's constructor builds the source
+	// value, and a Lean-produced one is projected back without any check.
+	if(refinement.kind === "checked-record")
+	{
+		if(checked && typeof refinement.constructor !== "string") throw new TypeError("A checked record input requires its site's constructor");
+		return `(LbErased.${refinement.definition}.${checked ? checkedRecordVia(refinement.constructor) : "erase"} ${input})`;
+	}
 	// Native packages pass records and variants with checked fields as erased mirrors whose
 	// check and erase functions the native adapter module defines.
 	if(["record", "variant"].includes(refinement.kind)) return `(LbErased.${refinement.definition}.${checked ? "check" : "erase"} ${input})`;

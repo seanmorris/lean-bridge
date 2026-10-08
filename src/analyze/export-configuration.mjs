@@ -339,7 +339,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 								: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
 		if(site.refinement === "reject" && refined(type)) return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject"
-			&& (type.kind !== "refinement" || type.predicate.kind !== "subtype" || type.predicate.constructor !== site.refinement.constructor))
+			&& (type.kind !== "refinement" || !["subtype", "checked-record"].includes(type.predicate.kind) || type.predicate.constructor !== site.refinement.constructor))
 			return `${label}: checked refinement constructor does not match the compiler-checked Subtype`;
 		if(site.callable !== undefined)
 		{

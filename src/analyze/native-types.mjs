@@ -87,7 +87,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		, option: ["kind", "element", "abi"]
 		, result: ["kind", "arguments", "abi"]
 		, tuple: ["kind", "arguments", "abi"]
-		, record: Object.hasOwn(type, "provenance") ? ["kind", "name", "lean", "constructor", "provenance", "fields", "abi"] : ["kind", "name", "lean", "constructor", "fields", "abi"]
+		, record: ["kind", "name", "lean", "constructor", ...["provenance"].filter(key => Object.hasOwn(type, key)), "fields", ...["erased"].filter(key => Object.hasOwn(type, key)), "abi"]
 		, variant: ["kind", "name", "lean", "cases", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
 		, callback: ["kind", "parameters", "result", "abi"]
@@ -115,7 +115,16 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
 		if(!structural || references) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
-		if(type.predicate?.kind === "subtype")
+		if(type.predicate?.kind === "checked-record")
+		{
+			// Only the site's checked constructor builds a record with proof fields, at a top-level parameter.
+			if(depth !== 0 || copied || site === "result") fail("checked records require a top-level native parameter constructor");
+			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
+			if(typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid checked record constructor");
+			if(type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("checked record refinements require a record with erased proofs");
+			validate(type.base, depth, copied, references, policy, owned, structural, "checked-record");
+		}
+		else if(type.predicate?.kind === "subtype")
 		{
 			// An author-supplied checked constructor runs only at a top-level site over a primitive base.
 			if(depth !== 0 || copied) fail("Subtype refinements require a top-level native parameter or result");
@@ -160,9 +169,27 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			// references in the graph form. Nothing inside an argument is an identity, a callback or a refinement.
 			for(const child of type.provenance.arguments)
 			{
+				// A value index is provenance only: a closed Nat literal, never a host type.
+				if(child?.kind === "value")
+				{
+					closed(child, ["kind", "type", "value"], "record value argument");
+					recurse(child.type, true, false);
+					if(child.type.kind !== "primitive" || child.type.name !== "nat" || typeof child.value !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(child.value)) fail("invalid record value argument");
+					continue;
+				}
 				recurse(child, true, false);
 				if(containsKind(child, ["resource", "callback", "refinement"], references)) fail("record provenance arguments cannot carry resource, callback or refinement types");
 			}
+		}
+		// Erased proof fields never cross. A record carrying them crosses only as a Lean-produced
+		// top-level result or as the base of a parameter's checked-record refinement.
+		if(Object.hasOwn(type, "erased"))
+		{
+			// A bare one at a parameter would bypass the constructor; representation checks pass no site.
+			if(depth !== 0 || copied || references || site === "parameter") fail("checked records cross only through a parameter constructor or as a result");
+			if(!Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024 || new Set(type.erased).size !== type.erased.length
+				|| type.erased.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
+				|| !type.fields.length || type.fields.some(field => type.erased.includes(field.name))) fail("invalid erased proof fields");
 		}
 		for(const field of type.fields)
 		{

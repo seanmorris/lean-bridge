@@ -183,6 +183,15 @@ export const validateElaboratedMetadata = (report, request) => {
 					{
 						if(!refinements || ((depth !== 0 || refinements === "fin-only") && type.predicate?.kind !== "fin")) fail("Unsupported nested refinement position");
 						closed(type, ["kind", "base", "predicate"]);
+						// A checked record is built only by its site's constructor; its base is the record itself.
+						if(type.predicate?.kind === "checked-record")
+						{
+							closed(type.predicate, ["kind", "constructor"]);
+							if(typeof type.predicate.constructor !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.predicate.constructor)
+								|| type.base?.kind !== "record" || !Object.hasOwn(type.base, "erased")) fail("Invalid checked record refinement");
+							copied(type.base, depth, references, refinements);
+							return;
+						}
 						scalar(type.base);
 						if(type.predicate?.kind === "fin")
 						{
@@ -231,7 +240,11 @@ export const validateElaboratedMetadata = (report, request) => {
 					}
 					if(type?.kind === "record")
 					{
-						closed(type, Object.hasOwn(type, "provenance") ? ["kind", "name", "provenance", "fields"] : ["kind", "name", "fields"]);
+						closed(type, ["kind", "name", "fields", ...["provenance", "erased"].filter(key => Object.hasOwn(type, key))]);
+						// Erased proof fields are named once, never cross, and appear only at a top-level site.
+						if(Object.hasOwn(type, "erased") && (depth !== 0 || !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024
+							|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
+							|| !Array.isArray(type.fields) || !type.fields.length || type.fields.some(field => type.erased.includes(field?.name)))) fail("Invalid checked record");
 						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
 							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
 						// An instantiated generic record names its structure and the resolved type arguments.
@@ -245,6 +258,15 @@ export const validateElaboratedMetadata = (report, request) => {
 							// identity, a callback or a refinement, so no bound is lowered away with the argument.
 							for(const argument of type.provenance.arguments)
 							{
+								// A value index is provenance only: a closed Nat literal, never a host type.
+								if(argument?.kind === "value")
+								{
+									closed(argument, ["kind", "type", "value"]);
+									closed(argument.type, ["kind", "name"]);
+									if(argument.type.kind !== "primitive" || argument.type.name !== "nat" || typeof argument.value !== "string"
+										|| !/^(?:0|[1-9][0-9]*)$/.test(argument.value)) fail("Invalid component record value argument");
+									continue;
+								}
 								if(containsKind(argument, ["resource", "callback", "refinement"], references)) fail("Component record provenance arguments cannot carry resource, callback or refinement types");
 								copied(argument, depth + 1, references, refinements);
 							}

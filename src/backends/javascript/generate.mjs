@@ -45,7 +45,8 @@ const declarationRefinements = declaration => {
 
 const emitFinCheck = (output, refinement, expression, path, indent) => {
 	if(refinement?.kind === "fin") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
-	else if(refinement && refinement.kind !== "subtype") output.push(`${indent}validate.assertNestedFin(${expression}, ${quote(refinement)}, ${quote(path)});`);
+	// Lean runs a Subtype or checked-record constructor itself; the host has no bound to check.
+	else if(refinement && !["subtype", "checked-record"].includes(refinement.kind)) output.push(`${indent}validate.assertNestedFin(${expression}, ${quote(refinement)}, ${quote(path)});`);
 };
 
 const typeScriptType = (typeRef, typeMap) => {
@@ -636,7 +637,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
 		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {
 			const value = declarationRefinements(item);
-			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype"].includes(refinement.kind));
+			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype", "checked-record"].includes(refinement.kind));
 		})) ? [
 				"export const assertNestedFin = (value, refinement, path) => {"
 				, "  if (refinement === null) return;"

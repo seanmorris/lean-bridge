@@ -158,6 +158,47 @@ def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
   modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
   return ← nominalReference e name
 
+/-- A record with proof fields crosses only at a top-level site. A parameter is built by the
+configured checked constructor alone, whose explicit binders are the payload fields by name and
+type, in Lean order, and whose result is `Option` of the exact record. A result is produced by Lean,
+which already holds the proofs, so it takes no constructor. -/
+def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
+    (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)
+    (checked : Option String) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
+  if payload.isEmpty then reject e "checked records need at least one payload field"
+  unless depth == 0 && !copied && structural && callbackSite.isSome && !hostReply do
+    reject e "checked records currently require a top-level parameter or result"
+  if callbackSite == some true then
+    if checked.isSome then reject e "Lean-produced checked records take no constructor"
+    return reference
+  let some constructor := checked
+    | reject e "checked records require a configured checked constructor"
+  let constructorName := constructor.toName
+  let env ← getEnv
+  let some moduleIndex := env.getModuleIdxFor? constructorName
+    | reject e "checked record constructor module is unavailable"
+  unless request.modules.contains env.header.moduleNames[moduleIndex.toNat]!.toString do
+    reject e "checked record constructor must belong to a selected module"
+  let constructorType ← inferType (← mkConstWithFreshMVarLevels constructorName)
+  discard <| forallTelescopeReducing constructorType fun arguments result => do
+    unless arguments.size == payload.size do
+      reject e "checked record constructor must take exactly the payload fields"
+    for argument in arguments, (field, fieldType) in payload do
+      let declaration ← argument.fvarId!.getDecl
+      unless declaration.binderInfo == .default do
+        reject e "checked record constructor takes only explicit payload values"
+      -- Binder names map host payload fields to constructor inputs; an initial convention.
+      unless declaration.userName == field do
+        reject e s!"checked record constructor input {declaration.userName} must be named {field}"
+      unless ← isDefEq declaration.type fieldType do
+        reject e s!"checked record constructor input {field} must equal the payload field type"
+    unless result.isAppOfArity ``Option 1 && (← isDefEq result.appArg! e) do
+      reject e "checked record constructor must return Option of the exact record"
+  discard <| checkBody request constructorName
+  return obj [("kind", str "refinement"), ("base", reference),
+    ("predicate", obj [("kind", str "checked-record"), ("constructor", str constructor)]),
+    ("abi", ← abi e)]
+
 /-- Whether a shape, or any definition it references, has a node of the given kind. -/
 partial def containsKind (types : Array Json) (value : Json) (kind : String) (seen : List String := []) : Bool :=
   match value with
@@ -382,7 +423,16 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         -- Every type argument is a closed runtime type: a Sort-typed, non-proposition, copied shape.
         let mut arguments := #[]
         for argument in args do
-          unless (← whnf (← inferType argument)).isSort do reject e "generic record arguments must be types"
+          unless (← whnf (← inferType argument)).isSort do
+            -- A value index is recorded only as instantiation provenance. This slice admits a
+            -- closed Nat literal; other index kinds are refused at their source.
+            unless ← isDefEq (← inferType argument) (mkConst ``Nat) do
+              reject e "generic record value arguments must be Nat literals"
+            let .lit (.natVal index) ← whnf argument
+              | reject e "generic record value arguments must be closed Nat literals"
+            arguments := arguments.push (obj [("kind", str "value"),
+              ("type", ← shapeTree request (mkConst ``Nat)), ("value", str (toString index))])
+            continue
           if ← isProp argument then reject e "generic record arguments cannot be propositions"
           let shape ← shapeTree request argument (aliasName :: seen) 0 true none containerFin false
           -- An argument is a plain copied type throughout: no identity, callback or refinement
@@ -394,17 +444,24 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         -- Field types come from Lean's own inference on a typed receiver, with the structure's
         -- universes and arguments instantiated; a field that depends on the receiver is rejected.
         let mut fields := #[]
-        for field in info.fieldNames do
-          let some projection := info.getProjFn? fields.size | reject e "missing record projection"
+        -- Proof fields are erased: they never cross, and only a checked constructor builds them.
+        let mut erased : Array Name := #[]
+        let mut payload : Array (Name × Expr) := #[]
+        for field in info.fieldNames, position in [0:info.fieldNames.size] do
+          let some projection := info.getProjFn? position | reject e "missing record projection"
           if !nativeIdentifier field.toString || (field.toString.splitOn ".").length != 1 ||
               ["new", "DESTROY", "CLONE", "CLONE_SKIP"].contains field.toString ||
               !nativeIdentifier projection.toString then reject e "invalid or reserved native record field"
-          let fieldType ← withLocalDecl `value .default e fun receiver => do
+          let (fieldType, proof) ← withLocalDecl `value .default e fun receiver => do
             let application := mkAppN (mkConst projection levels) (args.push receiver)
             let fieldType ← instantiateMVars (← inferType application)
+            if ← isProp fieldType then return (fieldType, true)
             if fieldType.containsFVar receiver.fvarId! then reject e s!"generic record field {field} depends on the record value"
-            if ← isProp fieldType then reject e s!"generic record field {field} is a proof"
-            return fieldType
+            return (fieldType, false)
+          if proof then
+            erased := erased.push field
+            continue
+          payload := payload.push (field, fieldType)
           -- An inherited generic parent is one subobject field whose Lean type is an unnamed
           -- application; it resolves to the single source alias that denotes it. Fields that a
           -- program names explicitly never take this path.
@@ -421,9 +478,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         -- projected field types in order and build the closed alias; the probe is Lean-typed.
         let constructorType ← inferType (mkAppN (mkConst induct.ctors.head! levels) args)
         forallTelescopeReducing constructorType fun binders result => do
-          unless binders.size == fields.size do reject e "generic record constructor arity disagrees with its projections"
+          unless binders.size == info.fieldNames.size do reject e "generic record constructor arity disagrees with its projections"
           unless ← isDefEq result e do reject e "generic record constructor does not build the instantiated record"
-          for binder in binders, index in [0:fields.size] do
+          for binder in binders, index in [0:binders.size] do
+            -- A proof binder's type mentions earlier binders; only Lean's own constructor holds it.
+            if erased.contains info.fieldNames[index]! then continue
             let declared ← inferType binder
             let projected ← withLocalDecl `value .default e fun receiver => do
               instantiateMVars (← inferType (mkAppN (mkConst (info.getProjFn? index).get! levels) (args.push receiver)))
@@ -431,10 +490,13 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         let aliasType ← inferType (mkConst aliasName)
         unless (← whnf aliasType).isSort do reject e "generic record alias must denote a type"
         unless ← isDefEq (mkConst aliasName) e do reject e "generic record alias does not unfold to the instantiation"
-        return ← rememberShape e aliasName <| obj [("kind", str "record"), ("name", str aliasName.toString),
+        let reference ← rememberShape e aliasName <| obj ([("kind", str "record"), ("name", str aliasName.toString),
           ("lean", str aliasName.toString), ("constructor", str induct.ctors.head!.toString),
           ("provenance", obj [("structure", str structureName.toString), ("arguments", toJson arguments)]),
-          ("fields", toJson fields), ("abi", ← abi e)]
+          ("fields", toJson fields)] ++ (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++
+          [("abi", ← abi e)])
+        if erased.isEmpty then return reference
+        return ← checkedRecordSite request e reference payload depth copied structural checked callbackSite hostReply
   if let .const name _ := e then
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
@@ -470,19 +532,34 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
             if fieldType.hasLooseBVars then reject e "inherited record fields cannot depend on the record value"
             unless ← isDefEq (← inferType binder) fieldType do reject e "inherited record constructor and projection types disagree"
       let mut fields := #[]
-      for field in info.fieldNames do
-        let some projection := info.getProjFn? fields.size | reject e "missing record projection"
+      -- Proof fields are erased: they never cross, and only a checked constructor builds them.
+      let mut erased : Array Name := #[]
+      let mut payload : Array (Name × Expr) := #[]
+      for field in info.fieldNames, position in [0:info.fieldNames.size] do
+        let some projection := info.getProjFn? position | reject e "missing record projection"
         if !nativeIdentifier field.toString || (field.toString.splitOn ".").length != 1 ||
             ["new", "DESTROY", "CLONE", "CLONE_SKIP"].contains field.toString ||
             !nativeIdentifier projection.toString then reject e "invalid or reserved native record field"
         let projectionInfo ← getConstInfo projection
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
+        let proof ← withLocalDecl `value .default e fun receiver => isProp (fieldType.instantiate1 receiver)
+        if proof then
+          erased := erased.push field
+          continue
+        -- A payload field that depends on another field stays refused as a dependent type.
+        payload := payload.push (field, fieldType)
         -- A plain record's fields are structural: each Fin field is checked where the record crosses.
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
           ("type", ← shapeTree request fieldType (name :: seen) 0 true none containerFin true)])
-      return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
-        ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
+      let types := (← get).types
+      if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") then
+        reject e "checked record payload fields cannot carry refinements yet"
+      let reference ← rememberShape e name <| obj ([("kind", str "record"), ("name", str name.toString),
+        ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields)] ++
+        (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++ [("abi", ← abi e)])
+      if erased.isEmpty then return reference
+      return ← checkedRecordSite request e reference payload depth copied structural checked callbackSite hostReply
     if let .inductInfo induct ← getConstInfo name then
       if seen.contains name then return ← nominalReference e name
       if !nativeIdentifier name.toString || induct.numParams != 0 || induct.numIndices != 0 then
@@ -570,6 +647,9 @@ partial def inlineCopiedType (types : Array Json) (value : Json)
   if kind == "result" || kind == "tuple" then
     let args ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
     return value.setObjVal! "arguments" (toJson (← args.mapM fun child => inlineCopiedType types child seen (depth + 1)))
+  -- A checked record's site keeps its predicate around the inlined record.
+  if kind == "refinement" && (value.getObjVal? "base" |>.toOption |>.bind fun base => base.getObjValAs? String "kind" |>.toOption) == some "reference" then
+    return value.setObjVal! "base" (← inlineCopiedType types (← ofExcept <| value.getObjVal? "base") seen (depth + 1))
   let expandFields := fun (owner : Json) => do
     let fields ← ofExcept <| owner.getObjValAs? (Array Json) "fields"
     let fields ← fields.mapM fun (field : Json) => do
@@ -701,6 +781,10 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
 
 partial def componentCopiedType (value : Json) : MetaM Json := do
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  -- A value index is instantiation provenance only, never a host type.
+  if kind == "value" then
+    return obj [("kind", str kind), ("type", ← componentCopiedType (← ofExcept <| value.getObjVal? "type")),
+      ("value", ← ofExcept <| value.getObjVal? "value")]
   if kind == "reference" then
     return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name")]
   if kind == "graph" then
@@ -735,7 +819,8 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
         pure [("provenance", obj [("structure", ← ofExcept <| provenance.getObjVal? "structure"),
           ("arguments", toJson (← args.mapM componentCopiedType))])]
       | .error _ => pure []
-    return obj ([("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name")] ++ provenance ++ [("fields", toJson fields)])
+    let erased := match value.getObjVal? "erased" with | .ok names => [("erased", names)] | .error _ => []
+    return obj ([("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name")] ++ provenance ++ [("fields", toJson fields)] ++ erased)
   if kind == "variant" then
     let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
     let cases ← cases.mapM fun (item : Json) => do
@@ -822,7 +907,7 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
       let predicate := (type.getObjVal? "predicate").toOption.getD Json.null
       let configured := (refinement.getObjValAs? String "constructor").toOption
       if (type.getObjValAs? String "kind").toOption != some "refinement" ||
-          (predicate.getObjValAs? String "kind").toOption != some "subtype" ||
+          !["subtype", "checked-record"].contains ((predicate.getObjValAs? String "kind").toOption.getD "") ||
           configured != (predicate.getObjValAs? String "constructor").toOption then
         return some s!"{label}: checked refinement constructor does not match the compiler-checked Subtype"
   let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")

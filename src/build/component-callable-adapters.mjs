@@ -26,6 +26,19 @@ export const createComponentPrivateAbi = document => {
 		|| document.types.some(type => type.fields.some(field => compound(field.type)));
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
+	// Checked records cross only as payload mirrors, which the recursive graph carriers generate.
+	if(document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
+	{
+		if(callbackTypes.length) throw new TypeError("Checked records cannot share a component with callbacks yet");
+		const exports = document.declarations.map(declaration => ({ bindingId: declaration.id
+			, symbol: `lean_bridge_${sha256(`${document.component.id}\0${declaration.id}`).slice(0, 24)}`
+			, parameters: declaration.parameters.map(parameter => parameter.type)
+			, result: declaration.result.type
+			, resultMode: declaration.resultMode }));
+		const graph = { version: componentRecursiveAbi, dispatch: componentRecursiveDispatch, types: componentRecordDefinitions(document, true), exports };
+		assertComponentRecursiveBindings(graph, document);
+		return graph;
+	}
 	const nominalRefinements = nominalRefinementEntries(document.types), constrained = nominalRefinements.length > 0;
 	const structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(callbackDefinitionRefinement)
 		|| callbackTypes.some(type => [...type.callable.parameters.map(item => item.type), type.callable.result.type].some(type => type.kind !== "primitive")));

@@ -33,6 +33,14 @@ export const assertRefinement = (refinement, type, depth = 0) => {
 			|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor)) fail();
 		return;
 	}
+	if(refinement.kind === "checked-record")
+	{
+		// A site's checked constructor builds a record with erased proofs from its payload.
+		keys(["kind", "constructor"]);
+		if(depth !== 0 || type?.kind !== "named" || typeof refinement.constructor !== "string"
+			|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(refinement.constructor)) fail();
+		return;
+	}
 	keys(["kind", "arguments"]);
 	const count = ["tuple", "result"].includes(refinement.kind) ? 2 : 1;
 	if(!["array", "list", "option", "tuple", "result"].includes(refinement.kind)
