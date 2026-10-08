@@ -112,7 +112,16 @@ export const generateNativeCallables = (model, surface) => {
 		const native = model.exports.find(item => `lean:${item.name}` === fn.declaration.id);
 		return native.result.kind === "callback" ? [[fn.declaration.result.type.id, nativeTypeKey(native.result)]] : [];
 	}));
-	const leases = type => bindings.get(nativeTypeKey(type)).filter(cb => leased.has(cb.type.id) ? leased.get(cb.type.id) === nativeTypeKey(type) : !type.checked);
+	// Checked host replies add native types to a public representation but are never leased. A
+	// borrowed-only slot keeps its unchecked owners; when only reply types share it, the first by key
+	// fills it once, so no public slot is assigned twice.
+	const keyed = (left, right) => nativeTypeKey(left) < nativeTypeKey(right) ? -1 : 1;
+	const unreplied = new Set(types.filter(type => !type.checked && !type.reply).flatMap(type => bindings.get(nativeTypeKey(type)).map(cb => cb.type.id)));
+	const replyOwners = new Map();
+	for(const type of types.filter(item => item.reply).sort(keyed))
+		for(const cb of bindings.get(nativeTypeKey(type))) if(!replyOwners.has(cb.type.id)) replyOwners.set(cb.type.id, nativeTypeKey(type));
+	const owns = (type, cb) => !type.checked && (!type.reply || (!unreplied.has(cb.type.id) && replyOwners.get(cb.type.id) === nativeTypeKey(type)));
+	const leases = type => bindings.get(nativeTypeKey(type)).filter(cb => leased.has(cb.type.id) ? leased.get(cb.type.id) === nativeTypeKey(type) : owns(type, cb));
 	const leaseBounds = [];
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";

@@ -215,7 +215,8 @@ test("a native build admits R1 and refuses R2 at the existing host-reply capabil
 	const r2 = reviewedCallbackFinReview({ hostReply: true });
 	validateReviewedSource(reviewInput(r2));
 	await assert.rejects(() => nativeModel(t, r2), error => {
-		assert.match(JSON.stringify(error.details ?? error.message), /Fin refinements in a host callback result are refused/u);
+		// A bare Fin reply has no Fin-free failure value, so the model refuses it after extraction.
+		assert.match(JSON.stringify(error.details ?? error.message), /a host callback result needs a Fin-free failure value: scalar Fin, a Fin in its selected default, Subtype and checked records are refused/u);
 		return true;
 	});
 });

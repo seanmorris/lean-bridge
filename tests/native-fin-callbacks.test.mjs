@@ -216,7 +216,7 @@ test("C and C++ READMEs document only the callable bounds a package admits, and 
 		assert.match(text, /the closure is not invoked, the caller's values are unchanged/u);
 		assert.match(text, /Fin 0 has no values, so every call to a closure taking one is refused\./u);
 		assert.match(text, /Values Lean produces for the host, the arguments it passes to a host callback and the results of a returned closure, are already below their bounds\./u);
-		assert.match(text, /A host callback's result cannot carry a Fin bound: the host produces it while Lean runs, so such exports are refused when the package is built\./u);
+		assert.match(text, /The host callbacks of this package return no Fin bounds\./u);
 		assert.doesNotMatch(text, /installed|tested|verified/u);
 	}
 	assert.match(c, /returns INVALID_ARGUMENT with a message naming the argument and its bound; .* until its dispose function releases it, exactly once\./u);
@@ -261,6 +261,9 @@ const replyShapes = () => {
 		, { name: "digit", constructor: "FinCallbacks.Late.digit", fields: [{ name: "value", type: fin("10") }] }];
 	const late = { kind: "variant", name: "FinCallbacks.Late", lean: "FinCallbacks.Late", cases, abi: heap };
 	const alias = { kind: "alias", name: "FinCallbacks.MaybeDigit", lean: "FinCallbacks.MaybeDigit", target: option(fin("5")), abi: heap };
+	const slotFields = [{ name: "digit", projection: "FinCallbacks.Slot.digit", type: option(fin("5")) }
+		, { name: "count", projection: "FinCallbacks.Slot.count", type: nat }];
+	const slot = { kind: "record", name: "FinCallbacks.Slot", lean: "FinCallbacks.Slot", constructor: "FinCallbacks.Slot.mk", fields: slotFields, abi: heap };
 	return {
 		// None, an empty collection, the ok branch and the first case: none of these failure values holds a Fin.
 		admitted: {
@@ -274,13 +277,17 @@ const replyShapes = () => {
 			, maybeTile: option(finCallbackTile)
 			, aliased: alias
 			, nested: option(array(fin("3")))
+			// A record, product or ok branch qualifies when its own stand-in holds no Fin.
+			, slotted: slot
+			, product: { kind: "tuple", arguments: [option(fin("5")), nat], abi: heap }
+			, success: { kind: "result", arguments: [array(fin("3")), nat], abi: heap }
 		}
 		, refused: {
 			scalar: fin("5")
 			, zero: fin("0")
 			, tile: finCallbackTile
 			, pair: { kind: "tuple", arguments: [fin("5"), nat], abi: heap }
-			, success: { kind: "result", arguments: [fin("7"), nat], abi: heap }
+			, okDigit: { kind: "result", arguments: [fin("7"), nat], abi: heap }
 			, first: { ...late, cases: [...cases].reverse() }
 			, aliasedScalar: { ...alias, target: fin("5"), abi: nat.abi }
 		}
@@ -347,6 +354,36 @@ test("checked host replies keep distinct identities in either declaration order"
 	assert.doesNotMatch(section(source, `lb_invoke_${forward["Sample.c"]}(`), /lb_fin_below/u);
 });
 
+test("checked host replies never assign a public closure slot twice, in either declaration order and beside a returned closure", () => {
+	const { maybe } = replyShapes().admitted, three = { ...maybe, element: finCallbackBound("3") }, plain = { ...maybe, element: finCallbackNat };
+	const slots = signatures => {
+		const model = finCallbackCompilerModel(signatures), surface = replySurface(model), { vtable } = generateNativeCallables(model, surface);
+		const calls = [...vtable.matchAll(/\.(callback[0-9a-f]+)_call = lb_owned_([0-9a-f]+), \.\1_dispose = lb_dispose_\2,/gu)].map(([, slot, key]) => [slot, key]);
+		// Every public closure type has exactly one call and one dispose assignment, together.
+		assert.equal(calls.length, surface.callbacks.size);
+		assert.equal(new Set(calls.map(([slot]) => slot)).size, calls.length);
+		assert.equal((vtable.match(/_call = /gu) ?? []).length, calls.length);
+		const key = name => nativeTypeKey(model.exports.find(item => item.name === `Sample.${name}`).parameters[0].type);
+		return { calls: Object.fromEntries(calls), key, model, surface };
+	};
+	const host = type => [finCallback([finCallbackNat], type), finCallbackNat];
+	// Beside an unchecked callback of the same representation, that callback keeps every borrowed-only slot.
+	for(const order of [["a", "b", "c"], ["c", "b", "a"]])
+	{
+		const { calls, key } = slots({ [order[0]]: host(three), [order[1]]: host(maybe), [order[2]]: host(plain) });
+		assert.deepEqual(new Set(Object.values(calls)), new Set([key(order[2])]), order.join(""));
+	}
+	// With only checked replies, the first reply type by key fills each slot once, whatever the order.
+	const first = [slots({ a: host(three), b: host(maybe) }), slots({ a: host(maybe), b: host(three) })];
+	const owner = first.map(({ key }) => [key("a"), key("b")].sort()[0]);
+	assert.equal(owner[0], owner[1]);
+	for(const [index, { calls }] of first.entries()) assert.deepEqual(new Set(Object.values(calls)), new Set([owner[index]]));
+	// A returned closure of the same representation is leased by exactly its own native type.
+	const { calls, model, surface } = slots({ a: host(three), b: host(maybe), lease: [finCallbackNat, finCallback([finCallbackNat], plain)] });
+	const leasedType = model.exports.find(item => item.name === "Sample.lease").result, leasedId = surface.functions.find(fn => fn.declaration.id === "lean:Sample.lease").declaration.result.type.id;
+	assert.equal(calls[surface.callbacks.get(leasedId).field], nativeTypeKey(leasedType));
+});
+
 test("the C reply walk and Lean's reconstruction are independent, and packages without replies keep their sources", () => {
 	const model = replyModel({ maybe: replyShapes().admitted.maybe }), host = model.exports[0].parameters[0].type, key = nativeTypeKey(host);
 	const source = generateNativeCallables(model, replySurface(model)).source;
@@ -372,7 +409,8 @@ test("the C reply walk and Lean's reconstruction are independent, and packages w
 	{
 		const guide = nativeCallbackFinGuide(model, target);
 		assert.match(guide, /A host callback's result is compared with its Fin bounds before Lean uses it\./u);
-		assert.doesNotMatch(guide, /cannot carry a Fin bound|rolled back|no Lean code runs/u);
+		assert.match(guide, /a record, product, ok branch or first case qualifies when its own stand-in holds no Fin, for example a field holding an option of Fin\./u);
+		assert.doesNotMatch(guide, /return no Fin bounds|rolled back|no Lean code runs/u);
 	}
 });
 
@@ -408,16 +446,20 @@ test("fresh Lean admits every safe direction and compiles the generated adapter"
 	assert.deepEqual(model.exports.filter(item => item.result.checked).map(item => item.name).sort(), ["branch", "digits", "impossible", "maybeTiles", "pick", "scaler", "shaped", "tiles", "wide"].map(name => `FinCallbacks.${name}`));
 });
 
-test("fresh Lean refuses Fin in a host callback's result, alone or inside a container", { skip: !lean, timeout: 900_000 }, async t => {
-	const replies = [["reply", "def reply (host : Nat → Fin 5) : Nat := (host 0).val"]
+test("fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it", { skip: !lean, timeout: 900_000 }, async t => {
+	const refused = [["reply", "def reply (host : Nat → Fin 5) : Nat := (host 0).val"]
 		, ["replyTile", "structure Tile where\n  digit : Fin 5\n  count : Nat\ndef replyTile (host : Nat → Tile) : Nat := (host 0).count"]
-		, ["replies", "def replies (host : Nat → Except String (Array (Fin 5))) : Nat := match host 0 with | .ok values => values.size | .error _ => 0"]];
-	for(const [name, definition] of replies)
+		, ["replyOk", "def replyOk (host : Nat → Except String (Fin 5)) : Nat := match host 0 with | .ok value => value.val | .error _ => 0"]];
+	for(const [name, definition] of refused)
 	{
 		const source = `namespace FinCallbacks\n${definition}\nend FinCallbacks\n`;
 		await assert.rejects(() => elaborate(t, { exports: [`FinCallbacks.${name}`] }, source)
-			, error => /Fin refinements in a host callback result are refused: the host produces the value while Lean runs/u.test(JSON.stringify(error.details ?? error.message)), name);
+			, error => /a host callback result needs a Fin-free failure value: scalar Fin, a Fin in its selected default, Subtype and checked records are refused/u.test(JSON.stringify(error.details ?? error.message)), name);
 	}
+	// The ok branch's empty array stands in for a refused reply, so extraction and the model admit it.
+	const source = "namespace FinCallbacks\ndef replies (host : Nat → Except String (Array (Fin 5))) : Nat := match host 0 with | .ok values => values.size | .error _ => 0\nend FinCallbacks\n";
+	const { model } = await elaborate(t, { exports: ["FinCallbacks.replies"] }, source);
+	assert.deepEqual(model.exports[0].parameters[0].type.reply, { kind: "result", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "5" }] }, null] });
 });
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CALLBACK_PROFILES?.split(",").sort() ?? [];
