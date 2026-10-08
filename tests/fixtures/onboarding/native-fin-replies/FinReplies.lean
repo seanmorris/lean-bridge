@@ -26,11 +26,11 @@ def wide (host : Nat → Option (Fin 184467440737095516170)) : Nat := match host
 def failure (host : Nat → Except (Fin 7) Nat) : Nat := match host 3 with | .ok n => n | .error d => table7.get d
 
 /-- The first case holds no Fin, so it stands in for a refused reply. -/
-inductive Late where
+inductive Trailing where
   | label (text : String)
   | digit (value : Fin 10)
 
-def late (host : Nat → Late) : Nat := match host 1 with | .label text => text.length | .digit d => table10.get d
+def late (host : Nat → Trailing) : Nat := match host 1 with | .label text => text.length | .digit d => table10.get d
 
 /-- A record with a bounded field, reached only through an option. -/
 structure Tile where

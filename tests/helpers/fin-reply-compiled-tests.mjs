@@ -31,6 +31,19 @@ const sanitized = { ASAN_OPTIONS: "detect_leaks=0:halt_on_error=1:abort_on_error
 const expectedChecks = 27;
 
 /**
+ * Run a command and, if it fails, keep its output beside the report before the temporary build is
+ * removed. The process runner reports output under details; a bare error keeps its own fields.
+ *
+ * @param path - Failure record path.
+ * @param run - Command to run.
+ */
+export const retainFailure = (path, run) => run().catch(async error => {
+	const output = error.details ?? error;
+	await writeFile(path, canonicalJson({ command: output.command ?? null, args: output.args ?? [], stdout: output.stdout ?? "", stderr: output.stderr ?? "", message: error.message }));
+	throw error;
+});
+
+/**
  * Remove exactly one C reply walk: the bound comparison of one native callback key and its constant.
  *
  * @param source - Generated src/native.c.
@@ -50,6 +63,19 @@ export const stripReplyWalk = (source, key) => {
 	assert.equal(stripped.split("_reply_take_rejected()) lb_record(").length, source.split("_reply_take_rejected()) lb_record(").length);
 	return { source: stripped, removed: [...definitions, ...comparisons] };
 };
+
+test("a failed harness command keeps its structured output beside the report", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-replies-retain-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const path = join(directory, "failure.json");
+	await assert.rejects(() => retainFailure(path, () => runCopied("/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], directory, { PATH: "/usr/bin:/bin" })));
+	const record = JSON.parse(await readFile(path, "utf8"));
+	assert.deepEqual([record.command, record.args, record.stdout, record.stderr], ["/bin/sh", ["-c", "echo out; echo err >&2; exit 3"], "out\n", "err\n"]);
+	// A successful command leaves no record.
+	await rm(path);
+	await retainFailure(path, () => runCopied("/bin/sh", ["-c", "true"], directory, { PATH: "/usr/bin:/bin" }));
+	await assert.rejects(() => readFile(path));
+});
 
 test("the harness bypass removes exactly one C reply walk and keeps Lean's rejection flag", () => {
 	const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
@@ -101,11 +127,7 @@ test("generated C wrapper execution: C reply walks and Lean's own reconstruction
 	const consumerFlags = ["-std=c11", "-Wall", "-Wextra", "-Werror", ...sanitizers, "-pthread"];
 	const runs = {}, reportPath = resolve(process.env.LEAN_BRIDGE_NATIVE_FIN_REPLY_REPORT ?? "build/native-fin-replies/c-bypass.json");
 	await mkdir(dirname(reportPath), { recursive: true });
-	// Compiler and consumer output survive a failure even though the temporary build is removed.
-	const retained = async (label, command, args, cwd, environment) => runCopied(command, args, cwd, environment).catch(async error => {
-		await writeFile(`${reportPath}.${label}.failure.json`, canonicalJson({ command, args, stdout: error.stdout ?? "", stderr: error.stderr ?? "", message: error.message }));
-		throw error;
-	});
+	const retained = (label, command, args, cwd, environment) => retainFailure(`${reportPath}.${label}.failure.json`, () => runCopied(command, args, cwd, environment));
 	const compilerVersion = (await runCopied("/usr/bin/cc", ["--version"], directory, env)).stdout.split("\n")[0];
 	const libraries = { wrapperSha256: sha256(await readFile(join(binding, "lib", `lib${surface.prefix}.so`))), componentSha256: sha256(await readFile(join(component, receipt.library))) };
 	for(const [variant, source] of Object.entries(variants))
