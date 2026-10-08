@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault } from "../../build/native-model.mjs";
+import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault, nativeReplyRejectedSymbol } from "../../build/native-model.mjs";
 import { finRefinementWalk, nativeCReference } from "./native-copied-values.mjs";
 
 /**
@@ -92,6 +92,9 @@ export const generateNativeCallables = (model, surface) => {
 	const copy = type => surface.copy(nativeCReference(type));
 	const id = type => `lb_copy_${copy(type).index}`;
 	const types = model.types.filter(type => type.kind === "callback"), bindings = new Map();
+	// Only packages with checked host callback replies consume Lean's rejection flag; others keep their bytes.
+	const replies = types.some(type => type.reply), rejected = nativeReplyRejectedSymbol(model);
+	const rejection = frame => `  if (${rejected}()) lb_record(${frame}, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Lean rejected a host callback result outside its Fin bound");`;
 	for(const type of types)
 	{
 		const matches = [...surface.callbacks.values()].filter(({ type: { callable } }) =>
@@ -109,7 +112,16 @@ export const generateNativeCallables = (model, surface) => {
 		const native = model.exports.find(item => `lean:${item.name}` === fn.declaration.id);
 		return native.result.kind === "callback" ? [[fn.declaration.result.type.id, nativeTypeKey(native.result)]] : [];
 	}));
-	const leases = type => bindings.get(nativeTypeKey(type)).filter(cb => leased.has(cb.type.id) ? leased.get(cb.type.id) === nativeTypeKey(type) : !type.checked);
+	// Checked host replies add native types to a public representation but are never leased. A
+	// borrowed-only slot keeps its unchecked owners; when only reply types share it, the first by key
+	// fills it once, so no public slot is assigned twice.
+	const keyed = (left, right) => nativeTypeKey(left) < nativeTypeKey(right) ? -1 : 1;
+	const unreplied = new Set(types.filter(type => !type.checked && !type.reply).flatMap(type => bindings.get(nativeTypeKey(type)).map(cb => cb.type.id)));
+	const replyOwners = new Map();
+	for(const type of types.filter(item => item.reply).sort(keyed))
+		for(const cb of bindings.get(nativeTypeKey(type))) if(!replyOwners.has(cb.type.id)) replyOwners.set(cb.type.id, nativeTypeKey(type));
+	const owns = (type, cb) => !type.checked && (!type.reply || (!unreplied.has(cb.type.id) && replyOwners.get(cb.type.id) === nativeTypeKey(type)));
+	const leases = type => bindings.get(nativeTypeKey(type)).filter(cb => leased.has(cb.type.id) ? leased.get(cb.type.id) === nativeTypeKey(type) : owns(type, cb));
 	const leaseBounds = [];
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";
@@ -140,9 +152,9 @@ static void lb_record(lb_frame *frame, ${p}_status status, const ${p}_error *err
   if (length >= sizeof(frame->message)) length = sizeof(frame->message) - 1;
   memcpy(frame->message, text, length); frame->message[length] = 0; frame->message_length = length;
 }
-static void lb_observe(lb_frame *frame) {
+${replies ? `int ${rejected}(void);\n` : ""}static void lb_observe(lb_frame *frame) {
   if (lb_ready(NULL) != ${m}_STATUS_OK) lb_record(frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Lean runtime is not ready or has been retired");
-  if (lb_native_callback_take_error()) lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Expired or wrong-thread host callback");
+  if (lb_native_callback_take_error()) lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Expired or wrong-thread host callback");${replies ? `\n${rejection("frame")}` : ""}
 }
 static lb_frame *lb_enter(void) {
   if (lb_current) lb_observe(lb_current);
@@ -232,6 +244,8 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 			, `  ${copy(type.result).name} returned = {0};`
 			, ...nested ? ["  lb_borrow_owner *borrowed = NULL;"] : []
 			, ...type.parameters.map((t, i) => `  ${copy(t).name} arg${i} = {0};`)
+			// A reply Lean rejected earlier in this call suppresses every later host callback.
+			, ...replies ? [rejection("frame")] : []
 			, `  if (frame->status != ${m}_STATUS_OK) goto done;`];
 		for(const [i, t] of type.parameters.entries())
 		{
@@ -244,6 +258,12 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 				: [`  ${copy(t).name} view${i} = arg${i}; view${i}.owner = NULL; view${i}.release = NULL;`]);
 		}
 		const args = type.parameters.map((t, i) => copy(t).aggregate ? `&${nested ? "arg" : "view"}${i}` : `arg${i}`);
+		// A checked reply is compared on host limbs before any Lean value exists; a rejected one
+		// leaves Lean the Fin-free placeholder that result already holds.
+		const replyReject = message => `{ lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, ${message}); goto done; }`;
+		const replySites = { refinement: type.reply, type: type.result, value: "(&returned)", label: "callback result" };
+		const replyWalk = type.reply ? finRefinementWalk({ ...replySites, constant: `lb_fin_reply_${key}`, copy, bounds: leaseBounds, reject: replyReject })
+			.map(line => `    ${line}`) : [];
 		lines.push(`  ${p}_error error = {0};`
 			, `  ${p}_status status = host->host.call(${["host->host.context", ...args, ...(!unit(type.result) ? ["&returned"] : []), "&error"].join(", ")});`
 			, `  if (status != ${m}_STATUS_OK) lb_record(frame, status, &error, "Host callback failed");`
@@ -251,6 +271,7 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 			, `  if (frame->status == ${m}_STATUS_OK) {`
 			, `    if (!${id(type.result)}_check(&returned, &frame->budget)) lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid callback result or 16 MiB call limit exceeded");`
 			, "    else {"
+			, ...replyWalk
 			, ...(nativeObjectType(type.result) ? ["      lean_dec(result);"] : [])
 			, `      result = ${id(type.result)}_in(&returned);`, "    }", "  }", "done:"
 			, `  ${cleanup(type.result, "returned")}`

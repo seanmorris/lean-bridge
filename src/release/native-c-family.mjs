@@ -37,10 +37,15 @@ export const nativeCallbackFinGuide = (model, target) => {
 	const refusal = target === "cpp" ? "throws Error with status INVALID_ARGUMENT whose message names the argument and its bound"
 		: "returns INVALID_ARGUMENT with a message naming the argument and its bound";
 	const release = target === "cpp" ? "close() or destruction releases it" : "its dispose function releases it, exactly once";
+	// Only packages with checked host replies describe them; every other package keeps its text.
+	const replies = model.exports.some(item => item.refinements?.parameters.some(tree => tree?.kind === "callback" && tree.result !== null));
+	const failure = target === "cpp" ? "the call throws Error with status INVALID_ARGUMENT" : "the call returns INVALID_ARGUMENT";
+	const reply = ` A host callback's result is compared with its Fin bounds before Lean uses it. Bounds are admitted only where the value that stands in for a refused reply holds no Fin. That value is none for an option, an empty array or list, the ok branch of an Except, every field of a record or product, and the first case of a variant, applied at each level. So an option, array or list of Fin always qualifies, and a record, product, ok branch or first case qualifies when its own stand-in holds no Fin, for example a field holding an option of Fin. A reply at or above its bound is refused and ${failure} with a message naming the result and its bound. No output is written, and no later host callback in that call runs. Lean may continue with the stand-in value, which never reaches the caller.`;
 	return "\n\nLean Fin n values cross as Nat values below n, including bounds wider than 64 bits."
 		+ (checked ? ` A closure returned by Lean compares every Fin in its arguments with its bound before it runs: each element of an array or list, a present option value, both product components, only the active Except branch, each record field and only the active variant case's fields. An argument at or above its bound ${refusal}; the closure is not invoked, the caller's values are unchanged, and the closure stays valid until ${release}. Fin 0 has no values, so every call to a closure taking one is refused.` : "")
 		+ (produced ? " Values Lean produces for the host, the arguments it passes to a host callback and the results of a returned closure, are already below their bounds." : "")
-		+ " A host callback's result cannot carry a Fin bound: the host produces it while Lean runs, so such exports are refused when the package is built. Invoke and release returned closures on their creating thread.";
+		+ (replies ? reply : " The host callbacks of this package return no Fin bounds.")
+		+ " Invoke and release returned closures on their creating thread.";
 };
 
 /**

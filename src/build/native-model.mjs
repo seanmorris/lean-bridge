@@ -99,6 +99,32 @@ export const nativeCallbackDefault = type => {
 	return nativeObjectType(type) ? "lean_box(0)" : "0";
 };
 
+/**
+ * Name the component's thread-local flag that records a host callback reply Lean rejected.
+ *
+ * @param model - Compiler-checked native model.
+ */
+export const nativeReplyRejectedSymbol = model => `lb_r${sha256(model.component.id).slice(0, 16)}_reply_take_rejected`;
+
+/**
+ * Render the source type of a checked host callback reply: Fin at each bounded leaf and the
+ * source definition of each mirrored record or variant, whose check builds it.
+ *
+ * @param type - Native representation of the reply.
+ * @param tree - Reply refinement tree, or null where nothing is bounded.
+ * @param mirrors - Lean names of the mirrored definitions.
+ */
+const replyLeanType = (type, tree, mirrors) => {
+	if(tree === null) return absoluteLeanType(type, mirrors);
+	const inner = (child, index) => replyLeanType(child, tree.arguments[index], mirrors);
+	if(tree.kind === "fin") return `(_root_.Fin ${tree.bound})`;
+	if(["array", "list", "option"].includes(tree.kind)) return `(_root_.${{ array: "Array", list: "List", option: "Option" }[tree.kind]} ${inner(type.element, 0)})`;
+	if(tree.kind === "tuple") return `(_root_.Prod ${type.arguments.map(inner).join(" ")})`;
+	if(tree.kind === "result") return `(_root_.Except ${inner(type.arguments[1], 1)} ${inner(type.arguments[0], 0)})`;
+	if(["record", "variant"].includes(tree.kind)) return `_root_.${type.lean}`;
+	fail("unsupported checked callback reply");
+};
+
 const callbackLeanDefault = (type, mirrors = new Set()) => {
 	const inner = child => callbackLeanDefault(child, mirrors);
 	if(type.kind === "array") return "#[]";
@@ -136,11 +162,27 @@ const nativeRepresentation = type => {
  * check. Only exports with a checked adapter may carry them. A callback carries a tree
  * only in its safe directions: the arguments of a Lean closure leased to the host, which
  * are checked before it runs, and values Lean produces for the host. A host callback's
- * result would reach running Lean before any check, so it is refused.
+ * result reaches running Lean, so it is admitted only when its failure value holds no
+ * refined leaf: a rejected reply then leaves Lean a well-typed placeholder, never a Fin.
  *
  * @param declaration - Compiler-selected native declaration.
  * @param callbacks - Whether the selected packages check Fin in callbacks (C and C++).
  */
+/**
+ * Whether the failure value a host callback hands running Lean holds no refined leaf.
+ * It follows exactly the constructor nativeCallbackDefault and callbackLeanDefault select:
+ * none, an empty collection, the ok branch and the first variant case.
+ *
+ * @param tree - Refinement tree of the callback result, or null.
+ */
+const containmentSafe = tree => {
+	if(tree === null || ["option", "array", "list"].includes(tree.kind)) return true;
+	if(tree.kind === "result") return containmentSafe(tree.arguments[0]);
+	if(["tuple", "record"].includes(tree.kind)) return tree.arguments.every(containmentSafe);
+	if(tree.kind === "variant") return tree.cases[0].arguments.every(containmentSafe);
+	return false;
+};
+
 const nativeRefinements = (declaration, callbacks = false) => {
 	const unsupported = message => Object.assign(new TypeError(`${declaration.name}: ${message}`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
 	const tree = (type, top = true, site = undefined) => {
@@ -153,7 +195,7 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			}
 			const parameters = type.parameters.map(child => tree(child, false)), result = tree(type.result, false);
 			if(parameters.every(child => child === null) && result === null) return null;
-			if(site === "parameter" && result !== null) throw unsupported("Fin refinements in a host callback result are refused: the host produces the value while Lean runs");
+			if(site === "parameter" && !containmentSafe(result)) throw unsupported("a host callback result needs a Fin-free failure value: scalar Fin, a Fin in its selected default, Subtype and checked records are refused");
 			if(!callbacks) throw unsupported("checked Fin refinements in callbacks are implemented only for C and C++ packages");
 			return { kind: "callback", parameters, result };
 		}
@@ -239,9 +281,9 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { refinements: admitRefinements });
 	const allTypes = new Map();
 	const visit = type => {
-		// A leased closure's checked trees distinguish its key; the representation itself is validated.
-		const { checked, ...shape } = type;
-		void checked;
+		// A leased closure's checked trees and a host callback's reply tree distinguish its key; the representation itself is validated.
+		const { checked, reply, ...shape } = type;
+		void checked; void reply;
 		validateNativeType(shape);
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
@@ -272,7 +314,12 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	};
 	const checked = elaborated.declarations.map(source => {
 		const refinements = nativeRefinements(source, callbackRefinements);
-		const parameters = source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) }));
+		// A host callback whose reply carries bounds is a different native type: its key, trampoline
+		// check and Lean reconstruction differ from an unchecked callback with the same representation.
+		const parameters = source.parameters.map((parameter, i) => {
+			const tree = refinements?.parameters[i];
+			return { ...parameter, type: { ...nativeRepresentation(parameter.type), ...(tree?.kind === "callback" && tree.result !== null ? { reply: tree.result } : {}) } };
+		});
 		// A leased closure whose arguments are checked is a different native type: its key, lease
 		// kind and Lean carrier differ from an unchecked closure with the same representation.
 		const leased = refinements?.result?.kind === "callback" && refinements.result.parameters.some(item => item !== null)
@@ -449,7 +496,11 @@ const nativeCallbackRefinedCall = (item, application) => {
 		const tree = item.refinements.parameters[i];
 		if(tree === null) return `a${i}`;
 		const names = binders(tree.parameters.length);
-		return `(fun ${names.join(" ")} => a${i} ${names.map((name, k) => componentRefinementConversion(tree.parameters[k], name, false)).join(" ")})`;
+		const reply = `a${i} ${names.map((name, k) => componentRefinementConversion(tree.parameters[k], name, false)).join(" ")}`;
+		if(tree.result === null) return `(fun ${names.join(" ")} => ${reply})`;
+		// The host reply is evaluated once; each Fin is rebuilt from its decidable proof, and a
+		// reply the C check should have refused reaches only the Fin-free reject.
+		return `(fun ${names.join(" ")} => let _bridgeReply := ${reply}; match ${componentRefinementConversion(tree.result, "_bridgeReply", true)} with | .some _bridgeChecked => _bridgeChecked | .none => reply_reject_${nativeTypeKey(parameter.type)} _bridgeReply)`;
 	});
 	const call = `${application} ${args.join(" ")}`;
 	const tree = item.refinements.result;
@@ -479,7 +530,19 @@ export const generateNativeLeanAdapters = model => {
 	// elimination preserves the closure object's representation without copying.
 	for(const type of model.types.filter(type => type.kind === "callback"))
 	  lines.push(`structure ClosureCarry${type.key} where`, `  value : ${absoluteLeanType(type, mirrors)}`, "");
+	// Its argument is the runtime reply, so the reject is never hoisted; its body is never a Fin.
+	// The C reject returns the failure value Lean builds here with source constructors, so no
+	// erased mirror layout stands in for a source value.
+	const replyPrototypes = [];
+	for(const type of model.types.filter(type => type.kind === "callback" && type.reply))
+	{
+		const source = replyLeanType(type.result, type.reply, mirrors);
+		lines.push(`@[export lb_t${type.key}_reply_fallback]`, `def reply_fallback_${type.key} (_unit : _root_.Unit) : ${source} := ${callbackLeanDefault(type.result)}`, ""
+			, `@[extern "lb_t${type.key}_reply_reject"]`, `opaque reply_reject_${type.key} (reply : ${absoluteLeanType(type.result, mirrors)}) : ${source} := ${callbackLeanDefault(type.result)}`, "");
+		replyPrototypes.push(`lean_object * lb_t${type.key}_reply_fallback(lean_object * unit);`);
+	}
 	const prototypes = ["#include <lean/lean.h>", "#include <stdint.h>", `LEAN_CASSERT(sizeof(size_t) * 8 == ${model.pointerBits});`];
+	prototypes.push(...replyPrototypes);
 	const emit = (symbol, parameters, result, body) => {
 		const ps = parameters.length ? parameters : [{ name: "unit", type: { kind: "primitive", name: "unit", lean: "Unit" } }];
 		const callback = result.kind === "callback";

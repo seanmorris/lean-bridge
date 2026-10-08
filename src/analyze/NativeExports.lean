@@ -315,9 +315,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       reject e "Fin refinements require a top-level or structural-container parameter or result"
     -- Native libraries check bounds around top-level parameters and results, inside their
     -- structural containers, in plain record and variant fields, in the arguments of a Lean
-    -- closure leased to the host, and where Lean itself produces the value for the host.
-    -- A host callback's result would reach running Lean code before any check could refuse
-    -- it, and native packages never substitute a value, so it stays refused.
+    -- closure leased to the host, where Lean itself produces the value for the host, and in a
+    -- host callback's structural result. The model admits a host reply only when its failure
+    -- value holds no Fin; other host-reply positions stay refused here.
     if request.profile.getD "component-scalars-v1" != "component-scalars-v1" && !structural then
       if hostReply then
         reject e "Fin refinements in a host callback result are refused: the host produces the value while Lean runs"
@@ -627,7 +627,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       | _ => break
     -- A leased closure's result comes from Lean; a host callback's result is a host reply.
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1) false none containerFin (callbackSite == some true)
+      ("result", ← shapeTree request result seen (depth + 1) false none containerFin callbackSite.isSome
         (hostReply := callbackSite == some false)), ("abi", ← abi e)]
   let reduced ← whnf e
   if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply)

@@ -1952,6 +1952,39 @@ Both captured APIs importing generated code and generated public entry modules h
 
 These suites hash the selected compiler's complete `lib/lean` tree and take several minutes. The consumer workflows run them after installing the required tools. See the [generated-package acceptance record](../evidence/lake-generated-packages-20260912.md).
 
+## Native Fin callback replies
+
+Run the ordinary-source C/C++ checks with the pinned Lean toolchain, native C/C++
+compilers and the dependencies prepared by `scripts/env.sh`:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 \
+LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp \
+LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 \
+LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp \
+  node --test --test-concurrency=1 tests/native-fin-callbacks.test.mjs
+```
+
+The fresh-Lean gate compares fifteen checked reply signatures with extracted
+metadata. The installed gate builds C and C++ packages from two author roots,
+compares their archives, removes source files, and installs offline without a
+Lean compiler on the consumer path. It writes
+`build/native-fin-replies/installed-c-cpp.json`, with 81 C checks and 74 C++ checks.
+These include ownership, first-error preservation, later-callback suppression,
+reentry, thread and fork controls. Installed packages have no separate dispatch
+instrumentation or sanitizer coverage.
+
+The independent generated-wrapper gate writes
+`build/native-fin-replies/c-bypass.json`. It removes the C reply bound check in a
+test-only build and verifies that Lean's own checked reconstruction still rejects
+the reply. ASan and UBSan cover the wrapper and consumer, not the Lean component,
+bridge runtime or `libleanshared`. CI retains `acceptance.tap` and requires all
+three fresh-Lean tests to pass, so an accidentally skipped compiler gate fails the
+job. CI also requires both JSON reports and uploads the whole
+`build/native-fin-replies/` directory, including retained failure diagnostics.
+Reviewed host replies and other native hosts require separate installed checks.
+
 ## Standalone CLI package
 
 Check the reviewed source allowlist and the tarball-installed executable:

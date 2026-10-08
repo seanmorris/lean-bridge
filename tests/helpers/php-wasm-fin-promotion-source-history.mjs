@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeNativeFinReplySource } from "./native-fin-reply-source-history.mjs";
 
 export const phpWasmFinPromotionHistoryPath = "docs/evidence/php-wasm-fin-promotion-source-history-20261008.json";
 export const phpWasmFinPromotionChangedPaths = [
@@ -55,6 +56,7 @@ export const reversePhpWasmFinPromotionUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforePhpWasmFinPromotionSource = (path, source, expected) => {
+	source = beforeNativeFinReplySource(path, source, expected);
 	if(typeof source !== "string" || !phpWasmFinPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

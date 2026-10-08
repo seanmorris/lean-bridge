@@ -2563,8 +2563,15 @@ jobs:
           LEAN_BRIDGE_FIN_RECORD_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=c,cpp node --test tests/native-fin-records.test.mjs
           test -s build/native-fin-records/c-cpp.json
           test -s build/native-fin-records/reviewed-c-cpp.json
-          LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp node --test --test-concurrency=1 tests/native-fin-callbacks.test.mjs
+          mkdir -p build/native-fin-replies
+          set -o pipefail
+          LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp node --test --test-reporter=tap --test-concurrency=1 tests/native-fin-callbacks.test.mjs | tee build/native-fin-replies/acceptance.tap
+          rg "^ok [0-9]+ - fresh Lean admits every safe direction and compiles the generated adapter$" build/native-fin-replies/acceptance.tap
+          rg "^ok [0-9]+ - fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it$" build/native-fin-replies/acceptance.tap
+          rg "^ok [0-9]+ - fresh Lean admits every checked host reply family and compiles each typed reconstruction$" build/native-fin-replies/acceptance.tap
           test -s build/native-fin-callbacks/c-cpp.json
+          test -s build/native-fin-replies/c-bypass.json
+          test -s build/native-fin-replies/installed-c-cpp.json
           LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs
           test -s build/native-subtype/c-cpp.json
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=c,cpp node --test tests/generic-records.test.mjs
@@ -2755,6 +2762,7 @@ jobs:
             build/native-fin-records/c-cpp.json
             build/native-fin-records/reviewed-c-cpp.json
             build/native-fin-callbacks/c-cpp.json
+            build/native-fin-replies/
             build/native-subtype/c-cpp.json
             build/generic-records/c-cpp.json
             build/generic-records/specialized-c-cpp.json
@@ -3143,6 +3151,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
               consumer_command="$consumer_command && npm run test:native-fin"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST=1 LEAN_BRIDGE_FIN_CALLBACK_PROFILES=c,cpp LEAN_BRIDGE_NATIVE_FIN_REPLY_TEST=1 LEAN_BRIDGE_FIN_REPLY_PROFILES=c,cpp node --test --test-reporter=tap --test-concurrency=1 tests/native-fin-callbacks.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=c,cpp node --test tests/native-fin-products.test.mjs"
