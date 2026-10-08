@@ -348,8 +348,17 @@ export const nativeRefinedResult = result => ({ kind: "option", element: result
 	, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } });
 
 /**
+ * List a refinement tree's children: a callback keeps them as parameters and result, a variant
+ * in its cases, and every other node as arguments.
+ *
+ * @param tree - Validated native refinement tree.
+ */
+const refinementChildren = tree => tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments)
+	: tree.kind === "callback" ? [...tree.parameters, tree.result] : tree.arguments ?? [];
+
+/**
  * Collect the Lean names of records and variants whose fields carry checked Fin bounds,
- * from every export's refinement trees.
+ * from every export's refinement trees, including those inside callbacks.
  *
  * @param model - Compiler-checked native model.
  */
@@ -358,7 +367,7 @@ const nativeErasedMirrors = model => {
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind)) names.add(tree.definition);
-		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
 	return names;
@@ -375,7 +384,7 @@ const renderErasedMirrors = (model, mirrors) => {
 	const walk = tree => {
 		if(!tree || typeof tree !== "object") return;
 		if(["record", "variant"].includes(tree.kind) && !trees.has(tree.definition)) trees.set(tree.definition, tree);
-		for(const child of tree.kind === "variant" ? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? []) walk(child);
+		for(const child of refinementChildren(tree)) walk(child);
 	};
 	for(const item of model.exports) if(item.refinements) [...item.refinements.parameters, item.refinements.result].forEach(walk);
 	const lines = [], done = new Set();

@@ -85,6 +85,46 @@ int main() {
   CHECK(api::visit([&](Nat digit) -> Nat { ++seen; if (digit > largest) largest = digit; return digit * 10; }) == 100);
   CHECK(seen == 5 && largest == 4);
 
+  /* List of records: every element's Fin 5 field, first, middle and last, is checked; the caller's vector is unchanged. */
+  auto tiles = api::tiles(std::monostate{});
+  std::vector<api::Tile> row{{0, 10}, {1, 10}, {2, 10}};
+  CHECK(tiles(row) == 330);
+  for (std::size_t bad = 0; bad < 3; ++bad) {
+    row[bad].digit = 5;
+    CHECK(rejected([&] { tiles(row); }, "arg0 is not below its Fin 5 bound") && row[bad].digit == 5);
+    row[bad].digit = bad;
+  }
+  CHECK(tiles(row) == 330);
+
+  /* Nested: an absent list runs; a present list checks every record inside it. */
+  auto maybe = api::maybe_tiles(std::monostate{});
+  CHECK(maybe(std::nullopt) == 7 && maybe(row) == 3);
+  row[1].digit = 9;
+  CHECK(rejected([&] { maybe(row); }, "arg0 is not below its Fin 5 bound"));
+  row[1].digit = 1;
+
+  /* A variant: only the active case's Fin 10 field is checked. */
+  auto shaped = api::shaped(std::monostate{});
+  CHECK(shaped(api::ShapeCircle{9}) == 9);
+  CHECK(rejected([&] { shaped(api::ShapeCircle{10}); }, "arg0 is not below its Fin 10 bound"));
+  CHECK(shaped(api::ShapeLabel{"hey"}) == 23);
+
+  /* A leased closure's record result comes from Lean: every digit is below 5. */
+  auto maker = api::tile_maker(Nat(3));
+  for (unsigned n = 0; n < 12; ++n) CHECK(maker(Nat(n)) == (api::Tile{Nat((3 + n) % 5), Nat(n)}));
+
+  /* Host callbacks receive Lean's records and variants: digits 0 through 4, a radius below 10, and a label. */
+  unsigned tile_calls = 0; Nat tile_max = 0;
+  CHECK(api::visit_tiles([&](api::Tile tile) -> Nat { ++tile_calls; if (tile.digit > tile_max) tile_max = tile.digit; return tile.digit + tile.count; }) == 25);
+  CHECK(tile_calls == 6 && tile_max == 4);
+  unsigned shape_calls = 0; Nat radius = 0;
+  CHECK(api::visit_shapes([&](api::Shape shape) -> Nat {
+    ++shape_calls;
+    if (const auto *circle = std::get_if<api::ShapeCircle>(&shape)) { radius = circle->radius; return circle->radius; }
+    return Nat(std::get<api::ShapeLabel>(shape).text.size() + 20);
+  }) == 31);
+  CHECK(shape_calls == 2 && radius == 9);
+
   std::printf("fin-callback-ok:%u\n", checks);
   return 0;
 }

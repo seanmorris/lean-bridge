@@ -28,7 +28,14 @@ const result = (ok, error) => ({ kind: "result", arguments: [ok, error], abi: he
  * @param value - Result type.
  */
 const callback = (parameters, value) => ({ kind: "callback", parameters, result: value, abi: heap });
-export { callback as finCallback, fin as finCallbackBound, nat as finCallbackNat };
+const list = element => ({ kind: "list", element, abi: heap });
+// A plain record and a variant with checked fields, as the extractor reports them inline.
+const tileFields = [{ name: "digit", projection: "FinCallbacks.Tile.digit", type: fin("5") }, { name: "count", projection: "FinCallbacks.Tile.count", type: nat }];
+const tile = { kind: "record", name: "FinCallbacks.Tile", lean: "FinCallbacks.Tile", constructor: "FinCallbacks.Tile.mk", fields: tileFields, abi: heap };
+const circle = { name: "circle", constructor: "FinCallbacks.Shape.circle", fields: [{ name: "radius", type: fin("10") }] };
+const label = { name: "label", constructor: "FinCallbacks.Shape.label", fields: [{ name: "text", type: text }] };
+const shape = { kind: "variant", name: "FinCallbacks.Shape", lean: "FinCallbacks.Shape", cases: [circle, label], abi: heap };
+export { callback as finCallback, fin as finCallbackBound, nat as finCallbackNat, tile as finCallbackTile };
 /** Parameter and result shapes of every exported declaration, with configured arity 1 where a closure is leased. */
 export const finCallbackSignatures = {
 	branch: [nat, callback([result(fin("7"), text)], nat)]
@@ -38,7 +45,13 @@ export const finCallbackSignatures = {
 	, pick: [nat, callback([option(tuple(fin("5"), nat))], nat)]
 	, scaler: [nat, callback([fin("10")], nat)]
 	, visit: [callback([fin("5")], nat), nat]
-	, wide: [nat, callback([fin("184467440737095516170")], nat)] };
+	, wide: [nat, callback([fin("184467440737095516170")], nat)]
+	, maybeTiles: [nat, callback([option(list(tile))], nat)]
+	, shaped: [nat, callback([shape], nat)]
+	, tileMaker: [nat, callback([nat], tile)]
+	, tiles: [nat, callback([list(tile)], nat)]
+	, visitShapes: [callback([shape], nat), nat]
+	, visitTiles: [callback([tile], nat), nat] };
 
 /**
  * Compiler-shaped model input for the given exports under the fincallbacks component.

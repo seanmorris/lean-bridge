@@ -11,10 +11,10 @@ export { nativeFixtureEnvironment as finCallbackEnvironment } from "./copied-fix
 const coordinate = { name: "fincallbacks", version: "1.0.0" };
 /** C and C++ check Fin in callbacks first; other native hosts need their own evidence. */
 export const finCallbackTargets = Object.freeze({ c: ["c", coordinate], cpp: ["cpp", coordinate] });
-const leasing = ["branch", "counter", "digits", "impossible", "pick", "scaler", "wide"];
+const leasing = ["branch", "counter", "digits", "impossible", "maybeTiles", "pick", "scaler", "shaped", "tileMaker", "tiles", "wide"];
 /** Exports that return a leased closure, each configured with arity 1. */
 export const finCallbackArities = Object.freeze(Object.fromEntries(leasing.map(name => [`FinCallbacks.${name}`, 1])));
-export const finCallbackExports = Object.freeze([...leasing, "visit"].map(name => `FinCallbacks.${name}`));
+export const finCallbackExports = Object.freeze([...leasing, "visit", "visitShapes", "visitTiles"].map(name => `FinCallbacks.${name}`));
 
 /**
  * Name each generated closure type the C consumer uses, from the compiled Binding IR.
@@ -29,7 +29,7 @@ export const finCallbackConsumerNames = ir => {
 	{
 		const name = declaration.id.split(".").at(-1);
 		if(leasing.includes(name)) names[`CLOSURE_${name.toUpperCase()}`] = `${surface.prefix}_owned_${field(declaration.result.type)}`;
-		if(name === "visit") names.HOST_VISIT = `${surface.prefix}_${field(declaration.parameters[0].type)}`;
+		if(name.startsWith("visit")) names[`HOST_${name.slice("visit".length).toUpperCase() || "VISIT"}`] = `${surface.prefix}_${field(declaration.parameters[0].type)}`;
 	}
 	return names;
 };

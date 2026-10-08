@@ -30,6 +30,24 @@ static fincallbacks_status host_visit(void *context, mpz_srcptr digit, mpz_ptr o
   return FINCALLBACKS_STATUS_OK;
 }
 
+/* Host callbacks over a record and a variant: every value Lean passes keeps its field bounds. */
+static unsigned long tiles_seen, tile_digit_max, shapes_seen, shape_radius;
+static fincallbacks_status host_tile(void *context, const fincallbacks_tile *tile, mpz_ptr out, fincallbacks_error *error) {
+  (void)context; (void)error;
+  ++tiles_seen;
+  if (mpz_cmp_ui(tile->digit, tile_digit_max) > 0) tile_digit_max = mpz_get_ui(tile->digit);
+  if (mpz_cmp_ui(tile->digit, 5) >= 0) tile_digit_max = 1000;
+  mpz_add(out, tile->digit, tile->count);
+  return FINCALLBACKS_STATUS_OK;
+}
+static fincallbacks_status host_shape(void *context, const fincallbacks_shape *shape, mpz_ptr out, fincallbacks_error *error) {
+  (void)context; (void)error;
+  ++shapes_seen;
+  if (shape->kind == FINCALLBACKS_SHAPE_KIND_CIRCLE) { shape_radius = mpz_cmp_ui(shape->cases.circle.radius, 10) < 0 ? mpz_get_ui(shape->cases.circle.radius) : 1000; mpz_set(out, shape->cases.circle.radius); }
+  else mpz_set_ui(out, shape->cases.label.text.length + 20);
+  return FINCALLBACKS_STATUS_OK;
+}
+
 static CLOSURE_SCALER *shared_scaler;
 static fincallbacks_status thread_status;
 static void *other_thread(void *unused) {
@@ -133,6 +151,65 @@ int main(void) {
   /* A host callback's Fin 5 arguments come from Lean: the host sees every value 0 through 4 and nothing at the bound. */
   HOST_VISIT host = {host_visit, NULL};
   CHECK(OK(fincallbacks_visit(&host, out, &error)) && mpz_cmp_ui(out, 100) == 0 && visited == 5 && visited_max == 4);
+
+  /* List of records: every element's Fin 5 field, first, middle and last, is checked; the caller's records are unchanged. */
+  CLOSURE_TILES *tiles = NULL;
+  CHECK(OK(fincallbacks_tiles(0, &tiles, &error)) && tiles);
+  fincallbacks_tile row[3];
+  for (unsigned i = 0; i < 3; ++i) { fincallbacks_tile_init(&row[i]); mpz_set_ui(row[i].digit, i); mpz_set_ui(row[i].count, 10); }
+  fincallbacks_list_lean_fin_callbacks_tile_span rows = {row, 3, NULL, NULL};
+  CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);
+  for (unsigned bad = 0; bad < 3; ++bad) {
+    mpz_set_ui(row[bad].digit, 5);
+    CHECK(rejected(CALL(CLOSURE_TILES)(tiles, &rows, out, &error), &error, "arg0 is not below its Fin 5 bound") && mpz_cmp_ui(row[bad].digit, 5) == 0);
+    mpz_set_ui(row[bad].digit, bad);
+  }
+  CHECK(OK(CALL(CLOSURE_TILES)(tiles, &rows, out, &error)) && mpz_cmp_ui(out, 330) == 0);
+  DISPOSE(CLOSURE_TILES)(&tiles);
+
+  /* Nested: an absent list runs; a present list checks every record inside it. */
+  CLOSURE_MAYBETILES *maybe = NULL;
+  CHECK(OK(fincallbacks_maybe_tiles(0, &maybe, &error)) && maybe);
+  fincallbacks_option_list_lean_fin_callbacks_tile_value optional = {0};
+  CHECK(OK(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error)) && mpz_cmp_ui(out, 7) == 0);
+  optional.has_value = 1; optional.value = rows;
+  CHECK(OK(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error)) && mpz_cmp_ui(out, 3) == 0);
+  mpz_set_ui(row[1].digit, 9);
+  CHECK(rejected(CALL(CLOSURE_MAYBETILES)(maybe, &optional, out, &error), &error, "arg0 is not below its Fin 5 bound"));
+  mpz_set_ui(row[1].digit, 1);
+  DISPOSE(CLOSURE_MAYBETILES)(&maybe);
+  for (unsigned i = 0; i < 3; ++i) fincallbacks_tile_clear(&row[i]);
+
+  /* A variant: only the active case's Fin 10 field is checked. */
+  CLOSURE_SHAPED *shaped = NULL;
+  CHECK(OK(fincallbacks_shaped(0, &shaped, &error)) && shaped);
+  fincallbacks_shape shape; fincallbacks_shape_init(&shape);
+  CHECK(OK(fincallbacks_shape_select(&shape, FINCALLBACKS_SHAPE_KIND_CIRCLE)));
+  mpz_set_ui(shape.cases.circle.radius, 9);
+  CHECK(OK(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error)) && mpz_cmp_ui(out, 9) == 0);
+  mpz_set_ui(shape.cases.circle.radius, 10);
+  CHECK(rejected(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error), &error, "arg0 is not below its Fin 10 bound") && mpz_cmp_ui(shape.cases.circle.radius, 10) == 0);
+  CHECK(OK(fincallbacks_shape_select(&shape, FINCALLBACKS_SHAPE_KIND_LABEL)));
+  shape.cases.label.text = (fincallbacks_string){"hey", 3, NULL, NULL};
+  CHECK(OK(CALL(CLOSURE_SHAPED)(shaped, &shape, out, &error)) && mpz_cmp_ui(out, 23) == 0);
+  fincallbacks_shape_clear(&shape);
+  DISPOSE(CLOSURE_SHAPED)(&shaped);
+
+  /* A leased closure's record result comes from Lean: every digit is below 5. */
+  CLOSURE_TILEMAKER *maker = NULL; mpz_set_ui(factor, 3);
+  CHECK(OK(fincallbacks_tile_maker(factor, &maker, &error)) && maker);
+  for (unsigned long n = 0; n < 12; ++n) {
+    fincallbacks_tile made; fincallbacks_tile_init(&made); mpz_set_ui(digit, n);
+    CHECK(OK(CALL(CLOSURE_TILEMAKER)(maker, digit, &made, &error)) && mpz_cmp_ui(made.digit, (3 + n) % 5) == 0 && mpz_cmp_ui(made.count, n) == 0);
+    fincallbacks_tile_clear(&made);
+  }
+  DISPOSE(CLOSURE_TILEMAKER)(&maker);
+
+  /* Host callbacks receive Lean's records and variants: digits 0 through 4, a radius below 10, and a label. */
+  HOST_TILES tile_host = {host_tile, NULL};
+  CHECK(OK(fincallbacks_visit_tiles(&tile_host, out, &error)) && mpz_cmp_ui(out, 25) == 0 && tiles_seen == 6 && tile_digit_max == 4);
+  HOST_SHAPES shape_host = {host_shape, NULL};
+  CHECK(OK(fincallbacks_visit_shapes(&shape_host, out, &error)) && mpz_cmp_ui(out, 31) == 0 && shapes_seen == 2 && shape_radius == 9);
 
   mpz_clear(factor); mpz_clear(digit); mpz_clear(out); mpz_clear(before);
   printf("fin-callback-ok:%u\n", checks);

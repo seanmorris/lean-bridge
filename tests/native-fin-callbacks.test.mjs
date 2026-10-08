@@ -25,10 +25,12 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { generateNativeCallables } from "../src/backends/c/native-callables.mjs";
 import { generateNativePrimitiveC } from "../src/backends/c/native-primitives.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
-import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures } from "./helpers/fin-callback-model.mjs";
+import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
 const leased = (parameters, result = null) => ({ parameters: [null], result: { kind: "callback", parameters, result } });
+const tile = { kind: "record", definition: "FinCallbacks.Tile", fields: ["digit", "count"], arguments: [fin("5"), null] };
+const shape = { kind: "variant", definition: "FinCallbacks.Shape", cases: [{ name: "circle", fields: ["radius"], arguments: [fin("10")] }, { name: "label", fields: ["text"], arguments: [null] }] };
 /** Refinement trees the native model must carry for every export of the fixture. */
 const expectedTrees = {
 	"Sample.branch": leased([{ kind: "result", arguments: [fin("7"), null] }])
@@ -38,7 +40,13 @@ const expectedTrees = {
 	, "Sample.pick": leased([{ kind: "option", arguments: [{ kind: "tuple", arguments: [fin("5"), null] }] }])
 	, "Sample.scaler": leased([fin("10")])
 	, "Sample.visit": { parameters: [{ kind: "callback", parameters: [fin("5")], result: null }], result: null }
-	, "Sample.wide": leased([fin("184467440737095516170")]) };
+	, "Sample.wide": leased([fin("184467440737095516170")])
+	, "Sample.maybeTiles": leased([{ kind: "option", arguments: [{ kind: "list", arguments: [tile] }] }])
+	, "Sample.shaped": leased([shape])
+	, "Sample.tileMaker": leased([null], tile)
+	, "Sample.tiles": leased([{ kind: "list", arguments: [tile] }])
+	, "Sample.visitShapes": { parameters: [{ kind: "callback", parameters: [shape], result: null }], result: null }
+	, "Sample.visitTiles": { parameters: [{ kind: "callback", parameters: [tile], result: null }], result: null } };
 
 test("leased closures carry checked argument trees and a distinct native type; Lean-produced bounds are erased", () => {
 	const model = finCallbackCompilerModel();
@@ -68,7 +76,15 @@ test("Lean adapters build each closure argument's Fin from its proof, answer non
 	assert.match(section("digits"), /\.mapM \(fun _bridgeValue0 => \(if proof : \(_bridgeValue0\) < 3 then/u);
 	assert.match(section("counter"), /fun _bridgeArg0 =>\n\s+\(\(_bridgeClosure\) _bridgeArg0\)\.val\)⟩/u);
 	assert.match(section("visit"), /_root_\.Sample\.visit \(fun _bridgeArg0 => a0 \(_bridgeArg0\)\.val\)/u);
-	for(const name of ["scaler", "digits", "impossible", "pick", "branch", "wide"]) assert.doesNotMatch(section(name), /default|sorry|unsafe|panic/u, name);
+	// Records and variants inside callbacks cross as erased mirrors, built through check and returned through erase.
+	assert.match(lean, /structure LbErased\.FinCallbacks\.Tile where/u);
+	assert.match(lean, /inductive LbErased\.FinCallbacks\.Shape where/u);
+	assert.match(section("tiles"), /\.mapM \(fun _bridgeValue0 => \(LbErased\.FinCallbacks\.Tile\.check \(_bridgeValue0\)\)\)/u);
+	assert.match(section("shaped"), /LbErased\.FinCallbacks\.Shape\.check \(_bridgeArg0\)/u);
+	assert.match(section("tileMaker"), /let _bridgeResult := \(_bridgeClosure\) _bridgeArg0; \(LbErased\.FinCallbacks\.Tile\.erase \(_bridgeResult\)\)/u);
+	assert.match(section("visitTiles"), /_root_\.Sample\.visitTiles \(fun _bridgeArg0 => a0 \(LbErased\.FinCallbacks\.Tile\.erase \(_bridgeArg0\)\)\)/u);
+	assert.match(section("visitShapes"), /a0 \(LbErased\.FinCallbacks\.Shape\.erase \(_bridgeArg0\)\)/u);
+	for(const name of ["scaler", "digits", "impossible", "pick", "branch", "wide", "tiles", "shaped", "maybeTiles"]) assert.doesNotMatch(section(name), /default|sorry|unsafe|panic/u, name);
 	// Every checked closure is called through an Option-returning entry; unchecked shapes keep their old entry.
 	for(const type of model.types.filter(item => item.kind === "callback"))
 	{
@@ -118,18 +134,33 @@ test("the C lease call compares every bound on caller limbs before borrowing Lea
 test("the Binding IR that npm reads carries exactly the callback bounds the native model checks", () => {
 	// Parity only: npm's own installed acceptance of these shapes is separate evidence, not inherited from C.
 	const model = finCallbackCompilerModel(), abi = createComponentPrivateAbi(model.bindingIr);
-	const extension = id => model.bindingIr.types.find(type => type.id === id).source.extensions["lean-lang.org/refinements"];
+	const definition = id => model.bindingIr.types.find(type => type.id === id);
+	// The IR keeps a record's or variant's bounds on its own definition, so a callback tree names it as null there.
+	const nominal = new Map();
+	const project = tree => {
+		if(tree === null || tree.kind === "fin") return tree;
+		if(["record", "variant"].includes(tree.kind))
+		{
+			nominal.set(tree.definition, tree.kind === "record" ? { kind: "record", fields: tree.arguments } : { kind: "variant", cases: tree.cases.map(branch => branch.arguments) });
+			return null;
+		}
+		const children = tree.arguments.map(project);
+		return children.every(child => child === null) ? null : { ...tree, arguments: children };
+	};
 	for(const item of model.exports)
 	{
 		const declaration = model.bindingIr.declarations.find(entry => entry.id === `lean:${item.name}`);
 		const sites = [...declaration.parameters.map((parameter, index) => [parameter.type, item.refinements.parameters[index]]), [declaration.result.type, item.refinements.result]];
 		for(const [type, tree] of sites.filter(([, tree]) => tree?.kind === "callback"))
 		{
-			const { parameters, result } = tree;
-			assert.deepEqual(extension(type.id), { parameters, result }, item.name);
-			assert.deepEqual(abi.callbacks.find(callback => callback.id === type.id).refinements, { parameters, result }, item.name);
+			const parameters = tree.parameters.map(project), result = project(tree.result);
+			const expected = parameters.every(child => child === null) && result === null ? undefined : { parameters, result };
+			assert.deepEqual(definition(type.id).source.extensions["lean-lang.org/refinements"], expected, item.name);
+			assert.deepEqual(abi.callbacks.find(callback => callback.id === type.id).refinements, expected, item.name);
 		}
 	}
+	assert.deepEqual([...nominal.keys()].sort(), ["FinCallbacks.Shape", "FinCallbacks.Tile"]);
+	for(const [name, value] of nominal) assert.deepEqual(definition(`lean:${name}`).source.extensions["lean-lang.org/nominal-refinements"], value, name);
 });
 
 test("host replies, nested callbacks, mixed bounds and packages without callback checks stay refused", () => {
@@ -139,7 +170,9 @@ test("host replies, nested callbacks, mixed bounds and packages without callback
 		, ["a host callback's result inside a container", { reply: [finCallback([nat], { kind: "array", element: finCallbackBound("5"), abi: nat.abi }), nat] }, true, /Fin refinements require a top-level native parameter or result/u]
 		, ["a callback inside a leased closure's argument", { nested: [nat, finCallback([finCallback([finCallbackBound("5")], nat)], nat)] }, true, /Fin refinements require a top-level native parameter or result|callbacks inside copied values/u]
 		, ["an ordinary bound beside a callback", { mixed: [finCallbackBound("5"), finCallback([finCallbackBound("10")], nat)] }, true, /checked Fin refinements cannot share a native export with callbacks/u]
-		, ["a package set beyond C and C++", { scaler }, false, /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/u]];
+		, ["a package set beyond C and C++", { scaler }, false, /checked Fin refinements in callbacks are implemented only for C and C\+\+ packages/u]
+		// A record's field is structural wherever the record appears, so the host-reply rule is the model's.
+		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /Fin refinements in a host callback result are refused/u]];
 	for(const [label, signatures, callbacks, pattern] of refused)
 		assert.throws(() => finCallbackCompilerModel(signatures, callbacks), error => pattern.test(error.message), label);
 	// Callback shapes without any bound keep their unchecked representation and entries.
@@ -151,7 +184,7 @@ test("host replies, nested callbacks, mixed bounds and packages without callback
 const lean = process.env.LEAN_BRIDGE_NATIVE_FIN_CALLBACK_LEAN_TEST === "1";
 const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const fixture = "tests/fixtures/onboarding/native-fin-callbacks";
-const leasedArities = Object.fromEntries(["branch", "counter", "digits", "impossible", "pick", "scaler", "wide"].map(name => [`FinCallbacks.${name}`, 1]));
+const leasedArities = Object.fromEntries(["branch", "counter", "digits", "impossible", "maybeTiles", "pick", "scaler", "shaped", "tileMaker", "tiles", "wide"].map(name => [`FinCallbacks.${name}`, 1]));
 // Fresh extraction and a Lean compile of the generated adapter, stopping before any C or package step.
 const elaborate = async (t, configuration, source) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-fin-callbacks-"));
@@ -173,15 +206,16 @@ const elaborate = async (t, configuration, source) => {
 };
 
 test("fresh Lean admits every safe direction and compiles the generated adapter", { skip: !lean, timeout: 900_000 }, async t => {
-	const exports = [...Object.keys(leasedArities), "FinCallbacks.visit"].sort();
+	const exports = [...Object.keys(leasedArities), "FinCallbacks.visit", "FinCallbacks.visitShapes", "FinCallbacks.visitTiles"].sort();
 	const { model } = await elaborate(t, { exports, arities: leasedArities });
 	const trees = Object.fromEntries(model.exports.map(item => [item.name.replace("FinCallbacks.", "Sample."), item.refinements]));
 	assert.deepEqual(trees, expectedTrees);
-	assert.deepEqual(model.exports.filter(item => item.result.checked).map(item => item.name).sort(), ["branch", "digits", "impossible", "pick", "scaler", "wide"].map(name => `FinCallbacks.${name}`));
+	assert.deepEqual(model.exports.filter(item => item.result.checked).map(item => item.name).sort(), ["branch", "digits", "impossible", "maybeTiles", "pick", "scaler", "shaped", "tiles", "wide"].map(name => `FinCallbacks.${name}`));
 });
 
 test("fresh Lean refuses Fin in a host callback's result, alone or inside a container", { skip: !lean, timeout: 900_000 }, async t => {
 	const replies = [["reply", "def reply (host : Nat → Fin 5) : Nat := (host 0).val"]
+		, ["replyTile", "structure Tile where\n  digit : Fin 5\n  count : Nat\ndef replyTile (host : Nat → Tile) : Nat := (host 0).count"]
 		, ["replies", "def replies (host : Nat → Except String (Array (Fin 5))) : Nat := match host 0 with | .ok values => values.size | .error _ => 0"]];
 	for(const [name, definition] of replies)
 	{
