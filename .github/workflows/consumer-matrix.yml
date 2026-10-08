@@ -2237,6 +2237,8 @@ jobs:
           test -s build/collections/php-wasm-zend-faults.json
           LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs
           test -s build/php-wasm-fin/ordinary.json
+          LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs
+          test -s build/php-wasm-fin/reviewed.json
           LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs
           test -s build/generic-records/php-wasm.json
           test -s build/type-corpus/php-wasm.json
@@ -2276,6 +2278,7 @@ jobs:
             build/collections/php-wasm.json
             build/collections/php-wasm-zend-faults.json
             build/php-wasm-fin/ordinary.json
+            build/php-wasm-fin/reviewed.json
             build/generic-records/php-wasm.json
           if-no-files-found: error
           overwrite: true
