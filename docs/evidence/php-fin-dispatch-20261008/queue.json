@@ -1,0 +1,42 @@
+{
+  "node": 1425,
+  "kind": "native PHP installed Fin with per-step dispatch counters (ordinary and reviewed)",
+  "revision": "592609416c71b2a52d72c5ad00d31b2440b88732",
+  "selection": "tests/php-fin.test.mjs (both gated tests: ordinary and independently reviewed)",
+  "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/php-fin.test.mjs",
+  "sources": {
+    "tests/php-fin.test.mjs": "ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502",
+    "tests/helpers/native-fin-count-interposer.mjs": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4",
+    "tests/helpers/native-fin-consumers.mjs": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+    "src/backends/php/copied-assets.mjs": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "cwd": "/app/build/worktrees/callback-reply-vo1220",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_PHP_FIN_TEST": "1",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "TMPDIR": "(unset: /tmp)"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "php": "PHP 8.2.33 (cli) (built: Aug 10 2026 16:44:03) (NTS)",
+    "composer": "Composer version 2.5.5 2023-03-21 11:50:05",
+    "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "nm": "GNU nm (GNU Binutils for Debian) 2.40"
+  },
+  "freeSpace": "9464M",
+  "freeSpaceFloor": "1024M (watchdog stops the run below it)",
+  "reports": {
+    "ordinary": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/php.json",
+    "reviewed": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/php-reviewed.json",
+    "copiedTo": "/app/build/vo1425-php-dispatch-5926094/"
+  },
+  "tap": "/app/build/vo1425-php-dispatch-5926094/run.tap",
+  "end": "/app/build/vo1425-php-dispatch-5926094/end.txt",
+  "startedAt": "2026-10-08T22:12:16.829Z"
+}

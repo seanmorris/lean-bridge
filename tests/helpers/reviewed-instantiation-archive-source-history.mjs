@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePhpDispatchIntegrationSource } from "./php-dispatch-integration-source-history.mjs";
 
 export const reviewedInstantiationArchiveHistoryPath = "docs/evidence/reviewed-instantiation-archive-source-history-20261008.json";
 export const reviewedInstantiationArchivePredecessor = "f38413e8e0e21a716423cbd5a8aabab722830d7b";
@@ -59,6 +60,7 @@ export const reverseReviewedInstantiationArchiveUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeReviewedInstantiationArchiveSource = (path, source, expected) => {
+	source = beforePhpDispatchIntegrationSource(path, source, expected);
 	if(typeof source !== "string" || !registered(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

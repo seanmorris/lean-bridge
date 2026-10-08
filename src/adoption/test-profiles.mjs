@@ -199,6 +199,7 @@ const profileManifest = Object.freeze({
 		, "owned-wasm-bindings"
 		, "jvm-thread-exit-repair-evidence"
 		, "php-nix-boundary-repair-evidence"
+		, "php-fin-dispatch-evidence"
 		, "perl-contract-repair-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"

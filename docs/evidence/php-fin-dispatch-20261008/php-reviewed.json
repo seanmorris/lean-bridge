@@ -1,0 +1,215 @@
+{
+  "archives": {
+    "archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip": "79bffb6ab0f503838f66768c99335148900739a0769c646ce57e6c1e14938389",
+    "archives/native-fin-1.0.0-c.tar.gz": "129d47c83a6e84058f46b3b55623fc2581cdc39bb66ba4b8308d26003ef7a134"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "bff1f54d5667cfa544ebb3a83367988985508c1e574ff9e38a1b5bd501d4e825",
+      "checks": 2028,
+      "compilerFreePath": true,
+      "consumerSha256": "1783e3d8fb8d8e28df55b0abb371fc93977adb16e16af5d2774ef84a3d8e102c",
+      "dispatch": {
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label",
+          "lb_b703515a10173a97c2e27e46",
+          "lb_1d7e0c72a4d6e1cde32466e4",
+          "lb_9afacce322a81504ba9eb75b"
+        ],
+        "interposer": "LD_PRELOAD",
+        "interposerSha256": "a6584dcb1a98f5d517680e475ad039e255d1ff15a1bfdb4e0ab49414651da710",
+        "observed": [
+          [
+            "start",
+            "ok",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-mirror-bound",
+            "rejected:1:arg0<10",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-mirror-huge",
+            "rejected:1:arg0<10",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-impossible-zero",
+            "rejected:1:arg0<0",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-label-late",
+            "rejected:1:arg1<4",
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "valid-mirror",
+            "ok:6",
+            [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "valid-label",
+            "ok:slot:8",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-mirror",
+            "rejected:1:arg0<10",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-impossible",
+            "rejected:1:arg0<0",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-invalid-label",
+            "rejected:1:arg1<4",
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-valid-mirror",
+            "ok:0",
+            [
+              2,
+              0,
+              1,
+              2,
+              0,
+              1
+            ]
+          ],
+          [
+            "recovery-valid-label",
+            "ok:slot:5",
+            [
+              2,
+              0,
+              2,
+              2,
+              0,
+              2
+            ]
+          ]
+        ],
+        "positiveControl": "valid public PHP calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column",
+        "probeSha256": "560f67fef54a7de86605cc99507be9892b60eb1c5c62790168f93fec2640f344",
+        "routes": [
+          "public PHP functions LeanNativeFin\\mirror, LeanNativeFin\\impossible and LeanNativeFin\\label through Composer autoload and PHP FFI into the bundled C adapter"
+        ]
+      },
+      "modelSha256": "dd965c52b87fe58cb729dcf0b3f80c3a8869c274d3d9839f4d3d6ecdc9a2ea84",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51350816,
+              "path": "archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip",
+              "sha256": "79bffb6ab0f503838f66768c99335148900739a0769c646ce57e6c1e14938389"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "lean-bridge-fixtures/native-fin",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "php-native",
+      "receiptSha256": "15a52aab5ed9eb323c3d7a8166f1d83616a72732936d6d3e0b3b93fd19dfef87",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sharedNativeLibraries": {
+        "libcomponent_3f006a55a2dafabb9196.so": "1dc7c7fefd12e9b23c58a55d588a03213594055c6f27c501eca3fbff0d3de420",
+        "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "libnative_fin.so": "a969da07861f6e1074a6b994808e8132ecfa2e05268aa175a076b72fc01c4a9b"
+      },
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "fafe074caebc0ec3007a30aa1f7991f59e977e73f52fc7e2ddf2d73ddb4c9ed4"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

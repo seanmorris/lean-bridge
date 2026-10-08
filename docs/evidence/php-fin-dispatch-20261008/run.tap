@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: native PHP packages are checked Fin consumers beside the other C-adapter hosts
+ok 1 - native PHP packages are checked Fin consumers beside the other C-adapter hosts
+  ---
+  duration_ms: 0.971393
+  type: 'test'
+  ...
+# Subtest: generated PHP bound docs come only from checked refinement metadata
+ok 2 - generated PHP bound docs come only from checked refinement metadata
+  ---
+  duration_ms: 19.11006
+  type: 'test'
+  ...
+# Subtest: the PHP dispatch expectations separate rejections from positive controls
+ok 3 - the PHP dispatch expectations separate rejections from positive controls
+  ---
+  duration_ms: 1.327125
+  type: 'test'
+  ...
+# Subtest: the PHP dispatch parser accepts only the exact ordered per-step rows
+ok 4 - the PHP dispatch parser accepts only the exact ordered per-step rows
+  ---
+  duration_ms: 5.238447
+  type: 'test'
+  ...
+# Subtest: the PHP dispatch probe parses and refuses a process without the counter
+ok 5 - the PHP dispatch probe parses and refuses a process without the counter
+  ---
+  duration_ms: 53.023678
+  type: 'test'
+  ...
+# Subtest: relocated source-free native PHP packages check Fin bounds through the bundled C adapter
+ok 6 - relocated source-free native PHP packages check Fin bounds through the bundled C adapter
+  ---
+  duration_ms: 368649.264719
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Composer archive
+# offline Composer installation without producer files or Lean/C compilers
+# per-step source and adapter counts in the relocated PHP process
+# build 1: compiling the shared C library and Composer archive
+# Subtest: independently reviewed Php packages check scalar Fin through installed consumers
+ok 7 - independently reviewed Php packages check scalar Fin through installed consumers
+  ---
+  duration_ms: 349207.416871
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Composer archive
+# offline Composer installation without producer files or Lean/C compilers
+# per-step source and adapter counts in the relocated PHP process
+# build 1: compiling the shared C library and Composer archive
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 718402.325807

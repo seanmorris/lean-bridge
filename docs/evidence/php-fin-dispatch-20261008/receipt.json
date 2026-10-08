@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1425,
+  "execution": "local",
+  "revision": "592609416c71b2a52d72c5ad00d31b2440b88732",
+  "sources": {
+    "tests/php-fin.test.mjs": "ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502",
+    "tests/helpers/native-fin-count-interposer.mjs": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4",
+    "tests/helpers/native-fin-consumers.mjs": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+    "src/backends/php/copied-assets.mjs": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "scope": {
+    "host": "native PHP (php-native) installed packages, ordinary source and independently reviewed IR",
+    "counter": "LD_PRELOAD interposer counting three Lean source entries and three C adapters per step",
+    "routes": [
+      "public PHP functions LeanNativeFin\\mirror, LeanNativeFin\\impossible and LeanNativeFin\\label through Composer autoload and PHP FFI into the bundled C adapter"
+    ],
+    "missingCounter": "each gated run first requires the probe to refuse a process without the counter",
+    "otherHosts": false,
+    "hostedCi": false,
+    "olderEvidence": "docs/evidence/native-fin-hosts-20261006.md and its observed:false records are unchanged; this is a separately dated measurement"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/queue.json",
+      "originalPath": "build/vo1425-php-dispatch-5926094/queue.json",
+      "sha256": "8b37732e04fb2c01bbab4241ce9e2e4650e186a0a44599bd8ba18ebacaf1d5c7",
+      "bytes": 2238
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/run.tap",
+      "originalPath": "build/vo1425-php-dispatch-5926094/run.tap",
+      "sha256": "f11febeff30efd2bf90241eceba299f4a6f7c7794a6649003e4a0fd20ec5a57e",
+      "bytes": 2212
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/end.txt",
+      "originalPath": "build/vo1425-php-dispatch-5926094/end.txt",
+      "sha256": "cc713c28152c383986c952573ba02d7ba40d73f01e921f1dbf6355218a1fec73",
+      "bytes": 46
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/php.json",
+      "originalPath": "build/vo1425-php-dispatch-5926094/php.json",
+      "sha256": "6111649002d7111c814f2c9b237f618727eb36f665fc313b1bb2f6630ededf5b",
+      "bytes": 5748
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/php-reviewed.json",
+      "originalPath": "build/vo1425-php-dispatch-5926094/php-reviewed.json",
+      "sha256": "9a3df65fdbf46b8ad4cebb0bb8220857cd745cfd3f9b6deea35db7ed6e686f62",
+      "bytes": 5842
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/php-fin.test.mjs.txt",
+      "originalPath": "git:592609416c71b2a52d72c5ad00d31b2440b88732:tests/php-fin.test.mjs",
+      "sha256": "ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502",
+      "bytes": 29918
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-count-interposer.mjs.txt",
+      "originalPath": "git:592609416c71b2a52d72c5ad00d31b2440b88732:tests/helpers/native-fin-count-interposer.mjs",
+      "sha256": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4",
+      "bytes": 1526
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-consumers.mjs.txt",
+      "originalPath": "git:592609416c71b2a52d72c5ad00d31b2440b88732:tests/helpers/native-fin-consumers.mjs",
+      "sha256": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+      "bytes": 16569
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/backends/php/copied-assets.mjs.txt",
+      "originalPath": "git:592609416c71b2a52d72c5ad00d31b2440b88732:src/backends/php/copied-assets.mjs",
+      "sha256": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1",
+      "bytes": 5416
+    },
+    {
+      "path": "docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/build/native-component.mjs.txt",
+      "originalPath": "git:592609416c71b2a52d72c5ad00d31b2440b88732:src/build/native-component.mjs",
+      "sha256": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867",
+      "bytes": 12579
+    }
+  ],
+  "remaining": [
+    "Inventory promotion and source history belong to main.",
+    "WIT, Ruby, .NET and JVM counters remain."
+  ]
+}

@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePhpDispatchIntegrationSource } from "./php-dispatch-integration-source-history.mjs";
 import { beforeReviewedInstantiationArchiveSource, reviewedInstantiationArchiveChangedPaths, reviewedInstantiationArchiveHistoryPath, reviewedInstantiationArchivePredecessor, reviewedInstantiationArchiveProducer, reviewedInstantiationArchiveProducerPins, reverseReviewedInstantiationArchiveUpdate } from "./reviewed-instantiation-archive-source-history.mjs";
 
 test("reviewed instantiation archive restores exact main predecessors without accepting unknown edits", async () => {
@@ -19,7 +20,7 @@ test("reviewed instantiation archive restores exact main predecessors without ac
 	assert.deepEqual(record.updates.map(update => update.path), reviewedInstantiationArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), restored = reverseReviewedInstantiationArchiveUpdate(source, update);
+		const source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), restored = reverseReviewedInstantiationArchiveUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforeReviewedInstantiationArchiveSource(update.path, source), restored);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), restored);
@@ -37,7 +38,7 @@ test("reviewed native branch intermediates require the explicitly authenticated 
 	assert.deepEqual(record.producerUpdates.map(update => update.path), Object.keys(reviewedInstantiationArchiveProducerPins));
 	for(const update of record.producerUpdates)
 	{
-		const source = await readFile(update.path, "utf8"), expected = reviewedInstantiationArchiveProducerPins[update.path];
+		const source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), expected = reviewedInstantiationArchiveProducerPins[update.path];
 		assert.equal(update.previousSha256, expected);
 		const restored = beforeReviewedInstantiationArchiveSource(update.path, source, expected);
 		assert.equal(sha256(restored), expected);
@@ -51,7 +52,7 @@ test("reviewed native branch intermediates require the explicitly authenticated 
 });
 
 test("reviewed instantiation archive refreshes one current source pin without promoting any claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePhpDispatchIntegrationSource(path, await readFile(path, "utf8"));
 	const document = JSON.parse(source), previous = JSON.parse(beforeReviewedInstantiationArchiveSource(path, source));
 	const record = JSON.parse(await readFile(reviewedInstantiationArchiveHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -61,7 +62,7 @@ test("reviewed instantiation archive refreshes one current source pin without pr
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforePhpDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

@@ -37,13 +37,18 @@ test("browser generic promotion authenticates every source predecessor and rejec
 });
 
 test("browser generic promotion changes exactly six ordinary signature cells and no earlier claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeReviewedInstantiationArchiveSource(path, await readFile(path, "utf8"));
 	const previous = JSON.parse(beforeBrowserGenericPromotionSource(path, source));
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(source);
+	assert.ok(live.observations.length >= document.observations.length);
 	assert.deepEqual(document.observations.slice(0, previous.observations.length), previous.observations);
 	assert.deepEqual(document.observations.slice(previous.observations.length), [browserGenericObservation()]);
 	assert.equal(document.observations.at(-1).id, browserGenericObservationId);
-	assert.deepEqual(document.evidence.slice(previous.evidence.length), [await browserGenericEvidence()]);
+	const evidence = await browserGenericEvidence();
+	for(const file of evidence.files)
+		file.sha256 = sha256(beforeReviewedInstantiationArchiveSource(file.path, await readFile(file.path, "utf8")));
+	assert.deepEqual(document.evidence.slice(previous.evidence.length), [evidence]);
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts);
 	assert.equal(before.length, after.length);
 	const expected = ["browser-javascript", "browser-react", "browser-worker"].flatMap(profile =>
@@ -72,7 +77,7 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeReviewedInstantiationArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
