@@ -73,6 +73,7 @@ import { phpReceiverDependencyChangedPaths } from "./php-receiver-dependency-sou
 import { nativeFinPromotionChangedPaths } from "./native-fin-promotion-source-history.mjs";
 import { reviewedSubtypeDecisionsChangedPaths } from "./reviewed-subtype-decisions-source-history.mjs";
 import { witDependencyChangedPaths } from "./wit-dependency-source-history.mjs";
+import { genericRecordBrowserChangedPaths } from "./generic-record-browser-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -610,6 +611,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nativeFinPromotionChangedPaths
 	, ...reviewedSubtypeDecisionsChangedPaths
 	, ...witDependencyChangedPaths
+	, ...genericRecordBrowserChangedPaths
 ])].sort());
 
 /**
