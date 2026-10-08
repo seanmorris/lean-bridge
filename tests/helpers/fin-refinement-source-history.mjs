@@ -131,6 +131,7 @@ import { browserGenericPromotionChangedPaths } from "./browser-generic-promotion
 import { reviewedInstantiationArchiveChangedPaths } from "./reviewed-instantiation-archive-source-history.mjs";
 import { phpDispatchIntegrationChangedPaths } from "./php-dispatch-integration-source-history.mjs";
 import { reviewedRecordPromotionChangedPaths } from "./reviewed-record-promotion-source-history.mjs";
+import { witDispatchIntegrationChangedPaths } from "./wit-dispatch-integration-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -726,6 +727,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedInstantiationArchiveChangedPaths
 	, ...phpDispatchIntegrationChangedPaths
 	, ...reviewedRecordPromotionChangedPaths
+	, ...witDispatchIntegrationChangedPaths
 ])].sort());
 
 /**

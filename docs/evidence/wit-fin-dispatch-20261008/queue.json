@@ -1,0 +1,50 @@
+{
+  "node": 1425,
+  "kind": "WIT/WASI installed Fin with per-step dispatch counters (ordinary and reviewed)",
+  "revision": "dac615e032e47ee604782257522563277a3eb985",
+  "selection": "tests/wit-fin.test.mjs (both gated tests: ordinary and independently reviewed)",
+  "command": "env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/wit-fin.test.mjs",
+  "sources": {
+    "tests/wit-fin.test.mjs": "002505d7e71e398484a0c2d82ad7a12935fcd8e51e79535e73afc48f895a1199",
+    "tests/helpers/native-fin-dispatch.mjs": "e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc",
+    "tests/helpers/native-fin-dispatch-tests.mjs": "7ed7bc8353591017d8bdb6afd44221036b898381ea2d0c6446e4bb5f24175a8b",
+    "tests/helpers/native-fin-count-interposer.mjs": "4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4",
+    "tests/helpers/native-fin-consumers.mjs": "a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd",
+    "tests/helpers/type-corpus-wit.mjs": "2cf8c27c2401bb5aea78a9a172cdb5044f4f1a1e023d0efc6a02891d84aff378",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "src/backends/wit/copied-host.mjs": "d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf",
+    "src/build/native-wit-projection.mjs": "2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397",
+    "src/build/native-component.mjs": "2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867"
+  },
+  "cpu": "taskset -c 3",
+  "concurrency": 1,
+  "cwd": "/app/build/worktrees/callback-reply-vo1220",
+  "environment": {
+    "NO_COLOR": "1",
+    "FORCE_COLOR": "(unset)",
+    "LEAN_BRIDGE_WIT_FIN_TEST": "1",
+    "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+    "LEAN_BRIDGE_WASMTIME_C_API": "/app/.toolchains/wasmtime42",
+    "TMPDIR": "(unset: /tmp)"
+  },
+  "versions": {
+    "node": "v22.23.3",
+    "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+    "wasmtime": "42.0.1 (/app/.toolchains/wasmtime42/include/wasmtime.h WASMTIME_VERSION)",
+    "libwasmtimeSha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3",
+    "wasmTools": "wasm-tools 1.245.1 (76927bf4b 2026-02-12)",
+    "wasmToolsSha256": "ab280f26f95e2769d36a2f0bd8d5fa46f35a2b699010c00dd0214118cf7dc30f",
+    "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "nm": "GNU nm (GNU Binutils for Debian) 2.40"
+  },
+  "freeSpace": "9425M",
+  "freeSpaceFloor": "1024M (watchdog stops the run below it)",
+  "reports": {
+    "ordinary": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/wit.json",
+    "reviewed": "/app/build/worktrees/callback-reply-vo1220/build/native-fin/wit-reviewed.json",
+    "copiedTo": "/app/build/vo1425-wit-dispatch-dac615e/"
+  },
+  "tap": "/app/build/vo1425-wit-dispatch-dac615e/run.tap",
+  "end": "/app/build/vo1425-wit-dispatch-dac615e/end.txt",
+  "startedAt": "2026-10-08T23:02:37.141Z"
+}

@@ -110,17 +110,19 @@ test("both reports keep their route, installation flags and the exact per-step c
 
 test("the row recount refuses counts from a rejected call, a Fin 0 entry or a missed adapter", () => {
 	assertPhpDispatchRows(structuredClone(phpDispatchRows));
+	// The pinned rows share counter arrays; give every row its own so a mutant changes only the rows it names.
 	const rows = change => {
-		const copy = structuredClone(phpDispatchRows);
+		const copy = phpDispatchRows.map(([step, status, counts]) => [step, status, [...counts]]);
 		change(copy);
+		assert.deepEqual(copy[0], ["start", "ok", [0, 0, 0, 0, 0, 0]], "start is unchanged");
 		return copy;
 	};
-	for(const [label, changed] of Object.entries({
-		"rejected call counted": rows(copy => { for(const row of copy.slice(2)) row[2][0]++; })
-		, "Fin 0 entered": rows(copy => { for(const row of copy.slice(3)) row[2][1]++; })
-		, "adapter missed": rows(copy => { for(const row of copy.slice(5)) row[2][3]--; })
-	}))
-		assert.throws(() => assertPhpDispatchDeltas(changed), assert.AssertionError, label);
+	for(const [step, changed] of [
+		["invalid-mirror-huge", rows(copy => { for(const row of copy.slice(2)) row[2][0]++; })]
+		, ["invalid-impossible-zero", rows(copy => { for(const row of copy.slice(3)) row[2][1]++; })]
+		, ["valid-mirror", rows(copy => { for(const row of copy.slice(5)) row[2][3]--; })]
+	])
+		assert.throws(() => assertPhpDispatchDeltas(changed), error => error instanceof assert.AssertionError && error.message.split("\n")[0] === step, step);
 });
 
 test("the producer test must keep its missing-counter refusal, preloaded run and exact rows", async () => {

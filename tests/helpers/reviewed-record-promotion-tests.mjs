@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeWitDispatchIntegrationSource } from "./wit-dispatch-integration-source-history.mjs";
 import { beforeReviewedRecordPromotionSource, reviewedRecordPromotionChangedPaths, reviewedRecordPromotionHistoryPath, reviewedRecordPromotionPredecessor, reverseReviewedRecordPromotionUpdate } from "./reviewed-record-promotion-source-history.mjs";
 import { reconcileReviewedRecordObservations, reviewedRecordEvidence, reviewedRecordHosts, reviewedRecordReceiptPath } from "./reviewed-record-promotion.mjs";
 import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId } from "./browser-generic-promotion.mjs";
@@ -23,7 +24,7 @@ test("reviewed record promotion authenticates predecessors and refuses unknown s
 	assert.deepEqual(history.updates.map(update => update.path), reviewedRecordPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseReviewedRecordPromotionUpdate(source, update);
+		const source = beforeWitDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedRecordPromotionUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeReviewedRecordPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +38,8 @@ test("reviewed record promotion authenticates predecessors and refuses unknown s
 });
 
 test("reviewed record reconciliation extends eight signatures and leaves every instance and browser cell intact", async () => {
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeWitDispatchIntegrationSource("docs/type-surface.v1.json", JSON.stringify(currentDocument, null, 2) + "\n"));
 	const path = "docs/type-surface.v1.json";
 	const previous = JSON.parse(beforeReviewedRecordPromotionSource(path, await readFile(path, "utf8")));
 	assert.deepEqual(document.observations, reconcileReviewedRecordObservations(previous.observations));
@@ -76,7 +78,10 @@ test("reviewed record reconciliation extends eight signatures and leaves every i
 	}
 	previous.evidence.find(entry => entry.id === browserGenericEvidenceId).scope += browserGenericCommandQualification;
 	assert.deepEqual(document.evidence.slice(0, previous.evidence.length), previous.evidence);
-	assert.deepEqual(document.evidence.slice(previous.evidence.length), await reviewedRecordEvidence());
+	const promotedEvidence = await reviewedRecordEvidence();
+	for(const entry of promotedEvidence) for(const file of entry.files)
+		file.sha256 = sha256(beforeWitDispatchIntegrationSource(file.path, await readFile(file.path, "utf8")));
+	assert.deepEqual(document.evidence.slice(previous.evidence.length), promotedEvidence);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);
 	assert.equal(document.observations.length, previous.observations.length + 2);

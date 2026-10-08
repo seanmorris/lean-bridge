@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "milestone": "wit-dispatch-integration-v1",
+  "predecessorCommit": "5dd16b52a540f9da88a6611d6877073c1257a0c8",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "2074cff2240da45ec4b96b6eb654528cb3c2309603fdc4504f58c34d1f713af7",
+      "previousSha256": "483936b0f19154c0e5f28999eb3275373cea7505400cf2846cf08f68e069ef53",
+      "edits": [
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea\"\n",
+          "current": "          \"sha256\": \"77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb\"\n"
+        },
+        {
+          "start": 1515350,
+          "previous": "          \"sha256\": \"c98e7be0e89525f7a21fe527431ee8c216b9f8d4983559a719d3fdf2cefea7b3\"\n",
+          "current": "          \"sha256\": \"002505d7e71e398484a0c2d82ad7a12935fcd8e51e79535e73afc48f895a1199\"\n"
+        },
+        {
+          "start": 1919069,
+          "previous": "          \"sha256\": \"f53273331fd3c842533ed7d25267566ce320aa05910d5c13c4df0cc5fff6dea7\"\n",
+          "current": "          \"sha256\": \"1f9b4050bfcbde867d9196235b93939116a0c06c7ecc7913a5e373478af58ec8\"\n"
+        },
+        {
+          "start": 1927859,
+          "previous": "          \"sha256\": \"f53273331fd3c842533ed7d25267566ce320aa05910d5c13c4df0cc5fff6dea7\"\n",
+          "current": "          \"sha256\": \"1f9b4050bfcbde867d9196235b93939116a0c06c7ecc7913a5e373478af58ec8\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "77ef75f8b85a4749ac62faa59532629709fa0f21d67d80ee93d09fbc89975bfb",
+      "previousSha256": "a11786619e1a136cb68d6c8259ab404cfbd5936fc63d1aa1b34f1f119a4060ea",
+      "edits": [
+        {
+          "start": 7898,
+          "previous": "",
+          "current": "\t\t, \"wit-fin-dispatch-evidence\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wit-fin.test.mjs",
+      "currentSha256": "002505d7e71e398484a0c2d82ad7a12935fcd8e51e79535e73afc48f895a1199",
+      "previousSha256": "c98e7be0e89525f7a21fe527431ee8c216b9f8d4983559a719d3fdf2cefea7b3",
+      "edits": [
+        {
+          "start": 140,
+          "previous": "",
+          "current": "import { existsSync } from \"node:fs\";\n"
+        },
+        {
+          "start": 285,
+          "previous": "import { basename, join } from \"node:path\";\n",
+          "current": "import { basename, join, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 511,
+          "previous": "",
+          "current": "import { renderWitHostHeader } from \"../src/backends/wit/copied-host.mjs\";\n"
+        },
+        {
+          "start": 1321,
+          "previous": "",
+          "current": "import { witCompilerOptions } from \"./helpers/type-corpus-wit-evidence.mjs\";\nimport { nativeFinAdapterSymbol, nativeFinCountInterposerFor, nativeFinDispatchExpected, nativeFinDispatchMutations, nativeFinDispatchSources, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from \"./helpers/native-fin-dispatch.mjs\";\n"
+        },
+        {
+          "start": 1773,
+          "previous": "",
+          "current": "import \"./helpers/native-fin-dispatch-tests.mjs\";\n"
+        },
+        {
+          "start": 10179,
+          "previous": "",
+          "current": "const witFinDispatchExpected = nativeFinDispatchExpected(outcome => outcome.rejected ? `rejected:${outcome.rejected[0]}<${outcome.rejected[1]}` : `ok:${outcome.ok}`);\nconst witFinDispatchRoutes = [\"public WIT exports mirror, impossible and label through the installed nativefin_wasmtime_call host API, the embedded Wasmtime component and its host imports into the bundled C adapter\"];\nconst missingCounter = \"native_fin_dispatch_count is not resolvable in this WIT host process\\n\";\nconst limbs = number => {\n\tconst words = [];\n\tfor(let rest = number; rest > 0n; rest >>= 32n) words.push(Number(rest & 0xffffffffn));\n\treturn words;\n};\nconst witArgument = argument => {\n\tif(typeof argument === \"string\") return `text(${JSON.stringify(argument)})`;\n\tconst words = limbs(argument);\n\treturn words.length ? `nat((const uint32_t[]){${words.join(\", \")}}, ${words.length})` : \"nat(NULL, 0)\";\n};\n\n/**\n * Probe run under the count interposer. It resolves the counter from the process-wide symbol scope\n * before opening a session and exits with status 2 when it is missing, so an absent interposer never\n * reports zeros. It also refuses a host library loaded from outside the relocated deployment.\n */\nconst witFinDispatchProbe = () => `#define _GNU_SOURCE\n#include \"nativefin_wasmtime.h\"\n#include <ctype.h>\n#include <dlfcn.h>\n#include <stdbool.h>\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\ntypedef wasmtime_component_val_t value;\nstatic unsigned long (*counter)(unsigned);\nstatic nativefin_wasmtime *session;\nstatic value nat(const uint32_t *words, size_t count) {\n  value result = {.kind = WASMTIME_COMPONENT_LIST};\n  wasmtime_component_vallist_new_uninit(&result.of.list, count);\n  for (size_t i = 0; i < count; ++i) result.of.list.data[i] = (value){.kind = WASMTIME_COMPONENT_U32, .of.u32 = words[i]};\n  return result;\n}\nstatic value text(const char *bytes) {\n  value result = {.kind = WASMTIME_COMPONENT_STRING};\n  wasm_name_new(&result.of.string, strlen(bytes), bytes);\n  return result;\n}\n/* Accept exactly one \"argN is not below its Fin B bound\" phrase; Wasmtime may add context around it. */\nstatic bool rejection(const char *message, char *status, size_t size) {\n  static const char phrase[] = \" is not below its Fin \";\n  const char *marker = strstr(message, phrase);\n  if (!marker || strstr(marker + 1, phrase)) return false;\n  const char *index = marker;\n  while (index > message && isdigit((unsigned char)index[-1])) --index;\n  if (index == marker || index - message < 3 || memcmp(index - 3, \"arg\", 3) != 0) return false;\n  if (index - 3 > message && isalnum((unsigned char)index[-4])) return false;\n  const char *bound = marker + sizeof phrase - 1, *end = bound;\n  while (isdigit((unsigned char)*end)) ++end;\n  if (end == bound || strncmp(end, \" bound\", 6) != 0 || isalnum((unsigned char)end[6])) return false;\n  int written = snprintf(status, size, \"rejected:arg%.*s<%.*s\", (int)(marker - index), index, (int)(end - bound), bound);\n  return written > 0 && (size_t)written < size;\n}\nstatic void report(const char *step, const char *status) {\n  printf(\"%s %s\", step, status);\n  for (unsigned i = 0; i < 6; ++i) printf(\" %lu\", counter(i));\n  putchar('\\\\n');\n}\n/* One public call: a rejection must leave the result slot unchanged; results print as decimal or text. */\nstatic void call(const char *step, const char *name, value *args, size_t count) {\n  value result = {.kind = WASMTIME_COMPONENT_U32, .of.u32 = 991};\n  char status[96] = \"error\";\n  wasmtime_error_t *error = nativefin_wasmtime_call(session, name, args, count, &result);\n  if (error) {\n    wasm_name_t message; wasmtime_error_message(error, &message);\n    char *copy = calloc(message.size + 1, 1);\n    if (!copy) exit(1);\n    memcpy(copy, message.data, message.size);\n    if (!rejection(copy, status, sizeof status) || result.kind != WASMTIME_COMPONENT_U32 || result.of.u32 != 991) strcpy(status, \"error\");\n    free(copy); wasm_name_delete(&message); wasmtime_error_delete(error);\n  } else {\n    const value *data = result.of.list.data;\n    if (result.kind == WASMTIME_COMPONENT_LIST && result.of.list.size <= 1 && (!result.of.list.size || data[0].kind == WASMTIME_COMPONENT_U32))\n      snprintf(status, sizeof status, \"ok:%u\", result.of.list.size ? data[0].of.u32 : 0u);\n    else if (result.kind == WASMTIME_COMPONENT_STRING && result.of.string.size && result.of.string.size < 64) {\n      bool printable = true;\n      for (size_t i = 0; i < result.of.string.size; ++i) printable = printable && result.of.string.data[i] > ' ' && result.of.string.data[i] <= '~';\n      if (printable) snprintf(status, sizeof status, \"ok:%.*s\", (int)result.of.string.size, result.of.string.data);\n      else strcpy(status, \"ok:unprintable\");\n    } else strcpy(status, \"ok:unexpected\");\n    wasmtime_component_val_delete(&result);\n  }\n  for (size_t i = 0; i < count; ++i) wasmtime_component_val_delete(&args[i]);\n  report(step, status);\n}\nint main(int argc, char **argv) {\n  *(void **)&counter = dlsym(RTLD_DEFAULT, \"native_fin_dispatch_count\");\n  if (!counter) { fputs(\"native_fin_dispatch_count is not resolvable in this WIT host process\\\\n\", stderr); return 2; }\n  if (argc != 2) { fputs(\"usage: dispatch DEPLOYMENT_ROOT\\\\n\", stderr); return 2; }\n  Dl_info host;\n  void *entry = dlsym(RTLD_DEFAULT, \"nativefin_wasmtime_call\");\n  size_t length = strlen(argv[1]);\n  if (!entry || !dladdr(entry, &host) || !host.dli_fname || strncmp(host.dli_fname, argv[1], length) != 0 || host.dli_fname[length] != '/') {\n    fputs(\"nativefin_wasmtime_call is not loaded from the deployment\\\\n\", stderr); return 3;\n  }\n  if (nativefin_wasmtime_open(&session)) { fputs(\"cannot open session\\\\n\", stderr); return 1; }\n  report(\"start\", \"ok\");\n${nativeFinDispatchSteps.slice(1).map(([step, name, args]) => `  { value args[] = {${args.map(witArgument).join(\", \")}}; call(\"${step}\", \"${name}\", args, ${args.length}); }`).join(\"\\n\")}\n  nativefin_wasmtime_close(session);\n  return 0;\n}\n`;\n\n/**\n * Compile the dispatch probe against the installed package headers, then count source and adapter entry\n * in a process that loads only the relocated deployment's libraries.\n *\n * @param root0 - Installed WIT host and its handoff.\n * @param root0.consumer - Task-owned root that receives the probe directory beside the deployment.\n * @param root0.handoff - Copied handoff holding the verified package archive.\n * @param root0.pkg - Package-set entry for the WIT host package.\n * @param root0.wit - Installed WIT facts, including the deployment and its verified libraries.\n * @param root0.componentId - Component identity that names the counted adapters.\n */\nconst observeWitDispatch = async ({ consumer, handoff, pkg, wit, componentId }) => {\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" };\n\tconst deployment = wit.deploymentRoot, columns = nativeFinDispatchSymbols(componentId);\n\t// Each counted symbol must be a defined dynamic symbol of the verified deployment for the preload to interpose it.\n\tconst defined = new Set();\n\tfor(const path of Object.keys(wit.libraries))\n\t{\n\t\tconst listed = await runCopied(\"/usr/bin/nm\", [\"-D\", \"--defined-only\", join(deployment, path)], deployment, tools);\n\t\tfor(const line of listed.stdout.split(\"\\n\")) defined.add(line.trim().split(/\\s+/).at(-1));\n\t}\n\tfor(const symbol of columns) assert.ok(defined.has(symbol), symbol);\n\tconst probeRoot = join(consumer, \"dispatch\"), headers = join(probeRoot, \"package\"), interposer = join(probeRoot, \"libdispatch.so\");\n\tawait saveLakeFile(headers, \".keep\", \"\");\n\tawait runCopied(\"/usr/bin/tar\", [\"--use-compress-program=/usr/bin/gzip\", \"-xf\", join(handoff, pkg.artifacts[0].path), \"-C\", headers], probeRoot, tools);\n\tconst installed = join(headers, `${pkg.name}-${pkg.version}-wit-wasi`);\n\tassert.equal(sha256(await readFile(join(installed, \"lean-bridge-package.json\"))), wit.packageReceiptSha256);\n\tawait verifyNativeFiles(installed, wit.packageReceipt.files);\n\tawait saveLakeFile(probeRoot, \"interposer.c\", nativeFinCountInterposerFor(componentId));\n\tawait saveLakeFile(probeRoot, \"dispatch.c\", witFinDispatchProbe());\n\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-shared\", \"-fPIC\", \"interposer.c\", \"-o\", \"libdispatch.so\"], probeRoot, tools);\n\tassert.match((await runCopied(\"/usr/bin/nm\", [\"-D\", \"--defined-only\", interposer], probeRoot, tools)).stdout, /^[0-9a-f]+ T native_fin_dispatch_count$/m);\n\tconst link = [\"-L\", join(deployment, \"lib\"), `-l:${wit.compiled.library}`, \"-lwasmtime\", `-Wl,-rpath,${join(deployment, \"lib\")}`];\n\tawait runCopied(\"/usr/bin/cc\", [...witCompilerOptions, \"dispatch.c\", \"-I\", join(installed, \"include\"), ...link, \"-o\", \"dispatch\"], probeRoot, tools);\n\t// The headers serve only compilation; the probe runs against the relocated deployment alone.\n\tawait rm(headers, { recursive: true, force: true });\n\tconst command = join(probeRoot, \"dispatch\");\n\t// Without the preload the counter is missing and the probe refuses before opening a session.\n\tawait assert.rejects(runCopied(command, [deployment], probeRoot), error => /exited with status 2/.test(error.message)\n\t\t&& error.details.stdout === \"\" && error.details.stderr === missingCounter);\n\tconst run = await runCopied(command, [deployment], probeRoot, { ...copiedCleanEnvironment, LD_PRELOAD: interposer });\n\tassert.equal(run.stderr, \"\");\n\tconst observed = readNativeFinDispatch(run.stdout, witFinDispatchExpected);\n\tassert.deepEqual(observed, witFinDispatchExpected);\n\treturn { columns, observed, interposer: \"LD_PRELOAD\"\n\t\t, routes: witFinDispatchRoutes\n\t\t, positiveControl: \"valid public WIT calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column\"\n\t\t, probeSha256: sha256(witFinDispatchProbe())\n\t\t, interposerSha256: sha256(nativeFinCountInterposerFor(componentId)) };\n};\n\n"
+        },
+        {
+          "start": 22496,
+          "previous": "",
+          "current": "test(\"the WIT dispatch rows spell each rejection by parameter and bound and each result by value\", () => {\n\tassert.deepEqual(witFinDispatchExpected.map(([step, status]) => `${step} ${status}`), [\n\t\t\"start ok\"\n\t\t, \"invalid-mirror-bound rejected:arg0<10\"\n\t\t, \"invalid-mirror-huge rejected:arg0<10\"\n\t\t, \"invalid-impossible-zero rejected:arg0<0\"\n\t\t, \"invalid-label-late rejected:arg1<4\"\n\t\t, \"valid-mirror ok:6\"\n\t\t, \"valid-label ok:slot:8\"\n\t\t, \"recovery-invalid-mirror rejected:arg0<10\"\n\t\t, \"recovery-invalid-impossible rejected:arg0<0\"\n\t\t, \"recovery-invalid-label rejected:arg1<4\"\n\t\t, \"recovery-valid-mirror ok:0\"\n\t\t, \"recovery-valid-label ok:slot:5\"\n\t]);\n\tconst { valid, mutations } = nativeFinDispatchMutations(witFinDispatchExpected);\n\tassert.deepEqual(readNativeFinDispatch(valid, witFinDispatchExpected), witFinDispatchExpected);\n\tfor(const [name, output] of Object.entries(mutations))\n\t\tassert.throws(() => readNativeFinDispatch(output, witFinDispatchExpected), TypeError, name);\n\t// The probe resolves the counter and checks the host's origin before any session or call.\n\tconst probe = witFinDispatchProbe(), order = [\"\\\"native_fin_dispatch_count\\\"\", \"return 2; }\", \"dladdr(entry, &host)\", \"nativefin_wasmtime_open(&session)\", \"report(\\\"start\\\", \\\"ok\\\")\"];\n\tassert.deepEqual(order.map(item => probe.indexOf(item)), order.map(item => probe.indexOf(item)).toSorted((a, b) => a - b));\n\tassert.ok(order.every(item => probe.includes(item)));\n\tassert.match(probe, /value args\\[\\] = \\{nat\\(\\(const uint32_t\\[\\]\\)\\{0, 0, 64\\}, 3\\)\\}; call\\(\"invalid-mirror-huge\", \"mirror\", args, 1\\);/);\n\tassert.match(probe, /call\\(\"invalid-impossible-zero\", \"impossible\", args, 1\\);/);\n});\n\nconst wasmtimeCApi = resolve(\".toolchains/wasmtime42\");\n/**\n * Stand-in Lean sources and exported adapters in one shared library.\n *\n * @param componentId - Component identity that names the adapters.\n */\nconst fakeComponent = componentId => `#include <stdint.h>\nvoid *l_NativeFin_mirror(void *a0) { return (void *)(9 - (uintptr_t)a0); }\nvoid *l_NativeFin_impossible(void *a0) { return a0; }\nvoid *l_NativeFin_label(void *a0, void *a1, void *a2) { (void)a2; return (void *)((uintptr_t)a0 + (uintptr_t)a1); }\n${nativeFinDispatchSources.map(name => `void *${nativeFinAdapterSymbol(componentId, `NativeFin.${name}`)}(${name === \"label\" ? \"void *a0, void *a1, void *a2\" : \"void *a0\"}) { return l_NativeFin_${name}(${name === \"label\" ? \"a0, a1, a2\" : \"a0\"}); }`).join(\"\\n\")}\n`;\n/**\n * A stand-in Wasmtime host with the generated header: it checks bounds in C before its adapters, unless LEAK is defined.\n *\n * @param componentId - Component identity that names the adapters.\n */\nconst fakeHost = componentId => `#include \"nativefin_wasmtime.h\"\n#include <stdbool.h>\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\nvoid *${nativeFinAdapterSymbol(componentId, \"NativeFin.mirror\")}(void *);\nvoid *${nativeFinAdapterSymbol(componentId, \"NativeFin.impossible\")}(void *);\nvoid *${nativeFinAdapterSymbol(componentId, \"NativeFin.label\")}(void *, void *, void *);\nstruct nativefin_wasmtime { int open; };\nwasmtime_error_t *nativefin_wasmtime_open(nativefin_wasmtime **out) { *out = calloc(1, sizeof **out); return *out ? NULL : wasmtime_error_new(\"allocation\"); }\nwasmtime_error_t *nativefin_wasmtime_link(wasmtime_component_linker_t *linker) { (void)linker; return NULL; }\nvoid nativefin_wasmtime_close(nativefin_wasmtime *session) { free(session); }\nstatic bool word(const wasmtime_component_val_t *v, uintptr_t *out) {\n  if (v->kind != WASMTIME_COMPONENT_LIST || v->of.list.size > 1) return false;\n  *out = v->of.list.size ? v->of.list.data[0].of.u32 : 0; return true;\n}\nstatic wasmtime_error_t *reject(const char *message) {\n  /* Wasmtime 42 reports a host import error in this shape. */\n  char text[256]; snprintf(text, sizeof text, \"error while executing at wasm backtrace:\\\\n    0:     0x55 - nativefin!<wasm function 1>\\\\n\\\\nCaused by:\\\\n    %s\\\\n\", message);\n  return wasmtime_error_new(text);\n}\nwasmtime_error_t *nativefin_wasmtime_call(nativefin_wasmtime *session, const char *name,\n    const wasmtime_component_val_t *args, size_t count, wasmtime_component_val_t *out) {\n  uintptr_t first = 0, second = 0; bool fits = count > 0 && word(&args[0], &first);\n  if (!session) return wasmtime_error_new(\"closed\");\n  if (strcmp(name, \"impossible\") == 0) return reject(\"arg0 is not below its Fin 0 bound\");\n  if (strcmp(name, \"mirror\") == 0) {\n#ifdef LEAK\n    if (!fits || first >= 10) ${nativeFinAdapterSymbol(componentId, \"NativeFin.mirror\")}((void *)first);\n#endif\n    if (!fits || first >= 10) return reject(\"arg0 is not below its Fin 10 bound\");\n    uintptr_t result = (uintptr_t)${nativeFinAdapterSymbol(componentId, \"NativeFin.mirror\")}((void *)first);\n    *out = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_LIST};\n    wasmtime_component_vallist_new_uninit(&out->of.list, result ? 1 : 0);\n    if (result) out->of.list.data[0] = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_U32, .of.u32 = (uint32_t)result};\n    return NULL;\n  }\n  if (strcmp(name, \"label\") == 0 && count == 3 && fits && word(&args[1], &second)) {\n    if (second >= 4) return reject(\"arg1 is not below its Fin 4 bound\");\n    char text[32]; snprintf(text, sizeof text, \"%.*s:%lu\", (int)args[2].of.string.size, args[2].of.string.data, (unsigned long)(uintptr_t)${nativeFinAdapterSymbol(componentId, \"NativeFin.label\")}((void *)first, (void *)second, NULL));\n    *out = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_STRING};\n    wasm_name_new(&out->of.string, strlen(text), text);\n    return NULL;\n  }\n  (void)${nativeFinAdapterSymbol(componentId, \"NativeFin.impossible\")};\n  return wasmtime_error_new(\"unexpected call\");\n}\n`;\n\ntest(\"the WIT dispatch probe counts a stand-in C-adapter host exactly and refuses a missing counter, a foreign host and a leaking host\", { skip: !existsSync(join(wasmtimeCApi, \"lib/libwasmtime.so\")) }, async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-wit-fin-probe-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" }, componentId = \"nativefin@1.0.0\";\n\tconst cc = (args, cwd = root) => runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", ...args], cwd, tools);\n\tawait saveLakeFile(root, \"include/nativefin_wasmtime.h\", renderWitHostHeader({ surface: { prefix: \"nativefin\", callbacks: new Set() } }));\n\tawait saveLakeFile(root, \"component.c\", fakeComponent(componentId));\n\tawait saveLakeFile(root, \"host.c\", fakeHost(componentId));\n\tawait saveLakeFile(root, \"dispatch.c\", witFinDispatchProbe());\n\tawait saveLakeFile(root, \"interposer.c\", nativeFinCountInterposerFor(componentId));\n\tconst include = [\"-I\", join(root, \"include\"), \"-I\", join(wasmtimeCApi, \"include\")];\n\tawait cc([\"-shared\", \"-fPIC\", \"interposer.c\", \"-o\", \"libdispatch.so\"]);\n\tfor(const [deployment, flags] of [[\"deployment\", []], [\"leaking\", [\"-DLEAK\"]]])\n\t{\n\t\tawait saveLakeFile(join(root, deployment, \"lib\"), \".keep\", \"\");\n\t\tconst lib = join(root, deployment, \"lib\");\n\t\tawait cc([\"-shared\", \"-fPIC\", \"component.c\", \"-o\", join(lib, \"libnativefin.so\")]);\n\t\tawait cc([\"-shared\", \"-fPIC\", ...flags, ...include, \"host.c\", \"-L\", lib, \"-lnativefin\", \"-L\", join(wasmtimeCApi, \"lib\"), \"-lwasmtime\", \"-Wl,-rpath,$ORIGIN\", \"-o\", join(lib, \"libnativefin_wasmtime.so\")]);\n\t\tconst link = [\"-L\", lib, \"-l:libnativefin_wasmtime.so\", \"-L\", join(wasmtimeCApi, \"lib\"), \"-lwasmtime\", `-Wl,-rpath,${lib}:${join(wasmtimeCApi, \"lib\")}`];\n\t\tawait cc([...witCompilerOptions.slice(1), ...include, \"dispatch.c\", ...link, \"-o\", join(root, deployment, \"dispatch\")]);\n\t}\n\tconst preload = { ...copiedCleanEnvironment, LD_PRELOAD: join(root, \"libdispatch.so\") };\n\tconst probe = join(root, \"deployment\", \"dispatch\"), deployment = join(root, \"deployment\");\n\tawait assert.rejects(runCopied(probe, [deployment], root), error => /exited with status 2/.test(error.message)\n\t\t&& error.details.stdout === \"\" && error.details.stderr === missingCounter);\n\tawait assert.rejects(runCopied(probe, [join(root, \"leaking\")], root, preload), error => /exited with status 3/.test(error.message)\n\t\t&& error.details.stdout === \"\" && error.details.stderr === \"nativefin_wasmtime_call is not loaded from the deployment\\n\");\n\tconst run = await runCopied(probe, [deployment], root, preload);\n\tassert.equal(run.stderr, \"\");\n\tassert.deepEqual(readNativeFinDispatch(run.stdout, witFinDispatchExpected), witFinDispatchExpected);\n\t// A host that enters the adapter before rejecting is caught at its first invalid row.\n\tconst leaked = await runCopied(join(root, \"leaking\", \"dispatch\"), [join(root, \"leaking\")], root, preload);\n\tassert.match(leaked.stdout, /^invalid-mirror-bound rejected:arg0<10 1 0 0 1 0 0$/m);\n\tassert.throws(() => readNativeFinDispatch(leaked.stdout, witFinDispatchExpected), /invalid-mirror-bound was rejected but changed counts by 1 0 0 1 0 0/);\n});\n\n"
+        },
+        {
+          "start": 36041,
+          "previous": "",
+          "current": "\t\t// The counted adapters are the model's own exports for this component identity.\n\t\tassert.equal(model.component.id, \"nativefin@1.0.0\");\n\t\tfor(const name of [\"mirror\", \"impossible\", \"label\"])\n\t\t\tassert.equal(model.exports.find(item => item.name === `NativeFin.${name}`).symbol, nativeFinAdapterSymbol(model.component.id, `NativeFin.${name}`), name);\n\t\tt.diagnostic(\"per-step source and adapter counts in the relocated WIT host process\");\n\t\tconst dispatch = await observeWitDispatch({ consumer, handoff, pkg, wit: installed.wit, componentId: model.component.id });\n"
+        },
+        {
+          "start": 36887,
+          "previous": "\t\t\t, dispatch: { observed: false, reason: \"the Wasmtime host library links the bundled adapter privately; identity with the instrumented C adapter is asserted instead\" }\n",
+          "current": "\t\t\t, dispatch\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-fin-dispatch-evidence.test.mjs",
+      "currentSha256": "701eb79d4fa8fa8d979f7d25e5a62c693afc0c500585666f98e2c69b8b511dc0",
+      "previousSha256": "bd90f472973a4c2f85b55284e337159912aa9635550a0a01c49c06a5e692020f",
+      "edits": [
+        {
+          "start": 6956,
+          "previous": "",
+          "current": "\t// The pinned rows share counter arrays; give every row its own so a mutant changes only the rows it names.\n"
+        },
+        {
+          "start": 7091,
+          "previous": "\t\tconst copy = structuredClone(phpDispatchRows);\n",
+          "current": "\t\tconst copy = phpDispatchRows.map(([step, status, counts]) => [step, status, [...counts]]);\n"
+        },
+        {
+          "start": 7200,
+          "previous": "",
+          "current": "\t\tassert.deepEqual(copy[0], [\"start\", \"ok\", [0, 0, 0, 0, 0, 0]], \"start is unchanged\");\n"
+        },
+        {
+          "start": 7307,
+          "previous": "\tfor(const [label, changed] of Object.entries({\n\t\t\"rejected call counted\": rows(copy => { for(const row of copy.slice(2)) row[2][0]++; })\n\t\t, \"Fin 0 entered\": rows(copy => { for(const row of copy.slice(3)) row[2][1]++; })\n\t\t, \"adapter missed\": rows(copy => { for(const row of copy.slice(5)) row[2][3]--; })\n\t}))\n\t\tassert.throws(() => assertPhpDispatchDeltas(changed), assert.AssertionError, label);\n",
+          "current": "\tfor(const [step, changed] of [\n\t\t[\"invalid-mirror-huge\", rows(copy => { for(const row of copy.slice(2)) row[2][0]++; })]\n\t\t, [\"invalid-impossible-zero\", rows(copy => { for(const row of copy.slice(3)) row[2][1]++; })]\n\t\t, [\"valid-mirror\", rows(copy => { for(const row of copy.slice(5)) row[2][3]--; })]\n\t])\n\t\tassert.throws(() => assertPhpDispatchDeltas(changed), error => error instanceof assert.AssertionError && error.message.split(\"\\n\")[0] === step, step);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "e2726ee53c59455c2c08a8027faca342780aa279d144b1714fbc1d541d0816cb",
+      "previousSha256": "55e8dd08602c240309880f07a62b5f832c9720708b6c6c0de82e63886b1160e2",
+      "edits": [
+        {
+          "start": 11852,
+          "previous": "",
+          "current": "import { witDispatchIntegrationChangedPaths } from \"./wit-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 49788,
+          "previous": "",
+          "current": "\t, ...witDispatchIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-record-promotion-source-history.mjs",
+      "currentSha256": "a4ec40a20275a7723310a6fdee76fc9c8e5f65fa6ec050ac0c0b94b237d22aa1",
+      "previousSha256": "1131775f3d2e20c82eb796d64c2e11d47a439ab88bfc4ce555afe0d9f8b801b5",
+      "edits": [
+        {
+          "start": 248,
+          "previous": "",
+          "current": "import { beforeWitDispatchIntegrationSource } from \"./wit-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2662,
+          "previous": "",
+          "current": "\tsource = beforeWitDispatchIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-record-promotion-tests.mjs",
+      "currentSha256": "1f9b4050bfcbde867d9196235b93939116a0c06c7ecc7913a5e373478af58ec8",
+      "previousSha256": "f53273331fd3c842533ed7d25267566ce320aa05910d5c13c4df0cc5fff6dea7",
+      "edits": [
+        {
+          "start": 623,
+          "previous": "",
+          "current": "import { beforeWitDispatchIntegrationSource } from \"./wit-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1776,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseReviewedRecordPromotionUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeWitDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseReviewedRecordPromotionUpdate(source, update);\n"
+        },
+        {
+          "start": 2880,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(beforeWitDispatchIntegrationSource(\"docs/type-surface.v1.json\", JSON.stringify(currentDocument, null, 2) + \"\\n\"));\n"
+        },
+        {
+          "start": 5207,
+          "previous": "\tassert.deepEqual(document.evidence.slice(previous.evidence.length), await reviewedRecordEvidence());\n",
+          "current": "\tconst promotedEvidence = await reviewedRecordEvidence();\n\tfor(const entry of promotedEvidence) for(const file of entry.files)\n\t\tfile.sha256 = sha256(beforeWitDispatchIntegrationSource(file.path, await readFile(file.path, \"utf8\")));\n\tassert.deepEqual(document.evidence.slice(previous.evidence.length), promotedEvidence);\n"
+        }
+      ]
+    }
+  ]
+}

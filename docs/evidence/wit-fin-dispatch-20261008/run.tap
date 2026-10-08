@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: the parametrized interposer reproduces the measured native-fin interposer byte for byte
+ok 1 - the parametrized interposer reproduces the measured native-fin interposer byte for byte
+  ---
+  duration_ms: 2.022371
+  type: 'test'
+  ...
+# Subtest: the dispatch steps separate rejections from positive controls
+ok 2 - the dispatch steps separate rejections from positive controls
+  ---
+  duration_ms: 0.589064
+  type: 'test'
+  ...
+# Subtest: the dispatch reader accepts only the exact ordered per-step rows
+ok 3 - the dispatch reader accepts only the exact ordered per-step rows
+  ---
+  duration_ms: 5.603115
+  type: 'test'
+  ...
+# Subtest: WIT/WASI host packages are checked Fin consumers beside the other C-adapter hosts
+ok 4 - WIT/WASI host packages are checked Fin consumers beside the other C-adapter hosts
+  ---
+  duration_ms: 0.193738
+  type: 'test'
+  ...
+# Subtest: WIT bound docs come only from checked refinement metadata and leave the WIT text unchanged
+ok 5 - WIT bound docs come only from checked refinement metadata and leave the WIT text unchanged
+  ---
+  duration_ms: 33.662587
+  type: 'test'
+  ...
+# Subtest: the WIT dispatch rows spell each rejection by parameter and bound and each result by value
+ok 6 - the WIT dispatch rows spell each rejection by parameter and bound and each result by value
+  ---
+  duration_ms: 7.297083
+  type: 'test'
+  ...
+# Subtest: the WIT dispatch probe counts a stand-in C-adapter host exactly and refuses a missing counter, a foreign host and a leaking host
+ok 7 - the WIT dispatch probe counts a stand-in C-adapter host exactly and refuses a missing counter, a foreign host and a leaking host
+  ---
+  duration_ms: 445.351274
+  type: 'test'
+  ...
+# Subtest: relocated source-free WIT/WASI hosts check Fin bounds through the bundled C adapter
+ok 8 - relocated source-free WIT/WASI hosts check Fin bounds through the bundled C adapter
+  ---
+  duration_ms: 367379.98115
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and WIT/WASI host package
+# offline installation, relocation and two compiler-free executions
+# per-step source and adapter counts in the relocated WIT host process
+# build 1: compiling the shared C library and WIT/WASI host package
+# Subtest: independently reviewed Wit packages check scalar Fin through installed consumers
+ok 9 - independently reviewed Wit packages check scalar Fin through installed consumers
+  ---
+  duration_ms: 349752.333575
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and WIT/WASI host package
+# offline installation, relocation and two compiler-free executions
+# per-step source and adapter counts in the relocated WIT host process
+# build 1: compiling the shared C library and WIT/WASI host package
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 717983.012778
