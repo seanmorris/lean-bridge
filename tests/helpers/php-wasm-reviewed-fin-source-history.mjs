@@ -1,26 +1,24 @@
 /**
- * Preserve exact source predecessors of the Callback Fin promotion change (#1445).
+ * Preserve exact source predecessors of the reviewed PHP-Wasm Fin integration (#1443).
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
 
-export const callbackFinPromotionHistoryPath = "docs/evidence/callback-fin-promotion-source-history-20261008.json";
-export const callbackFinPromotionChangedPaths = [
-	"docs/type-surface.v1.json"
-	, "docs/javascript-typescript.md"
-	, "docs/consume/c.md"
-	, "docs/consume/cpp.md"
-	, "docs/evidence/refinement-closure-audit-20261007.md"
-	, "src/adoption/test-profiles.mjs"
-	, "tests/helpers/copied-graph-repair-source-history.mjs"
-	, "tests/helpers/copied-graph-repair-source-history-tests.mjs"
+export const phpWasmReviewedFinHistoryPath = "docs/evidence/php-wasm-reviewed-fin-source-history-20261008.json";
+export const phpWasmReviewedFinChangedPaths = [
+	".github/workflows/consumer-matrix.yml"
+	, "docs/type-surface.v1.json"
+	, "tests/helpers/php-wasm-fin-fixtures.mjs"
+	, "tests/php-wasm-fin.test.mjs"
+	, "tests/documentation.test.mjs"
+	, "tests/helpers/php-shard-ci-tests.mjs"
+	, "tests/helpers/callback-fin-promotion-source-history.mjs"
+	, "tests/helpers/callback-fin-promotion-source-history-tests.mjs"
+	, "tests/helpers/callback-fin-promotion-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/checked-record-promotion-tests.mjs"
-	, "tests/type-surface.test.mjs"
 ];
 let history;
 
@@ -30,8 +28,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseCallbackFinPromotionUpdate = (source, update) => {
-	assert.ok(callbackFinPromotionChangedPaths.includes(update.path));
+export const reversePhpWasmReviewedFinUpdate = (source, update) => {
+	assert.ok(phpWasmReviewedFinChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,18 +49,17 @@ export const reverseCallbackFinPromotionUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the callback Fin promotion, stopping at an explicitly requested identity.
+ * Restore the source before the reviewed PHP-Wasm Fin integration, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeCallbackFinPromotionSource = (path, source, expected) => {
-	source = beforePhpWasmReviewedFinSource(path, source, expected);
-	if(typeof source !== "string" || !callbackFinPromotionChangedPaths.includes(path)) return source;
+export const beforePhpWasmReviewedFinSource = (path, source, expected) => {
+	if(typeof source !== "string" || !phpWasmReviewedFinChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(callbackFinPromotionHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(phpWasmReviewedFinHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseCallbackFinPromotionUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePhpWasmReviewedFinUpdate(source, update) : source;
 };

@@ -1,0 +1,837 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-reviewed-fin-v1",
+  "predecessorCommit": "b82e76a9e62699d84c838f5a61774fef101ea9f7",
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "currentSha256": "93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8",
+      "previousSha256": "6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28",
+      "edits": [
+        {
+          "start": 124554,
+          "previous": "",
+          "current": "          LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs\n          test -s build/php-wasm-fin/reviewed.json\n"
+        },
+        {
+          "start": 126837,
+          "previous": "",
+          "current": "            build/php-wasm-fin/reviewed.json\n"
+        },
+        {
+          "start": 128046,
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f4101011598d7ac9902ede7ba4261ec38e3ed555092779cdfd621f8da4b30349",
+      "previousSha256": "5e43dcd02507725061d3190c2ec3d74efd54a050010d33334bdfe9f2edd507c8",
+      "edits": [
+        {
+          "start": 77859,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 95054,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 111355,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 126123,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 135405,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 145030,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 168414,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 181383,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 196278,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 209062,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 222282,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 230815,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 239245,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 248262,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 256636,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 275916,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 285755,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 297890,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 316488,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 325784,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 338467,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 347722,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 357005,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 366138,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 374997,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 382384,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 390308,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 400954,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 415060,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 422158,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 432387,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 440131,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 446505,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 452668,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 458765,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 465286,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 472952,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 482246,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 493468,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 503165,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 524300,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 532865,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 543873,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 575758,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 582387,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 592646,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 613519,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 622042,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 632992,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 664510,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 673729,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 681069,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 693352,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 700212,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 709240,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 723266,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 734308,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 748356,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 759102,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 771173,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 782461,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 791044,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 797502,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 805888,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 813696,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 823478,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 832071,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 844474,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 899815,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1011877,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1058278,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1072118,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1075395,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1079512,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1083169,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1086110,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1088601,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1093212,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1095702,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1100712,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1102868,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1107762,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1109925,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1115372,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1118177,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1127640,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1137346,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1144651,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1149233,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1151726,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1157104,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1159623,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1167069,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1170503,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1177183,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1182665,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1188944,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1206191,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1221505,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1237546,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1251784,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1270346,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1284770,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1305446,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1324571,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1336292,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1351147,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1359589,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1373684,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1381480,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1393351,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1401553,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1416739,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1421333,
+          "previous": "          \"sha256\": \"2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17\"\n",
+          "current": "          \"sha256\": \"e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551\"\n"
+        },
+        {
+          "start": 1428367,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        },
+        {
+          "start": 1451513,
+          "previous": "          \"sha256\": \"6eaff789848d9156b790e9df402c05e19281ca8dae18488d5478d980d065bb28\"\n",
+          "current": "          \"sha256\": \"93a5e975deb67569273fc891a59b023ed273ed7776aa8aed699ef04dba7abdd8\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-fixtures.mjs",
+      "currentSha256": "02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9",
+      "previousSha256": "39f64dbf4616a101a9ff37704ff9f93b0666297d638b7fdd157edb0e3625d93e",
+      "edits": [
+        {
+          "start": 1103,
+          "previous": "",
+          "current": "import { finProductReviewedIr } from \"./reviewed-fin-product-fixture.mjs\";\nimport { finRecordReviewedIr } from \"./reviewed-fin-record-fixture.mjs\";\nimport { hashBindingIr } from \"../../src/binding-ir/canonical.mjs\";\n"
+        },
+        {
+          "start": 1693,
+          "previous": "",
+          "current": "\t, review: finProductReviewedIr\n"
+        },
+        {
+          "start": 2015,
+          "previous": "",
+          "current": "\t, review: finRecordReviewedIr\n"
+        },
+        {
+          "start": 4887,
+          "previous": "",
+          "current": " * @param spec.reviewed - Build from the fixture's independent review instead of selected exports.\n"
+        },
+        {
+          "start": 5606,
+          "previous": "\t\tconst exports = { schemaVersion: 1, modules: [spec.module], exports: spec.exports, targets: { \"php-wasm\": spec.settings } };\n",
+          "current": "\t\t// A reviewed build takes every export decision from the review; the configuration names only modules and targets.\n\t\tconst exports = { schemaVersion: 1, modules: [spec.module], ...(spec.reviewed ? {} : { exports: spec.exports }), targets: { \"php-wasm\": spec.settings } };\n"
+        },
+        {
+          "start": 5967,
+          "previous": "",
+          "current": "\t\tif(spec.reviewed) await saveLakeFile(projectRoot, \"api.binding-ir.json\", canonicalJson(spec.review()));\n"
+        },
+        {
+          "start": 6681,
+          "previous": "",
+          "current": "\t\t// Only a reconciled review produces the reviewed model schema.\n\t\tassert.equal(model.schemaVersion, spec.reviewed ? 3 : 2);\n"
+        },
+        {
+          "start": 8045,
+          "previous": "\tconst options = { t, library: { id: spec.label }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath: \"ordinary-source\", fixture: installation };\n",
+          "current": "\tconst sourcePath = spec.reviewed ? \"reviewed-source\" : \"ordinary-source\";\n\tconst options = { t, library: { id: spec.label }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath, fixture: installation };\n"
+        },
+        {
+          "start": 8976,
+          "previous": "\tconst identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256 };\n",
+          "current": "\tconst identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256, ...(spec.reviewed ? { reviewedBindingIrSha256: hashBindingIr(spec.review()) } : {}) };\n"
+        },
+        {
+          "start": 9317,
+          "previous": "\treturn { readme, report: { label: spec.label, profile: \"php-wasm\", path: \"ordinary-source\", dispatch: \"not measured\", ...identities, ...provenance, ...installed } };\n",
+          "current": "\treturn { readme, report: { label: spec.label, profile: \"php-wasm\", path: sourcePath, dispatch: \"not measured\", ...identities, ...provenance, ...installed } };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "33d63a2c578653cec7e61e8613d763c6cad84c112351e14d38834c051eb66e68",
+      "previousSha256": "ed05f48857e13fabf5fa77711e3d9f57340a0d2eb74b5feb503999b231dbb504",
+      "edits": [
+        {
+          "start": 140,
+          "previous": "import { readFile } from \"node:fs/promises\";\nimport { dirname, resolve } from \"node:path\";\n",
+          "current": "import { cp, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 1473,
+          "previous": "",
+          "current": "import { buildElaboratedComponent } from \"../src/build/elaborated-component.mjs\";\n"
+        },
+        {
+          "start": 1731,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-reviewed-fin-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 13780,
+          "previous": "",
+          "current": "\nconst reviewedLean = process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST === \"1\";\nconst leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\");\n/**\n * Elaborate a fixture with a review into the wasm32 model and compile its Lean adapter, stopping before any C or\n * Emscripten step; the model, or the refusal, comes from fresh Lean.\n *\n * @param t - Running test context.\n * @param fixture - Entry of phpWasmFinFixtures.\n * @param review - Reviewed Binding IR document.\n */\nconst elaborateReviewed = async (t, fixture, review) => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-php-wasm-reviewed-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst projectRoot = join(directory, \"project\");\n\tawait cp(fixture.root, projectRoot, { recursive: true });\n\tawait writeFile(join(projectRoot, \"lean-bridge.exports.json\"), canonicalJson({ schemaVersion: 1, modules: [fixture.module], targets: { \"php-wasm\": fixture.settings } }));\n\tawait writeFile(join(projectRoot, \"api.binding-ir.json\"), canonicalJson(review));\n\tlet model;\n\tconst stopped = Object.assign(new Error(\"stopped before C\"), { code: \"stopped-before-c\" });\n\tconst compileComponent = async ({ model: compiled }) => {\n\t\tmodel = compiled;\n\t\tthrow stopped;\n\t};\n\tconst options = { projectRoot, outputRoot: join(directory, \"out\"), leanPrefix, targets: [\"php-wasm\"], profile: \"php-wasm-copied-v1\", receiptName: \"php-wasm-component.json\" };\n\tawait assert.rejects(() => buildElaboratedComponent({ ...options, createModel: createPhpWasmCopiedModel, createAdapters: generateNativeLeanAdapters, compileComponent })\n\t\t, error => { if(error !== stopped) throw error; return true; });\n\treturn model;\n};\n\ntest(\"independent Fin reviews reconcile with fresh Lean in the wasm32 model, and a changed bound is refused\", { skip: !reviewedLean, timeout: 1_800_000 }, async t => {\n\t// Each mutation tightens one reviewed bound; reconciliation must stop at that decision.\n\tconst mutations = {\n\t\tproducts: ir => { ir.declarations.find(item => item.id === \"lean:FinProducts.first\").source.extensions[\"lean-lang.org/refinements\"].parameters[0].arguments[0].bound = \"9\"; }\n\t\t, records: ir => { ir.types.find(item => item.id === \"lean:FinRecords.Tile\").source.extensions[\"lean-lang.org/nominal-refinements\"].fields[0].bound = \"4\"; } };\n\tfor(const [name, fixture] of Object.entries(phpWasmFinFixtures))\n\t{\n\t\tconst model = await elaborateReviewed(t, fixture, fixture.review());\n\t\tassert.equal(model.schemaVersion, 3, name);\n\t\tassert.equal(model.pointerBits, 32, name);\n\t\tassert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements, name);\n\t\tconst changed = fixture.review();\n\t\tmutations[name](changed);\n\t\tawait assert.rejects(() => elaborateReviewed(t, fixture, changed)\n\t\t\t, error => error.code === \"reviewed-ir-source-mismatch\"\n\t\t\t\t&& (name === \"products\"\n\t\t\t\t\t? /^bindingIr\\.declarations\\[\\d+\\]\\.source\\.extensions\\.lean-lang\\.org\\/refinements\\.parameters\\[0\\]\\.arguments\\[0\\]\\.bound$/u\n\t\t\t\t\t: /^bindingIr\\.types\\[\\d+\\]\\.source\\.extensions\\.lean-lang\\.org\\/nominal-refinements\\.fields\\[0\\]\\.bound$/u).test(error.details?.field), name);\n\t}\n});\n\ntest(\"independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)\", { skip: process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST !== \"1\", timeout: 3_600_000 }, async t => {\n\tconst reports = [];\n\tfor(const [name, fixture] of Object.entries(phpWasmFinFixtures))\n\t{\n\t\t// The review supplies every export decision; fresh Lean must agree with each bound before packaging.\n\t\tconst verifyModel = model => assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements);\n\t\tconst spec = { ...fixture, label: `reviewed-fin-${name}`, exports: Object.keys(fixture.refinements), verifyModel, minimumChecks: 2000, reviewed: true };\n\t\tconst { readme, report } = await checkInstalledPhpWasmFixture(t, spec);\n\t\tassert.match(readme, /\\n## Bounded integers\\n\\nLean Fin n parameters and results are Brick\\\\Math\\\\BigInteger values below n\\. The PHP-Wasm side module/u);\n\t\treports.push({ fixture: name, refinements: fixture.refinements, ...report });\n\t}\n\tconst reportPath = resolve(process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_REPORT ?? \"build/php-wasm-fin/reviewed.json\");\n\tawait saveLakeFile(dirname(reportPath), reportPath.split(\"/\").at(-1), canonicalJson({ schemaVersion: 1, reports }));\n});\n\ntest(\"CI runs the reviewed PHP-Wasm Fin reconciliation and installed gates and keeps their report\", async () => {\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst command = \"          LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs\\n          test -s build/php-wasm-fin/reviewed.json\\n\";\n\tconst validate = workflow => {\n\t\tconst job = name => workflow.match(new RegExp(`^ {2}${name}:\\\\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\\\\n)`, \"mu\"))?.[0];\n\t\tconst wasm = job(\"php-wasm-consumers\"), native = job(\"php-consumers\");\n\t\tassert.ok(wasm); assert.ok(native);\n\t\tassert.match(wasm, /timeout-minutes: 330/u); assert.match(native, /timeout-minutes: 240/u);\n\t\tassert.equal(wasm.split(command).length, 2);\n\t\tassert.ok(wasm.includes(\"          test -s build/php-wasm-fin/ordinary.json\\n\" + command));\n\t\tassert.ok(wasm.includes(\"            build/php-wasm-fin/ordinary.json\\n            build/php-wasm-fin/reviewed.json\\n\"));\n\t\tassert.ok(wasm.includes(` && ${command.trim().split(\"\\n\")[0]} && `));\n\t\tassert.doesNotMatch(native, /LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_/u);\n\t};\n\tvalidate(workflow);\n\tfor(const changed of [\n\t\tworkflow.replace(command, \"\")\n\t\t, workflow.replace(command, \"      - name: misplaced\\n        run: |\\n\" + command)\n\t\t, workflow.replace(command, \"\").replace(\"  php-consumers:\\n\", \"  php-consumers:\\n\" + command)\n\t\t, workflow.replace(\"            build/php-wasm-fin/reviewed.json\\n\", \"\")\n\t\t, workflow.replace(\" && \" + command.trim().split(\"\\n\")[0] + \" && \", \" && \")\n\t])\n\t\tassert.throws(() => validate(changed), assert.AssertionError);\n\t// The name pattern selects both reviewed tests and nothing else in this file.\n\tconst source = await readFile(new URL(import.meta.url), \"utf8\"), pattern = /independent Fin reviews reconcile|independently reviewed PHP-Wasm packages/u;\n\tassert.equal([...source.matchAll(/^test\\(\"([^\"]+)\"/gmu)].filter(([, name]) => pattern.test(name)).length, 2);\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/documentation.test.mjs",
+      "currentSha256": "e27f9b704317fe35cb553def41ac4d42c1fc8b1a9d3f4a484cc0d40e9ee83551",
+      "previousSha256": "2f951d1c21e8cc977f1f2887a5a1ea3d79537cdb1e06687b2cf6c6c9c3ad0a17",
+      "edits": [
+        {
+          "start": 86097,
+          "previous": "",
+          "current": "    , [\"LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs\", \"build/php-wasm-fin/reviewed.json\"]\n"
+        },
+        {
+          "start": 87652,
+          "previous": "  assert.match(workflow, /build\\/callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm-zend-faults\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-generated\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-packages\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-mixed-packages\\.json\\n\\s*build\\/compounds\\/php-wasm\\.json\\n\\s*build\\/compounds\\/php-wasm-zend-faults\\.json\\n\\s*build\\/lists\\/php-wasm\\.json\\n\\s*build\\/lists\\/php-wasm-zend-faults\\.json\\n\\s*build\\/aliases\\/php-wasm\\.json\\n\\s*build\\/aliases\\/php-wasm-zend-faults\\.json\\n\\s*build\\/variants\\/php-wasm\\.json\\n\\s*build\\/variants\\/php-wasm-zend-faults\\.json\\n\\s*build\\/collections\\/php-wasm\\.json\\n\\s*build\\/collections\\/php-wasm-zend-faults\\.json\\n\\s*build\\/php-wasm-fin\\/ordinary\\.json\\n\\s*build\\/generic-records\\/php-wasm\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /build\\/callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm-zend-faults\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-generated\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-packages\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-mixed-packages\\.json\\n\\s*build\\/compounds\\/php-wasm\\.json\\n\\s*build\\/compounds\\/php-wasm-zend-faults\\.json\\n\\s*build\\/lists\\/php-wasm\\.json\\n\\s*build\\/lists\\/php-wasm-zend-faults\\.json\\n\\s*build\\/aliases\\/php-wasm\\.json\\n\\s*build\\/aliases\\/php-wasm-zend-faults\\.json\\n\\s*build\\/variants\\/php-wasm\\.json\\n\\s*build\\/variants\\/php-wasm-zend-faults\\.json\\n\\s*build\\/collections\\/php-wasm\\.json\\n\\s*build\\/collections\\/php-wasm-zend-faults\\.json\\n\\s*build\\/php-wasm-fin\\/ordinary\\.json\\n\\s*build\\/php-wasm-fin\\/reviewed\\.json\\n\\s*build\\/generic-records\\/php-wasm\\.json\\n\\s*if-no-files-found: error/);\n"
+        },
+        {
+          "start": 89795,
+          "previous": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-wasm-values\\.json\\n\\s*build\\/recursive\\/wasm32-transport\\.json\\n\\s*build\\/recursive\\/php-wasm-zend\\.json\\n\\s*build\\/recursive\\/php-wasm-zend-lean\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-packages\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-reproduction\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-loading\\.json\\n\\s*build\\/recursive\\/php-wasm-shared-regressions\\.json\\n\\s*build\\/type-corpus\\/php-wasm\\.json\\n\\s*build\\/type-corpus\\/reviewed-wasm-php-wasm\\.json\\n\\s*build\\/char-native\\/php-wasm\\.json\\n\\s*build\\/word-native\\/php-wasm\\.json\\n\\s*build\\/callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm-zend-faults\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-generated\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-packages\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-mixed-packages\\.json\\n\\s*build\\/compounds\\/php-wasm\\.json\\n\\s*build\\/compounds\\/php-wasm-zend-faults\\.json\\n\\s*build\\/lists\\/php-wasm\\.json\\n\\s*build\\/lists\\/php-wasm-zend-faults\\.json\\n\\s*build\\/aliases\\/php-wasm\\.json\\n\\s*build\\/aliases\\/php-wasm-zend-faults\\.json\\n\\s*build\\/variants\\/php-wasm\\.json\\n\\s*build\\/variants\\/php-wasm-zend-faults\\.json\\n\\s*build\\/collections\\/php-wasm\\.json\\n\\s*build\\/collections\\/php-wasm-zend-faults\\.json\\n\\s*build\\/php-wasm-fin\\/ordinary\\.json\\n\\s*build\\/generic-records\\/php-wasm\\.json\\n\\s*if-no-files-found: error/);\n",
+          "current": "  assert.match(workflow, /path: \\|\\n\\s*build\\/recursive\\/php-wasm-values\\.json\\n\\s*build\\/recursive\\/wasm32-transport\\.json\\n\\s*build\\/recursive\\/php-wasm-zend\\.json\\n\\s*build\\/recursive\\/php-wasm-zend-lean\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-packages\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-reproduction\\.json\\n\\s*build\\/recursive\\/php-wasm-graph-loading\\.json\\n\\s*build\\/recursive\\/php-wasm-shared-regressions\\.json\\n\\s*build\\/type-corpus\\/php-wasm\\.json\\n\\s*build\\/type-corpus\\/reviewed-wasm-php-wasm\\.json\\n\\s*build\\/char-native\\/php-wasm\\.json\\n\\s*build\\/word-native\\/php-wasm\\.json\\n\\s*build\\/callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm\\.json\\n\\s*build\\/structured-callables\\/php-wasm-zend-faults\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-generated\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-packages\\.json\\n\\s*build\\/recursive-callables\\/php-wasm-mixed-packages\\.json\\n\\s*build\\/compounds\\/php-wasm\\.json\\n\\s*build\\/compounds\\/php-wasm-zend-faults\\.json\\n\\s*build\\/lists\\/php-wasm\\.json\\n\\s*build\\/lists\\/php-wasm-zend-faults\\.json\\n\\s*build\\/aliases\\/php-wasm\\.json\\n\\s*build\\/aliases\\/php-wasm-zend-faults\\.json\\n\\s*build\\/variants\\/php-wasm\\.json\\n\\s*build\\/variants\\/php-wasm-zend-faults\\.json\\n\\s*build\\/collections\\/php-wasm\\.json\\n\\s*build\\/collections\\/php-wasm-zend-faults\\.json\\n\\s*build\\/php-wasm-fin\\/ordinary\\.json\\n\\s*build\\/php-wasm-fin\\/reviewed\\.json\\n\\s*build\\/generic-records\\/php-wasm\\.json\\n\\s*if-no-files-found: error/);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-shard-ci-tests.mjs",
+      "currentSha256": "bfad45a0e2e455108fac677e9921e946460603e290c5a4417347db4ff6ce6ce9",
+      "previousSha256": "f942f7fa1708a8edb4c20aa2b6727458415e6be9ee0265fe46d1880cedd460d4",
+      "edits": [
+        {
+          "start": 390,
+          "previous": "",
+          "current": "import { beforePhpWasmReviewedFinSource } from \"./php-wasm-reviewed-fin-source-history.mjs\";\n\nconst workflow = async () => {\n\tconst path = \".github/workflows/consumer-matrix.yml\";\n\treturn beforePhpWasmReviewedFinSource(path, await readFile(path, \"utf8\"));\n};\n"
+        },
+        {
+          "start": 8253,
+          "previous": "\tassertPhpShardContract(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "current": "\tassertPhpShardContract(await workflow());\n"
+        },
+        {
+          "start": 8402,
+          "previous": "\tconst source = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n",
+          "current": "\tconst source = await workflow();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-fin-promotion-source-history.mjs",
+      "currentSha256": "e59d1fe48be3c98d0bdf10febb0b92ac77098448b4ccc5e01b91c53761852674",
+      "previousSha256": "852e4e437653e9fed0833972170b7658150de8b6a2447a971ba831cb062173a2",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import { beforePhpWasmReviewedFinSource } from \"./php-wasm-reviewed-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 2467,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmReviewedFinSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-fin-promotion-source-history-tests.mjs",
+      "currentSha256": "ecedf384838572f2689b6dcdc071b32ff686ce7de9c65115ff7dfefc04835f59",
+      "previousSha256": "b70172babf51b80e35e218f7beae4bd66a90bf3cbac7d42850fefec6517145de",
+      "edits": [
+        {
+          "start": 352,
+          "previous": "",
+          "current": "import { beforePhpWasmReviewedFinSource } from \"./php-wasm-reviewed-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 1159,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePhpWasmReviewedFinSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2126,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePhpWasmReviewedFinSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2712,
+          "previous": "\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\tassert.equal(sha256(beforePhpWasmReviewedFinSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-fin-promotion-tests.mjs",
+      "currentSha256": "97167e61c4c82a0622f4325b6a15641a57e83caf6feec944c832bd456745069f",
+      "previousSha256": "7d36d81dfd39d9edd627ac939ff27be63667cd9c12380e28def2c16118a61cd3",
+      "edits": [
+        {
+          "start": 550,
+          "previous": "",
+          "current": "import { beforePhpWasmReviewedFinSource } from \"./php-wasm-reviewed-fin-source-history.mjs\";\n\nconst readPromotedSurface = async () => {\n\tconst result = await readTypeSurface();\n\tresult.document = JSON.parse(beforePhpWasmReviewedFinSource(\"docs/type-surface.v1.json\", JSON.stringify(result.document, null, 2) + \"\\n\"));\n\treturn result;\n};\n"
+        },
+        {
+          "start": 4704,
+          "previous": "\tconst references = await callbackFinPromotionReferences(), { document } = await readTypeSurface(), previous = await predecessor();\n",
+          "current": "\tconst references = await callbackFinPromotionReferences(), { document } = await readPromotedSurface(), previous = await predecessor();\n"
+        },
+        {
+          "start": 5685,
+          "previous": "\t\tfor(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);\n",
+          "current": "\t\tfor(const file of entry.files) assert.equal(sha256(beforePhpWasmReviewedFinSource(file.path, await readFile(file.path, \"utf8\"), file.sha256)), file.sha256, file.path);\n"
+        },
+        {
+          "start": 6097,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();\n"
+        },
+        {
+          "start": 6512,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();\n",
+          "current": "\tconst { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "515948755fe5194af73f795275d0a3f51a4f22c626fb3c9ccfb1504211e3bfbc",
+      "previousSha256": "8ccc072fb73dd5268ba1f56701b495d708fcba421f98fe883d1cb4b9b6cc4421",
+      "edits": [
+        {
+          "start": 10060,
+          "previous": "",
+          "current": "import { phpWasmReviewedFinChangedPaths } from \"./php-wasm-reviewed-fin-source-history.mjs\";\n"
+        },
+        {
+          "start": 47261,
+          "previous": "",
+          "current": "\t, ...phpWasmReviewedFinChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

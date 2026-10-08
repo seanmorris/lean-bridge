@@ -4,8 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -20,9 +21,11 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { finRecordCompilerInput, finRecordNat, finRecordSignatures } from "./helpers/fin-record-model.mjs";
 import { finProductCompilerInput, finProductSignatures } from "./helpers/fin-product-model.mjs";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
+import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import "./helpers/php-wasm-fin-source-history-tests.mjs";
 import "./helpers/php-wasm-fin-evidence-tests.mjs";
 import "./helpers/php-wasm-fin-archive-source-history-tests.mjs";
+import "./helpers/php-wasm-reviewed-fin-source-history-tests.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);
@@ -162,4 +165,97 @@ test("relocated PHP-Wasm packages check Fin before Lean in Node and browser host
 	}
 	const reportPath = resolve(process.env.LEAN_BRIDGE_PHP_WASM_FIN_REPORT ?? "build/php-wasm-fin/ordinary.json");
 	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports }));
+});
+
+const reviewedLean = process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST === "1";
+const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+/**
+ * Elaborate a fixture with a review into the wasm32 model and compile its Lean adapter, stopping before any C or
+ * Emscripten step; the model, or the refusal, comes from fresh Lean.
+ *
+ * @param t - Running test context.
+ * @param fixture - Entry of phpWasmFinFixtures.
+ * @param review - Reviewed Binding IR document.
+ */
+const elaborateReviewed = async (t, fixture, review) => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-reviewed-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const projectRoot = join(directory, "project");
+	await cp(fixture.root, projectRoot, { recursive: true });
+	await writeFile(join(projectRoot, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, modules: [fixture.module], targets: { "php-wasm": fixture.settings } }));
+	await writeFile(join(projectRoot, "api.binding-ir.json"), canonicalJson(review));
+	let model;
+	const stopped = Object.assign(new Error("stopped before C"), { code: "stopped-before-c" });
+	const compileComponent = async ({ model: compiled }) => {
+		model = compiled;
+		throw stopped;
+	};
+	const options = { projectRoot, outputRoot: join(directory, "out"), leanPrefix, targets: ["php-wasm"], profile: "php-wasm-copied-v1", receiptName: "php-wasm-component.json" };
+	await assert.rejects(() => buildElaboratedComponent({ ...options, createModel: createPhpWasmCopiedModel, createAdapters: generateNativeLeanAdapters, compileComponent })
+		, error => { if(error !== stopped) throw error; return true; });
+	return model;
+};
+
+test("independent Fin reviews reconcile with fresh Lean in the wasm32 model, and a changed bound is refused", { skip: !reviewedLean, timeout: 1_800_000 }, async t => {
+	// Each mutation tightens one reviewed bound; reconciliation must stop at that decision.
+	const mutations = {
+		products: ir => { ir.declarations.find(item => item.id === "lean:FinProducts.first").source.extensions["lean-lang.org/refinements"].parameters[0].arguments[0].bound = "9"; }
+		, records: ir => { ir.types.find(item => item.id === "lean:FinRecords.Tile").source.extensions["lean-lang.org/nominal-refinements"].fields[0].bound = "4"; } };
+	for(const [name, fixture] of Object.entries(phpWasmFinFixtures))
+	{
+		const model = await elaborateReviewed(t, fixture, fixture.review());
+		assert.equal(model.schemaVersion, 3, name);
+		assert.equal(model.pointerBits, 32, name);
+		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements, name);
+		const changed = fixture.review();
+		mutations[name](changed);
+		await assert.rejects(() => elaborateReviewed(t, fixture, changed)
+			, error => error.code === "reviewed-ir-source-mismatch"
+				&& (name === "products"
+					? /^bindingIr\.declarations\[\d+\]\.source\.extensions\.lean-lang\.org\/refinements\.parameters\[0\]\.arguments\[0\]\.bound$/u
+					: /^bindingIr\.types\[\d+\]\.source\.extensions\.lean-lang\.org\/nominal-refinements\.fields\[0\]\.bound$/u).test(error.details?.field), name);
+	}
+});
+
+test("independently reviewed PHP-Wasm packages check Fin before Lean in Node and browser hosts (dispatch not measured)", { skip: process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST !== "1", timeout: 3_600_000 }, async t => {
+	const reports = [];
+	for(const [name, fixture] of Object.entries(phpWasmFinFixtures))
+	{
+		// The review supplies every export decision; fresh Lean must agree with each bound before packaging.
+		const verifyModel = model => assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements])), fixture.refinements);
+		const spec = { ...fixture, label: `reviewed-fin-${name}`, exports: Object.keys(fixture.refinements), verifyModel, minimumChecks: 2000, reviewed: true };
+		const { readme, report } = await checkInstalledPhpWasmFixture(t, spec);
+		assert.match(readme, /\n## Bounded integers\n\nLean Fin n parameters and results are Brick\\Math\\BigInteger values below n\. The PHP-Wasm side module/u);
+		reports.push({ fixture: name, refinements: fixture.refinements, ...report });
+	}
+	const reportPath = resolve(process.env.LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_REPORT ?? "build/php-wasm-fin/reviewed.json");
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports }));
+});
+
+test("CI runs the reviewed PHP-Wasm Fin reconciliation and installed gates and keeps their report", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const command = "          LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs\n          test -s build/php-wasm-fin/reviewed.json\n";
+	const validate = workflow => {
+		const job = name => workflow.match(new RegExp(`^ {2}${name}:\\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)`, "mu"))?.[0];
+		const wasm = job("php-wasm-consumers"), native = job("php-consumers");
+		assert.ok(wasm); assert.ok(native);
+		assert.match(wasm, /timeout-minutes: 330/u); assert.match(native, /timeout-minutes: 240/u);
+		assert.equal(wasm.split(command).length, 2);
+		assert.ok(wasm.includes("          test -s build/php-wasm-fin/ordinary.json\n" + command));
+		assert.ok(wasm.includes("            build/php-wasm-fin/ordinary.json\n            build/php-wasm-fin/reviewed.json\n"));
+		assert.ok(wasm.includes(` && ${command.trim().split("\n")[0]} && `));
+		assert.doesNotMatch(native, /LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_/u);
+	};
+	validate(workflow);
+	for(const changed of [
+		workflow.replace(command, "")
+		, workflow.replace(command, "      - name: misplaced\n        run: |\n" + command)
+		, workflow.replace(command, "").replace("  php-consumers:\n", "  php-consumers:\n" + command)
+		, workflow.replace("            build/php-wasm-fin/reviewed.json\n", "")
+		, workflow.replace(" && " + command.trim().split("\n")[0] + " && ", " && ")
+	])
+		assert.throws(() => validate(changed), assert.AssertionError);
+	// The name pattern selects both reviewed tests and nothing else in this file.
+	const source = await readFile(new URL(import.meta.url), "utf8"), pattern = /independent Fin reviews reconcile|independently reviewed PHP-Wasm packages/u;
+	assert.equal([...source.matchAll(/^test\("([^"]+)"/gmu)].filter(([, name]) => pattern.test(name)).length, 2);
 });

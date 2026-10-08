@@ -18,12 +18,16 @@ import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./copied-fixtu
 import { installedPhpWasmCorpus } from "./type-corpus-php-wasm-install.mjs";
 import { finProductRefinements } from "./fin-product-install.mjs";
 import { finRecordRefinements } from "./fin-record-install.mjs";
+import { finProductReviewedIr } from "./reviewed-fin-product-fixture.mjs";
+import { finRecordReviewedIr } from "./reviewed-fin-record-fixture.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 
 const settings = name => ({ npm: { name: `lean-bridge-${name}-wasm`, version: "1.0.0" }, composer: { name: `lean-bridge-${name}/wasm`, version: "1.0.0" } });
 /** Lean projects, expected trees and native PHP callers reused on PHP-Wasm. */
 const products = {
 	root: "tests/fixtures/onboarding/native-fin-products"
 	, module: "FinProducts", refinements: finProductRefinements
+	, review: finProductReviewedIr
 	, namespace: "LeanFinproducts", operation: "first"
 	, consumer: "tests/fixtures/fin-product-consumers/php-native.php"
 	, settings: settings("finproducts")
@@ -31,6 +35,7 @@ const products = {
 const records = {
 	root: "tests/fixtures/onboarding/native-fin-records"
 	, module: "FinRecords", refinements: finRecordRefinements
+	, review: finRecordReviewedIr
 	, namespace: "LeanFinrecords", operation: "tile_sum"
 	, consumer: "tests/fixtures/fin-record-consumers/php-native.php"
 	, settings: settings("finrecords")
@@ -84,6 +89,7 @@ export const phpWasmExecutionTuples = Object.freeze([...variants("node/embedded"
  * @param spec - Fixture root, module, export names, PHP settings and caller.
  * @param spec.verifyModel - Check the wasm32 model before installation.
  * @param spec.minimumChecks - Least number of public checks each execution must report.
+ * @param spec.reviewed - Build from the fixture's independent review instead of selected exports.
  */
 export const checkInstalledPhpWasmFixture = async (t, spec) => {
 	const archives = [];
@@ -95,14 +101,18 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 		t.after(() => Promise.all([author, consumer].map(root => rm(root, { recursive: true, force: true }))));
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release"), handoff = join(consumer, "handoff");
 		await cp(spec.root, projectRoot, { recursive: true });
-		const exports = { schemaVersion: 1, modules: [spec.module], exports: spec.exports, targets: { "php-wasm": spec.settings } };
+		// A reviewed build takes every export decision from the review; the configuration names only modules and targets.
+		const exports = { schemaVersion: 1, modules: [spec.module], ...(spec.reviewed ? {} : { exports: spec.exports }), targets: { "php-wasm": spec.settings } };
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(exports));
+		if(spec.reviewed) await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(spec.review()));
 		const environment = nativeFixtureEnvironment(["php-wasm"]);
 		if(environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME) environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME = environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
 		t.diagnostic(`${spec.label} build ${attempt}: wasm32`);
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: ["php-wasm"], environment }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 		const model = JSON.parse(await readFile(join(outputRoot, "php-wasm/component/model.json"), "utf8"));
 		assert.equal(model.pointerBits, 32);
+		// Only a reconciled review produces the reviewed model schema.
+		assert.equal(model.schemaVersion, spec.reviewed ? 3 : 2);
 		spec.verifyModel(model);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
@@ -118,7 +128,8 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 	const caller = await phpWasmFinCaller(spec);
 	const clean = { ...copiedCleanEnvironment, LEAN_BRIDGE_PHP_SOURCE: "/unavailable/php", LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler", LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime" };
 	const installation = { settings: spec.settings, source: caller.source, request: caller.request, removeHandoff: true };
-	const options = { t, library: { id: spec.label }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath: "ordinary-source", fixture: installation };
+	const sourcePath = spec.reviewed ? "reviewed-source" : "ordinary-source";
+	const options = { t, library: { id: spec.label }, consumer, handoff, receipt, packageSet, environment, clean, sourcePath, fixture: installation };
 	const installed = await installedPhpWasmCorpus(options).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 	// A lost realm or arrangement fails the gate instead of shrinking it.
 	assert.deepEqual(installed.phpWasm.executions.map(item => `${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort(), phpWasmExecutionTuples);
@@ -128,7 +139,7 @@ export const checkInstalledPhpWasmFixture = async (t, spec) => {
 		assert.ok(execution.observation.checks > spec.minimumChecks, `${spec.label} ${execution.realm}`);
 	}
 	const readme = await readFile(join(consumer, "relocated/node_modules", spec.settings.npm.name, "README.md"), "utf8");
-	const identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256 };
+	const identities = { bindingIrSha256: built.bindingIrSha256, modelSha256: sha256(canonicalJson(model)), receiptSha256, ...(spec.reviewed ? { reviewedBindingIrSha256: hashBindingIr(spec.review()) } : {}) };
 	const provenance = { packages: receipt.packages, archives: archives[0], reproducible: true, sourceRemovedBeforeInstallation: true };
-	return { readme, report: { label: spec.label, profile: "php-wasm", path: "ordinary-source", dispatch: "not measured", ...identities, ...provenance, ...installed } };
+	return { readme, report: { label: spec.label, profile: "php-wasm", path: sourcePath, dispatch: "not measured", ...identities, ...provenance, ...installed } };
 };

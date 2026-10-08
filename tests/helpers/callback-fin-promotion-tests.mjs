@@ -10,6 +10,13 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { callbackFinPromotionReferences } from "./callback-fin-promotion-references.mjs";
 import { beforeCallbackFinPromotionSource } from "./callback-fin-promotion-source-history.mjs";
+import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
+
+const readPromotedSurface = async () => {
+	const result = await readTypeSurface();
+	result.document = JSON.parse(beforePhpWasmReviewedFinSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	return result;
+};
 
 const predecessor = async () => JSON.parse(beforeCallbackFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 const groups = [
@@ -66,7 +73,7 @@ const validate = (document, previous, references, contracts) => {
 };
 
 test("callback promotion binds five original selections and their archive validators", async () => {
-	const references = await callbackFinPromotionReferences(), { document } = await readTypeSurface(), previous = await predecessor();
+	const references = await callbackFinPromotionReferences(), { document } = await readPromotedSurface(), previous = await predecessor();
 	assert.deepEqual(document.evidence.slice(previous.evidence.length).map(item => item.id), references.map(item => item.id));
 	for(const reference of references)
 	{
@@ -77,19 +84,19 @@ test("callback promotion binds five original selections and their archive valida
 		for(const path of ["tests/helpers/callback-fin-promotion-references.mjs", ...reference.validators])
 			assert.ok(entry.files.some(file => file.path === path), path);
 		for(const file of reference.files) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256), file.path);
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforePhpWasmReviewedFinSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
 		assert.deepEqual(entry.artifacts, reference.artifacts.map(file => ({ ...file, path: `${reference.id}/${file.path}` })));
 	}
 });
 
 test("callback promotion adds eighteen cells without changing other positions or source routes", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();
 	validate(document, previous, references, contracts);
 	assert.equal(previous.observations.length, 477); assert.equal(previous.evidence.length, 255);
 });
 
 test("callback promotion rejects inferred hosts, directions, runtime claims and omitted limits", async () => {
-	const { document, ...contracts } = await readTypeSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();
+	const { document, ...contracts } = await readPromotedSurface(), previous = await predecessor(), references = await callbackFinPromotionReferences();
 	const start = previous.observations.length;
 	const changes = [
 		value => { value.observations[start].profiles = ["python"]; }

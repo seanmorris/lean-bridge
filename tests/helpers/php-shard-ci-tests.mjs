@@ -8,6 +8,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
+
+const workflow = async () => {
+	const path = ".github/workflows/consumer-matrix.yml";
+	return beforePhpWasmReviewedFinSource(path, await readFile(path, "utf8"));
+};
 
 // The former job's step lines, before the split.
 const formerSteps = "d08fda0aa7d53296d4a7bbe7b92165e992c45fc4458912d2dcc00b780a3f4d3e";
@@ -154,11 +160,11 @@ export const assertPhpShardContract = source => {
 };
 
 test("the native PHP and PHP-Wasm jobs together keep exactly the former PHP job and both gate the summary", async () => {
-	assertPhpShardContract(await readFile(".github/workflows/consumer-matrix.yml", "utf8"));
+	assertPhpShardContract(await workflow());
 });
 
 test("PHP shard checks refuse skipped, weakened or unenforced jobs and lost commands", async () => {
-	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const source = await workflow();
 	const mutations = [
 		["skipped native job", "    name: Native PHP\n", "    name: Native PHP\n    if: false\n"]
 		, ["skipped PHP-Wasm job", "    name: PHP-Wasm\n", "    name: PHP-Wasm\n    if: github.event_name == 'schedule'\n"]
