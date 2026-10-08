@@ -232,6 +232,7 @@ const profileManifest = Object.freeze({
 		, "scalar-fin-rejection"
 		, "generic-records"
 		, "generic-records-browser"
+		, "browser-callback-fin"
 		, "component-consumer-docs"
 		, "component-runtime"
 		, "component-scalar-codec"
