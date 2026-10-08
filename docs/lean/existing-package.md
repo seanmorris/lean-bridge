@@ -66,7 +66,22 @@ Keep exactly one `.binding-ir.json` file in the source project: schema 3 for cop
 lean-bridge build --project . --target pypi --output ./build/reviewed-release
 ```
 
-The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
+The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. A finite specialization instead uses `lean:<specialization-name>` and keeps the generic declaration in `source.declaration`. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
+
+For a schema-3 finite specialization, put the closed choice in the declaration's `source.extensions["lean-lang.org/specialization"]`:
+
+```json
+{
+  "name": "Shop.keepText",
+  "declaration": "Shop.keep",
+  "types": ["String"],
+  "application": "(@_root_.Shop.keep.{0} (@_root_.String))"
+}
+```
+
+This example describes `Shop.keep {α : Type} (value : α) : α` with `α` fixed to `String`. The declaration ID is `lean:Shop.keepText`; its parameter and result use the concrete string type. Use the application that fresh Lean elaboration produces for that source and toolchain. The compiler receives only the public name, source declaration and closed type names. The builder compares the expected application, including resolved instances, against fresh metadata; it never executes application text from the review. Changing a valid type choice changes the API, so the concrete signature and authenticated review must agree with that choice.
+
+The same [name and count rules](#export-concrete-specializations) apply as for ordinary configuration. Keep `specializations` out of the accompanying configuration: the review owns those decisions. This admission has source-reconciliation tests; independently authored C/C++ and npm/strict TypeScript installed gates are prepared but have not run. Reviewed generic-record instantiations and checked Subtype constructors remain separate work.
 
 Native targets and PHP-Wasm accept reviewed pure copied primitives, arrays and immutable records. Native targets include C, C++, .NET, Java/Kotlin, Perl, native PHP, Python, Ruby, Rust and WIT/WASI. All targets support nineteen primitives, including `Char`, `USize` and `ISize`. Platform integers use the compiled target's width: 32 bits for npm/PHP-Wasm and 64 bits for native/WIT packages. Native and PHP-Wasm also support these primitives in copied arrays and record fields; npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also support nested arrays, acyclic copied records, tagged Option/Except values and nested binary products. npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also support `List` on both source paths. Documentation and argument names may differ from the compiler's defaults and are retained in the generated Binding IR. Host export names must match.
 

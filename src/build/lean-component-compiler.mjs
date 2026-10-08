@@ -23,7 +23,7 @@ import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { readExportConfiguration, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { createMetadataRequest, identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readReviewedSource, validateReviewedSource, reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
+import { readReviewedSource, reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
 
 /**
  * Reports Lean component compiler failures with stable machine-readable codes and structured diagnostic context.
@@ -237,7 +237,8 @@ export const compileLeanComponentSources = async ({
 			const sourceInventory = elaborated ? await inspectLeanProject(join(inputs, "source")) : null;
 			const reviewedBindingIr = elaborated ? await readReviewedSource(join(inputs, "source"), sourceInventory) : null;
 			const configuration = elaborated ? (await readExportConfiguration(join(inputs, "source"))).configuration : null;
-			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedBindingIr ? validateReviewedSource(reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : configuration.exports ?? [], resources: [], arities: reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr).arities : Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)), ...compilerExportSelection(configuration) }
+			const reviewedSelection = reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr) : null;
+			let exportRequest = elaborated ? { modules: sourceOrder, exportModules: compilationPlan.document.source.requestedModules, exports: reviewedSelection?.exports ?? configuration.exports ?? [], resources: [], arities: reviewedSelection?.arities ?? Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)), ...compilerExportSelection(configuration), ...(reviewedSelection?.specializations ? { specializations: reviewedSelection.specializations } : {}) }
 				: { modules: sourceOrder, exports: adapterPlan.exports.map(item => item.sourceDeclaration), resources: [], arities: [] };
 			const interfaces = [];
 			if(rich)

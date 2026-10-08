@@ -99,6 +99,8 @@ Compilation, packaging, and loading check the same ordinary-component capability
 
 Use [concrete specializations](existing-package.md#export-concrete-specializations) to bind a generic function's leading type parameters and resolve its following instance dictionaries. Each configured name becomes a concrete npm function with supported runtime arguments and results. CPAN accepts the same configuration against its native type profile, including [specialized returned closures](../publish/cpan.md#export-a-specialized-closure).
 
+A [schema-3 reviewed contract](existing-package.md#compile-a-reviewed-contract) can select those finite specializations in its source extension. Fresh Lean must reproduce the closed signature and exact application, including its resolved instances. The review owns the selection; configuration cannot override it. The C/C++ and npm installed gates for this reviewed route still await execution, and generic-record instantiation decisions are not yet admitted in a review.
+
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
 ## Native C and C++ exports

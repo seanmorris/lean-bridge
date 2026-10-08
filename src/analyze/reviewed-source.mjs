@@ -32,6 +32,44 @@ export const assertReviewedSourceConfiguration = configuration => {
 		fail("export-configuration-reviewed-ir", "Keep export decisions in the reviewed Binding IR; modules may select its Lean source roots");
 };
 
+const specializationKey = "lean-lang.org/specialization";
+// The compiler's application text is compared with a fresh compilation, never executed from the review.
+const applicationText = value => typeof value === "string" && value.length > 0 && value.length <= 4096 && ![...value].some(character => character.codePointAt(0) < 32 || character.codePointAt(0) === 127);
+
+/**
+ * Admit one closed specialization decision on a reviewed declaration.
+ *
+ * @param item - Reviewed declaration carrying the decision.
+ * @param value - Its lean-lang.org/specialization extension.
+ */
+const checkSpecialization = (item, value) => {
+	const path = `${item.id}.source.extensions.${specializationKey}`;
+	if(value === null || typeof value !== "object" || Array.isArray(value)
+		|| !same(Object.keys(value).sort(), ["application", "declaration", "name", "types"])
+		|| value.declaration !== item.source.declaration || item.id !== `lean:${value.name}` || !applicationText(value.application))
+		unsupported(`Reviewed builds do not support this decision: ${path}`, { path });
+};
+
+/**
+ * Reuse the export configuration's name, uniqueness, count and closed type-name rules.
+ *
+ * @param document - Reviewed declarations, already checked one by one.
+ */
+const reviewedSpecializations = document => {
+	const values = document.declarations.map(item => item.source.extensions[specializationKey]).filter(Boolean)
+		.map(({ name, declaration, types }) => ({ name, declaration, types }));
+	if(!values.length) return [];
+	try
+	{ validateExportConfiguration({ schemaVersion: 1, exports: document.declarations.map(exportName), specializations: values }); }
+	catch(error)
+	{ unsupported(`Reviewed specialization decisions are invalid: ${error.message}`, { path: `declarations.source.extensions.${specializationKey}` }); }
+	// A specialization of a reviewed export would name a declaration the compiler never elaborates generically.
+	if(values.some(value => document.declarations.some(item => item.id === `lean:${value.declaration}`)))
+		unsupported("Reviewed specializations must refer to generic source declarations, not other exports", { path: `declarations.source.extensions.${specializationKey}` });
+	return values.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+};
+const exportName = item => item.source.extensions[specializationKey]?.name ?? item.source.declaration;
+
 const checkReview = document => {
 	const reject = (condition, path) => {
 		if(condition) unsupported(`Reviewed builds do not support this decision: ${path}`, { path });
@@ -45,11 +83,14 @@ const checkReview = document => {
 	}] : []), "errors");
 	for(const producer of document.producers) reject(Object.keys(producer.extensions).length, `producers.${producer.id}.extensions`);
 	const source = (item, callbackName, declaration = false) => {
+		// A specialized export keeps its generic source declaration and is named by its reviewed decision.
+		const specialization = declaration ? item.source.extensions[specializationKey] : undefined;
 		reject(callbackName ? item.id !== `bridge:${callbackName}` || item.source.declaration !== callbackName || item.name !== callbackName
-			: !leanName(item.source.declaration) || item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
+			: !leanName(item.source.declaration) || item.id !== `lean:${specialization?.name ?? item.source.declaration}`, `${item.id}.source.declaration`);
+		if(specialization !== undefined) checkSpecialization(item, specialization);
 		// Aliases, records and variants carry their bounds on the definition, as compiled metadata does.
 		const refinementKey = declaration ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
-		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey), `${item.id}.source.extensions`);
+		reject(Object.keys(item.source.extensions).some(key => key !== refinementKey && (!declaration || key !== specializationKey)), `${item.id}.source.extensions`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
@@ -130,6 +171,7 @@ const checkReview = document => {
 		for(const [index, value] of declaration.parameters.entries()) parameter(value, `${declaration.id}.parameters[${index}]`);
 		site(declaration.result, `${declaration.id}.result`, true);
 	}
+	reviewedSpecializations(document);
 	return document;
 };
 
@@ -161,15 +203,19 @@ export const validateReviewedSource = review => {
 /**
  * Derive the compiler selection from reviewed signatures. A returned callable
  * fixes the outer export's arity; the compiler still verifies both signatures.
+ * A reviewed specialization selects its closed type names, never its application.
  *
  * @param review - Captured, independently reviewed contract.
  */
 export const reviewedSourceSelection = review => {
 	const document = validateReviewedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
-	return { exports: document.declarations.map(item => item.source.declaration).sort()
+	const specializations = reviewedSpecializations(document);
+	return { exports: document.declarations.map(exportName).sort()
 		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
-			.map(item => [item.source.declaration, item.parameters.length]).sort(([a], [b]) => a.localeCompare(b)) };
+			.map(item => [exportName(item), item.parameters.length]).sort(([a], [b]) => a.localeCompare(b))
+		// Only the closed choice reaches Lean; fresh elaboration computes the application.
+		, ...specializations.length ? { specializations } : {} };
 };
 
 /**
@@ -261,8 +307,8 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	const selection = reviewedSourceSelection(review);
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(ordered(config.modules), ordered(request.exportModules))
-		|| !same(ordered(request.exports), ordered(document.declarations.map(item => item.source.declaration)))
-		|| request.resources.length || !same(request.arities, selection.arities) || request.specializations !== undefined || request.contracts !== undefined)
+		|| !same(ordered(request.exports), selection.exports)
+		|| request.resources.length || !same(request.arities, selection.arities) || !same(request.specializations ?? null, selection.specializations ?? null) || request.contracts !== undefined)
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = reviewedContractDifference(document, compiled);
 	if(field)

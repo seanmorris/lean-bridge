@@ -209,6 +209,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 			, ...compilerExportSelection(config)
 			, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {})
 			, ...(reviewedSelection?.contracts ? { contracts: reviewedSelection.contracts } : {})
+			, ...(reviewedSelection?.specializations ? { specializations: reviewedSelection.specializations } : {})
 			, exportModules: selectedModules };
 		const request = createMetadataRequest(selection, { toolchain: analysis.project.toolchain
 			, leanCompilerSha256, extractorSha256

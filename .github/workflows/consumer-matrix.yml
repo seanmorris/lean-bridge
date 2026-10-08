@@ -1266,7 +1266,17 @@ jobs:
           node --test tests/generic-records.test.mjs
           test -s build/generic-records/npm.json
           test -s build/generic-records/specialized-npm.json
+          LEAN_BRIDGE_REVIEWED_SPECIALIZATION_NPM_TEST=1 node --test --test-name-pattern='independently reviewed npm package' tests/reviewed-specializations.test.mjs
+          test -s build/reviewed-specializations/npm.json
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
+      - name: Preserve reviewed specialization npm observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reviewed-specializations-npm-${{ github.sha }}
+          path: build/reviewed-specializations/npm.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Check ordinary and reviewed Fin packages in Node, TypeScript and browsers
         id: reviewed_fin_npm
         timeout-minutes: 60
@@ -2453,6 +2463,8 @@ jobs:
           test -s build/native-fin/native-reviewed.json
           LEAN_BRIDGE_SPECIALIZATION_PROFILES=c,cpp node --test tests/native-specializations.test.mjs
           test -s build/native-specializations/c-cpp.json
+          LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=c,cpp node --test --test-concurrency=1 tests/reviewed-specializations.test.mjs
+          test -s build/reviewed-specializations/c-cpp.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=c,cpp node --test tests/native-fin-containers.test.mjs
           test -s build/native-fin-containers/c-cpp.json
           test -s build/native-fin-containers/reviewed-c-cpp.json
@@ -2641,6 +2653,7 @@ jobs:
             build/native-fin/native.json
             build/native-fin/native-reviewed.json
             build/native-specializations/c-cpp.json
+            build/reviewed-specializations/c-cpp.json
             build/native-fin-containers/c-cpp.json
             build/native-fin-containers/reviewed-c-cpp.json
             build/native-fin-products/c-cpp.json
