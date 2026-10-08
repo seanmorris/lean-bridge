@@ -380,10 +380,11 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	// Scalar/container and nominal Fin positions cite separate host/runtime receipts.
 	const finEvidence = { python: "python-fin-installed", rust: "rust-fin-installed", ruby: "ruby-fin-installed", dotnet: "dotnet-fin-installed", java: "jvm-fin-installed", kotlin: "jvm-fin-installed", "php-native": "php-fin-installed", "wit-wasi": "wit-fin-installed" }[profile];
-	const fins = finEvidence ? ["fin"] : [];
+	const phpWasmFin = profile === "php-wasm";
+	const fins = finEvidence || phpWasmFin ? ["fin"] : [];
 	const finRuntimes = { python: ["python311", "python312"], ruby: ["ruby33"] }[profile] ?? [];
 	const finBatch = ["rust", "dotnet", "wit-wasi"].includes(profile);
-	const nominalFin = finRuntimes.length > 0 || finBatch;
+	const nominalFin = finRuntimes.length > 0 || finBatch || phpWasmFin;
 	// Finite specializations are signature-only cells, one receipt per build group.
 	const specializationEvidence = { python: "python", rust: "rust", ruby: "ruby", dotnet: "dotnet", java: "java-kotlin", kotlin: "java-kotlin", "php-native": "php-native", "wit-wasi": "wit-wasi" }[profile];
 	const specialized = specializationEvidence ? ["generic", "implicit", "instance"] : [];
@@ -408,6 +409,11 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
 			if(cell.shape === "fin")
 			{
+				if(phpWasmFin)
+				{
+					assert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === "field" ? "records" : "products"}-ordinary-installed`]);
+					continue;
+				}
 				assert.deepEqual(stage.evidence, cell.position === "field"
 					? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))
 					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`

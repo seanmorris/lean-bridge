@@ -1,32 +1,34 @@
 /**
- * Preserve exact source predecessors of the native consumer CI repairs (#1220).
+ * Preserve exact predecessors of the PHP-Wasm Fin support promotion.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source-history.mjs";
 
-export const nativeConsumerCiRepairHistoryPath = "docs/evidence/native-consumer-ci-repair-source-history-20261008.json";
-export const nativeConsumerCiRepairChangedPaths = [
+export const phpWasmFinPromotionHistoryPath = "docs/evidence/php-wasm-fin-promotion-source-history-20261008.json";
+export const phpWasmFinPromotionChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "tests/native-specializations.test.mjs"
-	, "tests/perl-refinements.test.mjs"
+	, "docs/php.md"
+	, "docs/lean/existing-package.md"
+	, "docs/evidence/refinement-closure-audit-20261007.md"
+	, "tests/php-wasm-fin.test.mjs"
+	, "tests/type-surface.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/reviewed-php-wasm-fin-archive-source-history.mjs"
-	, "tests/helpers/reviewed-php-wasm-fin-archive-source-history-tests.mjs"
+	, "tests/helpers/native-consumer-ci-repair-source-history.mjs"
+	, "tests/helpers/native-consumer-ci-repair-source-history-tests.mjs"
 ];
 let history;
 
 /**
- * Reverse registered spans only when both complete source hashes match.
+ * Reverse only authenticated spans with matching complete before/after identities.
  *
- * @param source - Complete current source text.
+ * @param source - Complete source text.
  * @param update - Exact recorded transition.
  */
-export const reverseNativeConsumerCiRepairUpdate = (source, update) => {
-	assert.ok(nativeConsumerCiRepairChangedPaths.includes(update.path));
+export const reversePhpWasmFinPromotionUpdate = (source, update) => {
+	assert.ok(phpWasmFinPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -46,18 +48,17 @@ export const reverseNativeConsumerCiRepairUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the native consumer CI repairs, stopping at an explicitly requested identity.
+ * Restore the pre-promotion source, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeNativeConsumerCiRepairSource = (path, source, expected) => {
-	source = beforePhpWasmFinPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !nativeConsumerCiRepairChangedPaths.includes(path)) return source;
+export const beforePhpWasmFinPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !phpWasmFinPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(nativeConsumerCiRepairHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(phpWasmFinPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseNativeConsumerCiRepairUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePhpWasmFinPromotionUpdate(source, update) : source;
 };

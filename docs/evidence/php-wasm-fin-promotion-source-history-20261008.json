@@ -1,0 +1,475 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-fin-promotion-v1",
+  "predecessorCommit": "c764790da547a5622fb120bb7f5564eed073b490",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "36fc2158c6f67348fb3d777f726b8e69a2253e9fda3a93a154d2f23f8703cdbb",
+      "previousSha256": "1517167bedd7adb4a89994588c3269121053542c30cd3d5184923adfcc646170",
+      "edits": [
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723\"\n",
+          "current": "          \"sha256\": \"cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1\"\n",
+          "current": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d\"\n",
+          "current": "          \"sha256\": \"630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282\"\n"
+        },
+        {
+          "start": 1877752,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"php-wasm-fin-products-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"c391e58a1fcfa9a3c137f1ca4b4fb8a49fc77dda\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs\",\n      \"scope\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives. Commands select the current reproduction tests; configure the local PHP-Wasm toolchain separately. The original reports identify the producer revision that actually ran.\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-promotion-references.mjs\",\n          \"sha256\": \"0cbf3a84cd77471b282c7e2e9ca5e7f7aa300a89998a15c016d22eecb24a57ed\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"35dddcde423bd68c56ba248b4d637ea12f933557edf41f2bfa092dddd1335082\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-php-wasm-fin-evidence.mjs\",\n          \"sha256\": \"8291cbd1839c0cddf56a2188db4d23e827173293c97337463cca75528354af2a\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/receipt.json\",\n          \"sha256\": \"512b62e522fc8e71ab814f2e073cbd7ee33ed24396fb04d13eb3bb280de15734\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/ordinary.json\",\n          \"sha256\": \"67dafe06c7c826269c3fb678117b9bf14da12b261f5c9484e695cfe1a1f87046\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/ordinary.tap\",\n          \"sha256\": \"b91f61f8e39c4507fcfeb3aebd651af0bf64c4bfe01c79e0fc4cbd062fe5e20e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/queue.log\",\n          \"sha256\": \"8755ea80be555fd82e966bdec4cac772fd3b15749f06f1776b9bb627f8ffc644\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-fin-products-ordinary-installed/packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"eb73ea66b8e46e80dad07c7aa4cc1582718c25983af8192320ab5f6b58bbc199\"\n        },\n        {\n          \"path\": \"php-wasm-fin-products-ordinary-installed/packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0.tgz\",\n          \"sha256\": \"96206869df592d7cb5da24839141ea74c8e9137b148e6537929c476fb349668f\"\n        },\n        {\n          \"path\": \"php-wasm-fin-products-ordinary-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz\",\n          \"sha256\": \"cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-fin-records-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"c391e58a1fcfa9a3c137f1ca4b4fb8a49fc77dda\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs\",\n      \"scope\": \"Ordinary-source records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives. Commands select the current reproduction tests; configure the local PHP-Wasm toolchain separately. The original reports identify the producer revision that actually ran.\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-promotion-references.mjs\",\n          \"sha256\": \"0cbf3a84cd77471b282c7e2e9ca5e7f7aa300a89998a15c016d22eecb24a57ed\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"35dddcde423bd68c56ba248b4d637ea12f933557edf41f2bfa092dddd1335082\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-php-wasm-fin-evidence.mjs\",\n          \"sha256\": \"8291cbd1839c0cddf56a2188db4d23e827173293c97337463cca75528354af2a\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/receipt.json\",\n          \"sha256\": \"512b62e522fc8e71ab814f2e073cbd7ee33ed24396fb04d13eb3bb280de15734\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/ordinary.json\",\n          \"sha256\": \"67dafe06c7c826269c3fb678117b9bf14da12b261f5c9484e695cfe1a1f87046\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/ordinary.tap\",\n          \"sha256\": \"b91f61f8e39c4507fcfeb3aebd651af0bf64c4bfe01c79e0fc4cbd062fe5e20e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-wasm-fin-20261008/queue.log\",\n          \"sha256\": \"8755ea80be555fd82e966bdec4cac772fd3b15749f06f1776b9bb627f8ffc644\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-fin-records-ordinary-installed/packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"4dd41c8fe307e8477df06b69768096e516d533a6c332d3008b9dfb0bd45b27ad\"\n        },\n        {\n          \"path\": \"php-wasm-fin-records-ordinary-installed/packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0.tgz\",\n          \"sha256\": \"6475f1245108440a47dbf4a669177bad2035861006f9049bb923ecb6065a7171\"\n        },\n        {\n          \"path\": \"php-wasm-fin-records-ordinary-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz\",\n          \"sha256\": \"cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-fin-products-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"8d395a3e49e189b174d9b8359c3247f77215b663\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews|independently reviewed PHP-Wasm' tests/php-wasm-fin.test.mjs\",\n      \"scope\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives. Commands select the current reproduction tests; configure the local PHP-Wasm toolchain separately. The original reports identify the producer revision that actually ran.\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-promotion-references.mjs\",\n          \"sha256\": \"0cbf3a84cd77471b282c7e2e9ca5e7f7aa300a89998a15c016d22eecb24a57ed\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"35dddcde423bd68c56ba248b4d637ea12f933557edf41f2bfa092dddd1335082\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-php-wasm-fin-evidence.mjs\",\n          \"sha256\": \"8291cbd1839c0cddf56a2188db4d23e827173293c97337463cca75528354af2a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/receipt.json\",\n          \"sha256\": \"267b96187f7264a76f294aa737e50a8185780723dc9d6422ae51d96261dc3663\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/reviewed.json\",\n          \"sha256\": \"4620eececc51da0dd6a639598b058d789bb3e860f65813779d5de27e22af947f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/original.tap\",\n          \"sha256\": \"17b73e0afa2e2cc704b2c55327dad4c9c55ab4af4fc3fe361b6e840d860cd301\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/original.queue\",\n          \"sha256\": \"281a1ee775bfe93fb81996f94ca6843da591ab4e4b8b73543aceefc56094c643\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/producer-test.mjs.txt\",\n          \"sha256\": \"7b1f8ce82f4d7c11837138bff30c6d0147d75a2e4a9a33f4768293b983b86cb8\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-fin-products-reviewed-installed/packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"f612e971aa81094777263a4c1ce946d1dc27fb38125c0e1790af71988ee51c14\"\n        },\n        {\n          \"path\": \"php-wasm-fin-products-reviewed-installed/packages/php-wasm/archives/lean-bridge-finproducts-wasm-1.0.0.tgz\",\n          \"sha256\": \"01a3c1b643c680327b1ce4845d38b115d968943545da56cdac92003829784584\"\n        },\n        {\n          \"path\": \"php-wasm-fin-products-reviewed-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz\",\n          \"sha256\": \"cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024\"\n        }\n      ]\n    },\n    {\n      \"id\": \"php-wasm-fin-records-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"8d395a3e49e189b174d9b8359c3247f77215b663\",\n      \"command\": \"LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews|independently reviewed PHP-Wasm' tests/php-wasm-fin.test.mjs\",\n      \"scope\": \"Independently reviewed records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives. Commands select the current reproduction tests; configure the local PHP-Wasm toolchain separately. The original reports identify the producer revision that actually ran.\",\n      \"files\": [\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-promotion-references.mjs\",\n          \"sha256\": \"0cbf3a84cd77471b282c7e2e9ca5e7f7aa300a89998a15c016d22eecb24a57ed\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-observation.mjs\",\n          \"sha256\": \"35dddcde423bd68c56ba248b4d637ea12f933557edf41f2bfa092dddd1335082\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-fin-fixtures.mjs\",\n          \"sha256\": \"02c8bd4820f9444c6ec8542f030a4fe137986ee6a2eb733a761903e3cb3617e9\"\n        },\n        {\n          \"path\": \"tests/helpers/type-corpus-php-wasm-evidence.mjs\",\n          \"sha256\": \"708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1\"\n        },\n        {\n          \"path\": \"tests/helpers/reviewed-php-wasm-fin-evidence.mjs\",\n          \"sha256\": \"8291cbd1839c0cddf56a2188db4d23e827173293c97337463cca75528354af2a\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/receipt.json\",\n          \"sha256\": \"267b96187f7264a76f294aa737e50a8185780723dc9d6422ae51d96261dc3663\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/reviewed.json\",\n          \"sha256\": \"4620eececc51da0dd6a639598b058d789bb3e860f65813779d5de27e22af947f\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/original.tap\",\n          \"sha256\": \"17b73e0afa2e2cc704b2c55327dad4c9c55ab4af4fc3fe361b6e840d860cd301\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/original.queue\",\n          \"sha256\": \"281a1ee775bfe93fb81996f94ca6843da591ab4e4b8b73543aceefc56094c643\"\n        },\n        {\n          \"path\": \"docs/evidence/reviewed-php-wasm-fin-20261008/producer-test.mjs.txt\",\n          \"sha256\": \"7b1f8ce82f4d7c11837138bff30c6d0147d75a2e4a9a33f4768293b983b86cb8\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"php-wasm-fin-records-reviewed-installed/packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"147179fc63a599fd637fea45c31c3c3ebe0f6b88b0d9153d66a312240e106664\"\n        },\n        {\n          \"path\": \"php-wasm-fin-records-reviewed-installed/packages/php-wasm/archives/lean-bridge-finrecords-wasm-1.0.0.tgz\",\n          \"sha256\": \"a4b1651a580c6ea927d948bf982fe0ebc0674b030ceb33e95d35974b3c78a18e\"\n        },\n        {\n          \"path\": \"php-wasm-fin-records-reviewed-installed/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.c013af2b779c19900323d7441f27fe76341e73bd588eb6f1915d0d0cfb83ebd7.tgz\",\n          \"sha256\": \"cc79eb448fb989be92253793bf39a5e5be155d5beafca7e3a74c229f67c18024\"\n        }\n      ]\n"
+        },
+        {
+          "start": 4396301,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"php-wasm-fin-products-ordinary\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\",\n          \"result\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata retains the exact closed bounds.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-ordinary-installed\"\n          ],\n          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-ordinary-installed\"\n          ],\n          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-ordinary-installed\"\n          ],\n          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-ordinary-installed\"\n          ],\n          \"note\": \"Ordinary-source products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n        }\n      },\n      \"limitations\": [\n        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n      }\n    },\n    {\n      \"id\": \"php-wasm-fin-records-ordinary\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Ordinary-source records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-ordinary-installed\"\n          ],\n          \"note\": \"Fresh Lean metadata retains the exact closed bounds.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-ordinary-installed\"\n          ],\n          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-ordinary-installed\"\n          ],\n          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-ordinary-installed\"\n          ],\n          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-ordinary-installed\"\n          ],\n          \"note\": \"Ordinary-source records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n        }\n      },\n      \"limitations\": [\n        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n      }\n    },\n    {\n      \"id\": \"php-wasm-fin-products-reviewed\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"parameter\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\",\n          \"result\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-reviewed-installed\"\n          ],\n          \"note\": \"Independently reviewed bounds reconcile with fresh Lean metadata.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-reviewed-installed\"\n          ],\n          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-reviewed-installed\"\n          ],\n          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-reviewed-installed\"\n          ],\n          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-products-reviewed-installed\"\n          ],\n          \"note\": \"Independently reviewed products: 11 exports, twelve installed executions with 2039 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n        }\n      },\n      \"limitations\": [\n        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n      }\n    },\n    {\n      \"id\": \"php-wasm-fin-records-reviewed\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"fin\"\n      ],\n      \"positions\": [\n        \"field\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Independently reviewed records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation.\",\n      \"hostTypes\": {\n        \"fin\": {\n          \"field\": \"Brick\\\\Math\\\\BigInteger checked against the declared closed Fin bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-reviewed-installed\"\n          ],\n          \"note\": \"Independently reviewed bounds reconcile with fresh Lean metadata.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-reviewed-installed\"\n          ],\n          \"note\": \"Plain copied PHP-Wasm preserves Fin bounds in products, active result branches, copied fields and their tested container combinations.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-reviewed-installed\"\n          ],\n          \"note\": \"The wasm32 adapter checks Nat limbs and constructs Fin with a decidable Lean proof.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-reviewed-installed\"\n          ],\n          \"note\": \"Two author roots reproduce three package archives before source-free offline installation. Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"php-wasm-fin-records-reviewed-installed\"\n          ],\n          \"note\": \"Independently reviewed records: 13 exports, twelve installed executions with 2053 checks each, two-root package reproduction and source-free offline installation. Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\"\n        }\n      },\n      \"limitations\": [\n        \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Source and adapter dispatch are not measured. These local reports do not establish hosted CI, native PHP, a native glibc floor, checked Subtype, callback replies, generic/recursive refined fields, or graph/owned refinement transports. Selected producer source identities are not a complete dependency closure. Package archive hashes are retained, not the binary archives.\",\n        \"Local Node 22.23.3 and Chromium 154.0.8037.57 execute PHP 8.4.1 on wasm32; the runtime pins Emscripten 3.1.68 and php-wasm 0.1.0. Each fixture runs eight Node arrangements (embedded/Composer, startup/lazy, weak/strict) and four Chromium bundled arrangements (startup/lazy, weak/strict). No Firefox, WebKit or browser Composer execution is claimed.\"\n      ],\n      \"conversionNotes\": {\n        \"fin\": \"Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection.\"\n      }\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "630780f3e3297e4ab0287bbe9bb4e125aeca1199286500cae7b0090800bfd282",
+      "previousSha256": "56d342be997387912fb41f757a4bf1f79784ea9745ef2a0e14d06022ffb9ad1d",
+      "edits": [
+        {
+          "start": 41796,
+          "previous": "In native PHP packages, a Lean `Fin n` parameter or result is a `Brick\\Math\\BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger::of(3))` returns 6. `mirror(BigInteger::of(10))` throws `LeanBridgeError` with code 1 and the message `arg0 is not below its Fin 10 bound`. A negative value throws `ValueError` and a non-BigInteger argument throws `TypeError`, as they do for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. PHPDoc on each function and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](evidence/native-fin-hosts-20261006.md) and the [container checks](evidence/native-fin-containers-20261006.md).\n",
+          "current": "In native PHP packages, a Lean `Fin n` parameter or result is a `Brick\\Math\\BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger::of(3))` returns 6. `mirror(BigInteger::of(10))` throws `LeanBridgeError` with code 1 and the message `arg0 is not below its Fin 10 bound`. A negative value throws `ValueError` and a non-BigInteger argument throws `TypeError`, as they do for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. PHPDoc on each function and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. See the [installed scalar checks](evidence/native-fin-hosts-20261006.md) and the [container checks](evidence/native-fin-containers-20261006.md). Native PHP generates Fin checks in pairs, Except and fields, but their installed acceptance is not recorded; Fin in callbacks is rejected.\n\n### Bounded integers in PHP-Wasm\n\nPHP-Wasm plain copied packages also preserve `Fin` bounds in pairs, active\n`Except` branches, copied record/variant fields and their tested `Array`, `List`\nand `Option` combinations. Use `Brick\\Math\\BigInteger`, including for bounds\nwider than 64 bits. `none` is valid for `Option (Fin 0)`;\na present `Fin 0` value is rejected. Both weak and strict callers retain their\ninput values and can call the package again after a rejection.\n\nThe [ordinary](evidence/php-wasm-fin-20261008/receipt.json) and\n[reviewed](evidence/reviewed-php-wasm-fin-20261008/receipt.json) package tests\neach execute 11 product exports and 13 record/variant exports. Every fixture\nruns in eight Node configurations (embedded or Composer, startup or lazy,\nweak or strict) and four Chromium bundled configurations. These runs use\nNode 22.23.3, Chromium 154.0.8037.57, PHP 8.4.1 and php-wasm 0.1.0.\nThese fixtures do not execute bare top-level `Fin` or direct\n`Array (Fin n)`, `List (Fin n)` or `Option (Fin n)` exports.\nSource-dispatch counters were not measured. PHP-Wasm checked `Subtype`,\nrefined callbacks and refinements combined with graph or owned transports\nremain unsupported.\n"
+        },
+        {
+          "start": 94967,
+          "previous": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Not audited | Native PHP: Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); PHP-Wasm: `Brick\\Math\\BigInteger checked against the declared closed Fin bound` (input, result, field) | Ordinary source: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Native PHP: Installed checks passed (input, result); Not audited (field, callback input, callback result); PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Values cross as Nat, alone or as the elements of arrays, lists and options. The bundled runtime and the exported Lean adapter each check every bound independently before Lean constructs Fin. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected.; PHP-Wasm: Only Fin nested in products, Except branches or copied fields is exercised; no bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Use Brick Math integers with exact closed bounds. Products, active Except branches and copied record/variant fields keep their constraints through the tested containers; none is valid for Option (Fin 0), but present Fin 0 values reject. Both weak and strict PHP callers preserve inputs and recover after rejection. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "cd66b0a7073bd49d7a24204a04aacde31d239ad4f4b26bea8a1031c62465e657",
+      "previousSha256": "6b79a8cf323fa8a526c2c36e5087b5ea5700ad635f01e93246b089d88061d723",
+      "edits": [
+        {
+          "start": 45481,
+          "previous": "\"Installed\" records executed package consumers. \"Generated; pending\" means the compiler admits the shape but its installed acceptance is not recorded. \"Native\" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`. PHP-Wasm's generated Fin support applies only to plain copied packages.\n",
+          "current": "\"Installed\" records executed package consumers. \"Generated; pending\" means the compiler admits the shape but its installed acceptance is not recorded. \"Native\" means the targets that share the C-family adapter: `c`, `cpp`, `pypi`, `cargo`, `rubygems`, `nuget`, `maven`, `php-native` and `wit-wasi`. PHP-Wasm's Fin support applies only to plain copied packages; its installed combinations are listed below the table.\n"
+        },
+        {
+          "start": 46023,
+          "previous": "| `Fin n` parameter or result | Installed | Installed | Installed | Generated; pending | Installed: npm, browser and all native hosts, including CPAN |\n| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Reviewed installed; ordinary pending | Generated; pending | Installed: npm, browser and all native hosts, including CPAN |\n| `Fin n` inside pairs and `Except` | Installed | C/C++ installed; other hosts pending | Generated; pending | Installed | Installed: npm, browser and C/C++; other hosts pending |\n",
+          "current": "| `Fin n` parameter or result | Installed | Installed | Installed | Nested only; bare scalar pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested only; bare scalar pending |\n| `Fin n` inside `Array`, `List`, `Option` | Installed | Installed | Reviewed installed; ordinary pending | Nested products/fields only; direct containers pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested products/fields only; direct containers pending |\n| `Fin n` inside pairs and `Except` | Installed | C/C++ installed; other hosts pending | Generated; pending | Installed, both source routes | Installed: npm, browser, C/C++ and PHP-Wasm; other hosts pending |\n"
+        },
+        {
+          "start": 46918,
+          "previous": "| `Fin n` in record or variant fields | Node installed; browser pending | C/C++ installed; other hosts pending | Generated; pending | Installed | C/C++ installed; other native hosts pending |\n",
+          "current": "| `Fin n` in record or variant fields | Node installed; browser pending | C/C++ installed; other hosts pending | Generated; pending | Installed, both source routes | C/C++ and PHP-Wasm installed; other native hosts pending |\n"
+        },
+        {
+          "start": 52172,
+          "previous": "The [ordinary PHP-Wasm Fin run](../evidence/php-wasm-fin-20261008/receipt.json) covers pairs, `Except`, record and variant fields, and their tested container combinations. Both complete fixtures run in twelve modes: Node embedded and Composer installations plus Chromium bundles, each with startup/lazy loading and weak/strict PHP callers. The product fixture performs 2039 checks per execution and the record fixture 2053. Packages reproduce across two author roots and run after removal of source/build files. Fin 0 rejection, active-branch checks, caller immutability and recovery remain in the callers. These runs do not measure source dispatch or establish reviewed PHP-Wasm contracts, checked Subtype or callback refinements.\n",
+          "current": "The [ordinary PHP-Wasm Fin run](../evidence/php-wasm-fin-20261008/receipt.json) and [independently reviewed run](../evidence/reviewed-php-wasm-fin-20261008/receipt.json) cover pairs, active `Except` branches and copied record/variant fields. Tested compositions include `List (Option (Fin 3 × Except (Fin 2) Nat))`, arrays and lists of refined records, optional variants, and products/results containing records and variants. They do not execute bare top-level Fin or direct Array/List/Option (Fin n) exports, and do not establish every possible container combination or a separate Array-of-products run. Each complete fixture runs in twelve modes: eight Node embedded/Composer combinations and four Chromium bundled combinations, with startup/lazy loading and weak/strict PHP callers. The product fixture performs 2039 checks per execution and the record fixture 2053. Packages reproduce across two author roots and run after removal of source/build files. Fin 0 rejection, active-branch checks, caller immutability and recovery remain in the callers. The reviewed run also compiles the independent contracts with fresh Lean and rejects altered bounds. Both runs use Node 22.23.3, Chromium 154.0.8037.57 and PHP 8.4.1 on wasm32. Source dispatch is unmeasured; checked Subtype, refined callbacks and graph/owned refinement transports remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/refinement-closure-audit-20261007.md",
+      "currentSha256": "faa2868c529f7d795fef57ac47dc3de0104d9354af27d2d5a8644e5b95e80364",
+      "previousSha256": "86a1f412dd6be4bc8d185fa7579745f72bca0db34e275ba22dfa05b287db9969",
+      "edits": [
+        {
+          "start": 7358,
+          "previous": "| PHP-Wasm refinements | Ordinary-source product and nominal-field fixtures passed on `c391e58`, with 2039 and 2053 checks per execution. | The [successful Fin archive](php-wasm-fin-20261008/receipt.json) preserves all twelve Node/Chromium execution tuples for each fixture. The [first attempt](php-wasm-generic-records-20261007/receipt.json), which failed before installation on the reserved `never` name, remains unchanged. | Promote only the observed ordinary positions. Checked Subtype, reviewed contracts and measured source/adapter dispatch remain open. Graph, owned and callback-bearing refinement paths remain separate. |\n",
+          "current": "| PHP-Wasm refinements | Six ordinary/reviewed parameter, result and field cells cite the [ordinary](php-wasm-fin-20261008/receipt.json) and [reviewed](reviewed-php-wasm-fin-20261008/receipt.json) archives. No bare top-level Fin or direct Array/List/Option (Fin n) export is executed. Each route executes the complete product and record fixtures in twelve Node/Chromium arrangements, with 2039 and 2053 checks per execution. | None for these four selections. The earlier reserved-name failure and original producer bytes remain unchanged. | Checked Subtype, measured source/adapter dispatch, integrated hosted acceptance and graph/owned/callback refinement transports remain open. No native PHP or other browser-engine claim is added. |\n"
+        },
+        {
+          "start": 24444,
+          "previous": "| PHP-Wasm refinements | Codex archive and integration, Claude source work | VO #1443: the full ordinary plain-copied Fin run is archived. Promote its observed positions, then add checked Subtype and reviewed contracts with separate Node/browser Wasm evidence. Source/adapter dispatch remains unmeasured. |\n",
+          "current": "| PHP-Wasm refinements | Codex archive and integration, Claude source work | VO #1443: ordinary and independently reviewed plain-copied Fin observations are archived and promoted in exactly six cells. Implement checked Subtype and remaining graph/owned/callback refinement combinations. Source/adapter dispatch and integrated hosted acceptance remain unmeasured by these local runs. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "currentSha256": "276c817afc57871f6bd3e73c0d51ef2652e2ccfe6711d58351d5f7dccc52739f",
+      "previousSha256": "e4f7457442b2107f0fc220e28c028f84cdb234ec837b462dc0b63d9b5aed384d",
+      "edits": [
+        {
+          "start": 1934,
+          "previous": "",
+          "current": "import \"./helpers/php-wasm-fin-promotion-tests.mjs\";\nimport \"./helpers/php-wasm-fin-promotion-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8",
+      "previousSha256": "eac64903f2df2bb0bc8111e3a38adf2d11a6f7b9bb22a2a5aae1b68c1b7e45b1",
+      "edits": [
+        {
+          "start": 25728,
+          "previous": "\tconst fins = finEvidence ? [\"fin\"] : [];\n",
+          "current": "\tconst phpWasmFin = profile === \"php-wasm\";\n\tconst fins = finEvidence || phpWasmFin ? [\"fin\"] : [];\n"
+        },
+        {
+          "start": 25990,
+          "previous": "\tconst nominalFin = finRuntimes.length > 0 || finBatch;\n",
+          "current": "\tconst nominalFin = finRuntimes.length > 0 || finBatch || phpWasmFin;\n"
+        },
+        {
+          "start": 27919,
+          "previous": "",
+          "current": "\t\t\t\tif(phpWasmFin)\n\t\t\t\t{\n\t\t\t\t\tassert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === \"field\" ? \"records\" : \"products\"}-ordinary-installed`]);\n\t\t\t\t\tcontinue;\n\t\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "dc0609960d16985b20ae6cf459cc59020aad36db41563b4c6c8c160d1063daae",
+      "previousSha256": "56be041c8d8e53f68171f82c2eeef1a0e472850d5eeeeb573ccc5c3c690b717c",
+      "edits": [
+        {
+          "start": 10362,
+          "previous": "",
+          "current": "import { phpWasmFinPromotionChangedPaths } from \"./php-wasm-fin-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 47687,
+          "previous": "",
+          "current": "\t, ...phpWasmFinPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-consumer-ci-repair-source-history.mjs",
+      "currentSha256": "1c978463f2a4fad27e9600444ebdc9ddd00b329f02b08fd34a647b8b3ad418bd",
+      "previousSha256": "25fd08171c164c1f4abfafa743e9469099bc716d6d8f085b758e73b9d1e719e9",
+      "edits": [
+        {
+          "start": 236,
+          "previous": "",
+          "current": "import { beforePhpWasmFinPromotionSource } from \"./php-wasm-fin-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2321,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmFinPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-consumer-ci-repair-source-history-tests.mjs",
+      "currentSha256": "a022188db149c679ec20350ad14ebb8725d6c6fdeddd43f6d5671ef0fe17f544",
+      "previousSha256": "4f1ce1d0c1dd0174bf79865bfb2b9b306f882ec3fcc69e35cbff5cf775b7dc79",
+      "edits": [
+        {
+          "start": 367,
+          "previous": "",
+          "current": "import { beforePhpWasmFinPromotionSource } from \"./php-wasm-fin-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 1086,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforePhpWasmFinPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 2066,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforePhpWasmFinPromotionSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 2654,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path, \"utf8\")), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforePhpWasmFinPromotionSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}
