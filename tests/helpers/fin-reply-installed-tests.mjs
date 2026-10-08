@@ -19,7 +19,7 @@ import { copyPackageSetHandoff } from "./package-set.mjs";
 import { finCallbackEnvironment } from "./fin-callback-install.mjs";
 import { finReplyConsumerNames, finReplyExports, finReplyFixture, finReplyTargets, installFinReplyConsumer, parseFinReplyResult } from "./fin-reply-install.mjs";
 import { retainFailure } from "./fin-reply-compiled-tests.mjs";
-import { finReplyCompilerModel } from "./fin-reply-model.mjs";
+import { finReplyCompilerModel, finReplyHostShape, finReplyOptionDigit } from "./fin-reply-model.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import { boostSources } from "../../src/backends/cpp/boost.mjs";
 import { generateCBindingPackage } from "../../src/backends/c/generate.mjs";
@@ -83,6 +83,13 @@ test("the C consumer spells no module-qualified type name, so the installed modu
 	// Option-of-record names embed the Lean module path; the harness passes that one as TILE_REPLY.
 	assert.deepEqual(source.match(/\bfinreplies_[a-z0-9_]*lean_[a-z0-9_]*/gu) ?? [], []);
 	assert.match(source, /\bTILE_REPLY \*reply\b/u);
+});
+
+test("the compiler-shaped aliased reply is the bare Option (Fin 5) extraction leaves, with no nominal alias", () => {
+	const ir = finReplyCompilerModel("FinReplies").bindingIr;
+	assert.deepEqual(finReplyHostShape(ir, "aliased"), finReplyOptionDigit);
+	assert.deepEqual(finReplyHostShape(ir, "maybe"), finReplyOptionDigit);
+	assert.ok(!ir.types.some(type => type.kind === "alias"));
 });
 
 test("both consumers compile against generated public headers for the fixture module and a renamed one", async t => {

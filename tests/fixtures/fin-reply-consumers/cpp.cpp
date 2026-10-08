@@ -107,7 +107,7 @@ static int check_composites() {
   CHECK(fr::product([](Nat) { return Pair{std::nullopt, Nat(9)}; }) == 9);
   RUN(leaf_bounds([](unsigned v) { return fr::slotted([v](Nat) { return fr::Slot{Nat(v), Nat(9)}; }); }, 5, 9));
   CHECK(fr::slotted([](Nat) { return fr::Slot{std::nullopt, Nat(9)}; }) == 9);
-  RUN(leaf_bounds([](unsigned v) { return fr::aliased([v](Nat) { return fr::MaybeDigit(Nat(v)); }); }, 5, 4));
+  RUN(leaf_bounds([](unsigned v) { return fr::aliased([v](Nat) { return std::optional<Nat>(Nat(v)); }); }, 5, 4));
   RUN(leaf_bounds([](unsigned v) { return fr::nested([v](Nat) { return std::optional<std::vector<Nat>>(nats({0, v})); }); }, 3, 2));
   CHECK(fr::nested([](Nat) { return std::optional<std::vector<Nat>>{}; }) == 2);
   return 0;

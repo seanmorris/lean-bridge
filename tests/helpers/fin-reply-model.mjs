@@ -37,7 +37,9 @@ export const finReplyCompilerModel = module => {
 		, maybeTile: host(option(record("Tile", [["digit", fin("5")], ["count", nat]])))
 		, twice: host(option(fin("5")))
 		, plain: [nat, nat]
-		, aliased: host({ kind: "alias", ...named("MaybeDigit"), target: option(fin("5")), abi: heap })
+		// Extraction keeps no alias in a callable signature (callableTarget), so the abbrev MaybeDigit replies
+		// its bare Option (Fin 5).
+		, aliased: host(option(fin("5")))
 		, empty0: host(list(fin("0")))
 		, nested: host(option(array(fin("3"))))
 		, product: host({ kind: "tuple", arguments: [option(fin("5")), nat], abi: heap })
@@ -52,4 +54,33 @@ export const finReplyCompilerModel = module => {
 	twice.parameters.push({ ...twice.parameters[0], name: "second" });
 	input.component = { id: "finreplies@1.0.0", name: "finreplies", version: "1.0.0" };
 	return createNativeModel(input, { refinements: true, callbackRefinements: true });
+};
+
+/** The reply aliased and maybe both declare: a bare option of the Fin 5 digit's Nat. */
+export const finReplyOptionDigit = Object.freeze({
+	result: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "nat" }] }
+	, bounds: { kind: "option", arguments: [{ kind: "fin", bound: "5" }] }
+});
+
+/**
+ * The host reply that public headers declare for one export: its Binding IR result type with each named
+ * type resolved, and the Fin bounds the IR records for it. Documentation, positions and generated
+ * callback identities are left out, so the compiler-shaped model and fresh extraction compare on meaning.
+ *
+ * @param ir - Binding IR.
+ * @param name - Unqualified export name.
+ */
+export const finReplyHostShape = (ir, name) => {
+	const types = new Map(ir.types.map(type => [type.id, type]));
+	const declaration = ir.declarations.find(item => item.id.endsWith(`.${name}`));
+	const callback = types.get(declaration.parameters[0].type.id);
+	const members = fields => fields.map(item => ({ name: item.name, type: shape(item.type) }));
+	const shape = type => {
+		if(type.kind !== "named") return type.arguments ? { ...type, arguments: type.arguments.map(shape) } : type;
+		const named = types.get(type.id), target = named.target && shape(named.target);
+		const cases = named.cases.map(item => ({ name: item.name, fields: members(item.fields) }));
+		const bounds = named.source.extensions["lean-lang.org/nominal-refinements"] ?? null;
+		return { kind: named.kind, declaration: named.source.declaration, target, fields: members(named.fields), cases, bounds };
+	};
+	return { result: shape(callback.callable.result.type), bounds: callback.source.extensions["lean-lang.org/refinements"]?.result ?? null };
 };

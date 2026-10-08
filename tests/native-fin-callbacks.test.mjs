@@ -35,6 +35,7 @@ import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { nativeCallbackFinGuide } from "../src/release/native-c-family.mjs";
+import { finReplyCompilerModel, finReplyHostShape, finReplyOptionDigit } from "./helpers/fin-reply-model.mjs";
 import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
@@ -486,6 +487,12 @@ test("fresh Lean admits every checked host reply family and compiles each typed 
 	assert.deepEqual(reply("product"), { kind: "tuple", arguments: [{ kind: "option", arguments: [fin("5")] }, null] });
 	for(const name of ["digits", "late", "maybeTile", "nested", "slotted"]) assert.ok(reply(name), name);
 	assert.equal(model.exports.find(item => item.name === "FinCallbacks.plain").refinements, undefined);
+	// The compiler-shaped model behind the header controls declares every reply as extraction does, so a
+	// fictitious nominal alias cannot pass those controls.
+	const synthetic = finReplyCompilerModel("FinCallbacks").bindingIr;
+	for(const name of names.filter(item => item !== "plain"))
+		assert.deepEqual(finReplyHostShape(model.bindingIr, name), finReplyHostShape(synthetic, name), name);
+	assert.deepEqual(finReplyHostShape(model.bindingIr, "aliased"), finReplyOptionDigit);
 	// The compiled adapter rebuilds each reply through its decidable check and the source-typed fallback.
 	for(const name of names.filter(item => item !== "plain"))
 		assert.match(adapters.leanSource, new RegExp(`reply_reject_${nativeTypeKey(model.exports.find(item => item.name === `FinCallbacks.${name}`).parameters[0].type)} _bridgeReply`, "u"), name);
