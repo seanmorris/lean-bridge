@@ -242,24 +242,27 @@ test("retained transcripts alone recount every run, and an altered or missing tr
 	assert.equal(recountReviewedFinWasmEntryReport(report, expected, { engines: [] }), 2);
 	// Coverage is declared independently: a dropped or relabelled context, a relabelled prelude, an undeclared
 	// browser run or a different TypeScript consumer is refused.
-	for(const [value, coverage] of [
-		[{ ...report, contexts: report.contexts.slice(0, 1) }, { engines: [] }]
-		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: ["mirror", "label"] }] }, { engines: [] }]
-		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: [], profile: "node-typescript" }] }, { engines: [] }]
-		, [report, { engines: ["chromium"] }]
-		, [{ ...report, typescriptSha256: sha256("other") }, { engines: [] }]
-	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, coverage), assert.AssertionError);
+	for(const [value, coverage, diagnostic] of [
+		[{ ...report, contexts: report.contexts.slice(0, 1) }, { engines: [] }, /the declared contexts/u]
+		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: ["mirror", "label"] }] }, { engines: [] }, /node-typescript prelude/u]
+		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: [] }] }, { engines: [] }, /node-typescript prelude/u]
+		, [report, { engines: ["chromium"] }, /the declared contexts/u]
+		, [{ ...report, typescriptSha256: sha256("other") }, { engines: [] }, /the strict TypeScript consumer/u]
+	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, coverage), error => error instanceof assert.AssertionError && diagnostic.test(error.message), String(diagnostic));
 	assert.throws(() => recountReviewedFinWasmEntryReport(report, expected), TypeError);
+	// Transcript corruption, with both declared contexts present so each case reaches its own check.
 	const parsed = JSON.parse(stdout);
 	parsed.entry.lines = parsed.entry.lines.filter(line => !line.startsWith("lean-bridge-source-entry nested"));
 	const forged = JSON.stringify(parsed), forgedDigest = sha256(forged);
-	for(const value of [
-		{ ...report, transcripts: { [digest]: `${stdout} ` } }
-		, { ...report, transcripts: {} }
-		, { ...report, contexts: [{ ...report.contexts[0], transcriptSha256: forgedDigest }], transcripts: { [forgedDigest]: forged } }
-		, { ...report, contexts: [{ ...report.contexts[0], source: false }] }
-		, { ...report, mode: "original" }
-	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, { engines: [] }), assert.AssertionError);
+	for(const [value, diagnostic] of [
+		[{ ...report, transcripts: { ...report.transcripts, [digest]: `${stdout} ` } }, /a retained transcript is its digest's bytes/u]
+		, [{ ...report, transcripts: { [digest]: stdout } }, new RegExp(`transcript ${typedDigest} is retained`, "u")]
+		, [{ ...report, contexts: [{ ...report.contexts[0], transcriptSha256: forgedDigest }, report.contexts[1]], transcripts: { ...report.transcripts, [forgedDigest]: forged } }, /source entry of raw nested|source entry of public nested/u]
+		, [{ ...report, contexts: [{ ...report.contexts[0], source: false }, report.contexts[1]] }, /node-javascript recount/u]
+		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], calls: report.contexts[1].calls - 1 }] }, /node-typescript recount/u]
+	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, { engines: [] }), error => error instanceof assert.AssertionError && diagnostic.test(error.message), String(diagnostic));
+	// A report relabelled as another mode is refused before any transcript is read.
+	assert.throws(() => recountReviewedFinWasmEntryReport({ ...report, mode: "original" }, expected, { engines: [] }), assert.AssertionError);
 });
 
 test("a browser report must cover exactly the declared engines; removing an engine with all its rows is refused", () => {
