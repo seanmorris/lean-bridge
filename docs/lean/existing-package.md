@@ -218,6 +218,17 @@ Parent discovery considers public, safe, universe-free aliases in the project's 
 
 The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent runtime fields and recursive generic records remain unsupported. Proof-bearing records require the separate [checked-record mapping](#export-a-record-with-proof-fields); inheritance acceptance does not establish that combination. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.
 
+The [installed inheritance evidence](../evidence/inherited-records-20261008/receipt.json)
+covers ordinary-source C/C++ and Node packages with those nested parent fields.
+The generic fixture checks three direct exports over six closed aliases, including
+universe and phantom arguments. C performs 2011 checks, C++ 2007 and Node 1005 checks
+plus 1006 rejections; the installed declarations also pass strict TypeScript.
+Separate plain-inheritance C/C++ packages each pass 2010 checks for single, multiple,
+multilevel and overlapping parents, including a parent `Fin 10` field. The packages
+reproduce across two builds and install offline after author/build deletion.
+These runs do not establish browser or reviewed inheritance, other native hosts,
+or configured generic function specializations over inherited records.
+
 ### Declare export contracts
 
 Use `contracts` to require specific ownership, lifetimes, refinement policies or boundary effects. Each key names an exact exported declaration or configured specialization. Lean checks the decisions against the compiled signature and the selected adapter. A mismatch stops the build before linking.

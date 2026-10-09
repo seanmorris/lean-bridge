@@ -11,6 +11,7 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import "./helpers/inherited-record-evidence-tests.mjs";
 import "./helpers/inherited-record-archive-source-history-tests.mjs";
+import "./helpers/inherited-record-promotion-tests.mjs";
 import "./helpers/inheritance-subtype-harness-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";

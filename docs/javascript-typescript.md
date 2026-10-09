@@ -480,7 +480,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Option α` | `{ readonly tag: "none" } \| { readonly tag: "some"; readonly value: T }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact own tags preserve none, some Unit and every nested option. Null and omitted payloads reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | `{ readonly ok: T } \| { readonly error: E }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one own data property selects ok or error, including Unit payloads. IR arguments are [success, error]; a domain error returns a value. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Named readonly interface (plain JavaScript object)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Named readonly interface (plain JavaScript object)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Node JavaScript / TypeScript: Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Ordinary-source Node inputs/results/fields keep inherited parent subobjects in their declared named fields (for example toBase), with the parent's own record value nested inside. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Browser / React / Worker: Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Named TypeScript alias with the target’s ordinary JavaScript value representation` (input, result, field); `Resolved target type with a named TypeScript alias` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Compiler-authenticated names, targets and chains. Runtime validation and copied ownership follow the target; no wrapper, coercion or loss of exact primitive semantics. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Named readonly discriminated union: { kind: "caseName", ...fields }` (input, result, field); `Named tagged readonly union (plain JavaScript object)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
@@ -613,9 +613,9 @@ constructors and field accessors handle the compiler's record representation.
 
 Both source paths have [installed record checks](evidence/npm-records-20260920.md)
 in Node, strict TypeScript and three browser engines, including React and workers.
-Closed generic records use the named specializations below. Inherited and
-dependent records need their own acceptance evidence. Recursive copies use the
-graph transport described below.
+Closed generic records use the named specializations below. Node's inherited-record
+mapping has separate installed checks below. Dependent records need their own
+acceptance evidence. Recursive copies use the graph transport described below.
 Records cannot contain callbacks or resources. A component can export both copied
 records and synchronous callbacks with copied record arguments and results.
 
@@ -650,6 +650,29 @@ not establish reviewed-browser execution or instance dictionaries over the recor
 
 The browser inventory's reproduction command is reconstructed from its fixture
 and configuration. Its original queue records times and result, not that command.
+
+### Inherited records in Node
+
+Pass the parent as a nested object under its generated field name, such as `toBase`.
+For the installed `GenericInheritance` fixture, the package's `grow` function takes:
+
+```javascript
+const grown = api.grow({ toBase: { base: 4n }, child: 7n });
+// grown is { toBase: { base: 5n }, child: 14n }.
+```
+
+Here `api` is the imported package namespace. Its generated `NatChild` interface
+names `toBase: NatBase` and `child: bigint`. Keep the parent object intact; a flattened
+`{ base: 4n, child: 7n }` input rejects. Results contain independent copies and need
+no disposal. Phantom type arguments add no runtime fields.
+
+The [installed inheritance checks](evidence/inherited-records-20261008/receipt.json)
+cover three direct exports over closed aliases with universe and phantom arguments.
+Node performs 1005 checks and 1006 rejections; strict TypeScript checks the installed
+declarations with `skipLibCheck: false`. Two builds reproduce the package archives;
+installation runs offline after deleting the author sources and builds. These are
+ordinary-source Node checks, not browser, React, worker, reviewed-inheritance or
+configured function-specialization acceptance.
 
 ### Checked records and fixed indices
 
