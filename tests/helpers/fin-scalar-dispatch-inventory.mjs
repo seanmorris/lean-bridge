@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinDispatchReferences, finDispatchArchives } from "./fin-dispatch-references.mjs";
+import { beforeReviewedFinRefusalSource } from "./reviewed-fin-refusal-source-history.mjs";
 
 export const scalarDispatchObservationIds = [
 	"native-fin-php-ordinary-source", "native-fin-wit-ordinary-source"
@@ -97,7 +98,9 @@ export const scalarDispatchInventoryEvidence = async references => {
 		return { id: reference.id, kind: "installed"
 			, revision: reference.revision, command: reference.command
 			, scope: `${reference.sourcePath} ${reference.caller}: ${reference.checks} public checks. ${reference.scope}. ${reference.instrument} measures three Lean source functions and their three adapters, with independent per-call recounts. ${reference.environment}. Consumer SHA-256 ${reference.consumerSha256}; probe SHA-256 ${reference.probeSha256}. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.`
-			, files: await Promise.all(files.map(async path => ({ path, sha256: sha256(await readFile(path)) })))
+			// This builder describes the earlier scalar inventory milestone. Later source-only
+			// transitions preserve its exact identities; current pins are checked separately.
+			, files: await Promise.all(files.map(async path => ({ path, sha256: sha256(beforeReviewedFinRefusalSource(path, await readFile(path, "utf8"))) })))
 			, artifacts: Object.entries(report.archives).map(([path, sha256]) => ({ path: `${reference.id}/${path}`, sha256 })) };
 	}));
 };

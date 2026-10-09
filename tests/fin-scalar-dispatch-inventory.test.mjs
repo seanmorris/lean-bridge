@@ -13,12 +13,13 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeReviewedFinRefusalSource } from "./helpers/reviewed-fin-refusal-source-history.mjs";
 import { finDispatchReferences, finDispatchSelectionIds } from "./helpers/fin-dispatch-references.mjs";
 import { assertFinScalarDispatchInventory, scalarDispatchObservationIds, supplementFinScalarDispatchInventory } from "./helpers/fin-scalar-dispatch-inventory.mjs";
 import { beforeFinScalarDispatchInventorySource, finScalarDispatchInventoryChangedPaths, finScalarDispatchInventoryHistoryPath, finScalarDispatchInventoryPredecessor, reverseFinScalarDispatchInventoryUpdate } from "./helpers/fin-scalar-dispatch-inventory-source-history.mjs";
 
 const snapshot = async () => {
-	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const current = JSON.parse(beforeReviewedFinRefusalSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 	const previous = JSON.parse(beforeFinScalarDispatchInventorySource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
 	const history = JSON.parse(await readFile(finScalarDispatchInventoryHistoryPath));
 	const references = await finDispatchReferences();
@@ -40,7 +41,7 @@ test("scalar dispatch inventory authenticates every complete predecessor and ref
 	assert.deepEqual(record.updates.map(update => update.path), finScalarDispatchInventoryChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseFinScalarDispatchInventoryUpdate(source, update);
+		const source = beforeReviewedFinRefusalSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinScalarDispatchInventoryUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeFinScalarDispatchInventorySource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -98,7 +99,7 @@ test("each inventory selection retains its original report, caller, command, env
 		assert.equal(entry.kind, "installed"); assert.equal(entry.revision, reference.revision); assert.equal(entry.command, reference.command);
 		for(const claim of [reference.scope, reference.environment, reference.instrument, `${reference.checks} public checks`, reference.consumerSha256, reference.probeSha256]) assert.ok(entry.scope.includes(claim));
 		for(const file of [reference.receipt, reference.report]) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256));
-		for(const file of entry.files) assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(beforeReviewedFinRefusalSource(file.path, await readFile(file.path, "utf8"))), file.sha256, file.path);
 		const report = JSON.parse(await readFile(reference.report.path));
 		assert.deepEqual(entry.artifacts, Object.entries(report.archives).map(([path, sha256]) => ({ path: `${reference.id}/${path}`, sha256 })));
 	}

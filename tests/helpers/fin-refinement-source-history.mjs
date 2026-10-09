@@ -146,6 +146,7 @@ import { authorRefinementDocsChangedPaths } from "./author-refinement-docs-sourc
 import { perlScalarRelocationChangedPaths } from "./perl-scalar-relocation-source-history.mjs";
 import { jvmDispatchIntegrationChangedPaths } from "./jvm-dispatch-integration-source-history.mjs";
 import { finScalarDispatchInventoryChangedPaths } from "./fin-scalar-dispatch-inventory-source-history.mjs";
+import { reviewedFinRefusalChangedPaths } from "./reviewed-fin-refusal-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -757,6 +758,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...perlScalarRelocationChangedPaths
 	, ...jvmDispatchIntegrationChangedPaths
 	, ...finScalarDispatchInventoryChangedPaths
+	, ...reviewedFinRefusalChangedPaths
 ])].sort());
 
 /**
