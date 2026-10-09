@@ -329,11 +329,11 @@ int main(int argc, char **argv) {
 });
 
 const java = process.env.LEAN_BRIDGE_JAVA, leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX;
-test("a Lean runtime preload aborts GDB itself but runs in the inferior when set through GDB", { skip: !(gdb && java && leanPrefix) && "set LEAN_BRIDGE_FIN_CONTAINER_GDB_SMOKE=1, LEAN_BRIDGE_JAVA and LEAN_BRIDGE_LEAN_PREFIX where GDB may ptrace", timeout: 300_000 }, async t => {
+test("a Lean runtime preload set through GDB loads in a real JVM inferior that exits normally", { skip: !(gdb && java && leanPrefix) && "set LEAN_BRIDGE_FIN_CONTAINER_GDB_SMOKE=1, LEAN_BRIDGE_JAVA and LEAN_BRIDGE_LEAN_PREFIX where GDB may ptrace", timeout: 300_000 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-container-gdb-preload-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const runtime = join(leanPrefix, "lib", "lean", "libleanshared.so"), script = join(root, "java.gdb.py");
-	// A multithreaded inferior, so GDB raises and catches its own internal exceptions while it starts.
+	// A multithreaded inferior, where GDB 13.1 aborted once the same preload reached its own environment.
 	await writeFile(script, `import gdb
 for setting in ["pagination off", "confirm off", "breakpoint pending off", "disable-randomization off"]:
     gdb.execute("set " + setting)
@@ -348,5 +348,4 @@ gdb.write("preloaded %d exit %s\\n" % (seen.count(${JSON.stringify(runtime)}), g
 	const { args, environment } = finContainerGdbInvocation({ script, config: join(root, "unused.json"), env: tools, extra: { LD_PRELOAD: runtime } });
 	const inferior = await runCopied(finContainerGdbCommand, args, root, environment);
 	assert.match(inferior.stdout, /^preloaded 1 exit 0$/mu);
-	await assert.rejects(() => runCopied(finContainerGdbCommand, ["-batch", "-q", "-nx", "-x", script], root, { ...tools, LD_PRELOAD: runtime }), /terminate called/u);
 });
