@@ -1,0 +1,969 @@
+{
+  "schemaVersion": 1,
+  "milestone": "fin-scalar-dispatch-inventory-v1",
+  "predecessorCommit": "e9f44187e1e11ac4cd42c2a8fa096e746b787bfd",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "160c8fcc7a3837a65ae5146683ee5fd294dc01fe1ff669b71a60dbc419147370",
+      "previousSha256": "28b223bd4066e68678def7230f3d31f8088ecadc122a7d12a652b918eda3ae39",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8\"\n",
+          "current": "          \"sha256\": \"b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n",
+          "current": "          \"sha256\": \"766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984\"\n"
+        },
+        {
+          "start": 1954512,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"fin-dispatch-php-native-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"592609416c71b2a52d72c5ad00d31b2440b88732\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/php-fin.test.mjs\",\n      \"scope\": \"ordinary-source php-native: 2028 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. LD_PRELOAD measures three Lean source functions and their three adapters, with independent per-call recounts. Local PHP 8.2.33 (NTS) through FFI with Composer 2.5.5 and a glibc 2.36 package floor on x86_64 Linux. Consumer SHA-256 1783e3d8fb8d8e28df55b0abb371fc93977adb16e16af5d2774ef84a3d8e102c; probe SHA-256 560f67fef54a7de86605cc99507be9892b60eb1c5c62790168f93fec2640f344. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"f9f354e6dfc5869b389f8e24eba49005fb48a6c9f5fdb3f7513d68c5e21f8a46\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/receipt.json\",\n          \"sha256\": \"be5a5e2ae6397eb4c148957818fc5047a20a279b246e2e50c50f1116fce18b72\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/queue.json\",\n          \"sha256\": \"8b37732e04fb2c01bbab4241ce9e2e4650e186a0a44599bd8ba18ebacaf1d5c7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/run.tap\",\n          \"sha256\": \"f11febeff30efd2bf90241eceba299f4a6f7c7794a6649003e4a0fd20ec5a57e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/end.txt\",\n          \"sha256\": \"cc713c28152c383986c952573ba02d7ba40d73f01e921f1dbf6355218a1fec73\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/php.json\",\n          \"sha256\": \"6111649002d7111c814f2c9b237f618727eb36f665fc313b1bb2f6630ededf5b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/php-reviewed.json\",\n          \"sha256\": \"9a3df65fdbf46b8ad4cebb0bb8220857cd745cfd3f9b6deea35db7ed6e686f62\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/php-fin.test.mjs.txt\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-count-interposer.mjs.txt\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-consumers.mjs.txt\",\n          \"sha256\": \"a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/backends/php/copied-assets.mjs.txt\",\n          \"sha256\": \"7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-php-native-ordinary-installed/archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip\",\n          \"sha256\": \"7411a6061977beee89568e964d3d804c00081e47113e882930e1a5f6d8b5fc98\"\n        },\n        {\n          \"path\": \"fin-dispatch-php-native-ordinary-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"26650440acd2ada024ae38a54e36431b311dde4ec3b0679ecb9c2c818c454c80\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-php-native-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"592609416c71b2a52d72c5ad00d31b2440b88732\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_PHP_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/php-fin.test.mjs\",\n      \"scope\": \"reviewed-ir php-native: 2028 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. LD_PRELOAD measures three Lean source functions and their three adapters, with independent per-call recounts. Local PHP 8.2.33 (NTS) through FFI with Composer 2.5.5 and a glibc 2.36 package floor on x86_64 Linux. Consumer SHA-256 1783e3d8fb8d8e28df55b0abb371fc93977adb16e16af5d2774ef84a3d8e102c; probe SHA-256 560f67fef54a7de86605cc99507be9892b60eb1c5c62790168f93fec2640f344. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/php-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"f9f354e6dfc5869b389f8e24eba49005fb48a6c9f5fdb3f7513d68c5e21f8a46\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/receipt.json\",\n          \"sha256\": \"be5a5e2ae6397eb4c148957818fc5047a20a279b246e2e50c50f1116fce18b72\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/queue.json\",\n          \"sha256\": \"8b37732e04fb2c01bbab4241ce9e2e4650e186a0a44599bd8ba18ebacaf1d5c7\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/run.tap\",\n          \"sha256\": \"f11febeff30efd2bf90241eceba299f4a6f7c7794a6649003e4a0fd20ec5a57e\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/end.txt\",\n          \"sha256\": \"cc713c28152c383986c952573ba02d7ba40d73f01e921f1dbf6355218a1fec73\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/php.json\",\n          \"sha256\": \"6111649002d7111c814f2c9b237f618727eb36f665fc313b1bb2f6630ededf5b\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/php-reviewed.json\",\n          \"sha256\": \"9a3df65fdbf46b8ad4cebb0bb8220857cd745cfd3f9b6deea35db7ed6e686f62\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/php-fin.test.mjs.txt\",\n          \"sha256\": \"ebf0ce859e6883891bc43dc082b02d4c789be521f292a8a737a9e0ad99394502\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-count-interposer.mjs.txt\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/tests/helpers/native-fin-consumers.mjs.txt\",\n          \"sha256\": \"a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/backends/php/copied-assets.mjs.txt\",\n          \"sha256\": \"7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1\"\n        },\n        {\n          \"path\": \"docs/evidence/php-fin-dispatch-20261008/sources/5926094/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-php-native-reviewed-installed/archives/lean-bridge-fixtures-native-fin-1.0.0-linux-x86_64.zip\",\n          \"sha256\": \"79bffb6ab0f503838f66768c99335148900739a0769c646ce57e6c1e14938389\"\n        },\n        {\n          \"path\": \"fin-dispatch-php-native-reviewed-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"129d47c83a6e84058f46b3b55623fc2581cdc39bb66ba4b8308d26003ef7a134\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-wit-wasi-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"dac615e032e47ee604782257522563277a3eb985\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/wit-fin.test.mjs\",\n      \"scope\": \"ordinary-source wit-wasi: 2027 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. LD_PRELOAD measures three Lean source functions and their three adapters, with independent per-call recounts. Local Wasmtime 42.0.1 C API, wasm-tools 1.245.1 and a glibc 2.36 package floor on x86_64 Linux; no other Wasmtime, wasm-tools or glibc floor is established. Consumer SHA-256 f73d7d497e9c3649cf8db213c80992fcf49ecab1ba04655175d324d6c327532a; probe SHA-256 0b7e94310b4f6546649648cd2c6d3437d01ded29c1122216192a82ca22baf582. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/wit-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"79455f2429630b1d3c33d41b6c34b1e27a1a8e83f24aab84908fdf3b9bd9456a\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/receipt.json\",\n          \"sha256\": \"07cb48bcd702790614854fe0592a550810dbd643088fd2b0ab2b27c5d61ebb0e\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/queue.json\",\n          \"sha256\": \"4628d78f44c69171b528237f68d0f32c9685fe64fb24d8b149be8762aa88c770\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/run.tap\",\n          \"sha256\": \"246bbf6869aa41b9c1a6768aab61abb87cac64c2f7267b8dd1f4bdeb6fbc42d5\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/end.txt\",\n          \"sha256\": \"dd91b26f599a6b974272dc9b82b06696fdaddbec73ab989d2a5822497246f88a\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/wit.json\",\n          \"sha256\": \"dff385d9fb5348a424aba0b1bad16b633b71216ab4d6dd647c1f6d0ca0730bb5\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/wit-reviewed.json\",\n          \"sha256\": \"ab71f60816b5e5c58cb9480642491fc05c8bd660ba68250dd3be6758a095102b\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/wit-fin.test.mjs.txt\",\n          \"sha256\": \"002505d7e71e398484a0c2d82ad7a12935fcd8e51e79535e73afc48f895a1199\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-dispatch-tests.mjs.txt\",\n          \"sha256\": \"7ed7bc8353591017d8bdb6afd44221036b898381ea2d0c6446e4bb5f24175a8b\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-count-interposer.mjs.txt\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-consumers.mjs.txt\",\n          \"sha256\": \"a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/type-corpus-wit.mjs.txt\",\n          \"sha256\": \"2cf8c27c2401bb5aea78a9a172cdb5044f4f1a1e023d0efc6a02891d84aff378\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/backends/wit/copied-host.mjs.txt\",\n          \"sha256\": \"d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/build/native-wit-projection.mjs.txt\",\n          \"sha256\": \"2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-wit-wasi-ordinary-installed/archives/nativefin-1.0.0-c.tar.gz\",\n          \"sha256\": \"1e4b0c31a1b05f33c6d843efcbf73ff9f3ae1f854624bea029e77c933bc1307f\"\n        },\n        {\n          \"path\": \"fin-dispatch-wit-wasi-ordinary-installed/archives/nativefin-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"46d2e94c50ef7e1efd778b23a720961dadce999b05f69a6aa2e87f1419235cc4\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-wit-wasi-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"dac615e032e47ee604782257522563277a3eb985\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_WIT_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_WASMTIME_C_API=/app/.toolchains/wasmtime42 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/wit-fin.test.mjs\",\n      \"scope\": \"reviewed-ir wit-wasi: 2027 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. LD_PRELOAD measures three Lean source functions and their three adapters, with independent per-call recounts. Local Wasmtime 42.0.1 C API, wasm-tools 1.245.1 and a glibc 2.36 package floor on x86_64 Linux; no other Wasmtime, wasm-tools or glibc floor is established. Consumer SHA-256 f73d7d497e9c3649cf8db213c80992fcf49ecab1ba04655175d324d6c327532a; probe SHA-256 0b7e94310b4f6546649648cd2c6d3437d01ded29c1122216192a82ca22baf582. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/wit-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"79455f2429630b1d3c33d41b6c34b1e27a1a8e83f24aab84908fdf3b9bd9456a\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/receipt.json\",\n          \"sha256\": \"07cb48bcd702790614854fe0592a550810dbd643088fd2b0ab2b27c5d61ebb0e\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/queue.json\",\n          \"sha256\": \"4628d78f44c69171b528237f68d0f32c9685fe64fb24d8b149be8762aa88c770\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/run.tap\",\n          \"sha256\": \"246bbf6869aa41b9c1a6768aab61abb87cac64c2f7267b8dd1f4bdeb6fbc42d5\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/end.txt\",\n          \"sha256\": \"dd91b26f599a6b974272dc9b82b06696fdaddbec73ab989d2a5822497246f88a\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/wit.json\",\n          \"sha256\": \"dff385d9fb5348a424aba0b1bad16b633b71216ab4d6dd647c1f6d0ca0730bb5\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/wit-reviewed.json\",\n          \"sha256\": \"ab71f60816b5e5c58cb9480642491fc05c8bd660ba68250dd3be6758a095102b\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/wit-fin.test.mjs.txt\",\n          \"sha256\": \"002505d7e71e398484a0c2d82ad7a12935fcd8e51e79535e73afc48f895a1199\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-dispatch-tests.mjs.txt\",\n          \"sha256\": \"7ed7bc8353591017d8bdb6afd44221036b898381ea2d0c6446e4bb5f24175a8b\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-count-interposer.mjs.txt\",\n          \"sha256\": \"4bbb43a5ed86ffeb001c764f32114c0104d0649cb94ec7e2d341aea4eca226c4\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/native-fin-consumers.mjs.txt\",\n          \"sha256\": \"a0437bc542bfed6a765692cceff76f68b39d5f7e537263d1d1ab8a0d2de556fd\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/type-corpus-wit.mjs.txt\",\n          \"sha256\": \"2cf8c27c2401bb5aea78a9a172cdb5044f4f1a1e023d0efc6a02891d84aff378\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/backends/wit/copied-host.mjs.txt\",\n          \"sha256\": \"d93a198b62f7b70f3756abe6d305902abfb02087faca2b56fb063ef553c7bfdf\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/build/native-wit-projection.mjs.txt\",\n          \"sha256\": \"2154c3c3752f39547d1cdeeee4ebed6cb3579513ecbf7d293eee26ed46877397\"\n        },\n        {\n          \"path\": \"docs/evidence/wit-fin-dispatch-20261008/sources/dac615e/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-wit-wasi-reviewed-installed/archives/nativefin-1.0.0-c.tar.gz\",\n          \"sha256\": \"e6fb54800f3dc2a19b8e84f9f31b54e1946738641075a5db3a3d715ac5322cb2\"\n        },\n        {\n          \"path\": \"fin-dispatch-wit-wasi-reviewed-installed/archives/nativefin-1.0.0-wit-wasi.tar.gz\",\n          \"sha256\": \"139fc5ecb12c8bdff60cddab3dc43221087da25d7dc600a9d2031126756eefe9\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-ruby-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"c3bfecb21af56fcc3d4648d305a577730499a516\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/ruby-fin.test.mjs\",\n      \"scope\": \"ordinary-source ruby: 2029 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints measures three Lean source functions and their three adapters, with independent per-call recounts. Local Ruby 3.3.12, GDB 13.1, ptrace and a glibc 2.36 package floor on x86_64 Linux. Consumer SHA-256 40d6b24387d8e90fe082af78953519874c4a1201db68707edc98eabf736522f4; probe SHA-256 1738c5f6495587f6eed85ed3bd59932ced2d5adae41ca0bb201c21440a9de5cb. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/ruby-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"9fcda9ad79b7b4f204719dad9e59bf82cb0ac0794e1ac5b29298ce205030df5c\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"b15f2952fcaf6e3e467a31c0faa244eeb80fd9b0498ce6fb11389691ab6f4938\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"dcc1960042d130905ae77a46ebe52475178ff71d9673a82bd682a3f87651df5d\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"c81085293fb3c8bcc6db27a7ab4dba4a88b2e6ffc1acb384b2de01965dbfdbe9\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"261ceda3a1d4761b7ff71972421966b6e0e7daaa9f84f1fc4e9cf6e7ad4a10f5\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/ruby.json\",\n          \"sha256\": \"9c3a6f0d01142f510ea2f821b6519d58107d220fb214711bc6711e9a620357fd\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/ruby-reviewed.json\",\n          \"sha256\": \"97934b8677a90c7f9ea14eebbed22078efd4d584222db241fa97fdaee20e35a6\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/ruby-fin.test.mjs.source\",\n          \"sha256\": \"817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb.mjs.source\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb-tests.mjs.source\",\n          \"sha256\": \"cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch.mjs.source\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/copied-fixture-install.mjs.source\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/verified-assets.mjs.source\",\n          \"sha256\": \"801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-assets.mjs.source\",\n          \"sha256\": \"501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-values.mjs.source\",\n          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/build/native-component.mjs.source\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-ruby-ordinary-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"c4da640952516379f9070a2f3fb7d19dc35f21c44ed67d7aeff41f9b8ddc29f9\"\n        },\n        {\n          \"path\": \"fin-dispatch-ruby-ordinary-installed/archives/native-fin-1.0.0-x86_64-linux.gem\",\n          \"sha256\": \"9f8d68a4e961cc8d7b1487cdf77a562b94afc341be87dcfe4e911d23d7cf725e\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-ruby-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"c3bfecb21af56fcc3d4648d305a577730499a516\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_RUBY_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/ruby-fin.test.mjs\",\n      \"scope\": \"reviewed-ir ruby: 2029 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints measures three Lean source functions and their three adapters, with independent per-call recounts. Local Ruby 3.3.12, GDB 13.1, ptrace and a glibc 2.36 package floor on x86_64 Linux. Consumer SHA-256 40d6b24387d8e90fe082af78953519874c4a1201db68707edc98eabf736522f4; probe SHA-256 1738c5f6495587f6eed85ed3bd59932ced2d5adae41ca0bb201c21440a9de5cb. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/ruby-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"9fcda9ad79b7b4f204719dad9e59bf82cb0ac0794e1ac5b29298ce205030df5c\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"b15f2952fcaf6e3e467a31c0faa244eeb80fd9b0498ce6fb11389691ab6f4938\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"dcc1960042d130905ae77a46ebe52475178ff71d9673a82bd682a3f87651df5d\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"c81085293fb3c8bcc6db27a7ab4dba4a88b2e6ffc1acb384b2de01965dbfdbe9\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"261ceda3a1d4761b7ff71972421966b6e0e7daaa9f84f1fc4e9cf6e7ad4a10f5\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/ruby.json\",\n          \"sha256\": \"9c3a6f0d01142f510ea2f821b6519d58107d220fb214711bc6711e9a620357fd\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/ruby-reviewed.json\",\n          \"sha256\": \"97934b8677a90c7f9ea14eebbed22078efd4d584222db241fa97fdaee20e35a6\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/ruby-fin.test.mjs.source\",\n          \"sha256\": \"817b089ecf718de80e5d2fc6d63f03c881e987c7c2bd76734871c5eb4187716c\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb.mjs.source\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch-gdb-tests.mjs.source\",\n          \"sha256\": \"cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/native-fin-dispatch.mjs.source\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/tests/helpers/copied-fixture-install.mjs.source\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/verified-assets.mjs.source\",\n          \"sha256\": \"801be5e0c60f3ab8d86e9fc5286657c556a7c2315b557e3dfa62c02ef4ec6b49\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-assets.mjs.source\",\n          \"sha256\": \"501e2ad9936e09d58131f9995164ec27fa28d222bfeeded3ed64ae2b5bda0c4f\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/backends/ruby/copied-values.mjs.source\",\n          \"sha256\": \"44580dc2129a996655284ea7df86250cf3a671a0930259c05b58fd6e1d1c51c7\"\n        },\n        {\n          \"path\": \"docs/evidence/ruby-fin-dispatch-20261009/sources/c3bfecb/src/build/native-component.mjs.source\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-ruby-reviewed-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"28bf671970c04a27f563b9119bef074f70e29ac8c13f9c3ad4330c13096f0b0a\"\n        },\n        {\n          \"path\": \"fin-dispatch-ruby-reviewed-installed/archives/native-fin-1.0.0-x86_64-linux.gem\",\n          \"sha256\": \"d6642a6b5476505a67576342e1fcf48faf554b5031af86e0a9c8f21bc95b8532\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-dotnet-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"75a51146adad19a4fb0f253be66bf980e5fbd965\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/dotnet-fin.test.mjs\",\n      \"scope\": \"ordinary-source dotnet: 2022 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints measures three Lean source functions and their three adapters, with independent per-call recounts. Local .NET SDK 8.0.424 with Microsoft.NETCore.App 8.0.30, GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 458bc71a4a12a0f68c930113be8df89764fab78d33c4017b1568fa766278ef76; probe SHA-256 3509e5ac85f8e599b016cd4bbc879995eaa0fd1716b0a61b687cd10b42b77524. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/dotnet-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"bc527aee5ad0ed15567a6e2a32d954e9ccc4fb337c32d2a18ab257bbea2e0bb6\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"4961f9576c023c6eece18f76c60b5dea3b05ea1c7300c6583d388b8009308252\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"00389e1afe26c2cc52c46590753f029b564bf8387644453a58de7badb8080f94\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"c072c582044fd38a331abff46d0f0dfec20c5a318f36c2ff921609b7e1ace9a9\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"83e61ab900998e678376bea045a0184f18d1a2258cd81515a709f15dd08ed740\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/dotnet.json\",\n          \"sha256\": \"09d07a8ea5b9fe8f4a465f321fc77beba1457f0d0871e0c91013dcedbc0ebaf7\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/dotnet-reviewed.json\",\n          \"sha256\": \"c401d6c12c99ba205aac261d4a72704bee0248e5a4f311577f4a26e5c0572926\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/dotnet-fin.test.mjs.txt\",\n          \"sha256\": \"0e875c02e5ec5a1e6c4b00c3d51d919b3db5aabd1037945b3cc613686e787b63\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/verified-assets.mjs.txt\",\n          \"sha256\": \"972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-values.mjs.txt\",\n          \"sha256\": \"b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-model.mjs.txt\",\n          \"sha256\": \"ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-dotnet-ordinary-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"c99afe5020491af03a937f2cefe27684941fc55165f7bab936e2310b5ea3a40b\"\n        },\n        {\n          \"path\": \"fin-dispatch-dotnet-ordinary-installed/archives/native-fin.1.0.0.nupkg\",\n          \"sha256\": \"6d7b4faf80cc8ffea395b995fbb1620083deb11f0070223ee861dc2842235006\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-dotnet-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"75a51146adad19a4fb0f253be66bf980e5fbd965\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_DOTNET_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/dotnet-fin.test.mjs\",\n      \"scope\": \"reviewed-ir dotnet: 2022 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints measures three Lean source functions and their three adapters, with independent per-call recounts. Local .NET SDK 8.0.424 with Microsoft.NETCore.App 8.0.30, GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 458bc71a4a12a0f68c930113be8df89764fab78d33c4017b1568fa766278ef76; probe SHA-256 3509e5ac85f8e599b016cd4bbc879995eaa0fd1716b0a61b687cd10b42b77524. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/dotnet-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"bc527aee5ad0ed15567a6e2a32d954e9ccc4fb337c32d2a18ab257bbea2e0bb6\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"4961f9576c023c6eece18f76c60b5dea3b05ea1c7300c6583d388b8009308252\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"00389e1afe26c2cc52c46590753f029b564bf8387644453a58de7badb8080f94\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"c072c582044fd38a331abff46d0f0dfec20c5a318f36c2ff921609b7e1ace9a9\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"83e61ab900998e678376bea045a0184f18d1a2258cd81515a709f15dd08ed740\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/dotnet.json\",\n          \"sha256\": \"09d07a8ea5b9fe8f4a465f321fc77beba1457f0d0871e0c91013dcedbc0ebaf7\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/dotnet-reviewed.json\",\n          \"sha256\": \"c401d6c12c99ba205aac261d4a72704bee0248e5a4f311577f4a26e5c0572926\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/dotnet-fin.test.mjs.txt\",\n          \"sha256\": \"0e875c02e5ec5a1e6c4b00c3d51d919b3db5aabd1037945b3cc613686e787b63\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/verified-assets.mjs.txt\",\n          \"sha256\": \"972aa8ddd973f71fa7e8177fcada0eceaf567c1d3b4519da0591157f646332ff\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-values.mjs.txt\",\n          \"sha256\": \"b4ec94f1da85ad3cab476520ca0ce19d1e4807c54dab25fef7370c46295fc82c\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/backends/dotnet/copied-model.mjs.txt\",\n          \"sha256\": \"ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b\"\n        },\n        {\n          \"path\": \"docs/evidence/dotnet-fin-dispatch-20261009/sources/75a5114/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-dotnet-reviewed-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"28ddbc9fcd78e439a85b59315e3fa45977be7f6fc47473bba3b452ed13fcd735\"\n        },\n        {\n          \"path\": \"fin-dispatch-dotnet-reviewed-installed/archives/native-fin.1.0.0.nupkg\",\n          \"sha256\": \"73f066967b7fa3afdc3c03f0fedf9f37842935ce3e40b3f35ff2225e23102723\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-java-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"40fa8a8339d36b576747ee4029c6e11115b316fd\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/jvm-fin.test.mjs\",\n      \"scope\": \"ordinary-source java: 2023 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints-extracted-root measures three Lean source functions and their three adapters, with independent per-call recounts. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 3dce1114c690c84cb6d313fd973b66d27e5a910e677ef94fa829464f53598c14; probe SHA-256 2e2bbb1c6398ad4cc597ec43baa8bbef156e733eb170774f91ea07cf24344a02. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/jvm-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"68a1fc20cecd029d4574285843cae174b6edc012a1e2d2e9d80335b4c2334492\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"6219484380f4326792e919340188f818fb96de958ff19624e6cad9494e6707db\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"6df41b6337d04dbb36a58dc196dd563359dbbe15493f242922ae13eeeebf4c04\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"73fbca72d5498ac2258a60e901e836fd7223d9c2678cde38387cc0667c4c54a3\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"2549f0ac4a2b4aeec5bf970cbbcfbf49627c6ebaeebaec38adff80e970fce17b\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm.json\",\n          \"sha256\": \"38642919540fd1e1a124ab0a9d921dc6e543dc05e9e46a6412184119a21e7d23\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm-reviewed.json\",\n          \"sha256\": \"7560fa9a28337aa3743abe177318f7decf8231504e0076d965a75fcd999caebb\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/jvm-fin.test.mjs.txt\",\n          \"sha256\": \"fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-extracted.mjs.txt\",\n          \"sha256\": \"6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/verified-assets.mjs.txt\",\n          \"sha256\": \"ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-assets.mjs.txt\",\n          \"sha256\": \"93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-runtime.mjs.txt\",\n          \"sha256\": \"21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-values.mjs.txt\",\n          \"sha256\": \"b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-model.mjs.txt\",\n          \"sha256\": \"d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-java-ordinary-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"ef4fbd79d2f66d7458a660cb487c19511e7df3ca045ececc07692e64aa9d4bc9\"\n        },\n        {\n          \"path\": \"fin-dispatch-java-ordinary-installed/archives/native-fin-1.0.0.jar\",\n          \"sha256\": \"907c53382d4949ff4df569bc87cc6f56b1a55ac35a60d07d8659512f028af0ff\"\n        },\n        {\n          \"path\": \"fin-dispatch-java-ordinary-installed/archives/native-fin-1.0.0.pom\",\n          \"sha256\": \"518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-java-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"40fa8a8339d36b576747ee4029c6e11115b316fd\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/jvm-fin.test.mjs\",\n      \"scope\": \"reviewed-ir java: 2023 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints-extracted-root measures three Lean source functions and their three adapters, with independent per-call recounts. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 3dce1114c690c84cb6d313fd973b66d27e5a910e677ef94fa829464f53598c14; probe SHA-256 2e2bbb1c6398ad4cc597ec43baa8bbef156e733eb170774f91ea07cf24344a02. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/jvm-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"68a1fc20cecd029d4574285843cae174b6edc012a1e2d2e9d80335b4c2334492\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"6219484380f4326792e919340188f818fb96de958ff19624e6cad9494e6707db\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"6df41b6337d04dbb36a58dc196dd563359dbbe15493f242922ae13eeeebf4c04\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"73fbca72d5498ac2258a60e901e836fd7223d9c2678cde38387cc0667c4c54a3\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"2549f0ac4a2b4aeec5bf970cbbcfbf49627c6ebaeebaec38adff80e970fce17b\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm.json\",\n          \"sha256\": \"38642919540fd1e1a124ab0a9d921dc6e543dc05e9e46a6412184119a21e7d23\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm-reviewed.json\",\n          \"sha256\": \"7560fa9a28337aa3743abe177318f7decf8231504e0076d965a75fcd999caebb\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/jvm-fin.test.mjs.txt\",\n          \"sha256\": \"fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-extracted.mjs.txt\",\n          \"sha256\": \"6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/verified-assets.mjs.txt\",\n          \"sha256\": \"ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-assets.mjs.txt\",\n          \"sha256\": \"93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-runtime.mjs.txt\",\n          \"sha256\": \"21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-values.mjs.txt\",\n          \"sha256\": \"b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-model.mjs.txt\",\n          \"sha256\": \"d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-java-reviewed-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"c61d48d98ca7b4739d5c5fd0ea7449db37ef6803fc440aa6d1ce96cbaaa19cd6\"\n        },\n        {\n          \"path\": \"fin-dispatch-java-reviewed-installed/archives/native-fin-1.0.0.jar\",\n          \"sha256\": \"e02b61f1de32c28afdc12e1437a5871fb3d5307732c27d78c8d6d41d4c4fd10b\"\n        },\n        {\n          \"path\": \"fin-dispatch-java-reviewed-installed/archives/native-fin-1.0.0.pom\",\n          \"sha256\": \"518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-kotlin-ordinary-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"40fa8a8339d36b576747ee4029c6e11115b316fd\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/jvm-fin.test.mjs\",\n      \"scope\": \"ordinary-source kotlin: 2022 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints-extracted-root measures three Lean source functions and their three adapters, with independent per-call recounts. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 0da35207cc3d54eda693c509a88cbfdeb69d5e1ad3d7ca5eb1c0be64d9040368; probe SHA-256 4a81a3c84ba3f21d60dd9588856731645ed562039a6471e34664c665c0e5beb2. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/jvm-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"68a1fc20cecd029d4574285843cae174b6edc012a1e2d2e9d80335b4c2334492\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"6219484380f4326792e919340188f818fb96de958ff19624e6cad9494e6707db\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"6df41b6337d04dbb36a58dc196dd563359dbbe15493f242922ae13eeeebf4c04\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"73fbca72d5498ac2258a60e901e836fd7223d9c2678cde38387cc0667c4c54a3\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"2549f0ac4a2b4aeec5bf970cbbcfbf49627c6ebaeebaec38adff80e970fce17b\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm.json\",\n          \"sha256\": \"38642919540fd1e1a124ab0a9d921dc6e543dc05e9e46a6412184119a21e7d23\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm-reviewed.json\",\n          \"sha256\": \"7560fa9a28337aa3743abe177318f7decf8231504e0076d965a75fcd999caebb\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/jvm-fin.test.mjs.txt\",\n          \"sha256\": \"fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-extracted.mjs.txt\",\n          \"sha256\": \"6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/verified-assets.mjs.txt\",\n          \"sha256\": \"ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-assets.mjs.txt\",\n          \"sha256\": \"93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-runtime.mjs.txt\",\n          \"sha256\": \"21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-values.mjs.txt\",\n          \"sha256\": \"b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-model.mjs.txt\",\n          \"sha256\": \"d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-kotlin-ordinary-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"ef4fbd79d2f66d7458a660cb487c19511e7df3ca045ececc07692e64aa9d4bc9\"\n        },\n        {\n          \"path\": \"fin-dispatch-kotlin-ordinary-installed/archives/native-fin-1.0.0.jar\",\n          \"sha256\": \"907c53382d4949ff4df569bc87cc6f56b1a55ac35a60d07d8659512f028af0ff\"\n        },\n        {\n          \"path\": \"fin-dispatch-kotlin-ordinary-installed/archives/native-fin-1.0.0.pom\",\n          \"sha256\": \"518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f\"\n        }\n      ]\n    },\n    {\n      \"id\": \"fin-dispatch-kotlin-reviewed-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"40fa8a8339d36b576747ee4029c6e11115b316fd\",\n      \"command\": \"env -u FORCE_COLOR NO_COLOR=1 LEAN_BRIDGE_JVM_FIN_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 taskset -c 3 node --test --test-concurrency=1 --test-reporter=tap tests/jvm-fin.test.mjs\",\n      \"scope\": \"reviewed-ir kotlin: 2022 public checks. Installed top-level scalar Fin calls of mirror, impossible and label only; no container, product, field, callback, other platform or hosted claim. gdb-breakpoints-extracted-root measures three Lean source functions and their three adapters, with independent per-call recounts. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established. Consumer SHA-256 0da35207cc3d54eda693c509a88cbfdeb69d5e1ad3d7ca5eb1c0be64d9040368; probe SHA-256 4a81a3c84ba3f21d60dd9588856731645ed562039a6471e34664c665c0e5beb2. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.\",\n      \"files\": [\n        {\n          \"path\": \"tests/fin-dispatch-references.test.mjs\",\n          \"sha256\": \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-dispatch-references.mjs\",\n          \"sha256\": \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"\n        },\n        {\n          \"path\": \"tests/fin-scalar-dispatch-inventory.test.mjs\",\n          \"sha256\": \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"\n        },\n        {\n          \"path\": \"tests/helpers/fin-scalar-dispatch-inventory.mjs\",\n          \"sha256\": \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"\n        },\n        {\n          \"path\": \"tests/helpers/jvm-fin-dispatch-evidence.mjs\",\n          \"sha256\": \"68a1fc20cecd029d4574285843cae174b6edc012a1e2d2e9d80335b4c2334492\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/receipt.json\",\n          \"sha256\": \"6219484380f4326792e919340188f818fb96de958ff19624e6cad9494e6707db\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/queue.json\",\n          \"sha256\": \"6df41b6337d04dbb36a58dc196dd563359dbbe15493f242922ae13eeeebf4c04\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/run.tap\",\n          \"sha256\": \"73fbca72d5498ac2258a60e901e836fd7223d9c2678cde38387cc0667c4c54a3\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/end.txt\",\n          \"sha256\": \"2549f0ac4a2b4aeec5bf970cbbcfbf49627c6ebaeebaec38adff80e970fce17b\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm.json\",\n          \"sha256\": \"38642919540fd1e1a124ab0a9d921dc6e543dc05e9e46a6412184119a21e7d23\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/jvm-reviewed.json\",\n          \"sha256\": \"7560fa9a28337aa3743abe177318f7decf8231504e0076d965a75fcd999caebb\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/jvm-fin.test.mjs.txt\",\n          \"sha256\": \"fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-extracted.mjs.txt\",\n          \"sha256\": \"6647ea82c4fb21408474947032fbf77a025fa0380de0803fa05eda40df64166f\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb-run.mjs.txt\",\n          \"sha256\": \"edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch-gdb.mjs.txt\",\n          \"sha256\": \"71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/native-fin-dispatch.mjs.txt\",\n          \"sha256\": \"e1b7105b020665d1ff624baa09f0ab62101b3a3eaba5d9f79cc56895105fb0bc\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/verified-assets.mjs.txt\",\n          \"sha256\": \"ed24535082694443ccbfeca08a5bb82fe7125a1b15ec1f0e2eacb8acd24d5eae\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-assets.mjs.txt\",\n          \"sha256\": \"93e97eb16ae6970e51ef78d3fd16b6db408b90e9c3affdd06121d8e97faf7750\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-runtime.mjs.txt\",\n          \"sha256\": \"21aa41d1087ea4fe83e2b7a620f58eb893add37cce7fe11f6fa04d500cd047c9\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-values.mjs.txt\",\n          \"sha256\": \"b4ab3f1bc62f8d1a16abc768e7abcc3c9e2ae6dd768904891f658128f0318fab\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/backends/jvm/copied-model.mjs.txt\",\n          \"sha256\": \"d586a7a26f856377bcdb68cded3b64793ebb3c628112c6a693bd8c863515c246\"\n        },\n        {\n          \"path\": \"docs/evidence/jvm-fin-dispatch-20261009/sources/40fa8a8/src/build/native-component.mjs.txt\",\n          \"sha256\": \"2798e4cad749111193445a470704201c350819241a293a155c4baff59f135867\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"fin-dispatch-kotlin-reviewed-installed/archives/native-fin-1.0.0-c.tar.gz\",\n          \"sha256\": \"c61d48d98ca7b4739d5c5fd0ea7449db37ef6803fc440aa6d1ce96cbaaa19cd6\"\n        },\n        {\n          \"path\": \"fin-dispatch-kotlin-reviewed-installed/archives/native-fin-1.0.0.jar\",\n          \"sha256\": \"e02b61f1de32c28afdc12e1437a5871fb3d5307732c27d78c8d6d41d4c4fd10b\"\n        },\n        {\n          \"path\": \"fin-dispatch-kotlin-reviewed-installed/archives/native-fin-1.0.0.pom\",\n          \"sha256\": \"518be6a0ff402b5d23e937bd883909caf02fd09e523deef3df546cc5cdb4265f\"\n        }\n      ]\n"
+        },
+        {
+          "start": 4289750,
+          "previous": "            \"fin-ruby33-product-array-ordinary-installed\"\n",
+          "current": "            \"fin-ruby33-product-array-ordinary-installed\",\n            \"fin-dispatch-ruby-ordinary-installed\"\n"
+        },
+        {
+          "start": 4289873,
+          "previous": "          \"note\": \"Separate TAP, queue and runner records identify Ruby 3.3.12 for the new local valid, invalid and recovery checks. Original reports retain exact model, review, caller and archive identities; these runs do not measure dispatch. A bound violation raises RangeError naming the parameter and bound; non-Integer input raises TypeError, and negatives raise the Nat RangeError. Empty arrays and absent options remain valid for Fin 0; invalid first, middle and last elements are rejected, absent payloads are not read, and caller data stays unchanged.\"\n",
+          "current": "          \"note\": \"Separate TAP, queue and runner records identify Ruby 3.3.12 for the new local valid, invalid and recovery checks. Original reports retain exact model, review, caller and archive identities; these runs do not measure dispatch. A bound violation raises RangeError naming the parameter and bound; non-Integer input raises TypeError, and negatives raise the Nat RangeError. Empty arrays and absent options remain valid for Fin 0; invalid first, middle and last elements are rejected, absent payloads are not read, and caller data stays unchanged. Separate scalar entry-counter reports: ruby: 2029 public checks. Local Ruby 3.3.12, GDB 13.1, ptrace and a glibc 2.36 package floor on x86_64 Linux The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4291154,
+          "previous": "        \"Ordinary Ruby dispatch is not counted in this host's process, which loads bundled libraries privately. Earlier scalar evidence compares those libraries byte-for-byte with the C archive from the same build; the new product/Array reports add no dispatch measurements.\",\n        \"The new reports configure a glibc minimum of 2.36 without measuring host glibc or Lean version. They do not establish a release-floor or hosted CI result.\"\n",
+          "current": "        \"Earlier scalar reports compared bundled libraries with the C archive but did not count host-process entries. Older container, product and field reports retain their original measurement scope.\",\n        \"The new reports configure a glibc minimum of 2.36 without measuring host glibc or Lean version. They do not establish a release-floor or hosted CI result.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4295466,
+          "previous": "            \"fin-batch-dotnet-product-array-ordinary-installed\"\n",
+          "current": "            \"fin-batch-dotnet-product-array-ordinary-installed\",\n            \"fin-dispatch-dotnet-ordinary-installed\"\n"
+        },
+        {
+          "start": 4295597,
+          "previous": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is ArgumentException naming the parameter and bound. Negative values throw the Nat ArgumentOutOfRangeException. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n",
+          "current": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is ArgumentException naming the parameter and bound. Negative values throw the Nat ArgumentOutOfRangeException. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports. Separate scalar entry-counter reports: dotnet: 2022 public checks. Local .NET SDK 8.0.424 with Microsoft.NETCore.App 8.0.30, GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, debugger, ptrace policy or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4297872,
+          "previous": "        \"Earlier ordinary scalar/container .NET evidence compares the privately loaded libraries with the C archive from the same build; it does not count dispatch in the .NET process.\"\n",
+          "current": "        \"Earlier ordinary scalar/container .NET evidence compares the privately loaded libraries with the C archive from the same build; it does not count dispatch in the .NET process.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4299093,
+          "previous": "      \"scope\": \"Ordinary-source JVM exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; source-free installed Java and Kotlin consumers check endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal, callback, product, result and reviewed-IR positions are not promoted.\",\n",
+          "current": "      \"scope\": \"Ordinary-source JVM exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; source-free installed Java and Kotlin consumers check endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal fields, callbacks, products, Except and reviewed-IR coverage are not added by this observation.\",\n"
+        },
+        {
+          "start": 4300066,
+          "previous": "          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected. Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected.\"\n",
+          "current": "          \"note\": \"Fresh Lean metadata keeps exact closed bounds on parameters and results, at depth zero and inside arrays, lists and options. Other shapes and positions require their own acceptance evidence.\"\n"
+        },
+        {
+          "start": 4302217,
+          "previous": "            \"native-fin-containers-java-kotlin-installed\"\n",
+          "current": "            \"native-fin-containers-java-kotlin-installed\",\n            \"fin-dispatch-java-ordinary-installed\",\n            \"fin-dispatch-kotlin-ordinary-installed\"\n"
+        },
+        {
+          "start": 4302394,
+          "previous": "          \"note\": \"Offline installed Java and Kotlin consumers pass exact per-bound checks and repeat them after relocation. A bound violation is IllegalArgumentException naming the parameter and bound. Negative values throw the Nat IllegalArgumentException, and the Java consumer also checks that null throws NullPointerException. Java and Kotlin compile separately against the one installed JAR. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged.\"\n",
+          "current": "          \"note\": \"Offline installed Java and Kotlin consumers pass exact per-bound checks and repeat them after relocation. A bound violation is IllegalArgumentException naming the parameter and bound. Negative values throw the Nat IllegalArgumentException, and the Java consumer also checks that null throws NullPointerException. Java and Kotlin compile separately against the one installed JAR. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Separate scalar entry-counter reports: java: 2023 public checks. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established kotlin: 2022 public checks. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4304374,
+          "previous": "        \"Ordinary-source JVM top-level parameters and results, alone or inside Array, List and Option; no nominal, callback, product, result or reviewed-IR claim.\",\n",
+          "current": "        \"Ordinary-source JVM top-level parameters and results, alone or inside Array, List and Option; no nominal-field, callback, product, Except or reviewed-IR claim.\",\n"
+        },
+        {
+          "start": 4304628,
+          "previous": "        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n",
+          "current": "        \"Earlier scalar reports compared bundled libraries with the C archive but did not count host-process entries. Older container, product and field reports retain their original measurement scope.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4305715,
+          "previous": "      \"scope\": \"Ordinary-source native PHP exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal, callback, product, result and reviewed-IR positions are not promoted.\",\n",
+          "current": "      \"scope\": \"Ordinary-source native PHP exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal fields, callbacks, products, Except and reviewed-IR coverage are not added by this observation.\",\n"
+        },
+        {
+          "start": 4306683,
+          "previous": "          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected. Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected.\"\n",
+          "current": "          \"note\": \"Fresh Lean metadata keeps exact closed bounds on parameters and results, at depth zero and inside arrays, lists and options. Other shapes and positions require their own acceptance evidence.\"\n"
+        },
+        {
+          "start": 4308837,
+          "previous": "            \"native-fin-containers-php-native-installed\"\n",
+          "current": "            \"native-fin-containers-php-native-installed\",\n            \"fin-dispatch-php-native-ordinary-installed\"\n"
+        },
+        {
+          "start": 4308965,
+          "previous": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is LeanBridgeError with code 1 naming the parameter and bound. Non-BigInteger arguments throw TypeError and negative values throw ValueError, in weak and strict typing modes. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged.\"\n",
+          "current": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is LeanBridgeError with code 1 naming the parameter and bound. Non-BigInteger arguments throw TypeError and negative values throw ValueError, in weak and strict typing modes. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Separate scalar entry-counter reports: php-native: 2028 public checks. Local PHP 8.2.33 (NTS) through FFI with Composer 2.5.5 and a glibc 2.36 package floor on x86_64 Linux The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4310286,
+          "previous": "        \"Ordinary-source native PHP top-level parameters and results, alone or inside Array, List and Option; no nominal, callback, product, result or reviewed-IR claim.\",\n",
+          "current": "        \"Ordinary-source native PHP top-level parameters and results, alone or inside Array, List and Option; no nominal-field, callback, product, Except or reviewed-IR claim.\",\n"
+        },
+        {
+          "start": 4310547,
+          "previous": "        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n",
+          "current": "        \"Earlier scalar reports compared bundled libraries with the C archive but did not count host-process entries. Older container, product and field reports retain their original measurement scope.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4311632,
+          "previous": "      \"scope\": \"Ordinary-source WIT/WASI exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal, callback, product, result and reviewed-IR positions are not promoted.\",\n",
+          "current": "      \"scope\": \"Ordinary-source WIT/WASI exports preserve closed Fin bounds at top-level parameters and results, including transparent aliases and bounds wider than 64 bits. Relocated builds reproduce the archive; a source-free installed consumer checks endpoints, Fin 0, rejection at and beyond each bound, unchanged caller data and repeated recovery. Fin inside Array, List and Option at those sites is checked element by element, including nested combinations; nominal fields, callbacks, products, Except and reviewed-IR coverage are not added by this observation.\",\n"
+        },
+        {
+          "start": 4312607,
+          "previous": "          \"note\": \"Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected. Fresh Lean metadata keeps exact bounds at depth zero and inside arrays, lists and options; Fin in fields, callbacks, products and results is rejected.\"\n",
+          "current": "          \"note\": \"Fresh Lean metadata keeps exact closed bounds on parameters and results, at depth zero and inside arrays, lists and options. Other shapes and positions require their own acceptance evidence.\"\n"
+        },
+        {
+          "start": 4314742,
+          "previous": "            \"native-fin-containers-wit-wasi-installed\"\n",
+          "current": "            \"native-fin-containers-wit-wasi-installed\",\n            \"fin-dispatch-wit-wasi-ordinary-installed\"\n"
+        },
+        {
+          "start": 4314866,
+          "previous": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is a Wasmtime call error naming the parameter and bound, with the result slot unchanged. The WIT text and component are identical with or without the constraint. Each rejection refreshes the store, and the consumer executes twice after relocation. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged.\"\n",
+          "current": "          \"note\": \"An offline installed consumer passes exact per-bound checks and repeats them after relocation. A bound violation is a Wasmtime call error naming the parameter and bound, with the result slot unchanged. The WIT text and component are identical with or without the constraint. Each rejection refreshes the store, and the consumer executes twice after relocation. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Container cases: empty arrays and none are valid for Fin 0, invalid first, middle and last elements are rejected naming the failed element's bound, absent option payloads are never read, and inputs stay unchanged. Separate scalar entry-counter reports: wit-wasi: 2027 public checks. Local Wasmtime 42.0.1 C API, wasm-tools 1.245.1 and a glibc 2.36 package floor on x86_64 Linux; no other Wasmtime, wasm-tools or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4316312,
+          "previous": "        \"Ordinary-source WIT/WASI top-level parameters and results, alone or inside Array, List and Option; no nominal, callback, product, result or reviewed-IR claim.\",\n",
+          "current": "        \"Ordinary-source WIT/WASI top-level parameters and results, alone or inside Array, List and Option; no nominal-field, callback, product, Except or reviewed-IR claim.\",\n"
+        },
+        {
+          "start": 4316571,
+          "previous": "        \"Dispatch is not counted in this host's process, which loads the bundled libraries privately; the evidence instead shows they are byte-identical to the C archive's libraries from the same build.\"\n",
+          "current": "        \"Earlier scalar reports compared bundled libraries with the C archive but did not count host-process entries. Older container, product and field reports retain their original measurement scope.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4353880,
+          "previous": "            \"fin-batch-dotnet-product-array-reviewed-installed\"\n",
+          "current": "            \"fin-batch-dotnet-product-array-reviewed-installed\",\n            \"fin-dispatch-dotnet-reviewed-installed\"\n"
+        },
+        {
+          "start": 4354011,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Installed dotnet consumers execute valid, invalid and recovery cases with exact caller, source, review, model and archive identities. Dispatch is unmeasured in these new reports. Separate scalar entry-counter reports: dotnet: 2022 public checks. Local .NET SDK 8.0.424 with Microsoft.NETCore.App 8.0.30, GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, debugger, ptrace policy or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4355389,
+          "previous": "        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\"\n",
+          "current": "        \"Successful hosted .NET job 113176414688 in run 37736101772 at f9d5ce9 used installed SDK 8.0.424; its log prints Lean 4.32.2 and the setup-node 22.23.3 cache path. Declared package floor 2.38 comes from the default with no override in the job log. Host glibc was not measured. The consumer restores offline and builds with the .NET SDK. Other jobs of that run failed; this is not a whole-run pass.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4358816,
+          "previous": "            \"reviewed-scalar-rollout-jvm-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-jvm-installed\",\n            \"fin-dispatch-java-reviewed-installed\"\n"
+        },
+        {
+          "start": 4358933,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Separate scalar entry-counter reports: java: 2023 public checks. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4360191,
+          "previous": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4363217,
+          "previous": "            \"reviewed-scalar-rollout-jvm-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-jvm-installed\",\n            \"fin-dispatch-kotlin-reviewed-installed\"\n"
+        },
+        {
+          "start": 4363336,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Separate scalar entry-counter reports: kotlin: 2022 public checks. Local OpenJDK 22.0.2 runtime and javac, Kotlin 2.2.0 compiling with JAVA_HOME at that JDK 22 (the original version capture ran on the default JRE 21.0.12), GNU gdb 13.1 with Yama ptrace_scope 0 and a glibc 2.36 package floor on x86_64 Linux; no other runtime, compiler, debugger, ptrace policy or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4364596,
+          "previous": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4367663,
+          "previous": "            \"reviewed-scalar-rollout-php-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-php-installed\",\n            \"fin-dispatch-php-native-reviewed-installed\"\n"
+        },
+        {
+          "start": 4367786,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Separate scalar entry-counter reports: php-native: 2028 public checks. Local PHP 8.2.33 (NTS) through FFI with Composer 2.5.5 and a glibc 2.36 package floor on x86_64 Linux The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4368828,
+          "previous": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4372585,
+          "previous": "            \"fin-ruby33-product-array-reviewed-installed\"\n",
+          "current": "            \"fin-ruby33-product-array-reviewed-installed\",\n            \"fin-dispatch-ruby-reviewed-installed\"\n"
+        },
+        {
+          "start": 4372708,
+          "previous": "          \"note\": \"Separate TAP, queue and runner records identify Ruby 3.3.12 for the new local valid, invalid and recovery checks. Original reports retain exact model, review, caller and archive identities; these runs do not measure dispatch.\"\n",
+          "current": "          \"note\": \"Separate TAP, queue and runner records identify Ruby 3.3.12 for the new local valid, invalid and recovery checks. Original reports retain exact model, review, caller and archive identities; these runs do not measure dispatch. Separate scalar entry-counter reports: ruby: 2029 public checks. Local Ruby 3.3.12, GDB 13.1, ptrace and a glibc 2.36 package floor on x86_64 Linux The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4373863,
+          "previous": "        \"The new reports configure a glibc minimum of 2.36 without measuring host glibc or Lean version. They do not establish a release-floor or hosted CI result.\"\n",
+          "current": "        \"The new reports configure a glibc minimum of 2.36 without measuring host glibc or Lean version. They do not establish a release-floor or hosted CI result.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4377072,
+          "previous": "            \"reviewed-scalar-rollout-wit-installed\"\n",
+          "current": "            \"reviewed-scalar-rollout-wit-installed\",\n            \"fin-dispatch-wit-wasi-reviewed-installed\"\n"
+        },
+        {
+          "start": 4377193,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Separate scalar entry-counter reports: wit-wasi: 2027 public checks. Local Wasmtime 42.0.1 C API, wasm-tools 1.245.1 and a glibc 2.36 package floor on x86_64 Linux; no other Wasmtime, wasm-tools or glibc floor is established The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        },
+        {
+          "start": 4378287,
+          "previous": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\"\n",
+          "current": "        \"Runtime floors and measured dispatch remain exactly those in each linked report; one host does not inherit another host's counters.\",\n        \"The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "766b655382f82949b9cc2cd0c42d4bc9b58b448bd88632c773925304392ea984",
+      "previousSha256": "957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8",
+      "edits": [
+        {
+          "start": 8135,
+          "previous": "",
+          "current": "\t\t, \"fin-dispatch-references\"\n\t\t, \"fin-scalar-dispatch-inventory\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "b9a202b769df1f5237b9b67260ac653913a2d368bc893b87d5eca07c26cbfe35",
+      "previousSha256": "9a53eec25dc8150a265fbf2eb8498cc74d611f9741a61e3e5293bcb478301af8",
+      "edits": [
+        {
+          "start": 27692,
+          "previous": "\t\tfor(const stage of Object.values(cell.stages))\n",
+          "current": "\t\tfor(const [stageName, stage] of Object.entries(cell.stages))\n"
+        },
+        {
+          "start": 27933,
+          "previous": "",
+          "current": "\t\t\t\tconst scalarCounters = stageName !== \"installedExecution\" ? []\n\t\t\t\t\t: [\"java\", \"kotlin\"].includes(profile) ? [\"java\", \"kotlin\"]\n\t\t\t\t\t\t: [\"php-native\", \"wit-wasi\", \"ruby\", \"dotnet\"].includes(profile) ? [profile] : [];\n"
+        },
+        {
+          "start": 28751,
+          "previous": "\t\t\t\t\t\t, ...([\"rust\", \"dotnet\"].includes(profile) ? [\"product\", \"product-array\"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])]);\n",
+          "current": "\t\t\t\t\t\t, ...([\"rust\", \"dotnet\"].includes(profile) ? [\"product\", \"product-array\"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])\n\t\t\t\t\t\t, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "d2d8936fb9b0f871214738e61a471d0b383e277a5fe55e150bce32cfb8b08b55",
+      "previousSha256": "574b34b097767c594b1ae32120ed03b918784715430835ddf479555da7cc733c",
+      "edits": [
+        {
+          "start": 13227,
+          "previous": "",
+          "current": "import { finScalarDispatchInventoryChangedPaths } from \"./fin-scalar-dispatch-inventory-source-history.mjs\";\n"
+        },
+        {
+          "start": 51766,
+          "previous": "",
+          "current": "\t, ...finScalarDispatchInventoryChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-dispatch-integration-source-history.mjs",
+      "currentSha256": "c18f249392d573864b5aa9053e0245394ca899164bd4e1afa0a4fa0686188380",
+      "previousSha256": "cc0c5ae94d2d799ce72f06625320375549fba6909ce30d68335164747ca50ddc",
+      "edits": [
+        {
+          "start": 260,
+          "previous": "",
+          "current": "import { beforeFinScalarDispatchInventorySource } from \"./fin-scalar-dispatch-inventory-source-history.mjs\";\n"
+        },
+        {
+          "start": 2535,
+          "previous": "",
+          "current": "\tsource = beforeFinScalarDispatchInventorySource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-dispatch-integration-source-history-tests.mjs",
+      "currentSha256": "18465c5b7b1883fcfcc1557fd940af028aafc268755676c3c23d8882b5fd4e89",
+      "previousSha256": "daa29c69890d444f04a67ba7d4544cbcd2feded2e0ae3239b41740e5a1b4410c",
+      "edits": [
+        {
+          "start": 614,
+          "previous": "",
+          "current": "import { beforeFinScalarDispatchInventorySource } from \"./fin-scalar-dispatch-inventory-source-history.mjs\";\n"
+        },
+        {
+          "start": 1477,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseJvmDispatchIntegrationUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeFinScalarDispatchInventorySource(update.path, await readFile(update.path, \"utf8\")), previous = reverseJvmDispatchIntegrationUpdate(source, update);\n"
+        },
+        {
+          "start": 2786,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeFinScalarDispatchInventorySource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3369,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeFinScalarDispatchInventorySource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

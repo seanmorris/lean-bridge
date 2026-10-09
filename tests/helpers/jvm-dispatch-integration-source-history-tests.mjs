@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeFinScalarDispatchInventorySource } from "./fin-scalar-dispatch-inventory-source-history.mjs";
 import { beforeJvmDispatchIntegrationSource, jvmDispatchIntegrationChangedPaths, jvmDispatchIntegrationHistoryPath, jvmDispatchIntegrationPredecessor, reverseJvmDispatchIntegrationUpdate } from "./jvm-dispatch-integration-source-history.mjs";
 
 test("JVM dispatch integration history authenticates exact predecessors and refuses unknown edits", async () => {
@@ -21,7 +22,7 @@ test("JVM dispatch integration history authenticates exact predecessors and refu
 	assert.deepEqual(record.updates.map(update => update.path), jvmDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseJvmDispatchIntegrationUpdate(source, update);
+		const source = beforeFinScalarDispatchInventorySource(update.path, await readFile(update.path, "utf8")), previous = reverseJvmDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeJvmDispatchIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +38,7 @@ test("JVM dispatch integration history authenticates exact predecessors and refu
 });
 
 test("JVM dispatch integration refreshes exactly 132 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", text = beforeFinScalarDispatchInventorySource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(text), previous = JSON.parse(beforeJvmDispatchIntegrationSource(path, text));
 	const record = JSON.parse(await readFile(jvmDispatchIntegrationHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -47,7 +48,7 @@ test("JVM dispatch integration refreshes exactly 132 source pins without promoti
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(await readFile(file.path)), update.currentSha256);
+			assert.equal(sha256(beforeFinScalarDispatchInventorySource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

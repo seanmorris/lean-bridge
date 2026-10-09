@@ -403,12 +403,15 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	{
 		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
 		if(cell.shape === "subtype" || (cell.shape === "fin" && !nominalFin)) assert.notEqual(cell.position, "field");
-		for(const stage of Object.values(cell.stages))
+		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
 			if(cell.shape === "fin")
 			{
+				const scalarCounters = stageName !== "installedExecution" ? []
+					: ["java", "kotlin"].includes(profile) ? ["java", "kotlin"]
+						: ["php-native", "wit-wasi", "ruby", "dotnet"].includes(profile) ? [profile] : [];
 				if(phpWasmFin)
 				{
 					assert.deepEqual(stage.evidence, [`php-wasm-fin-${cell.position === "field" ? "records" : "products"}-ordinary-installed`]);
@@ -418,7 +421,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					? (finBatch ? [`fin-batch-${profile}-record-ordinary-installed`] : finRuntimes.map(runtime => `fin-${runtime}-record-ordinary-installed`))
 					: [finEvidence, `native-fin-containers-${specializationEvidence}-installed`
 						, ...finRuntimes.flatMap(runtime => ["product", "product-array"].map(family => `fin-${runtime}-${family}-ordinary-installed`))
-						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])]);
+						, ...(["rust", "dotnet"].includes(profile) ? ["product", "product-array"].map(family => `fin-batch-${profile}-${family}-ordinary-installed`) : [])
+						, ...scalarCounters.map(caller => `fin-dispatch-${caller}-ordinary-installed`)]);
 				continue;
 			}
 			if(cell.shape === "subtype")

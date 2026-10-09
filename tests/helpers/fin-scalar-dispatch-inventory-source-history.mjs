@@ -1,27 +1,21 @@
 /**
- * Preserve exact predecessors when integrating the measured JVM Fin dispatch archive and host guidance.
+ * Preserve exact predecessors when attaching scalar entry-counter evidence to current inventory.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinScalarDispatchInventorySource } from "./fin-scalar-dispatch-inventory-source-history.mjs";
 
-export const jvmDispatchIntegrationHistoryPath = "docs/evidence/jvm-dispatch-integration-source-history-20261009.json";
-export const jvmDispatchIntegrationPredecessor = "63ae7b175733d806c6bfaa829822ac7f0f756943";
-export const jvmDispatchIntegrationChangedPaths = [
+export const finScalarDispatchInventoryHistoryPath = "docs/evidence/fin-scalar-dispatch-inventory-source-history-20261009.json";
+export const finScalarDispatchInventoryPredecessor = "e9f44187e1e11ac4cd42c2a8fa096e746b787bfd";
+export const finScalarDispatchInventoryChangedPaths = [
 	"docs/type-surface.v1.json"
 	, "src/adoption/test-profiles.mjs"
-	, "tests/jvm-fin.test.mjs"
-	, "docs/php.md"
-	, "docs/consume/wit-wasi.md"
-	, "docs/consume/java.md"
-	, "docs/consume/kotlin.md"
-	, "docs/lean/existing-package.md"
+	, "tests/type-surface.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/perl-scalar-relocation-source-history.mjs"
-	, "tests/helpers/perl-scalar-relocation-source-history-tests.mjs"
+	, "tests/helpers/jvm-dispatch-integration-source-history.mjs"
+	, "tests/helpers/jvm-dispatch-integration-source-history-tests.mjs"
 ];
 let history;
 
@@ -31,8 +25,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseJvmDispatchIntegrationUpdate = (source, update) => {
-	assert.ok(jvmDispatchIntegrationChangedPaths.includes(update.path));
+export const reverseFinScalarDispatchInventoryUpdate = (source, update) => {
+	assert.ok(finScalarDispatchInventoryChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -58,12 +52,11 @@ export const reverseJvmDispatchIntegrationUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeJvmDispatchIntegrationSource = (path, source, expected) => {
-	source = beforeFinScalarDispatchInventorySource(path, source, expected);
-	if(typeof source !== "string" || !jvmDispatchIntegrationChangedPaths.includes(path)) return source;
+export const beforeFinScalarDispatchInventorySource = (path, source, expected) => {
+	if(typeof source !== "string" || !finScalarDispatchInventoryChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(jvmDispatchIntegrationHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(finScalarDispatchInventoryHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseJvmDispatchIntegrationUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseFinScalarDispatchInventoryUpdate(source, update) : source;
 };

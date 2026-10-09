@@ -145,6 +145,7 @@ import { dotnetDispatchIntegrationChangedPaths } from "./dotnet-dispatch-integra
 import { authorRefinementDocsChangedPaths } from "./author-refinement-docs-source-history.mjs";
 import { perlScalarRelocationChangedPaths } from "./perl-scalar-relocation-source-history.mjs";
 import { jvmDispatchIntegrationChangedPaths } from "./jvm-dispatch-integration-source-history.mjs";
+import { finScalarDispatchInventoryChangedPaths } from "./fin-scalar-dispatch-inventory-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -755,6 +756,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...authorRefinementDocsChangedPaths
 	, ...perlScalarRelocationChangedPaths
 	, ...jvmDispatchIntegrationChangedPaths
+	, ...finScalarDispatchInventoryChangedPaths
 ])].sort());
 
 /**
