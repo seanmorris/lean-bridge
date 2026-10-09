@@ -276,14 +276,28 @@ export const assertReviewedFinWasmEntryPhases = context => {
 };
 
 /**
- * Recount a retained report from its transcripts alone: every transcript must be the bytes its digest names, and
- * every Node run and browser observation is accounted again against the exact expectation of its mode.
+ * Recount a retained report from its transcripts alone, against coverage declared independently of the report:
+ * exactly the Node contexts or every browser context too, on exactly the chosen engines, with the strict TypeScript
+ * consumer's prelude read from its own source. Every transcript must be the bytes its digest names, and every Node
+ * run and browser observation is accounted again against the exact expectation of its mode.
  *
  * @param report - A report of checkReviewedFinWasmEntry.
  * @param expected - Expectation of the report's selection and mode.
+ * @param coverage - The run's declared coverage.
+ * @param coverage.engines - Browser engines the run was required to cover; empty for a Node-only run.
  */
-export const recountReviewedFinWasmEntryReport = (report, expected) => {
+export const recountReviewedFinWasmEntryReport = (report, expected, { engines }) => {
+	assert.ok(Array.isArray(engines), "declared coverage");
 	assert.deepEqual([report.mode, report.selection, report.calls], [expected.mode, expected.selection, expected.calls.length]);
+	const source = reviewedFinWasmTypeScript(expected.selection);
+	assert.equal(report.typescriptSha256, sha256(source), "the strict TypeScript consumer");
+	const preludes = { "node-javascript": [], "node-typescript": reviewedFinWasmTypeScriptPrelude(source, expected.selection) };
+	assert.deepEqual(report.contexts.map(context => context.profile), [...Object.keys(preludes), ...engines.length ? reviewedFinBrowserProfiles : []], "the declared contexts, no more and no fewer");
+	for(const context of report.contexts)
+	{
+		if(Object.hasOwn(preludes, context.profile)) assert.deepEqual(context.prelude, preludes[context.profile], `${context.profile} prelude`);
+		else assert.deepEqual(context.engines, engines, `${context.profile} engines`);
+	}
 	for(const [digest, text] of Object.entries(report.transcripts)) assert.equal(sha256(text), digest, "a retained transcript is its digest's bytes");
 	const transcript = digest => {
 		assert.ok(Object.hasOwn(report.transcripts, digest), `transcript ${digest} is retained`);
@@ -303,7 +317,7 @@ export const recountReviewedFinWasmEntryReport = (report, expected) => {
 		for(const observation of observations)
 		{
 			const parsed = transcript(observation.transcriptSha256);
-			const prelude = browser ? [] : context.prelude;
+			const prelude = browser ? [] : preludes[context.profile];
 			assert.deepEqual(accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, prelude), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);
 			runs++;
 		}

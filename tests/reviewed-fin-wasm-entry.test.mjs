@@ -14,6 +14,7 @@ import { checkReviewedFinWasmEntry, recountReviewedFinWasmEntryReport } from "./
 import { reviewedFinBrowserProfiles } from "./helpers/reviewed-fin-wasm-browser.mjs";
 import { expectReviewedFinWasmEntry, reviewedFinWasmEntryModes } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { reviewedFinWasmSelections } from "./helpers/reviewed-fin-wasm-fixture.mjs";
+import { corpusBrowserSelection } from "./helpers/type-corpus.mjs";
 
 const browsers = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_TEST === "1" || browsers;
@@ -27,7 +28,9 @@ for(const mode of reviewedFinWasmEntryModes) for(const selection of reviewedFinW
 		assert.deepEqual(report.contexts.map(context => context.profile), ["node-javascript", "node-typescript", ...browsers ? reviewedFinBrowserProfiles : []]);
 		for(const context of report.contexts) assert.deepEqual([context.mode, context.source, context.calls], [mode, mode === "probe", report.calls], context.profile);
 		// The retained transcripts alone reproduce every accounted run.
-		assert.ok(recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry(selection, mode)) >= report.contexts.length);
+		// Coverage is declared from the run's own selection, independently of the report.
+		const engines = browsers ? corpusBrowserSelection(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS) : [];
+		assert.ok(recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry(selection, mode), { engines }) >= report.contexts.length);
 		const path = resolve(process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR ?? "build/reviewed-fin-wasm-entry", `${mode}-${reviewed ? "reviewed" : "ordinary"}-${selection}.json`);
 		await saveLakeFile(dirname(path), basename(path), canonicalJson(report));
 	});

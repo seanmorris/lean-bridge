@@ -19,6 +19,7 @@ import { createComponentPrivateAbi } from "../src/build/component-callable-adapt
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { reviewedFinWasmSourceControls } from "./helpers/reviewed-fin-wasm-source-entry.mjs";
+import { reviewedFinWasmTypeScript } from "./helpers/reviewed-fin-wasm-typescript.mjs";
 import { accountReviewedFinWasmEntryReport, assertReviewedFinWasmEntryPhases, authenticateReviewedFinWasmEntryPackage, prepareReviewedFinWasmEntryConsumer, recountReviewedFinWasmEntryReport, reviewedFinWasmEntryBrowserPhases, reviewedFinWasmEntryNodeIndex, reviewedFinWasmInstalledManifest, runReviewedFinWasmEntryNode, runReviewedFinWasmEntryNodeOutput } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
 
 const entryHelper = pathToFileURL(resolve("tests/helpers/reviewed-fin-wasm-entry.mjs")).href;
@@ -211,8 +212,31 @@ test("retained transcripts alone recount every run, and an altered or missing tr
 	const { root } = await consumer(t, "structural", "probe");
 	const stdout = await runReviewedFinWasmEntryNodeOutput(root, "index.mjs"), digest = sha256(stdout);
 	const accounted = accountReviewedFinWasmEntryReport(expected, JSON.parse(stdout));
-	const report = { mode: "probe", selection: "structural", calls: expected.calls.length, contexts: [{ profile: "node-javascript", transcriptSha256: digest, ...accounted }], transcripts: { [digest]: stdout } };
-	assert.equal(recountReviewedFinWasmEntryReport(report, expected), 1);
+	// A Node-only report: the strict TypeScript context's run here is the same consumer with its declared prelude.
+	await writeFile(join(root, "typed.mjs"), `import * as api from "reviewed-fin";\nvoid api.mirror(9n);\nvoid api.label("prefix", 0n, "suffix");\nvoid api.rows([[0n, 9n]]);\nvoid api.nested([{ tag: "some", value: [2n, { error: 1n }] }]);\n${reviewedFinWasmEntryNodeIndex}`);
+	const typedOutput = await runReviewedFinWasmEntryNodeOutput(root, "typed.mjs"), typedDigest = sha256(typedOutput);
+	const prelude = ["mirror", "label", "rows", "nested"];
+	const typed = accountReviewedFinWasmEntryReport(expected, JSON.parse(typedOutput), prelude);
+	const contexts = [{ profile: "node-javascript", transcriptSha256: digest, ...accounted }, { profile: "node-typescript", transcriptSha256: typedDigest, ...typed }];
+	const report = {
+		mode: "probe"
+		, selection: "structural"
+		, calls: expected.calls.length
+		, typescriptSha256: sha256(reviewedFinWasmTypeScript("structural"))
+		, contexts
+		, transcripts: { [digest]: stdout, [typedDigest]: typedOutput }
+	};
+	assert.equal(recountReviewedFinWasmEntryReport(report, expected, { engines: [] }), 2);
+	// Coverage is declared independently: a dropped or relabelled context, a relabelled prelude, an undeclared
+	// browser run or a different TypeScript consumer is refused.
+	for(const [value, coverage] of [
+		[{ ...report, contexts: report.contexts.slice(0, 1) }, { engines: [] }]
+		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: ["mirror", "label"] }] }, { engines: [] }]
+		, [{ ...report, contexts: [report.contexts[0], { ...report.contexts[1], prelude: [], profile: "node-typescript" }] }, { engines: [] }]
+		, [report, { engines: ["chromium"] }]
+		, [{ ...report, typescriptSha256: sha256("other") }, { engines: [] }]
+	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, coverage), assert.AssertionError);
+	assert.throws(() => recountReviewedFinWasmEntryReport(report, expected), TypeError);
 	const parsed = JSON.parse(stdout);
 	parsed.entry.lines = parsed.entry.lines.filter(line => !line.startsWith("lean-bridge-source-entry nested"));
 	const forged = JSON.stringify(parsed), forgedDigest = sha256(forged);
@@ -222,5 +246,31 @@ test("retained transcripts alone recount every run, and an altered or missing tr
 		, { ...report, contexts: [{ ...report.contexts[0], transcriptSha256: forgedDigest }], transcripts: { [forgedDigest]: forged } }
 		, { ...report, contexts: [{ ...report.contexts[0], source: false }] }
 		, { ...report, mode: "original" }
-	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected), assert.AssertionError);
+	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected, { engines: [] }), assert.AssertionError);
+});
+
+test("a browser report must cover exactly the declared engines; removing an engine with all its rows is refused", () => {
+	const engines = ["chromium", "firefox", "webkit"];
+	const context = profile => {
+		const { variants, phases } = reviewedFinWasmEntryBrowserPhases[profile];
+		const observations = engines.flatMap(engine => variants.flatMap(variant => phases.map(phase => ({ engine, variant, phase, transcriptSha256: sha256(`${profile} ${engine} ${variant} ${phase}`) }))));
+		return { profile, engines, observations, executions: engines.flatMap(engine => variants.map(variant => ({ engine, variant, transcriptSha256: sha256(`${profile} ${engine} ${variant} first`) }))) };
+	};
+	// Removing one engine together with its observations and executions still satisfies the per-context phase check,
+	// so only the independently declared engines can refuse it.
+	const reduced = context("browser-worker");
+	reduced.engines = ["chromium", "firefox"];
+	reduced.observations = reduced.observations.filter(item => item.engine !== "webkit");
+	reduced.executions = reduced.executions.filter(item => item.engine !== "webkit");
+	assertReviewedFinWasmEntryPhases(reduced);
+	const contexts = [{ profile: "node-javascript", prelude: [] }, { profile: "node-typescript", prelude: ["mirror", "label"] }, context("browser-javascript"), context("browser-react"), reduced];
+	const report = {
+		mode: "original"
+		, selection: "scalar"
+		, calls: 226
+		, typescriptSha256: sha256(reviewedFinWasmTypeScript("scalar"))
+		, transcripts: {}
+		, contexts
+	};
+	assert.throws(() => recountReviewedFinWasmEntryReport(report, { mode: "original", selection: "scalar", calls: Array(226) }, { engines }), /browser-worker engines/u);
 });
