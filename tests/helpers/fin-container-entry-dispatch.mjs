@@ -25,11 +25,12 @@ const huge = 2n ** 70n;
 export const finContainerEntryAdapter = (componentId, name) => `lb_${sha256(`${componentId}\0${name}`).slice(0, 24)}`;
 
 /**
- * Module initializer of the compiled native adapters for one component.
+ * Module initializer of the compiled native adapters for one component, as native-model.mjs names that
+ * module. The Wasm component's LeanBridgeGenerated module is a different artifact.
  *
  * @param componentId - Actual component identity.
  */
-export const finContainerEntryInitializer = componentId => `initialize_LeanBridgeGenerated${sha256(componentId).slice(0, 16)}`;
+export const finContainerEntryInitializer = componentId => `initialize_LeanBridgeNative${sha256(componentId).slice(0, 16)}`;
 
 /**
  * Ten columns: the five Lean sources, then their adapters for this component.

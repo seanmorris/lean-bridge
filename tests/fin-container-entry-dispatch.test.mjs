@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { renderWitHostHeader } from "../src/backends/wit/copied-host.mjs";
+import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
 import { renderCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
@@ -49,7 +50,9 @@ test("container entry columns come from the actual component and its unique mode
 			assert.ok(!seen.has(adapter), "adapters differ between components");
 			seen.add(adapter);
 		}
-		assert.match(finContainerEntryInitializer(id), /^initialize_LeanBridgeGenerated[0-9a-f]{16}$/u);
+		// The raw probe initializes the native adapter module the build itself names, never the Wasm one.
+		assert.equal(finContainerEntryInitializer(id), `initialize_${generateNativeLeanAdapters({ component: { id }, exports: [], types: [] }).module}`);
+		assert.match(finContainerEntryInitializer(id), /^initialize_LeanBridgeNative[0-9a-f]{16}$/u);
 	}
 	const base = model("FinContainers.Api@1.0.0");
 	for(const [label, mutate, component] of [
