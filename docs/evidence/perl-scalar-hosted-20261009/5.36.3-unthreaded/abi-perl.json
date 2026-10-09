@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 2,
+  "consumer": "perl",
+  "timingMode": "steady-state",
+  "operation": "Generated XS call to Lean UInt32 addition",
+  "scope": "Perl 5.36.3 unthreaded; median of 9 warmed installed-API samples; runtime startup excluded",
+  "iterations": 100000,
+  "durationNanoseconds": 86256326.00001149,
+  "nanosecondsPerOperation": 862.563260000115,
+  "environment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "cpu": "AMD EPYC 7763 64-Core Processor"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "archives": {
+    "archives/LeanBridge-NativeFin-1.000.tar.gz": "0950fc00a058dd9621098ea27e967b3ca2ba73f07f2573853b9d8088a4e583fb",
+    "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "2b907a44ca30ed4d2dd3108266c1a870d25dfeed5cd2ffb011937da77153111e",
+      "checks": 2024,
+      "compilerFreePath": true,
+      "consumerSha256": "a939676bc4bd5d545079a56f70f2160be3b383375aec2471290e7c052f2e5f36",
+      "dispatch": {
+        "columns": [
+          "l_NativeFin_mirror",
+          "l_NativeFin_impossible",
+          "l_NativeFin_label"
+        ],
+        "interposer": "LD_PRELOAD",
+        "observed": [
+          [
+            "valid-mirror",
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          [
+            "invalid-only",
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "valid-label",
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          [
+            "invalid-then-valid",
+            [
+              1,
+              0,
+              0
+            ]
+          ]
+        ],
+        "positiveControl": "valid public calls increment their source count"
+      },
+      "modelSha256": "71f414532ac8ce0f6b86b18fd723f7793eb0cb8673777a30f418bc404360c7ca",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 59694,
+              "path": "archives/LeanBridge-NativeFin-1.000.tar.gz",
+              "sha256": "0950fc00a058dd9621098ea27e967b3ca2ba73f07f2573853b9d8088a4e583fb"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-NativeFin",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51362427,
+              "path": "archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz",
+              "sha256": "c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpan",
+          "version": "0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+      "profile": "perl",
+      "receiptSha256": "c39d2521f4555166bd2003df89b151f8aa5067a64fe28014234effeb10d0ba2f",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "reviewedSourceSha256": "95c70a9b79f4f4cce574b9d7ce8a3f1dcb32519448820cd52b40a371fd1ecd4c",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e5f00f8e5a4107fe77b7d044fa875e959976d2809c2cae45dba05abab7f04666"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

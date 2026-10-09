@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePerlScalarPromotionSource } from "./perl-scalar-promotion-source-history.mjs";
 
 export const wasmCiArrayHistoryPath = "docs/evidence/wasm-ci-array-source-history-20261009.json";
 export const wasmCiArrayPredecessor = "293e047d3fea9e6f5484fe63fc40110a55f1d1de";
@@ -55,6 +56,7 @@ export const reverseWasmCiArrayUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeWasmCiArraySource = (path, source, expected) => {
+	source = beforePerlScalarPromotionSource(path, source, expected);
 	if(typeof source !== "string" || !wasmCiArrayChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

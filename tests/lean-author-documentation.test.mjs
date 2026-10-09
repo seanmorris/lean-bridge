@@ -220,7 +220,7 @@ test("callback guidance separates installed browser and reviewed directions from
 	assert.match(document, /Reviewed host replies and other native hosts remain pending/);
 });
 
-test("CPAN author and publisher guidance cite four-ABI relocation without promoting scalar or reviewed Subtype", async () => {
+test("CPAN guidance distinguishes scalar and container four-ABI relocation from reviewed Subtype", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const receipt = JSON.parse(await readFile("docs/evidence/perl-refinements-hosted-20261009/receipt.json"));
 	assert.equal(receipt.configurations.length, 4); assert.equal(receipt.scope.supportPromotion, false);
@@ -232,10 +232,10 @@ test("CPAN author and publisher guidance cite four-ABI relocation without promot
 	assert.match(document, /Four-ABI CPAN acceptance.*perl-refinements-20261009\.md/u);
 	assert.match(document, /Installed, both source routes on four ABIs/u);
 	assert.match(document, /Installed on four ABIs; ordinary source/u);
-	assert.match(document, /This container evidence does not cover the separate top-level scalar relocation gate/u);
-	assert.match(document, /Executed; relocation retest pending/u);
+	assert.match(document, /Separate scalar checks.*perl-scalar-20261009\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);
+	assert.match(document, /\| `Fin n` parameter or result \| Installed \| Installed \| Installed, both source routes on four ABIs \|/u);
 	assert.match(document, /C\/C\+\+ and Node installed; other profiles pending/u);
-	assert.doesNotMatch(document, /Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);
+	assert.doesNotMatch(document, /Executed; relocation retest pending|Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);
 	const publisher = await readFile("docs/publish/cpan.md", "utf8");
 	assert.ok(publisher.includes("checked top-level Subtype constructors"));
 	assert.ok(publisher.includes("../evidence/perl-refinements-20261009.md"));

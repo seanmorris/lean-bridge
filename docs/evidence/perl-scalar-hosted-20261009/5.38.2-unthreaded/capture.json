@@ -1,0 +1,50 @@
+{
+  "revision": "046ced089cd007d10ce91b66a69c461321c808ca",
+  "run": 37897964965,
+  "configuration": "5.38.2-unthreaded",
+  "job": 113713586090,
+  "jobSha256": "01e4424c6c6a828042b8a55d42171289af2eac9fd17dc5786a3be0a10177fe01",
+  "logSha256": "bb410f14f35c3bd54f818405952319c0542e0dc6a28a8ad7df90147c14c24b2f",
+  "artifacts": [
+    {
+      "kind": "corpus",
+      "id": 11611950446,
+      "bytes": 537906,
+      "sha256": "7f11ba49991caf4a67093ed9d14b0fc54415ae68447dd2dce4ea67d751093bcf",
+      "reports": [
+        {
+          "member": "native-fin/perl.json",
+          "path": "ordinary.json",
+          "bytes": 3766,
+          "sha256": "949eb351e3c523348370b7cfc084d5a8a891e9cf938e2b6701cdca3c36f0aef1"
+        },
+        {
+          "member": "native-fin/perl-reviewed.json",
+          "path": "reviewed.json",
+          "bytes": 3860,
+          "sha256": "aa338888ca62b89f40311a1f3013d0c01ae1d177220f898e201fe400808053fd"
+        }
+      ]
+    },
+    {
+      "kind": "abi",
+      "id": 11611870446,
+      "bytes": 2124,
+      "sha256": "2d9d92d9cf197ef0c2e9665fc3bb5ff68131cb01b21242c557c0ec35339bd20a",
+      "reports": [
+        {
+          "member": "5.38.2-unthreaded/acceptance.json",
+          "path": "abi-acceptance.json",
+          "bytes": 1719,
+          "sha256": "a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1"
+        },
+        {
+          "member": "5.38.2-unthreaded/perl.json",
+          "path": "abi-perl.json",
+          "bytes": 479,
+          "sha256": "408268adb399c0936c315bf9e8785c24ae69c59d2387844fffd7683b8eba2a5a"
+        }
+      ]
+    }
+  ]
+}

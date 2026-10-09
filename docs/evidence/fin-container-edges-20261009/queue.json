@@ -1,0 +1,133 @@
+{
+  "revision": "dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b",
+  "tree": "e5d84091a1c5ec3d205e0600a0af5b7fd4289be4",
+  "cwd": "/app/build/worktrees/fin-container-edges-producer-dc6b8b8",
+  "queuedAt": "2026-10-09T10:33:50.694Z",
+  "sources": {
+    "tests/fin-container-edges.test.mjs": "c22cdd1d20e90498bf5ee0b6829878b090eb5ff208e168e1e6cca2b5cb2749af",
+    "tests/helpers/fin-container-edges.mjs": "3f2af08f59520ece2180ebd85ee57d5b7af53e18dbf89c50a94b37e2a30aef08",
+    "tests/helpers/fin-container-edge-install.mjs": "f6d1bf014ac2a711c6da9c06bd9e91c57ac180ffd5dce1a23b0aef05f8c6bb75",
+    "tests/fixtures/fin-container-edges.lean": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45",
+    "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+    "tests/fixtures/fin-container-consumers/c.c": "5e75156d9b1ab58fc1d981f8b6ab2ab8eb72be9e2e1d023508faa4dfb5dcf2b4",
+    "tests/fixtures/fin-container-edge-consumers/c.c": "bfc0c35df92db0abe5e24003068b6dd1d1559f53a5ec4ccd9d7691a52c9fbdcd",
+    "tests/fixtures/fin-container-consumers/cpp.cpp": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+    "tests/fixtures/fin-container-edge-consumers/cpp.cpp": "123d127829c3d2e38b9169ae3a0c3b5fce4f5bf67ddeee03c2629218b7fc2a7f",
+    "tests/fixtures/fin-container-consumers/python.py": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+    "tests/fixtures/fin-container-edge-consumers/python.py": "689c606d91f8e2e49e9f231f660e65cd7cd995e5a87628a25447ca60f9955b75",
+    "tests/helpers/fin-container-install.mjs": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "src/build/canonical-build.mjs": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+    "src/build/native-model.mjs": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+    "src/build/native-artifacts.mjs": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+    "src/backends/c/gmp-projection.mjs": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+    "src/backends/c/gmp-values.mjs": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+    "src/backends/cpp/primitives.mjs": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+    "src/backends/cpp/copied-values.mjs": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+    "src/backends/python/generate.mjs": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+    "src/backends/python/copied-conversions.mjs": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+    "src/release/native-c-family.mjs": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+    "src/release/package-set-receipt.mjs": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+  },
+  "expected": {
+    "c": {
+      "checks": 14114,
+      "consumerSha256": "b9df0c88e8085e2ea605b4295811c966991e3efb6186f02a168f8224a751eb4d"
+    },
+    "cpp": {
+      "checks": 14099,
+      "consumerSha256": "2243247b9aa590e001ee9b9290e6e00ca1914f2031a9bf2f9ce947b6bd53dead"
+    },
+    "python": {
+      "checks": 14095,
+      "consumerSha256": "9e32423234dc8e8ab93451cba3858de7a55b9da23df980e8d076dea0f2ad1ba7"
+    }
+  },
+  "runnerSha256": "2eb8d3a9b0d58131c799a4d73f9db0169d32cbb30ce22ec68442b86404c48c40",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^installed source-free native packages execute zero-bound and nested-position Fin edge cases$",
+    "tests/fin-container-edges.test.mjs"
+  ],
+  "selections": [
+    {
+      "name": "c-cpp",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "report": "edges-c-cpp.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES": "c,cpp",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT": "/app/build/vo1454-fin-container-edges-dc6b8b8/edges-c-cpp.json"
+      }
+    },
+    {
+      "name": "python311",
+      "profiles": [
+        "python"
+      ],
+      "report": "edges-python311.json",
+      "python": "/app/.toolchains/python311/bin/python3",
+      "version": "3.11.16",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES": "python",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT": "/app/build/vo1454-fin-container-edges-dc6b8b8/edges-python311.json",
+        "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3"
+      }
+    },
+    {
+      "name": "python312",
+      "profiles": [
+        "python"
+      ],
+      "report": "edges-python312.json",
+      "python": "/app/.toolchains/python312/bin/python3",
+      "version": "3.12.14",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES": "python",
+        "LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT": "/app/build/vo1454-fin-container-edges-dc6b8b8/edges-python312.json",
+        "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python312/bin/python3"
+      }
+    }
+  ],
+  "node": "v22.23.2",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "readelf": "GNU readelf (GNU Binutils for Debian) 2.40",
+  "pythons": {
+    "/app/.toolchains/python311/bin/python3": "Python 3.11.16",
+    "/app/.toolchains/python312/bin/python3": "Python 3.12.14"
+  },
+  "freeMiB": 6798,
+  "stopFloorMiB": 2048,
+  "scope": "Local ordinary-source installed C/C++/Python Fin zero-bound and nested-position behavior, source-free offline two-root packages and complete installed-tree relocation. glibc2.36 only. Not hosted, release-floor, other-host or expanded dispatch acceptance."
+}

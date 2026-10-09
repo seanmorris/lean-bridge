@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1425,
+  "execution": "hosted",
+  "revision": "046ced089cd007d10ce91b66a69c461321c808ca",
+  "runId": 37897964965,
+  "relocationFix": "63ae7b1",
+  "configurations": [
+    {
+      "name": "5.36.3-unthreaded",
+      "job": 113713586092,
+      "corpus": 11610422596,
+      "abi": 11610207539
+    },
+    {
+      "name": "5.36.3-threaded",
+      "job": 113713586009,
+      "corpus": 11610726080,
+      "abi": 11611150841
+    },
+    {
+      "name": "5.38.2-unthreaded",
+      "job": 113713586090,
+      "corpus": 11611950446,
+      "abi": 11611870446
+    },
+    {
+      "name": "5.38.2-threaded",
+      "job": 113713586060,
+      "corpus": 11607767471,
+      "abi": 11607558341
+    }
+  ],
+  "scope": {
+    "profile": "perl",
+    "ecosystem": "cpan",
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir"
+    ],
+    "checks": 2024,
+    "sourceCounterRows": 4,
+    "selection": "LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests/perl-fin.test.mjs, nine unskipped tests including both selected routes",
+    "relocation": "Each consumer's installed tree moves after its first full run and the unchanged consumer reruns from the moved tree; the source counters run there",
+    "glibc": "Each package records its configured glibc 2.38 floor. No run on a minimum-libc machine is claimed",
+    "identities": "Model, Binding IR, source-tree and package-set receipt digests are those the reports carry. The full build documents are not present, so they are not recomputed",
+    "sources": "Selected producer sources are exact 046ced0 snapshots, which include the 63ae7b1 relocation of scalar consumers",
+    "binaryArchivesRetained": false,
+    "artifactZipsRetained": true,
+    "supportPromotion": false
+  },
+  "files": [
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/fetched-at.txt",
+      "sha256": "6dd8ee8391dd724b37270fc14d3e5a72d2a9a77c90f4bbe887b73a30722e88a3",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/capture.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/capture.json",
+      "sha256": "a6fc1e6db575d7a4c6788965c09a5305f3204efcbbe5da4360462252ab6b1f8b",
+      "bytes": 1600
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/job.json",
+      "sha256": "b835ed9f65cfbda30d7d86ae49e382740f972e1afe4ad16331e732414d2c89da",
+      "bytes": 3981
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.log",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/job.log",
+      "sha256": "b47938ba98ab2d8f3d03e2946d8679fbcaa5a0109013ab12f9c350c2f46a9c9e",
+      "bytes": 394960
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/corpus-artifact.json",
+      "sha256": "163418edb5207a6187ffc234087d78dd435ed4d19560900efb3f2d6e467bd5a4",
+      "bytes": 775
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/abi-artifact.json",
+      "sha256": "8980aa408d65e622a3b7cdb29a81528443fa3733a93ce00bd43cc13c045895c5",
+      "bytes": 765
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/corpus.zip",
+      "sha256": "9b4bde1a48e90149df0ff93cb102315d6187e126c46f1f88f6784fee7f8715c3",
+      "bytes": 537867
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/abi.zip",
+      "sha256": "18275b72438305a2a11a3011a009c5c2c113987af66dd6bd9df7cd431cbd6c49",
+      "bytes": 2125
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/ordinary.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/corpus.zip!native-fin/perl.json",
+      "sha256": "f6fa08e0e697eb8598d1b8b532d41c4e27a6299cf0e67e52dd4e7f340afe312d",
+      "bytes": 3766
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/reviewed.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/corpus.zip!native-fin/perl-reviewed.json",
+      "sha256": "0b5e58481f99196a09326838885b75e1d25462ab68405e391c4c9daa5a6b5c93",
+      "bytes": 3860
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/abi.zip!5.36.3-unthreaded/acceptance.json",
+      "sha256": "321b54b25d2e8e799ad52185aa7952a478f6164c50b6011637958aa729748fc9",
+      "bytes": 1719
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-perl.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-unthreaded/abi.zip!5.36.3-unthreaded/perl.json",
+      "sha256": "3be3d944fdcf2df2dbb8aa08255b41d82b57210a196ac4484e48fc69e7c1198b",
+      "bytes": 480
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/fetched-at.txt",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/fetched-at.txt",
+      "sha256": "31b66ce76b3e9155905e6fa31384486654c08b7d09d8efb646c0829694f8c3fc",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/capture.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/capture.json",
+      "sha256": "809c262f2229e3d4ce421516cf28208397b5144c5c830f1045739ad01dd89fef",
+      "bytes": 1594
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/job.json",
+      "sha256": "5e7e48745bb0c1f98a5c9a85f87a64e9ae43bd1a5e9c46b10a5654b22f5b2f0f",
+      "bytes": 3979
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.log",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/job.log",
+      "sha256": "8a366846aeaa90d504e232e92dd99fd0dbf59fa861b4505582f63ebf41500844",
+      "bytes": 394782
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/corpus-artifact.json",
+      "sha256": "98ec35ccebb79a28b47b7c24791b14fd5221c9df66e27a77a19a67edcdd47c47",
+      "bytes": 773
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/abi-artifact.json",
+      "sha256": "18dc8b1b53e8ee5250a0c81376256db5254ccd412f2b61bccfe59e56b0ebd61d",
+      "bytes": 763
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/corpus.zip",
+      "sha256": "f006edf54ef4faabbeb5cea49790e1a85da171e8a0f6da56626f2b2e58b476cb",
+      "bytes": 538087
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/abi.zip",
+      "sha256": "a15ed63b38ca6492605e3a6504570517b0cd636d6bc8e263367e6b3599e088cc",
+      "bytes": 2102
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/ordinary.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/corpus.zip!native-fin/perl.json",
+      "sha256": "54b5fe6146c70f903e69224ad0e8be074d2c29acd89769cbaf7b79044e004f87",
+      "bytes": 3764
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/reviewed.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/corpus.zip!native-fin/perl-reviewed.json",
+      "sha256": "4c02215fecedab7a5829cb4fe755ebc8eeb7eff74f349e5ca52f2a31ebec2b89",
+      "bytes": 3858
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/abi.zip!5.36.3-threaded/acceptance.json",
+      "sha256": "cb41a4cc86d1e29c552c64dc9279155b92e65736cd654917560f0e60d89ff575",
+      "bytes": 1717
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-perl.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.36.3-threaded/abi.zip!5.36.3-threaded/perl.json",
+      "sha256": "aeb35bbaf15819e78f264ae14c4532c3d85cda4a52091a7b960704546975c8c5",
+      "bytes": 477
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/fetched-at.txt",
+      "sha256": "31786d4ca1b483e9f5ab57ef068b99fdff440d06ff926b3cb9b07fccb0b7479b",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/capture.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/capture.json",
+      "sha256": "a9cb60e0209d5cf501b5963fcf80c4d88738dc5fc8b069f21cc961a74b748ee4",
+      "bytes": 1600
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/job.json",
+      "sha256": "01e4424c6c6a828042b8a55d42171289af2eac9fd17dc5786a3be0a10177fe01",
+      "bytes": 3981
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.log",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/job.log",
+      "sha256": "bb410f14f35c3bd54f818405952319c0542e0dc6a28a8ad7df90147c14c24b2f",
+      "bytes": 392051
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/corpus-artifact.json",
+      "sha256": "5b8158250b41f7232333de0cdd48eda5967ddd03c5e4ce581a625c55043ddde1",
+      "bytes": 775
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/abi-artifact.json",
+      "sha256": "61f2a990c13a346e0ec536bab7c0b697ef364da54aa1314f56b9647faf6153cb",
+      "bytes": 765
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/corpus.zip",
+      "sha256": "7f11ba49991caf4a67093ed9d14b0fc54415ae68447dd2dce4ea67d751093bcf",
+      "bytes": 537906
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/abi.zip",
+      "sha256": "2d9d92d9cf197ef0c2e9665fc3bb5ff68131cb01b21242c557c0ec35339bd20a",
+      "bytes": 2124
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/ordinary.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/corpus.zip!native-fin/perl.json",
+      "sha256": "949eb351e3c523348370b7cfc084d5a8a891e9cf938e2b6701cdca3c36f0aef1",
+      "bytes": 3766
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/reviewed.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/corpus.zip!native-fin/perl-reviewed.json",
+      "sha256": "aa338888ca62b89f40311a1f3013d0c01ae1d177220f898e201fe400808053fd",
+      "bytes": 3860
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/abi.zip!5.38.2-unthreaded/acceptance.json",
+      "sha256": "a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1",
+      "bytes": 1719
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-perl.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-unthreaded/abi.zip!5.38.2-unthreaded/perl.json",
+      "sha256": "408268adb399c0936c315bf9e8785c24ae69c59d2387844fffd7683b8eba2a5a",
+      "bytes": 479
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/fetched-at.txt",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/fetched-at.txt",
+      "sha256": "4b1fa0840f0b3ff29c4c5e7fec5928efc01346fcd1e826fa99225e24736afe8f",
+      "bytes": 25
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/capture.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/capture.json",
+      "sha256": "6410809558caa50920a86ebca400ae8f6213bf8025d68b31f8954181674dc086",
+      "bytes": 1594
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/job.json",
+      "sha256": "a22df7183e48feead9dccd8a9f754ed8451844067b8b03b18e26d8169063853a",
+      "bytes": 3979
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.log",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/job.log",
+      "sha256": "3373fa817c27e89de8d407267bd6c932ff00923899452614fa2060f5e7bc9ea9",
+      "bytes": 390128
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/corpus-artifact.json",
+      "sha256": "e09ce30d24481cce171bc315c17800269ef15501756ebfa99598a1797c0ce750",
+      "bytes": 773
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-artifact.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/abi-artifact.json",
+      "sha256": "f71425a0ee36598d1a53460a204d8350279a69a51ee19dc6cc1517bde437b9d1",
+      "bytes": 763
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/corpus.zip",
+      "sha256": "2a512953c3caa40eb152a93bbd9c6607c7873898b3c3c63e957e5873ad1fec06",
+      "bytes": 538181
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi.zip",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/abi.zip",
+      "sha256": "502d953da63980fa86e16b4b102f7375192454de80be283131131fe66b547de3",
+      "bytes": 2106
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/ordinary.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/corpus.zip!native-fin/perl.json",
+      "sha256": "1fdc15bee61242b8914459a15147b1f253a9bd63ce2e7215e96455a00c0eff36",
+      "bytes": 3764
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/reviewed.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/corpus.zip!native-fin/perl-reviewed.json",
+      "sha256": "1ccf3b74bd73e00a2b721270cc55726e765d3d4dca3826e728e6b3e587bd44bf",
+      "bytes": 3858
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/abi.zip!5.38.2-threaded/acceptance.json",
+      "sha256": "e5fec63e9bf6c41c07efda06661d4abb8d55ddd27d3186fc26edc3c46520ba48",
+      "bytes": 1717
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-perl.json",
+      "originalPath": "build/vo1425-perl-scalar-046ced0/5.38.2-threaded/abi.zip!5.38.2-threaded/perl.json",
+      "sha256": "2c93fb387fcf15cb5faa9bcc3946fa60fcc500db586dbf4515707ab5a1067bcd",
+      "bytes": 475
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/perl-fin.test.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:tests/perl-fin.test.mjs",
+      "sha256": "db9417bcdb8cf599252681d4893fc418ca00f907b38d0772a97cd16171fba0bf",
+      "bytes": 18463
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/perl-relocated-consumer.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:tests/helpers/perl-relocated-consumer.mjs",
+      "sha256": "9c9d10cafe51d829958d825defed98344fda692e4002b71c9863109d644c6acb",
+      "bytes": 2306
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/.github/workflows/perl-consumer.yml.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:.github/workflows/perl-consumer.yml",
+      "sha256": "9b560a9976cb967ab2d717bcf8cf656ca47d9b11f2e8d89e5b6ad0bfd3d8a5bc",
+      "bytes": 22324
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/reviewed-scalar-host-fixture.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:tests/helpers/reviewed-scalar-host-fixture.mjs",
+      "sha256": "88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c",
+      "bytes": 681
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:tests/fixtures/onboarding/native-fin/NativeFin.lean",
+      "sha256": "7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b",
+      "bytes": 787
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/backends/perl/generate.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:src/backends/perl/generate.mjs",
+      "sha256": "c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d",
+      "bytes": 40059
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-model.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-project.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:src/build/native-project.mjs",
+      "sha256": "b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7",
+      "bytes": 17169
+    },
+    {
+      "path": "docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "git:046ced089cd007d10ce91b66a69c461321c808ca:src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "bytes": 14878
+    }
+  ]
+}

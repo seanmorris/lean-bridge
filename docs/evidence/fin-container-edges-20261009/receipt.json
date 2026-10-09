@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "kind": "fin-container-edge-native-acceptance",
+  "revision": "dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b",
+  "selections": [
+    "c-cpp",
+    "python311",
+    "python312"
+  ],
+  "scope": {
+    "hosts": [
+      "c",
+      "cpp",
+      "python"
+    ],
+    "pythonFloors": [
+      "3.11.16",
+      "3.12.14"
+    ],
+    "route": "ordinary-source",
+    "cases": [
+      "empty Array, List and Option of Fin 0 round trips",
+      "nonempty or present Fin 0 refused with the exact bound diagnostic",
+      "None and some [] distinct",
+      "every outer and inner invalid position",
+      "structural and negative-Nat controls",
+      "1000 rounds per shape"
+    ],
+    "relocation": "Complete installed trees move before an identical repeat; C and C++ executables carry only an origin-relative runtime path",
+    "localGlibc": "2.36",
+    "local": true,
+    "hostedCi": false,
+    "otherNativeHosts": false,
+    "dispatchObserved": false,
+    "supportPromotion": false,
+    "retained": "Queue, runner, runner output, per-selection start, end and TAP, reports and Git source snapshots; package archives and executables are identified by digest only"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/queue.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/queue.json",
+      "sha256": "ccf0a0f59b46d913b9f6fbc5dac28bccb2a3e093bc59f3429d654b04d20e7b22",
+      "bytes": 6986
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/runner.mjs.txt",
+      "originalPath": "build/run-vo1454-fin-container-edges-dc6b8b8.mjs",
+      "sha256": "2eb8d3a9b0d58131c799a4d73f9db0169d32cbb30ce22ec68442b86404c48c40",
+      "bytes": 9086
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/runner-output.txt",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8.runner.log",
+      "sha256": "df08c9f37f6d8f908c72364aba5e87318bdfa6e91c90ef50655c8621e34182b0",
+      "bytes": 1512
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/c-cpp/start.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/c-cpp/start.json",
+      "sha256": "757670c2bcbbe1021ea56ab50c9da84752a9a9d4b5e640acaae4f1598cc98641",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/c-cpp/end.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/c-cpp/end.json",
+      "sha256": "f4832498884ca41210c7f56d9705a7f7accef758abafacbd6cc68f0541f8b848",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/c-cpp/run.tap",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/c-cpp/run.tap",
+      "sha256": "dfa92aaf20e963a619b6c673f6f83d7345702cd3436bcffae510afab740f3f9a",
+      "bytes": 430
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python311/start.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python311/start.json",
+      "sha256": "7febaa67d5f651b1ab78132f22bacbe5a7926b1097f0ac9a39bd8f746325814b",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python311/end.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python311/end.json",
+      "sha256": "b71f39be365d031596f833d812e51fb58af41a5f27fe1032591947060f665501",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python311/run.tap",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python311/run.tap",
+      "sha256": "24ad88522ef09d709f1f3c93a8a4f3899f216eab6fcee216f542b4245c24da0e",
+      "bytes": 430
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python312/start.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python312/start.json",
+      "sha256": "8086caf1e9e20822a8aa0de7dba9c312f680a32d300e539c6bfe44787eb68b96",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python312/end.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python312/end.json",
+      "sha256": "51992e001eb4575f854c3e7cdb216489cc172334a8703da78c712d31bbd00103",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/python312/run.tap",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/python312/run.tap",
+      "sha256": "84e38f22028b8cd9f89c6a0c1ea768a4ac7f56abd83140aabb35f14984597706",
+      "bytes": 430
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/edges-c-cpp.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/edges-c-cpp.json",
+      "sha256": "a3109be8b136e7511b08e8d5e2879827310542dc052944c7fee5627a40302430",
+      "bytes": 15944
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/edges-python311.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/edges-python311.json",
+      "sha256": "38551f22f4278fcaf8c31f900a2a9da6ec7b7c517d7770cd70cf10cd5e34b52f",
+      "bytes": 7966
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/edges-python312.json",
+      "originalPath": "build/vo1454-fin-container-edges-dc6b8b8/edges-python312.json",
+      "sha256": "bdeb74f53d9f88442fd530cb82c5f8bec8c1ea76b88b7ab76227b670dd9a558e",
+      "bytes": 7966
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fin-container-edges.test.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fin-container-edges.test.mjs",
+      "sha256": "c22cdd1d20e90498bf5ee0b6829878b090eb5ff208e168e1e6cca2b5cb2749af",
+      "bytes": 15126
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-edges.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/fin-container-edges.mjs",
+      "sha256": "3f2af08f59520ece2180ebd85ee57d5b7af53e18dbf89c50a94b37e2a30aef08",
+      "bytes": 4578
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-edge-install.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/fin-container-edge-install.mjs",
+      "sha256": "f6d1bf014ac2a711c6da9c06bd9e91c57ac180ffd5dce1a23b0aef05f8c6bb75",
+      "bytes": 12731
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edges.lean.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-edges.lean",
+      "sha256": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45",
+      "bytes": 593
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "bytes": 1562
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/c.c.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-consumers/c.c",
+      "sha256": "5e75156d9b1ab58fc1d981f8b6ab2ab8eb72be9e2e1d023508faa4dfb5dcf2b4",
+      "bytes": 9241
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/c.c.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-edge-consumers/c.c",
+      "sha256": "bfc0c35df92db0abe5e24003068b6dd1d1559f53a5ec4ccd9d7691a52c9fbdcd",
+      "bytes": 12356
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/cpp.cpp.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "bytes": 4048
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/cpp.cpp.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-edge-consumers/cpp.cpp",
+      "sha256": "123d127829c3d2e38b9169ae3a0c3b5fce4f5bf67ddeee03c2629218b7fc2a7f",
+      "bytes": 4055
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/python.py.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-consumers/python.py",
+      "sha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+      "bytes": 3310
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/python.py.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/fixtures/fin-container-edge-consumers/python.py",
+      "sha256": "689c606d91f8e2e49e9f231f660e65cd7cd995e5a87628a25447ca60f9955b75",
+      "bytes": 3992
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-install.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/package-set.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "bytes": 5283
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/lake-workspace.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+      "bytes": 9902
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/native-model.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/native-artifacts.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "bytes": 12720
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/c/gmp-projection.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/c/gmp-projection.mjs",
+      "sha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+      "bytes": 16403
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/c/gmp-values.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/c/gmp-values.mjs",
+      "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+      "bytes": 12058
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/cpp/primitives.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "bytes": 8384
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/cpp/copied-values.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/cpp/copied-values.mjs",
+      "sha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+      "bytes": 9558
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/python/generate.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/python/generate.mjs",
+      "sha256": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+      "bytes": 49832
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/python/copied-conversions.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+      "bytes": 10261
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/release/native-c-family.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "bytes": 24893
+    },
+    {
+      "path": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "git:dc6b8b8d615c6cf1073d697057cd012c6a1c4b3b:src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "bytes": 14878
+    }
+  ],
+  "sources": [
+    {
+      "path": "tests/fin-container-edges.test.mjs",
+      "sha256": "c22cdd1d20e90498bf5ee0b6829878b090eb5ff208e168e1e6cca2b5cb2749af",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fin-container-edges.test.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-edges.mjs",
+      "sha256": "3f2af08f59520ece2180ebd85ee57d5b7af53e18dbf89c50a94b37e2a30aef08",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-edges.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-install.mjs",
+      "sha256": "f6d1bf014ac2a711c6da9c06bd9e91c57ac180ffd5dce1a23b0aef05f8c6bb75",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-edge-install.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-edges.lean",
+      "sha256": "6c2b2250f52557b39b0267762b029af38ba695dccd63065c01a069a6b37cea45",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edges.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/c.c",
+      "sha256": "5e75156d9b1ab58fc1d981f8b6ab2ab8eb72be9e2e1d023508faa4dfb5dcf2b4",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/c.c.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-edge-consumers/c.c",
+      "sha256": "bfc0c35df92db0abe5e24003068b6dd1d1559f53a5ec4ccd9d7691a52c9fbdcd",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/c.c.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/cpp.cpp",
+      "sha256": "0b1b4a5454c9d7eabc7b9eb81fb6e84a43f9b561a57ed2743e46d3db56542fec",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/cpp.cpp.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-edge-consumers/cpp.cpp",
+      "sha256": "123d127829c3d2e38b9169ae3a0c3b5fce4f5bf67ddeee03c2629218b7fc2a7f",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/cpp.cpp.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-consumers/python.py",
+      "sha256": "ee267c0ba444e24710624cd1e090cb4d5c8cd6bcad17201bbc7622cb2a780261",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/fixtures/fin-container-edge-consumers/python.py",
+      "sha256": "689c606d91f8e2e49e9f231f660e65cd7cd995e5a87628a25447ca60f9955b75",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/fixtures/fin-container-edge-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/helpers/fin-container-install.mjs",
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/fin-container-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/package-set.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/tests/helpers/lake-workspace.mjs.txt"
+    },
+    {
+      "path": "src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/canonical-build.mjs.txt"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/native-model.mjs.txt"
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "5fd01aa0ad402df7512b90a63a22b1cacb97ff0a06f2a44e1bd9a5089f7ffbc4",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/build/native-artifacts.mjs.txt"
+    },
+    {
+      "path": "src/backends/c/gmp-projection.mjs",
+      "sha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/c/gmp-projection.mjs.txt"
+    },
+    {
+      "path": "src/backends/c/gmp-values.mjs",
+      "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/c/gmp-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/cpp/primitives.mjs.txt"
+    },
+    {
+      "path": "src/backends/cpp/copied-values.mjs",
+      "sha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/cpp/copied-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/python/generate.mjs",
+      "sha256": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/python/generate.mjs.txt"
+    },
+    {
+      "path": "src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/backends/python/copied-conversions.mjs.txt"
+    },
+    {
+      "path": "src/release/native-c-family.mjs",
+      "sha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/release/native-c-family.mjs.txt"
+    },
+    {
+      "path": "src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "snapshot": "docs/evidence/fin-container-edges-20261009/sources/dc6b8b8/src/release/package-set-receipt.mjs.txt"
+    }
+  ]
+}

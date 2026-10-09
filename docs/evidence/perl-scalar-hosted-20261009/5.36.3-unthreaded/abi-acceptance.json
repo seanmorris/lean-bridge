@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "perl": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+  "glibcMinimumVersion": "2.38",
+  "nativeLibrarySha256": "f68dbebfe4cf5cd4e412868ad5d0c6fa7e164ecb9e1de727f1b64023ad0c25a7",
+  "packages": [
+    {
+      "schemaVersion": 1,
+      "ecosystem": "cpan",
+      "backend": "perl",
+      "archive": "LeanBridge-Runtime-0.0021056889059781942471068306415729474798124915620330281817490381625813854656335101.tar.gz",
+      "sha256": "e0dc95360e15f693a3ae75cdd09fd44f89d110b6e6f703df03e0ebe3f258094f",
+      "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+      "abiVariants": [
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d"
+      ],
+      "compilerAccess": false
+    },
+    {
+      "schemaVersion": 1,
+      "ecosystem": "cpan",
+      "backend": "perl",
+      "archive": "LeanBridge-Workshop-0.002.tar.gz",
+      "sha256": "c949913e4df77b2b4a287d784cc175a0eb5860df885e131e820807d557b23f8e",
+      "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+      "abiVariants": [
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d"
+      ],
+      "compilerAccess": false
+    },
+    {
+      "schemaVersion": 1,
+      "ecosystem": "cpan",
+      "backend": "perl",
+      "archive": "LeanBridge-Other-0.001.tar.gz",
+      "sha256": "83c8b8c865ab45c6dc2c47b80b28c506ece2cee27c3b2aaf39106ebaf5a49778",
+      "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+      "abiVariants": [
+        "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d"
+      ],
+      "compilerAccess": false
+    }
+  ]
+}

@@ -1,0 +1,817 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-scalar-promotion-v1",
+  "predecessorCommit": "594a8f346fff20c1a9062ccd5905d6439d1e1201",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "f80f67d53930948c5378c2719716967907e5fdc66f4920bf1a47f2d91110c5eb",
+      "previousSha256": "bb50f93fe9a56599bbeb5e14179bf3acacfe685bf1c08786b7b647508baf3fc5",
+      "edits": [
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 266657,
+          "previous": "          \"sha256\": \"97d6960b6b5c974d5fd0ff73ce27470187a773d5d365070ab9088a74379b0378\"\n",
+          "current": "          \"sha256\": \"7c1277b4b8145297e6c621455f4f92167e3a45be1ba1b94b6c0aae7a644f08d6\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873\"\n",
+          "current": "          \"sha256\": \"9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8\"\n",
+          "current": "          \"sha256\": \"0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049\"\n"
+        },
+        {
+          "start": 2156492,
+          "previous": "",
+          "current": "    },\n    {\n      \"id\": \"perl-scalar-ordinary-hosted-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"046ced089cd007d10ce91b66a69c461321c808ca\",\n      \"command\": \"LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests/perl-fin.test.mjs\",\n      \"scope\": \"Ordinary-source top-level scalar Fin parameters/results and transparent aliases, including bounds 0, 1, 10, 300 and 2^70, exact bound diagnostics, result-only Fin, unchanged caller data and 1000 rejection/recovery cycles. Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04. Packages record a glibc 2.38 floor; the runs do not establish execution on a minimum-libc machine. Each configuration executes 2024 public checks, then repeats the unchanged consumer after moving the installed tree. Two clean author roots reproduce the archives. Author sources are removed before offline, compiler-free installation. Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports. Original report identities and GitHub artifact ZIP membership are authenticated; model, Binding IR and receipt digests remain report-carried identities because the full build documents are absent. Selected Git snapshots are not a complete source dependency closure. Container, nominal-field, callback, product, Except and Subtype acceptance are separate.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/receipt.json\",\n          \"sha256\": \"627c0ecfe938dd4608d05830da7f15499813bbec3c2bbb3b231e685194ae38fb\"\n        },\n        {\n          \"path\": \"tests/helpers/perl-scalar-hosted-evidence.mjs\",\n          \"sha256\": \"14f721e0cc5a79ab7563c8bef37a3bbe14233e85d881494864db33b469efc70e\"\n        },\n        {\n          \"path\": \"tests/helpers/hosted-specialization-evidence.mjs\",\n          \"sha256\": \"a4e5e436b864f73f5b0132ed4b55a31ed95f329fd4488cd5348b9335ff3c1ec7\"\n        },\n        {\n          \"path\": \"tests/perl-scalar-hosted-evidence.test.mjs\",\n          \"sha256\": \"553c2598b73dc627812558db6b3f6a81670abb5c6af09f456f5d0debc170b1f1\"\n        },\n        {\n          \"path\": \"tests/helpers/perl-scalar-promotion.mjs\",\n          \"sha256\": \"a8d8952eeaa60276b59ca334a88f79ebc5e46f5db7646d5b030ebe1fd1439ccc\"\n        },\n        {\n          \"path\": \"tests/perl-scalar-promotion.test.mjs\",\n          \"sha256\": \"1ec88727842019c2e31b66af9fd9256f6a996feb1c59a7906d0f7e42950bd538\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/fetched-at.txt\",\n          \"sha256\": \"6dd8ee8391dd724b37270fc14d3e5a72d2a9a77c90f4bbe887b73a30722e88a3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/capture.json\",\n          \"sha256\": \"a6fc1e6db575d7a4c6788965c09a5305f3204efcbbe5da4360462252ab6b1f8b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.json\",\n          \"sha256\": \"b835ed9f65cfbda30d7d86ae49e382740f972e1afe4ad16331e732414d2c89da\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.log\",\n          \"sha256\": \"b47938ba98ab2d8f3d03e2946d8679fbcaa5a0109013ab12f9c350c2f46a9c9e\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus-artifact.json\",\n          \"sha256\": \"163418edb5207a6187ffc234087d78dd435ed4d19560900efb3f2d6e467bd5a4\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-artifact.json\",\n          \"sha256\": \"8980aa408d65e622a3b7cdb29a81528443fa3733a93ce00bd43cc13c045895c5\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus.zip\",\n          \"sha256\": \"9b4bde1a48e90149df0ff93cb102315d6187e126c46f1f88f6784fee7f8715c3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi.zip\",\n          \"sha256\": \"18275b72438305a2a11a3011a009c5c2c113987af66dd6bd9df7cd431cbd6c49\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/ordinary.json\",\n          \"sha256\": \"f6fa08e0e697eb8598d1b8b532d41c4e27a6299cf0e67e52dd4e7f340afe312d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/reviewed.json\",\n          \"sha256\": \"0b5e58481f99196a09326838885b75e1d25462ab68405e391c4c9daa5a6b5c93\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-acceptance.json\",\n          \"sha256\": \"321b54b25d2e8e799ad52185aa7952a478f6164c50b6011637958aa729748fc9\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-perl.json\",\n          \"sha256\": \"3be3d944fdcf2df2dbb8aa08255b41d82b57210a196ac4484e48fc69e7c1198b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/fetched-at.txt\",\n          \"sha256\": \"31b66ce76b3e9155905e6fa31384486654c08b7d09d8efb646c0829694f8c3fc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/capture.json\",\n          \"sha256\": \"809c262f2229e3d4ce421516cf28208397b5144c5c830f1045739ad01dd89fef\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.json\",\n          \"sha256\": \"5e7e48745bb0c1f98a5c9a85f87a64e9ae43bd1a5e9c46b10a5654b22f5b2f0f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.log\",\n          \"sha256\": \"8a366846aeaa90d504e232e92dd99fd0dbf59fa861b4505582f63ebf41500844\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus-artifact.json\",\n          \"sha256\": \"98ec35ccebb79a28b47b7c24791b14fd5221c9df66e27a77a19a67edcdd47c47\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-artifact.json\",\n          \"sha256\": \"18dc8b1b53e8ee5250a0c81376256db5254ccd412f2b61bccfe59e56b0ebd61d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus.zip\",\n          \"sha256\": \"f006edf54ef4faabbeb5cea49790e1a85da171e8a0f6da56626f2b2e58b476cb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi.zip\",\n          \"sha256\": \"a15ed63b38ca6492605e3a6504570517b0cd636d6bc8e263367e6b3599e088cc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/ordinary.json\",\n          \"sha256\": \"54b5fe6146c70f903e69224ad0e8be074d2c29acd89769cbaf7b79044e004f87\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/reviewed.json\",\n          \"sha256\": \"4c02215fecedab7a5829cb4fe755ebc8eeb7eff74f349e5ca52f2a31ebec2b89\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-acceptance.json\",\n          \"sha256\": \"cb41a4cc86d1e29c552c64dc9279155b92e65736cd654917560f0e60d89ff575\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-perl.json\",\n          \"sha256\": \"aeb35bbaf15819e78f264ae14c4532c3d85cda4a52091a7b960704546975c8c5\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/fetched-at.txt\",\n          \"sha256\": \"31786d4ca1b483e9f5ab57ef068b99fdff440d06ff926b3cb9b07fccb0b7479b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/capture.json\",\n          \"sha256\": \"a9cb60e0209d5cf501b5963fcf80c4d88738dc5fc8b069f21cc961a74b748ee4\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.json\",\n          \"sha256\": \"01e4424c6c6a828042b8a55d42171289af2eac9fd17dc5786a3be0a10177fe01\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.log\",\n          \"sha256\": \"bb410f14f35c3bd54f818405952319c0542e0dc6a28a8ad7df90147c14c24b2f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus-artifact.json\",\n          \"sha256\": \"5b8158250b41f7232333de0cdd48eda5967ddd03c5e4ce581a625c55043ddde1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-artifact.json\",\n          \"sha256\": \"61f2a990c13a346e0ec536bab7c0b697ef364da54aa1314f56b9647faf6153cb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus.zip\",\n          \"sha256\": \"7f11ba49991caf4a67093ed9d14b0fc54415ae68447dd2dce4ea67d751093bcf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi.zip\",\n          \"sha256\": \"2d9d92d9cf197ef0c2e9665fc3bb5ff68131cb01b21242c557c0ec35339bd20a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/ordinary.json\",\n          \"sha256\": \"949eb351e3c523348370b7cfc084d5a8a891e9cf938e2b6701cdca3c36f0aef1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/reviewed.json\",\n          \"sha256\": \"aa338888ca62b89f40311a1f3013d0c01ae1d177220f898e201fe400808053fd\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-acceptance.json\",\n          \"sha256\": \"a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-perl.json\",\n          \"sha256\": \"408268adb399c0936c315bf9e8785c24ae69c59d2387844fffd7683b8eba2a5a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/fetched-at.txt\",\n          \"sha256\": \"4b1fa0840f0b3ff29c4c5e7fec5928efc01346fcd1e826fa99225e24736afe8f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/capture.json\",\n          \"sha256\": \"6410809558caa50920a86ebca400ae8f6213bf8025d68b31f8954181674dc086\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.json\",\n          \"sha256\": \"a22df7183e48feead9dccd8a9f754ed8451844067b8b03b18e26d8169063853a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.log\",\n          \"sha256\": \"3373fa817c27e89de8d407267bd6c932ff00923899452614fa2060f5e7bc9ea9\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus-artifact.json\",\n          \"sha256\": \"e09ce30d24481cce171bc315c17800269ef15501756ebfa99598a1797c0ce750\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-artifact.json\",\n          \"sha256\": \"f71425a0ee36598d1a53460a204d8350279a69a51ee19dc6cc1517bde437b9d1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus.zip\",\n          \"sha256\": \"2a512953c3caa40eb152a93bbd9c6607c7873898b3c3c63e957e5873ad1fec06\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi.zip\",\n          \"sha256\": \"502d953da63980fa86e16b4b102f7375192454de80be283131131fe66b547de3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/ordinary.json\",\n          \"sha256\": \"1fdc15bee61242b8914459a15147b1f253a9bd63ce2e7215e96455a00c0eff36\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/reviewed.json\",\n          \"sha256\": \"1ccf3b74bd73e00a2b721270cc55726e765d3d4dca3826e728e6b3e587bd44bf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-acceptance.json\",\n          \"sha256\": \"e5fec63e9bf6c41c07efda06661d4abb8d55ddd27d3186fc26edc3c46520ba48\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-perl.json\",\n          \"sha256\": \"2c93fb387fcf15cb5faa9bcc3946fa60fcc500db586dbf4515707ab5a1067bcd\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/perl-fin.test.mjs.txt\",\n          \"sha256\": \"db9417bcdb8cf599252681d4893fc418ca00f907b38d0772a97cd16171fba0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/perl-relocated-consumer.mjs.txt\",\n          \"sha256\": \"9c9d10cafe51d829958d825defed98344fda692e4002b71c9863109d644c6acb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/.github/workflows/perl-consumer.yml.txt\",\n          \"sha256\": \"9b560a9976cb967ab2d717bcf8cf656ca47d9b11f2e8d89e5b6ad0bfd3d8a5bc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/reviewed-scalar-host-fixture.mjs.txt\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/backends/perl/generate.mjs.txt\",\n          \"sha256\": \"c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-model.mjs.txt\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-project.mjs.txt\",\n          \"sha256\": \"b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/release/package-set-receipt.mjs.txt\",\n          \"sha256\": \"d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"5.36.3-unthreaded/ordinary/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"9c2b6fc9d4fadcb099709cbf7edfe2a476335523d44a2a12b96146dd27aabeb9\"\n        },\n        {\n          \"path\": \"5.36.3-unthreaded/ordinary/archives/LeanBridge-Runtime-0.0021056889059781942471068306415729474798124915620330281817490381625813854656335101.tar.gz\",\n          \"sha256\": \"e0dc95360e15f693a3ae75cdd09fd44f89d110b6e6f703df03e0ebe3f258094f\"\n        },\n        {\n          \"path\": \"5.36.3-threaded/ordinary/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"be1e458dc63722cf8dd1560537486c9ac6783caf048b9f3034deb76a1b8b0f32\"\n        },\n        {\n          \"path\": \"5.36.3-threaded/ordinary/archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz\",\n          \"sha256\": \"3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887\"\n        },\n        {\n          \"path\": \"5.38.2-unthreaded/ordinary/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"646d81624e86ef8e27b06b1579e24cce59c6f0bb90f82c882a693f952aed6fa8\"\n        },\n        {\n          \"path\": \"5.38.2-unthreaded/ordinary/archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz\",\n          \"sha256\": \"c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637\"\n        },\n        {\n          \"path\": \"5.38.2-threaded/ordinary/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"2d779c389b6c3e1e533cf48f0b9fb8f8310bc0dcc8a2b0e31c4d4b360d8ffed8\"\n        },\n        {\n          \"path\": \"5.38.2-threaded/ordinary/archives/LeanBridge-Runtime-0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201.tar.gz\",\n          \"sha256\": \"3eb28fb76323d26a453e95059fdcdb44c964d2d4cd1caefe33465869ddf0170b\"\n        }\n      ]\n    },\n    {\n      \"id\": \"perl-scalar-reviewed-hosted-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"046ced089cd007d10ce91b66a69c461321c808ca\",\n      \"command\": \"LEAN_BRIDGE_PERL_FIN_TEST=1 node --test tests/perl-fin.test.mjs\",\n      \"scope\": \"Independently reviewed top-level scalar Fin parameters/results and transparent aliases, including bounds 0, 1, 10, 300 and 2^70, exact bound diagnostics, result-only Fin, unchanged caller data and 1000 rejection/recovery cycles. Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04. Packages record a glibc 2.38 floor; the runs do not establish execution on a minimum-libc machine. Each configuration executes 2024 public checks, then repeats the unchanged consumer after moving the installed tree. Two clean author roots reproduce the archives. Author sources are removed before offline, compiler-free installation. Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports. Original report identities and GitHub artifact ZIP membership are authenticated; model, Binding IR and receipt digests remain report-carried identities because the full build documents are absent. Selected Git snapshots are not a complete source dependency closure. Container, nominal-field, callback, product, Except and Subtype acceptance are separate.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/receipt.json\",\n          \"sha256\": \"627c0ecfe938dd4608d05830da7f15499813bbec3c2bbb3b231e685194ae38fb\"\n        },\n        {\n          \"path\": \"tests/helpers/perl-scalar-hosted-evidence.mjs\",\n          \"sha256\": \"14f721e0cc5a79ab7563c8bef37a3bbe14233e85d881494864db33b469efc70e\"\n        },\n        {\n          \"path\": \"tests/helpers/hosted-specialization-evidence.mjs\",\n          \"sha256\": \"a4e5e436b864f73f5b0132ed4b55a31ed95f329fd4488cd5348b9335ff3c1ec7\"\n        },\n        {\n          \"path\": \"tests/perl-scalar-hosted-evidence.test.mjs\",\n          \"sha256\": \"553c2598b73dc627812558db6b3f6a81670abb5c6af09f456f5d0debc170b1f1\"\n        },\n        {\n          \"path\": \"tests/helpers/perl-scalar-promotion.mjs\",\n          \"sha256\": \"a8d8952eeaa60276b59ca334a88f79ebc5e46f5db7646d5b030ebe1fd1439ccc\"\n        },\n        {\n          \"path\": \"tests/perl-scalar-promotion.test.mjs\",\n          \"sha256\": \"1ec88727842019c2e31b66af9fd9256f6a996feb1c59a7906d0f7e42950bd538\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/fetched-at.txt\",\n          \"sha256\": \"6dd8ee8391dd724b37270fc14d3e5a72d2a9a77c90f4bbe887b73a30722e88a3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/capture.json\",\n          \"sha256\": \"a6fc1e6db575d7a4c6788965c09a5305f3204efcbbe5da4360462252ab6b1f8b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.json\",\n          \"sha256\": \"b835ed9f65cfbda30d7d86ae49e382740f972e1afe4ad16331e732414d2c89da\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/job.log\",\n          \"sha256\": \"b47938ba98ab2d8f3d03e2946d8679fbcaa5a0109013ab12f9c350c2f46a9c9e\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus-artifact.json\",\n          \"sha256\": \"163418edb5207a6187ffc234087d78dd435ed4d19560900efb3f2d6e467bd5a4\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-artifact.json\",\n          \"sha256\": \"8980aa408d65e622a3b7cdb29a81528443fa3733a93ce00bd43cc13c045895c5\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/corpus.zip\",\n          \"sha256\": \"9b4bde1a48e90149df0ff93cb102315d6187e126c46f1f88f6784fee7f8715c3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi.zip\",\n          \"sha256\": \"18275b72438305a2a11a3011a009c5c2c113987af66dd6bd9df7cd431cbd6c49\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/ordinary.json\",\n          \"sha256\": \"f6fa08e0e697eb8598d1b8b532d41c4e27a6299cf0e67e52dd4e7f340afe312d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/reviewed.json\",\n          \"sha256\": \"0b5e58481f99196a09326838885b75e1d25462ab68405e391c4c9daa5a6b5c93\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-acceptance.json\",\n          \"sha256\": \"321b54b25d2e8e799ad52185aa7952a478f6164c50b6011637958aa729748fc9\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-unthreaded/abi-perl.json\",\n          \"sha256\": \"3be3d944fdcf2df2dbb8aa08255b41d82b57210a196ac4484e48fc69e7c1198b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/fetched-at.txt\",\n          \"sha256\": \"31b66ce76b3e9155905e6fa31384486654c08b7d09d8efb646c0829694f8c3fc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/capture.json\",\n          \"sha256\": \"809c262f2229e3d4ce421516cf28208397b5144c5c830f1045739ad01dd89fef\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.json\",\n          \"sha256\": \"5e7e48745bb0c1f98a5c9a85f87a64e9ae43bd1a5e9c46b10a5654b22f5b2f0f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/job.log\",\n          \"sha256\": \"8a366846aeaa90d504e232e92dd99fd0dbf59fa861b4505582f63ebf41500844\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus-artifact.json\",\n          \"sha256\": \"98ec35ccebb79a28b47b7c24791b14fd5221c9df66e27a77a19a67edcdd47c47\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-artifact.json\",\n          \"sha256\": \"18dc8b1b53e8ee5250a0c81376256db5254ccd412f2b61bccfe59e56b0ebd61d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/corpus.zip\",\n          \"sha256\": \"f006edf54ef4faabbeb5cea49790e1a85da171e8a0f6da56626f2b2e58b476cb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi.zip\",\n          \"sha256\": \"a15ed63b38ca6492605e3a6504570517b0cd636d6bc8e263367e6b3599e088cc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/ordinary.json\",\n          \"sha256\": \"54b5fe6146c70f903e69224ad0e8be074d2c29acd89769cbaf7b79044e004f87\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/reviewed.json\",\n          \"sha256\": \"4c02215fecedab7a5829cb4fe755ebc8eeb7eff74f349e5ca52f2a31ebec2b89\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-acceptance.json\",\n          \"sha256\": \"cb41a4cc86d1e29c552c64dc9279155b92e65736cd654917560f0e60d89ff575\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.36.3-threaded/abi-perl.json\",\n          \"sha256\": \"aeb35bbaf15819e78f264ae14c4532c3d85cda4a52091a7b960704546975c8c5\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/fetched-at.txt\",\n          \"sha256\": \"31786d4ca1b483e9f5ab57ef068b99fdff440d06ff926b3cb9b07fccb0b7479b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/capture.json\",\n          \"sha256\": \"a9cb60e0209d5cf501b5963fcf80c4d88738dc5fc8b069f21cc961a74b748ee4\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.json\",\n          \"sha256\": \"01e4424c6c6a828042b8a55d42171289af2eac9fd17dc5786a3be0a10177fe01\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/job.log\",\n          \"sha256\": \"bb410f14f35c3bd54f818405952319c0542e0dc6a28a8ad7df90147c14c24b2f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus-artifact.json\",\n          \"sha256\": \"5b8158250b41f7232333de0cdd48eda5967ddd03c5e4ce581a625c55043ddde1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-artifact.json\",\n          \"sha256\": \"61f2a990c13a346e0ec536bab7c0b697ef364da54aa1314f56b9647faf6153cb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/corpus.zip\",\n          \"sha256\": \"7f11ba49991caf4a67093ed9d14b0fc54415ae68447dd2dce4ea67d751093bcf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi.zip\",\n          \"sha256\": \"2d9d92d9cf197ef0c2e9665fc3bb5ff68131cb01b21242c557c0ec35339bd20a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/ordinary.json\",\n          \"sha256\": \"949eb351e3c523348370b7cfc084d5a8a891e9cf938e2b6701cdca3c36f0aef1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/reviewed.json\",\n          \"sha256\": \"aa338888ca62b89f40311a1f3013d0c01ae1d177220f898e201fe400808053fd\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-acceptance.json\",\n          \"sha256\": \"a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-unthreaded/abi-perl.json\",\n          \"sha256\": \"408268adb399c0936c315bf9e8785c24ae69c59d2387844fffd7683b8eba2a5a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/fetched-at.txt\",\n          \"sha256\": \"4b1fa0840f0b3ff29c4c5e7fec5928efc01346fcd1e826fa99225e24736afe8f\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/capture.json\",\n          \"sha256\": \"6410809558caa50920a86ebca400ae8f6213bf8025d68b31f8954181674dc086\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.json\",\n          \"sha256\": \"a22df7183e48feead9dccd8a9f754ed8451844067b8b03b18e26d8169063853a\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/job.log\",\n          \"sha256\": \"3373fa817c27e89de8d407267bd6c932ff00923899452614fa2060f5e7bc9ea9\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus-artifact.json\",\n          \"sha256\": \"e09ce30d24481cce171bc315c17800269ef15501756ebfa99598a1797c0ce750\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-artifact.json\",\n          \"sha256\": \"f71425a0ee36598d1a53460a204d8350279a69a51ee19dc6cc1517bde437b9d1\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/corpus.zip\",\n          \"sha256\": \"2a512953c3caa40eb152a93bbd9c6607c7873898b3c3c63e957e5873ad1fec06\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi.zip\",\n          \"sha256\": \"502d953da63980fa86e16b4b102f7375192454de80be283131131fe66b547de3\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/ordinary.json\",\n          \"sha256\": \"1fdc15bee61242b8914459a15147b1f253a9bd63ce2e7215e96455a00c0eff36\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/reviewed.json\",\n          \"sha256\": \"1ccf3b74bd73e00a2b721270cc55726e765d3d4dca3826e728e6b3e587bd44bf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-acceptance.json\",\n          \"sha256\": \"e5fec63e9bf6c41c07efda06661d4abb8d55ddd27d3186fc26edc3c46520ba48\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/5.38.2-threaded/abi-perl.json\",\n          \"sha256\": \"2c93fb387fcf15cb5faa9bcc3946fa60fcc500db586dbf4515707ab5a1067bcd\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/perl-fin.test.mjs.txt\",\n          \"sha256\": \"db9417bcdb8cf599252681d4893fc418ca00f907b38d0772a97cd16171fba0bf\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/perl-relocated-consumer.mjs.txt\",\n          \"sha256\": \"9c9d10cafe51d829958d825defed98344fda692e4002b71c9863109d644c6acb\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/.github/workflows/perl-consumer.yml.txt\",\n          \"sha256\": \"9b560a9976cb967ab2d717bcf8cf656ca47d9b11f2e8d89e5b6ad0bfd3d8a5bc\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/copied-fixture-install.mjs.txt\",\n          \"sha256\": \"4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/helpers/reviewed-scalar-host-fixture.mjs.txt\",\n          \"sha256\": \"88fe947a03cde2c0356e67cc13e875120f3813baf3f5b119a8e4852b8015678c\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/tests/fixtures/onboarding/native-fin/NativeFin.lean.txt\",\n          \"sha256\": \"7399d8119ceced0dca35994130e85636025cb2340d7265dff9dd9062e4e17c3b\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/backends/perl/generate.mjs.txt\",\n          \"sha256\": \"c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-model.mjs.txt\",\n          \"sha256\": \"aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/build/native-project.mjs.txt\",\n          \"sha256\": \"b941e848c291a05a4fab3e93f2d9f5d3a5c9380f9a290c5668378c05ae5b5cf7\"\n        },\n        {\n          \"path\": \"docs/evidence/perl-scalar-hosted-20261009/sources/046ced0/src/release/package-set-receipt.mjs.txt\",\n          \"sha256\": \"d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"5.36.3-unthreaded/reviewed/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"422a2a31b67e7d76040ee6e0711bbd33753a6d1268cf9f2a4e1ac044df8b49b7\"\n        },\n        {\n          \"path\": \"5.36.3-unthreaded/reviewed/archives/LeanBridge-Runtime-0.0021056889059781942471068306415729474798124915620330281817490381625813854656335101.tar.gz\",\n          \"sha256\": \"e0dc95360e15f693a3ae75cdd09fd44f89d110b6e6f703df03e0ebe3f258094f\"\n        },\n        {\n          \"path\": \"5.36.3-threaded/reviewed/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"eaeaf9e757fc1d1bff1c2c23c36ad5949849d2fada3d8bd93d52861612e2a829\"\n        },\n        {\n          \"path\": \"5.36.3-threaded/reviewed/archives/LeanBridge-Runtime-0.0021003929731850758972973244829406958690725170599882297501769226195507928501733121.tar.gz\",\n          \"sha256\": \"3db6a29d8ceedf1ce19ad0908cbe5f5ad9ddcddff75056f3d8cab5a9aa44f887\"\n        },\n        {\n          \"path\": \"5.38.2-unthreaded/reviewed/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"0950fc00a058dd9621098ea27e967b3ca2ba73f07f2573853b9d8088a4e583fb\"\n        },\n        {\n          \"path\": \"5.38.2-unthreaded/reviewed/archives/LeanBridge-Runtime-0.0021072338727314564978413376084786059360699966616434525968589739297421353356724781.tar.gz\",\n          \"sha256\": \"c7b601ca6de3399e837e49b83e5955746f22e20dc38e04a20ba674db7d74b637\"\n        },\n        {\n          \"path\": \"5.38.2-threaded/reviewed/archives/LeanBridge-NativeFin-1.000.tar.gz\",\n          \"sha256\": \"bf81ee3225033d19360da5791ab6e0d51c8b9780fac58fef04334a496727b407\"\n        },\n        {\n          \"path\": \"5.38.2-threaded/reviewed/archives/LeanBridge-Runtime-0.0020989849429724070532481922236718104540983444686201531094367768450915895511528201.tar.gz\",\n          \"sha256\": \"3eb28fb76323d26a453e95059fdcdb44c964d2d4cd1caefe33465869ddf0170b\"\n        }\n      ]\n"
+        },
+        {
+          "start": 4552122,
+          "previous": "            \"perl-relocated-reviewed-container-hosted-installed\"\n",
+          "current": "            \"perl-relocated-reviewed-container-hosted-installed\",\n            \"perl-scalar-reviewed-hosted-installed\"\n"
+        },
+        {
+          "start": 4552253,
+          "previous": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Four new hosted reviewed-container reports each pass 2027 checks before and after installed-tree relocation. Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04 with the glibc 2.38 package floor. Two clean builds reproduce archives within each configuration. Author sources are removed before offline, compiler-free installation; the installed tree is moved after the first run and the unchanged full consumer runs again from the moved prefix.\"\n",
+          "current": "          \"note\": \"Source-free installed consumers execute valid endpoints, invalid inputs and recovery. Only the named host, source route and parameter/result positions are promoted. Four new hosted reviewed-container reports each pass 2027 checks before and after installed-tree relocation. Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04 with the glibc 2.38 package floor. Two clean builds reproduce archives within each configuration. Author sources are removed before offline, compiler-free installation; the installed tree is moved after the first run and the unchanged full consumer runs again from the moved prefix. The separate hosted scalar reports cover both Perl versions and threading modes. Each configuration executes 2024 public checks, then repeats the unchanged consumer after moving the installed tree. Two clean author roots reproduce the archives. Author sources are removed before offline, compiler-free installation. Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports.\"\n"
+        },
+        {
+          "start": 4554003,
+          "previous": "        \"The new hosted relocation reports cover reviewed Array/List/Option Fin only. Earlier scalar evidence remains unchanged; fresh scalar relocation and reviewed Subtype require separate acceptance.\"\n",
+          "current": "        \"Earlier hosted relocation reports cover reviewed Array/List/Option Fin. The separately dated hosted scalar reports now establish top-level Fin relocation on all four Perl configurations. Reviewed Subtype retains its separate acceptance requirements.\",\n        \"Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports.\"\n"
+        },
+        {
+          "start": 4767601,
+          "previous": "      \"scope\": \"Ordinary-source installed CPAN packages check Fin inside Array, List, Option, their tested nested compositions and transparent aliases. This observation covers container parameters/results, not the separate top-level scalar native-fin relocation gate.\",\n",
+          "current": "      \"scope\": \"Ordinary-source installed CPAN packages check Fin inside Array, List, Option, their tested nested compositions and transparent aliases. Separate hosted scalar reports establish top-level Fin parameters/results and transparent aliases, including bounds wider than a machine word and result-only Fin.\",\n"
+        },
+        {
+          "start": 4768250,
+          "previous": "            \"perl-relocated-supplemental-hosted-installed\"\n",
+          "current": "            \"perl-relocated-supplemental-hosted-installed\",\n            \"perl-scalar-ordinary-hosted-installed\"\n"
+        },
+        {
+          "start": 4768375,
+          "previous": "          \"note\": \"Fresh Lean metadata retains exact closed Fin bounds inside Array, List, Option and transparent aliases.\"\n",
+          "current": "          \"note\": \"Fresh Lean metadata retains exact closed Fin bounds inside Array, List, Option and transparent aliases. Separate scalar evidence: Fresh Lean metadata preserves exact closed Fin bounds on scalar parameters/results and transparent aliases.\"\n"
+        },
+        {
+          "start": 4768778,
+          "previous": "            \"perl-relocated-supplemental-hosted-installed\"\n",
+          "current": "            \"perl-relocated-supplemental-hosted-installed\",\n            \"perl-scalar-ordinary-hosted-installed\"\n"
+        },
+        {
+          "start": 4768903,
+          "previous": "          \"note\": \"Generated XS checks every present element using exact Math::BigInt bounds and reports its indexed path; empty containers and absent options do not construct Fin 0.\"\n",
+          "current": "          \"note\": \"Generated XS checks every present element using exact Math::BigInt bounds and reports its indexed path; empty containers and absent options do not construct Fin 0. Separate scalar evidence: Generated XS accepts exact Math::BigInt values and checks every parameter against its declared bound; generated documentation retains that bound.\"\n"
+        },
+        {
+          "start": 4769405,
+          "previous": "            \"perl-relocated-supplemental-hosted-installed\"\n",
+          "current": "            \"perl-relocated-supplemental-hosted-installed\",\n            \"perl-scalar-ordinary-hosted-installed\"\n"
+        },
+        {
+          "start": 4769530,
+          "previous": "          \"note\": \"Compiled XS checks bounds before the guarded typed adapter or source call. Public counter controls measure mirrorAll and orDefault only.\"\n",
+          "current": "          \"note\": \"Compiled XS checks bounds before the guarded typed adapter or source call. Public counter controls measure mirrorAll and orDefault only. Separate scalar evidence: Compiled XS rejects invalid inputs before calling the guarded adapter. The installed source-counter controls separately observe three named Lean functions.\"\n"
+        },
+        {
+          "start": 4770013,
+          "previous": "            \"perl-relocated-supplemental-hosted-installed\"\n",
+          "current": "            \"perl-relocated-supplemental-hosted-installed\",\n            \"perl-scalar-ordinary-hosted-installed\"\n"
+        },
+        {
+          "start": 4770138,
+          "previous": "          \"note\": \"Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04 with the glibc 2.38 package floor. Two clean builds reproduce archives within each configuration. Author sources are removed before offline, compiler-free installation; the installed tree is moved after the first run and the unchanged full consumer runs again from the moved prefix.\"\n",
+          "current": "          \"note\": \"Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04 with the glibc 2.38 package floor. Two clean builds reproduce archives within each configuration. Author sources are removed before offline, compiler-free installation; the installed tree is moved after the first run and the unchanged full consumer runs again from the moved prefix. Separate scalar evidence: Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04. Packages record a glibc 2.38 floor; the runs do not establish execution on a minimum-libc machine. Two independent author roots reproduce the original CPAN component and required runtime archives.\"\n"
+        },
+        {
+          "start": 4770972,
+          "previous": "            \"perl-relocated-supplemental-hosted-installed\"\n",
+          "current": "            \"perl-relocated-supplemental-hosted-installed\",\n            \"perl-scalar-ordinary-hosted-installed\"\n"
+        },
+        {
+          "start": 4771097,
+          "previous": "          \"note\": \"All four configurations pass 2027 ordinary container checks and 1518 supplemental checks per full run, including late rejection, caller preservation and recovery, then repeat after installed-tree relocation.\"\n",
+          "current": "          \"note\": \"All four configurations pass 2027 ordinary container checks and 1518 supplemental checks per full run, including late rejection, caller preservation and recovery, then repeat after installed-tree relocation. Separate scalar evidence: Each configuration executes 2024 public checks, then repeats the unchanged consumer after moving the installed tree. Two clean author roots reproduce the archives. Author sources are removed before offline, compiler-free installation. Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports.\"\n"
+        },
+        {
+          "start": 4771945,
+          "previous": "        \"Container parameters/results only; no nominal-field, product, Except or callback promotion.\",\n",
+          "current": "        \"Scalar and tested container parameters/results only; no nominal-field, product, Except or callback promotion.\",\n"
+        },
+        {
+          "start": 4772216,
+          "previous": "        \"Ordinary source only. Reviewed containers retain their separate observation.\"\n",
+          "current": "        \"Ordinary source only. Reviewed containers retain their separate observation.\",\n        \"Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports.\",\n        \"Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on hosted Ubuntu 24.04. Packages record a glibc 2.38 floor; the runs do not establish execution on a minimum-libc machine.\"\n"
+        },
+        {
+          "start": 4772855,
+          "previous": "        \"fin\": \"Array and List use array references; Option uses undef for absence and the generated Some->new(value) for presence. Every present Math::BigInt element must be below its bound. Empty/absent Fin 0 containers are valid; present Fin 0 elements are rejected before dispatch, with the failing indexed path.\"\n",
+          "current": "        \"fin\": \"Array and List use array references; Option uses undef for absence and the generated Some->new(value) for presence. Every present Math::BigInt element must be below its bound. Empty/absent Fin 0 containers are valid; present Fin 0 elements are rejected before dispatch, with the failing indexed path. For scalar Fin, pass an exact Math::BigInt below the closed bound. Fin 0 rejects every input. A negative value retains the Nat conversion error; other invalid bounds die with the parameter and exact bound. Caller values remain unchanged, and valid calls still succeed after rejection.\"\n"
+        }
+      ]
+    },
+    {
+      "path": ".gitattributes",
+      "currentSha256": "665b28fb2dcbd6d1c09b4007fb1c05b1f9061a909aa0755ddbab4d2be258441b",
+      "previousSha256": "4bf978a45484ff44f121f0dc063b4367532f316c945d6508799b0116cafdf41a",
+      "edits": [
+        {
+          "start": 2007,
+          "previous": "",
+          "current": "# Preserve the receipt-authenticated hosted Perl scalar job logs without rewriting whitespace.\ndocs/evidence/perl-scalar-hosted-20261009/*/job.log whitespace=-blank-at-eol\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "currentSha256": "7c1277b4b8145297e6c621455f4f92167e3a45be1ba1b94b6c0aae7a644f08d6",
+      "previousSha256": "97d6960b6b5c974d5fd0ff73ce27470187a773d5d365070ab9088a74379b0378",
+      "edits": [
+        {
+          "start": 29981,
+          "previous": "The [installed refinement checks](../evidence/perl-refinements-20261009.md) cover container `Fin` on ordinary-source and reviewed-IR packages in all four pinned Perl configurations. They include a full rerun after moving the installed package. The separate top-level scalar relocation gate is not part of that evidence.\n",
+          "current": "The [scalar Fin checks](../evidence/perl-scalar-20261009.md) and [container refinement checks](../evidence/perl-refinements-20261009.md) cover ordinary-source and reviewed-IR packages on Perl 5.36.3 and 5.38.2, each threaded and unthreaded. Both suites rerun the installed consumer after moving its complete installation. The scalar suite also measures entry into three named Lean functions and confirms that its invalid-only calls enter none of them.\n"
+        },
+        {
+          "start": 49097,
+          "previous": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Array and List use array references; Option uses undef for absence and the generated Some->new(value) for presence. Every present Math::BigInt element must be below its bound. Empty/absent Fin 0 containers are valid; present Fin 0 elements are rejected before dispatch, with the failing indexed path. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "current": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Array and List use array references; Option uses undef for absence and the generated Some->new(value) for presence. Every present Math::BigInt element must be below its bound. Empty/absent Fin 0 containers are valid; present Fin 0 elements are rejected before dispatch, with the failing indexed path. For scalar Fin, pass an exact Math::BigInt below the closed bound. Fin 0 rejects every input. A negative value retains the Nat conversion error; other invalid bounds die with the parameter and exact bound. Caller values remain unchanged, and valid calls still succeed after rejection. Use the host's Nat representation and the declared closed bound. Container carriers retain their element constraints; absent values are valid for Fin 0 but present Fin 0 values are rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "9825e7e3bb0f577b6d8c0d77fab6081956233cc25da8d209a0fa62ba4976ba2a",
+      "previousSha256": "53a1b1ad30f7199d33303a61d02ac905f047c4c7f990ce11e94469b8d9390873",
+      "edits": [
+        {
+          "start": 37712,
+          "previous": "`Fin` is also checked inside `Array`, `List` and `Option` at parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called. An empty array or `none` is valid even for `Fin 0`. Generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN's XS checks use typed accessors and name the failing element, for example `arg0[2]? is not below its Fin 10 bound`. [Four-ABI CPAN acceptance](../evidence/perl-refinements-20261009.md) covers ordinary-source and reviewed container packages on Perl 5.36.3 and 5.38.2, threaded and unthreaded. Each complete consumer passes before and after the installed package tree moves, with author sources removed and no compiler or network access. This container evidence does not cover the separate top-level scalar relocation gate.\n",
+          "current": "`Fin` is also checked inside `Array`, `List` and `Option` at parameters and results, including nested combinations such as `Array (Option (Fin 10))` and aliases such as `abbrev Digits := Array (Fin 10)`. The bundled adapter checks every present element before Lean is called. An empty array or `none` is valid even for `Fin 0`. Generated documentation writes element bounds as `arg0[*] < 10` and present option values as `arg0? < 10`. CPAN's XS checks use typed accessors and name the failing element, for example `arg0[2]? is not below its Fin 10 bound`. [Four-ABI CPAN acceptance](../evidence/perl-refinements-20261009.md) covers ordinary-source and reviewed container packages on Perl 5.36.3 and 5.38.2, threaded and unthreaded. Each complete consumer passes before and after the installed package tree moves, with author sources removed and no compiler or network access. [Separate scalar checks](../evidence/perl-scalar-20261009.md) cover top-level `Fin` on the same four configurations, including installed-tree relocation and entry counts for `mirror`, `impossible` and `label`.\n"
+        },
+        {
+          "start": 49453,
+          "previous": "| `Fin n` parameter or result | Installed | Installed | Executed; relocation retest pending | Nested only; bare scalar pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested only; bare scalar pending |\n",
+          "current": "| `Fin n` parameter or result | Installed | Installed | Installed, both source routes on four ABIs | Nested only; bare scalar pending | Installed: npm, browser and native hosts including CPAN. PHP-Wasm: nested only; bare scalar pending |\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "0b35ce2ba329c803e5a7d6158942a2facc972e75fe2a2949afb1e37899f74049",
+      "previousSha256": "c55efe0ed0032d6266e06612e169e112996a7209e80a18cb0a0a0d164a46d0e8",
+      "edits": [
+        {
+          "start": 8013,
+          "previous": "",
+          "current": "\t\t, \"perl-scalar-hosted-evidence\"\n\t\t, \"perl-scalar-promotion\"\n\t\t, \"fin-container-edge-evidence\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/hosted-specialization-evidence.mjs",
+      "currentSha256": "a4e5e436b864f73f5b0132ed4b55a31ed95f329fd4488cd5348b9335ff3c1ec7",
+      "previousSha256": "3e734a19826dcc3834c9d3a4f910bedaa59c7c9e12271ff55246afaf67e2278e",
+      "edits": [
+        {
+          "start": 7625,
+          "previous": "",
+          "current": "/** The same strict GitHub artifact ZIP reader, for other hosted archives. */\nexport { membersOf as strictArtifactZipMembers };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "710204ec0424739fa8ff51b9e4e8466263d74ff1d5d50b4c892d238c261b0e8b",
+      "previousSha256": "8232f141bf099b8df49cb33b8ed96ef294f7e1ca287a1ccd9b4b72a788e2ad81",
+      "edits": [
+        {
+          "start": 14579,
+          "previous": "",
+          "current": "import { perlScalarPromotionChangedPaths } from \"./perl-scalar-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 53650,
+          "previous": "",
+          "current": "\t, ...perlScalarPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wasm-ci-array-source-history.mjs",
+      "currentSha256": "124112325a61314d0a2377ecfd2bfbd8f6ba483e255511b94b6859a4a67713a8",
+      "previousSha256": "266d79e949b334dedc29fb786c10a8100cc33b268454302aaec1444a76246075",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "import { beforePerlScalarPromotionSource } from \"./perl-scalar-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 2407,
+          "previous": "",
+          "current": "\tsource = beforePerlScalarPromotionSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wasm-ci-array-history.test.mjs",
+      "currentSha256": "edae21eb5b622633ef930b316479af9b230b742c7c7d87735ac8e3abafdcca04",
+      "previousSha256": "59e54dd1d20d74d5a86704afd630e114c5d587f47f7778f31d8412534d34e4fd",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "",
+          "current": "import { beforePerlScalarPromotionSource } from \"./helpers/perl-scalar-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 1285,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reverseWasmCiArrayUpdate(source, update);\n",
+          "current": "\t\tconst source = beforePerlScalarPromotionSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseWasmCiArrayUpdate(source, update);\n"
+        },
+        {
+          "start": 2496,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = beforePerlScalarPromotionSource(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "currentSha256": "ce5db35ba2dd12615f263568995cbe8e4765b0345130971901cd039766591dca",
+      "previousSha256": "fc2c91ec34faa1fb0441b4df98e72e2bf1770c7fafdaf0f3f76e62bbb34235de",
+      "edits": [
+        {
+          "start": 16382,
+          "previous": "test(\"CPAN author and publisher guidance cite four-ABI relocation without promoting scalar or reviewed Subtype\", async () => {\n",
+          "current": "test(\"CPAN guidance distinguishes scalar and container four-ABI relocation from reviewed Subtype\", async () => {\n"
+        },
+        {
+          "start": 17454,
+          "previous": "\tassert.match(document, /This container evidence does not cover the separate top-level scalar relocation gate/u);\n\tassert.match(document, /Executed; relocation retest pending/u);\n",
+          "current": "\tassert.match(document, /Separate scalar checks.*perl-scalar-20261009\\.md.*top-level `Fin` on the same four configurations.*installed-tree relocation and entry counts for `mirror`, `impossible` and `label`/u);\n\tassert.match(document, /\\| `Fin n` parameter or result \\| Installed \\| Installed \\| Installed, both source routes on four ABIs \\|/u);\n"
+        },
+        {
+          "start": 17880,
+          "previous": "\tassert.doesNotMatch(document, /Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);\n",
+          "current": "\tassert.doesNotMatch(document, /Executed; relocation retest pending|Both routes executed; relocation retest pending|Four ABIs executed; relocation retest pending|their installed acceptance is not yet recorded/u);\n"
+        }
+      ]
+    }
+  ]
+}

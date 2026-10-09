@@ -1,0 +1,609 @@
+{
+  "archives": {
+    "archives/fincontainers-1.0.0-c.tar.gz": "ccfcd4ff513dc14700a9feb741e9bbf6a92e391debed2f6230518874f1d99bc9",
+    "archives/fincontainers-1.0.0-cpp.tar.gz": "b792632d9547631e8fbb0c3129e7ff967394919357705f81be71207ef82e057e"
+  },
+  "authorRoots": 2,
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "bindingIrSha256": "9ebe0153d5b074f995f2bd3717a697780121cd2c6a7d114d6c6d914a74507a5a",
+      "checks": 14114,
+      "compilerFreePath": true,
+      "consumerSha256": "b9df0c88e8085e2ea605b4295811c966991e3efb6186f02a168f8224a751eb4d",
+      "dispatch": {
+        "observed": false,
+        "reason": "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate."
+      },
+      "executableSha256": "6bfac3fbbb8b085d2f2af660b2f71306dd9471d92f614ff33b0ccf3fda2bc13d",
+      "fixtureSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57",
+      "installedFilesSha256": "c72179e960bf70eb49a2304dc8ba751c461c7b9d9a8f7e8da236268606ed1353",
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "0885d2ad8fd3fe318140dbc925b8acd04b8479bb485bbd10b1a7ffc030a036d4",
+      "modelSha256": "692a45f0301b088e276530102533d140a472740823ebdb27db7565079236aa04",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53860237,
+              "path": "archives/fincontainers-1.0.0-c.tar.gz",
+              "sha256": "ccfcd4ff513dc14700a9feb741e9bbf6a92e391debed2f6230518874f1d99bc9"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "c",
+      "receiptSha256": "bda219ccbcc600ea6c96b15d560d8802e5695f7a9b486c43a5f28a3b8bff64ea",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.emptyArray": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.emptyList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinContainers.emptyOption": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.optionalDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "runtimeSearchPath": "$ORIGIN/fincontainers-1.0.0-c/lib",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742"
+    },
+    {
+      "bindingIrSha256": "9ebe0153d5b074f995f2bd3717a697780121cd2c6a7d114d6c6d914a74507a5a",
+      "checks": 14099,
+      "compilerFreePath": true,
+      "consumerSha256": "2243247b9aa590e001ee9b9290e6e00ca1914f2031a9bf2f9ce947b6bd53dead",
+      "dispatch": {
+        "observed": false,
+        "reason": "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate."
+      },
+      "executableSha256": "bb5f3b9ba44314e9fd4c4fb8f241d81b1048bd5fe03c9c211b007825998095ae",
+      "fixtureSha256": "5fe62fce2672dc9ca4ea513f2e1e59fe36781a3601400ddeb16e71b8366cab57",
+      "installedFilesSha256": "4589458583395dae72afb19b0230cd101d5d943e35b06d7899214b32a181b82f",
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "b62701fec9ab4b9e309201200acc294a40fbc499d02bdd3feec3075df4a8fbe7",
+      "modelSha256": "692a45f0301b088e276530102533d140a472740823ebdb27db7565079236aa04",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51788088,
+              "path": "archives/fincontainers-1.0.0-cpp.tar.gz",
+              "sha256": "b792632d9547631e8fbb0c3129e7ff967394919357705f81be71207ef82e057e"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "fincontainers",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "cpp",
+      "receiptSha256": "bda219ccbcc600ea6c96b15d560d8802e5695f7a9b486c43a5f28a3b8bff64ea",
+      "refinements": {
+        "FinContainers.countNone": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.emptyArray": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.emptyList": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "list"
+          }
+        },
+        "FinContainers.emptyOption": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "0",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "0",
+                "kind": "fin"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.flatten": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.label": {
+          "parameters": [
+            null,
+            {
+              "arguments": [
+                {
+                  "bound": "4",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.mirrorAll": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "10",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.optionalDigits": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "list"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "bound": "10",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "list"
+              }
+            ],
+            "kind": "option"
+          }
+        },
+        "FinContainers.orDefault": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "option"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.present": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "bound": "10",
+                      "kind": "fin"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        },
+        "FinContainers.sumHuge": {
+          "parameters": [
+            {
+              "arguments": [
+                {
+                  "bound": "1180591620717411303424",
+                  "kind": "fin"
+                }
+              ],
+              "kind": "list"
+            }
+          ],
+          "result": null
+        },
+        "FinContainers.wrapAll": {
+          "parameters": [
+            null
+          ],
+          "result": {
+            "arguments": [
+              {
+                "bound": "7",
+                "kind": "fin"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "runtimeSearchPath": "$ORIGIN/fincontainers-1.0.0-cpp/lib",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "854ae2e7e40f7ea90ae120f4fc8780195a64f40f26952d97564949f28dca2742"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

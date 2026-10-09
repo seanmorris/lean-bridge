@@ -21,3 +21,5 @@ docs/evidence/python-rust-container-dispatch-20261009/rust.job.log whitespace=-b
 docs/evidence/hosted-specializations-20261009/*/job.log whitespace=-blank-at-eol
 # Preserve the receipt-authenticated failed Wasm entry smoke TAP without rewriting whitespace.
 docs/evidence/wasm-entry-20261009/failed-ba282ec-node-smoke/run.tap whitespace=-blank-at-eol
+# Preserve the receipt-authenticated hosted Perl scalar job logs without rewriting whitespace.
+docs/evidence/perl-scalar-hosted-20261009/*/job.log whitespace=-blank-at-eol

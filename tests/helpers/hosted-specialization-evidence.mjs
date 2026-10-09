@@ -107,6 +107,8 @@ const membersOf = (bytes, selected) => {
 	assert.deepEqual([...found.keys()].sort(), [...selected].sort());
 	return found;
 };
+/** The same strict GitHub artifact ZIP reader, for other hosted archives. */
+export { membersOf as strictArtifactZipMembers };
 
 /**
  * Check one report's semantics against fixed historical contracts and retained consumer sources.
