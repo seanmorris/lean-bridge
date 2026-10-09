@@ -17,10 +17,22 @@ import { generateJavaScriptPackage } from "../../src/backends/javascript/generat
 import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { callComponentScalar } from "../../src/release/component-runtime.mjs";
 import { compileComponentCopiedCall } from "../../src/release/component-copied-runtime.mjs";
+import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
-import { captureConsoleError, entryBegin, entryEnd, measureCorpus } from "../fixtures/reviewed-fin-wasm/javascript-entry.mjs";
+import { instrumentReviewedFinWasmIr, reviewedFinWasmSourceControl, reviewedFinWasmSourceControls } from "./reviewed-fin-wasm-source-entry.mjs";
+import { captureConsoleError, entryBegin, entryEnd, measureCorpus, sourceEntryMarker } from "../fixtures/reviewed-fin-wasm/javascript-entry.mjs";
 
-export const reviewedFinWasmEntryMarker = "lean-bridge-source-entry";
+export const reviewedFinWasmEntryMarker = sourceEntryMarker;
+/**
+ * Measurement modes. An original package is the unmodified build, observed only at its adapters; a probe package is
+ * the separate instrumented build, observed at its adapters, including the control, and at its Lean source.
+ */
+export const reviewedFinWasmEntryModes = Object.freeze(["original", "probe"]);
+const entryIr = (selection, mode) => {
+	assert.ok(reviewedFinWasmSelections.includes(selection), "a known selection");
+	assert.ok(reviewedFinWasmEntryModes.includes(mode), "an explicit measurement mode");
+	return mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection);
+};
 const wide = 184467440737095516170n;
 // Scalar ABI 2 reports an adapter-side Fin failure as 6; copied ABI 6 reports it as 5.
 const boundStatus = selection => (selection === "scalar" ? 6 : 5);
@@ -41,14 +53,13 @@ const leanExports = {
 };
 
 /**
- * The selected adapter symbols of one selection, in private ABI order, derived from its binding IR.
+ * Every adapter column of one selection and mode, in private ABI order, derived from its expected binding IR.
  *
  * @param selection - Scalar-only or structural corpus.
+ * @param mode - Mode: original or probe.
  */
-export const reviewedFinWasmEntrySymbols = selection => {
-	assert.ok(reviewedFinWasmSelections.includes(selection));
-	return createComponentPrivateAbi(reviewedFinWasmIr(selection)).exports.map(item => ({ name: item.bindingId.replace(/^lean:ReviewedFin\./u, ""), bindingId: item.bindingId, symbol: item.symbol }));
-};
+export const reviewedFinWasmEntrySymbols = (selection, mode) => createComponentPrivateAbi(entryIr(selection, mode)).exports
+	.map(item => ({ name: item.bindingId.replace(/^lean:ReviewedFin\./u, ""), bindingId: item.bindingId, symbol: item.symbol }));
 
 /**
  * Authenticate an installed package's descriptor and side-module bytes before any observation: the bytes are the
@@ -58,11 +69,16 @@ export const reviewedFinWasmEntrySymbols = selection => {
  * @param options.descriptor - Default export of the installed internal/descriptor.mjs.
  * @param options.bytes - Installed side-module bytes.
  * @param options.selection - Scalar-only or structural corpus.
+ * @param options.mode - Mode: original for the unmodified package, probe for the instrumented one.
  */
-export const reviewedFinWasmEntrySelection = ({ descriptor, bytes, selection }) => {
+export const reviewedFinWasmEntrySelection = ({ descriptor, bytes, selection, mode }) => {
+	const expected = entryIr(selection, mode);
 	assert.equal(sha256(bytes), descriptor.integrity, "the side module is the descriptor's");
+	// The actual transport and refinement trees, not only identities: a changed bound, type or position differs.
+	assert.equal(reviewedContractDifference(expected, descriptor.bindingIr), null, `the ${mode} binding IR is the expected contract`);
 	assert.deepEqual(descriptor.privateAbi, createComponentPrivateAbi(descriptor.bindingIr), "the private ABI is its binding IR's");
-	const symbols = reviewedFinWasmEntrySymbols(selection);
+	assert.deepEqual(descriptor.privateAbi, createComponentPrivateAbi(expected), "the private ABI is the expected contract's");
+	const symbols = reviewedFinWasmEntrySymbols(selection, mode);
 	assert.deepEqual(descriptor.privateAbi.exports.map(item => [item.bindingId, item.symbol]), symbols.map(item => [item.bindingId, item.symbol]), "the selection's symbols");
 	return { moduleBytes: bytes, symbols: symbols.map(item => item.symbol) };
 };
@@ -105,16 +121,16 @@ const encoderEnters = (abi, signature, args) => {
 };
 
 /**
- * Import the generated public package of a selection over a runtime that answers through the given call.
+ * Import the public package generated from a binding IR over a runtime that answers through the given call.
  *
- * @param selection - Scalar-only or structural corpus.
+ * @param ir - Expected binding IR of the selection and mode.
  * @param call - Runtime call implementation.
  */
-const generatedPublic = async (selection, call) => {
+const generatedPublic = async (ir, call) => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-fin-entry-"));
 	try
 	{
-		const files = generateJavaScriptPackage(reviewedFinWasmIr(selection));
+		const files = generateJavaScriptPackage(ir);
 		for(const [path, text] of Object.entries(files))
 		{
 			await mkdir(join(root, path, ".."), { recursive: true });
@@ -123,21 +139,25 @@ const generatedPublic = async (selection, call) => {
 		const key = `__leanBridgeEntryRuntime${sha256(root).slice(0, 12)}`;
 		globalThis[key] = { call };
 		await writeFile(join(root, "internal/runtime.mjs"), `export const runtime = globalThis[${JSON.stringify(key)}];\n`);
-		return { api: await import(pathToFileURL(join(root, "index.mjs"))), files };
+		try
+		{ return { api: await import(pathToFileURL(join(root, "index.mjs"))), files }; }
+		finally
+		{ delete globalThis[key]; }
 	}
 	finally
 	{ await rm(root, { recursive: true, force: true }); }
 };
 
 /**
- * The exact expected call sequence of one selection: every call's export, route, arguments and outcome, and
- * whether it enters the adapter and the Lean source.
+ * The exact expected call sequence of one selection and mode: every call's export, route, arguments and outcome,
+ * and whether it enters the adapter and the Lean source. Probe packages add the unrefined control's calls.
  *
  * @param selection - Scalar-only or structural corpus.
- * @param controls - Calls of an unrefined control export, present only in instrumented probe builds.
+ * @param mode - Mode: original or probe.
  */
-export const expectReviewedFinWasmEntry = async (selection, controls = []) => {
-	const abi = createComponentPrivateAbi(reviewedFinWasmIr(selection));
+export const expectReviewedFinWasmEntry = async (selection, mode) => {
+	const ir = entryIr(selection, mode), controls = mode === "probe" ? reviewedFinWasmSourceControls : [];
+	const abi = createComponentPrivateAbi(ir);
 	const signatures = new Map(abi.exports.map(item => [item.bindingId.replace(/^lean:ReviewedFin\./u, ""), item]));
 	const entries = [];
 	const model = (name, args, publicCall) => {
@@ -153,7 +173,7 @@ export const expectReviewedFinWasmEntry = async (selection, controls = []) => {
 		return exported.run(args);
 	};
 	let reached = false;
-	const { api } = await generatedPublic(selection, (id, args) => {
+	const { api } = await generatedPublic(ir, (id, args) => {
 		reached = true;
 		return model(id.replace(/^lean:ReviewedFin\./u, ""), args, true);
 	});
@@ -175,7 +195,7 @@ export const expectReviewedFinWasmEntry = async (selection, controls = []) => {
 			{ assert.equal(entries.length, before); entries.push([0, 0]); }
 		}
 	} : target[key]) });
-	const controlApi = Object.fromEntries(controls.map(([name]) => [name, value => model(name, [value], true)]));
+	const controlApi = Object.fromEntries(controls.map(([name]) => [name, value => publicApi[name](value)]));
 	// The expectation's own brackets are captured, not printed; they are the measured run's, not evidence.
 	const captured = captureConsoleError();
 	let measured;
@@ -185,32 +205,39 @@ export const expectReviewedFinWasmEntry = async (selection, controls = []) => {
 	{ captured.stop(); }
 	const { result, calls } = measured;
 	assert.equal(calls.length, entries.length);
-	return { result, calls: calls.map(([id, name, route, args, outcome], index) => [id, name, route, args, outcome, ...entries[index]]) };
+	return { mode, selection, result, calls: calls.map(([id, name, route, args, outcome], index) => [id, name, route, args, outcome, ...entries[index]]) };
 };
 
 const describe = call => `${call[2]} ${call[1]}(${call[3]}) #${call[0]}`;
 
 /**
- * Account one measured run against the exact expectation: the same calls in order with the same outcomes, the
- * adapter counters moving by exactly the expected entry on the called export's symbol and nowhere else, and, when
- * stderr lines are given, exactly one Lean source marker inside each bracket of a call that enters the source.
+ * Account one measured run against the exact expectation of its mode. Every run observes every adapter column of
+ * that mode, in ABI order: an original package all its exports, a probe package also the control. Only a probe run
+ * carries Lean source brackets, and it must. The run's calls equal the expected ones in order and outcome, and each
+ * call moves exactly the expected entry on its own column and nothing elsewhere.
  *
  * @param expected - Result of expectReviewedFinWasmEntry.
- * @param observed - The measured run's corpus result and calls.
- * @param options - Selected symbols, and the run's console.error lines for an instrumented probe build.
- * @param options.symbols - Selected export names in counter order; empty when adapters were not observed.
- * @param options.lines - Captured console.error lines, or null when source entry was not measured.
+ * @param observed - The measured run: its mode, corpus result and calls.
+ * @param lines - A probe run's captured console.error lines; absent for an original run.
  */
-export const accountReviewedFinWasmEntry = (expected, observed, { symbols, lines = null }) => {
+export const accountReviewedFinWasmEntry = (expected, observed, lines = undefined) => {
+	const { mode, selection } = expected;
+	const columns = reviewedFinWasmEntrySymbols(selection, mode).map(item => item.name);
+	assert.equal(new Set(columns).size, columns.length, "unique adapter columns");
+	assert.equal(columns.includes(reviewedFinWasmSourceControl), mode === "probe", "the control is a probe column only");
+	assert.equal(observed?.mode, mode, `a ${mode} run`);
+	assert.ok(Array.isArray(observed.calls) && observed.calls.length > 0, "a run with observations");
+	assert.equal(mode === "probe", Array.isArray(lines), mode === "probe" ? "a probe run carries its source brackets" : "an original run claims no source entry");
 	assert.deepEqual(observed.result, expected.result, "corpus result");
 	assert.equal(observed.calls.length, expected.calls.length, "every call is measured once");
 	for(const [index, call] of expected.calls.entries())
 	{
 		const seen = observed.calls[index], [, name, , , , adapter] = call;
 		assert.deepEqual(seen.slice(0, 5), call.slice(0, 5), `call ${describe(call)}`);
-		assert.deepEqual(seen[5], symbols.map(symbol => (symbol === name ? adapter : 0)), `adapter entry of ${describe(call)}`);
+		assert.ok(Array.isArray(seen[5]) && seen[5].length === columns.length, `every adapter column observed for ${describe(call)}`);
+		assert.deepEqual(seen[5], columns.map(column => (column === name ? adapter : 0)), `adapter entry of ${describe(call)}`);
 	}
-	if(lines === null) return expected.calls.length;
+	if(mode === "original") return { mode, calls: expected.calls.length, columns, source: false };
 	const segments = [];
 	let open = null;
 	for(const line of lines)
@@ -239,5 +266,5 @@ export const accountReviewedFinWasmEntry = (expected, observed, { symbols, lines
 	assert.equal(segments.length, expected.calls.length, "every call has one bracket");
 	for(const [index, call] of expected.calls.entries())
 		assert.deepEqual(segments[index], call[6] ? [call[1]] : [], `source entry of ${describe(call)}`);
-	return expected.calls.length;
+	return { mode, calls: expected.calls.length, columns, source: true };
 };

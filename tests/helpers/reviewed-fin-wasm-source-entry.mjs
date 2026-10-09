@@ -8,7 +8,7 @@
 import assert from "node:assert/strict";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
-import { reviewedFinWasmEntryMarker } from "./reviewed-fin-wasm-entry.mjs";
+import { sourceEntryMarker as reviewedFinWasmEntryMarker } from "../fixtures/reviewed-fin-wasm/javascript-entry.mjs";
 
 export const reviewedFinWasmSourceControl = "traceNat";
 export const reviewedFinWasmSourceInstrumentation = "probe build: dbgTrace markers in the fixture source and an unrefined control export; not the unmodified packages whose adapter entry is observed";

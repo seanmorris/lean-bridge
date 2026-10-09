@@ -8,6 +8,8 @@
 import { executeCorpus } from "./javascript.mjs";
 
 export const entryBegin = "lean-bridge-call-begin";
+// The marker an instrumented probe build's Lean source prints, through dbgTrace, when an export's body is entered.
+export const sourceEntryMarker = "lean-bridge-source-entry";
 export const entryEnd = "lean-bridge-call-end";
 
 /**

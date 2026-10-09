@@ -30,7 +30,7 @@ test("the expectation reproduces the pinned corpus and follows the generated val
 	};
 	for(const selection of ["scalar", "structural"])
 	{
-		const { result, calls } = await expectReviewedFinWasmEntry(selection);
+		const { result, calls } = await expectReviewedFinWasmEntry(selection, "original");
 		assert.deepEqual(result, { module: "reviewed-fin", selection, ...reviewedFinWasmExpected[selection] });
 		assert.equal(calls.length, pinned[selection].calls);
 		assert.deepEqual(tally(calls), pinned[selection].tally);
@@ -55,23 +55,48 @@ test("the expectation reproduces the pinned corpus and follows the generated val
 			assert.deepEqual(next.map(item => [item[1], item[2], ...recovered[0].length === 3 ? [item[3]] : [], item[6]]), recovered.map(item => [...item, 1]), `recovery after ${call.join(" ")}`);
 		}
 	}
-	const controlled = await expectReviewedFinWasmEntry("scalar", reviewedFinWasmSourceControls);
+	const controlled = await expectReviewedFinWasmEntry("scalar", "probe");
 	assert.equal(controlled.calls.length, 236);
+	assert.deepEqual(controlled.calls.slice(0, 226), (await expectReviewedFinWasmEntry("scalar", "original")).calls, "the probe adds only control calls");
+	await assert.rejects(expectReviewedFinWasmEntry("scalar"), assert.AssertionError, "an explicit mode");
+	// The generated package's temporary runtime binding does not outlive its import.
+	assert.deepEqual(Object.keys(globalThis).filter(key => key.startsWith("__leanBridgeEntryRuntime")), []);
 	assert.deepEqual(controlled.calls.slice(226).map(call => [call[1], call[2], call.slice(4)]), reviewedFinWasmSourceControls[0][1].flatMap(() => ["public", "raw"].map(route => [reviewedFinWasmSourceControl, route, [1, 1, 1]])));
 });
 
-test("the selection authenticates the installed side-module bytes and its private ABI before any observation", () => {
-	const bytes = Buffer.from("\0asm\x01\0\0\0component bytes"), bindingIr = reviewedFinWasmIr("structural");
-	const descriptor = { integrity: sha256(bytes), bindingIr, privateAbi: createComponentPrivateAbi(bindingIr) };
-	const selected = reviewedFinWasmEntrySelection({ descriptor, bytes, selection: "structural" });
-	assert.deepEqual(selected.symbols, reviewedFinWasmEntrySymbols("structural").map(item => item.symbol));
-	assert.equal(selected.symbols.length, 9);
+test("the selection authenticates the installed bytes, contract and private ABI of its mode before any observation", () => {
+	const bytes = Buffer.from("\0asm\x01\0\0\0component bytes");
+	const descriptorOf = bindingIr => ({ integrity: sha256(bytes), bindingIr, privateAbi: createComponentPrivateAbi(bindingIr) });
+	for(const [selection, mode, ir, columns] of [["structural", "original", reviewedFinWasmIr("structural"), 9], ["scalar", "probe", instrumentReviewedFinWasmIr("scalar"), 7]])
+	{
+		const selected = reviewedFinWasmEntrySelection({ descriptor: descriptorOf(ir), bytes, selection, mode });
+		assert.deepEqual(selected.symbols, reviewedFinWasmEntrySymbols(selection, mode).map(item => item.symbol));
+		assert.equal(selected.symbols.length, columns);
+	}
 	const flipped = Buffer.from(bytes); flipped[9] ^= 1;
+	// Each changed contract keeps a freshly rederived private ABI, as a rebuilt package would.
+	const changed = (selection, mode, change) => {
+		const ir = structuredClone(mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection)); change(ir);
+		return { descriptor: descriptorOf(ir), bytes, selection, mode };
+	};
+	const refinement = (ir, name) => ir.declarations.find(item => item.name === name).source.extensions["lean-lang.org/refinements"];
+	const original = descriptorOf(reviewedFinWasmIr("structural"));
 	for(const [label, options] of [
-		["flipped byte", { descriptor, bytes: flipped, selection: "structural" }]
-		, ["other selection", { descriptor, bytes, selection: "scalar" }]
-		, ["foreign symbol", { descriptor: { ...descriptor, privateAbi: { ...descriptor.privateAbi, exports: descriptor.privateAbi.exports.map((item, index) => (index ? item : { ...item, symbol: "lean_bridge_000000000000000000000000" })) } }, bytes, selection: "structural" }]
-		, ["ABI not derived from its IR", { descriptor: { ...descriptor, bindingIr: reviewedFinWasmIr("scalar") }, bytes, selection: "structural" }]
+		["flipped byte", { descriptor: original, bytes: flipped, selection: "structural", mode: "original" }]
+		, ["other selection", { descriptor: original, bytes, selection: "scalar", mode: "original" }]
+		, ["no mode", { descriptor: original, bytes, selection: "structural" }]
+		, ["foreign symbol", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index) => (index ? item : { ...item, symbol: "lean_bridge_000000000000000000000000" })) } }, bytes, selection: "structural", mode: "original" }]
+		, ["ABI not derived from its IR", { descriptor: { ...original, bindingIr: reviewedFinWasmIr("scalar") }, bytes, selection: "structural", mode: "original" }]
+		, ["bound 10 to 11", changed("structural", "original", ir => { refinement(ir, "mirror").parameters[0].bound = "11"; })]
+		, ["result-only bound", changed("scalar", "original", ir => { refinement(ir, "tenth").result.bound = "11"; })]
+		, ["nested bound", changed("structural", "original", ir => { refinement(ir, "nested").parameters[0].arguments[0].arguments[0].arguments[0].bound = "4"; })]
+		, ["parameter type", changed("scalar", "original", ir => { ir.declarations[0].parameters[0].type = { kind: "primitive", name: "int" }; })]
+		, ["bound position", changed("scalar", "original", ir => { const value = refinement(ir, "label"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; })]
+		, ["probe control omitted", changed("scalar", "probe", ir => { ir.declarations.pop(); })]
+		, ["probe control refined", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "fin", bound: "10" }], result: null }; })]
+		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
+		, ["probe as original", { descriptor: descriptorOf(instrumentReviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "original" }]
+		, ["original as probe", { descriptor: descriptorOf(reviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "probe" }]
 	]) assert.throws(() => reviewedFinWasmEntrySelection(options), assert.AssertionError, label);
 });
 
@@ -92,19 +117,20 @@ test("probe inputs add only the markers and the unrefined control", async () => 
 /**
  * A measured run exactly as an installed package would produce it, for the accountant controls.
  *
- * @param expected - Expected calls.
- * @param symbols - Selected export names in counter order.
+ * @param expected - Expected calls of one mode.
+ * @param symbols - Adapter columns in counter order.
  */
 const synthetic = (expected, symbols) => ({
-	observed: { result: expected.result, calls: expected.calls.map(([id, name, route, args, outcome, adapter]) => [id, name, route, args, outcome, symbols.map(symbol => (symbol === name ? adapter : 0))]) }
+	observed: { mode: expected.mode, result: expected.result, calls: expected.calls.map(([id, name, route, args, outcome, adapter]) => [id, name, route, args, outcome, symbols.map(symbol => (symbol === name ? adapter : 0))]) }
 	, lines: expected.calls.flatMap(([id, name, , , , , source]) => [`${entryBegin} ${id}`, ...source ? [`${reviewedFinWasmEntryMarker} ${name}`] : [], `${entryEnd} ${id}`])
 });
 
 test("the accountant refuses altered adapter or source entry and names the failing call", async () => {
-	const expected = await expectReviewedFinWasmEntry("structural", reviewedFinWasmSourceControls);
-	const symbols = [...reviewedFinWasmEntrySymbols("structural").map(item => item.name), reviewedFinWasmSourceControl];
+	const expected = await expectReviewedFinWasmEntry("structural", "probe");
+	const symbols = reviewedFinWasmEntrySymbols("structural", "probe").map(item => item.name);
+	assert.equal(symbols.at(-1), reviewedFinWasmSourceControl);
 	const original = synthetic(expected, symbols);
-	assert.equal(accountReviewedFinWasmEntry(expected, original.observed, { symbols, lines: original.lines }), 530);
+	assert.deepEqual(accountReviewedFinWasmEntry(expected, original.observed, original.lines), { mode: "probe", calls: 530, columns: symbols, source: true });
 	const find = predicate => expected.calls.findIndex(predicate);
 	const fin0 = find(call => call[1] === "never" && call[2] === "raw" && call[5] === 1);
 	const late = find(call => call[1] === "label" && call[2] === "raw" && call[5] === 1 && call[6] === 0);
@@ -131,7 +157,7 @@ test("the accountant refuses altered adapter or source entry and names the faili
 	for(const [index, mutate] of mutations)
 	{
 		const value = structuredClone(original); mutate(value);
-		assert.throws(() => accountReviewedFinWasmEntry(expected, value.observed, { symbols, lines: value.lines }), error => error instanceof assert.AssertionError && error.message.includes(describe(index)), describe(index));
+		assert.throws(() => accountReviewedFinWasmEntry(expected, value.observed, value.lines), error => error instanceof assert.AssertionError && error.message.includes(describe(index)), describe(index));
 	}
 	// Whole-run refusals: a lost or extra call, a wrong total, an unentered control, stray or misordered lines.
 	const control = expected.calls.length - 1;
@@ -146,8 +172,28 @@ test("the accountant refuses altered adapter or source entry and names the faili
 		, value => { value.lines.splice(value.lines.indexOf(`${entryEnd} 3`), 1); }
 	]) {
 		const value = structuredClone(original); mutate(value);
-		assert.throws(() => accountReviewedFinWasmEntry(expected, value.observed, { symbols, lines: value.lines }), assert.AssertionError);
+		assert.throws(() => accountReviewedFinWasmEntry(expected, value.observed, value.lines), assert.AssertionError);
 	}
+});
+
+test("each mode requires every adapter column, exactly its own source claim and a run with observations", async () => {
+	const unmodified = await expectReviewedFinWasmEntry("scalar", "original"), probe = await expectReviewedFinWasmEntry("scalar", "probe");
+	const columns = reviewedFinWasmEntrySymbols("scalar", "original").map(item => item.name);
+	const base = synthetic(unmodified, columns), traced = synthetic(probe, reviewedFinWasmEntrySymbols("scalar", "probe").map(item => item.name));
+	assert.deepEqual(accountReviewedFinWasmEntry(unmodified, base.observed), { mode: "original", calls: 226, columns, source: false });
+	for(const [label, expected, observed, lines] of [
+		["empty adapter vectors", unmodified, { ...base.observed, calls: base.observed.calls.map(call => [...call.slice(0, 5), []]) }, undefined]
+		, ["an omitted column", unmodified, { ...base.observed, calls: base.observed.calls.map(call => [...call.slice(0, 5), call[5].slice(1)]) }, undefined]
+		, ["a duplicated column", unmodified, { ...base.observed, calls: base.observed.calls.map(call => [...call.slice(0, 5), [...call[5], call[5][0]]]) }, undefined]
+		, ["no observation", unmodified, { ...base.observed, calls: [] }, undefined]
+		, ["no run", unmodified, undefined, undefined]
+		, ["an original run claiming source entry", unmodified, base.observed, base.lines]
+		, ["a probe run without source brackets", probe, traced.observed, undefined]
+		, ["a probe run without the control column", probe, { ...traced.observed, calls: traced.observed.calls.map(call => [...call.slice(0, 5), call[5].slice(0, -1)]) }, traced.lines]
+		, ["an original run labelled probe", probe, { ...base.observed, mode: "probe" }, base.lines]
+		, ["a probe run labelled original", unmodified, { ...traced.observed, mode: "original" }, undefined]
+		, ["an unlabelled run", unmodified, { ...base.observed, mode: undefined }, undefined]
+	]) assert.throws(() => accountReviewedFinWasmEntry(expected, observed, lines), assert.AssertionError, label);
 });
 
 test("console capture records synchronously and restores the realm's console on success and on throw", () => {
