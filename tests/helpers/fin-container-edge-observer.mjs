@@ -12,6 +12,7 @@ import { validateNativeElf, verifyNativeFiles } from "../../src/build/native-art
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgePublicSymbols, finContainerEdgeRawProbe, finContainerEdgeSourceEntries, readFinContainerEdgeRaw } from "./fin-container-edge-dispatch.mjs";
 import { finContainerEntryInitializer } from "./fin-container-entry-dispatch.mjs";
+import { finContainerEdgeCppSymbols } from "./fin-container-edge-cpp.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const shared = /^[A-Za-z0-9_.+-]+\.so(?:\.[0-9]+)*$/u;
@@ -76,13 +77,20 @@ export const verifyFinContainerEdgeDeployment = async ({ installed, receiptPath,
  * @param deployment - Verified installed model, columns, directory and library names.
  * @param options - Additional public C definition requirements.
  * @param options.publicC - Also authenticate the six GMP entrypoints.
+ * @param options.publicCpp - Also authenticate the six C wire entrypoints used by C++.
  */
-export const finContainerEdgeDefinitions = async (deployment, { publicC = false } = {}) => {
+export const finContainerEdgeDefinitions = async (deployment, { publicC = false, publicCpp = false } = {}) => {
 	assert.equal(typeof publicC, "boolean");
+	assert.equal(typeof publicCpp, "boolean");
+	assert.ok(!(publicC && publicCpp), "a public probe identifies one host API");
 	const listings = {};
 	for(const name of Object.keys(deployment.libraries))
 		listings[name] = (await runCopied("/usr/bin/nm", ["-D", "--defined-only", join(deployment.directory, name)], deployment.directory, tools)).stdout;
-	const required = [...deployment.columns, "lean_bridge_native_component_initialize", finContainerEntryInitializer(deployment.model.component.id), ...publicC ? finContainerEdgePublicSymbols : []];
+	const publicSymbols = publicC ? finContainerEdgePublicSymbols : publicCpp ? finContainerEdgeCppSymbols : [];
+	const required = [...deployment.columns
+		, "lean_bridge_native_component_initialize"
+		, finContainerEntryInitializer(deployment.model.component.id)
+		, ...publicSymbols];
 	return Object.fromEntries(required.map(symbol => {
 		const owners = Object.entries(listings).filter(([, text]) => text.split("\n").some(line => new RegExp(`^[0-9a-f]+ [TW] ${symbol}$`, "u").test(line.trim()))).map(([name]) => name);
 		assert.equal(owners.length, 1, `${symbol} must have exactly one verified definition`);

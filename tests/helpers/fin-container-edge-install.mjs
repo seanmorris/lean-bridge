@@ -146,7 +146,7 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapter observation and, for C, the complete public consumer.
+ * @param options.measureDispatch - Opt in to raw adapter observation and, for C/C++, the complete public consumer.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  */
@@ -286,9 +286,10 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 		, expectedModelSha256, leanPrefix
 		, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;
-	const publicC = measureDispatch && profile === "c" ? await observeFinContainerEdgePublic({
+	const publicHost = measureDispatch && ["c", "cpp"].includes(profile) ? await observeFinContainerEdgePublic({
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
-		, expectedModelSha256, probeRoot: join(consumer, "c-edge-public") }) : null;
+		, expectedModelSha256, profile
+		, probeRoot: join(consumer, `${profile}-edge-public`) }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
@@ -298,7 +299,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
 		, ...(profile === "php-native" ? { repeatStrictExecution: true } : {})
 		, ...(rawAdapter ? { rawAdapterDispatch: rawAdapter } : {})
-		, ...(publicC ? { publicHostDispatch: publicC } : {})
+		, ...(publicHost ? { publicHostDispatch: publicHost } : {})
 		, ...(python ? { python } : {}) };
 };
 

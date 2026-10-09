@@ -9,6 +9,8 @@ import { join } from "node:path";
 import { generateCBindingPackage } from "../../src/backends/c/generate.mjs";
 import { generateGmpProjection } from "../../src/backends/c/gmp-projection.mjs";
 import { generateNativePrimitiveC } from "../../src/backends/c/native-primitives.mjs";
+import { boostSources } from "../../src/backends/cpp/boost.mjs";
+import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../../src/backends/cpp/primitives.mjs";
 import { brokerHeader, brokerSource } from "../../src/backends/native/runtime-broker.mjs";
 import { generateNativeLeanAdapters, nativeTypeKey } from "../../src/build/native-model.mjs";
 import { finContainerEntryAdapter } from "./fin-container-entry-dispatch.mjs";
@@ -59,8 +61,11 @@ export const finContainerEdgeCompilerModel = () => {
  *
  * @param root - Fresh test-owned directory.
  * @param lean - Absolute pinned Lean compiler path.
+ * @param options - Optional public C++ headers for its source gate.
+ * @param options.cpp - Generate the ordinary C++ wrappers and pinned standalone Boost headers.
  */
-export const compileFinContainerEdgeFixture = async (root, lean) => {
+export const compileFinContainerEdgeFixture = async (root, lean, { cpp = false } = {}) => {
+	assert.equal(typeof cpp, "boolean");
 	const model = finContainerEdgeCompilerModel(), adapters = generateNativeLeanAdapters(model);
 	const environment = { ...copiedCleanEnvironment, LEAN_PATH: root, LEAN_NUM_THREADS: "1", PATH: "/usr/bin:/bin" };
 	const prefix = (await runCopied(lean, ["--print-prefix"], root)).stdout.trim();
@@ -70,6 +75,9 @@ export const compileFinContainerEdgeFixture = async (root, lean) => {
 	await runCopied(lean, ["-c", "adapters.c", `${adapters.module}.lean`], root, environment);
 	for(const [path, source] of Object.entries(generateCBindingPackage(model.bindingIr))) await saveLakeFile(root, `raw/${path}`, source);
 	for(const [path, source] of Object.entries(generateGmpProjection(model.bindingIr).files)) await saveLakeFile(root, `gmp/${path}`, source);
+	if(cpp)
+		for(const [path, source] of Object.entries({ ...renderPrimitiveCppPackage(compilePrimitiveCppModel(model.bindingIr)), ...boostSources() }))
+			await saveLakeFile(root, `cpp/${path}`, source);
 	await saveLakeFile(root, "native.c", generateNativePrimitiveC(model, { initializer: `initialize_${adapters.module}` }));
 	await saveLakeFile(root, "component.h", adapters.header);
 	await saveLakeFile(root, "lean_bridge_native_runtime.h", brokerHeader);
