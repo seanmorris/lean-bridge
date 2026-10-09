@@ -9,13 +9,55 @@ import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
+import { cIdentifier } from "../../src/backends/c/generate.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { nativeFinAdapterSymbol, nativeFinCountInterposerFor, nativeFinDispatchExpected, nativeFinDispatchSources, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from "./native-fin-dispatch.mjs";
+import { nativeFinAdapterSymbol, nativeFinCountInterposerFor, nativeFinDispatchSources, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from "./native-fin-dispatch.mjs";
 
 export const cppFinMissingCounter = "native_fin_dispatch_count is not resolvable in this C++ process\n";
-export const cppFinDispatchExpected = nativeFinDispatchExpected(outcome => outcome.rejected
-	? `invalid:1:1:${outcome.rejected[0]}:${outcome.rejected[1]}` : `ok:${outcome.ok}`);
+const validateNames = names => {
+	assert.deepEqual(Object.keys(names).sort(), [...nativeFinDispatchSources].sort());
+	for(const method of nativeFinDispatchSources)
+	{
+		assert.ok(Array.isArray(names[method]));
+		assert.equal(names[method].length, method === "label" ? 3 : 1);
+		assert.equal(new Set(names[method]).size, names[method].length);
+		for(const name of names[method]) assert.match(name, /^[a-z][a-z0-9_]*$/u);
+	}
+};
+
+/**
+ * Read public argument labels from the verified contract, including reviewed aliases.
+ * NativeFin's Lean binder spelling does not dictate independently reviewed public names.
+ *
+ * @param model - Verified installed model, including its binding IR.
+ */
+export const cppFinDispatchParameterNames = model => {
+	assert.equal(model.component.id, "native-fin@1.0.0");
+	assert.equal(model.bindingIr.component.id, model.component.id);
+	const names = Object.fromEntries(nativeFinDispatchSources.map(method => {
+		const matches = model.bindingIr.declarations.filter(item => item.source.declaration === `NativeFin.${method}`);
+		assert.equal(matches.length, 1, method);
+		return [method, matches[0].parameters.map(parameter => cIdentifier(parameter.name))];
+	}));
+	validateNames(names);
+	return names;
+};
+
+const rejectionName = (names, method, outcome) => names[method][Number(outcome.rejected[0].slice(3))];
+
+/**
+ * Exact rows with the error labels published by this package, not inferred from its route.
+ *
+ * @param names - Verified per-export public argument labels.
+ */
+export const cppFinDispatchExpected = names => {
+	validateNames(names);
+	return nativeFinDispatchSteps.map(([step, method, , outcome, counts]) => [step
+		, outcome.ok === null ? "ok" : outcome.rejected
+			? `invalid:1:1:${rejectionName(names, method, outcome)}:${outcome.rejected[1]}` : `ok:${outcome.ok}`
+		, counts]);
+};
 
 /**
  * Check the fixture's actual compiled model before using its adapter symbols.
@@ -34,15 +76,20 @@ export const cppFinDispatchSymbols = model => {
 	return nativeFinDispatchSymbols(model.component.id);
 };
 
-/** Render public C++ API calls and exact values/errors, with one counter row per call. */
-export const cppFinDispatchProbe = () => {
+/**
+ * Render public C++ API calls and exact values/errors, with one counter row per call.
+ *
+ * @param names - Verified per-export public argument labels.
+ */
+export const cppFinDispatchProbe = names => {
+	const expected = cppFinDispatchExpected(names);
 	const calls = nativeFinDispatchSteps.map(([step, method, args, outcome], index) => {
 		if(method === null) return '    report("start", "ok");';
 		const call = `api::${method}(${args.map(value => typeof value === "bigint" ? `Nat("${value}")` : JSON.stringify(value)).join(", ")})`;
-		const status = JSON.stringify(cppFinDispatchExpected[index][1]);
+		const status = JSON.stringify(expected[index][1]);
 		if(outcome.rejected)
 		{
-			const [parameter, bound] = outcome.rejected;
+			const parameter = rejectionName(names, method, outcome), bound = outcome.rejected[1];
 			return `    refused(${JSON.stringify(step)}, [] { (void)${call}; }, ${JSON.stringify(`${parameter} is not below its Fin ${bound} bound`)}, ${status});`;
 		}
 		return `    if (${call} != ${method === "label" ? JSON.stringify(outcome.ok) : `Nat("${outcome.ok}")`}) throw std::runtime_error("${step}: result differs");
@@ -110,6 +157,8 @@ export const observeCppFinDispatch = async ({ consumer, packages, model }) => {
 	const installedModel = JSON.parse(await readFile(join(installed, modelPath)));
 	assert.equal(canonicalJson(installedModel), canonicalJson(model));
 	const columns = cppFinDispatchSymbols(installedModel);
+	const parameterNames = cppFinDispatchParameterNames(installedModel);
+	const expected = cppFinDispatchExpected(parameterNames);
 	const libraries = Object.fromEntries(Object.entries(receipt.files).filter(([path]) => /^lib\/[^/]+\.so(?:\.[0-9]+)*$/u.test(path)));
 	assert.ok(Object.keys(libraries).length > 0);
 	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
@@ -129,7 +178,7 @@ export const observeCppFinDispatch = async ({ consumer, packages, model }) => {
 		return definitions.get(symbol)[0];
 	});
 	const probeRoot = join(consumer, "cpp-dispatch"), interposer = join(probeRoot, "libdispatch.so");
-	const source = cppFinDispatchProbe(), instrument = nativeFinCountInterposerFor(model.component.id);
+	const source = cppFinDispatchProbe(parameterNames), instrument = nativeFinCountInterposerFor(model.component.id);
 	await saveLakeFile(probeRoot, "probe.cpp", source);
 	await saveLakeFile(probeRoot, "interposer.c", instrument);
 	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-ldl", "-o", "libdispatch.so"], probeRoot, compile);
@@ -140,13 +189,13 @@ export const observeCppFinDispatch = async ({ consumer, packages, model }) => {
 		&& error.details.stdout === "" && error.details.stderr === cppFinMissingCounter);
 	const run = await runCopied(executable, [], root, { ...copiedCleanEnvironment, LD_PRELOAD: interposer });
 	assert.equal(run.stderr, "");
-	const observed = readNativeFinDispatch(run.stdout, cppFinDispatchExpected);
+	const observed = readNativeFinDispatch(run.stdout, expected);
 	const repeat = await runCopied(executable, [], root, { ...copiedCleanEnvironment, LD_PRELOAD: interposer });
 	assert.equal(repeat.stderr, ""); assert.equal(repeat.stdout, run.stdout);
 	await verifyNativeFiles(installed, receipt.files);
 	assert.deepEqual(await readFile(receiptPath), receiptBytes);
 	return { kind: "cpp-public-fin-entry-v1"
-		, columns, observed, definers, libraries
+		, columns, observed, definers, libraries, parameterNames
 		, instrument: "LD_PRELOAD"
 		, scope: "public C++ scalar Fin calls in two cold C++ processes; no raw-adapter caller in this observation"
 		, routes: "native_fin.hpp -> public C ABI -> checked runtime -> typed adapter -> Lean source"
