@@ -24,6 +24,8 @@ import { perlContainerDispatchColumns, perlContainerDispatchSteps, perlContainer
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { observeFinContainerHostDispatch } from "./helpers/fin-container-host-dispatch.mjs";
+import { finContainerEntryProfiles, observeFinContainerEntry } from "./helpers/fin-container-entry-probes.mjs";
+import { observeCppFinContainerEntry } from "./helpers/cpp-fin-container-entry-probe.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import "./helpers/fin-container-host-dispatch-tests.mjs";
 import "./helpers/container-host-dispatch-source-history-tests.mjs";
@@ -32,6 +34,8 @@ import "./helpers/perl-fin-xs-audit-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
+// Ten-column entry counters replace the unobserved claim for six hosts only when explicitly enabled.
+const entryCounters = process.env.LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS === "1";
 for(const selection of [profiles, reviewedProfiles])
 {
 	assert.equal(new Set(selection).size, selection.length, "Duplicate Fin container profile");
@@ -264,7 +268,9 @@ const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX)
 				: profile === "perl" ? await observePerlDispatch(moved.installed, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
 					: ["python", "rust"].includes(profile) ? await observeFinContainerHostDispatch({ profile, consumer, command, packages, environment })
-						: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
+						: entryCounters && finContainerEntryProfiles.includes(profile) ? await observeFinContainerEntry({ profile, consumer, command, packages, handoff, model, environment })
+							: entryCounters && profile === "cpp" ? await observeCppFinContainerEntry({ consumer, packages, model, environment })
+								: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
 			reports.push({ profile, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
 				, dispatch
