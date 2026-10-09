@@ -10,10 +10,12 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
+import { finRecordCompilerModel, finRecordNat, finRecordShape } from "./helpers/fin-record-model.mjs";
 import { genericRecordArrayExports } from "./helpers/generic-record-browser.mjs";
 import { genericRecordInstantiations } from "./helpers/generic-record-packages.mjs";
 import { specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
-import { assertGenericRecordArrayAdditions, checkInstalledGenericRecordArrays, claimGenericRecordArrayReport, genericRecordArrayBaseConsumers, genericRecordArrayCases, genericRecordArrayConfiguration, genericRecordArrayConsumer, genericRecordArrayExpectedChecks, genericRecordArrayInstantiations, genericRecordArrayProfileSelection, genericRecordArrayProfiles, genericRecordArrayReportPath, genericRecordArraySource, writeGenericRecordArrayReport } from "./helpers/generic-record-arrays.mjs";
+import { assertGenericRecordArrayAdditions, checkInstalledGenericRecordArrays, claimGenericRecordArrayReport, genericRecordArrayBaseConsumers, genericRecordArrayCases, genericRecordArrayConfiguration, genericRecordArrayConsumer, genericRecordArrayExpectedChecks, genericRecordArrayInstantiations, genericRecordArrayPerlDiagnostics, genericRecordArrayPerlMessages, genericRecordArrayProfileSelection, genericRecordArrayProfiles, genericRecordArrayReportPath, genericRecordArraySource, writeGenericRecordArrayReport } from "./helpers/generic-record-arrays.mjs";
 
 const profiles = genericRecordArrayProfileSelection(process.env.LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES);
 const extensions = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", perl: "pl", "php-native": "php", "wit-wasi": "c" };
@@ -147,23 +149,21 @@ test("every C Array refusal seeds its output and the rounds refuse a negative me
 	assert.ok(!rounds.includes("null_row"));
 });
 
-test("every Perl Array refusal message is the generated XS text of the package it calls", async () => {
-	const fragment = await readFile("tests/fixtures/generic-record-array-consumers/perl.pl", "utf8");
-	const generated = await readFile("src/backends/perl/generate.mjs", "utf8"), runtime = await readFile("src/backends/perl/Runtime.xs", "utf8");
-	const graph = await readFile("src/backends/perl/copied-graph-runtime.mjs", "utf8");
-	// GenericRecords has no recursive type, so CPAN inlines it: its errors come from generate.mjs and Runtime.xs, never the copied-graph runtime.
-	const record = 'croak("expected ${packageName} with an exact class and plain untied hash")';
-	const sources = new Map([["Nat cannot be negative", [runtime, 'croak("Nat cannot be negative")']]
-		, ["expected Math::BigInt", [runtime, 'croak("expected Math::BigInt")']]
-		, ["Array requires a plain array reference", [generated, 'croak("${list ? "List" : "Array"} requires a plain array reference")']]
-		, ...["NatBox", "ArrayBox", "RowBox"].map(name => [`expected LeanBridge::GenericRecords::${name} with an exact class and plain untied hash`, [generated, record]])]);
-	const used = new Set([...fragment.matchAll(/'([^']+)'\]|array_raises\('([^']+)'/gu)].map(match => match[1] ?? match[2]));
-	assert.deepEqual([...used].sort(), [...sources.keys()].sort());
-	for(const [message, [source, site]] of sources)
-	{
-		assert.ok(source.includes(site), message);
-		if(message !== "Nat cannot be negative") assert.ok(!graph.includes(message), `${message} is not copied-graph text`);
-	}
+test("every Perl Array diagnostic is in the plain XS its inlined records render", async () => {
+	const messages = genericRecordArrayPerlMessages(await readFile("tests/fixtures/generic-record-array-consumers/perl.pl", "utf8"));
+	assert.deepEqual(messages, Object.keys(genericRecordArrayPerlDiagnostics).sort());
+	// The extractor's inline form of the four Array exports; the installed run repeats this on the built model and shipped archives.
+	const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true }, array = element => ({ kind: "array", element, abi: heap });
+	const box = finRecordShape("NatBox", [["value", finRecordNat], ["count", finRecordNat]]);
+	const arrayBox = finRecordShape("ArrayBox", [["value", array(finRecordNat)], ["count", finRecordNat]]);
+	const rowBox = finRecordShape("RowBox", [["value", array(box)], ["count", finRecordNat]]);
+	const signatures = { pushCount: [arrayBox, arrayBox], rowTotal: [array(box), finRecordNat], rowOf: [finRecordNat, array(box)], rowBoxSum: [rowBox, finRecordNat] };
+	const model = finRecordCompilerModel({ moduleName: "LeanBridge::GenericRecords" }, signatures);
+	assert.equal(model.copiedGraph, undefined);
+	const receipt = { library: "libcomponent_test.so", nativeLibrary: { sha256: "b".repeat(64) }, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
+	const rendered = { component: generatePerlBindingPackage(model, receipt)["Component.xs"], runtime: await readFile("src/backends/perl/Runtime.xs", "utf8") };
+	assert.ok(!rendered.component.includes("lpg_") && rendered.component.includes("lbp_bigint_text(aTHX_ value, 1)"));
+	for(const [message, [role, site]] of Object.entries(genericRecordArrayPerlDiagnostics)) assert.ok(rendered[role].includes(site), message);
 });
 
 test("each profile has its expected case list and an exact check total", () => {
