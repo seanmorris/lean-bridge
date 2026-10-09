@@ -12,7 +12,7 @@ import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { callComponentScalar } from "../../src/release/component-runtime.mjs";
@@ -58,13 +58,23 @@ const leanExports = {
 	, nested: { accepts: ([values]) => values.every(nested), run: ([values]) => [...values].reverse() }
 };
 
+const byBindingId = (left, right) => (left.bindingId < right.bindingId ? -1 : left.bindingId > right.bindingId ? 1 : 0);
 /**
- * Every adapter column of one selection and mode, in private ABI order, derived from its expected binding IR.
+ * A private ABI with its exports in binding ID order and its records in canonical order. Declaration order is the
+ * emitter's choice: the compiler lists exports alphabetically, an authored contract in source order.
+ *
+ * @param abi - A private ABI.
+ */
+const canonicalAbi = abi => ({ ...abi, exports: [...abi.exports].sort(byBindingId), ...abi.records ? { records: [...abi.records].map(item => canonicalJson(item)).sort().map(item => JSON.parse(item)) } : {} });
+
+/**
+ * Every adapter column of one selection and mode, derived from its expected binding IR, in binding ID order: the
+ * one deterministic column order shared by the observed symbols, their counters and the accountant.
  *
  * @param selection - Scalar-only or structural corpus.
  * @param mode - Mode: original or probe.
  */
-export const reviewedFinWasmEntrySymbols = (selection, mode) => createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode)).exports
+export const reviewedFinWasmEntrySymbols = (selection, mode) => canonicalAbi(createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode))).exports
 	.map(item => ({ name: item.bindingId.replace(/^lean:ReviewedFin\./u, ""), bindingId: item.bindingId, symbol: item.symbol }));
 
 /**
@@ -83,9 +93,13 @@ export const reviewedFinWasmEntrySelection = ({ descriptor, bytes, selection, mo
 	// The actual transport and refinement trees, not only identities: a changed bound, type or position differs.
 	assert.equal(reviewedContractDifference(expected, descriptor.bindingIr), null, `the ${mode} binding IR is the expected contract`);
 	assert.deepEqual(descriptor.privateAbi, createComponentPrivateAbi(descriptor.bindingIr), "the private ABI is its binding IR's");
-	assert.deepEqual(descriptor.privateAbi, createComponentPrivateAbi(expected), "the private ABI is the expected contract's");
+	const exported = descriptor.privateAbi.exports;
+	assert.equal(new Set(exported.map(item => item.bindingId)).size, exported.length, "no duplicate export");
+	assert.equal(new Set(exported.map(item => item.symbol)).size, exported.length, "no duplicate adapter symbol");
+	// Export by export: the same binding IDs, each with the expected symbol, signature and result mode.
+	assert.deepEqual(canonicalAbi(descriptor.privateAbi), canonicalAbi(createComponentPrivateAbi(expected)), "the private ABI is the expected contract's, export by export");
 	const symbols = reviewedFinWasmEntrySymbols(selection, mode);
-	assert.deepEqual(descriptor.privateAbi.exports.map(item => [item.bindingId, item.symbol]), symbols.map(item => [item.bindingId, item.symbol]), "the selection's symbols");
+	assert.deepEqual(Object.fromEntries(exported.map(item => [item.bindingId, item.symbol])), Object.fromEntries(symbols.map(item => [item.bindingId, item.symbol])), "the selection's symbols");
 	return { moduleBytes: bytes, symbols: symbols.map(item => item.symbol) };
 };
 

@@ -68,11 +68,15 @@ export const runtime = { call: () => { throw new Error("unreachable"); } };
  * @param selection - Scalar-only or structural corpus.
  * @param mode - Mode: original or probe.
  * @param runtime - Which stand-in runtime the package ships.
+ * @param options - Package layout.
+ * @param options.compiled - List declarations in the compiler's alphabetical order rather than the authored order.
  */
-const consumer = async (t, selection, mode, runtime = "faithful") => {
+const consumer = async (t, selection, mode, runtime = "faithful", { compiled = false } = {}) => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-fin-wasm-entry-harness-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	const ir = reviewedFinWasmEntryIr(selection, mode), installed = join(root, "node_modules/reviewed-fin");
+	// A compiled package lists its declarations alphabetically, as the compiler's elaborated contract does.
+	const authored = reviewedFinWasmEntryIr(selection, mode), installed = join(root, "node_modules/reviewed-fin");
+	const ir = compiled ? { ...authored, declarations: [...authored.declarations].sort((left, right) => (left.id < right.id ? -1 : 1)) } : authored;
 	for(const [path, text] of Object.entries(generateJavaScriptPackage(ir))) await saveLakeFile(installed, path, text);
 	const bytes = frames(reviewedFinWasmEntrySymbols(selection, mode).map(item => item.symbol));
 	await saveLakeFile(installed, "internal/wasm/component.wasm", bytes);
@@ -96,6 +100,15 @@ test("each mode's measured Node run is accounted in full through the producer's 
 		const accounted = accountReviewedFinWasmEntryReport(await expectReviewedFinWasmEntry(selection, mode), report);
 		assert.deepEqual([accounted.mode, accounted.source, accounted.columns.length], [mode, mode === "probe", { scalar: 6, structural: 9 }[selection] + (mode === "probe" ? 1 : 0)]);
 		assert.equal(Object.hasOwn(report.entry, "lines"), mode === "probe");
+	}
+});
+
+test("a package in the compiler's declaration order is authenticated and accounted in the shared column order", async t => {
+	for(const [selection, mode] of [["scalar", "original"], ["structural", "probe"]])
+	{
+		const { root } = await consumer(t, selection, mode, "faithful", { compiled: true });
+		const accounted = accountReviewedFinWasmEntryReport(await expectReviewedFinWasmEntry(selection, mode), await runReviewedFinWasmEntryNode(root, "index.mjs"));
+		assert.deepEqual(accounted.columns, reviewedFinWasmEntrySymbols(selection, mode).map(item => item.name));
 	}
 });
 

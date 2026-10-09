@@ -119,9 +119,11 @@ export const authenticateReviewedFinWasmEntryPackage = async (root, selection, m
 	assert.ok(sideModule.startsWith(`${installed}/internal/wasm/`), "the side module belongs to the installed package");
 	const bytes = await readFile(sideModule);
 	const { symbols } = reviewedFinWasmEntrySelection({ descriptor, bytes, selection, mode });
-	for(const generated of [generateJavaScriptPackage(descriptor.bindingIr), generateJavaScriptPackage(reviewedFinWasmEntryIr(selection, mode))])
-		for(const path of ["index.mjs", "internal/validators.mjs"])
-			assert.equal(await readFile(join(installed, path), "utf8"), generated[path], `${mode} ${path} is the generated public code`);
+	// The shipped public code is exactly the generator's output for the authenticated installed contract, which
+	// reviewedFinWasmEntrySelection has already compared with the expected contract declaration by declaration.
+	const generated = generateJavaScriptPackage(descriptor.bindingIr);
+	for(const path of ["index.mjs", "internal/validators.mjs"])
+		assert.equal(await readFile(join(installed, path), "utf8"), generated[path], `${mode} ${path} is the generated public code`);
 	return { integrity: descriptor.integrity, symbols, sideModule: `./${sideModule.slice(root.length + 1)}` };
 };
 
