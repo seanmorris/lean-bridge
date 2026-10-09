@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { isAbsolute } from "node:path";
 import { finContainerEntryAdapter, finContainerEntryInitializer } from "./fin-container-entry-dispatch.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, insertFinContainerEdgeFragment } from "./fin-container-edges.mjs";
 
@@ -119,17 +120,30 @@ const validatedColumns = (model, component) => finContainerEdgeColumns(model, co
  *
  * @param model - Verified installed native model.
  * @param component - Verified receipt component.
+ * @param definitions - Optional absolute defining-library paths. Installed observations must supply these.
  */
-export const finContainerEdgeInterposer = (model, component) => {
+export const finContainerEdgeInterposer = (model, component, definitions) => {
 	const columns = validatedColumns(model, component);
+	if(definitions !== undefined)
+	{
+		assert.deepEqual(Object.keys(definitions).sort(), [...columns].sort());
+		for(const path of Object.values(definitions)) assert.ok(typeof path === "string" && isAbsolute(path) && !path.includes("\0"));
+	}
 	return `#define _GNU_SOURCE
 #include <dlfcn.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 static unsigned long counts[8];
 unsigned long fin_container_edge_count(unsigned index) { if (index >= 8) abort(); return counts[index]; }
 ${columns.map((symbol, index) => `void *${symbol}(void *argument) {
   static void *(*next)(void *);
-  if (!next) { *(void **)&next = dlsym(RTLD_NEXT, "${symbol}"); if (!next) abort(); }
+  if (!next) {
+    *(void **)&next = dlsym(RTLD_NEXT, "${symbol}"); if (!next) abort();
+${definitions ? `    Dl_info info;
+    char *actual = dladdr((void *)next, &info) ? realpath(info.dli_fname, NULL) : NULL;
+    if (!actual || strcmp(actual, ${JSON.stringify(definitions[symbol])})) { fputs("unexpected edge definition: ${symbol}\\n", stderr); exit(6); }
+    free(actual);\n` : ""}  }
   ++counts[${index}];
   return next(argument);
 }`).join("\n")}

@@ -24,7 +24,7 @@ import { renderWitHostHeader } from "../src/backends/wit/copied-host.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
-import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeGemReceipt, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
+import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeDispatchEnabled, finContainerEdgeGemReceipt, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -348,9 +348,19 @@ test("edge reports refuse old paths, existing bytes and dangling symlinks before
 });
 
 const profiles = finContainerEdgeSelection(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES);
+const measureDispatch = finContainerEdgeDispatchEnabled(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH, profiles);
+test("edge dispatch opt-in rejects typoed flags and missing installed selections", () => {
+	assert.equal(finContainerEdgeDispatchEnabled(undefined, []), false);
+	assert.equal(finContainerEdgeDispatchEnabled(undefined, ["c"]), false);
+	assert.equal(finContainerEdgeDispatchEnabled("1", ["c"]), true);
+	assert.throws(() => finContainerEdgeDispatchEnabled("1", []));
+	for(const flag of ["0", "", "true", "yes", " 1", "1 "])
+		assert.throws(() => finContainerEdgeDispatchEnabled(flag, ["c"]));
+});
 test("installed source-free native packages execute zero-bound and nested-position Fin edge cases", { skip: !profiles.length, timeout: 2_400_000 }, async t => {
 	const path = resolve(process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT ?? `build/native-fin-container-edges/edges-${profiles.join("-")}.json`);
-	const report = await checkInstalledFinContainerEdges(t, profiles, path);
+	const report = await checkInstalledFinContainerEdges(t, profiles, path, { measureDispatch });
 	assert.deepEqual(report.profiles, profiles);
 	assert.deepEqual(report.reports.map(item => item.profile), profiles);
+	if(measureDispatch) assert.ok(report.reports.every(item => item.dispatch.rawAdapter?.runtimeDefinitionsChecked === true));
 });

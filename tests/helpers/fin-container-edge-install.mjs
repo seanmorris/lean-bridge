@@ -15,6 +15,7 @@ import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.m
 import { copiedCleanEnvironment, installCopiedConsumer, runCopied } from "./copied-fixture-install.mjs";
 import { finContainerEnvironment, finContainerTargets } from "./fin-container-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeSource } from "./fin-container-edges.mjs";
+import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -64,6 +65,20 @@ export const finContainerEdgeSelection = value => {
 	assert.ok(profiles.every(profile => Object.hasOwn(finContainerEdgeChecks, profile)), "Unknown, empty or unimplemented Fin edge installed profile");
 	assert.equal(new Set(profiles).size, profiles.length, "Duplicate Fin edge profile");
 	return profiles;
+};
+
+/**
+ * Enable additional raw measurements only on an explicit installed selection. Typos must not silently
+ * turn an expected measurement into a passing uninstrumented run.
+ *
+ * @param value - Optional LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH setting.
+ * @param profiles - Explicit installed profiles.
+ */
+export const finContainerEdgeDispatchEnabled = (value, profiles) => {
+	if(value === undefined) return false;
+	assert.equal(value, "1", "Fin edge dispatch accepts only the explicit value 1");
+	assert.ok(profiles.length > 0, "Fin edge dispatch requires an installed profile selection");
+	return true;
 };
 
 /**
@@ -130,8 +145,12 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
+ * @param options.measureDispatch - Explicit opt-in to a separate raw C adapter observation.
+ * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
+ * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
  */
-export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command }) => {
+export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix }) => {
+	assert.equal(typeof measureDispatch, "boolean");
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
 	const jvm = ["java", "kotlin"].includes(profile);
@@ -262,6 +281,10 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	await verifyNativeFiles(movedInstall, receipt.files);
 	if(executable) assert.equal(sha256(await readFile(movedCommand)), executable.executableSha256);
 	for(const [path, digest] of Object.entries(deployed)) assert.equal(sha256(await readFile(join(moved, path))), digest);
+	const rawAdapter = measureDispatch ? await observeFinContainerEdgeRaw({
+		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+		, expectedModelSha256, leanPrefix
+		, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
@@ -270,6 +293,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		, ...executable
 		, ...(Object.keys(deployed).length ? { deployedFiles: deployed } : {})
 		, ...(profile === "php-native" ? { repeatStrictExecution: true } : {})
+		, ...(rawAdapter ? { rawAdapterDispatch: rawAdapter } : {})
 		, ...(python ? { python } : {}) };
 };
 
@@ -279,8 +303,11 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
  * @param t - Test context owning temporary cleanup.
  * @param profiles - Explicit supported development slice.
  * @param reportPath - Fresh separated report path, validated before any compilation.
+ * @param options - Explicit optional acceptance measurements.
+ * @param options.measureDispatch - Measure raw C adapters of each installed package after its move.
  */
-export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) => {
+export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, { measureDispatch = false } = {}) => {
+	assert.equal(typeof measureDispatch, "boolean");
 	assert.deepEqual(finContainerEdgeSelection(profiles.join(",")), profiles);
 	await requireNewFinContainerEdgeReport(reportPath);
 	const environment = finContainerEnvironment(profiles), reports = [], archives = [], authors = [];
@@ -327,7 +354,10 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 						, "present", "flatten", "label", "wrap-all", "empty-array"
 						, "empty-list", "empty-option", "optional-digits"
 					].map(name => new RegExp(`${name}: func\\(`, "u")) } });
-			const repeated = await repeatFinContainerEdges({ profile, consumer, handoff, packages, command });
+			const { rawAdapterDispatch, ...repeated } = await repeatFinContainerEdges({
+				profile, consumer, handoff, packages, command, measureDispatch
+				, expectedModelSha256: sha256(modelBytes)
+				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX });
 			reports.push({ profile
 				, path: "ordinary-source"
 				, ...observation
@@ -340,7 +370,10 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 				, bindingIrSha256: built.bindingIrSha256
 				, receiptSha256
 				, refinements: finContainerEdgeRefinements
-				, dispatch: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." } });
+				, dispatch: rawAdapterDispatch ? { kind: "fin-container-edge-dispatch-v1"
+					, publicHost: { observed: false, reason: "The separate C raw caller does not measure this host's public calls." }
+					, rawAdapter: rawAdapterDispatch }
+					: { observed: false, reason: "This supplement measures public behavior. Expanded source/adapter counters remain a separate required gate." } });
 		}
 	}
 	assert.equal(new Set(authors).size, 2); assert.deepEqual(archives[1], archives[0]);

@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -16,6 +16,7 @@ import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { finContainerEntryAdapter } from "./helpers/fin-container-entry-dispatch.mjs";
 import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgePublicProbe, finContainerEdgeRawCases, finContainerEdgeRawExpected, finContainerEdgeRawProbe, finContainerEdgeSourceEntries, readFinContainerEdgeRaw } from "./helpers/fin-container-edge-dispatch.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource } from "./helpers/fin-container-edges.mjs";
+import { observeFinContainerEdgeRaw, verifyFinContainerEdgeDeployment } from "./helpers/fin-container-edge-observer.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -128,6 +129,38 @@ test("public instrumentation preserves every original assertion and checks both 
 	await assert.rejects(finContainerEdgePublicProbe(base, { id: "other@1.0.0" }));
 });
 
+test("deployment binding refuses foreign receipts, model drift and unrecorded native libraries", async t => {
+	const installed = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-receipt-"));
+	t.after(() => rm(installed, { recursive: true, force: true }));
+	// A format-only ELF fixture exercises receipt rejection, not linking or measured execution.
+	const elf = Buffer.alloc(64); elf.write("\x7fELF", "binary"); elf[4] = 2; elf[5] = 1;
+	elf.writeUInt16LE(62, 18); elf.writeUInt16LE(3, 16);
+	const modelBytes = Buffer.from(JSON.stringify({ ...base, bindingIrSha256: "b".repeat(64) }));
+	const files = { "lean-bridge/component/model.json": modelBytes, "lib/libedge.so": elf };
+	for(const [path, bytes] of Object.entries(files)) await saveLakeFile(installed, path, bytes);
+	const receipt = { component: base.component, bindingIrSha256: "b".repeat(64)
+		, files: Object.fromEntries(Object.entries(files).map(([path, bytes]) => [path, { bytes: bytes.length, sha256: sha256(bytes) }])) };
+	const receiptBytes = Buffer.from(JSON.stringify(receipt)), receiptPath = "package-receipt.json";
+	await saveLakeFile(installed, receiptPath, receiptBytes);
+	const options = { installed, receiptPath, receiptBytes, expectedModelSha256: sha256(modelBytes) };
+	const verified = await verifyFinContainerEdgeDeployment(options);
+	assert.deepEqual(verified.libraries, { "libedge.so": sha256(elf) });
+	await assert.rejects(observeFinContainerEdgeRaw({ ...options, probeRoot: join(installed, "probe") }), /outside the installed package/u);
+	await assert.rejects(observeFinContainerEdgeRaw({ ...options, probeRoot: installed }), /outside the installed package/u);
+	await assert.rejects(verifyFinContainerEdgeDeployment({ ...options, receiptBytes: Buffer.from("{}") }), /original archive member/u);
+	await assert.rejects(verifyFinContainerEdgeDeployment({ ...options, expectedModelSha256: "a".repeat(64) }), /producer's model/u);
+	await saveLakeFile(installed, "lib/foreign.so", elf);
+	await assert.rejects(verifyFinContainerEdgeDeployment(options), /unrecorded native library/u);
+	await rm(join(installed, "lib/foreign.so"));
+	await symlink(join(installed, "lib/libedge.so"), join(installed, "lib/alias.so"));
+	await assert.rejects(verifyFinContainerEdgeDeployment(options), /unsupported native artifact/u);
+	await rm(join(installed, "lib/alias.so"));
+	await saveLakeFile(installed, "lean-bridge/component/model.json", Buffer.from("{}"));
+	await assert.rejects(verifyFinContainerEdgeDeployment(options), /native artifact drift/u);
+	await saveLakeFile(installed, "lean-bridge/component/model.json", modelBytes);
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), verified);
+});
+
 const enabled = process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_SOURCE_TEST === "1";
 test("fresh Lean preserves the measured calls and executes all raw cases with actual counters", { skip: !enabled }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-boundaries-"));
@@ -193,6 +226,38 @@ test("fresh Lean preserves the measured calls and executes all raw cases with ac
 		await assert.rejects(() => runCopied(join(root, "raw"), [], root, { ...environment, LD_PRELOAD: join(root, `${label}.so`) })
 			, error => error.details.stderr === "edge raw probe: wrong per-call source or adapter count\n", label);
 	}
+	// Exercise the observer against a relocated local compiler fixture with an explicit synthetic
+	// receipt. This proves its binding/instrumentation, not package-manager installation or provenance.
+	const staging = join(root, "receipt-fixture"), installed = join(root, "receipt-fixture-moved");
+	await mkdir(join(staging, "lib"), { recursive: true });
+	await copyFile(join(root, "libedge-source.so"), join(staging, "lib/libedge-source.so"));
+	for(const name of ["libleanshared.so", "libleanshared_1.so", "libleanshared_2.so"])
+		await copyFile(join(prefix, "lib/lean", name), join(staging, "lib", name));
+	const modelBytes = Buffer.from(JSON.stringify({ ...compiled, bindingIrSha256: "b".repeat(64) }));
+	await saveLakeFile(staging, "lean-bridge/component/model.json", modelBytes);
+	const files = {};
+	for(const path of ["lean-bridge/component/model.json", "lib/libedge-source.so", "lib/libleanshared.so", "lib/libleanshared_1.so", "lib/libleanshared_2.so"])
+	{
+		const bytes = await readFile(join(staging, path));
+		files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+	}
+	const receiptBytes = Buffer.from(JSON.stringify({ component: compiled.component, bindingIrSha256: "b".repeat(64), files }));
+	await saveLakeFile(staging, "package-receipt.json", receiptBytes);
+	await rename(staging, installed);
+	const options = { installed, receiptPath: "package-receipt.json", receiptBytes, expectedModelSha256: sha256(modelBytes), probeRoot: join(root, "receipt-probe"), leanPrefix: prefix };
+	const receiptObservation = await observeFinContainerEdgeRaw(options);
+	assert.deepEqual(receiptObservation.observed, finContainerEdgeRawExpected);
+	assert.equal(receiptObservation.runtimeDefinitionsChecked, true);
+	assert.equal(receiptObservation.installedFilesUnchanged, true);
+	assert.match(receiptObservation.caller, /not a host-language call/u);
+	await assert.rejects(observeFinContainerEdgeRaw(options), { code: "EEXIST" });
+	const columns = finContainerEdgeColumns(compiled, compiled.component);
+	const wrongDefinitions = Object.fromEntries(columns.map(symbol => [symbol, join(root, "libedge-source.so")]));
+	wrongDefinitions[columns[2]] = join(root, "wrong-library.so");
+	await saveLakeFile(root, "wrong-definition.c", finContainerEdgeInterposer(compiled, compiled.component, wrongDefinitions));
+	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "wrong-definition.c", "-ldl", "-o", "wrong-definition.so"], root, compile);
+	await assert.rejects(() => runCopied(join(root, "raw"), [], root, { ...environment, LD_PRELOAD: join(root, "wrong-definition.so") })
+		, error => /exited with status 6:/u.test(error.message) && error.details.stderr === `unexpected edge definition: ${columns[2]}\n`);
 });
 
 test("raw and public edge probes compile against the pinned Lean API and generated GMP header", { skip: !enabled }, async t => {
