@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { existsSync } from "node:fs";
-import { cp, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, readFile, readdir, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import test from "node:test";
@@ -24,9 +24,9 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { nativeFinAdapterSymbol, nativeFinDispatchExpected, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from "./helpers/native-fin-dispatch.mjs";
-import { nativeFinAuditConfig, nativeFinAuditConfigSha256, nativeFinAuditDefiners, nativeFinAuditRecord, nativeFinAuditSource, readNativeFinAuditRecord } from "./helpers/native-fin-dispatch-audit.mjs";
+import { nativeFinDefiners, nativeFinGdbExit, nativeFinGdbIdentity, nativeFinGdbRecord, nativeFinGdbScript, readNativeFinGdbRecord } from "./helpers/native-fin-dispatch-gdb.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
-import "./helpers/native-fin-dispatch-audit-tests.mjs";
+import "./helpers/native-fin-dispatch-gdb-tests.mjs";
 
 const huge = "1180591620717411303424";
 const expectedBounds = {
@@ -97,44 +97,46 @@ puts "ruby-fin-ok:#{$checks}"
 
 const rubyFinDispatchExpected = nativeFinDispatchExpected(outcome => outcome.rejected ? `rejected:${outcome.rejected[0]}<${outcome.rejected[1]}` : `ok:${outcome.ok}`);
 const rubyFinDispatchRoutes = ["public Ruby methods LeanBridge::NativeFin.mirror, .impossible and .label through the verified RTLD_DEEPBIND gem loader and Fiddle into the bundled C adapter"];
-const unattached = "fin dispatch audit is not attached\n", unbound = "fin dispatch audit did not bind the verified deployment\n";
+const unattached = "fin dispatch instrumentation is not attached\n", uncovered = "fin dispatch instrumentation did not cover the verified deployment\n";
+const gdbCommand = process.env.LEAN_BRIDGE_GDB ?? "/usr/bin/gdb";
 
 /**
- * Ruby probe run under the audit. Before loading the gem it requires a fresh record from this process: the
- * expected configuration digest, this invocation's nonce and PID, an attached audit and no binding yet.
- * After loading it requires all six redirections from the configured defining libraries before printing a
- * row, so zero counts are reported only for a proven attachment. Every count comes from the mapped record.
+ * Ruby probe run under GDB. Before loading the gem it requires a fresh record for this process: the
+ * expected identity digest, this invocation's nonce and PID, an attached debugger and nothing armed. After
+ * loading it requires a breakpoint on every one of the six verified definitions, including entries that no
+ * relocation references, before printing a row; every count comes from the record GDB updates on each hit.
+ * The optional dynamic mode adds one owned stand-in step that calls an otherwise unreferenced adapter.
  */
 const rubyFinDispatchProbe = () => `# frozen_string_literal: true
-RECORD, NONCE, CONFIG, DEFINERS = ARGV
+RECORD, NONCE, CONFIG, DEFINERS, MODE = ARGV
 EXPECTED = DEFINERS.to_s.split(",").map { |index| Integer(index, 10) }
-LAYOUT = ${JSON.stringify(nativeFinAuditRecord.rubyFormat)}
-def audit
+LAYOUT = ${JSON.stringify(nativeFinGdbRecord.rubyFormat)}
+def instrumentation
   bytes = begin
     ::File.binread(RECORD)
   rescue ::SystemCallError, ::TypeError
     nil
   end
-  bytes && bytes.bytesize == ${nativeFinAuditRecord.size} ? bytes.unpack(LAYOUT) : nil
+  bytes && bytes.bytesize == ${nativeFinGdbRecord.size} ? bytes.unpack(LAYOUT) : nil
 end
 def ours?(record)
-  record && record[0] == ${JSON.stringify(nativeFinAuditRecord.magic)} && record[1] == ${nativeFinAuditRecord.version} && record[2] == 6 && record[3] == CONFIG && record[4] == NONCE && record[5] == ::Process.pid && record[6] == 1
+  record && record[0] == ${JSON.stringify(nativeFinGdbRecord.magic)} && record[1] == ${nativeFinGdbRecord.version} && record[2] == 6 && record[3] == CONFIG && record[4] == NONCE && record[5] == ::Process.pid && record[6] == 1
 end
 def entries(record) = record[28, 6]
-record = ARGV.size == 4 && EXPECTED.size == 6 ? audit : nil
+record = [4, 5].include?(ARGV.size) && EXPECTED.size == 6 ? instrumentation : nil
 unless ours?(record) && record[7].zero? && record[8].zero? && record[9].zero? && entries(record).all?(&:zero?)
   $stderr.write(${JSON.stringify(unattached)})
   exit 2
 end
 require "lean_bridge/native_fin"
 API = LeanBridge::NativeFin
-record = audit
-unless ours?(record) && record[7] == 0x3f && record[8].zero? && record[9].zero? && record[10, 6].all?(&:positive?) && record[16, 6] == EXPECTED && record[22, 6].all?(&:positive?) && entries(record).all?(&:zero?)
-  $stderr.write(${JSON.stringify(unbound)})
+record = instrumentation
+unless ours?(record) && record[7] == 0x3f && record[8].zero? && record[9].zero? && record[10, 6].all? { |count| count == 1 } && record[16, 6] == EXPECTED && entries(record).all?(&:zero?)
+  $stderr.write(${JSON.stringify(uncovered)})
   exit 3
 end
 def report(step, status)
-  $stdout.write([step, status, *entries(audit)].join(" ") + "\\n")
+  $stdout.write([step, status, *entries(instrumentation)].join(" ") + "\\n")
 end
 def status
   value = yield
@@ -147,72 +149,103 @@ rescue ::StandardError => error
 end
 report("start", "ok")
 ${nativeFinDispatchSteps.slice(1).map(([step, name, args]) => `report(${JSON.stringify(step)}, status { API.${name}(${args.map(value => typeof value === "string" ? JSON.stringify(value) : value.toString()).join(", ")}) })`).join("\n")}
+report("dynamic-impossible-adapter", status { API.dynamic_impossible_adapter }) if MODE == "dynamic"
 `;
 
 /**
- * Build the audit for the verified deployment directory and count per-step entries in one Ruby process.
- * Library bytes are verified against the gem receipt and every counted symbol's single defining library is
- * read from nm before anything runs; a run without the audit must refuse before loading the gem.
+ * Prepare GDB instrumentation of one verified deployment directory and run the probe with or without it.
+ * Every counted symbol's single defining library is read from nm before anything runs; each run gets a new
+ * nonce, record, breakpoint list and output files. Results carry the probe's own exit status, stdout and
+ * stderr; GDB's statuses 70-72 mean the inferior never produced trusted rows.
  *
  * @param root0 - Verified deployment and the Ruby command that loads it.
- * @param root0.probeRoot - Task-owned directory for the audit, probe and records.
+ * @param root0.probeRoot - Task-owned directory for the script, probe and records.
  * @param root0.nativeDirectory - Directory that holds the verified libraries the gem loads.
  * @param root0.componentId - Component identity that names the counted adapters.
  * @param root0.command - Ruby executable.
  * @param root0.args - Ruby arguments that precede the probe path.
  * @param root0.cwd - Working directory for Ruby.
  * @param root0.env - Clean environment that finds the gem.
- * @param root0.audit - Optional configuration override, for refusal controls.
+ * @param root0.definers - Optional per-column definer override, for refusal controls.
  */
-const observeRubyDispatch = async ({ probeRoot, nativeDirectory, componentId, command, args = [], cwd, env, audit = null }) => {
+const observeRubyDispatch = async ({ probeRoot, nativeDirectory, componentId, command, args = [], cwd, env, definers = null }) => {
 	const tools = { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" };
 	const libraries = (await readdir(nativeDirectory)).filter(name => /\.so(?:\.[0-9]+)*$/u.test(name)).sort();
 	const listings = {};
 	for(const name of libraries) listings[name] = (await runCopied("/usr/bin/nm", ["-D", "--defined-only", join(nativeDirectory, name)], nativeDirectory, tools)).stdout;
-	const config = nativeFinAuditConfig({ componentId, libraries, definers: nativeFinAuditDefiners(componentId, listings), ...audit });
-	const source = nativeFinAuditSource(config), configSha256 = nativeFinAuditConfigSha256(config);
-	await saveLakeFile(probeRoot, "audit.c", source);
+	const { identity, configSha256, definerIndices } = nativeFinGdbIdentity({ componentId, libraries, definers: definers ?? nativeFinDefiners(componentId, listings) });
 	await saveLakeFile(probeRoot, "dispatch.rb", rubyFinDispatchProbe());
-	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC", "audit.c", "-o", "libfinaudit.so"], probeRoot, tools);
-	const exported = (await runCopied("/usr/bin/nm", ["-D", "--defined-only", join(probeRoot, "libfinaudit.so")], probeRoot, tools)).stdout;
-	assert.deepEqual(exported.trim().split("\n").map(line => line.split(" ").slice(1).join(" ")).sort(), ["T la_objopen", "T la_symbind64", "T la_version"]);
-	const definers = config.definers.map(name => config.libraries.indexOf(name)).join(",");
+	await saveLakeFile(probeRoot, "fin.gdb.py", nativeFinGdbScript);
 	let runs = 0;
-	// The result is left pending so callers can assert refusals; before() may plant a file at the record path first.
-	const run = async (extra, { nonce = randomBytes(16).toString("hex"), before = null } = {}) => {
-		const record = join(probeRoot, `record-${runs++}.bin`);
+	/**
+	 * One probe run; before() may plant a file at the record path first.
+	 *
+	 * @param root0 - Run options.
+	 * @param root0.gdb - Run under GDB instrumentation.
+	 * @param root0.mode - Optional probe mode.
+	 * @param root0.root - Directory GDB treats as verified, normally the native directory.
+	 * @param root0.nonce - Run nonce; fresh unless replayed by a control.
+	 * @param root0.before - Optional hook given the record path.
+	 */
+	const run = async ({ gdb = true, mode = null, root = nativeDirectory, nonce = randomBytes(16).toString("hex"), before = null } = {}) => {
+		const stem = join(probeRoot, `run-${runs++}`), record = `${stem}.record`, armed = `${stem}.armed.json`;
 		if(before) await before(record);
-		const probeArgs = [...args, join(probeRoot, "dispatch.rb"), record, nonce, configSha256, definers];
-		const probeEnv = { ...env, LEAN_BRIDGE_FIN_AUDIT_RECORD: record, LEAN_BRIDGE_FIN_AUDIT_NONCE: nonce, LEAN_BRIDGE_FIN_AUDIT_ROOT: nativeDirectory, ...extra };
-		return { record, nonce, result: runCopied(command, probeArgs, cwd, probeEnv) };
+		const argv = [command, ...args, join(probeRoot, "dispatch.rb"), record, nonce, configSha256, definerIndices.join(","), ...mode ? [mode] : []];
+		const config = { identity, configSha256, root, nonce, record, armed, argv, stdout: `${stem}.stdout`, stderr: `${stem}.stderr` };
+		await writeFile(`${stem}.json`, canonicalJson(config), { flag: "wx" });
+		const started = gdb
+			? runCopied(gdbCommand, ["-batch", "-q", "-nx", "-x", join(probeRoot, "fin.gdb.py")], cwd, { ...env, LEAN_BRIDGE_FIN_GDB_CONFIG: `${stem}.json` })
+			: runCopied(argv[0], argv.slice(1), cwd, env);
+		let code = 0, stdout, stderr;
+		try
+		{ ({ stdout, stderr } = await started); }
+		catch(error)
+		{
+			const status = /exited with status (\d+)/u.exec(error.message);
+			if(!status) throw error;
+			code = Number(status[1]); ({ stdout, stderr } = error.details);
+		}
+		const read = async path => (existsSync(path) ? readFile(path, "utf8") : null);
+		// Under GDB the process streams carry GDB's own messages; the probe's streams are files.
+		if(!gdb) return { record, nonce, armed, code, output: stdout + stderr, stdout, stderr };
+		return { record, nonce, armed, code, output: stdout + stderr, stdout: await read(config.stdout), stderr: await read(config.stderr) };
 	};
-	const audited = { LD_AUDIT: join(probeRoot, "libfinaudit.so") };
-	return { config, configSha256, source, definers, run, audited, auditSha256: sha256(await readFile(join(probeRoot, "libfinaudit.so"))) };
+	return { identity, configSha256, definerIndices, listings, run };
 };
 
 /**
- * Require the mapped record of one accepted run to match its rows and configuration exactly.
+ * Require one accepted run's record and armed breakpoints to match its rows and verified definitions.
  *
  * @param observer - Result of observeRubyDispatch.
  * @param root0 - One run.
  * @param root0.record - Record path.
  * @param root0.nonce - This run's nonce.
+ * @param root0.armed - Armed breakpoint list path.
  * @param observed - Parsed rows of the same run.
  */
-const assertRubyDispatchRecord = async (observer, { record, nonce }, observed) => {
-	const mapped = readNativeFinAuditRecord(await readFile(record)), { config } = observer;
-	assert.deepEqual([mapped.magic, mapped.version, mapped.columns, mapped.config, mapped.nonce, mapped.attached], [nativeFinAuditRecord.magic, 1, 6, observer.configSha256, nonce, 1]);
-	assert.deepEqual([mapped.redirected, mapped.conflicts, mapped.foreign], [0x3f, 0, 0]);
-	assert.deepEqual(mapped.definers, config.definers.map(name => config.libraries.indexOf(name)));
-	assert.ok(mapped.bindings.every(count => count >= 1) && mapped.callers.every(mask => mask > 0));
-	// The entries the probe printed last are the mapped bytes after the final call.
+const assertRubyDispatchRecord = async (observer, { record, nonce, armed }, observed) => {
+	const mapped = readNativeFinGdbRecord(await readFile(record)), { identity } = observer;
+	assert.deepEqual([mapped.magic, mapped.version, mapped.columns, mapped.config, mapped.nonce, mapped.attached], [nativeFinGdbRecord.magic, 1, 6, observer.configSha256, nonce, 1]);
+	assert.deepEqual([mapped.armed, mapped.conflicts, mapped.foreign, mapped.breakpoints], [0x3f, 0, 0, [1, 1, 1, 1, 1, 1]]);
+	assert.deepEqual(mapped.definers, observer.definerIndices);
+	// The entries the probe printed last are the record's bytes after the final call.
 	assert.deepEqual(mapped.entries, observed.at(-1)[2]);
-	return { bindings: mapped.bindings, callers: mapped.callers.map(mask => config.libraries.filter((_, index) => mask & 1 << index)) };
+	// Each breakpoint sits exactly on its symbol's nm definition in the configured library.
+	const breakpoints = JSON.parse(await readFile(armed, "utf8")).map(({ symbol, library, offset }) => ({ symbol, library, offset }));
+	assert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));
+	for(const { symbol, library, offset } of breakpoints)
+	{
+		const line = observer.listings[library].split("\n").find(entry => entry.trim().endsWith(` ${symbol}`));
+		assert.equal(offset, Number.parseInt(line.trim().split(" ")[0], 16), symbol);
+	}
+	return breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset: `0x${offset.toString(16)}` }));
 };
 
 const standInEvidence = libraries => ({ runtimeIdentity: sha256("ruby fin dispatch stand-in"), componentId: "native-fin@1.0.0", library: "libnative_fin.so", libraries });
+const adapter = name => nativeFinAdapterSymbol("native-fin@1.0.0", `NativeFin.${name}`);
 /**
  * A stand-in gem entry that loads through the real generated verified loader with its production flags.
+ * The extra dynamic method reaches the otherwise unreferenced Fin 0 adapter by symbol lookup.
  *
  * @param libraries - Basename to SHA-256 of each stand-in library.
  */
@@ -237,10 +270,10 @@ ${verifiedRubyAssets(standInEvidence(libraries))}
       def self.mirror(arg0) = invoke(MIRROR, word(arg0))[0, 8].unpack1("Q<")
       def self.impossible(arg0) = invoke(IMPOSSIBLE, word(arg0))[0, 8].unpack1("Q<")
       def self.label(arg0, arg1, arg2) = invoke(LABEL, word(arg0), word(arg1), arg2).to_s
+      def self.dynamic_impossible_adapter = ::Fiddle::Function.new(LIBRARY[${JSON.stringify(adapter("impossible"))}], [POINTER], POINTER).call(0).to_i
   end
 end
 `;
-const adapter = name => nativeFinAdapterSymbol("native-fin@1.0.0", `NativeFin.${name}`);
 /** Stand-in Lean sources and their exported adapters, one library as in the component build. */
 const standInComponent = () => `#include <stdint.h>
 void *l_NativeFin_mirror(void *a0) { return (void *)(9 - (uintptr_t)a0); }
@@ -250,13 +283,15 @@ void *${adapter("mirror")}(void *a0) { return l_NativeFin_mirror(a0); }
 void *${adapter("impossible")}(void *a0) { return l_NativeFin_impossible(a0); }
 void *${adapter("label")}(void *a0, void *a1, void *a2) { return l_NativeFin_label(a0, a1, a2); }
 `;
-/** The checked C entry points: each bound is checked before its adapter, unless LEAK is defined. */
+/**
+ * The checked C entry points in the generated layout: each bound is checked before its adapter, and the
+ * Fin 0 entry rejects without referencing its adapter at all. LEAK enters the mirror adapter first.
+ */
 const standInAdapter = () => `#include <stdint.h>
 #include <stdio.h>
 void *${adapter("mirror")}(void *);
-void *${adapter("impossible")}(void *);
 void *${adapter("label")}(void *, void *, void *);
-static volatile uintptr_t fin0 = 0, fin4 = 4, fin10 = 10;
+static volatile uintptr_t fin4 = 4, fin10 = 10;
 static int reject(char *error, const char *message) { snprintf(error, 64, "%s", message); return 1; }
 int native_fin_mirror(uintptr_t arg0, uintptr_t *out, char *error) {
 #ifdef LEAK
@@ -265,10 +300,7 @@ int native_fin_mirror(uintptr_t arg0, uintptr_t *out, char *error) {
   if (arg0 >= fin10) return reject(error, "arg0 is not below its Fin 10 bound");
   *out = (uintptr_t)${adapter("mirror")}((void *)arg0); return 0;
 }
-int native_fin_impossible(uintptr_t arg0, uintptr_t *out, char *error) {
-  if (arg0 >= fin0) return reject(error, "arg0 is not below its Fin 0 bound");
-  *out = (uintptr_t)${adapter("impossible")}((void *)arg0); return 0;
-}
+int native_fin_impossible(uintptr_t arg0, uintptr_t *out, char *error) { (void)arg0; (void)out; return reject(error, "arg0 is not below its Fin 0 bound"); }
 int native_fin_label(uintptr_t arg0, uintptr_t arg1, const char *arg2, char *out, char *error) {
   if (arg1 >= fin4) return reject(error, "arg1 is not below its Fin 4 bound");
   snprintf(out, 64, "%s:%lu", arg2, (unsigned long)(uintptr_t)${adapter("label")}((void *)arg0, (void *)arg1, (void *)arg2)); return 0;
@@ -303,11 +335,14 @@ test("generated Ruby bound docs come only from checked refinement metadata", () 
 });
 
 const standInRuby = resolve(".toolchains/ruby33/bin/ruby");
-test("the Ruby dispatch audit counts a deep-bound stand-in exactly and refuses missing, stale, foreign and leaking runs", { skip: !existsSync(standInRuby) || process.platform !== "linux" || process.arch !== "x64" }, async t => {
-	const root = await mkdtemp(join(tmpdir(), "lean-bridge-ruby-fin-audit-"));
+const standInSkip = !existsSync(standInRuby) ? "the pinned Ruby 3.3 toolchain is not installed"
+	: process.platform !== "linux" || process.arch !== "x64" ? "GDB entry counters target x86_64 Linux"
+		: !existsSync(gdbCommand) ? `no debugger at ${gdbCommand}; entry-breakpoint controls need GDB with ptrace` : false;
+test("GDB entry breakpoints count a deep-bound Ruby stand-in exactly and refuse missing, stale, foreign and leaking runs", { skip: standInSkip }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-ruby-fin-gdb-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const tools = { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" }, componentId = "native-fin@1.0.0";
-	const cc = args => runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC", "-Wl,-z,now", ...args], root, tools);
+	const cc = args => runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-O2", "-shared", "-fPIC", ...args], root, tools);
 	await saveLakeFile(root, "src/component.c", standInComponent());
 	await saveLakeFile(root, "src/adapter.c", standInAdapter());
 	await saveLakeFile(root, "src/runtime.c", "int lean_bridge_stand_in_runtime(void) { return 0; }\n");
@@ -326,7 +361,10 @@ test("the Ruby dispatch audit counts a deep-bound stand-in exactly and refuses m
 		await saveLakeFile(lib, "lean_bridge/native_copied_runtime_v1.rb", copiedRubyRuntime);
 		gems[variant] = { lib, native };
 	}
-	const observe = (variant, probe, audit = null) => observeRubyDispatch({
+	// As generated, nothing in the deployment references the Fin 0 adapter.
+	const relocations = (await runCopied("/usr/bin/readelf", ["-rW", join(gems.gem.native, "libnative_fin.so")], root, tools)).stdout;
+	assert.ok(relocations.includes(adapter("mirror")) && !relocations.includes(adapter("impossible")));
+	const observe = (variant, probe, definers = null) => observeRubyDispatch({
 		probeRoot: join(root, probe)
 		, nativeDirectory: gems[variant].native
 		, componentId
@@ -334,43 +372,53 @@ test("the Ruby dispatch audit counts a deep-bound stand-in exactly and refuses m
 		, args: ["-I", gems[variant].lib]
 		, cwd: root
 		, env: copiedCleanEnvironment
-		, audit
+		, definers
 	});
 	const observer = await observe("gem", "probe");
-	assert.deepEqual(observer.config.definers, Array(6).fill("libcomponent_stand_in.so"));
-	const refused = async (attempt, code, stderr) => assert.rejects(attempt.result, error => error.message.includes(`exited with status ${code}`)
-		&& error.details.stdout === "" && error.details.stderr === stderr);
-	// Without the audit no record exists, and the probe refuses before loading the gem.
-	const missing = await observer.run({});
-	await refused(missing, 2, unattached);
+	assert.deepEqual(observer.identity.definers, Array(6).fill("libcomponent_stand_in.so"));
+	const refused = (run, code, stderr) => {
+		assert.equal(run.code, code, run.output);
+		assert.equal(run.stdout ?? "", ""); if(stderr !== null) assert.equal(run.stderr, stderr);
+	};
+	// Without GDB no record exists, and the probe refuses before loading the gem.
+	const missing = await observer.run({ gdb: false });
+	refused(missing, 2, unattached);
 	assert.equal(existsSync(missing.record), false);
-	// Under the production deep-bound flags every row is exact, and the mapped record agrees with it.
-	const accepted = await observer.run(observer.audited);
-	const { stdout, stderr } = await accepted.result;
-	assert.equal(stderr, "");
-	const observed = readNativeFinDispatch(stdout, rubyFinDispatchExpected);
+	// Under the production deep-bound flags all six entries are armed, including the unreferenced adapter.
+	const accepted = await observer.run();
+	assert.equal(accepted.code, 0, accepted.output); assert.equal(accepted.stderr, "");
+	const observed = readNativeFinDispatch(accepted.stdout, rubyFinDispatchExpected);
 	assert.deepEqual(observed, rubyFinDispatchExpected);
-	const mapped = await assertRubyDispatchRecord(observer, accepted, observed);
-	assert.deepEqual(mapped.callers, [...Array(3).fill(["libcomponent_stand_in.so"]), ...Array(3).fill(["libnative_fin.so"])]);
+	const breakpoints = await assertRubyDispatchRecord(observer, accepted, observed);
+	assert.equal(breakpoints.length, 6);
+	// A computed-address call of the otherwise unreferenced Fin 0 adapter is an actual counted entry.
+	const dynamic = await observer.run({ mode: "dynamic" });
+	assert.equal(dynamic.code, 0, dynamic.output);
+	const extended = [...rubyFinDispatchExpected, ["dynamic-impossible-adapter", "ok:0", [2, 1, 2, 2, 1, 2]]];
+	assert.equal(dynamic.stdout, extended.map(([step, status, counts]) => `${step} ${status} ${counts.join(" ")}\n`).join(""));
+	assert.deepEqual(readNativeFinGdbRecord(await readFile(dynamic.record)).entries, [2, 1, 2, 2, 1, 2]);
 	// A stale valid record is never adopted, with a fresh nonce or with its own nonce replayed.
 	const stale = await readFile(accepted.record);
 	for(const nonce of [undefined, accepted.nonce])
 	{
-		const attempt = await observer.run(observer.audited, { nonce, before: path => writeFile(path, stale, { flag: "wx" }) });
-		await refused(attempt, 2, unattached);
+		const attempt = await observer.run({ nonce, before: path => writeFile(path, stale, { flag: "wx" }) });
+		refused(attempt, nativeFinGdbExit.refusedRecord, null);
+		assert.match(attempt.output, /fin instrumentation refused: \[Errno 17\] File exists/u);
 		assert.ok((await readFile(attempt.record)).equals(stale), "the stale record is untouched");
 	}
-	// An audit rooted elsewhere binds nothing of the loaded gem.
-	await refused(await observer.run({ ...observer.audited, LEAN_BRIDGE_FIN_AUDIT_ROOT: gems.leaking.native }), 3, unbound);
-	// Adapters configured in the wrong library are reported as foreign and left uncounted.
-	const wrong = await observe("gem", "wrong", { definers: Object.fromEntries(nativeFinDispatchSymbols(componentId).map((symbol, k) => [symbol, k < 3 ? "libcomponent_stand_in.so" : "libnative_fin.so"])) });
-	const misplaced = await wrong.run(wrong.audited);
-	await refused(misplaced, 3, unbound);
-	const partial = readNativeFinAuditRecord(await readFile(misplaced.record));
-	assert.equal(partial.redirected, 0b000111); assert.ok(partial.foreign >= 3);
+	// GDB rooted elsewhere arms nothing in the loaded gem.
+	refused(await observer.run({ root: gems.leaking.native }), 3, uncovered);
+	// Adapters configured in the wrong library are reported as foreign and never armed.
+	const misplaced = Object.fromEntries(nativeFinDispatchSymbols(componentId).map((symbol, k) => [symbol, k < 3 ? "libcomponent_stand_in.so" : "libnative_fin.so"]));
+	const wrong = await observe("gem", "wrong", misplaced);
+	const misarmed = await wrong.run();
+	refused(misarmed, 3, uncovered);
+	const partial = readNativeFinGdbRecord(await readFile(misarmed.record));
+	assert.deepEqual([partial.armed, partial.foreign, partial.breakpoints], [0b000111, 3, [1, 1, 1, 0, 0, 0]]);
 	// A C entry point that enters its adapter before rejecting is caught at its first invalid row.
 	const leaking = await observe("leaking", "leak");
-	const leak = await (await leaking.run(leaking.audited)).result;
+	const leak = await leaking.run();
+	assert.equal(leak.code, 0, leak.output);
 	assert.match(leak.stdout, /^invalid-mirror-bound rejected:arg0<10 1 0 0 1 0 0$/mu);
 	assert.throws(() => readNativeFinDispatch(leak.stdout, rubyFinDispatchExpected), /invalid-mirror-bound was rejected but changed counts by 1 0 0 1 0 0/u);
 });
@@ -427,7 +475,7 @@ const checkInstalledRubyFin = async (t, reviewed = false) => {
 		await verifyNativeFiles(installed, gemReceipt.files);
 		const gemLibraries = sharedLibraries(gemReceipt.files);
 		// The gem bundles the exact checked adapter that the C, Python and Rust probes
-		// instrument; its RTLD_DEEPBIND loader bypasses LD_PRELOAD, so entries are counted under LD_AUDIT.
+		// instrument; its RTLD_DEEPBIND loader bypasses LD_PRELOAD, so entries are counted by GDB breakpoints.
 		const shared = Object.keys(gemLibraries).filter(name => Object.hasOwn(cLibraries, name)).sort();
 		assert.ok(shared.includes("libnative_fin.so"), JSON.stringify({ gem: gemLibraries, c: cLibraries }));
 		for(const name of shared) assert.equal(gemLibraries[name], cLibraries[name], name);
@@ -443,7 +491,9 @@ const checkInstalledRubyFin = async (t, reviewed = false) => {
 		assert.equal(model.component.id, "native-fin@1.0.0");
 		for(const name of ["mirror", "impossible", "label"])
 			assert.equal(model.exports.find(item => item.name === `NativeFin.${name}`).symbol, nativeFinAdapterSymbol(model.component.id, `NativeFin.${name}`), name);
-		t.diagnostic("per-step source and adapter counts in the relocated Ruby process under LD_AUDIT");
+		t.diagnostic("per-step source and adapter counts in the relocated Ruby process under GDB entry breakpoints");
+		// Installed entry counts need GDB with ptrace; their absence fails this gated acceptance, never skips it.
+		assert.ok(existsSync(gdbCommand), `GDB is required at ${gdbCommand} for installed Ruby entry counts; set LEAN_BRIDGE_GDB, and ptrace must be permitted`);
 		const relocatedGem = join(relocated, relative(root, installed));
 		await verifyNativeFiles(relocatedGem, gemReceipt.files);
 		const directories = [...new Set(Object.keys(gemReceipt.files).filter(path => /\.so(?:\.[0-9]+)*$/u.test(path)).map(dirname))];
@@ -456,30 +506,31 @@ const checkInstalledRubyFin = async (t, reviewed = false) => {
 			, cwd: relocated
 			, env: { ...copiedCleanEnvironment, GEM_HOME: movedGems, GEM_PATH: movedGems }
 		});
-		// Without the audit the probe refuses before loading the gem, and no record appears.
-		const missing = await observer.run({});
-		await assert.rejects(missing.result, error => /exited with status 2/.test(error.message)
-			&& error.details.stdout === "" && error.details.stderr === unattached);
+		// Without GDB the probe refuses before loading the gem, and no record appears.
+		const missing = await observer.run({ gdb: false });
+		assert.equal(missing.code, 2, missing.output); assert.equal(missing.stdout, ""); assert.equal(missing.stderr, unattached);
 		assert.equal(existsSync(missing.record), false);
-		const accepted = await observer.run(observer.audited);
-		const counted = await accepted.result;
-		assert.equal(counted.stderr, "");
-		const observed = readNativeFinDispatch(counted.stdout, rubyFinDispatchExpected);
+		const accepted = await observer.run();
+		assert.equal(accepted.code, 0, `instrumented probe failed (70 stale record, 71 ptrace or instrumentation, 72 signal): ${accepted.output}`);
+		assert.equal(accepted.stderr, "");
+		const observed = readNativeFinDispatch(accepted.stdout, rubyFinDispatchExpected);
 		assert.deepEqual(observed, rubyFinDispatchExpected);
-		const mapped = await assertRubyDispatchRecord(observer, accepted, observed);
+		const breakpoints = await assertRubyDispatchRecord(observer, accepted, observed);
 		const dispatch = {
-			columns: observer.config.columns
+			columns: observer.identity.columns
 			, observed
-			, interposer: "LD_AUDIT"
+			, instrument: "gdb-breakpoints"
+			, instrumentation: "in-memory int3 breakpoints at each verified definition; deployed files and the production loader are unchanged"
 			, routes: rubyFinDispatchRoutes
 			, positiveControl: "valid public Ruby calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column"
 			, probeSha256: sha256(rubyFinDispatchProbe())
-			, auditSourceSha256: sha256(observer.source)
-			, auditSha256: observer.auditSha256
+			, scriptSha256: sha256(nativeFinGdbScript)
 			, configSha256: observer.configSha256
-			, definers: observer.config.definers
-			, bindings: mapped.bindings
-			, callers: mapped.callers
+			, gdb: { version: (await runCopied(gdbCommand, ["--version"], relocated, copiedCleanEnvironment)).stdout.split("\n")[0], sha256: sha256(await readFile(await realpath(gdbCommand))) }
+			, definers: observer.identity.definers
+			, breakpoints
+			, libraries: Object.fromEntries(observer.identity.libraries.map(name => [name, gemLibraries[name]]))
+			, scope: "local x86_64 Linux with GDB and ptrace"
 		};
 		reports.push({ profile: "ruby"
 			, path: reviewed ? "reviewed-ir" : "ordinary-source"
