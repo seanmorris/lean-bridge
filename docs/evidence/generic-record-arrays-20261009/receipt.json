@@ -1,0 +1,437 @@
+{
+  "schemaVersion": 1,
+  "kind": "generic-record-array-native-acceptance",
+  "revision": "c5e9760f92ae7e5ece9d561ee39585e94ceb9952",
+  "selections": [
+    "c-cpp",
+    "python311",
+    "python312"
+  ],
+  "scope": {
+    "hosts": [
+      "c",
+      "cpp",
+      "python"
+    ],
+    "pythonFloors": [
+      "3.11.16",
+      "3.12.14"
+    ],
+    "route": "ordinary-source",
+    "cases": [
+      "ArrayBox Array Nat field",
+      "BoxRow Array NatBox input and result",
+      "RowBox Array NatBox field",
+      "negative members at the first, middle and last position",
+      "1000 Array rounds"
+    ],
+    "localGlibc": "2.36",
+    "local": true,
+    "hostedCi": false,
+    "otherNativeHosts": false,
+    "supportPromotion": false,
+    "retained": "Queue, runner, runner output, per-selection start, end and TAP, reports and Git source snapshots; package archives are identified by digest only"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/queue.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/queue.json",
+      "sha256": "23d548aa3b9a69f9038e92d84535e53c313edf243843a77b69aeada6f7d90d9d",
+      "bytes": 7385
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/runner.mjs.txt",
+      "originalPath": "build/run-vo1439-generic-record-arrays-c5e9760.mjs",
+      "sha256": "89f75f834ab4708dd99e99608e5faf05dbbd65f039951eedf60330b97af525c0",
+      "bytes": 10174
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/runner-output.txt",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760.runner.log",
+      "sha256": "3a72e27312b20faa0cd5ffc995809147ef93b47539cbd029ce0f888998420efd",
+      "bytes": 1505
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/c-cpp/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/c-cpp/start.json",
+      "sha256": "9826c94d35971858147397ac5faaefde8ccdf0b3248a1caaf6582eedefae2a9b",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/c-cpp/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/c-cpp/end.json",
+      "sha256": "a7eac2ae85a5d3becf914d7e1a6e6091642f04cc5f2e8c5ce86a1465c02b9186",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/c-cpp/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/c-cpp/run.tap",
+      "sha256": "546c1f3678c91c4fb2709f79ebd5be63072094301cc362187d431b6f33798941",
+      "bytes": 526
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python311/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python311/start.json",
+      "sha256": "93b02205267216812e6d58023651ba1257510ab0cb5a97372ce215f11a235898",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python311/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python311/end.json",
+      "sha256": "eae5cb7f4e00019c3965c7efca56f5486ef70b2b67129889ae3917257e748c14",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python311/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python311/run.tap",
+      "sha256": "63e6723e6e54a0e7ffa4f6fbae8da5b967768394cdea186b363a8bb3cf5de21b",
+      "bytes": 491
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python312/start.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python312/start.json",
+      "sha256": "0ba527edb1f47ce96700728a79426aec2c82276fe08b6e7a47091282a5bde1b6",
+      "bytes": 83
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python312/end.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python312/end.json",
+      "sha256": "5b71d9385278b5e138d286f5a75dba19c0a6c3f11cfa2a8e2489eea2b377a963",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/python312/run.tap",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/python312/run.tap",
+      "sha256": "24b69a9fb595c33b606ea7ec1bfe9d18d342db14a92f1f4d2582101e021ad995",
+      "bytes": 489
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/array-c-cpp.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/array-c-cpp.json",
+      "sha256": "d212121d2d05462d3547a5937a4947c9aa52d5502e2ee6eb4586529964de1fb0",
+      "bytes": 14113
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/array-python.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/array-python.json",
+      "sha256": "1a92ed30da2e36338b8e7843a14f4124087d246b0ceaad9edb21210e83af0433",
+      "bytes": 7374
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/array-python312.json",
+      "originalPath": "build/vo1439-generic-record-arrays-c5e9760/array-python312.json",
+      "sha256": "3fcfe5d9bfe14e33ccf6ae82351bc2d4ae9a07bcceb60f8e3134e84a22ac929c",
+      "bytes": 7374
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/generic-record-arrays.test.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/generic-record-arrays.test.mjs",
+      "sha256": "670765fc8fbce045d87741d85569198ec0c5b1208c8e0a8108f0bbddc4646590",
+      "bytes": 16049
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-arrays.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/generic-record-arrays.mjs",
+      "sha256": "432a988e832a72483fc326d3036b19117328d26f8ead43e142e08c2070fcfaca",
+      "bytes": 17809
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/c.c.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-array-consumers/c.c",
+      "sha256": "6170d7b32244465dfe1fe7cffbe0d96c83837a17af4ebe39cedbae5913a3061c",
+      "bytes": 9214
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/cpp.cpp.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-array-consumers/cpp.cpp",
+      "sha256": "5ca9ee39b74bd7b2ab9b6748c29bae8f4de0cfcbc42a05d3ef899dfc6bfd2ecb",
+      "bytes": 4061
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/python.py.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-array-consumers/python.py",
+      "sha256": "8396fc1b42e790bfab538074fd4459ba06bf81c6520ed593a0d654cdbc45a6ba",
+      "bytes": 4484
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-browser/GenericRecordArrays.lean.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+      "sha256": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+      "bytes": 717
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specializations.lean.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+      "bytes": 525
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/onboarding/generic-records/GenericRecords.lean.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+      "bytes": 2184
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/c.c.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-consumers/c.c",
+      "sha256": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70",
+      "bytes": 6001
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/cpp.cpp.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-consumers/cpp.cpp",
+      "sha256": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17",
+      "bytes": 2478
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/python.py.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-consumers/python.py",
+      "sha256": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+      "bytes": 2475
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/c.c.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-specialization-consumers/c.c",
+      "sha256": "4ca635d51219e560bc45c98f97d05495db460372843fa63151764028fbdd8733",
+      "bytes": 5301
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/cpp.cpp.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-specialization-consumers/cpp.cpp",
+      "sha256": "50f2248465f34075d1e8d3c852813764534d64c722a978f01a51248a557ddab4",
+      "bytes": 1385
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/python.py.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/fixtures/generic-record-specialization-consumers/python.py",
+      "sha256": "c8d01e1ad3e136204a09490be165bb5e1e0c2bbca9f6ddd21c2f6f13de355fdd",
+      "bytes": 1234
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-browser.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/generic-record-browser.mjs",
+      "sha256": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+      "bytes": 13430
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-packages.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/generic-record-packages.mjs",
+      "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+      "bytes": 16720
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-specializations.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+      "bytes": 7480
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/copied-fixture-install.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "bytes": 12888
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/package-set.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "bytes": 5283
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/build/canonical-build.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "bytes": 43813
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/build/native-model.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "bytes": 42596
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/c/gmp-projection.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/c/gmp-projection.mjs",
+      "sha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+      "bytes": 16403
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/c/gmp-values.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/c/gmp-values.mjs",
+      "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+      "bytes": 12058
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/cpp/primitives.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "bytes": 8384
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/cpp/copied-values.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/cpp/copied-values.mjs",
+      "sha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+      "bytes": 9558
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/python/generate.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/python/generate.mjs",
+      "sha256": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+      "bytes": 49832
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/python/copied-conversions.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+      "bytes": 10261
+    },
+    {
+      "path": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/release/package-set-receipt.mjs.txt",
+      "originalPath": "git:c5e9760f92ae7e5ece9d561ee39585e94ceb9952:src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "bytes": 14878
+    }
+  ],
+  "sources": [
+    {
+      "path": "tests/generic-record-arrays.test.mjs",
+      "sha256": "670765fc8fbce045d87741d85569198ec0c5b1208c8e0a8108f0bbddc4646590",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/generic-record-arrays.test.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/generic-record-arrays.mjs",
+      "sha256": "432a988e832a72483fc326d3036b19117328d26f8ead43e142e08c2070fcfaca",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-arrays.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-array-consumers/c.c",
+      "sha256": "6170d7b32244465dfe1fe7cffbe0d96c83837a17af4ebe39cedbae5913a3061c",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/c.c.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-array-consumers/cpp.cpp",
+      "sha256": "5ca9ee39b74bd7b2ab9b6748c29bae8f4de0cfcbc42a05d3ef899dfc6bfd2ecb",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/cpp.cpp.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-array-consumers/python.py",
+      "sha256": "8396fc1b42e790bfab538074fd4459ba06bf81c6520ed593a0d654cdbc45a6ba",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-array-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-browser/GenericRecordArrays.lean",
+      "sha256": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-browser/GenericRecordArrays.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specializations.lean",
+      "sha256": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specializations.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/onboarding/generic-records/GenericRecords.lean",
+      "sha256": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/onboarding/generic-records/GenericRecords.lean.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-consumers/c.c",
+      "sha256": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/c.c.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-consumers/cpp.cpp",
+      "sha256": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/cpp.cpp.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-consumers/python.py",
+      "sha256": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specialization-consumers/c.c",
+      "sha256": "4ca635d51219e560bc45c98f97d05495db460372843fa63151764028fbdd8733",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/c.c.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specialization-consumers/cpp.cpp",
+      "sha256": "50f2248465f34075d1e8d3c852813764534d64c722a978f01a51248a557ddab4",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/cpp.cpp.txt"
+    },
+    {
+      "path": "tests/fixtures/generic-record-specialization-consumers/python.py",
+      "sha256": "c8d01e1ad3e136204a09490be165bb5e1e0c2bbca9f6ddd21c2f6f13de355fdd",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/fixtures/generic-record-specialization-consumers/python.py.txt"
+    },
+    {
+      "path": "tests/helpers/generic-record-browser.mjs",
+      "sha256": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-browser.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/generic-record-packages.mjs",
+      "sha256": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-packages.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/generic-record-specializations.mjs",
+      "sha256": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/generic-record-specializations.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/copied-fixture-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/package-set.mjs",
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/tests/helpers/package-set.mjs.txt"
+    },
+    {
+      "path": "src/build/canonical-build.mjs",
+      "sha256": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/build/canonical-build.mjs.txt"
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "sha256": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/build/native-model.mjs.txt"
+    },
+    {
+      "path": "src/backends/c/gmp-projection.mjs",
+      "sha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/c/gmp-projection.mjs.txt"
+    },
+    {
+      "path": "src/backends/c/gmp-values.mjs",
+      "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/c/gmp-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/cpp/primitives.mjs",
+      "sha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/cpp/primitives.mjs.txt"
+    },
+    {
+      "path": "src/backends/cpp/copied-values.mjs",
+      "sha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/cpp/copied-values.mjs.txt"
+    },
+    {
+      "path": "src/backends/python/generate.mjs",
+      "sha256": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/python/generate.mjs.txt"
+    },
+    {
+      "path": "src/backends/python/copied-conversions.mjs",
+      "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/backends/python/copied-conversions.mjs.txt"
+    },
+    {
+      "path": "src/release/package-set-receipt.mjs",
+      "sha256": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed",
+      "snapshot": "docs/evidence/generic-record-arrays-20261009/sources/c5e9760/src/release/package-set-receipt.mjs.txt"
+    }
+  ]
+}

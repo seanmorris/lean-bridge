@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { disableFinContainerEntryWorkflow } from "./fin-container-entry-ci.mjs";
+import { beforeWasmCiArraySource } from "./wasm-ci-array-source-history.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const oldBudget = "    timeout-minutes: 240\n";
@@ -34,12 +35,13 @@ export const nativeConsumerBudgets = job => {
 
 /**
  * The only workflow changes are the native job's budget line with its explanatory comment, and the separately
- * gated FinContainers entry counters, which are removed exactly before the pinned digests are checked.
+ * gated FinContainers entry counters. Unwind the exact later Wasm CI transition, then remove the entry counters
+ * before checking the original pinned digests. Unknown edits retain their bytes and fail the check.
  *
  * @param workflow - Complete workflow being checked.
  */
 export const assertNativeConsumerBudget = workflow => {
-	const current = disableFinContainerEntryWorkflow(workflow);
+	const current = disableFinContainerEntryWorkflow(beforeWasmCiArraySource(path, workflow));
 	assert.equal(current.split(newBudget).length, 2, "the reviewed budget appears once");
 	assert.equal(sha256(current.replace(newBudget, oldBudget)), previousSha256, "preserve every native step, report gate, upload, enforcement and other job");
 	const job = nativeJob(current); assert.ok(job);

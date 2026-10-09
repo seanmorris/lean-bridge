@@ -1,22 +1,23 @@
 /**
- * Preserve exact predecessors when registering the reviewed Wasm entry archive.
+ * Preserve exact predecessors when registering the reviewed Wasm CI and Array archive.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeWasmCiArraySource } from "./wasm-ci-array-source-history.mjs";
 
-export const wasmEntryArchiveHistoryPath = "docs/evidence/wasm-entry-archive-source-history-20261009.json";
-export const wasmEntryArchivePredecessor = "fc7ffb6a937d230dbde1eb9dace4eaba69543ff2";
-export const wasmEntryArchiveChangedPaths = [
+export const wasmCiArrayHistoryPath = "docs/evidence/wasm-ci-array-source-history-20261009.json";
+export const wasmCiArrayPredecessor = "293e047d3fea9e6f5484fe63fc40110a55f1d1de";
+export const wasmCiArrayChangedPaths = [
 	"docs/type-surface.v1.json"
-	, ".gitattributes"
+	, ".github/workflows/consumer-matrix.yml"
 	, "src/adoption/test-profiles.mjs"
+	, "tests/helpers/bounded-apt-tests.mjs"
+	, "tests/helpers/native-consumer-budget-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/native-edge-array-harness-source-history.mjs"
-	, "tests/native-edge-array-harness-history.test.mjs"
+	, "tests/helpers/wasm-entry-archive-source-history.mjs"
+	, "tests/wasm-entry-archive-history.test.mjs"
 ];
 let history;
 
@@ -26,8 +27,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseWasmEntryArchiveUpdate = (source, update) => {
-	assert.ok(wasmEntryArchiveChangedPaths.includes(update.path));
+export const reverseWasmCiArrayUpdate = (source, update) => {
+	assert.ok(wasmCiArrayChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -47,18 +48,17 @@ export const reverseWasmEntryArchiveUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before the Wasm entry archive integration, stopping at an explicitly requested identity.
+ * Restore the source before the Wasm CI and Array archive integration, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeWasmEntryArchiveSource = (path, source, expected) => {
-	source = beforeWasmCiArraySource(path, source, expected);
-	if(typeof source !== "string" || !wasmEntryArchiveChangedPaths.includes(path)) return source;
+export const beforeWasmCiArraySource = (path, source, expected) => {
+	if(typeof source !== "string" || !wasmCiArrayChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(wasmEntryArchiveHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(wasmCiArrayHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseWasmEntryArchiveUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseWasmCiArrayUpdate(source, update) : source;
 };

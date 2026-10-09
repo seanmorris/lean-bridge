@@ -106,6 +106,7 @@ export const browserInstallSites = Object.freeze([
 	, [".github/workflows/consumer-matrix.yml", "owned-cpp-callback-results", "Install all callback browser engines"]
 	, [".github/workflows/consumer-matrix.yml", "owned-callback-results", "Install all callback browser engines"]
 	, [".github/workflows/consumer-matrix.yml", "node-consumers", "Install documentation browser engines"]
+	, [".github/workflows/consumer-matrix.yml", "reviewed-fin-wasm-entry", "Install browser engines"]
 	, [".github/workflows/demos-pages.yml", "build", "Install browser audit engines"]]);
 
 /**

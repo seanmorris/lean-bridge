@@ -1527,6 +1527,60 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+  reviewed-fin-wasm-entry:
+    name: Reviewed Fin Wasm entry (${{ matrix.mode }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [original, probe]
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install browser engines
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked engine and prepared runtime
+        run: |
+          nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
+          nix build .#component-build-engine --out-link build/locked-lake-engine
+      - name: Account installed Wasm adapter and Lean source entry in Node and every browser context
+        shell: bash
+        env:
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST: "1"
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR: build/reviewed-fin-wasm-entry
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          set -euo pipefail
+          mkdir -p build/reviewed-fin-wasm-entry
+          node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^${{ matrix.mode }} (ordinary|independently reviewed) (scalar|structural) Fin entry is accounted in installed npm packages$' tests/reviewed-fin-wasm-entry.test.mjs 2>&1 | tee build/reviewed-fin-wasm-entry/run.tap
+          node scripts/check-reviewed-fin-wasm-entry-run.mjs build/reviewed-fin-wasm-entry --mode=${{ matrix.mode }}
+      - name: Preserve Wasm entry observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reviewed-fin-wasm-entry-${{ matrix.mode }}-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/reviewed-fin-wasm-entry/
+          if-no-files-found: error
+          retention-days: 30
+
   browser-consumer:
     name: Browser npm boundary
     runs-on: ubuntu-24.04
@@ -4695,6 +4749,7 @@ jobs:
       - reviewed-ir-admission
       - nix-cache
       - node-consumers
+      - reviewed-fin-wasm-entry
       - owned-javascript-wasm
       - owned-javascript-receivers
       - owned-ruby-callback-results
@@ -4806,4 +4861,7 @@ jobs:
         run: exit 1
       - name: Enforce WIT receiver acceptance
         if: needs.owned-wit-receivers.result != 'success'
+        run: exit 1
+      - name: Enforce reviewed Fin Wasm entry acceptance
+        if: needs.reviewed-fin-wasm-entry.result != 'success'
         run: exit 1

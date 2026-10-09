@@ -1,0 +1,139 @@
+{
+  "revision": "c5e9760f92ae7e5ece9d561ee39585e94ceb9952",
+  "tree": "1cc4cbadfbfa665fbc7b72d8d59eda5eb15b31a1",
+  "cwd": "/app/build/worktrees/generic-record-arrays-producer-c5e9760",
+  "queuedAt": "2026-10-09T10:17:59.719Z",
+  "sources": {
+    "tests/generic-record-arrays.test.mjs": "670765fc8fbce045d87741d85569198ec0c5b1208c8e0a8108f0bbddc4646590",
+    "tests/helpers/generic-record-arrays.mjs": "432a988e832a72483fc326d3036b19117328d26f8ead43e142e08c2070fcfaca",
+    "tests/fixtures/generic-record-array-consumers/c.c": "6170d7b32244465dfe1fe7cffbe0d96c83837a17af4ebe39cedbae5913a3061c",
+    "tests/fixtures/generic-record-array-consumers/cpp.cpp": "5ca9ee39b74bd7b2ab9b6748c29bae8f4de0cfcbc42a05d3ef899dfc6bfd2ecb",
+    "tests/fixtures/generic-record-array-consumers/python.py": "8396fc1b42e790bfab538074fd4459ba06bf81c6520ed593a0d654cdbc45a6ba",
+    "tests/fixtures/generic-record-browser/GenericRecordArrays.lean": "a372869e7b472ee4fb5db20f2f34984aeddb94d9727fe64d8163559f20ffa7ec",
+    "tests/fixtures/generic-record-specializations.lean": "26e73e3a2f872d4a3399aa313cbb88da96992b36681e383a18818aefd552cce9",
+    "tests/fixtures/onboarding/generic-records/GenericRecords.lean": "01e2a3c3c4d7eb9552a32191d5ae69aad7b713a82607507c8f702a0cc624cf5f",
+    "tests/fixtures/generic-record-consumers/c.c": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70",
+    "tests/fixtures/generic-record-consumers/cpp.cpp": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17",
+    "tests/fixtures/generic-record-consumers/python.py": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+    "tests/fixtures/generic-record-specialization-consumers/c.c": "4ca635d51219e560bc45c98f97d05495db460372843fa63151764028fbdd8733",
+    "tests/fixtures/generic-record-specialization-consumers/cpp.cpp": "50f2248465f34075d1e8d3c852813764534d64c722a978f01a51248a557ddab4",
+    "tests/fixtures/generic-record-specialization-consumers/python.py": "c8d01e1ad3e136204a09490be165bb5e1e0c2bbca9f6ddd21c2f6f13de355fdd",
+    "tests/helpers/generic-record-browser.mjs": "6164fda2a59a4d0ec1cf0bf638570ecbb270ca943fd395f5f3b898b46d1bfcc5",
+    "tests/helpers/generic-record-packages.mjs": "749c6404fde73b89fe03054c40f39b3de20a49c428e8ba3f4e241681546835dd",
+    "tests/helpers/generic-record-specializations.mjs": "a8c06844daddc89b331f65eb330f59f19eaf7e9ab032294a826d5fefe857120f",
+    "tests/helpers/copied-fixture-install.mjs": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "src/build/canonical-build.mjs": "17e88b02d75c81379c0a8f6e6b14ab583fabfaa8b7fdb747174505256ca48e7c",
+    "src/build/native-model.mjs": "aa8cd31583063c8a1d3fdc1aeba71d7cc46aaf21dbe4ff270318d5b646106a13",
+    "src/backends/c/gmp-projection.mjs": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82",
+    "src/backends/c/gmp-values.mjs": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6",
+    "src/backends/cpp/primitives.mjs": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9",
+    "src/backends/cpp/copied-values.mjs": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+    "src/backends/python/generate.mjs": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c",
+    "src/backends/python/copied-conversions.mjs": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936",
+    "src/release/package-set-receipt.mjs": "d0b945554b03e9d0f93149b12ddf808c33243cbb0ff5495a7a8a68e683fc71ed"
+  },
+  "expected": {
+    "c": {
+      "consumerSha256": "956323f95b7feb88299757af0691d4496aefa27bd899d1b161272ae62da1af94",
+      "checks": 2078
+    },
+    "cpp": {
+      "consumerSha256": "c23c4154526af37d44326a05536965deca3ac57d941905eacd0dfe8432a05b28",
+      "checks": 2058
+    },
+    "python": {
+      "consumerSha256": "33fadefa74cf39963ffa1c0c5b733a16c9d83a915bb75aca18f8adde44374c80",
+      "checks": 2144
+    }
+  },
+  "runnerSha256": "89f75f834ab4708dd99e99608e5faf05dbbd65f039951eedf60330b97af525c0",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^relocated source-free native packages carry Array fields and results over alias-named generic records$",
+    "tests/generic-record-arrays.test.mjs"
+  ],
+  "selections": [
+    {
+      "name": "c-cpp",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "report": "array-c-cpp.json",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "c,cpp",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-c5e9760/array-c-cpp.json"
+      }
+    },
+    {
+      "name": "python311",
+      "profiles": [
+        "python"
+      ],
+      "report": "array-python.json",
+      "python": "/app/.toolchains/python311/bin/python3",
+      "version": "3.11.16",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "python",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-c5e9760/array-python.json",
+        "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python311/bin/python3"
+      }
+    },
+    {
+      "name": "python312",
+      "profiles": [
+        "python"
+      ],
+      "report": "array-python312.json",
+      "python": "/app/.toolchains/python312/bin/python3",
+      "version": "3.12.14",
+      "environment": {
+        "NO_COLOR": "1",
+        "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR": "2.36",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2",
+        "LEAN_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MAKEFLAGS": "-j1",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES": "python",
+        "LEAN_BRIDGE_GENERIC_RECORD_ARRAY_REPORT": "/app/build/vo1439-generic-record-arrays-c5e9760/array-python312.json",
+        "LEAN_BRIDGE_PYTHON": "/app/.toolchains/python312/bin/python3"
+      }
+    }
+  ],
+  "unset": [
+    "FORCE_COLOR",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.3",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "cc": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cxx": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "pkgConfig": "1.8.1",
+  "pythons": {
+    "/app/.toolchains/python311/bin/python3": "Python 3.11.16",
+    "/app/.toolchains/python312/bin/python3": "Python 3.12.14"
+  },
+  "freeMiB": 7499,
+  "stopFloorMiB": 2048,
+  "scope": "Local ordinary-source installed C, C++ and Python Array fields and results over alias-named generic records, two author roots, glibc 2.36 floor; not hosted or release-floor acceptance; other native hosts remain under #1439"
+}

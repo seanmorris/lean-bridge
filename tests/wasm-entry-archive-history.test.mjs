@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeWasmCiArraySource } from "./helpers/wasm-ci-array-source-history.mjs";
 import { beforeWasmEntryArchiveSource, wasmEntryArchiveChangedPaths, wasmEntryArchiveHistoryPath, wasmEntryArchivePredecessor, reverseWasmEntryArchiveUpdate } from "./helpers/wasm-entry-archive-source-history.mjs";
 
 test("Wasm entry archive history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -20,7 +21,7 @@ test("Wasm entry archive history authenticates exact predecessors and rejects un
 	assert.deepEqual(record.updates.map(update => update.path), wasmEntryArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseWasmEntryArchiveUpdate(source, update);
+		const source = beforeWasmCiArraySource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmEntryArchiveUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmEntryArchiveSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Wasm entry archive history authenticates exact predecessors and rejects un
 });
 
 test("Wasm entry archive refresh source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeWasmCiArraySource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntryArchiveSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntryArchiveHistoryPath));
 	let pins = 0;
