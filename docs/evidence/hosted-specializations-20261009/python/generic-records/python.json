@@ -1,0 +1,135 @@
+{
+  "archives": {
+    "archives/genericrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "1005d5db289f002a2f5277f079f17e747a36b646bc5fd4b36ad6c41df83098ba"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "a95cd08176dc181ac3c546f1aa6d9f20df31ec4afef50d42c9a7628c1e656518",
+      "checks": 1019,
+      "compilerFreePath": true,
+      "consumerSha256": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "04da9ef862bd5858379d8189d356f0310a794e957d77e06c8ab0b2d771570df5",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51375470,
+              "path": "archives/genericrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+              "sha256": "1005d5db289f002a2f5277f079f17e747a36b646bc5fd4b36ad6c41df83098ba"
+            }
+          ],
+          "ecosystem": "pypi",
+          "name": "genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "pypi",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "python",
+      "receiptSha256": "37fde5dc73855b63cb234a9116feb5dfebd14596bf22a78c9d5898a6731d0cc2",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "4f96a6b37f28c6ece289375324a158ecf44130e50779f6e68f5e7770ba945e3c"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

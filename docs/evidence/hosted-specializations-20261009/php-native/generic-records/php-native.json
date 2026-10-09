@@ -1,0 +1,135 @@
+{
+  "archives": {
+    "archives/example-genericrecords-1.0.0-linux-x86_64.zip": "122b75c3a0875acdb3fbd14e03ad39d1567a3f3814754fadc3451a0259595ebd"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "5353dfcf475d589e635cdfa0abe28b82aa45490c7b91ab133b214aad97fc3414",
+      "checks": 1021,
+      "compilerFreePath": true,
+      "consumerSha256": "f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "modelSha256": "187abfb5821177580da9e1325596e63a810a84f1b5559e671f628dbe74ae4164",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51374270,
+              "path": "archives/example-genericrecords-1.0.0-linux-x86_64.zip",
+              "sha256": "122b75c3a0875acdb3fbd14e03ad39d1567a3f3814754fadc3451a0259595ebd"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/genericrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-native",
+      "receiptSha256": "af7a192244955bb9213980f86e6d7c1c401067a0fce8b85c4f1213472d37dc92",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "efb57286f79e72e5e98df80fbe613e00dfe0d9cfcc3b37e4e2a859e7d8c1e068"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

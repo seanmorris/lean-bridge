@@ -17,3 +17,5 @@ docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/job.log whitespac
 docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/job.log whitespace=-blank-at-eol
 docs/evidence/python-rust-container-dispatch-20261009/python.job.log whitespace=-blank-at-eol
 docs/evidence/python-rust-container-dispatch-20261009/rust.job.log whitespace=-blank-at-eol
+# Preserve receipt-authenticated hosted specialization logs without rewriting whitespace.
+docs/evidence/hosted-specializations-20261009/*/job.log whitespace=-blank-at-eol

@@ -76,6 +76,16 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		assert.deepEqual(selected.symbols, reviewedFinWasmEntrySymbols(selection, mode).map(item => item.symbol));
 		assert.equal(selected.symbols.length, columns);
 	}
+	// The compiler lists an elaborated contract's declarations alphabetically; the order is not part of the contract.
+	for(const [selection, mode] of [["scalar", "original"], ["structural", "original"], ["scalar", "probe"], ["structural", "probe"]])
+	{
+		const authored = mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection);
+		const compiled = { ...authored, declarations: [...authored.declarations].sort((left, right) => (left.id < right.id ? -1 : 1)) };
+		assert.notDeepEqual(compiled.declarations.map(item => item.id), authored.declarations.map(item => item.id));
+		const selected = reviewedFinWasmEntrySelection({ descriptor: descriptorOf(compiled), bytes, selection, mode });
+		assert.deepEqual(selected.symbols, reviewedFinWasmEntrySymbols(selection, mode).map(item => item.symbol), `${selection} ${mode} canonical columns`);
+		assert.deepEqual(reviewedFinWasmEntrySymbols(selection, mode).map(item => item.bindingId), compiled.declarations.map(item => item.id), "columns follow binding ID order");
+	}
 	const flipped = Buffer.from(bytes); flipped[9] ^= 1;
 	// Each changed contract keeps a freshly rederived private ABI, as a rebuilt package would.
 	const changed = (selection, mode, change) => {
@@ -100,8 +110,15 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
 		, ["probe control with a no-op refinement", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null }; })]
 		, ["probe as original", { descriptor: descriptorOf(instrumentReviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "original" }]
+		, ["swapped adapter symbols", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index, all) => ({ ...item, symbol: all[index === 0 ? 1 : index === 1 ? 0 : index].symbol })) } }, bytes, selection: "structural", mode: "original" }]
+		, ["a duplicated export in the ABI", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: [...original.privateAbi.exports, original.privateAbi.exports[0]] } }, bytes, selection: "structural", mode: "original" }]
+		, ["a missing export", changed("structural", "original", ir => { ir.declarations.splice(3, 1); })]
+		, ["a duplicated adapter symbol", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index, all) => ({ ...item, symbol: all[0].symbol })) } }, bytes, selection: "structural", mode: "original" }]
 		, ["original as probe", { descriptor: descriptorOf(reviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "probe" }]
 	]) assert.throws(() => reviewedFinWasmEntrySelection(options), assert.AssertionError, label);
+	// A contract duplicating an export is refused, here already by the production ABI derivation.
+	const duplicated = structuredClone(reviewedFinWasmIr("structural")); duplicated.declarations.push(structuredClone(duplicated.declarations[0]));
+	assert.throws(() => reviewedFinWasmEntrySelection({ descriptor: { ...original, bindingIr: duplicated }, bytes, selection: "structural", mode: "original" }));
 });
 
 test("probe inputs add only the markers and the unrefined control", async () => {

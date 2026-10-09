@@ -1,0 +1,112 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0.jar": "f92e0046e2957d20d3c47e4563702c8c10155443e5907e23c8dfbb8ae504fa4c",
+    "archives/specialized-1.0.0.pom": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "71f22687659af8df89b674013be80390f4ca76156d7f3df54ffdcd8396d41b4c",
+      "checks": 2070,
+      "compilerFreePath": true,
+      "consumerSha256": "ea480a4537a2c3bb903e76791c1ac7e8def6b5b8299926cdd513449892b97e21",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "ca9b52c240ffa8c1e7cdb62777fe91433885bee7579773a860f6181708a39688",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51392880,
+              "path": "archives/specialized-1.0.0.jar",
+              "sha256": "f92e0046e2957d20d3c47e4563702c8c10155443e5907e23c8dfbb8ae504fa4c"
+            },
+            {
+              "bytes": 621,
+              "path": "archives/specialized-1.0.0.pom",
+              "sha256": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "24c65b19d101a638aa07aa2990c1f1b306e7ec94d490433943450175fba2063b",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "792bf1f25ff851f58ef4078fb0d6c813d000c924619c7d13ff68cc8b502d911f"
+    },
+    {
+      "bindingIrSha256": "71f22687659af8df89b674013be80390f4ca76156d7f3df54ffdcd8396d41b4c",
+      "checks": 2036,
+      "compilerFreePath": true,
+      "consumerSha256": "92d46b0957df6c6c2537ed1245a2b65c65225ac35a22284e066f3155e133f81c",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "ca9b52c240ffa8c1e7cdb62777fe91433885bee7579773a860f6181708a39688",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51392880,
+              "path": "archives/specialized-1.0.0.jar",
+              "sha256": "f92e0046e2957d20d3c47e4563702c8c10155443e5907e23c8dfbb8ae504fa4c"
+            },
+            {
+              "bytes": 621,
+              "path": "archives/specialized-1.0.0.pom",
+              "sha256": "c2b4b0b373bc733d9bdac5f445110e5aef842cd770fe5be4ef8a514a32db6dec"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "24c65b19d101a638aa07aa2990c1f1b306e7ec94d490433943450175fba2063b",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "792bf1f25ff851f58ef4078fb0d6c813d000c924619c7d13ff68cc8b502d911f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

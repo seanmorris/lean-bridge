@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeWasmEntryHarnessSource } from "./wasm-entry-harness-source-history.mjs";
 
 export const wasmEntryControlsHistoryPath = "docs/evidence/wasm-entry-controls-source-history-20261009.json";
 export const wasmEntryControlsPredecessor = "01393fce581ae088df05cfc24f299f9a52a0ff97";
@@ -52,6 +53,7 @@ export const reverseWasmEntryControlsUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeWasmEntryControlsSource = (path, source, expected) => {
+	source = beforeWasmEntryHarnessSource(path, source, expected);
 	if(typeof source !== "string" || !wasmEntryControlsChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

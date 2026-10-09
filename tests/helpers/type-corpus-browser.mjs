@@ -43,9 +43,10 @@ const ready = async page => {
 	await page.locator('#result[data-status="ready"], #result[data-status="error"]').waitFor();
 	assert.equal(await page.locator("#result").getAttribute("data-status"), "ready", await page.locator("#result").textContent());
 };
-const observation = async (page, browser, validate) => {
+// Each validated observation also names its engine, variant and phase; validators may ignore it.
+const observation = async (page, browser, validate, identity) => {
 	const result = { ...await page.evaluate(() => globalThis.corpusResult), hostVersion: browser.version() };
-	validate(result);
+	validate(result, identity);
 	return result;
 };
 const instrumentWorkers = page => page.addInitScript(() => {
@@ -86,13 +87,14 @@ const openPage = async (browser, url, intercept = undefined) => {
 };
 
 const checkExecution = async ({ browser, engine, variant, url, profile, validate, installedAssets }) => {
+	const at = phase => ({ engine, variant, phase });
 	const state = await openPage(browser, url);
 	const { page } = state;
 	try
 	{
 		await page.goto(url);
 		await ready(page);
-		const first = await observation(page, browser, validate);
+		const first = await observation(page, browser, validate, at("first"));
 		await Promise.all(state.pendingAssets);
 		const initialRequests = state.assets.length;
 		let lifecycle;
@@ -104,7 +106,7 @@ const checkExecution = async ({ browser, engine, variant, url, profile, validate
 				assert.equal(await page.locator("#result").count(), 0);
 				await page.locator("#toggle").click();
 				await ready(page);
-				assert.deepEqual(await observation(page, browser, validate), first);
+				assert.deepEqual(await observation(page, browser, validate, at(`remount-${index + 1}`)), first);
 			}
 			lifecycle = await page.evaluate(() => globalThis.corpusLifecycle);
 			assert.deepEqual(lifecycle, variant === "strict"
@@ -117,7 +119,7 @@ const checkExecution = async ({ browser, engine, variant, url, profile, validate
 			await page.locator("#rerun").click();
 			await page.waitForFunction(previous => document.querySelector("#result").textContent !== previous, before);
 			await ready(page);
-			assert.deepEqual(await observation(page, browser, validate), first);
+			assert.deepEqual(await observation(page, browser, validate, at("rerun")), first);
 			lifecycle = { rerun: true };
 		}
 		await Promise.all(state.pendingAssets);
@@ -128,7 +130,7 @@ const checkExecution = async ({ browser, engine, variant, url, profile, validate
 			assert.deepEqual(await page.evaluate(() => globalThis.corpusWorkers()), { created: 1, terminated: 1, live: 0 });
 			await page.locator("#rerun").click();
 			await ready(page);
-			assert.deepEqual(await observation(page, browser, validate), first);
+			assert.deepEqual(await observation(page, browser, validate, at("worker-restart")), first);
 			await page.locator("#stop").click();
 			lifecycle = await page.evaluate(() => globalThis.corpusWorkers());
 			assert.deepEqual(lifecycle, { created: 2, terminated: 2, live: 0 });
@@ -149,7 +151,7 @@ const checkExecution = async ({ browser, engine, variant, url, profile, validate
 	{ await state.context.close(); }
 };
 
-const checkFailure = async (browser, url, validate) => {
+const checkFailure = async (browser, url, validate, identity) => {
 	let failing = true;
 	const state = await openPage(browser, url, route => failing ? route.fulfill({ status: 404, body: "Missing test WASM asset" }) : route.continue());
 	try
@@ -161,7 +163,7 @@ const checkFailure = async (browser, url, validate) => {
 		failing = false;
 		await state.page.reload();
 		await ready(state.page);
-		await observation(state.page, browser, validate);
+		await observation(state.page, browser, validate, { ...identity, phase: "failure-recovery" });
 		await Promise.all(state.pendingAssets);
 		assert.deepEqual(state.errors, []);
 		assert.deepEqual(state.foreignRequests, []);
@@ -171,7 +173,7 @@ const checkFailure = async (browser, url, validate) => {
 	{ await state.context.close(); }
 };
 
-const checkPendingUnmount = async (browser, url, variant, validate) => {
+const checkPendingUnmount = async (browser, url, variant, validate, identity) => {
 	let release;
 	const held = new Promise(resolveHeld => { release = resolveHeld; });
 	const state = await openPage(browser, url, async route => { await held; await route.continue().catch(() => {}); });
@@ -188,7 +190,7 @@ const checkPendingUnmount = async (browser, url, variant, validate) => {
 		assert.equal(await state.page.evaluate(() => globalThis.corpusResult), undefined);
 		await state.page.locator("#toggle").click();
 		await ready(state.page);
-		await observation(state.page, browser, validate);
+		await observation(state.page, browser, validate, { ...identity, phase: "pending-unmount" });
 		await Promise.all(state.pendingAssets);
 		assert.deepEqual(state.errors, []);
 		assert.deepEqual(state.foreignRequests, []);
@@ -208,7 +210,8 @@ const checkPendingUnmount = async (browser, url, variant, validate) => {
  * @param options.oracle - Fresh Lean results.
  * @param options.framework - Exact framework archives, when React is selected.
  * @param options.environment - Compiler-free consumer environment.
- * @param options.consumer - Optional package loader and independent observation validator.
+ * @param options.consumer - Optional package loader, an independent observation validator, which also receives each
+ * observation's engine, variant and phase, and a hook run on the installation after bundling, before its removal.
  */
 export const installedBrowserCorpus = async ({ library, profile, root, oracle, framework, environment, consumer }) => {
 	const validate = consumer?.validateObservation ?? (result => validateCorpusObservation(library, corpusCases(library), oracle, result));
@@ -242,6 +245,8 @@ export const installedBrowserCorpus = async ({ library, profile, root, oracle, f
 		assert.deepEqual(deployment.files.filter(file => file.path.endsWith(".wasm")).map(file => file.sha256).sort(), installedAssets.map(file => file.sha256).sort());
 		deployments.push(deployment);
 	}
+	// A consumer may inspect the installation once more, after bundling and before it is removed.
+	await consumer?.beforeInstallRemoval?.(root, deployments);
 	// Only the static deployments survive. No browser can fall back to the source
 	// project, unpacked npm installation, bundler or a compiler.
 	for(const name of await readdir(root)) if(!variants.some(variant => name === `dist-${variant}`)) await rm(join(root, name), { recursive: true, force: true });
@@ -258,8 +263,8 @@ export const installedBrowserCorpus = async ({ library, profile, root, oracle, f
 				try
 				{
 					const execution = await checkExecution({ browser, engine, variant, url: server.url, profile, validate, installedAssets });
-					execution.failedAssetRecovery = await checkFailure(browser, server.url, validate);
-					if(profile === "browser-react") execution.pendingUnmount = await checkPendingUnmount(browser, server.url, variant, validate);
+					execution.failedAssetRecovery = await checkFailure(browser, server.url, validate, { engine, variant });
+					if(profile === "browser-react") execution.pendingUnmount = await checkPendingUnmount(browser, server.url, variant, validate, { engine, variant });
 					executions.push(execution);
 				}
 				finally

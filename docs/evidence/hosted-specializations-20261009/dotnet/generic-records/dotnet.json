@@ -1,0 +1,180 @@
+{
+  "archives": {
+    "archives/GenericRecords.Api.1.0.0.nupkg": "6d3000ec2021519399d258f66dbf4b878209c325c34a9377c9e2262da4d6048e"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "4fd713888e6548170c4fc1dd6c4d7b2c722d5796719d2447de2f40797dc741a4",
+      "checks": 1018,
+      "compilerFreePath": true,
+      "consumerSha256": "6e5d9bd86f7a668ce57462c2637c82f1c8523df26f9fbeae5aecbc8a9af37a91",
+      "instantiations": {
+        "BoxPair": {
+          "arguments": [
+            {
+              "id": "NatBox",
+              "kind": "named"
+            },
+            {
+              "id": "TextBox",
+              "kind": "named"
+            }
+          ],
+          "structure": "Pair"
+        },
+        "MarkerTag": {
+          "arguments": [
+            {
+              "id": "Marker",
+              "kind": "named"
+            }
+          ],
+          "fields": 1,
+          "structure": "Tag"
+        },
+        "MaybeBox": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "NatBoxAgain": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Box"
+        },
+        "TaggedNat": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Tagged"
+        },
+        "TextBox": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            }
+          ],
+          "structure": "Box"
+        },
+        "WordPair": {
+          "arguments": [
+            {
+              "kind": "primitive",
+              "name": "string"
+            },
+            {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          ],
+          "structure": "Pair"
+        }
+      },
+      "managedTypes": {
+        "artifactSha256": "7eb48b2f65d1c6a4b3485744d8879bd749bad8d16215bc599c80856a166f0548",
+        "artifactUnchanged": true,
+        "positiveCompiles": true,
+        "positiveSourceSha256": "f9bfe8eab74a3592a66b720ed018db9877fbb4ad44e9f66b88f466184b8923e9",
+        "rejected": [
+          {
+            "case": "alias",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 85,
+                "file": "invalid-alias.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "737fd4c757730ab2bd283eb7753e5b335626a3095726d5e64d44e811c364bea0"
+          },
+          {
+            "case": "field",
+            "diagnostics": [
+              {
+                "code": "CS1503",
+                "column": 87,
+                "file": "invalid-field.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "8c80b785b20d6cff03d1d80190235b539bfffa53eb45d9a9bd07b7e97e4ac113"
+          },
+          {
+            "case": "missing",
+            "diagnostics": [
+              {
+                "code": "CS7036",
+                "column": 80,
+                "file": "invalid-missing.cs",
+                "line": 1
+              }
+            ],
+            "sourceSha256": "357c175400d7029e51c13f2b0d4cb773c8c77f17571722a434b7e60040cc6a2f"
+          }
+        ],
+        "repeatExecutionAfterTypeRejection": true
+      },
+      "modelSha256": "d06abf04717f65c2ff44b164534ce34f843cbca9e0d341b5863b95ce8f93bf52",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51390858,
+              "path": "archives/GenericRecords.Api.1.0.0.nupkg",
+              "sha256": "6d3000ec2021519399d258f66dbf4b878209c325c34a9377c9e2262da4d6048e"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "GenericRecords.Api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "6283b9807b7154d2cac5cdfb613aafed1fae489830c0347c7f837889ea8de2a5",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "1e4bbe2107a30a72657321925f2c9e3a79d7190e12ea0191950e8fbb33fa6e48"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

@@ -1,0 +1,55 @@
+{
+  "archives": {
+    "archives/specialized-1.0.0.crate": "6e7c3b7a76c800e1e46000579ac72e8578cc76963298860c88c988eb12e6558b"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "ef3fb41e5c71d5c3d7dcdc07c4a967a5909d0dd211784452ee2c7cf2e1429d4b",
+      "checks": 2011,
+      "compilerFreePath": true,
+      "consumerSha256": "62c9c337f2917c6f8910db8d1c82703dfef54d9438bcecc31c70f18b8fa59d31",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "0d01701f134f2a3efa7642f4daa3551b657de00039a7ae517ca78e3397941c22",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51345494,
+              "path": "archives/specialized-1.0.0.crate",
+              "sha256": "6e7c3b7a76c800e1e46000579ac72e8578cc76963298860c88c988eb12e6558b"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "622586aa7603d0996138ad87c2e4258afb115235035b06785b22944ddec0a354",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "53a2961137c2d4c78dbad0ba027f6eb13f5a0053f79b026063df517b1917153e"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

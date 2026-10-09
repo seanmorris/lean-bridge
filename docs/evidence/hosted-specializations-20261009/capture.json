@@ -1,0 +1,662 @@
+{
+  "captures": [
+    {
+      "artifact": 11598866727,
+      "bytes": 1143647,
+      "conclusion": "cancelled",
+      "job": 113636828032,
+      "logSha256": "d7fa8ae477a3bf32f9815414e2137c1b57f2b7dcf18d0c077505f1ca481d088d",
+      "name": "c-family",
+      "reports": [
+        {
+          "bytes": 3720,
+          "member": "native-specializations/c-cpp.json",
+          "reports": [
+            {
+              "checks": 2016,
+              "consumerSha256": "56f675130a9129a4f3c1662c9ca6ba49d3c9558410e715a2f368b20283b96af9",
+              "profile": "c"
+            },
+            {
+              "checks": 2011,
+              "consumerSha256": "f85ddccdee25e3025930f70a5aea96e04f937f6260d4834a62bf0ac3894e0d8d",
+              "profile": "cpp"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b4cb02757b8ab933aa144f15baf23e36f9eed95553a7427969ce26e2d169b900"
+        },
+        {
+          "bytes": 7010,
+          "member": "generic-records/c-cpp.json",
+          "reports": [
+            {
+              "checks": 1013,
+              "consumerSha256": "3c6d5fb6bc446900e64a09a660d9de3fc86d64b7b3007ee849e2a17683465e70",
+              "profile": "c"
+            },
+            {
+              "checks": 1012,
+              "consumerSha256": "28b7951075e73d958db4608538c9c047546bbc28145eeb037165e7b27f0faa17",
+              "profile": "cpp"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "d5d6ea3401352885a4751c5efb5102d1365d4fce0195a719a435fd78757bbf54"
+        },
+        {
+          "bytes": 10480,
+          "member": "generic-records/specialized-c-cpp.json",
+          "reports": [
+            {
+              "checks": 1029,
+              "consumerSha256": "b36971096ba246e78db0aea400943b83b9b8209968025f63df36fe2ae7b22b56",
+              "profile": "c"
+            },
+            {
+              "checks": 1024,
+              "consumerSha256": "f4aa664ccc8c1f8de48b84561b76162cd8ef880b3d073a60844f0168a0c4bc44",
+              "profile": "cpp"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "9c62893c63cbfab12e6a0e41c5cdf17e269ca427272fa235f39420f5f0cad829"
+        }
+      ],
+      "sha256": "4a77f25f3936677d11283f0d4d0e5905255cfc241212a69fb5e0e91354ff81c0"
+    },
+    {
+      "artifact": 11596416341,
+      "bytes": 993757,
+      "conclusion": "success",
+      "job": 113636827939,
+      "logSha256": "5d0b3fbc7cf5039bff9ec1e7544a3321ba62c310f28fcc8f70b18cf0d993c5e2",
+      "name": "python",
+      "reports": [
+        {
+          "bytes": 1962,
+          "member": "native-specializations/python.json",
+          "reports": [
+            {
+              "checks": 2020,
+              "consumerSha256": "ca2a7b15e84ee0e83d40588e1f688cde70f6acb0b69ed9735df0e50ddab9cc64",
+              "profile": "python"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "5a95e27c95dcae8d1899fe045f97298854d05957edd3a10f833be5a032ef83a1"
+        },
+        {
+          "bytes": 3607,
+          "member": "generic-records/python.json",
+          "reports": [
+            {
+              "checks": 1019,
+              "consumerSha256": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+              "profile": "python"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "469a4d4b55cc30a878b5497943fc2a2d32a83e46ee8b123ac0739dd3fabf6e81"
+        },
+        {
+          "bytes": 5342,
+          "member": "generic-records/specialized-python.json",
+          "reports": [
+            {
+              "checks": 1036,
+              "consumerSha256": "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9",
+              "profile": "python"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "6ba173b852812acf638a9c5c0e6977775ff58b1a86ddfa837e77589710837f89"
+        },
+        {
+          "bytes": 3607,
+          "member": "generic-records/python312.json",
+          "reports": [
+            {
+              "checks": 1019,
+              "consumerSha256": "10c90a85fa986251612e69a8fa9dfe67006d3ba8d04329ed42a6626b61f291ca",
+              "profile": "python"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "469a4d4b55cc30a878b5497943fc2a2d32a83e46ee8b123ac0739dd3fabf6e81"
+        },
+        {
+          "bytes": 5342,
+          "member": "generic-records/specialized-python312.json",
+          "reports": [
+            {
+              "checks": 1036,
+              "consumerSha256": "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9",
+              "profile": "python"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "6ba173b852812acf638a9c5c0e6977775ff58b1a86ddfa837e77589710837f89"
+        }
+      ],
+      "sha256": "461d3e810c8bee043e7f498206f030ec9a18b4d79ca6636896d2b150f5a93b08"
+    },
+    {
+      "artifact": 11595796933,
+      "bytes": 841995,
+      "conclusion": "success",
+      "job": 113636828054,
+      "logSha256": "df26bf71d85c9fa7d2d36f1377bbcadab093a18213e90a97fec849a46dd86361",
+      "name": "rust",
+      "reports": [
+        {
+          "bytes": 1904,
+          "member": "native-specializations/rust.json",
+          "reports": [
+            {
+              "checks": 2011,
+              "consumerSha256": "62c9c337f2917c6f8910db8d1c82703dfef54d9438bcecc31c70f18b8fa59d31",
+              "profile": "rust"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "449216b8f8f9bac708be2282b18c2390486046b8ad5cb69ed8415ef3105424a6"
+        },
+        {
+          "bytes": 4740,
+          "member": "generic-records/rust.json",
+          "reports": [
+            {
+              "checks": 1013,
+              "consumerSha256": "3ad3f7766e48cb7b2cc45e9cf25cd0799cad933e2cb7090ee500eb6909d38a75",
+              "profile": "rust"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "5974b1fe94a1c4dce8131931eda393e91c01b5a3d08b3beb6112e92bdc561ff2"
+        },
+        {
+          "bytes": 7607,
+          "member": "generic-records/specialized-rust.json",
+          "reports": [
+            {
+              "checks": 1025,
+              "consumerSha256": "6adc6c3e6a5560deffcd99ce816c8633794459d65d0e5c552f9647463f328b14",
+              "profile": "rust"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "70a53832ef9923e931e679e1d73e7af9ea90ffcb3c1549f4a6f1e9889967b32b"
+        }
+      ],
+      "sha256": "00290557169f1c38a67ba1d06208dbd048912b90d77a336b11a8e74f9c143a9b"
+    },
+    {
+      "artifact": 11596081763,
+      "bytes": 1045952,
+      "conclusion": "success",
+      "job": 113636827869,
+      "logSha256": "d348504208e1cb25cbb9271cf0e9944ee50cc32f26303fcbd356fdd323c9353d",
+      "name": "dotnet",
+      "reports": [
+        {
+          "bytes": 1918,
+          "member": "native-specializations/dotnet.json",
+          "reports": [
+            {
+              "checks": 2030,
+              "consumerSha256": "aefe683414e9a9a11530a5a6bd07a96310a75a2e29014eaf54f7a3d2713bdece",
+              "profile": "dotnet"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "6983604ece2d0db20f928c5c1a941146f9fe27f8fda497a1e58837e2a3bc8b82"
+        },
+        {
+          "bytes": 5022,
+          "member": "generic-records/dotnet.json",
+          "reports": [
+            {
+              "checks": 1018,
+              "consumerSha256": "6e5d9bd86f7a668ce57462c2637c82f1c8523df26f9fbeae5aecbc8a9af37a91",
+              "profile": "dotnet"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "edba5c66e9bae9caab364cfe0c790f0cd3c1c3ed89fdc40c5c0f6b886573983e"
+        },
+        {
+          "bytes": 7894,
+          "member": "generic-records/specialized-dotnet.json",
+          "reports": [
+            {
+              "checks": 1034,
+              "consumerSha256": "16f05809c846ee59e289ea4e74172debadb796e8823f862b1c213fdce08bb37f",
+              "profile": "dotnet"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "4c7b45c424a656d6b3ad886f0f845ddb656568ff3fb4d7d8812585d9cad4a552"
+        }
+      ],
+      "sha256": "bc223633665537ee6e95b48f42c5fa500d53877ad9c40a43afac4be918877fe2"
+    },
+    {
+      "artifact": 11596287939,
+      "bytes": 2163502,
+      "conclusion": "success",
+      "job": 113636827858,
+      "logSha256": "e679f06e96491a49b675ddb1d1038b57b9ec747564405c745d1d11127cdc530f",
+      "name": "jvm",
+      "reports": [
+        {
+          "bytes": 4152,
+          "member": "native-specializations/java-kotlin.json",
+          "reports": [
+            {
+              "checks": 2070,
+              "consumerSha256": "ea480a4537a2c3bb903e76791c1ac7e8def6b5b8299926cdd513449892b97e21",
+              "profile": "java"
+            },
+            {
+              "checks": 2036,
+              "consumerSha256": "92d46b0957df6c6c2537ed1245a2b65c65225ac35a22284e066f3155e133f81c",
+              "profile": "kotlin"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "dd19d56b583d8bc074fb66623bcc9f684de02bf0bc95f5d5cfaf3556ee16793d"
+        },
+        {
+          "bytes": 11668,
+          "member": "generic-records/java-kotlin.json",
+          "reports": [
+            {
+              "checks": 1018,
+              "consumerSha256": "4c5c5b20637e263e8c14e59cb4827bea6055d9d66051eba5e1b886f7ec76c357",
+              "profile": "java"
+            },
+            {
+              "checks": 1015,
+              "consumerSha256": "538252f21fd680f808e4aa91ff246c46fe675752bc609bfb4ced4211d1ea74b5",
+              "profile": "kotlin"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "c1b153e50d5b6001e2b862bc6fbfef21cf63518760cd89def2797cac7b0d36a9"
+        },
+        {
+          "bytes": 18719,
+          "member": "generic-records/specialized-java-kotlin.json",
+          "reports": [
+            {
+              "checks": 1034,
+              "consumerSha256": "815c5d86424e0f723a635072a3dcbf78861518ab411a302f87d56a6677b8623f",
+              "profile": "java"
+            },
+            {
+              "checks": 1030,
+              "consumerSha256": "7d30f76e6b48f396ebbb3be657743dc18c6ef9acfd7d94e081d74bc7bbdc1fd5",
+              "profile": "kotlin"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b2071bd3c68a91253c651914da41e7c27b19fc460f50ddabf809c9e112e1ec6c"
+        }
+      ],
+      "sha256": "1cb9d97343f1c40e82c5cfab2d4cc21bb589e70dc3fb2f68045f0024dff05917"
+    },
+    {
+      "artifact": 11595368885,
+      "bytes": 877834,
+      "conclusion": "success",
+      "job": 113636827929,
+      "logSha256": "dee2301eb42704d2b5c58bfe61125894f6d04e2cd3e2e88a2a9fc4aa89105ae1",
+      "name": "ruby",
+      "reports": [
+        {
+          "bytes": 1932,
+          "member": "native-specializations/ruby.json",
+          "reports": [
+            {
+              "checks": 2020,
+              "consumerSha256": "7c63325b609b6f217059e97fd0a390fe6570323c15f039c723101dd174da19ad",
+              "profile": "ruby"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "2790eae00c8463f9b6cdb6491c872b7a5d126d81255b712a6b4d673d7d5e24ef"
+        },
+        {
+          "bytes": 3577,
+          "member": "generic-records/ruby.json",
+          "reports": [
+            {
+              "checks": 1021,
+              "consumerSha256": "5ed93b95395da55cda2b9035568d2e816ed40d01dc20f2cbf0c052dcd00e95c6",
+              "profile": "ruby"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "bb5b39443dfe5b7b7ca24e22f3d496d6bd0f78403ed7b7efdc2abaa9df020e64"
+        },
+        {
+          "bytes": 5312,
+          "member": "generic-records/specialized-ruby.json",
+          "reports": [
+            {
+              "checks": 1036,
+              "consumerSha256": "d011061f351cfa303c1a5ad84a635295c9bb989f7c39d632faee9ff65cce94d6",
+              "profile": "ruby"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b2fb352267a2f176839045b7ec14869c91470cd78f0b330b67cc84a8e5054f49"
+        }
+      ],
+      "sha256": "e33477a27aac749d178980bc2e0c860c3b399acb467a831ae445e1544586074d"
+    },
+    {
+      "artifact": 11595000032,
+      "bytes": 1692108,
+      "conclusion": "success",
+      "job": 113636827922,
+      "logSha256": "0c2944cb39f1ac9f28064fb0ef8a2118ecc7bc27597632d5fa185c5a9cc08085",
+      "name": "php-native",
+      "reports": [
+        {
+          "bytes": 1964,
+          "member": "native-specializations/php-native.json",
+          "reports": [
+            {
+              "checks": 2020,
+              "consumerSha256": "576f2343ef6f1d74fd36af79627124739d33094b30c15cc112eface72cc7212b",
+              "profile": "php-native"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b7ed0823745026f4e6ec8a23d4fafc5407a6ba8a4618f2b76d3a640b098491d9"
+        },
+        {
+          "bytes": 3609,
+          "member": "generic-records/php-native.json",
+          "reports": [
+            {
+              "checks": 1021,
+              "consumerSha256": "f2931f59779911f5ddb76cad20b8e7ac8120465e9d4f73f573ab9fbb173adfac",
+              "profile": "php-native"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "f4aa0abca2af6f17430c4b48996bd895fc4eb29174a53b9391a60fa9d2f5000f"
+        },
+        {
+          "bytes": 5344,
+          "member": "generic-records/specialized-php-native.json",
+          "reports": [
+            {
+              "checks": 1035,
+              "consumerSha256": "f92290dc943fd5bfdb8ebb0c955b0fb8e9404122b104c6767c6afa9971e74054",
+              "profile": "php-native"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "0d4aa5f66c74e65447ff461cd44d6d7a8e5a08a0c65c65cf17c4c4a05cb8dc0d"
+        }
+      ],
+      "sha256": "937d5948e10ee949aecdd08c0d0b436a25e6fe2cc4fe5ab7c72bf7cad1bc595d"
+    },
+    {
+      "artifact": 11598353701,
+      "bytes": 684990,
+      "conclusion": "success",
+      "job": 113636828253,
+      "logSha256": "dc1395c6b2103120462cbd9fd3cb227749d5e2d78a302a03bf6d3a8616ea28aa",
+      "name": "wit-wasi",
+      "reports": [
+        {
+          "bytes": 1934,
+          "member": "native-specializations/wit-wasi.json",
+          "reports": [
+            {
+              "checks": 2021,
+              "consumerSha256": "b0f7868d0faaf1de3e550c35293f50c3a8da0d9db8390c683a54d7ba22f08b15",
+              "profile": "wit-wasi"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "094992c61130f0d9a463e9ea03be53ae98e7826157f5c3490b7f41184e387316"
+        },
+        {
+          "bytes": 3579,
+          "member": "generic-records/wit-wasi.json",
+          "reports": [
+            {
+              "checks": 1019,
+              "consumerSha256": "c311efc21745a457af7eb9eadd1b44425a1474bb703167d93b7a39f7e354bb38",
+              "profile": "wit-wasi"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "68f72d3de5b708fdfe2c3ec3f0e1fdbee50eacbad86c6144400a7b3b22172bab"
+        },
+        {
+          "bytes": 5314,
+          "member": "generic-records/specialized-wit-wasi.json",
+          "reports": [
+            {
+              "checks": 1036,
+              "consumerSha256": "ed3ca5075cf7017d591aec36289e3e0b11d2a4872ab7c4ce9008dbaace7571cc",
+              "profile": "wit-wasi"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "be1999dc4d41eeeff71b2367b1a76f1cd426df7bd5e85e33341bac6543098ac4"
+        }
+      ],
+      "sha256": "b03d2b1c758b3a70af864392dbc68b07ef597e949f8f664b16ca00fd0db9a1fe"
+    },
+    {
+      "artifact": 11595406237,
+      "bytes": 538081,
+      "conclusion": "success",
+      "job": 113636828019,
+      "logSha256": "f83f026edc5ac4a8eeae3d3254feba7555a5e01fee1998740b6a028d0db09a30",
+      "name": "perl-5.36.3-threaded",
+      "reports": [
+        {
+          "bytes": 3159,
+          "member": "native-specializations/perl.json",
+          "reports": [
+            {
+              "checks": 2019,
+              "consumerSha256": "98913c32637cc6fc306f113ef31a89d2cd30899df235b166f915186001ba7026",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "ac66aaeb54f4fd18a39247ad6a8a6c8473a277000fdce965ac2586ab19c1aba8"
+        },
+        {
+          "bytes": 4804,
+          "member": "generic-records/perl.json",
+          "reports": [
+            {
+              "checks": 1025,
+              "consumerSha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b194eac5d0caf8e11777ebfac54e6f96ffe38ea51780bdb427df27e34a0eda06"
+        },
+        {
+          "bytes": 6540,
+          "member": "generic-records/specialized-perl.json",
+          "reports": [
+            {
+              "checks": 1040,
+              "consumerSha256": "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "047bd88ff37c4bbb7a6fa0f15bc28817f97015429d8cbb776dd2e0e37b7703c4"
+        }
+      ],
+      "sha256": "31e1a96036c7d1e860f6a8b32b02f9468745d8618d1255e2661119d9880c2254"
+    },
+    {
+      "artifact": 11596726119,
+      "bytes": 537828,
+      "conclusion": "success",
+      "job": 113636828081,
+      "logSha256": "5d1aabebb68fecce45551282db66e5133f748410d6cb6745f4333e772d8895d1",
+      "name": "perl-5.36.3-unthreaded",
+      "reports": [
+        {
+          "bytes": 3159,
+          "member": "native-specializations/perl.json",
+          "reports": [
+            {
+              "checks": 2019,
+              "consumerSha256": "98913c32637cc6fc306f113ef31a89d2cd30899df235b166f915186001ba7026",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "7e5391d808367e1c36d31fecd5d3b7766dc1ee2e33c4ec3c789ce31089f48529"
+        },
+        {
+          "bytes": 4804,
+          "member": "generic-records/perl.json",
+          "reports": [
+            {
+              "checks": 1025,
+              "consumerSha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "703ed9e5e4957b006bcfa14c73afa2160f783490c1689a71689c19dcaebc693c"
+        },
+        {
+          "bytes": 6540,
+          "member": "generic-records/specialized-perl.json",
+          "reports": [
+            {
+              "checks": 1040,
+              "consumerSha256": "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "e71206244f22212b1d1c5d50c1fd1a701251f417845e1ac20efff6400f66d446"
+        }
+      ],
+      "sha256": "936dd154382737ebc7e9148efbe65151f12dc3cbdfd9f3a1a07f334b49dcdc4c"
+    },
+    {
+      "artifact": 11597085761,
+      "bytes": 538132,
+      "conclusion": "success",
+      "job": 113636828016,
+      "logSha256": "e84400fece1c61ade69a10c6ea4cc9a4d6da9bea9990a5d99dff0f5e161cecf2",
+      "name": "perl-5.38.2-threaded",
+      "reports": [
+        {
+          "bytes": 3159,
+          "member": "native-specializations/perl.json",
+          "reports": [
+            {
+              "checks": 2019,
+              "consumerSha256": "98913c32637cc6fc306f113ef31a89d2cd30899df235b166f915186001ba7026",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "383324835fd36ba2b5dd8ac9a9a3425df18d7cbecb8f4f1adb7c41d379371748"
+        },
+        {
+          "bytes": 4804,
+          "member": "generic-records/perl.json",
+          "reports": [
+            {
+              "checks": 1025,
+              "consumerSha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "f699421ccd2455f3c683f40d57ae0f613599f9a2c9dcab23860a96f7c67d2a77"
+        },
+        {
+          "bytes": 6540,
+          "member": "generic-records/specialized-perl.json",
+          "reports": [
+            {
+              "checks": 1040,
+              "consumerSha256": "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "b8af8bb4ac52a3c4dcb225cd248a395ee3e2fd255323fbe3575b22078795a099"
+        }
+      ],
+      "sha256": "1926a206b7cf4ab5ca0b6625e95e9d5571a8f46e90c952c850590e9285b0fb22"
+    },
+    {
+      "artifact": 11598038706,
+      "bytes": 537879,
+      "conclusion": "success",
+      "job": 113636828211,
+      "logSha256": "c28d87e25c52546b707ae6e333c66590cc4dab334cbdd1dacca6d84b86d3ae5f",
+      "name": "perl-5.38.2-unthreaded",
+      "reports": [
+        {
+          "bytes": 3159,
+          "member": "native-specializations/perl.json",
+          "reports": [
+            {
+              "checks": 2019,
+              "consumerSha256": "98913c32637cc6fc306f113ef31a89d2cd30899df235b166f915186001ba7026",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "62b5dbaef7eff30d8004d799fe6beabf41a9a03f2e8fbce8ba783877e729749e"
+        },
+        {
+          "bytes": 4804,
+          "member": "generic-records/perl.json",
+          "reports": [
+            {
+              "checks": 1025,
+              "consumerSha256": "f83519bdac539b692f4d9f016665629a2534caa239ddb48221506fc4dd756e5c",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "7b68b9ba5b8520fa39d38c08783da01536f6dbe69f068969a56e5630574b68fe"
+        },
+        {
+          "bytes": 6540,
+          "member": "generic-records/specialized-perl.json",
+          "reports": [
+            {
+              "checks": 1040,
+              "consumerSha256": "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842",
+              "profile": "perl"
+            }
+          ],
+          "reproducible": true,
+          "sha256": "a92553b0b4c9063cc51dc2928fef477fc89ccc360d256b440074c8a08c5e6d59"
+        }
+      ],
+      "sha256": "d56c44be224402545fe6157cbb1cf6f6b41ec5bc5e9265c8bd50e8acbb12e011"
+    }
+  ],
+  "revision": "93c60a0487d0b2acc0b6d562cd72a3876738a666",
+  "run": 37873560469
+}

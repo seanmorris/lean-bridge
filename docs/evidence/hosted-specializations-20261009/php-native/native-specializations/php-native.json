@@ -1,0 +1,55 @@
+{
+  "archives": {
+    "archives/example-specialized-1.0.0-linux-x86_64.zip": "bc08ade870b285f797d4c7515724074927a08d4db935d4254f74606d80769ac8"
+  },
+  "reports": [
+    {
+      "bindingIrSha256": "8168bbcd27aa8cfb9701464b14998552578004fc378088d0294a07e1ab32950a",
+      "checks": 2020,
+      "compilerFreePath": true,
+      "consumerSha256": "576f2343ef6f1d74fd36af79627124739d33094b30c15cc112eface72cc7212b",
+      "exports": [
+        "Specialized.echoWord",
+        "Specialized.echoText",
+        "Specialized.echoNat",
+        "Specialized.echoWords",
+        "Specialized.chooseWord",
+        "Specialized.chooseText",
+        "Specialized.chooseWords",
+        "Specialized.firstTextWord",
+        "Specialized.doubleWord",
+        "Specialized.doubleNat",
+        "Specialized.plain"
+      ],
+      "modelSha256": "9dadd8ae12c20451028e70c1db5e1c7c8c0d9cb037f8aeb6cddd40ca2b78bf1e",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51354007,
+              "path": "archives/example-specialized-1.0.0-linux-x86_64.zip",
+              "sha256": "bc08ade870b285f797d4c7515724074927a08d4db935d4254f74606d80769ac8"
+            }
+          ],
+          "ecosystem": "composer",
+          "name": "example/specialized",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "php-native",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "php-native",
+      "receiptSha256": "3feed60c3b960d9c8c617e8875f8231a3df448f50af1c0f28bb5806be3288904",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "29efc1ec8bbca2cab0ec16f7cbbaa445da78a519a5d6c643189ce48a0e70685f"
+    }
+  ],
+  "reproducible": true,
+  "schemaVersion": 1
+}

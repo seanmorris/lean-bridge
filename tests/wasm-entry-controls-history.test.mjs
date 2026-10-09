@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeWasmEntryHarnessSource } from "./helpers/wasm-entry-harness-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeWasmEntryControlsSource, wasmEntryControlsChangedPaths, wasmEntryControlsHistoryPath, wasmEntryControlsPredecessor, reverseWasmEntryControlsUpdate } from "./helpers/wasm-entry-controls-source-history.mjs";
 
@@ -20,7 +21,7 @@ test("Wasm entry controls history authenticates exact predecessors and rejects u
 	assert.deepEqual(record.updates.map(update => update.path), wasmEntryControlsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseWasmEntryControlsUpdate(source, update);
+		const source = beforeWasmEntryHarnessSource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmEntryControlsUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmEntryControlsSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("Wasm entry controls history authenticates exact predecessors and rejects u
 });
 
 test("Wasm entry controls refresh source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeWasmEntryHarnessSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntryControlsSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntryControlsHistoryPath));
 	let pins = 0;
