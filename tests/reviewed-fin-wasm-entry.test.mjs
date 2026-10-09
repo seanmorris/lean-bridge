@@ -10,9 +10,9 @@ import { basename, dirname, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { checkReviewedFinWasmEntry } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
+import { checkReviewedFinWasmEntry, recountReviewedFinWasmEntryReport } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
 import { reviewedFinBrowserProfiles } from "./helpers/reviewed-fin-wasm-browser.mjs";
-import { reviewedFinWasmEntryModes } from "./helpers/reviewed-fin-wasm-entry.mjs";
+import { expectReviewedFinWasmEntry, reviewedFinWasmEntryModes } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { reviewedFinWasmSelections } from "./helpers/reviewed-fin-wasm-fixture.mjs";
 
 const browsers = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST === "1";
@@ -26,6 +26,8 @@ for(const mode of reviewedFinWasmEntryModes) for(const selection of reviewedFinW
 		// Every required context ran and was accounted in this mode; none can be missing or skipped.
 		assert.deepEqual(report.contexts.map(context => context.profile), ["node-javascript", "node-typescript", ...browsers ? reviewedFinBrowserProfiles : []]);
 		for(const context of report.contexts) assert.deepEqual([context.mode, context.source, context.calls], [mode, mode === "probe", report.calls], context.profile);
+		// The retained transcripts alone reproduce every accounted run.
+		assert.ok(recountReviewedFinWasmEntryReport(report, await expectReviewedFinWasmEntry(selection, mode)) >= report.contexts.length);
 		const path = resolve(process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR ?? "build/reviewed-fin-wasm-entry", `${mode}-${reviewed ? "reviewed" : "ordinary"}-${selection}.json`);
 		await saveLakeFile(dirname(path), basename(path), canonicalJson(report));
 	});

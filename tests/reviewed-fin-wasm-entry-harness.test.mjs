@@ -19,7 +19,7 @@ import { createComponentPrivateAbi } from "../src/build/component-callable-adapt
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
 import { reviewedFinWasmSourceControls } from "./helpers/reviewed-fin-wasm-source-entry.mjs";
-import { accountReviewedFinWasmEntryReport, authenticateReviewedFinWasmEntryPackage, prepareReviewedFinWasmEntryConsumer, reviewedFinWasmEntryNodeIndex, runReviewedFinWasmEntryNode } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
+import { accountReviewedFinWasmEntryReport, authenticateReviewedFinWasmEntryPackage, prepareReviewedFinWasmEntryConsumer, recountReviewedFinWasmEntryReport, reviewedFinWasmEntryNodeIndex, runReviewedFinWasmEntryNode, runReviewedFinWasmEntryNodeOutput } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
 
 const entryHelper = pathToFileURL(resolve("tests/helpers/reviewed-fin-wasm-entry.mjs")).href;
 // A side module whose named (i32) -> i32 frame exports return 0.
@@ -131,4 +131,23 @@ test("the harness refuses unobserved, bypassed, altered or mislabelled packages 
 	const edited = await consumer(t, "scalar", "original");
 	await writeFile(join(edited.installed, "internal/validators.mjs"), `${await readFile(join(edited.installed, "internal/validators.mjs"), "utf8")}\n`);
 	await assert.rejects(authenticateReviewedFinWasmEntryPackage(edited.root, "scalar", "original"), /generated public code/u);
+});
+
+test("retained transcripts alone recount every run, and an altered or missing transcript is refused", async t => {
+	const expected = await expectReviewedFinWasmEntry("structural", "probe");
+	const { root } = await consumer(t, "structural", "probe");
+	const stdout = await runReviewedFinWasmEntryNodeOutput(root, "index.mjs"), digest = sha256(stdout);
+	const accounted = accountReviewedFinWasmEntryReport(expected, JSON.parse(stdout));
+	const report = { mode: "probe", selection: "structural", calls: expected.calls.length, contexts: [{ profile: "node-javascript", transcriptSha256: digest, ...accounted }], transcripts: { [digest]: stdout } };
+	assert.equal(recountReviewedFinWasmEntryReport(report, expected), 1);
+	const parsed = JSON.parse(stdout);
+	parsed.entry.lines = parsed.entry.lines.filter(line => !line.startsWith("lean-bridge-source-entry nested"));
+	const forged = JSON.stringify(parsed), forgedDigest = sha256(forged);
+	for(const value of [
+		{ ...report, transcripts: { [digest]: `${stdout} ` } }
+		, { ...report, transcripts: {} }
+		, { ...report, contexts: [{ ...report.contexts[0], transcriptSha256: forgedDigest }], transcripts: { [forgedDigest]: forged } }
+		, { ...report, contexts: [{ ...report.contexts[0], source: false }] }
+		, { ...report, mode: "original" }
+	]) assert.throws(() => recountReviewedFinWasmEntryReport(value, expected), assert.AssertionError);
 });

@@ -102,13 +102,21 @@ export const authenticateReviewedFinWasmEntryPackage = async (root, selection, m
 export const reviewedFinWasmEntryNodeIndex = "import { executeCorpus } from \"./javascript.mjs\";\nimport { request, loadApi } from \"./package.mjs\";\nconsole.log(JSON.stringify(executeCorpus(request, await loadApi())));\n";
 
 /**
- * Run one prepared Node consumer. The preload observes before any consumer or package module evaluates, so a
+ * Run one prepared Node consumer and return its exact stdout. The preload observes before any consumer or package module evaluates, so a
  * static package import, as in the strict TypeScript consumer, is observed too.
  *
  * @param root - Prepared consumer root.
  * @param entry - Consumer entry relative to the root.
  */
-export const runReviewedFinWasmEntryNode = async (root, entry) => JSON.parse((await run(process.execPath, ["--import", "./entry-preload.mjs", entry], root)).stdout);
+export const runReviewedFinWasmEntryNodeOutput = async (root, entry) => (await run(process.execPath, ["--import", "./entry-preload.mjs", entry], root)).stdout;
+
+/**
+ * Run one prepared Node consumer and parse its measured run.
+ *
+ * @param root - Prepared consumer root.
+ * @param entry - Consumer entry relative to the root.
+ */
+export const runReviewedFinWasmEntryNode = async (root, entry) => JSON.parse(await runReviewedFinWasmEntryNodeOutput(root, entry));
 
 /**
  * Replace the consumer-owned corpus files with the measured run, after authentication. Nothing in the installed
@@ -198,6 +206,35 @@ export const accountReviewedFinWasmEntryReport = (expected, report) => {
 };
 
 /**
+ * Recount a retained report from its transcripts alone: every transcript must be the bytes its digest names, and
+ * every Node run and browser observation is accounted again against the exact expectation of its mode.
+ *
+ * @param report - A report of checkReviewedFinWasmEntry.
+ * @param expected - Expectation of the report's selection and mode.
+ */
+export const recountReviewedFinWasmEntryReport = (report, expected) => {
+	assert.deepEqual([report.mode, report.selection, report.calls], [expected.mode, expected.selection, expected.calls.length]);
+	for(const [digest, text] of Object.entries(report.transcripts)) assert.equal(sha256(text), digest, "a retained transcript is its digest's bytes");
+	const transcript = digest => {
+		assert.ok(Object.hasOwn(report.transcripts, digest), `transcript ${digest} is retained`);
+		return JSON.parse(report.transcripts[digest]);
+	};
+	let runs = 0;
+	for(const context of report.contexts)
+	{
+		const observations = context.observations ?? [context];
+		assert.ok(observations.length > 0, `${context.profile} retained its runs`);
+		for(const observation of observations)
+		{
+			const parsed = transcript(observation.transcriptSha256);
+			assert.deepEqual(accountReviewedFinWasmEntryReport(expected, context.observations ? parsed.results : parsed), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source }, `${context.profile} recount`);
+			runs++;
+		}
+	}
+	return runs;
+};
+
+/**
  * Build, install and measure one selection, route and mode.
  *
  * @param t - Test context responsible for cleanup.
@@ -214,6 +251,14 @@ export const checkReviewedFinWasmEntry = async (t, selection, reviewed, mode, { 
 	const built = await handoff(t, directory, selection, reviewed, mode);
 	const request = { module: "reviewed-fin", selection, mode, ...mode === "probe" ? { controls: reviewedFinWasmSourceControls.map(([name, values]) => [name, values.map(String)]) } : {} };
 	const contexts = [];
+	// Every measured run is retained byte for byte, deduplicated by digest; each context names the runs it produced.
+	const transcripts = {};
+	const retain = text => {
+		const digest = sha256(text);
+		assert.ok(!Object.hasOwn(transcripts, digest) || transcripts[digest] === text);
+		transcripts[digest] = text;
+		return digest;
+	};
 	const consumer = join(directory, "consumer");
 	await installReviewedFinWasm(consumer, built.handoff, built.receipt, selection);
 	const authenticated = await authenticateReviewedFinWasmEntryPackage(consumer, selection, mode);
@@ -226,8 +271,8 @@ export const checkReviewedFinWasmEntry = async (t, selection, reviewed, mode, { 
 	await symlink(join(consumer, "node_modules"), join(consumer, "dist/node_modules"));
 	for(const [profile, entry] of [["node-javascript", "index.mjs"], ["node-typescript", "dist/index.js"]])
 	{
-		const report = await runReviewedFinWasmEntryNode(consumer, entry);
-		contexts.push({ profile, hostVersion: process.version, ...accountReviewedFinWasmEntryReport(expected, report) });
+		const stdout = await runReviewedFinWasmEntryNodeOutput(consumer, entry);
+		contexts.push({ profile, hostVersion: process.version, consumerFiles, transcriptSha256: retain(stdout), ...accountReviewedFinWasmEntryReport(expected, JSON.parse(stdout)) });
 	}
 	if(browsers) for(const profile of reviewedFinBrowserProfiles)
 	{
@@ -235,12 +280,13 @@ export const checkReviewedFinWasmEntry = async (t, selection, reviewed, mode, { 
 		await installReviewedFinWasm(root, built.handoff, built.receipt, selection, { profile, framework });
 		const selected = await authenticateReviewedFinWasmEntryPackage(root, selection, mode);
 		const realm = profile === "browser-worker" ? "dedicated-worker" : "window";
-		await prepareReviewedFinWasmEntryConsumer(root, { request: { ...request, profile }, selection: selected, node: false });
-		const accounted = [];
-		// Every page or worker observation, including reruns and React remounts, is accounted in full.
+		const files = await prepareReviewedFinWasmEntryConsumer(root, { request: { ...request, profile }, selection: selected, node: false });
+		const observations = [];
+		// Every page or worker observation, including reruns and React remounts, is retained and accounted in full.
 		const validateObservation = observation => {
 			assert.deepEqual([observation.schemaVersion, observation.profile, observation.module, observation.realm], [1, profile, "reviewed-fin", realm]);
-			accounted.push(accountReviewedFinWasmEntryReport(expected, observation.results));
+			const transcriptSha256 = retain(canonicalJson(observation));
+			observations.push({ hostVersion: observation.hostVersion, transcriptSha256, ...accountReviewedFinWasmEntryReport(expected, observation.results) });
 		};
 		const packageSource = await readFile(join(root, "package.mjs"), "utf8");
 		const result = await installedBrowserCorpus({
@@ -251,8 +297,9 @@ export const checkReviewedFinWasmEntry = async (t, selection, reviewed, mode, { 
 			, environment: { ...clean, PATH: join(root, "bin") }
 			, consumer: { packageSource, validateObservation }
 		});
-		assert.ok(accounted.length > 0, `${profile} measured at least one run`);
-		contexts.push({ profile, runs: accounted.length, engines: result.browser.requestedEngines, ...accounted[0] });
+		assert.ok(observations.length > 0, `${profile} measured at least one run`);
+		const executions = result.browser.executions.map(({ engine, variant, lifecycle, failedAssetRecovery, pendingUnmount, assets, observation }) => ({ engine, variant, lifecycle, failedAssetRecovery, pendingUnmount, assets, transcriptSha256: retain(canonicalJson(observation)) }));
+		contexts.push({ profile, consumerFiles: files, engines: result.browser.requestedEngines, installedAssets: result.browser.installedAssets, deployments: result.browser.deployments, executions, observations, ...observations[0] });
 	}
 	return {
 		schemaVersion: 1
@@ -272,5 +319,6 @@ export const checkReviewedFinWasmEntry = async (t, selection, reviewed, mode, { 
 		, typescriptSha256: sha256(source)
 		, calls: expected.calls.length
 		, contexts
+		, transcripts
 	};
 };
