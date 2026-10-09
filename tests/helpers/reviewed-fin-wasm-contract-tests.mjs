@@ -192,17 +192,40 @@ test("Fin TypeScript consumers state exact public signatures and reject erased n
 });
 
 test("Wasm Fin mismatch probes are admissible reviews but differ at exact compiled constraint sites", () => {
-	const expected = reviewedFinWasmIr("structural"), cases = reviewedFinWasmMismatches();
-	assert.equal(cases.length, 8);
-	assert.equal(new Set(cases.map(item => item.label)).size, 8);
 	const erased = ir => ir.declarations.map(item => ({ name: item.name, parameters: item.parameters, result: item.result }));
-	for(const { label, ir } of cases)
+	for(const selection of ["scalar", "structural"])
 	{
-		validateReviewedSource(input(ir));
-		assert.deepEqual(erased(ir), erased(expected), label);
-		assert.match(reviewedContractDifference(ir, expected), /source\.extensions\.lean-lang\.org\/refinements/u, label);
+		const expected = reviewedFinWasmIr(selection), cases = reviewedFinWasmMismatches(selection);
+		assert.equal(cases.length, selection === "scalar" ? 10 : 8);
+		assert.equal(new Set(cases.map(item => item.label)).size, cases.length);
+		for(const { label, ir } of cases)
+		{
+			validateReviewedSource(input(ir));
+			assert.deepEqual(erased(ir), erased(expected), label);
+			assert.match(reviewedContractDifference(ir, expected), /source\.extensions\.lean-lang\.org\/refinements/u, label);
+		}
+		assert.deepEqual(reviewedFinWasmIr(selection), expected);
 	}
-	assert.deepEqual(reviewedFinWasmIr("structural"), expected);
+	assert.deepEqual(reviewedFinWasmMismatches(), reviewedFinWasmMismatches("structural"));
+	assert.throws(() => reviewedFinWasmMismatches("missing"), /Unknown Wasm Fin mismatch selection/u);
+});
+
+test("both reviewed Wasm ABIs reconcile changed bounds only after matching review builds and before publication", async () => {
+	const source = await readFile("tests/helpers/reviewed-fin-wasm-install.mjs", "utf8");
+	assert.ok(source.includes("reviewedFinWasmMismatches(selection).entries()"));
+	assert.ok(source.includes("configuration(selection, true)"));
+	assert.ok(source.includes("const mismatches = reviewed ? await checkMismatches(t, producers, selection) : [];"));
+	assert.ok(source.includes("await assert.rejects(lstat(outputRoot), { code: \"ENOENT\" });"));
+	assert.ok(source.indexOf("assert.deepEqual(facts[0], facts[1])") < source.indexOf("const mismatches = reviewed ?"));
+	assert.ok(source.indexOf("const mismatches = reviewed ?") < source.indexOf("await rm(producers"));
+});
+
+test("the eight earlier structural Wasm refusal inputs remain byte-identical to their archived identities", async () => {
+	const bytes = await readFile("docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json");
+	assert.equal(sha256(bytes), "eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19");
+	const report = JSON.parse(bytes);
+	assert.deepEqual(reviewedFinWasmMismatches("structural").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))
+		, report.mismatches.map(({ label, reviewedSourceSha256 }) => ({ label, reviewedSourceSha256 })));
 });
 
 test("Fin browser observations require the selected corpus, real realm and every rejection", () => {

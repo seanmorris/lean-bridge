@@ -159,14 +159,14 @@ const installedNode = async (root, selection) => {
 			, compilerSha256: sha256(await readFile(join(repository, "node_modules/typescript/lib/_tsc.js"))) } };
 };
 
-const checkMismatches = async (t, producers) => {
+const checkMismatches = async (t, producers, selection) => {
 	const observations = [];
-	for(const [index, { label, ir }] of reviewedFinWasmMismatches().entries())
+	for(const [index, { label, ir }] of reviewedFinWasmMismatches(selection).entries())
 	{
 		t.diagnostic(`fresh Lean reconciliation: ${label}`);
 		const projectRoot = join(producers, `mismatch-${index}`), outputRoot = join(producers, `rejected-${index}`);
 		await cp(fixture, projectRoot, { recursive: true });
-		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration("structural", true)));
+		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration(selection, true)));
 		const source = canonicalJson(ir);
 		await saveLakeFile(projectRoot, "api.binding-ir.json", source);
 		await assert.rejects(build(projectRoot, outputRoot), error => {
@@ -221,7 +221,7 @@ export const checkReviewedFinWasm = async (t, selection, reviewed, { browsers = 
 	assert.deepEqual(releases[0].report, releases[1].report);
 	for(const key of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][key]), await readFile(releases[1][key]));
-	const mismatches = reviewed && selection === "structural" ? await checkMismatches(t, producers) : [];
+	const mismatches = reviewed ? await checkMismatches(t, producers, selection) : [];
 	const receipt = releases[0].report, handoff = join(directory, "handoff");
 	await mkdir(handoff);
 	for(const name of [receipt.package.archive, receipt.runtime.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
