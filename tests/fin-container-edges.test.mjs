@@ -5,10 +5,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sha256 } from "../src/capsule/node.mjs";
 import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../src/backends/cpp/primitives.mjs";
@@ -16,7 +17,7 @@ import { boostSources } from "../src/backends/cpp/boost.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
-import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeSelection, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
+import { checkInstalledFinContainerEdges, finContainerEdgeChecks, finContainerEdgeSelection, prepareFinContainerEdgeExecutable, requireNewFinContainerEdgeReport, writeFinContainerEdgeReport } from "./helpers/fin-container-edge-install.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -142,6 +143,31 @@ test("installed edge selection is explicit and checks every assertion, including
 	assert.deepEqual(finContainerEdgeSelection("python,cpp,c"), ["c", "cpp", "python"]);
 	for(const value of ["", "c,c", "c,", "c,perl", "rust", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
 	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095 });
+});
+
+test("edge C/C++ linkage survives a real directory move without an absolute runtime path", { skip: !sourceChecks }, async t => {
+	// A tiny independent shared library checks only the loader mechanism. It is not Lean acceptance.
+	const parent = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-linkage-"));
+	t.after(() => rm(parent, { recursive: true, force: true }));
+	for(const profile of ["c", "cpp"])
+	{
+		const root = join(parent, profile), directory = `linkage-1.0.0-${profile}`;
+		await mkdir(join(root, "tools"), { recursive: true });
+		for(const name of ["as", "ld"]) await symlink(`/usr/bin/${name}`, join(root, "tools", name));
+		await saveLakeFile(root, "library.c", "int edge_linkage(void) { return 42; }\n");
+		await saveLakeFile(root, `${directory}/lib/pkgconfig/edge-linkage.pc`, `prefix=\${pcfiledir}/../..\nlibdir=\${prefix}/lib\nName: edge-linkage\nDescription: Loader-only control\nVersion: 1.0.0\nLibs: -L\${libdir} -Wl,-rpath,\${libdir} -ledge-linkage\n`);
+		await saveLakeFile(root, `consumer.${profile === "cpp" ? "cpp" : "c"}`, `#include <stdio.h>\n${profile === "cpp" ? 'extern "C" ' : ""}int edge_linkage(void);\nint main(void) { if(edge_linkage() != 42) return 1; puts("linkage-ok"); return 0; }\n`);
+		await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "library.c", "-o", `${directory}/lib/libedge-linkage.so`], root, { ...copiedCleanEnvironment, PATH: join(root, "tools") });
+		const executable = await prepareFinContainerEdgeExecutable({ profile, root, directory, pkgConfig: "edge-linkage" });
+		assert.equal(executable.runtimeSearchPath, `$ORIGIN/${directory}/lib`);
+		const before = await runCopied(join(root, "consumer"), [], root);
+		assert.equal(before.stdout, "linkage-ok\n"); assert.equal(before.stderr, "");
+		const moved = `${root}-relocated`;
+		await rename(root, moved); await assert.rejects(access(root), { code: "ENOENT" });
+		const after = await runCopied(join(moved, "consumer"), [], moved);
+		assert.equal(after.stdout, before.stdout); assert.equal(after.stderr, "");
+		assert.equal(sha256(await readFile(join(moved, "consumer"))), executable.executableSha256);
+	}
 });
 
 test("edge reports refuse old paths, existing bytes and dangling symlinks before any build", async t => {

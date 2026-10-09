@@ -62,6 +62,34 @@ export const writeFinContainerEdgeReport = async (path, report) => {
 };
 
 /**
+ * Compile the installed public C/C++ consumer with an origin-relative runtime search path.
+ * Check the actual ELF metadata, not just the compiler arguments, before moving the tree.
+ *
+ * @param options - Installed package and consumer paths.
+ * @param options.profile - C or C++.
+ * @param options.root - Consumer directory containing the restricted assembler/linker tools.
+ * @param options.directory - Single package directory beneath root.
+ * @param options.pkgConfig - Receipt-pinned pkg-config name.
+ */
+export const prepareFinContainerEdgeExecutable = async ({ profile, root, directory, pkgConfig }) => {
+	assert.ok(["c", "cpp"].includes(profile));
+	assert.match(directory, /^[A-Za-z0-9][A-Za-z0-9._-]*$/u);
+	const installed = join(root, directory), command = join(root, "consumer");
+	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
+	const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", pkgConfig], root, compile)).stdout.trim().split(/\s+/u);
+	assert.equal(flags.filter(flag => flag.startsWith("-Wl,-rpath,")).length, 1, "expected the installed package runtime search path");
+	const runtimeSearchPath = `$ORIGIN/${directory}/lib`;
+	const relativeFlags = flags.map(flag => flag.startsWith("-Wl,-rpath,") ? `-Wl,-rpath,${runtimeSearchPath}` : flag);
+	await runCopied(profile === "cpp" ? "/usr/bin/c++" : "/usr/bin/cc"
+		, [`-std=${profile === "cpp" ? "c++20" : "c11"}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", `consumer.${profile === "cpp" ? "cpp" : "c"}`, ...relativeFlags, "-o", command]
+		, root, compile);
+	const dynamic = await runCopied("/usr/bin/readelf", ["--dynamic", command], root);
+	const actualPaths = [...dynamic.stdout.matchAll(/\((?:RUNPATH|RPATH)\)[^\n]*\[([^\]]*)\]/gu)].map(match => match[1]);
+	assert.deepEqual(actualPaths, [runtimeSearchPath], "ELF runtime path must be relative to the executable, with no old-root fallback");
+	return { executableSha256: sha256(await readFile(command)), runtimeSearchPath };
+};
+
+/**
  * Verify the installed files against the receipt bytes from the original archive, move the complete
  * consumer tree, rerun the identical public consumer and verify the same file identities afterward.
  *
@@ -100,6 +128,15 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(await readFile(join(installed, receiptPath), "utf8"), archiveBytes, "installed receipt equals original archive member");
 	const receipt = JSON.parse(archiveBytes);
 	await verifyNativeFiles(installed, receipt.files);
+	const executable = profile === "python" ? null : await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig });
+	if(executable)
+	{
+		assert.equal(command, join(root, "consumer"));
+		const before = await runCopied(command, args, root, copiedCleanEnvironment);
+		assert.equal(before.stderr, "");
+		assert.equal(before.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
+		assert.equal(sha256(await readFile(command)), executable.executableSha256);
+	}
 	const moved = `${root}-relocated`;
 	assert.ok(command.startsWith(`${root}/`));
 	await rename(root, moved);
@@ -110,11 +147,13 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	const movedInstall = join(moved, relative(root, installed));
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
+	if(executable) assert.equal(sha256(await readFile(join(moved, "consumer"))), executable.executableSha256);
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
 		, installedFilesSha256: sha256(canonicalJson(receipt.files))
 		, installedReceiptSha256: sha256(archiveBytes)
+		, ...executable
 		, ...(python ? { python } : {}) };
 };
 
