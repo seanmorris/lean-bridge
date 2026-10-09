@@ -17,9 +17,13 @@ const environment = "Perl 5.36.3 and 5.38.2, each threaded and unthreaded, on ho
 const execution = "Each configuration executes 2024 public checks, then repeats the unchanged consumer after moving the installed tree. Two clean author roots reproduce the archives. Author sources are removed before offline, compiler-free installation.";
 const counters = "Four LD_PRELOAD controls measure the mirror, impossible and label Lean source functions in the relocated Perl process. Invalid-only calls enter none; valid mirror, valid label and rejection followed by recovery enter only their expected source. These controls do not count typed-adapter entries or the other exports.";
 
-/** Authenticate the four hosted configurations before constructing either route's evidence. */
-export const perlScalarPromotionEvidence = async () => {
-	const bytes = await readFile(receiptPath);
+/**
+ * Authenticate the four hosted configurations before constructing either route's evidence.
+ *
+ * @param read - Byte reader, including exact historical-source reconstruction when requested.
+ */
+export const perlScalarPromotionEvidence = async (read = readFile) => {
+	const bytes = await read(receiptPath);
 	assert.equal(sha256(bytes), "627c0ecfe938dd4608d05830da7f15499813bbec3c2bbb3b231e685194ae38fb");
 	const receipt = JSON.parse(bytes);
 	const { runs } = await assertPerlScalarArchive(receipt);
@@ -31,7 +35,7 @@ export const perlScalarPromotionEvidence = async () => {
 		, "tests/perl-scalar-promotion.test.mjs"
 		, ...receipt.files.map(file => file.path)];
 	// Read ZIPs as bytes. Their inventory identities must match the original GitHub artifacts.
-	const files = await Promise.all(paths.map(async path => ({ path, sha256: sha256(await readFile(path)) })));
+	const files = await Promise.all(paths.map(async path => ({ path, sha256: sha256(await read(path)) })));
 	return Promise.all(["ordinary", "reviewed"].map(async (route, index) => ({
 		id: perlScalarEvidenceIds[index]
 		, kind: "installed"
@@ -95,9 +99,10 @@ export const promotePerlScalarObservations = previous => {
  * Construct the exact permitted inventory change after authenticating the archive.
  *
  * @param previous - Unmodified inventory at the integration predecessor.
+ * @param read - Exact current or historical byte reader.
  */
-export const promotePerlScalarInventory = async previous => {
-	const inventory = structuredClone(previous), evidence = await perlScalarPromotionEvidence();
+export const promotePerlScalarInventory = async (previous, read = readFile) => {
+	const inventory = structuredClone(previous), evidence = await perlScalarPromotionEvidence(read);
 	for(const entry of evidence) assert.ok(!inventory.evidence.some(old => old.id === entry.id), `Already recorded: ${entry.id}`);
 	inventory.evidence.push(...evidence);
 	inventory.observations = promotePerlScalarObservations(previous.observations);
@@ -110,9 +115,10 @@ export const promotePerlScalarInventory = async previous => {
  * @param current - Candidate current inventory.
  * @param previous - Exact predecessor inventory.
  * @param updates - Authenticated source history transitions.
+ * @param read - Exact current or historical byte reader.
  */
-export const assertPerlScalarPromotion = async (current, previous, updates) => {
-	const expected = await promotePerlScalarInventory(previous);
+export const assertPerlScalarPromotion = async (current, previous, updates, read = readFile) => {
+	const expected = await promotePerlScalarInventory(previous, read);
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)
 	{
 		const update = updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);

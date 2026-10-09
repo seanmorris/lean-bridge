@@ -257,6 +257,12 @@ entering the Lean function, and 15,298 valid calls enter it. The probe uses
 instrumented packages, including valid controls and recovery calls. Its counters
 measure Node execution, not browser or native-host execution.
 
+[Scalar and container entry checks](evidence/wasm-fin-entry-20261009.md) also
+cover ordinary-source and independently reviewed packages in Node, strict
+TypeScript, browser pages, React and workers. They count Wasm adapter entries
+in unmodified packages and Lean source entries in separately instrumented
+packages. Invalid calls, valid controls and recovery are checked in both modes.
+
 ### Owned resources inside structured values
 
 The `javascript-wasm-owned-v1` package profile supports identity-bearing values

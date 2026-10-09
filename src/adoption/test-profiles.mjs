@@ -226,6 +226,8 @@ const profileManifest = Object.freeze({
 		, "wasm-entry-harness-history"
 		, "wasm-entry-evidence"
 		, "wasm-entry-archive-history"
+		, "wasm-entry-supplement"
+		, "wasm-entry-supplement-history"
 		, "reviewed-fin-wasm-entry-ci"
 		, "wasm-ci-array-history"
 		, "native-edge-array-harness-history"
