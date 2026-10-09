@@ -231,13 +231,15 @@ export const genericRecordArrayPerlMessages = fragment => [...new Set([...fragme
  */
 const assertPerlArrayDiagnostics = (model, handoff, packages) => {
 	assert.equal(model.copiedGraph, undefined, "GenericRecords selects the plain native model");
+	// Absolute tools and an empty environment: nothing on the caller's PATH reads the archives.
+	const tar = args => execFileSync("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", ...args], { encoding: "utf8", env: {}, maxBuffer: 64 * 1024 * 1024 });
 	const shipped = Object.fromEntries([["runtime", "Runtime.xs"], ["component", "Component.xs"]].map(([role, name]) => {
 		const selected = packages.filter(item => item.role === role);
 		assert.equal(selected.length, 1, role);
 		const archive = join(handoff, selected[0].artifacts[0].path);
-		const members = execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n").filter(path => /^[^/]+\/[^/]+$/u.test(path) && basename(path) === name);
+		const members = tar(["-tf", archive]).split("\n").filter(path => /^[^/]+\/[^/]+$/u.test(path) && basename(path) === name);
 		assert.equal(members.length, 1, `${role} archive ships one ${name}`);
-		return [role, execFileSync("tar", ["-xzOf", archive, members[0]], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })];
+		return [role, tar(["-xOf", archive, members[0]])];
 	}));
 	assert.ok(!shipped.component.includes("lpg_"), "The component XS has no copied-graph converter");
 	assert.ok(shipped.component.includes("lbp_bigint_text(aTHX_ value, 1)"), "The component reads Nat through the runtime");
