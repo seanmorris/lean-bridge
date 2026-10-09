@@ -1,0 +1,859 @@
+{
+  "schemaVersion": 1,
+  "milestone": "jvm-dispatch-integration-v1",
+  "predecessorCommit": "63ae7b175733d806c6bfaa829822ac7f0f756943",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "28b223bd4066e68678def7230f3d31f8088ecadc122a7d12a652b918eda3ae39",
+      "previousSha256": "61a1e5cc72f8736bf7f26a2a4b6d729678956419b951e4013a1d3868269ac833",
+      "edits": [
+        {
+          "start": 47348,
+          "previous": "          \"sha256\": \"8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126\"\n",
+          "current": "          \"sha256\": \"3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5\"\n"
+        },
+        {
+          "start": 47500,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 57139,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 79697,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 96900,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 113193,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 145182,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 145843,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 168568,
+          "previous": "          \"sha256\": \"7e293237b29e2e6b725ae75f852198de25e2eb598edde59ea691f81c123988be\"\n",
+          "current": "          \"sha256\": \"466f0236f4e91d282fc347645c7aa0eba301dace59345d2dda3fcf6aecc4a293\"\n"
+        },
+        {
+          "start": 169072,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 182038,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 196937,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 209212,
+          "previous": "          \"sha256\": \"8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126\"\n",
+          "current": "          \"sha256\": \"3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5\"\n"
+        },
+        {
+          "start": 209364,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 209870,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 223089,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 231627,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 240058,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 249072,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 257738,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 267313,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 276414,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 286263,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 298402,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 308436,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 316988,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 326282,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 338971,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 348222,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 357509,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 366632,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 375495,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 382880,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 390814,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 401464,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 408349,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 415558,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 422654,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 433513,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 440629,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 447007,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 453170,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 459929,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 466771,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 473613,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 482917,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 494151,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 503840,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 513433,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 524963,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 533526,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 544540,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 577070,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 583066,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 593329,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 602642,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 614190,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 622711,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 633667,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 683083,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 693185,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 700045,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 708017,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 722048,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 733261,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 747481,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 758935,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 771006,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 782294,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 790877,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 797335,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 805721,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 813856,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 825828,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 844966,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 900484,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1016059,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1073261,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1081005,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1087455,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1094715,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1102060,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1109113,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1116714,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1126994,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1140156,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1150414,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1158300,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1169037,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1179297,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1193716,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1226260,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1256542,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1289505,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1325377,
+          "previous": "          \"sha256\": \"8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126\"\n",
+          "current": "          \"sha256\": \"3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5\"\n"
+        },
+        {
+          "start": 1325529,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 1330731,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 1356283,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1374477,
+          "previous": "          \"sha256\": \"8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126\"\n",
+          "current": "          \"sha256\": \"3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5\"\n"
+        },
+        {
+          "start": 1374629,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1378820,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1394144,
+          "previous": "          \"sha256\": \"8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126\"\n",
+          "current": "          \"sha256\": \"3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5\"\n"
+        },
+        {
+          "start": 1394296,
+          "previous": "          \"sha256\": \"582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d\"\n",
+          "current": "          \"sha256\": \"df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1398512,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1417384,
+          "previous": "          \"sha256\": \"7e293237b29e2e6b725ae75f852198de25e2eb598edde59ea691f81c123988be\"\n",
+          "current": "          \"sha256\": \"466f0236f4e91d282fc347645c7aa0eba301dace59345d2dda3fcf6aecc4a293\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4\"\n",
+          "current": "          \"sha256\": \"00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c\"\n"
+        },
+        {
+          "start": 1419155,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab\"\n",
+          "current": "          \"sha256\": \"2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a\"\n"
+        },
+        {
+          "start": 1451673,
+          "previous": "          \"sha256\": \"6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f\"\n",
+          "current": "          \"sha256\": \"957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8\"\n"
+        },
+        {
+          "start": 1509169,
+          "previous": "          \"sha256\": \"6acf6ef167a5bb773adee25f1f5ca8f41a2f02f69880273f5ae1af93e9bd1fd0\"\n",
+          "current": "          \"sha256\": \"fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "currentSha256": "957037a2cfb3c788a581f1aa7dd536b7843365198d36b3a039cd14ab9962d3a8",
+      "previousSha256": "6c294f3c40be86e4fe917c77d6c73bd3c1522da2da85f53da22bc022d8d5935f",
+      "edits": [
+        {
+          "start": 8077,
+          "previous": "",
+          "current": "\t\t, \"jvm-fin-dispatch-evidence\"\n\t\t, \"fin-dispatch-guides\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/jvm-fin.test.mjs",
+      "currentSha256": "fbeb8f84f2f99308cca0a27f1b5f2d0c6a1d0ee5748a85f637831b3fb2903d72",
+      "previousSha256": "6acf6ef167a5bb773adee25f1f5ca8f41a2f02f69880273f5ae1af93e9bd1fd0",
+      "edits": [
+        {
+          "start": 130,
+          "previous": "import { cp, mkdtemp, readFile, readdir, rename, rm } from \"node:fs/promises\";\n",
+          "current": "import { existsSync } from \"node:fs\";\nimport { cp, mkdir, mkdtemp, readFile, readdir, realpath, rename, rm, writeFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 309,
+          "previous": "import { basename, join } from \"node:path\";\n",
+          "current": "import { basename, dirname, join } from \"node:path\";\n"
+        },
+        {
+          "start": 457,
+          "previous": "",
+          "current": "import { copiedJvmAssets } from \"../src/backends/jvm/copied-assets.mjs\";\n"
+        },
+        {
+          "start": 1283,
+          "previous": "",
+          "current": "import { nativeFinAdapterSymbol, nativeFinDispatchExpected, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from \"./helpers/native-fin-dispatch.mjs\";\nimport { nativeFinGdbExit, nativeFinGdbRecord, readNativeFinGdbRecord } from \"./helpers/native-fin-dispatch-gdb.mjs\";\nimport { nativeFinGdbCommand } from \"./helpers/native-fin-dispatch-gdb-run.mjs\";\nimport { assertExtractedNativeFinGdbRun, nativeFinGdbExtractedScript, observeExtractedNativeFinDispatch } from \"./helpers/native-fin-dispatch-gdb-extracted.mjs\";\n"
+        },
+        {
+          "start": 9203,
+          "previous": "",
+          "current": "const jvmFinDispatchExpected = nativeFinDispatchExpected(outcome => outcome.rejected ? `rejected:${outcome.rejected[0]}<${outcome.rejected[1]}` : `ok:${outcome.ok}`);\nconst jvmFinDispatchRoutes = profile => [`public ${profile === \"java\" ? \"Java\" : \"Kotlin\"} calls of org.leanbridge.native_fin.Api.mirror, .impossible and .label through the verified extracting RTLD_DEEPBIND JAR loader and FFM downcalls into the bundled C adapter`];\nconst jvmLoadTrigger = \"Api.only(0) == 7: a public call outside the six counted columns, after a record with nothing armed and no entries, and before a record with all six armed in one verified extraction root and still no entries\";\nconst unattached = \"fin dispatch instrumentation is not attached\\n\", uncovered = \"fin dispatch instrumentation did not cover the verified deployment\\n\";\nconst untriggered = \"fin dispatch load trigger failed\\n\";\nconst jvmValue = value => typeof value === \"string\" ? JSON.stringify(value) : `n(${JSON.stringify(value.toString())})`;\nconst javaRows = nativeFinDispatchSteps.slice(1).map(([step, name, args]) => `        report(${JSON.stringify(step)}, status(() -> Api.${name}(${args.map(jvmValue).join(\", \")})));`).join(\"\\n\");\nconst kotlinRows = nativeFinDispatchSteps.slice(1).map(([step, name, args]) => `    report(${JSON.stringify(step)}, status { Api.${name}(${args.map(jvmValue).join(\", \")}) })`).join(\"\\n\");\n\n/**\n * Java probe run under GDB. The JAR extracts and opens its verified libraries only when its runtime class\n * initializes at the first public call, so before any call the probe requires a fresh record for this\n * process: the expected identity digest, this invocation's nonce and PID, an attached debugger, nothing\n * armed and no entries. Its one explicit load trigger is Api.only(0), outside the six counted columns;\n * afterwards all six verified definitions must be armed and still entered zero times before the first row.\n */\nconst javaFinDispatchProbe = () => `import java.math.BigInteger;\nimport java.nio.ByteBuffer;\nimport java.nio.ByteOrder;\nimport java.nio.charset.StandardCharsets;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.util.function.Supplier;\nimport java.util.regex.Pattern;\nimport org.leanbridge.native_fin.Api;\n\nfinal class Probe {\n    private Probe() { }\n    private static final Pattern REJECTED = Pattern.compile(\"\\\\\\\\A(arg[0-9]+) is not below its Fin ([0-9]+) bound\\\\\\\\z\");\n    private static final Pattern PRINTABLE = Pattern.compile(\"\\\\\\\\A[!-~]+\\\\\\\\z\");\n    private static String record = \"\", nonce = \"\", config = \"\";\n    private static int[] expected = new int[0];\n    private static ByteBuffer instrumentation() {\n        try {\n            byte[] bytes = Files.readAllBytes(Path.of(record));\n            return bytes.length == ${nativeFinGdbRecord.size} ? ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN) : null;\n        } catch (java.io.IOException | RuntimeException error) { return null; }\n    }\n    private static String ascii(ByteBuffer bytes, int offset, int length) { return new String(bytes.array(), offset, length, StandardCharsets.ISO_8859_1); }\n    private static long word(ByteBuffer bytes, int offset) { return Integer.toUnsignedLong(bytes.getInt(offset)); }\n    private static long[] entries(ByteBuffer bytes) {\n        long[] counts = new long[6];\n        for (int k = 0; k < 6; k++) counts[k] = bytes.getLong(232 + 8 * k);\n        return counts;\n    }\n    private static boolean ours(ByteBuffer bytes) {\n        return bytes != null && ascii(bytes, 0, 8).equals(${JSON.stringify(nativeFinGdbRecord.magic)}) && word(bytes, 8) == ${nativeFinGdbRecord.version} && word(bytes, 12) == 6\n            && ascii(bytes, 16, 64).equals(config) && ascii(bytes, 80, 32).equals(nonce)\n            && bytes.getLong(112) == ProcessHandle.current().pid() && word(bytes, 120) == 1;\n    }\n    // Exactly the given armed mask, no conflicting or foreign definition and no counted entry.\n    private static boolean quiet(ByteBuffer bytes, long armed) {\n        if (word(bytes, 124) != armed || word(bytes, 128) != 0 || word(bytes, 132) != 0) return false;\n        for (long count : entries(bytes)) if (count != 0) return false;\n        return true;\n    }\n    private static boolean covered(ByteBuffer bytes) {\n        for (int k = 0; k < 6; k++) if (bytes.getLong(136 + 8 * k) != 1 || bytes.getInt(184 + 4 * k) != expected[k]) return false;\n        return true;\n    }\n    private static int[] indices(String text) {\n        String[] parts = text.split(\",\", -1);\n        int[] values = new int[parts.length];\n        for (int k = 0; k < parts.length; k++) values[k] = parts[k].matches(\"[0-9]{1,3}\") ? Integer.parseInt(parts[k]) : -1;\n        return values;\n    }\n    public static void main(String[] args) {\n        if (args.length == 4 || args.length == 5) { record = args[0]; nonce = args[1]; config = args[2]; expected = indices(args[3]); }\n        ByteBuffer before = expected.length == 6 ? instrumentation() : null;\n        if (!ours(before) || !quiet(before, 0)) { System.err.print(${JSON.stringify(unattached)}); System.err.flush(); System.exit(2); }\n        if (!trigger()) { System.err.print(${JSON.stringify(untriggered)}); System.err.flush(); System.exit(4); }\n        ByteBuffer after = instrumentation();\n        if (!ours(after) || !quiet(after, 0x3f) || !covered(after)) { System.err.print(${JSON.stringify(uncovered)}); System.err.flush(); System.exit(3); }\n        measure(args.length == 5 ? args[4] : null);\n        System.out.flush();\n    }\n    // The explicit load trigger: a public call that counts in no column extracts and opens the verified libraries.\n    private static boolean trigger() {\n        try { return Api.only(BigInteger.ZERO).equals(BigInteger.valueOf(7)); }\n        catch (RuntimeException error) { return false; }\n    }\n    private static BigInteger n(String digits) { return new BigInteger(digits); }\n    private static void report(String step, String status) {\n        ByteBuffer bytes = instrumentation();\n        if (bytes == null) throw new IllegalStateException(\"fin dispatch record is unreadable\");\n        StringBuilder line = new StringBuilder(step).append(' ').append(status);\n        for (long count : entries(bytes)) line.append(' ').append(count);\n        System.out.print(line.append('\\\\n'));\n    }\n    private static String status(Supplier<Object> call) {\n        try {\n            Object value = call.get();\n            if (value instanceof BigInteger number) return \"ok:\" + number;\n            return value instanceof String text && PRINTABLE.matcher(text).matches() ? \"ok:\" + text : \"ok:unexpected\";\n        } catch (IllegalArgumentException error) {\n            var match = REJECTED.matcher(String.valueOf(error.getMessage()));\n            return match.matches() ? \"rejected:\" + match.group(1) + \"<\" + match.group(2) : \"error:IllegalArgumentException\";\n        } catch (RuntimeException error) { return \"error:\" + error.getClass().getSimpleName(); }\n    }\n    private static void measure(String mode) {\n        report(\"start\", \"ok\");\n${javaRows}\n        if (\"dynamic\".equals(mode)) report(\"dynamic-impossible-adapter\", status(() -> {\n            try { return Api.class.getMethod(\"dynamicImpossibleAdapter\").invoke(null); }\n            catch (ReflectiveOperationException error) { throw new IllegalStateException(error); }\n        }));\n    }\n}\n`;\n\n/** The same probe as a separate Kotlin caller of the public API, with its own record checks and trigger. */\nconst kotlinFinDispatchProbe = () => `import java.math.BigInteger\nimport java.nio.ByteBuffer\nimport java.nio.ByteOrder\nimport java.nio.file.Files\nimport java.nio.file.Path\nimport kotlin.system.exitProcess\nimport org.leanbridge.native_fin.Api\n\nprivate val rejectedPattern = Regex(\"(arg[0-9]+) is not below its Fin ([0-9]+) bound\")\nprivate val printablePattern = Regex(\"[!-~]+\")\nprivate var record = \"\"\nprivate var nonce = \"\"\nprivate var config = \"\"\nprivate var expected = IntArray(0)\n\nprivate fun instrumentation(): ByteBuffer? = try {\n    val bytes = Files.readAllBytes(Path.of(record))\n    if (bytes.size == ${nativeFinGdbRecord.size}) ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN) else null\n} catch (error: java.io.IOException) { null } catch (error: RuntimeException) { null }\nprivate fun ascii(bytes: ByteBuffer, offset: Int, length: Int) = String(bytes.array(), offset, length, Charsets.ISO_8859_1)\nprivate fun word(bytes: ByteBuffer, offset: Int) = Integer.toUnsignedLong(bytes.getInt(offset))\nprivate fun entries(bytes: ByteBuffer) = LongArray(6) { bytes.getLong(232 + 8 * it) }\nprivate fun ours(bytes: ByteBuffer?) = bytes != null && ascii(bytes, 0, 8) == ${JSON.stringify(nativeFinGdbRecord.magic)} && word(bytes, 8) == ${nativeFinGdbRecord.version}L && word(bytes, 12) == 6L\n    && ascii(bytes, 16, 64) == config && ascii(bytes, 80, 32) == nonce\n    && bytes.getLong(112) == ProcessHandle.current().pid() && word(bytes, 120) == 1L\n// Exactly the given armed mask, no conflicting or foreign definition and no counted entry.\nprivate fun quiet(bytes: ByteBuffer, armed: Long) = word(bytes, 124) == armed && word(bytes, 128) == 0L && word(bytes, 132) == 0L && entries(bytes).all { it == 0L }\nprivate fun covered(bytes: ByteBuffer) = (0 until 6).all { bytes.getLong(136 + 8 * it) == 1L && bytes.getInt(184 + 4 * it) == expected[it] }\nprivate fun refuse(message: String, code: Int): Nothing {\n    System.err.print(message)\n    System.err.flush()\n    exitProcess(code)\n}\n\nfun main(args: Array<String>) {\n    if (args.size == 4 || args.size == 5) {\n        record = args[0]; nonce = args[1]; config = args[2]\n        expected = args[3].split(\",\").map { if (Regex(\"[0-9]{1,3}\").matches(it)) it.toInt() else -1 }.toIntArray()\n    }\n    val before = if (expected.size == 6) instrumentation() else null\n    if (!ours(before) || !quiet(before!!, 0L)) refuse(${JSON.stringify(unattached)}, 2)\n    if (!trigger()) refuse(${JSON.stringify(untriggered)}, 4)\n    val after = instrumentation()\n    if (!ours(after) || !quiet(after!!, 0x3fL) || !covered(after)) refuse(${JSON.stringify(uncovered)}, 3)\n    measure(if (args.size == 5) args[4] else null)\n    System.out.flush()\n}\n\n// The explicit load trigger: a public call that counts in no column extracts and opens the verified libraries.\nprivate fun trigger(): Boolean = try { Api.only(BigInteger.ZERO) == BigInteger.valueOf(7) } catch (error: RuntimeException) { false }\nprivate fun n(digits: String) = BigInteger(digits)\nprivate fun report(step: String, status: String) {\n    val bytes = instrumentation() ?: throw IllegalStateException(\"fin dispatch record is unreadable\")\n    print(step + \" \" + status + \" \" + entries(bytes).joinToString(\" \") + \"\\\\n\")\n}\nprivate fun status(call: () -> Any?): String = try {\n    when (val value = call()) {\n        is BigInteger -> \"ok:\" + value\n        is String -> if (printablePattern.matches(value)) \"ok:\" + value else \"ok:unexpected\"\n        else -> \"ok:unexpected\"\n    }\n} catch (error: IllegalArgumentException) {\n    val match = rejectedPattern.matchEntire(error.message ?: \"\")\n    if (match != null) \"rejected:\" + match.groupValues[1] + \"<\" + match.groupValues[2] else \"error:IllegalArgumentException\"\n} catch (error: RuntimeException) { \"error:\" + error.javaClass.simpleName }\nprivate fun measure(mode: String?) {\n    report(\"start\", \"ok\")\n${kotlinRows}\n    if (mode == \"dynamic\") report(\"dynamic-impossible-adapter\", status { Api::class.java.getMethod(\"dynamicImpossibleAdapter\").invoke(null) })\n}\n`;\n\nconst standInEvidence = libraries => ({ runtimeIdentity: sha256(\"JVM fin dispatch stand-in\"), componentReceiptSha256: sha256(\"JVM fin dispatch stand-in receipt\"), componentId: \"native-fin@1.0.0\", library: \"libnative_fin.so\", libraries });\nconst adapter = name => nativeFinAdapterSymbol(\"native-fin@1.0.0\", `NativeFin.${name}`);\n/**\n * A stand-in public API whose runtime class initializes the real generated extracting loader. Stand-in-only\n * environment hooks open extra library copies just before or after that loader, for the root controls, and\n * the extra dynamic method reaches the otherwise unreferenced Fin 0 adapter by symbol lookup.\n */\nconst standInApi = () => `package org.leanbridge.native_fin;\n\nimport java.io.IOException;\nimport java.io.UncheckedIOException;\nimport java.lang.foreign.Arena;\nimport java.lang.foreign.FunctionDescriptor;\nimport java.lang.foreign.Linker;\nimport java.lang.foreign.MemorySegment;\nimport java.lang.foreign.SymbolLookup;\nimport java.lang.foreign.ValueLayout;\nimport java.lang.invoke.MethodHandle;\nimport java.math.BigInteger;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\n\npublic final class Api {\n    private Api() { }\n    private static final class Runtime {\n        private Runtime() { }\n        static { hook(\"LEAN_BRIDGE_STAND_IN_BEFORE\"); }\n        static final SymbolLookup LOOKUP = NativeAssets.lookup();\n        static { hook(\"LEAN_BRIDGE_STAND_IN_AFTER\"); }\n        static final FunctionDescriptor SCALAR = FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.ADDRESS);\n        static final MethodHandle MIRROR = handle(\"native_fin_mirror\", SCALAR), IMPOSSIBLE = handle(\"native_fin_impossible\", SCALAR), ONLY = handle(\"native_fin_only\", SCALAR);\n        static final MethodHandle LABEL = handle(\"native_fin_label\", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS));\n        static final MethodHandle DYNAMIC = handle(${JSON.stringify(adapter(\"impossible\"))}, FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS));\n        private static MethodHandle handle(String name, FunctionDescriptor descriptor) {\n            return Linker.nativeLinker().downcallHandle(LOOKUP.find(name).orElseThrow(), descriptor);\n        }\n        // Copy the named libraries into a new extraction-style root under java.io.tmpdir and dlopen them there,\n        // optionally through a symlinked root or symlinked files. dlopen sees the path as given, never canonicalized.\n        private static void hook(String name) {\n            String sources = System.getenv(name), link = System.getenv(\"LEAN_BRIDGE_STAND_IN_LINK\");\n            if (sources == null) return;\n            try {\n                Path root = Files.createTempDirectory(\"lean-bridge-jvm-\"), store = link == null ? root : Files.createTempDirectory(\"stand-in-\");\n                if (\"dir\".equals(link)) { Files.delete(root); Files.createSymbolicLink(root, store); }\n                for (String source : sources.split(\":\")) {\n                    Path from = Path.of(source), copy = store.resolve(from.getFileName());\n                    Files.copy(from, copy);\n                    if (\"file\".equals(link)) Files.createSymbolicLink(root.resolve(from.getFileName()), copy);\n                    open(root.resolve(from.getFileName()).toString());\n                }\n            } catch (IOException error) { throw new UncheckedIOException(error); }\n        }\n        private static void open(String path) {\n            Linker linker = Linker.nativeLinker();\n            MethodHandle dlopen = linker.downcallHandle(linker.defaultLookup().find(\"dlopen\").orElseThrow(), FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT));\n            try (Arena arena = Arena.ofConfined()) {\n                if (((MemorySegment)dlopen.invokeExact(arena.allocateFrom(path), 2)).address() == 0) throw new IllegalStateException(\"stand-in hook cannot open \" + path);\n            } catch (RuntimeException | Error failure) { throw failure; }\n            catch (Throwable failure) { throw new IllegalStateException(failure); }\n        }\n    }\n    private static long word(BigInteger value) {\n        if (value.signum() < 0) throw new IllegalArgumentException(\"negative Nat\");\n        return value.bitLength() > 64 ? -1L : value.longValue();\n    }\n    private static BigInteger scalar(MethodHandle function, BigInteger value) {\n        try (Arena arena = Arena.ofConfined()) {\n            MemorySegment output = arena.allocate(8), error = arena.allocate(64);\n            int status = (int)function.invokeExact(word(value), output, error);\n            if (status != 0) throw new IllegalArgumentException(error.getString(0));\n            return BigInteger.valueOf(output.get(ValueLayout.JAVA_LONG, 0));\n        } catch (RuntimeException | Error failure) { throw failure; }\n        catch (Throwable failure) { throw new IllegalStateException(failure); }\n    }\n    public static BigInteger mirror(BigInteger value0) { return scalar(Runtime.MIRROR, value0); }\n    public static BigInteger impossible(BigInteger value0) { return scalar(Runtime.IMPOSSIBLE, value0); }\n    public static BigInteger only(BigInteger value0) { return scalar(Runtime.ONLY, value0); }\n    public static String label(BigInteger value0, BigInteger value1, String value2) {\n        try (Arena arena = Arena.ofConfined()) {\n            MemorySegment output = arena.allocate(64), error = arena.allocate(64);\n            int status = (int)Runtime.LABEL.invokeExact(word(value0), word(value1), arena.allocateFrom(value2), output, error);\n            if (status != 0) throw new IllegalArgumentException(error.getString(0));\n            return output.getString(0);\n        } catch (RuntimeException | Error failure) { throw failure; }\n        catch (Throwable failure) { throw new IllegalStateException(failure); }\n    }\n    public static BigInteger dynamicImpossibleAdapter() {\n        try { return BigInteger.valueOf(((MemorySegment)Runtime.DYNAMIC.invokeExact(MemorySegment.NULL)).address()); }\n        catch (RuntimeException | Error failure) { throw failure; }\n        catch (Throwable failure) { throw new IllegalStateException(failure); }\n    }\n}\n`;\n/** Stand-in Lean sources and their exported adapters, one library as in the component build. */\nconst standInComponent = () => `#include <stdint.h>\nvoid *l_NativeFin_mirror(void *a0) { return (void *)(9 - (uintptr_t)a0); }\nvoid *l_NativeFin_impossible(void *a0) { return a0; }\nvoid *l_NativeFin_only(void *a0) { (void)a0; return (void *)7; }\nvoid *l_NativeFin_label(void *a0, void *a1, void *a2) { (void)a2; return (void *)((uintptr_t)a0 + (uintptr_t)a1); }\nvoid *${adapter(\"mirror\")}(void *a0) { return l_NativeFin_mirror(a0); }\nvoid *${adapter(\"impossible\")}(void *a0) { return l_NativeFin_impossible(a0); }\nvoid *${adapter(\"only\")}(void *a0) { return l_NativeFin_only(a0); }\nvoid *${adapter(\"label\")}(void *a0, void *a1, void *a2) { return l_NativeFin_label(a0, a1, a2); }\n`;\n/**\n * The checked C entry points in the generated layout: each bound is checked before its adapter, and the\n * Fin 0 entry rejects without referencing its adapter at all. LEAK enters the mirror adapter first. The\n * stand-in trigger alone honors LEAN_BRIDGE_STAND_IN_TRIGGER=leak or =fail, for the load-trigger controls.\n */\nconst standInAdapter = () => `#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\nvoid *${adapter(\"mirror\")}(void *);\nvoid *${adapter(\"only\")}(void *);\nvoid *${adapter(\"label\")}(void *, void *, void *);\nstatic volatile uintptr_t fin1 = 1, fin4 = 4, fin10 = 10;\nstatic int reject(char *error, const char *message) { snprintf(error, 64, \"%s\", message); return 1; }\nint native_fin_mirror(uintptr_t arg0, uintptr_t *out, char *error) {\n#ifdef LEAK\n  if (arg0 >= fin10) (void)${adapter(\"mirror\")}((void *)arg0);\n#endif\n  if (arg0 >= fin10) return reject(error, \"arg0 is not below its Fin 10 bound\");\n  *out = (uintptr_t)${adapter(\"mirror\")}((void *)arg0); return 0;\n}\nint native_fin_impossible(uintptr_t arg0, uintptr_t *out, char *error) { (void)arg0; (void)out; return reject(error, \"arg0 is not below its Fin 0 bound\"); }\nint native_fin_only(uintptr_t arg0, uintptr_t *out, char *error) {\n  const char *trigger = getenv(\"LEAN_BRIDGE_STAND_IN_TRIGGER\");\n  if (trigger && strcmp(trigger, \"leak\") == 0) (void)${adapter(\"mirror\")}((void *)0);\n  if (trigger && strcmp(trigger, \"fail\") == 0) return reject(error, \"stand-in trigger failure\");\n  if (arg0 >= fin1) return reject(error, \"arg0 is not below its Fin 1 bound\");\n  *out = (uintptr_t)${adapter(\"only\")}((void *)arg0); return 0;\n}\nint native_fin_label(uintptr_t arg0, uintptr_t arg1, const char *arg2, char *out, char *error) {\n  if (arg1 >= fin4) return reject(error, \"arg1 is not below its Fin 4 bound\");\n  snprintf(out, 64, \"%s:%lu\", arg2, (unsigned long)(uintptr_t)${adapter(\"label\")}((void *)arg0, (void *)arg1, (void *)arg2)); return 0;\n}\n`;\n\n/**\n * Compile the Java or Kotlin probe offline against one JAR; returns the class path entry and main class.\n *\n * @param root0 - Probe inputs.\n * @param root0.profile - Either \"java\" or \"kotlin\".\n * @param root0.root - Task-owned probe directory.\n * @param root0.jar - The JAR whose public API the probe calls.\n * @param root0.environment - Producer toolchain selection.\n */\nconst buildJvmProbe = async ({ profile, root, jar, environment }) => {\n\tif(profile === \"java\")\n\t{\n\t\tawait saveLakeFile(root, \"Probe.java\", javaFinDispatchProbe());\n\t\tawait runCopied(environment.LEAN_BRIDGE_JAVAC, [\"--release\", \"22\", \"-Werror\", \"-Xlint:all\", \"-cp\", jar, \"-d\", join(root, \"classes\"), \"Probe.java\"], root);\n\t\treturn { classPath: `${jar}:${join(root, \"classes\")}`, main: \"Probe\" };\n\t}\n\tawait saveLakeFile(root, \"Probe.kt\", kotlinFinDispatchProbe());\n\tawait runCopied(environment.LEAN_BRIDGE_KOTLINC, [\"-Werror\", \"-jvm-target\", \"22\", \"-cp\", jar, \"Probe.kt\", \"-include-runtime\", \"-d\", join(root, \"probe.jar\")], root\n\t\t, { ...environment, JAVA_HOME: dirname(dirname(environment.LEAN_BRIDGE_JAVA)) });\n\treturn { classPath: `${jar}:${join(root, \"probe.jar\")}`, main: \"ProbeKt\" };\n};\nconst jvmProbeArgv = (java, { classPath, main }) => ({ record, nonce, configSha256, definerIndices, mode, tmpdir }) =>\n\t[java, \"--enable-native-access=ALL-UNNAMED\", `-Djava.io.tmpdir=${tmpdir}`, \"-cp\", classPath, main, record, nonce, configSha256, definerIndices.join(\",\"), ...mode ? [mode] : []];\n\n/**\n * One stand-in JAR: C stand-ins as packaged resources under the real generated loader, plus its own\n * resources extracted by the test for nm and hashing.\n *\n * @param root0 - Build inputs.\n * @param root0.root - Task-owned directory for this variant.\n * @param root0.flags - Extra C flags for the checked adapter.\n * @param root0.sources - Directory holding the stand-in C sources.\n * @param root0.environment - Producer toolchain selection.\n */\nconst buildStandInJar = async ({ root, flags, sources, environment }) => {\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" }, staged = join(root, \"native\");\n\tconst cc = args => runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-O2\", \"-shared\", \"-fPIC\", ...args], root, tools);\n\tawait mkdir(staged, { recursive: true });\n\tawait cc([join(sources, \"runtime.c\"), \"-o\", join(staged, \"libleanshared.so\")]);\n\tawait cc([join(sources, \"runtime.c\"), \"-o\", join(staged, \"liblean_bridge_native.so\")]);\n\tawait cc([join(sources, \"component.c\"), \"-o\", join(staged, \"libcomponent_stand_in.so\")]);\n\tawait cc([...flags, join(sources, \"adapter.c\"), \"-L\", staged, \"-l:libcomponent_stand_in.so\", \"-Wl,-rpath,$ORIGIN\", \"-o\", join(staged, \"libnative_fin.so\")]);\n\tconst libraries = Object.fromEntries(await Promise.all((await readdir(staged)).sort().map(async name => [name, sha256(await readFile(join(staged, name)))])));\n\tconst java = join(root, \"src/org/leanbridge/native_fin\");\n\tawait saveLakeFile(java, \"Api.java\", standInApi());\n\tawait saveLakeFile(java, \"NativeAssets.java\", copiedJvmAssets({ namespace: \"org.leanbridge.native_fin\" }, standInEvidence(libraries)));\n\tconst classes = join(root, \"classes\"), packaged = join(classes, \"META-INF/lean-bridge/native/linux-x64\");\n\tawait runCopied(environment.LEAN_BRIDGE_JAVAC, [\"--release\", \"22\", \"-d\", classes, join(java, \"Api.java\"), join(java, \"NativeAssets.java\")], root);\n\tawait mkdir(packaged, { recursive: true });\n\tfor(const name of Object.keys(libraries)) await cp(join(staged, name), join(packaged, name));\n\tconst jar = join(root, \"component.jar\"), resources = join(root, \"resources\");\n\tawait runCopied(join(dirname(environment.LEAN_BRIDGE_JAVAC), \"jar\"), [\"--create\", \"--file\", jar, \"-C\", classes, \".\"], root);\n\tawait mkdir(resources);\n\tawait runCopied(\"/usr/bin/unzip\", [\"-q\", jar, \"META-INF/lean-bridge/native/linux-x64/*\", \"-d\", resources], root, tools);\n\treturn { jar, staged, resources: join(resources, \"META-INF/lean-bridge/native/linux-x64\"), libraries };\n};\n\n// The configured JDK, Kotlin compiler and debugger, as in the installed acceptance.\nconst standInEnvironment = nativeFixtureEnvironment([\"java\", \"kotlin\"]);\nconst standInMissing = [\"LEAN_BRIDGE_JAVA\", \"LEAN_BRIDGE_JAVAC\", \"LEAN_BRIDGE_KOTLINC\"].map(name => standInEnvironment[name]).find(path => !existsSync(path))\n\t? \"no JDK 22 or Kotlin compiler at the configured paths\"\n\t: process.platform !== \"linux\" || process.arch !== \"x64\" ? \"GDB entry counters target x86_64 Linux\"\n\t\t: !existsSync(nativeFinGdbCommand) ? `no debugger at ${nativeFinGdbCommand}; entry-breakpoint controls need GDB with ptrace` : false;\n// The gated installed acceptance requires these controls; only an ungated run may skip them.\nconst standInSkip = process.env.LEAN_BRIDGE_JVM_FIN_TEST === \"1\" ? false : standInMissing;\ntest(\"GDB entry breakpoints count a deep-bound extracting JVM stand-in from Java and Kotlin and refuse every other root, image or record\", { skip: standInSkip, timeout: 1_200_000 }, async t => {\n\tassert.equal(standInMissing, false, `the gated JVM Fin acceptance requires its stand-in controls: ${standInMissing}`);\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-jvm-fin-gdb-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = standInEnvironment, java = environment.LEAN_BRIDGE_JAVA, componentId = \"native-fin@1.0.0\";\n\tconst tools = { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" }, sources = join(root, \"src\");\n\tawait saveLakeFile(sources, \"component.c\", standInComponent());\n\tawait saveLakeFile(sources, \"adapter.c\", standInAdapter());\n\tawait saveLakeFile(sources, \"runtime.c\", \"int lean_bridge_stand_in_runtime(void) { return 0; }\\n\");\n\tawait saveLakeFile(sources, \"wrong.c\", \"int lean_bridge_stand_in_runtime(void) { return 1; }\\n\");\n\tconst jars = {};\n\tfor(const [variant, flags] of [[\"package\", []], [\"leaking\", [\"-DLEAK\"]]]) jars[variant] = await buildStandInJar({ root: join(root, variant), flags, sources, environment });\n\t// The same basename with other bytes, outside every extraction root.\n\tconst wrong = join(root, \"wrong/libleanshared.so\");\n\tawait mkdir(dirname(wrong));\n\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Werror\", \"-O2\", \"-shared\", \"-fPIC\", join(sources, \"wrong.c\"), \"-o\", wrong], root, tools);\n\tassert.notEqual(sha256(await readFile(wrong)), jars.package.libraries[\"libleanshared.so\"]);\n\t// As generated, nothing in the deployment references the Fin 0 adapter.\n\tconst relocations = (await runCopied(\"/usr/bin/readelf\", [\"-rW\", join(jars.package.staged, \"libnative_fin.so\")], root, tools)).stdout;\n\tassert.ok(relocations.includes(adapter(\"mirror\")) && !relocations.includes(adapter(\"impossible\")));\n\t// Both probe callers compile against the generated copied API as well as against the stand-in.\n\tconst exported = [[\"impossible\", [\"nat\"], \"nat\"], [\"only\", [\"nat\"], \"nat\"], [\"mirror\", [\"nat\"], \"nat\"], [\"label\", [\"nat\", \"nat\", \"string\"], \"string\"]];\n\tconst ir = corpusReviewedIr({ id: \"native-fin\" }, exported.map(([name, parameters, result]) => ({ name: `NativeFin.${name}`, parameters, result })));\n\tconst generated = Object.entries(renderCopiedJvmPackage(compileCopiedJvmModel(ir))).filter(([path]) => path.endsWith(\".java\"));\n\tconst generatedRoot = join(root, \"generated\");\n\tfor(const [path, source] of generated) await saveLakeFile(dirname(join(generatedRoot, \"src\", path)), basename(path), source);\n\tawait runCopied(environment.LEAN_BRIDGE_JAVAC, [\"--release\", \"22\", \"-d\", join(generatedRoot, \"classes\"), ...generated.map(([path]) => join(generatedRoot, \"src\", path))], root);\n\tfor(const profile of [\"java\", \"kotlin\"]) await buildJvmProbe({ profile, root: join(generatedRoot, profile), jar: join(generatedRoot, \"classes\"), environment });\n\tconst probes = {};\n\tfor(const profile of [\"java\", \"kotlin\"]) probes[profile] = await buildJvmProbe({ profile, root: join(root, `${profile}-probe`), jar: jars.package.jar, environment });\n\tconst observe = (variant, probe, profile = \"java\", definers = null) => observeExtractedNativeFinDispatch({\n\t\tprobeRoot: join(root, probe)\n\t\t, resourceDirectory: jars[variant].resources\n\t\t, componentId\n\t\t, argv: jvmProbeArgv(java, variant === \"package\" ? probes[profile] : { ...probes[profile], classPath: probes[profile].classPath.replace(jars.package.jar, jars[variant].jar) })\n\t\t, cwd: root\n\t\t, env: copiedCleanEnvironment\n\t\t, definers\n\t});\n\tconst refused = (run, code, stderr) => {\n\t\tassert.equal(run.code, code, run.output);\n\t\tassert.equal(run.stdout ?? \"\", \"\"); if(stderr !== null) assert.equal(run.stderr, stderr);\n\t};\n\tconst poisoned = (run, reason) => {\n\t\tassert.equal(run.code, nativeFinGdbExit.instrumentation, run.output);\n\t\tassert.match(run.output, new RegExp(`fin instrumentation refused: deployment refused: ${reason}`, \"u\"));\n\t};\n\tfor(const profile of [\"java\", \"kotlin\"])\n\t{\n\t\tconst observer = await observe(\"package\", `${profile}-run`, profile);\n\t\tassert.deepEqual(observer.identity.definers, Array(6).fill(\"libcomponent_stand_in.so\"));\n\t\t// Without GDB no record exists, and the probe refuses before its load trigger.\n\t\tconst missing = await observer.run({ gdb: false });\n\t\trefused(missing, 2, unattached);\n\t\tassert.equal(existsSync(missing.record), false);\n\t\t// The trigger extracts into one root below the run's parent; all six entries are armed there.\n\t\tconst accepted = await observer.run();\n\t\tassert.equal(accepted.code, 0, accepted.output); assert.equal(accepted.stderr, \"\");\n\t\tconst observed = readNativeFinDispatch(accepted.stdout, jvmFinDispatchExpected);\n\t\tassert.deepEqual(observed, jvmFinDispatchExpected);\n\t\tconst { root: extracted, breakpoints } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);\n\t\tassert.equal(dirname(extracted), accepted.parent); assert.equal(breakpoints.length, 6);\n\t\tif(profile === \"kotlin\") continue;\n\t\t// A record carrying any other PID than the one GDB armed is refused.\n\t\tconst foreignPid = await readFile(accepted.record);\n\t\tforeignPid.writeBigInt64LE(foreignPid.readBigInt64LE(112) + 1n, 112);\n\t\tawait writeFile(join(root, \"foreign-pid.record\"), foreignPid, { flag: \"wx\" });\n\t\tawait assert.rejects(() => assertExtractedNativeFinGdbRun(observer, { ...accepted, record: join(root, \"foreign-pid.record\") }, observed), /the record belongs to the instrumented inferior/u);\n\t\t// A second root with identical bytes, before the loader's own root is complete, poisons the run.\n\t\tpoisoned(await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_BEFORE: join(jars.package.staged, \"libcomponent_stand_in.so\") } }), \"a second extraction root\");\n\t\t// So does an identical copy in another root after arming.\n\t\tpoisoned(await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_AFTER: join(jars.package.staged, \"libcomponent_stand_in.so\") } }), \"libcomponent_stand_in\\\\.so loaded again after arming\");\n\t\t// The same basename with other bytes in an extraction-style root is refused by content.\n\t\tpoisoned(await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_BEFORE: wrong } }), \"libleanshared\\\\.so has bytes\");\n\t\t// A symlinked root or a symlinked library is refused, even with the verified bytes.\n\t\tfor(const link of [\"dir\", \"file\"])\n\t\t\tpoisoned(await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_BEFORE: join(jars.package.staged, \"libleanshared.so\"), LEAN_BRIDGE_STAND_IN_LINK: link } }), \"symlinked extraction root or library\");\n\t\t// Libraries extracted outside the run's parent, or preloaded from anywhere, are never adopted.\n\t\tconst outside = join(root, \"outside\");\n\t\tawait mkdir(outside);\n\t\tpoisoned(await observer.run({ tmpdir: outside }), \"\\\\S+ loaded from outside a direct extraction child of the parent\");\n\t\tpoisoned(await observer.run({ extra: { LD_PRELOAD: Object.keys(jars.package.libraries).map(name => join(jars.package.staged, name)).join(\":\") } }), \"\\\\S+ loaded from outside a direct extraction child of the parent\");\n\t\t// A parent that is not fresh and empty is refused before the inferior starts.\n\t\tconst planted = await observer.run({ before: (record, parent) => writeFile(join(parent, \"planted\"), \"\") });\n\t\trefused(planted, nativeFinGdbExit.refusedRecord, null);\n\t\tassert.match(planted.output, /the extraction parent is not a fresh, empty, canonical directory/u);\n\t\t// A trigger that enters a counted column, or that fails, yields no rows.\n\t\tconst leakyTrigger = await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_TRIGGER: \"leak\" } });\n\t\trefused(leakyTrigger, 3, uncovered);\n\t\tassert.deepEqual(readNativeFinGdbRecord(await readFile(leakyTrigger.record)).entries, [1, 0, 0, 1, 0, 0]);\n\t\trefused(await observer.run({ extra: { LEAN_BRIDGE_STAND_IN_TRIGGER: \"fail\" } }), 4, untriggered);\n\t\t// A failed count write or arming callback ends the run with 71, so no rows are accepted.\n\t\tconst lost = await observer.run({ inject: { write: 3 } });\n\t\tassert.equal(lost.code, nativeFinGdbExit.instrumentation, lost.output);\n\t\tassert.match(lost.output, /fin instrumentation refused: entry count for column \\d failed: injected record write failure/u);\n\t\tassert.throws(() => readNativeFinDispatch(lost.stdout ?? \"\", jvmFinDispatchExpected), TypeError);\n\t\tconst unarmed = await observer.run({ inject: { arm: true } });\n\t\tassert.equal(unarmed.code, nativeFinGdbExit.instrumentation, unarmed.output);\n\t\tassert.match(unarmed.output, /fin instrumentation refused: instrumentation callback failed: injected arming failure/u);\n\t\tassert.equal(unarmed.stdout, \"\");\n\t\t// A computed-address call of the otherwise unreferenced Fin 0 adapter is an actual counted entry.\n\t\tconst dynamic = await observer.run({ mode: \"dynamic\" });\n\t\tassert.equal(dynamic.code, 0, dynamic.output);\n\t\tconst extended = [...jvmFinDispatchExpected, [\"dynamic-impossible-adapter\", \"ok:0\", [2, 1, 2, 2, 1, 2]]];\n\t\tassert.equal(dynamic.stdout, extended.map(([step, status, counts]) => `${step} ${status} ${counts.join(\" \")}\\n`).join(\"\"));\n\t\t// A stale valid record is never adopted, with a fresh nonce or with its own nonce replayed.\n\t\tconst stale = await readFile(accepted.record);\n\t\tfor(const nonce of [undefined, accepted.nonce])\n\t\t{\n\t\t\tconst attempt = await observer.run({ nonce, before: path => writeFile(path, stale, { flag: \"wx\" }) });\n\t\t\trefused(attempt, nativeFinGdbExit.refusedRecord, null);\n\t\t\tassert.match(attempt.output, /fin instrumentation refused: \\[Errno 17\\] File exists/u);\n\t\t\tassert.ok((await readFile(attempt.record)).equals(stale), \"the stale record is untouched\");\n\t\t}\n\t\t// Adapters configured in the wrong library are reported as foreign and never armed.\n\t\tconst misplaced = Object.fromEntries(nativeFinDispatchSymbols(componentId).map((symbol, k) => [symbol, k < 3 ? \"libcomponent_stand_in.so\" : \"libnative_fin.so\"]));\n\t\tconst misarmed = await (await observe(\"package\", \"wrong\", \"java\", misplaced)).run();\n\t\trefused(misarmed, 3, uncovered);\n\t\tconst partial = readNativeFinGdbRecord(await readFile(misarmed.record));\n\t\tassert.deepEqual([partial.armed, partial.foreign, partial.breakpoints], [0b000111, 3, [1, 1, 1, 0, 0, 0]]);\n\t\t// A C entry point that enters its adapter before rejecting is caught at its first invalid row.\n\t\tconst leak = await (await observe(\"leaking\", \"leak\")).run();\n\t\tassert.equal(leak.code, 0, leak.output);\n\t\tassert.match(leak.stdout, /^invalid-mirror-bound rejected:arg0<10 1 0 0 1 0 0$/mu);\n\t\tassert.throws(() => readNativeFinDispatch(leak.stdout, jvmFinDispatchExpected), /invalid-mirror-bound was rejected but changed counts by 1 0 0 1 0 0/u);\n\t}\n});\n\n"
+        },
+        {
+          "start": 51352,
+          "previous": "",
+          "current": "\t\t// The counted adapters are the model's own exports for this component identity.\n\t\tassert.equal(model.component.id, \"native-fin@1.0.0\");\n\t\tfor(const name of [\"mirror\", \"impossible\", \"label\"])\n\t\t\tassert.equal(model.exports.find(item => item.name === `NativeFin.${name}`).symbol, nativeFinAdapterSymbol(model.component.id, `NativeFin.${name}`), name);\n\t\t// The JAR loader opens its extracted libraries with RTLD_DEEPBIND, which bypasses LD_PRELOAD; installed entry\n\t\t// counts need GDB with ptrace, and their absence fails this gated acceptance, never skips it.\n\t\tassert.ok(existsSync(nativeFinGdbCommand), `GDB is required at ${nativeFinGdbCommand} for installed JVM entry counts; set LEAN_BRIDGE_GDB, and ptrace must be permitted`);\n\t\tconst jarArtifact = packages.flatMap(pkg => pkg.artifacts).find(item => item.path.endsWith(\".jar\"));\n"
+        },
+        {
+          "start": 53144,
+          "previous": "",
+          "current": "\t\t\tt.diagnostic(`per-step source and adapter counts from ${profile} in a relocated cold JVM under GDB entry breakpoints`);\n\t\t\t// This caller's own probe compiles offline against the relocated installed JAR, the handoff's exact bytes.\n\t\t\tconst installedJar = join(relocated, \"component.jar\");\n\t\t\tassert.equal(sha256(await readFile(installedJar)), jarArtifact.sha256);\n\t\t\tconst probe = await buildJvmProbe({ profile, root: join(relocated, \"probe\"), jar: installedJar, environment });\n\t\t\tconst observer = await observeExtractedNativeFinDispatch({\n\t\t\t\tprobeRoot: join(consumer, `${profile}-dispatch`)\n\t\t\t\t, resourceDirectory: nativeDirectory\n\t\t\t\t, componentId: model.component.id\n\t\t\t\t, argv: jvmProbeArgv(command, probe)\n\t\t\t\t, cwd: relocated\n\t\t\t\t, env: copiedCleanEnvironment\n\t\t\t});\n\t\t\t// Without GDB the probe refuses before its load trigger, and no record appears.\n\t\t\tconst missing = await observer.run({ gdb: false });\n\t\t\tassert.equal(missing.code, 2, missing.output); assert.equal(missing.stdout, \"\"); assert.equal(missing.stderr, unattached);\n\t\t\tassert.equal(existsSync(missing.record), false);\n\t\t\tconst accepted = await observer.run();\n\t\t\tassert.equal(accepted.code, 0, `instrumented probe failed (2 armed before the trigger, 3 uncovered, 4 trigger failed, 70 stale record or parent, 71 ptrace, instrumentation or refused deployment, 72 signal): ${accepted.output}`);\n\t\t\tassert.equal(accepted.stderr, \"\");\n\t\t\tconst observed = readNativeFinDispatch(accepted.stdout, jvmFinDispatchExpected);\n\t\t\tassert.deepEqual(observed, jvmFinDispatchExpected);\n\t\t\tconst { breakpoints } = await assertExtractedNativeFinGdbRun(observer, accepted, observed);\n\t\t\tconst dispatch = {\n\t\t\t\tcolumns: observer.identity.columns\n\t\t\t\t, observed\n\t\t\t\t, instrument: \"gdb-breakpoints-extracted-root\"\n\t\t\t\t, instrumentation: \"in-memory int3 breakpoints at each verified definition in one hashed extraction root below a fresh run-owned java.io.tmpdir; deployed files and the production loader are unchanged\"\n\t\t\t\t, routes: jvmFinDispatchRoutes(profile)\n\t\t\t\t, loadTrigger: jvmLoadTrigger\n\t\t\t\t, positiveControl: `valid public ${profile === \"java\" ? \"Java\" : \"Kotlin\"} calls increment exactly their source and adapter columns; rejected calls, including every Fin 0 call, change no column`\n\t\t\t\t, probeSha256: sha256(profile === \"java\" ? javaFinDispatchProbe() : kotlinFinDispatchProbe())\n\t\t\t\t, scriptSha256: sha256(nativeFinGdbExtractedScript)\n\t\t\t\t, configSha256: observer.configSha256\n\t\t\t\t, gdb: { version: (await runCopied(nativeFinGdbCommand, [\"--version\"], relocated, copiedCleanEnvironment)).stdout.split(\"\\n\")[0], sha256: sha256(await readFile(await realpath(nativeFinGdbCommand))) }\n\t\t\t\t, definers: observer.identity.definers\n\t\t\t\t, breakpoints\n\t\t\t\t, libraries: observer.identity.hashes\n\t\t\t\t, scope: \"x86_64 Linux with GDB and ptrace; one cold process per caller\"\n\t\t\t};\n"
+        },
+        {
+          "start": 56195,
+          "previous": "\t\t\t\t, dispatch: { observed: false, reason: \"the JVM loads extracted native libraries privately; identity with the instrumented C adapter is asserted instead\" }\n",
+          "current": "\t\t\t\t, dispatch\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "2fef6228d251924f5e781d9a56595f7e4d853d3866454f9c06f648d8ad1c038a",
+      "previousSha256": "330c77dde8e189f83a40aae3d679c7ac4625b4d2c6ae64a10da8ee5c92f2dbab",
+      "edits": [
+        {
+          "start": 43107,
+          "previous": "",
+          "current": "The separate [scalar entry-counter receipt](evidence/php-fin-dispatch-20261008/receipt.json) records ordinary-source and reviewed-IR native PHP Composer packages after source removal, offline installation and relocation. Rejected `mirror`, `impossible` and `label` calls entered neither the Lean source nor its C adapter. Valid calls, including those after rejected ones, entered their own source and adapter once. Both consumers passed 2,028 checks on PHP 8.2.33 with FFI on x86-64 Linux and a glibc 2.36 package floor. An `LD_PRELOAD` interposer counted the entries without changing the installed package. It covers these top-level scalar calls, not nested refinements, PHP-Wasm or other platforms.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "currentSha256": "466f0236f4e91d282fc347645c7aa0eba301dace59345d2dda3fcf6aecc4a293",
+      "previousSha256": "7e293237b29e2e6b725ae75f852198de25e2eb598edde59ea691f81c123988be",
+      "edits": [
+        {
+          "start": 46949,
+          "previous": "",
+          "current": "The separate [scalar entry-counter receipt](../evidence/wit-fin-dispatch-20261008/receipt.json) records ordinary-source and reviewed-IR Wasmtime host packages after source removal, offline installation and relocation of their local libraries. Rejected `mirror`, `impossible` and `label` calls entered neither the Lean source nor its C adapter. Valid calls, including those after rejected ones, entered their own source and adapter once. Both consumers passed 2,027 checks with the Wasmtime 42.0.1 C API and wasm-tools 1.245.1 on x86-64 Linux and a glibc 2.36 package floor. An `LD_PRELOAD` interposer counted the entries without changing the installed host. It covers these top-level scalar calls, not record or variant fields, containers or other platforms.\n\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/java.md",
+      "currentSha256": "3d191b6d9c90269a408c498a23cce31c39565b55384e6fe69bd6c1e9c63ebbd5",
+      "previousSha256": "8b3984ec9dd50ae3a7f930f03650adec038a3fa36829e3116e59afa56a48c126",
+      "edits": [
+        {
+          "start": 41320,
+          "previous": "A Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger.valueOf(3))` returns 6. `mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. `null` throws `NullPointerException`, and a negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Javadoc on each method and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "A Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger.valueOf(3))` returns 6. `mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. `null` throws `NullPointerException`, and a negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. Javadoc on each method and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. These packages also generate Fin checks in pairs, the active `Except` branch and plain record or variant fields, but installed acceptance for those shapes is not yet recorded. `Fin` in callback signatures is rejected at build time. See the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n\nThe separate [scalar entry-counter receipt](../evidence/jvm-fin-dispatch-20261009/receipt.json) records ordinary-source and reviewed-IR JARs after source removal, offline installation and relocation, with Java and Kotlin callers in separate processes. Rejected `mirror`, `impossible` and `label` calls entered neither the Lean source nor its C adapter. Valid calls, including those after rejected ones, entered their own source and adapter once. Both Java consumers passed 2,023 checks on OpenJDK 22.0.2 with GDB 13.1 on x86-64 Linux and a glibc 2.36 package floor. GDB counted the entries in the one verified directory the JAR extracted, without changing the generated loader or the extracted files. It covers these top-level scalar calls, not containers, nested refinements or other platforms.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "currentSha256": "df013c7e84e4f6e71cf4d7fb9e8328bdd1756ceed48c40c5e0afff172c37e28b",
+      "previousSha256": "582f78b45f9e7ef359ac76741693c64fd12e8c86f798eb4d6ebc94d68b59517d",
+      "edits": [
+        {
+          "start": 34017,
+          "previous": "A Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Api.mirror(BigInteger.valueOf(3))` returns 6. `Api.mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README states each bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Fields, callbacks, products and results are not; see the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n",
+          "current": "A Lean `Fin n` parameter or result is a `java.math.BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `Api.mirror(BigInteger.valueOf(3))` returns 6. `Api.mirror(BigInteger.TEN)` throws `IllegalArgumentException` with the message `arg0 is not below its Fin 10 bound`. A negative value throws the `IllegalArgumentException` that `Nat` throws. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README states each bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. These packages also generate Fin checks in pairs, the active `Except` branch and plain record or variant fields, but installed acceptance for those shapes is not yet recorded. `Fin` in callback signatures is rejected at build time. See the [installed checks](../evidence/native-fin-hosts-20261006.md) and the [container checks](../evidence/native-fin-containers-20261006.md).\n\nThe separate [scalar entry-counter receipt](../evidence/jvm-fin-dispatch-20261009/receipt.json) records ordinary-source and reviewed-IR JARs after source removal, offline installation and relocation, with Java and Kotlin callers in separate processes. Rejected `mirror`, `impossible` and `label` calls entered neither the Lean source nor its C adapter. Valid calls, including those after rejected ones, entered their own source and adapter once. Both Kotlin consumers passed 2,022 checks on Kotlin 2.2.0 compiling for OpenJDK 22.0.2 with GDB 13.1 on x86-64 Linux and a glibc 2.36 package floor. GDB counted the entries in the one verified directory the JAR extracted, without changing the generated loader or the extracted files. It covers these top-level scalar calls, not containers, nested refinements or other platforms.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "currentSha256": "00bf50dc1230955fa3f7d2b4e55801303019bf1a96850e079ad6bfdd1bead00c",
+      "previousSha256": "b1dc3511c93e988d18cb2efc8460c697ac99fb74fb0ecb48e05d0da159adc0b4",
+      "edits": [
+        {
+          "start": 38740,
+          "previous": "Native packages have ordinary-source and reviewed installed checks for pairs, `Except`, arrays of those shapes, and plain record/variant fields in [C/C++](../evidence/native-fin-records-20261007/receipt.json), [Python and Ruby](../evidence/fin-python-ruby-20261008/receipt-v2.json), [Rust](../evidence/fin-rust-20261008/receipt-v2.json) and [.NET](../evidence/fin-dotnet-hosted-20261008/receipt.json). The C/C++ [product](../evidence/native-fin-products-20261007/receipt.json) and [Array-of-product](../evidence/native-fin-product-arrays-20261007/receipt.json) receipts record the separate structural runs. [WIT/WASI](../evidence/fin-wit-records-20261008/receipt.json) has installed record/variant checks, including structural combinations inside those fields. Direct WIT product exports, Java/Kotlin and native PHP products/fields still need their own installed acceptance. Refined generic and recursive native types remain rejected. C/C++ callback directions and PHP-Wasm combinations are listed below.\n",
+          "current": "Native packages have ordinary-source and reviewed installed checks for pairs, `Except`, arrays of those shapes, and plain record/variant fields in [C/C++](../evidence/native-fin-records-20261007/receipt.json), [Python and Ruby](../evidence/fin-python-ruby-20261008/receipt-v2.json), [Rust](../evidence/fin-rust-20261008/receipt-v2.json) and [.NET](../evidence/fin-dotnet-hosted-20261008/receipt.json). The C/C++ [product](../evidence/native-fin-products-20261007/receipt.json) and [Array-of-product](../evidence/native-fin-product-arrays-20261007/receipt.json) receipts record the separate structural runs. [WIT/WASI](../evidence/fin-wit-records-20261008/receipt.json) has installed record/variant checks, including records and variants inside arrays, lists, options, pairs and `Except`. Direct WIT product exports, Java/Kotlin and native PHP products/fields still need their own installed acceptance. Refined generic and recursive native types remain rejected. C/C++ callback directions and PHP-Wasm combinations are listed below.\n"
+        },
+        {
+          "start": 52992,
+          "previous": "Separate scalar measurements count actual Lean source and adapter entries in [native PHP](../evidence/php-fin-dispatch-20261008/receipt.json), [Ruby](../evidence/ruby-fin-dispatch-20261009/receipt.json), [.NET](../evidence/dotnet-fin-dispatch-20261009/receipt.json) and [WIT/WASI](../evidence/wit-fin-dispatch-20261008/receipt.json). Each receipt names its runtime, instrumented calls and local platform. Matching bundled library bytes alone does not establish dispatch counts.\n",
+          "current": "Separate scalar measurements count actual Lean source and adapter entries in [native PHP](../evidence/php-fin-dispatch-20261008/receipt.json), [Ruby](../evidence/ruby-fin-dispatch-20261009/receipt.json), [.NET](../evidence/dotnet-fin-dispatch-20261009/receipt.json), [Java and Kotlin](../evidence/jvm-fin-dispatch-20261009/receipt.json) and [WIT/WASI](../evidence/wit-fin-dispatch-20261008/receipt.json). Each receipt names its runtime, instrumented calls and local platform. Matching bundled library bytes alone does not establish dispatch counts.\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "574b34b097767c594b1ae32120ed03b918784715430835ddf479555da7cc733c",
+      "previousSha256": "79cfcf156349f1909a034113dd9671cc5081394d9655dfc352ec49476969a1c4",
+      "edits": [
+        {
+          "start": 13127,
+          "previous": "",
+          "current": "import { jvmDispatchIntegrationChangedPaths } from \"./jvm-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 51616,
+          "previous": "",
+          "current": "\t, ...jvmDispatchIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-scalar-relocation-source-history.mjs",
+      "currentSha256": "ca8651b3125f52aa290de434e50e640adda5205f760da7064d3260adef3814f4",
+      "previousSha256": "5818e2a71469507f64995ed6f85d5c1253d322c61d2a20dad937fcfba902cf1f",
+      "edits": [
+        {
+          "start": 251,
+          "previous": "",
+          "current": "import { beforeJvmDispatchIntegrationSource } from \"./jvm-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2301,
+          "previous": "",
+          "current": "\tsource = beforeJvmDispatchIntegrationSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-scalar-relocation-source-history-tests.mjs",
+      "currentSha256": "96a4b75d570855fc9f01dbaa953e0c350c98ba8e98dbbbc6f28484d59d6927f6",
+      "previousSha256": "f26f15616e3c550173f20b723dcbbe33d5efc84ced63faeb881480404e9d8249",
+      "edits": [
+        {
+          "start": 452,
+          "previous": "",
+          "current": "import { beforeJvmDispatchIntegrationSource } from \"./jvm-dispatch-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1365,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reversePerlScalarRelocationUpdate(source, update);\n",
+          "current": "\t\tconst source = beforeJvmDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePerlScalarRelocationUpdate(source, update);\n"
+        },
+        {
+          "start": 2652,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforeJvmDispatchIntegrationSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3362,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforeJvmDispatchIntegrationSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

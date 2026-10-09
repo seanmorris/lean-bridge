@@ -1,20 +1,26 @@
 /**
- * Preserve exact predecessors when rerunning installed scalar Perl consumers after relocation.
+ * Preserve exact predecessors when integrating the measured JVM Fin dispatch archive and host guidance.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeJvmDispatchIntegrationSource } from "./jvm-dispatch-integration-source-history.mjs";
 
-export const perlScalarRelocationHistoryPath = "docs/evidence/perl-scalar-relocation-source-history-20261009.json";
-export const perlScalarRelocationPredecessor = "0bc379f365eca14023ce9da2f0c52d059f96edf7";
-export const perlScalarRelocationChangedPaths = [
-	"tests/perl-fin.test.mjs"
+export const jvmDispatchIntegrationHistoryPath = "docs/evidence/jvm-dispatch-integration-source-history-20261009.json";
+export const jvmDispatchIntegrationPredecessor = "63ae7b175733d806c6bfaa829822ac7f0f756943";
+export const jvmDispatchIntegrationChangedPaths = [
+	"docs/type-surface.v1.json"
+	, "src/adoption/test-profiles.mjs"
+	, "tests/jvm-fin.test.mjs"
+	, "docs/php.md"
+	, "docs/consume/wit-wasi.md"
+	, "docs/consume/java.md"
+	, "docs/consume/kotlin.md"
+	, "docs/lean/existing-package.md"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/helpers/author-refinement-docs-source-history.mjs"
-	, "tests/helpers/author-refinement-docs-source-history-tests.mjs"
+	, "tests/helpers/perl-scalar-relocation-source-history.mjs"
+	, "tests/helpers/perl-scalar-relocation-source-history-tests.mjs"
 ];
 let history;
 
@@ -24,8 +30,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reversePerlScalarRelocationUpdate = (source, update) => {
-	assert.ok(perlScalarRelocationChangedPaths.includes(update.path));
+export const reverseJvmDispatchIntegrationUpdate = (source, update) => {
+	assert.ok(jvmDispatchIntegrationChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -51,12 +57,11 @@ export const reversePerlScalarRelocationUpdate = (source, update) => {
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforePerlScalarRelocationSource = (path, source, expected) => {
-	source = beforeJvmDispatchIntegrationSource(path, source, expected);
-	if(typeof source !== "string" || !perlScalarRelocationChangedPaths.includes(path)) return source;
+export const beforeJvmDispatchIntegrationSource = (path, source, expected) => {
+	if(typeof source !== "string" || !jvmDispatchIntegrationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(perlScalarRelocationHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(jvmDispatchIntegrationHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePerlScalarRelocationUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reverseJvmDispatchIntegrationUpdate(source, update) : source;
 };

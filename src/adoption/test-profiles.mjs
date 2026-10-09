@@ -205,6 +205,8 @@ const profileManifest = Object.freeze({
 		, "wit-fin-dispatch-evidence"
 		, "ruby-fin-dispatch-evidence"
 		, "dotnet-fin-dispatch-evidence"
+		, "jvm-fin-dispatch-evidence"
+		, "fin-dispatch-guides"
 		, "perl-contract-repair-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"

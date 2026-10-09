@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: GDB entry breakpoints count a deep-bound extracting JVM stand-in from Java and Kotlin and refuse every other root, image or record
+ok 1 - GDB entry breakpoints count a deep-bound extracting JVM stand-in from Java and Kotlin and refuse every other root, image or record
+  ---
+  duration_ms: 45808.656706
+  type: 'test'
+  ...
+# Subtest: JVM packages are checked Fin consumers beside C, C++, Python, Rust, Ruby and .NET
+ok 2 - JVM packages are checked Fin consumers beside C, C++, Python, Rust, Ruby and .NET
+  ---
+  duration_ms: 0.326583
+  type: 'test'
+  ...
+# Subtest: generated JVM bound docs come only from checked refinement metadata
+ok 3 - generated JVM bound docs come only from checked refinement metadata
+  ---
+  duration_ms: 10.560113
+  type: 'test'
+  ...
+# Subtest: relocated source-free JVM packages check Fin bounds from Java and Kotlin through the bundled C adapter
+ok 4 - relocated source-free JVM packages check Fin bounds from Java and Kotlin through the bundled C adapter
+  ---
+  duration_ms: 467013.165763
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Maven JAR
+# offline java compilation and execution
+# per-step source and adapter counts from java in a relocated cold JVM under GDB entry breakpoints
+# offline kotlin compilation and execution
+# per-step source and adapter counts from kotlin in a relocated cold JVM under GDB entry breakpoints
+# build 1: compiling the shared C library and Maven JAR
+# Subtest: independently reviewed Jvm packages check scalar Fin through installed consumers
+ok 5 - independently reviewed Jvm packages check scalar Fin through installed consumers
+  ---
+  duration_ms: 467735.851846
+  type: 'test'
+  ...
+# build 0: compiling the shared C library and Maven JAR
+# offline java compilation and execution
+# per-step source and adapter counts from java in a relocated cold JVM under GDB entry breakpoints
+# offline kotlin compilation and execution
+# per-step source and adapter counts from kotlin in a relocated cold JVM under GDB entry breakpoints
+# build 1: compiling the shared C library and Maven JAR
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 981033.143221
