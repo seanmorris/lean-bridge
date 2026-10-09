@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforePerlRelocatedPromotionSource } from "./perl-relocated-promotion-source-history.mjs";
 import { beforeCppFinDispatchIntegrationSource, cppFinDispatchIntegrationChangedPaths, cppFinDispatchIntegrationHistoryPath, cppFinDispatchIntegrationPredecessor, reverseCppFinDispatchIntegrationUpdate } from "./cpp-fin-dispatch-integration-source-history.mjs";
 
 test("C++ Fin dispatch integration history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -20,7 +21,7 @@ test("C++ Fin dispatch integration history authenticates exact predecessors and 
 	assert.deepEqual(record.updates.map(update => update.path), cppFinDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseCppFinDispatchIntegrationUpdate(source, update);
+		const source = beforePerlRelocatedPromotionSource(update.path, await readFile(update.path, "utf8")), previous = reverseCppFinDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeCppFinDispatchIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -36,7 +37,7 @@ test("C++ Fin dispatch integration history authenticates exact predecessors and 
 });
 
 test("C++ Fin dispatch integration refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforePerlRelocatedPromotionSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeCppFinDispatchIntegrationSource(path, source));
 	const history = JSON.parse(await readFile(cppFinDispatchIntegrationHistoryPath));
 	let pins = 0;
@@ -47,7 +48,7 @@ test("C++ Fin dispatch integration refreshes source pins without changing any ob
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 2); assert.deepEqual(current, previous);
-	for(const evidence of current.evidence) for(const file of evidence.files)
+	for(const evidence of JSON.parse(await readFile(path)).evidence) for(const file of evidence.files)
 		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 });
 

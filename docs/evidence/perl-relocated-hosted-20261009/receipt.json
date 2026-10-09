@@ -1,0 +1,552 @@
+{
+  "schemaVersion": 1,
+  "planNodes": [
+    1431,
+    1432
+  ],
+  "execution": "hosted",
+  "revision": "93c60a0487d0b2acc0b6d562cd72a3876738a666",
+  "runId": 37873560469,
+  "configurations": [
+    {
+      "name": "5.36.3-unthreaded",
+      "job": 113636828081,
+      "corpus": 11596726119,
+      "abi": 11596721187,
+      "conclusion": "success"
+    },
+    {
+      "name": "5.36.3-threaded",
+      "job": 113636828019,
+      "corpus": 11595406237,
+      "abi": 11594363424,
+      "conclusion": "success"
+    },
+    {
+      "name": "5.38.2-unthreaded",
+      "job": 113636828211,
+      "corpus": 11598038706,
+      "abi": 11598038710,
+      "conclusion": "success"
+    },
+    {
+      "name": "5.38.2-threaded",
+      "job": 113636828016,
+      "corpus": 11597085761,
+      "abi": 11597010951,
+      "conclusion": "success"
+    }
+  ],
+  "original": {
+    "receipt": {
+      "path": "docs/evidence/perl-refinements-hosted-20261009/receipt.json",
+      "sha256": "e8c7408fdb4430554c2e59c81bcc4303d874ab082a97a183d285f00d23a2639c"
+    },
+    "revision": "bf89effc3735069b1f069482c26ccf296026e7db"
+  },
+  "scope": {
+    "profile": "perl",
+    "ecosystem": "cpan",
+    "selection": "Compare installed Perl corpus packages with fresh Lean results",
+    "ordinary": [
+      "Array/List/Option Fin",
+      "top-level checked Subtype",
+      "unboxed UInt32 Subtype and nested Fin 0"
+    ],
+    "reviewed": [
+      "Array/List/Option Fin"
+    ],
+    "relocation": "After its first full run, each selected consumer's installed tree is renamed to a fresh sibling and the unchanged consumer.pl reruns once with PERL5LIB at the moved prefix only. The rerun must print exactly the first run's success line and check count, and the old tree must stay absent. Subtype and container counters then run in the moved tree.",
+    "comparison": "Every report equals the same configuration's bf89eff report, including checks, caller, refinements, dispatch counts and package archive digests, except for relocatedInstallation on all four and repeatExecution on the Subtype and container reports. The first-run repetition and counter scope are those of the original receipt.",
+    "reproduction": "Two independent author builds per report reproduce archives within that interpreter configuration. No cross-ABI archive equality is claimed. Author/build directories are deleted before offline, compiler-free execution.",
+    "interpreter": "The workflow, selected toolchain builder, install harness, log and supplemental report identify each configured interpreter. Raw Perl Config output is not retained. The base-package ABI receipt supplies context, not refinement-package identity.",
+    "identities": "Reports retain source-tree, model, Binding IR and package-set receipt digests. Their complete original model and receipt files are not present, so those digests are not independently recomputed here.",
+    "sourceIdentity": "Selected producer sources are exact snapshots from the hosted Git revision, not a complete dependency closure or a claim about current source.",
+    "scalar": "Scalar native-fin Perl reports from this run predate the later 63ae7b1 relocation of scalar consumers and are not selected.",
+    "wholeRun": "All four Perl XS jobs completed successfully. Other jobs in the workflow are not claimed by this archive.",
+    "binaryArchivesRetained": false,
+    "supportPromotion": false
+  },
+  "files": [
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "40a9b694a2816c3ccaa07cf0355142019a1ec535b679aee7247ce184f7522006"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/job.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/job.json",
+      "bytes": 3981,
+      "sha256": "cb830fef1f7932825a57c249e0f75a9493b8adf6b2c917a91583d9e496b496d1"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/job.log",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/job.log",
+      "bytes": 392184,
+      "sha256": "5d1aabebb68fecce45551282db66e5133f748410d6cb6745f4333e772d8895d1"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/artifact.json",
+      "bytes": 775,
+      "sha256": "1a5dbbb8fe8d0ea3033178460773bf323991456802a2e0db5fd51dfdc99ac511"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/abi-artifact.json",
+      "bytes": 765,
+      "sha256": "889fef6e60679abf435dbad4606ac3638cd4028e60c38e5bd351724256fac9e2"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/abi.zip!5.36.3-unthreaded/acceptance.json",
+      "bytes": 1719,
+      "sha256": "321b54b25d2e8e799ad52185aa7952a478f6164c50b6011637958aa729748fc9"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/subtype.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/artifact.zip!native-subtype/perl.json",
+      "bytes": 5992,
+      "sha256": "52795f61a049a46b6fd0dab1de4adef1e287572809403d7ec04345b08b0ae24b"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/artifact.zip!native-fin-containers/perl.json",
+      "bytes": 7380,
+      "sha256": "2da20c3703a7560809c0932b94cbe530aeec62ae54f9ff7c8d53a26ea712d43d"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/reviewed-container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/artifact.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7474,
+      "sha256": "f503a8e53ec72787b358f112ddbd93766b61bd9c82fa02798eecf7cc48c46a35"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-unthreaded/supplemental.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-unthreaded/artifact.zip!perl-refinements/perl.json",
+      "bytes": 5533,
+      "sha256": "2e8f4c54b8563824d3718cadcbf2440b65e094f8a3d65685421e8becebd8f5c5"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/fetched-at.txt",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "d7c5b6ef5449ceba26eff3145427a81d87fab0296f7c3fcaf3b32e979bf5554e"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/job.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/job.json",
+      "bytes": 3979,
+      "sha256": "69cc2843d917c0627a6318650d403b083204546f1fdf5923614cd857bd31bf28"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/job.log",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/job.log",
+      "bytes": 388051,
+      "sha256": "f83f026edc5ac4a8eeae3d3254feba7555a5e01fee1998740b6a028d0db09a30"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/artifact.json",
+      "bytes": 773,
+      "sha256": "ed08f1a8d6398b40cb0cd61bd69765b653cf0bda9c418f3961f986f9865d8e64"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/abi-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/abi-artifact.json",
+      "bytes": 763,
+      "sha256": "69089230cce9202e6c449a0410158420697d304a605d33f7bed6fc459dd60063"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/abi.zip!5.36.3-threaded/acceptance.json",
+      "bytes": 1717,
+      "sha256": "cb41a4cc86d1e29c552c64dc9279155b92e65736cd654917560f0e60d89ff575"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/subtype.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/artifact.zip!native-subtype/perl.json",
+      "bytes": 5992,
+      "sha256": "205988cac4c0c7d5dde69828caeaa233f922951c7883e8521bb85b5a572ca665"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/artifact.zip!native-fin-containers/perl.json",
+      "bytes": 7380,
+      "sha256": "f8dc142efc3399c505068715288f10e1aa238330993398914cc6449648c30d0d"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/reviewed-container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/artifact.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7474,
+      "sha256": "ff0c5d874d8dedc4ff4136fa35cb5528cf171b24799b0048b1a3da9d7260b5ef"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.36.3-threaded/supplemental.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.36.3-threaded/artifact.zip!perl-refinements/perl.json",
+      "bytes": 5531,
+      "sha256": "ff872bcccc4ca908c71fe6236e9ebeab6d206b73b206e716790a9bb47977e583"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/fetched-at.txt",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "f170aa4039c964af6a67ed25865a0dc60f0e05c35bc0a307d3d18be86c180378"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/job.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/job.json",
+      "bytes": 3981,
+      "sha256": "f87c2b7d943c67845a666c77fe6597677a26ed00091bb05db51abe8f246f52b5"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/job.log",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/job.log",
+      "bytes": 389012,
+      "sha256": "c28d87e25c52546b707ae6e333c66590cc4dab334cbdd1dacca6d84b86d3ae5f"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/artifact.json",
+      "bytes": 775,
+      "sha256": "17ebe4f1de8995aa392c79bd76861130349f2e193bee8281a8fd44af69302639"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/abi-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/abi-artifact.json",
+      "bytes": 765,
+      "sha256": "293b6e32122d472f65c8b46b5dc801530987a94eb070cbc9b40feb6e83d5b783"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/abi.zip!5.38.2-unthreaded/acceptance.json",
+      "bytes": 1719,
+      "sha256": "a2a358f4f3c70c5ce929618ecce2ef528acf955d2bbcb19897f1344a22614af1"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/subtype.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/artifact.zip!native-subtype/perl.json",
+      "bytes": 5992,
+      "sha256": "4c1425e0c2ce213872d0d40575966421671434bb73182549d07925528b367e83"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/artifact.zip!native-fin-containers/perl.json",
+      "bytes": 7380,
+      "sha256": "27f0fe3f87355a678be65fb9a80e29746f6ada9e73b00ddc6fe4e8668f0f5bf6"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/reviewed-container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/artifact.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7474,
+      "sha256": "58769b5e4bf446e6df7214bb913429c4f26ac97ec2dcc3d1ed4c848032f3db57"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-unthreaded/supplemental.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-unthreaded/artifact.zip!perl-refinements/perl.json",
+      "bytes": 5533,
+      "sha256": "7b11cb368d6990db99ec7100d0e3875e4c121e4196ecc4afd17bf20b37401b31"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/fetched-at.txt",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/fetched-at.txt",
+      "bytes": 25,
+      "sha256": "c0aa4e5856608d0ebefe468b517479a11bcbec8782f17957e74adb3228686943"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/job.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/job.json",
+      "bytes": 3979,
+      "sha256": "4d64375705fc2959676bf8b487e034a1386f4af66a4b804c84d654da9bf9277b"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/job.log",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/job.log",
+      "bytes": 392053,
+      "sha256": "e84400fece1c61ade69a10c6ea4cc9a4d6da9bea9990a5d99dff0f5e161cecf2"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/corpus-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/artifact.json",
+      "bytes": 773,
+      "sha256": "ea3bca94455d3ff5fcb7c7fe39284d3803ad798afd6e74573ce0a4a4365ac94c"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/abi-artifact.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/abi-artifact.json",
+      "bytes": 763,
+      "sha256": "30174caeda50966641c68b52bd70c96e71a678c4d961f831690a96ca4bc0f707"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/abi-acceptance.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/abi.zip!5.38.2-threaded/acceptance.json",
+      "bytes": 1717,
+      "sha256": "e5fec63e9bf6c41c07efda06661d4abb8d55ddd27d3186fc26edc3c46520ba48"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/subtype.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/artifact.zip!native-subtype/perl.json",
+      "bytes": 5992,
+      "sha256": "edd9a0be7dcccd4196cc88679157c1cc375fddcd881d85ddfd288d85f3c55e57"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/artifact.zip!native-fin-containers/perl.json",
+      "bytes": 7380,
+      "sha256": "3926d5f689574f326b1f1add2871d1e3b1b5912f3d3bcec42c426ff8d508c7ad"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/reviewed-container.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/artifact.zip!native-fin-containers/reviewed-perl.json",
+      "bytes": 7474,
+      "sha256": "bbecd04a3dd91e7d51cf420344586ed9fd48f5c8c7fa5b8f647ba0991fbb1c24"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/5.38.2-threaded/supplemental.json",
+      "originalPath": "build/vo1431-perl-relocation-93c60a0/5.38.2-threaded/artifact.zip!perl-refinements/perl.json",
+      "bytes": 5531,
+      "sha256": "7a08b122dae01ee7198e94c48e8c9d9008ff77033f23078e2a028c78bf66706f"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/.github/workflows/perl-consumer.yml.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:.github/workflows/perl-consumer.yml",
+      "bytes": 22324,
+      "sha256": "9b560a9976cb967ab2d717bcf8cf656ca47d9b11f2e8d89e5b6ad0bfd3d8a5bc"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/scripts/env.sh.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:scripts/env.sh",
+      "bytes": 805,
+      "sha256": "637c5bf7e6792d85e04ca64874346af8e61095756d5412570252c2655ae0a66d"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/scripts/build-perl-toolchains.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:scripts/build-perl-toolchains.mjs",
+      "bytes": 3547,
+      "sha256": "e7986f05c4a800d403a26b8d97835bbe67e0c9fc8aaf4169f20ab9e505f00ae7"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/scripts/test-perl-consumers.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:scripts/test-perl-consumers.mjs",
+      "bytes": 5147,
+      "sha256": "d874c45d1381be4691e8284fb4310094f4ab1c5e4d80c300f7f9dc2aa91f13ec"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/perl-native.test.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/perl-native.test.mjs",
+      "bytes": 50558,
+      "sha256": "074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/native-subtype.test.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/native-subtype.test.mjs",
+      "bytes": 22404,
+      "sha256": "7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/native-fin-containers.test.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/native-fin-containers.test.mjs",
+      "bytes": 22948,
+      "sha256": "7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/perl-fin-containers.test.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/perl-fin-containers.test.mjs",
+      "bytes": 13601,
+      "sha256": "a00df6c4b1b6118ae619b060cec8979e38c7d3b46253faa6d03a4b14d1d0f523"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/perl-refinements.test.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/perl-refinements.test.mjs",
+      "bytes": 14202,
+      "sha256": "9b80aea3ebe91bb201c690ee2aebc325320cbfbfcb60146b23dd28317b8a6c45"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/native-subtype-install.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/native-subtype-install.mjs",
+      "bytes": 4083,
+      "sha256": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/fin-container-install.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/fin-container-install.mjs",
+      "bytes": 2979,
+      "sha256": "2024d6c6a44687293750c3ee5c25f092d689065e17beb8d535610963921c9329"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/copied-fixture-install.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/copied-fixture-install.mjs",
+      "bytes": 12888,
+      "sha256": "4b7065d87cfc18be27bdf9a78a8ed1f207b30c528dcd00a44b077e4d21de4227"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/perl-subtype-dispatch.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/perl-subtype-dispatch.mjs",
+      "bytes": 2899,
+      "sha256": "52b5f0b7204f2ea656b2cfcb18b6806c38c2e402542e6eec7a63d8d687857add"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/perl-fin-container-dispatch.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/perl-fin-container-dispatch.mjs",
+      "bytes": 2589,
+      "sha256": "aab2e672f7013118f880a139f407f9e1094a808572cb3b6aa508ad9474ebb5d9"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/reviewed-fin-container-fixture.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/reviewed-fin-container-fixture.mjs",
+      "bytes": 2452,
+      "sha256": "5e4d92f9bb4ccff65fb9356cc3a6613f5102665e59dbe38b99868e4804c8a132"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/type-corpus-reviewed-ir.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/type-corpus-reviewed-ir.mjs",
+      "bytes": 3557,
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/package-set.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/package-set.mjs",
+      "bytes": 5283,
+      "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/lake-workspace.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/lake-workspace.mjs",
+      "bytes": 9902,
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/subtype-consumers/perl.pl.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/subtype-consumers/perl.pl",
+      "bytes": 3749,
+      "sha256": "8939a772789f50bd51d0400ef5c4f92e8f817ed2a9396ebf7fb694acd4ab2646"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/fin-container-consumers/perl.pl.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/fin-container-consumers/perl.pl",
+      "bytes": 4514,
+      "sha256": "7851aed00c573e8c2e019a64f052540329c7cf9026a03895e3a2250142499649"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/LICENSE.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-subtype/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/lakefile.toml.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-subtype/lakefile.toml",
+      "bytes": 67,
+      "sha256": "7cc9357b8eaa2dc868fed6c1ac4c44499eb29ccfe26016e6ed6361e88b5429ba"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/lean-toolchain.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-subtype/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/package.json.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-subtype/package.json",
+      "bytes": 54,
+      "sha256": "db736971b2c14dc3aa16fc7113d32fd28f89a2abba58f601ece3613d87ffd2ee"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-subtype/Subtypes.lean.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-subtype/Subtypes.lean",
+      "bytes": 2276,
+      "sha256": "bc6065620ea7ba38b270362ae7aa93feb68e8e316b4c0fca196477f62103175c"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/LICENSE.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/lakefile.toml.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/lakefile.toml",
+      "bytes": 77,
+      "sha256": "c6846d4ad1a6d03a46227896f0a40b9fd07e367c168e2c9e51876ba6b4c8d8cc"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/lean-toolchain.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/package.json.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/package.json",
+      "bytes": 59,
+      "sha256": "b413a6e8f579fe18b487297b33ddaeabd2a44861a55e8ce85ecb0d398e7cc0bf"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/native-fin-containers/FinContainers.lean.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/native-fin-containers/FinContainers.lean",
+      "bytes": 1562,
+      "sha256": "f10a680c805bac2f8357b488c41d6f805cd394a9286e28bdcc7c356cedb014be"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/LICENSE.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/perl-refinements/LICENSE",
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/lakefile.toml.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/perl-refinements/lakefile.toml",
+      "bytes": 82,
+      "sha256": "7d08345133267305b07f7f2b0344955370d82195581ed868a74ed1ef997ab8de"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/lean-toolchain.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/perl-refinements/lean-toolchain",
+      "bytes": 25,
+      "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/package.json.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/perl-refinements/package.json",
+      "bytes": 62,
+      "sha256": "ec94f422bde7ba3edf897834f27df58385c9fb12b1bb39edf10caf06c76f5e8c"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/fixtures/onboarding/perl-refinements/PerlRefinements.lean.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/fixtures/onboarding/perl-refinements/PerlRefinements.lean",
+      "bytes": 1399,
+      "sha256": "cbb6f11a726fa269d5283c81dcce2a2519a00d5e8cd19dd597d1dd8204f411c2"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/src/backends/perl/generate.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/backends/perl/generate.mjs",
+      "bytes": 40059,
+      "sha256": "c7ad599484f0afaf3d7f46886635ac7f203d2653a62a36ff46a540ffb4e6af5d"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/src/release/cpan-install.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/release/cpan-install.mjs",
+      "bytes": 1923,
+      "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/src/release/cpan-package.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/release/cpan-package.mjs",
+      "bytes": 20458,
+      "sha256": "304934221a88450709aab2a49d189444215fa4119e0f8473cb5f13c68cd149f9"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/src/build/process-runner.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:src/build/process-runner.mjs",
+      "bytes": 2668,
+      "sha256": "f1c9d51f97abdbb1fcf0ff04ee5e70b20ffce770ffe6ca7a843d7e35877fdf36"
+    },
+    {
+      "path": "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/perl-relocated-consumer.mjs.source",
+      "originalPath": "git:93c60a0487d0b2acc0b6d562cd72a3876738a666:tests/helpers/perl-relocated-consumer.mjs",
+      "bytes": 2306,
+      "sha256": "9c9d10cafe51d829958d825defed98344fda692e4002b71c9863109d644c6acb"
+    }
+  ]
+}

@@ -1,22 +1,23 @@
 /**
- * Preserve exact predecessors when measuring public C++ scalar Fin entries.
+ * Preserve exact predecessors when measuring public relocated Perl refinement acceptance.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforePerlRelocatedPromotionSource } from "./perl-relocated-promotion-source-history.mjs";
 
-export const cppFinDispatchIntegrationHistoryPath = "docs/evidence/cpp-fin-dispatch-integration-source-history-20261009.json";
-export const cppFinDispatchIntegrationPredecessor = "8e627ded0b646c514d8d8ec7c6fc16416c812adb";
-export const cppFinDispatchIntegrationChangedPaths = [
+export const perlRelocatedPromotionHistoryPath = "docs/evidence/perl-relocated-promotion-source-history-20261009.json";
+export const perlRelocatedPromotionPredecessor = "d6070cb130f63034b0d1a894d5cceebab7fce0a1";
+export const perlRelocatedPromotionChangedPaths = [
 	"docs/type-surface.v1.json"
-	, "tests/native-fin.test.mjs"
-	, "tests/helpers/reviewed-fin-refusal-ci-source-history.mjs"
-	, "tests/helpers/reviewed-fin-refusal-ci-tests.mjs"
+	, ".gitattributes"
+	, "src/adoption/test-profiles.mjs"
+	, "docs/consume/perl.md"
+	, "tests/type-surface.test.mjs"
+	, "tests/helpers/cpp-fin-dispatch-integration-source-history.mjs"
+	, "tests/helpers/cpp-fin-dispatch-integration-tests.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
-	, "tests/reviewed-fin-refusal-history.test.mjs"
 ];
 let history;
 
@@ -26,8 +27,8 @@ let history;
  * @param source - Complete current source text.
  * @param update - Exact recorded transition.
  */
-export const reverseCppFinDispatchIntegrationUpdate = (source, update) => {
-	assert.ok(cppFinDispatchIntegrationChangedPaths.includes(update.path));
+export const reversePerlRelocatedPromotionUpdate = (source, update) => {
+	assert.ok(perlRelocatedPromotionChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let cursor = 0; const parts = [];
@@ -47,18 +48,17 @@ export const reverseCppFinDispatchIntegrationUpdate = (source, update) => {
 };
 
 /**
- * Restore the source before C++ entry-counter integration, stopping at an explicitly requested identity.
+ * Restore the source before Perl refinement promotion, stopping at an explicitly requested identity.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or historical source text.
  * @param expected - Optional exact stopping digest.
  */
-export const beforeCppFinDispatchIntegrationSource = (path, source, expected) => {
-	source = beforePerlRelocatedPromotionSource(path, source, expected);
-	if(typeof source !== "string" || !cppFinDispatchIntegrationChangedPaths.includes(path)) return source;
+export const beforePerlRelocatedPromotionSource = (path, source, expected) => {
+	if(typeof source !== "string" || !perlRelocatedPromotionChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
-	const record = history ??= JSON.parse(readFileSync(cppFinDispatchIntegrationHistoryPath, "utf8"));
+	const record = history ??= JSON.parse(readFileSync(perlRelocatedPromotionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reverseCppFinDispatchIntegrationUpdate(source, update) : source;
+	return update?.currentSha256 === digest ? reversePerlRelocatedPromotionUpdate(source, update) : source;
 };

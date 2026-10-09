@@ -495,17 +495,23 @@ test("checked Subtype evidence promotes only top-level parameters and results", 
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const ordinary = installed.filter(cell => cell.path === "ordinary-source");
 	const reviewed = installed.filter(cell => cell.path === "reviewed-ir");
-	// Ordinary Node, ten native profiles and three browsers; reviewed C/C++ and Node.
+	// Ordinary Node, ten earlier native profiles, Perl and three browsers; reviewed C/C++ and Node.
 	const native = ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 	const browser = ["browser-javascript", "browser-react", "browser-worker"];
-	assert.equal(ordinary.length, 2 * (2 + native.length + browser.length));
+	assert.equal(ordinary.length, 2 * (2 + native.length + 1 + browser.length));
 	assert.equal(reviewed.length, 8);
 	assert.equal(installed.length, ordinary.length + reviewed.length);
-	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, ...browser].sort());
+	assert.deepEqual([...new Set(installed.map(cell => cell.profile))].sort(), ["node-javascript", "node-typescript", ...native, "perl", ...browser].sort());
 	assert.deepEqual([...new Set(installed.map(cell => cell.position))], ["parameter", "result"]);
 	for(const cell of ordinary)
 	{
 		assert.equal(cell.path, "ordinary-source");
+		if(cell.profile === "perl")
+		{
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-relocated-subtype-hosted-installed", "perl-relocated-supplemental-hosted-installed"]);
+			assert.equal(cell.hostType, cell.position === "parameter" ? "Primitive base value checked by the named Lean constructor" : "Constructed subtype projected to its primitive base value");
+			continue;
+		}
 		if(native.includes(cell.profile))
 		{
 			assert.match(cell.stages.installedExecution.evidence[0], /^native-subtype-[a-z-]+-installed$/u);

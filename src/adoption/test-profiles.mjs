@@ -201,6 +201,8 @@ const profileManifest = Object.freeze({
 		, "php-nix-boundary-repair-evidence"
 		, "generic-record-npm-hosted-evidence"
 		, "perl-refinement-hosted-evidence"
+		, "perl-relocated-hosted-evidence"
+		, "perl-relocated-promotion"
 		, "php-fin-dispatch-evidence"
 		, "wit-fin-dispatch-evidence"
 		, "ruby-fin-dispatch-evidence"
