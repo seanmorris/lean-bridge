@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforePerlXsBudgetSource } from "./perl-xs-budget-source-history.mjs";
 
 export const inheritedRecordArchiveHistoryPath = "docs/evidence/inherited-record-archive-source-history-20261008.json";
 export const inheritedRecordArchivePredecessor = "237b9cec854ef74f0643f33f97864738e98803df";
@@ -57,6 +58,7 @@ export const reverseInheritedRecordArchiveUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeInheritedRecordArchiveSource = (path, source, expected) => {
+	source = beforePerlXsBudgetSource(path, source, expected);
 	if(typeof source !== "string" || !registered(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

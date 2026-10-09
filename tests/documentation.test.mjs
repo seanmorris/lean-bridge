@@ -10,6 +10,7 @@ import { dirname, resolve } from "node:path";
 import test from "node:test";
 import "./helpers/node-consumer-budget-ci-tests.mjs";
 import "./helpers/node-consumer-budget-source-history-tests.mjs";
+import "./helpers/perl-xs-budget-source-history-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
@@ -622,6 +623,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal([...toolchainBootstrap.matchAll(/download_archive "\$(?:ELAN|WASM_TOOLS|WABT)_URL"/gu)].length, 3);
   assert.match(toolchainBootstrap, /local partial="\$destination\.part"/);
   assert.match(toolchainBootstrap, /mv "\$partial" "\$destination"/);
+  // Each Perl ABI runs the installed Compare and Verify chain in one job; 120 minutes was exhausted.
+  const perlJob = perlWorkflow.split("  perl:\n")[1].split("\n  perl-receivers:\n")[0];
+  assert.match(perlJob, /^ {4}timeout-minutes: 180$/m);
+  for(const step of ["Compare installed Perl corpus packages with fresh Lean results", "Verify owned Perl values and installed CPAN archives"])
+  {
+    const body = perlJob.split(`      - name: ${step}\n`)[1]?.split("      - name:")[0];
+    assert.ok(body, step);
+    assert.doesNotMatch(body, /timeout-minutes|continue-on-error|^ {8}if:/mu, step);
+  }
   const nodeJob = workflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
   assert.match(nodeJob, /^ {4}timeout-minutes: 330$/m);
   assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);

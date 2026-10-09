@@ -119,7 +119,7 @@ test("CI requires recursive C# installs and preserves the complete per-ABI Perl 
 	const perl = (await readFile(".github/workflows/perl-consumer.yml", "utf8")).split("  perl:\n")[1].split("\n  combine:")[0];
 	const scripts = (await json("package.json")).scripts;
 	const commands = perl.replace(/^ {10}npm run test:owned-perl-transfers$/mu, scripts["test:owned-perl-transfers"]);
-	assert.match(perl, /^ {4}timeout-minutes: 120$/mu);
+	assert.match(perl, /^ {4}timeout-minutes: 180$/mu);
 	for(const name of ["recursive-callables", "structured-callables", "graph-package", "copied-graph-conversions"])
 		assert.ok(perl.includes(`tests/perl-${name}.test.mjs`));
 	for(const name of ["runtime", "values", "conversions", "xs", "scalars", "loader", "package", "coexistence", "documentation"])

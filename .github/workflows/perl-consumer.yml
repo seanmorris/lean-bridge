@@ -106,8 +106,9 @@ jobs:
   perl:
     name: Perl XS (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
-    # Copied and owned package families run sequentially on each Perl ABI.
-    timeout-minutes: 120
+    # Copied and owned package families run sequentially on each Perl ABI; the
+    # installed Compare and Verify chain alone took up to about 105 minutes.
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
