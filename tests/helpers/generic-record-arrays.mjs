@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, relative, resolve } from "node:path";
@@ -201,6 +202,47 @@ export const genericRecordArrayWit = Object.freeze([/echo-left: func\([^)]*: lef
 	, /row-total: func\(/u
 	, /row-of: func\(/u
 	, /row-box-sum: func\([^)]*: row-box\) -> /u]);
+
+/**
+ * Each exact diagnostic the Perl Array fragment asserts, with the shipped XS that raises it. These records are not
+ * recursive, so CPAN inlines them: Nat values go through the runtime's reader and the rest through the component's
+ * plain converters, not the copied-graph runtime.
+ */
+export const genericRecordArrayPerlDiagnostics = Object.freeze({ "Nat cannot be negative": ["runtime", 'croak("Nat cannot be negative")']
+	, "expected Math::BigInt": ["runtime", 'croak("expected Math::BigInt")']
+	, "Array requires a plain array reference": ["component", 'croak("Array requires a plain array reference")']
+	, ...Object.fromEntries(["NatBox", "ArrayBox", "RowBox"].map(name => `expected LeanBridge::GenericRecords::${name} with an exact class and plain untied hash`)
+		.map(message => [message, ["component", `croak("${message}")`]])) });
+
+/**
+ * The distinct diagnostics a Perl Array fragment asserts, from its case lists and direct array_raises calls.
+ *
+ * @param fragment - Perl Array fragment source.
+ */
+export const genericRecordArrayPerlMessages = fragment => [...new Set([...fragment.matchAll(/'([^']+)'\]|array_raises\('([^']+)'/gu)].map(match => match[1] ?? match[2]))].sort();
+
+/**
+ * The installed Perl run's own selection: the built model has no copied graph, and every asserted diagnostic is in
+ * the XS shipped in the runtime or component archive.
+ *
+ * @param model - Built native component model.
+ * @param handoff - Package-set handoff directory.
+ * @param packages - The handoff's CPAN packages.
+ */
+const assertPerlArrayDiagnostics = (model, handoff, packages) => {
+	assert.equal(model.copiedGraph, undefined, "GenericRecords selects the plain native model");
+	const shipped = Object.fromEntries([["runtime", "Runtime.xs"], ["component", "Component.xs"]].map(([role, name]) => {
+		const selected = packages.filter(item => item.role === role);
+		assert.equal(selected.length, 1, role);
+		const archive = join(handoff, selected[0].artifacts[0].path);
+		const members = execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n").filter(path => /^[^/]+\/[^/]+$/u.test(path) && basename(path) === name);
+		assert.equal(members.length, 1, `${role} archive ships one ${name}`);
+		return [role, execFileSync("tar", ["-xzOf", archive, members[0]], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })];
+	}));
+	assert.ok(!shipped.component.includes("lpg_"), "The component XS has no copied-graph converter");
+	assert.ok(shipped.component.includes("lbp_bigint_text(aTHX_ value, 1)"), "The component reads Nat through the runtime");
+	for(const [message, [role, site]] of Object.entries(genericRecordArrayPerlDiagnostics)) assert.ok(shipped[role].includes(site), message);
+};
 
 /**
  * Every check the composed consumer must print: the accepted specialized consumer plus the Array fragment.
@@ -423,6 +465,7 @@ export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath)
 			t.diagnostic(`installing and checking Arrays in ${profile}`);
 			const target = genericRecordTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
+			if(profile === "perl") assertPerlArrayDiagnostics(model, handoff, packages);
 			const source = await genericRecordArrayConsumer(profile);
 			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, dependencies, environment, source: () => source, wit: genericRecordArrayWit });
 			void command;
