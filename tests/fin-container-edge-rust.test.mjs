@@ -5,11 +5,13 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { copyFile, link, mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { copyFile, link, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
+import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { copiedRustLock, generateCopiedRustPackage } from "../src/backends/rust/copied-values.mjs";
 import { compileFinContainerEdgeSplitFixture, finContainerEdgeCompilerModel } from "./helpers/fin-container-edge-compiled-fixture.mjs";
 import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeWireSymbols } from "./helpers/fin-container-edge-dispatch.mjs";
@@ -17,9 +19,11 @@ import { finContainerEntryInitializer } from "./helpers/fin-container-entry-disp
 import { finContainerEdgeDefinitions } from "./helpers/fin-container-edge-observer.mjs";
 import { finContainerEdgeRustExpected, finContainerEdgeRustProbe, readFinContainerEdgeRust } from "./helpers/fin-container-edge-rust.mjs";
 import { finContainerEdgeRustInterposer } from "./helpers/fin-container-edge-rust-loader.mjs";
+import { observeFinContainerEdgeRust, verifyFinContainerEdgeRustDependencies } from "./helpers/fin-container-edge-rust-observer.mjs";
 import { finContainerEdgeConsumer } from "./helpers/fin-container-edges.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const text = rows => rows.map(([step, method, status, counts]) => `edge-rust ${step} ${method} ${status} ${counts.join(" ")}\n`).join("") + "fin-container-ok:14078\n";
 const totals = [[1001, 1003], [1001, 1003], [1001, 1003], [1003, 1003], [1003, 1004], [1003, 1010]];
@@ -79,6 +83,56 @@ test("Rust instrumentation preserves the original consumer and requires a closed
 	assert.ok(instrument.includes("equal_files(path, libraries[owner])"));
 	assert.ok(instrument.includes("RTLD_NOLOAD"));
 	assert.doesNotMatch(instrument, /\b(unlink|remove|rename)\(/u);
+});
+
+test("Rust dependency verification refuses archive, lock, manifest, source, closure and symlink drift", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-rust-dependencies-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const installed = join(root, "crate"), dependencyRoot = join(root, "vendor"), dependencyArchive = join(root, "original.tar.gz");
+	const lock = "test-only lock identity", source = "test-only dependency source", archive = "test-only archive identity";
+	const checksum = JSON.stringify({ package: sha256("test-only package"), files: { "lib.rs": sha256(source) } });
+	await saveLakeFile(installed, "Cargo.lock", lock);
+	await saveLakeFile(dependencyRoot, "example-1.0.0/lib.rs", source);
+	await saveLakeFile(dependencyRoot, "example-1.0.0/.cargo-checksum.json", checksum);
+	await saveLakeFile(root, "original.tar.gz", archive);
+	const dependencies = { sha256: sha256(archive), lockSha256: sha256(lock)
+		, packages: [{ directory: "example-1.0.0", checksum: sha256("test-only package"), files: 1, manifestSha256: sha256(checksum) }] };
+	const options = { installed, dependencyRoot, dependencyArchive, dependencies };
+	const valid = await verifyFinContainerEdgeRustDependencies(options);
+	assert.equal(valid.packageLockSha256, sha256(lock));
+	for(const [directory, path, original, message] of [
+		[root, "original.tar.gz", archive, /archive drift/u]
+		, [installed, "Cargo.lock", lock, /lock drift/u]
+		, [dependencyRoot, "example-1.0.0/.cargo-checksum.json", checksum, /checksum manifest drift/u]
+		, [dependencyRoot, "example-1.0.0/lib.rs", source, /dependency file drift/u]
+	]) {
+		await saveLakeFile(directory, path, original + "changed");
+		await assert.rejects(verifyFinContainerEdgeRustDependencies(options), message);
+		await saveLakeFile(directory, path, original);
+	}
+	for(const mutate of [
+		value => { value.packages.push(value.packages[0]); }
+		, value => { value.packages[0].directory = "../escape"; }
+		, value => { value.packages[0].checksum = sha256("wrong"); }
+		, value => { value.packages[0].files++; }
+	]) {
+		const changed = structuredClone(dependencies); mutate(changed);
+		await assert.rejects(verifyFinContainerEdgeRustDependencies({ ...options, dependencies: changed }), assert.AssertionError);
+	}
+	await saveLakeFile(dependencyRoot, "example-1.0.0/extra.rs", "unrecorded");
+	await assert.rejects(verifyFinContainerEdgeRustDependencies(options), /file set drift/u);
+	await rm(join(dependencyRoot, "example-1.0.0/extra.rs"));
+	await mkdir(join(dependencyRoot, "unexpected"));
+	await assert.rejects(verifyFinContainerEdgeRustDependencies(options), /closure changed/u);
+	await rm(join(dependencyRoot, "unexpected"), { recursive: true });
+	await rename(join(dependencyRoot, "example-1.0.0"), join(root, "outside"));
+	await symlink(join(root, "outside"), join(dependencyRoot, "example-1.0.0"));
+	await assert.rejects(verifyFinContainerEdgeRustDependencies(options), /must not be a symlink/u);
+	await rm(join(dependencyRoot, "example-1.0.0"));
+	await rename(join(root, "outside"), join(dependencyRoot, "example-1.0.0"));
+	await rename(join(dependencyRoot, "example-1.0.0/lib.rs"), join(root, "outside.rs"));
+	await symlink(join(root, "outside.rs"), join(dependencyRoot, "example-1.0.0/lib.rs"));
+	await assert.rejects(verifyFinContainerEdgeRustDependencies(options), /unsupported native artifact/u);
 });
 
 test("full Rust consumer measures actual Lean through verified extracted-and-unlinked libraries", { skip: process.env.LEAN_BRIDGE_FIN_CONTAINER_EDGE_SOURCE_TEST !== "1" }, async t => {
@@ -160,4 +214,52 @@ test("full Rust consumer measures actual Lean through verified extracted-and-unl
 		, columns, finalCounts: finContainerEdgeRustExpected.at(-1)[3]
 		, probeSha256: sha256(source), interposerSha256: sha256(instrument)
 		, stdoutSha256: sha256(observed.stdout), extractionCleanupUnchanged: true }));
+	// Exercise the deployed observer with an explicitly synthetic receipt, never an installed claim.
+	await rm(join(root, "target"), { recursive: true, force: true });
+	const bindingIrSha256 = hashBindingIr(model.bindingIr), modelPath = "lean-bridge/component/model.json";
+	const modelBytes = Buffer.from(JSON.stringify({ ...model, bindingIrSha256 }));
+	await saveLakeFile(crate, modelPath, modelBytes);
+	const files = {};
+	for(const path of await nativeArtifactPaths(crate))
+	{
+		const bytes = await readFile(join(crate, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
+	}
+	const receiptPath = "lean-bridge/package-receipt.json";
+	const receiptBytes = Buffer.from(JSON.stringify({ name: "fincontainers", version: "1.0.0", component: model.component, bindingIrSha256, files }));
+	await saveLakeFile(crate, receiptPath, receiptBytes);
+	const toolchains = { ...process.env, LEAN_BRIDGE_CARGO: cargo, LEAN_BRIDGE_RUSTC: rustc, CARGO_NET_OFFLINE: "true" };
+	const dependencies = await prepareRustCorpusDependencies({ rustRoot: crate, directory: root, handoff: join(root, "handoff"), environment: toolchains });
+	const moved = join(root, "package-moved"), dependencyRoot = join(root, "dependencies-moved");
+	await rename(crate, moved); await rename(join(root, "rust-dependencies"), dependencyRoot);
+	const options = { installed: moved, receiptPath, receiptBytes
+		, expectedModelSha256: sha256(modelBytes), dependencyRoot
+		, dependencyArchive: join(root, "handoff", dependencies.archive)
+		, dependencies
+		, environment: toolchains, probeRoot: join(root, "receipt-probe") };
+	const report = await observeFinContainerEdgeRust(options);
+	assert.equal(report.kind, "fin-container-edge-public-rust-v1");
+	assert.equal(report.profile, "rust"); assert.equal(report.observed, true);
+	assert.equal(report.checks, 14078); assert.equal(report.measuredCalls, 12038);
+	assert.deepEqual(report.observations, finContainerEdgeRustExpected);
+	assert.equal(report.stdoutSha256, sha256(observed.stdout)); assert.equal(report.probeSha256, sha256(source));
+	for(const name of ["repeatedColdProcess", "installedFilesUnchanged", "dependenciesUnchanged", "extractionCleanupUnchanged", "emptyCargoHome", "offline", "linkOnly"])
+		assert.equal(report[name], true, name);
+	assert.deepEqual(report.moduleDigests, Object.fromEntries(["Cargo.toml", "Cargo.lock", "src/lib.rs", "src/__runtime.rs", "src/assets.rs"].map(path => [path, files[path].sha256])));
+	const checkedIdentity = { libraries: Object.keys(report.libraries).map(name => join(report.libraryDirectory, name))
+		, definitions: Object.fromEntries(Object.entries(report.definitions).map(([symbol, name]) => [symbol, join(report.libraryDirectory, name)])) };
+	assert.equal(report.interposerSha256, sha256(finContainerEdgeRustInterposer(model, model.component, checkedIdentity)));
+	await assert.rejects(observeFinContainerEdgeRust(options), { code: "EEXIST" });
+	for(const directory of [moved, dependencyRoot])
+		await assert.rejects(observeFinContainerEdgeRust({ ...options, probeRoot: join(directory, "probe") }), /outside the installed package/u);
+	const original = await readFile(join(moved, "src/lib.rs"));
+	await saveLakeFile(moved, "src/lib.rs", Buffer.concat([original, Buffer.from("\n// drift\n")]));
+	await assert.rejects(observeFinContainerEdgeRust({ ...options, probeRoot: join(root, "changed-source") }), /native artifact drift/u);
+	await saveLakeFile(moved, "src/lib.rs", original);
+	t.diagnostic(JSON.stringify({ scope: "relocated source fixture with synthetic receipt, not installed-package acceptance"
+		, checks: report.checks, measuredCalls: report.measuredCalls
+		, rustcVersion: report.rustcVersion, probeSha256: report.probeSha256
+		, interposerSha256: report.interposerSha256
+		, stdoutSha256: report.stdoutSha256
+		, dependencyPackages: report.dependencies.packages.length
+		, offline: report.offline, linkOnly: report.linkOnly }));
 });

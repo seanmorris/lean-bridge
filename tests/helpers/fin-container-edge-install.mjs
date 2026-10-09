@@ -18,6 +18,7 @@ import { finContainerEdgeConsumer, finContainerEdgeRefinements, finContainerEdge
 import { observeFinContainerEdgeRaw } from "./fin-container-edge-observer.mjs";
 import { observeFinContainerEdgePublic } from "./fin-container-edge-public-observer.mjs";
 import { observeFinContainerEdgePython } from "./fin-container-edge-python-observer.mjs";
+import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -147,11 +148,13 @@ export const prepareFinContainerEdgeExecutable = async ({ profile, root, directo
  * @param options.handoff - Archive handoff directory.
  * @param options.packages - Selected verified package-set entries.
  * @param options.command - Absolute installed consumer command.
- * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python entry observation.
+ * @param options.measureDispatch - Opt in to raw adapters and full public C/C++/Python/Rust entry observation.
  * @param options.expectedModelSha256 - Producer model digest, required for raw observations.
  * @param options.leanPrefix - Matching Lean headers for the test-only raw probe.
+ * @param options.dependencies - Original Rust locked dependency handoff metadata.
+ * @param options.toolchainEnvironment - Explicit Cargo and rustc for the test-only Rust caller.
  */
-export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix }) => {
+export const repeatFinContainerEdges = async ({ profile, consumer, handoff, packages, command, measureDispatch = false, expectedModelSha256, leanPrefix, dependencies, toolchainEnvironment }) => {
 	assert.equal(typeof measureDispatch, "boolean");
 	const root = join(consumer, profile), pkg = packages.find(item => item.role === "component");
 	assert.ok(pkg);
@@ -294,7 +297,14 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		: measureDispatch && profile === "python" ? await observeFinContainerEdgePython({
 			installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 			, expectedModelSha256, command: movedCommand
-			, probeRoot: join(consumer, "python-edge-public") }) : null;
+			, probeRoot: join(consumer, "python-edge-public") })
+			: measureDispatch && profile === "rust" ? await observeFinContainerEdgeRust({
+				installed: movedInstall, receiptPath, receiptBytes: archiveBytes
+				, expectedModelSha256
+				, dependencyRoot: join(moved, "dependencies")
+				, dependencyArchive: join(consumer, "dependencies", dependencies.archive)
+				, dependencies, environment: toolchainEnvironment
+				, probeRoot: join(consumer, "rust-edge-public") }) : null;
 	return { relocatedInstallation: true
 		, repeatExecution: true
 		, installedFilesUnchanged: true
@@ -368,7 +378,8 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 			const { rawAdapterDispatch, publicHostDispatch, ...repeated } = await repeatFinContainerEdges({
 				profile, consumer, handoff, packages, command, measureDispatch
 				, expectedModelSha256: sha256(modelBytes)
-				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX });
+				, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
+				, dependencies, toolchainEnvironment: environment });
 			reports.push({ profile
 				, path: "ordinary-source"
 				, ...observation
