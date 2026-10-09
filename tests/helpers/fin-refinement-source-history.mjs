@@ -139,6 +139,7 @@ import { inheritedRecordPromotionChangedPaths } from "./inherited-record-promoti
 import { rubyGdbCiChangedPaths } from "./ruby-gdb-ci-source-history.mjs";
 import { genericNpmClosureChangedPaths } from "./generic-record-npm-closure-source-history.mjs";
 import { perlRefinementHostedChangedPaths } from "./perl-refinement-hosted-source-history.mjs";
+import { perlRelocatedConsumerChangedPaths } from "./perl-relocated-consumer-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -743,6 +744,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...rubyGdbCiChangedPaths
 	, ...genericNpmClosureChangedPaths
 	, ...perlRefinementHostedChangedPaths
+	, ...perlRelocatedConsumerChangedPaths
 ])].sort());
 
 /**

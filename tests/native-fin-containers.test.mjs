@@ -4,10 +4,12 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
+import { relocatePerlConsumer } from "./helpers/perl-relocated-consumer.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
@@ -176,12 +178,12 @@ const observeDispatch = async (consumer, packages, leanPrefix) => {
  * Count adapter and source dispatch in the installed CPAN package. Perl code cannot call the
  * typed adapter directly, so the direct-adapter column is observed in the C package probe.
  *
- * @param consumer - Consumer root containing the installed CPAN package.
+ * @param installed - The moved installed CPAN consumer tree.
  * @param command - Selected Perl interpreter.
  * @param adapters - Adapter symbol per Lean declaration, from the build's native model.
  */
-const observePerlDispatch = async (consumer, command, adapters) => {
-	const installed = join(consumer, "perl"), library = join(installed, "installed/lib/perl5");
+const observePerlDispatch = async (installed, command, adapters) => {
+	const library = join(installed, "installed/lib/perl5");
 	await saveLakeFile(installed, "interposer.c", perlContainerInterposer(adapters));
 	await runCopied("/usr/bin/cc", ["-std=gnu11", "-Wall", "-Wextra", "-Werror", "-Wno-strict-prototypes", "-shared", "-fPIC", "interposer.c", "-o", "libdispatch.so"], installed
 		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
@@ -256,9 +258,11 @@ const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 			const target = finContainerTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
 			const { command, ...observation } = await installFinContainerConsumer({ profile, consumer, handoff, packages, dependencies, environment });
+			// The installed CPAN tree moves after its first full run; the unchanged consumer reruns there and the counters run in it.
+			const moved = profile === "perl" ? await relocatePerlConsumer({ root: join(consumer, "perl"), command, success: "fin-container-ok", checks: observation.checks }) : null;
 			// The interpreter path is machine-specific; the report keeps portable facts only.
 			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX)
-				: profile === "perl" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
+				: profile === "perl" ? await observePerlDispatch(moved.installed, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))
 					: ["python", "rust"].includes(profile) ? await observeFinContainerHostDispatch({ profile, consumer, command, packages, environment })
 						: { observed: false, reason: "counted in the C package, whose adapter this host's bundled library shares" };
 			reports.push({ profile, path: reviewed ? "reviewed-ir" : "ordinary-source"
@@ -271,8 +275,10 @@ const checkInstalledFinContainers = async (t, profiles, reviewed = false) => {
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
 				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
-				, sourceRemovedBeforeInstallation: true });
-			await rm(join(consumer, profile), { recursive: true, force: true });
+				, sourceRemovedBeforeInstallation: true
+				, ...moved ? { relocatedInstallation: moved.relocatedInstallation, repeatExecution: moved.repeatExecution } : {} });
+			if(moved) assert.equal(existsSync(join(consumer, "perl")), false, "the counters ran without the old tree");
+			await rm(moved?.installed ?? join(consumer, profile), { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
 	}

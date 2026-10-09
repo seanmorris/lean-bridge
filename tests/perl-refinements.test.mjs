@@ -8,6 +8,9 @@ import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { relocatePerlConsumer } from "./helpers/perl-relocated-consumer.mjs";
+import "./helpers/perl-relocated-consumer-tests.mjs";
+import "./helpers/perl-relocated-consumer-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
@@ -163,9 +166,8 @@ test("relocated source-free CPAN packages check an unboxed word subtype and nest
 			const root = join(consumerRoot, `abi-${index}`);
 			const selected = { ...environment, LEAN_BRIDGE_CORPUS_PERL: perl };
 			const { command, ...observation } = await installCopiedConsumer({ profile: "perl", consumer: root, handoff, packages: receipt.packages, environment: selected, fixture: { source: consumer, success: "perl-refinements-ok" } });
-			const installed = join(root, "perl"), library = join(installed, "installed/lib/perl5");
-			const repeated = await runCopied(command, ["consumer.pl"], installed, { ...copiedCleanEnvironment, PERL5LIB: library });
-			assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout.trim(), `perl-refinements-ok:${observation.checks}`);
+			// The installed tree moves after its first full run, and the unchanged consumer reruns there.
+			const moved = await relocatePerlConsumer({ root: join(root, "perl"), command, success: "perl-refinements-ok", checks: observation.checks });
 			const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
 			reports.push({ profile: "perl", perl, path: "ordinary-source"
 				, ...observation
@@ -175,7 +177,9 @@ test("relocated source-free CPAN packages check an unboxed word subtype and nest
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
 				, receiptSha256
-				, sourceRemovedBeforeInstallation: true, repeatExecution: true });
+				, sourceRemovedBeforeInstallation: true
+				, relocatedInstallation: moved.relocatedInstallation
+				, repeatExecution: moved.repeatExecution });
 		}
 		await rm(consumerRoot, { recursive: true, force: true });
 	}

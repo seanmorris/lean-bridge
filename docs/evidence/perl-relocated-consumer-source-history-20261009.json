@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-relocated-consumer-v1",
+  "predecessorCommit": "42b66380f0e0c145e4e9b05db4f7db628ee18722",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "cf5b66b45c9662bd03adf766bfc3a0c8dd180657ac3e5d47bdf087898442b79a",
+      "previousSha256": "c90df66496eb2550612d480497dee462d1d5fca5aa4d0604179599a3f67c7923",
+      "edits": [
+        {
+          "start": 29346,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 40326,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 44483,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1519196,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1523207,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1526713,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1530589,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1534068,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1537552,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1541040,
+          "previous": "          \"sha256\": \"e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700\"\n",
+          "current": "          \"sha256\": \"7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5\"\n"
+        },
+        {
+          "start": 1545219,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1549351,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1552995,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1556991,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1560608,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1564230,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        },
+        {
+          "start": 1567856,
+          "previous": "          \"sha256\": \"d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85\"\n",
+          "current": "          \"sha256\": \"7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "874aba1f7e8bf57ad8ee19d6c7b78a861c8d2c2294cf2689bff56cdb1f8a65dc",
+      "previousSha256": "91818f5f9ea4986606fa806f712a31d65f36da3985f15708e59504ff98661544",
+      "edits": [
+        {
+          "start": 12629,
+          "previous": "",
+          "current": "import { perlRelocatedConsumerChangedPaths } from \"./perl-relocated-consumer-source-history.mjs\";\n"
+        },
+        {
+          "start": 50912,
+          "previous": "",
+          "current": "\t, ...perlRelocatedConsumerChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinement-hosted-source-history.mjs",
+      "currentSha256": "101f9c9fe34cb82081cd3f3bc45ba5789ca4e5be667194d6492dcb2f01a029bd",
+      "previousSha256": "ae776afd88a60bc6238803924f13b3f7701192428114ba2a6822a86127a51cd8",
+      "edits": [
+        {
+          "start": 244,
+          "previous": "",
+          "current": "import { beforePerlRelocatedConsumerSource } from \"./perl-relocated-consumer-source-history.mjs\";\n"
+        },
+        {
+          "start": 2343,
+          "previous": "",
+          "current": "\tsource = beforePerlRelocatedConsumerSource(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-refinement-hosted-source-history-tests.mjs",
+      "currentSha256": "a38d3ce9c7535b59cd33106c4970802d38aa3d0566458fd6a2e241cb8e7c9796",
+      "previousSha256": "e2b5dcb37995d9a1faecc464ede5ac01e1aabcd0bb6820c7367a5f3deb869dc0",
+      "edits": [
+        {
+          "start": 530,
+          "previous": "",
+          "current": "import { beforePerlRelocatedConsumerSource } from \"./perl-relocated-consumer-source-history.mjs\";\n"
+        },
+        {
+          "start": 1357,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = reversePerlRefinementHostedUpdate(source, update);\n",
+          "current": "\t\tconst source = beforePerlRelocatedConsumerSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePerlRefinementHostedUpdate(source, update);\n"
+        },
+        {
+          "start": 2645,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = beforePerlRelocatedConsumerSource(path, await readFile(path, \"utf8\"));\n"
+        },
+        {
+          "start": 3219,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(file.path)), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(beforePerlRelocatedConsumerSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "currentSha256": "7080d24a49f84f8a1e5abd3f51946243e75eb41539ef6ebdf3a33bdcc40b44c5",
+      "previousSha256": "e3b35feb66f7c05742913a499e8bc5aeb62069d7448ec008bcf76980e8d2b700",
+      "edits": [
+        {
+          "start": 152,
+          "previous": "",
+          "current": "import { existsSync } from \"node:fs\";\n"
+        },
+        {
+          "start": 376,
+          "previous": "",
+          "current": "import { relocatePerlConsumer } from \"./helpers/perl-relocated-consumer.mjs\";\n"
+        },
+        {
+          "start": 14664,
+          "previous": " * @param consumer - Consumer root containing the installed CPAN package.\n",
+          "current": " * @param installed - The moved installed CPAN consumer tree.\n"
+        },
+        {
+          "start": 14866,
+          "previous": "const observePerlDispatch = async (consumer, command, adapters) => {\n\tconst installed = join(consumer, \"perl\"), library = join(installed, \"installed/lib/perl5\");\n",
+          "current": "const observePerlDispatch = async (installed, command, adapters) => {\n\tconst library = join(installed, \"installed/lib/perl5\");\n"
+        },
+        {
+          "start": 20112,
+          "previous": "",
+          "current": "\t\t\t// The installed CPAN tree moves after its first full run; the unchanged consumer reruns there and the counters run in it.\n\t\t\tconst moved = profile === \"perl\" ? await relocatePerlConsumer({ root: join(consumer, \"perl\"), command, success: \"fin-container-ok\", checks: observation.checks }) : null;\n"
+        },
+        {
+          "start": 20614,
+          "previous": "\t\t\t\t: profile === \"perl\" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))\n",
+          "current": "\t\t\t\t: profile === \"perl\" ? await observePerlDispatch(moved.installed, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))\n"
+        },
+        {
+          "start": 21539,
+          "previous": "\t\t\t\t, sourceRemovedBeforeInstallation: true });\n\t\t\tawait rm(join(consumer, profile), { recursive: true, force: true });\n",
+          "current": "\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t\t, ...moved ? { relocatedInstallation: moved.relocatedInstallation, repeatExecution: moved.repeatExecution } : {} });\n\t\t\tif(moved) assert.equal(existsSync(join(consumer, \"perl\")), false, \"the counters ran without the old tree\");\n\t\t\tawait rm(moved?.installed ?? join(consumer, profile), { recursive: true, force: true });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-subtype.test.mjs",
+      "currentSha256": "7ac742bb132fb94eac76c16ea487436584a62f1e00c4c66dd6a4a8446a5b7f87",
+      "previousSha256": "d3a403209f9bfcef0dcf93f489a44c3e854b3b95f63304683f74a3df34555a85",
+      "edits": [
+        {
+          "start": 159,
+          "previous": "",
+          "current": "import { existsSync } from \"node:fs\";\n"
+        },
+        {
+          "start": 383,
+          "previous": "",
+          "current": "import { relocatePerlConsumer } from \"./helpers/perl-relocated-consumer.mjs\";\n"
+        },
+        {
+          "start": 15092,
+          "previous": " * @param consumer - Consumer root containing the installed CPAN package.\n",
+          "current": " * @param installed - The moved installed CPAN consumer tree.\n"
+        },
+        {
+          "start": 15294,
+          "previous": "const observePerlDispatch = async (consumer, command, adapters) => {\n\tconst installed = join(consumer, \"perl\"), library = join(installed, \"installed/lib/perl5\");\n",
+          "current": "const observePerlDispatch = async (installed, command, adapters) => {\n\tconst library = join(installed, \"installed/lib/perl5\");\n"
+        },
+        {
+          "start": 20411,
+          "previous": "",
+          "current": "\t\t\t// The installed CPAN tree moves after its first full run; the unchanged consumer reruns there and the counters run in it.\n\t\t\tconst moved = profile === \"perl\" ? await relocatePerlConsumer({ root: join(consumer, \"perl\"), command, success: \"subtype-ok\", checks: observation.checks }) : null;\n"
+        },
+        {
+          "start": 20907,
+          "previous": "\t\t\t\t: profile === \"perl\" ? await observePerlDispatch(consumer, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))\n",
+          "current": "\t\t\t\t: profile === \"perl\" ? await observePerlDispatch(moved.installed, command, Object.fromEntries(model.exports.map(item => [item.name, item.symbol])))\n"
+        },
+        {
+          "start": 21561,
+          "previous": "\t\t\t\t, sourceRemovedBeforeInstallation: true });\n\t\t\tawait rm(join(consumer, profile), { recursive: true, force: true });\n",
+          "current": "\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t\t, ...moved ? { relocatedInstallation: moved.relocatedInstallation, repeatExecution: moved.repeatExecution } : {} });\n\t\t\tif(moved) assert.equal(existsSync(join(consumer, \"perl\")), false, \"the counters ran without the old tree\");\n\t\t\tawait rm(moved?.installed ?? join(consumer, profile), { recursive: true, force: true });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-refinements.test.mjs",
+      "currentSha256": "9b80aea3ebe91bb201c690ee2aebc325320cbfbfcb60146b23dd28317b8a6c45",
+      "previousSha256": "a4c95ebbc175a3e1f687b2f49bc13c930bece97988bcc129e4501ed5cea22e5b",
+      "edits": [
+        {
+          "start": 334,
+          "previous": "",
+          "current": "import { relocatePerlConsumer } from \"./helpers/perl-relocated-consumer.mjs\";\nimport \"./helpers/perl-relocated-consumer-tests.mjs\";\nimport \"./helpers/perl-relocated-consumer-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 13114,
+          "previous": "\t\t\tconst installed = join(root, \"perl\"), library = join(installed, \"installed/lib/perl5\");\n\t\t\tconst repeated = await runCopied(command, [\"consumer.pl\"], installed, { ...copiedCleanEnvironment, PERL5LIB: library });\n\t\t\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout.trim(), `perl-refinements-ok:${observation.checks}`);\n",
+          "current": "\t\t\t// The installed tree moves after its first full run, and the unchanged consumer reruns there.\n\t\t\tconst moved = await relocatePerlConsumer({ root: join(root, \"perl\"), command, success: \"perl-refinements-ok\", checks: observation.checks });\n"
+        },
+        {
+          "start": 13787,
+          "previous": "\t\t\t\t, sourceRemovedBeforeInstallation: true, repeatExecution: true });\n",
+          "current": "\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t\t, relocatedInstallation: moved.relocatedInstallation\n\t\t\t\t, repeatExecution: moved.repeatExecution });\n"
+        }
+      ]
+    }
+  ]
+}
