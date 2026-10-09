@@ -13,11 +13,12 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeWasmEntryControlsSource } from "./helpers/wasm-entry-controls-source-history.mjs";
 import { assertHostedContainerInventory, assertHostedContainerReferences, hostedContainerCounterScope, hostedContainerObservationIds, hostedContainerReferences, hostedContainerSelectionIds, supplementHostedContainerInventory } from "./helpers/hosted-container-inventory.mjs";
 import { beforeHostedContainerInventorySource, hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "./helpers/hosted-container-inventory-source-history.mjs";
 
 const snapshot = async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeWasmEntryControlsSource(path, await readFile(path, "utf8"));
 	return { current: JSON.parse(source)
 		, previous: JSON.parse(beforeHostedContainerInventorySource(path, source))
 		, history: JSON.parse(await readFile(hostedContainerInventoryHistoryPath))
@@ -31,7 +32,7 @@ test("hosted container inventory authenticates exact predecessors and refuses un
 	assert.deepEqual(record.updates.map(update => update.path), hostedContainerInventoryChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseHostedContainerInventoryUpdate(source, update);
+		const source = beforeWasmEntryControlsSource(update.path, await readFile(update.path, "utf8")), previous = reverseHostedContainerInventoryUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeHostedContainerInventorySource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -72,7 +73,7 @@ test("hosted container inventory supplements exactly four existing observations 
 	const { document: unused, ...contracts } = await readTypeSurface(); void unused;
 	const states = inventory => typeSurfaceCells(inventory, contracts).map(cell => [cell.id, Object.fromEntries(Object.entries(cell.stages).map(([key, value]) => [key, value.state]))]);
 	assert.deepEqual(states(current), states(previous));
-	for(const evidence of current.evidence) for(const file of evidence.files)
+	for(const evidence of JSON.parse(await readFile("docs/type-surface.v1.json")).evidence) for(const file of evidence.files)
 		assert.equal(sha256(await readFile(file.path)), file.sha256, file.path);
 	assert.equal(classifyRepositoryTest("tests/hosted-container-inventory.test.mjs"), "contract");
 });

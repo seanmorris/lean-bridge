@@ -217,6 +217,8 @@ const profileManifest = Object.freeze({
 		, "hosted-container-inventory"
 		, "fin-entry-integration"
 		, "wasm-frame-entry-observer"
+		, "reviewed-fin-wasm-entry-controls"
+		, "wasm-entry-controls-history"
 		, "fin-scalar-dispatch-inventory"
 		, "reviewed-fin-refusal-history"
 		, "perl-contract-repair-evidence"
