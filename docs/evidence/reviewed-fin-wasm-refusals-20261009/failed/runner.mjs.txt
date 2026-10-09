@@ -1,0 +1,107 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync, spawn } from "node:child_process";
+import { closeSync, mkdirSync, openSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const cwd = "/app/build/worktrees/reviewed-wasm-refusal-vo1438";
+const revision = "d5a61df812a10d4cf22077048e7fa582af35accd";
+const output = "/app/build/vo1438-wasm-refusals-d5a61df";
+const sha = bytes => createHash("sha256").update(bytes).digest("hex");
+const git = args => execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 }).trim();
+const clean = () => {
+  assert.equal(git(["rev-parse", "HEAD"]), revision);
+  assert.equal(git(["status", "--porcelain", "--untracked-files=no"]), "");
+};
+const freeMiB = () => { const disk = statfsSync(cwd); return Math.floor(disk.bavail * disk.bsize / 1024 ** 2); };
+clean();
+assert.ok(freeMiB() >= 2048, "Need at least 2 GiB available before compiling");
+mkdirSync(output);
+const paths = [
+  "tests/generic-records.test.mjs",
+  "tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+  "tests/helpers/reviewed-fin-wasm-mismatches.mjs",
+  "tests/helpers/reviewed-fin-wasm-install.mjs",
+  "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+  "tests/helpers/reviewed-fin-wasm-typescript.mjs",
+  "tests/helpers/reviewed-fin-wasm-browser.mjs",
+  "tests/helpers/refinement-engine.mjs",
+  "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+  "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+  "src/analyze/reviewed-source.mjs",
+  "src/build/lake-entry-engine.mjs",
+  "src/build/component-engine.mjs"
+];
+const sources = Object.fromEntries(paths.map(path => {
+  const current = readFileSync(join(cwd, path));
+  const committed = execFileSync("git", ["show", `${revision}:${path}`], { cwd, maxBuffer: 16 * 1024 * 1024 });
+  assert.ok(current.equals(committed), path);
+  return [path, sha(current)];
+}));
+const lean = "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2";
+const selectedEnvironment = {
+  NO_COLOR: "1", LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST: "1",
+  LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST: "1",
+  LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: "chromium,firefox,webkit",
+  LEAN_BRIDGE_REVIEWED_FIN_WASM_REPORT_DIR: output,
+  LEAN_BRIDGE_LAKE_RUNTIME_ROOT: "/app/build/lean-link-spike/lazy",
+  PLAYWRIGHT_BROWSERS_PATH: "/app/.toolchains/playwright",
+  LEAN_BRIDGE_LEAN: join(lean, "bin/lean"),
+  LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1"
+};
+const environment = { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("LEAN_BRIDGE_") && key !== "FORCE_COLOR")), ...selectedEnvironment };
+const args = ["-c", "3", process.execPath, "--test", "--test-concurrency=1", "--test-reporter=tap", "--test-name-pattern=^independently reviewed (scalar|structural) Fin runs in source-free installed npm packages$", "tests/generic-records.test.mjs"];
+const startedAt = new Date().toISOString();
+const queue = { revision, tree: git(["rev-parse", "HEAD^{tree}"]), cwd, startedAt, sources,
+  runnerSha256: sha(readFileSync(import.meta.filename)), command: ["/usr/bin/taskset", ...args],
+  environment: selectedEnvironment, unset: ["FORCE_COLOR", "other LEAN_BRIDGE_* variables"],
+  node: process.version, lean: execFileSync(join(lean, "bin/lean"), ["--version"], { encoding: "utf8" }).trim(),
+  glibc: execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim(),
+  freeMiB: freeMiB(), stopFloorMiB: 1024, scope: "Local in-process real Lean/Wasm compiler, installed Node JS/TS and three browser engines; not locked Nix or hosted acceptance" };
+writeFileSync(join(output, "queue.json"), JSON.stringify(queue, null, 2) + "\n", { flag: "wx" });
+const log = openSync(join(output, "run.tap"), "wx");
+let minimumFreeMiB = queue.freeMiB, stoppedForDisk = false, escalation;
+const child = spawn("/usr/bin/taskset", args, { cwd, env: environment, detached: true, stdio: ["ignore", log, log] });
+console.log(JSON.stringify({ startedAt, pid: child.pid, revision, freeMiB: minimumFreeMiB, output }));
+const monitor = setInterval(() => {
+  minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+  if (minimumFreeMiB < 1024 && !stoppedForDisk) {
+    stoppedForDisk = true;
+    process.kill(-child.pid, "SIGTERM");
+    escalation = setTimeout(() => { try { process.kill(-child.pid, "SIGKILL"); } catch {} }, 10000);
+  }
+}, 5000);
+const result = await new Promise(resolve => {
+  child.once("error", error => resolve({ code: null, signal: null, error: error.message }));
+  child.once("close", (code, signal) => resolve({ code, signal }));
+});
+clearInterval(monitor); clearTimeout(escalation); closeSync(log);
+minimumFreeMiB = Math.min(minimumFreeMiB, freeMiB());
+const end = { ...result, stoppedForDisk, minimumFreeMiB, endedAt: new Date().toISOString(), tapSha256: sha(readFileSync(join(output, "run.tap"))) };
+writeFileSync(join(output, "end.json"), JSON.stringify(end, null, 2) + "\n", { flag: "wx" });
+console.log(JSON.stringify(end));
+clean();
+assert.equal(stoppedForDisk, false);
+assert.equal(result.code, 0);
+for (const [selection, expected] of [["scalar", 10], ["structural", 8]]) {
+  const bytes = readFileSync(join(output, `reviewed-${selection}.json`)), report = JSON.parse(bytes);
+  assert.equal(report.path, "reviewed-ir"); assert.equal(report.selection, selection);
+  assert.equal(report.privateAbi, selection === "scalar" ? 2 : 6);
+  for (const flag of ["reproducible", "sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreePath"]) assert.equal(report[flag], true);
+  assert.equal(report.independentBuilds, 2); assert.equal(report.mismatches.length, expected);
+  for (const item of report.mismatches) {
+    assert.equal(item.code, "reviewed-ir-source-mismatch"); assert.equal(item.outputAbsent, true);
+    assert.match(item.expectedField, /source\.extensions\.lean-lang\.org\/refinements/u);
+    assert.equal(typeof item.fieldObserved, "boolean");
+  }
+  assert.deepEqual(report.executions.map(item => item.profile), ["node-javascript", "node-typescript"]);
+  assert.equal(report.browser.length, 3);
+  assert.deepEqual(report.browser.map(item => item.profile), ["browser-javascript", "browser-react", "browser-worker"]);
+  for (const item of report.browser) {
+    assert.deepEqual(item.browser.requestedEngines, ["chromium", "firefox", "webkit"]);
+    assert.deepEqual([...new Set(item.browser.executions.map(execution => execution.engine))], ["chromium", "firefox", "webkit"]);
+    assert.equal(item.browser.installedSourcesRemoved, true);
+    assert.equal(item.browser.externalNetworkBlocked, true);
+  }
+  console.log(JSON.stringify({ selection, mismatches: expected, sha256: sha(bytes) }));
+}

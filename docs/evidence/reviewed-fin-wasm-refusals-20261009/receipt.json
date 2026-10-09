@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "kind": "reviewed-fin-wasm-fresh-lean-refusals",
+  "revision": "d5a61df812a10d4cf22077048e7fa582af35accd",
+  "scope": {
+    "selections": [
+      "scalar",
+      "structural"
+    ],
+    "privateAbis": [
+      2,
+      6
+    ],
+    "matchingBuilds": 4,
+    "refusedReviews": 18,
+    "mismatchFieldsObserved": true,
+    "nodeExecutions": 4,
+    "browserExecutions": 24,
+    "localGlibc": "2.36",
+    "hostedCi": false,
+    "lockedNix": false,
+    "entryCounterEvidence": false,
+    "failedAttempts": 1,
+    "failure": "shared-runtime-headers-unavailable",
+    "sourceIdentity": "Selected producer sources, not a complete dependency closure",
+    "runtimeIdentity": "Recorded header/runtime hashes, not archived runtime binaries"
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/failed/queue.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df/queue.json",
+      "sha256": "c01f47c993440a526e639b0303bd1ac3e7adc347827e916943ccdf9d03110eab",
+      "bytes": 3197
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/failed/end.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df/end.json",
+      "sha256": "64af97084a57d04c89d1bee87bfe5493b4f6483e5e196a85f2ca741dd4676a5c",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/failed/run.tap",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df/run.tap",
+      "sha256": "e14bb1de43eb6bac5b34416b6f82d70a0ed12f74500c59dbacc3a0507ec4b057",
+      "bytes": 4720
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/failed/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-wasm-refusals-d5a61df.mjs",
+      "sha256": "3e590b2d2c409dad92876f81e726d6f74ce4a8b05250698c4d84897d0c435c44",
+      "bytes": 6715
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/queue.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df-r2/queue.json",
+      "sha256": "32b12b8796335f52ba58103a58f6a3eeb557eefd795a184265b56d3d30499133",
+      "bytes": 4114
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/end.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df-r2/end.json",
+      "sha256": "2cbb8f1535ceba488385639dee6698e826383dccf7879cf2006f5acb3072a08f",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/run.tap",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df-r2/run.tap",
+      "sha256": "29a60e2be5460979713d5787d99e71c97c8ccf36ca4bb21f4f6e8006fbf57841",
+      "bytes": 1738
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/reviewed-scalar.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df-r2/reviewed-scalar.json",
+      "sha256": "b965a5bae959dd82c4e43405ad0ff7baba8f7d79d597012f49fd76511918281f",
+      "bytes": 53001
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/reviewed-structural.json",
+      "originalPath": "build/vo1438-wasm-refusals-d5a61df-r2/reviewed-structural.json",
+      "sha256": "c677620259107f876e8a01c66147e00e526505de8842d676fef10a20a2a2ba31",
+      "bytes": 55198
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/runner.mjs.txt",
+      "originalPath": "build/run-vo1438-wasm-refusals-d5a61df-r2.mjs",
+      "sha256": "a348b9f5e5b02d84a81f666b4fa689a7e1b4bbf6e336f049f049f9d703b7f772",
+      "bytes": 7226
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/audit.mjs.txt",
+      "originalPath": "build/audit-vo1438-wasm-refusals-d5a61df.mjs",
+      "sha256": "afaa08911c3bfa47e3f60d12432ecf204e795965a74f871f2901267eb617ef03",
+      "bytes": 6694
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/audit.json",
+      "originalPath": "build/vo1438-wasm-refusals-independent-audit-accepted.log",
+      "sha256": "84abfdd022a3774ea403218bf23c59268640b13859b2549ba029b07798f097c6",
+      "bytes": 1177
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/generic-records.test.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/generic-records.test.mjs",
+      "sha256": "653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1",
+      "bytes": 38725
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-installed-tests.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+      "sha256": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57",
+      "bytes": 1604
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-mismatches.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-mismatches.mjs",
+      "sha256": "df82d1fcc2c4afc78dafab93db99dfaa4cdec78ddada7a2b32d020d0a6bce0a3",
+      "bytes": 3701
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-install.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-install.mjs",
+      "sha256": "8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8",
+      "bytes": 13809
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-fixture.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-fixture.mjs",
+      "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625",
+      "bytes": 2463
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-typescript.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-typescript.mjs",
+      "sha256": "cdfb35044fe6e5ccda580dc5b1df1d2161f026b9c2a99e8a9618949d79d31c77",
+      "bytes": 2752
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-browser.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/reviewed-fin-wasm-browser.mjs",
+      "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639",
+      "bytes": 3018
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/refinement-engine.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+      "bytes": 1655
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/fixtures/reviewed-fin-wasm/javascript.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+      "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a",
+      "bytes": 4031
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+      "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07",
+      "bytes": 783
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/analyze/reviewed-source.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:src/analyze/reviewed-source.mjs",
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+      "bytes": 24336
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/build/lake-entry-engine.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:src/build/lake-entry-engine.mjs",
+      "sha256": "4686cd10fa95b0563c383f9820b17be021e7ef01e5ceda21adb921e20124cc21",
+      "bytes": 5438
+    },
+    {
+      "path": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/build/component-engine.mjs.txt",
+      "originalPath": "git:d5a61df812a10d4cf22077048e7fa582af35accd:src/build/component-engine.mjs",
+      "sha256": "bb72f15591546201f2bea8dc4f917fad3c6d2325c0405099ca9e6064228662c7",
+      "bytes": 12565
+    }
+  ],
+  "sources": [
+    {
+      "path": "tests/generic-records.test.mjs",
+      "sha256": "653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/generic-records.test.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+      "sha256": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-installed-tests.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-mismatches.mjs",
+      "sha256": "df82d1fcc2c4afc78dafab93db99dfaa4cdec78ddada7a2b32d020d0a6bce0a3",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-mismatches.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+      "sha256": "8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-install.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+      "sha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-fixture.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-typescript.mjs",
+      "sha256": "cdfb35044fe6e5ccda580dc5b1df1d2161f026b9c2a99e8a9618949d79d31c77",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-typescript.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-browser.mjs",
+      "sha256": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/reviewed-fin-wasm-browser.mjs.txt"
+    },
+    {
+      "path": "tests/helpers/refinement-engine.mjs",
+      "sha256": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/helpers/refinement-engine.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+      "sha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/fixtures/reviewed-fin-wasm/javascript.mjs.txt"
+    },
+    {
+      "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+      "sha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean.txt"
+    },
+    {
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/analyze/reviewed-source.mjs.txt"
+    },
+    {
+      "path": "src/build/lake-entry-engine.mjs",
+      "sha256": "4686cd10fa95b0563c383f9820b17be021e7ef01e5ceda21adb921e20124cc21",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/build/lake-entry-engine.mjs.txt"
+    },
+    {
+      "path": "src/build/component-engine.mjs",
+      "sha256": "bb72f15591546201f2bea8dc4f917fad3c6d2325c0405099ca9e6064228662c7",
+      "snapshot": "docs/evidence/reviewed-fin-wasm-refusals-20261009/sources/d5a61df/src/build/component-engine.mjs.txt"
+    }
+  ]
+}

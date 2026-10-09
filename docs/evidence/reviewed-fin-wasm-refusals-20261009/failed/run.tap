@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: independently reviewed scalar Fin runs in source-free installed npm packages
+not ok 1 - independently reviewed scalar Fin runs in source-free installed npm packages
+  ---
+  duration_ms: 40112.48541
+  type: 'test'
+  location: '/app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-installed-tests.mjs:19:2'
+  failureType: 'testCodeFailure'
+  error: 'The shared runtime header closure is unavailable'
+  code: 'shared-runtime-headers-unavailable'
+  name: 'ComponentSideLinkerError'
+  stack: |-
+    fail (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-side-linker.mjs:40:8)
+    linkComponentSideModule (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-side-linker.mjs:224:5)
+    async completeComponentEngineBuild (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-engine.mjs:202:18)
+    async executeLakeEntryComponent (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/lake-entry-engine.mjs:64:18)
+    async Object.capture (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/refinement-engine.mjs:30:3)
+    async runNativeComponentEngine (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/canonical-build.mjs:317:2)
+    async buildPlainComponentProject (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/canonical-build.mjs:719:4)
+    async checkReviewedFinWasm (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-install.mjs:209:3)
+    async TestContext.<anonymous> (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-installed-tests.mjs:20:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+  ...
+# reviewed scalar: WASM and npm build 1/2
+# {"path":"/app/build/worktrees/reviewed-wasm-refusal-vo1438/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include","cause":"ENOENT: no such file or directory, stat '/app/build/worktrees/reviewed-wasm-refusal-vo1438/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h'"}
+# Subtest: independently reviewed structural Fin runs in source-free installed npm packages
+not ok 2 - independently reviewed structural Fin runs in source-free installed npm packages
+  ---
+  duration_ms: 39550.605423
+  type: 'test'
+  location: '/app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-installed-tests.mjs:19:2'
+  failureType: 'testCodeFailure'
+  error: 'The shared runtime header closure is unavailable'
+  code: 'shared-runtime-headers-unavailable'
+  name: 'ComponentSideLinkerError'
+  stack: |-
+    fail (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-side-linker.mjs:40:8)
+    linkComponentSideModule (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-side-linker.mjs:224:5)
+    async completeComponentEngineBuild (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/component-engine.mjs:202:18)
+    async executeLakeEntryComponent (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/lake-entry-engine.mjs:64:18)
+    async Object.capture (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/refinement-engine.mjs:30:3)
+    async runNativeComponentEngine (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/canonical-build.mjs:317:2)
+    async buildPlainComponentProject (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/src/build/canonical-build.mjs:719:4)
+    async checkReviewedFinWasm (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-install.mjs:209:3)
+    async TestContext.<anonymous> (file:///app/build/worktrees/reviewed-wasm-refusal-vo1438/tests/helpers/reviewed-fin-wasm-installed-tests.mjs:20:18)
+    async Test.run (node:internal/test_runner/test:1054:7)
+  ...
+# reviewed structural: WASM and npm build 1/2
+# {"path":"/app/build/worktrees/reviewed-wasm-refusal-vo1438/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include","cause":"ENOENT: no such file or directory, stat '/app/build/worktrees/reviewed-wasm-refusal-vo1438/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser/cmake/include/lean/lean.h'"}
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 80613.218362

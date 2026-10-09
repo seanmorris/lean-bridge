@@ -1,0 +1,56 @@
+{
+  "revision": "d5a61df812a10d4cf22077048e7fa582af35accd",
+  "tree": "8e6b6f72c843df20d4776b66554a46a1db31175f",
+  "cwd": "/app/build/worktrees/reviewed-wasm-refusal-vo1438",
+  "startedAt": "2026-10-09T04:26:39.653Z",
+  "sources": {
+    "tests/generic-records.test.mjs": "653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1",
+    "tests/helpers/reviewed-fin-wasm-installed-tests.mjs": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57",
+    "tests/helpers/reviewed-fin-wasm-mismatches.mjs": "df82d1fcc2c4afc78dafab93db99dfaa4cdec78ddada7a2b32d020d0a6bce0a3",
+    "tests/helpers/reviewed-fin-wasm-install.mjs": "8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8",
+    "tests/helpers/reviewed-fin-wasm-fixture.mjs": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625",
+    "tests/helpers/reviewed-fin-wasm-typescript.mjs": "cdfb35044fe6e5ccda580dc5b1df1d2161f026b9c2a99e8a9618949d79d31c77",
+    "tests/helpers/reviewed-fin-wasm-browser.mjs": "cccaf1638b72e653fe637a61af8a17fa381a421e171806f7ffbd75e8fe24c639",
+    "tests/helpers/refinement-engine.mjs": "91e69b67d355d2b436fa699a5e4a4692362bdc4f9536634877b6af41e968d3b4",
+    "tests/fixtures/reviewed-fin-wasm/javascript.mjs": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a",
+    "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07",
+    "src/analyze/reviewed-source.mjs": "d3a875e4fc6dca6b7a93e70db62980d01f5b2a68f2e5e8999b93bbf0ca04a462",
+    "src/build/lake-entry-engine.mjs": "4686cd10fa95b0563c383f9820b17be021e7ef01e5ceda21adb921e20124cc21",
+    "src/build/component-engine.mjs": "bb72f15591546201f2bea8dc4f917fad3c6d2325c0405099ca9e6064228662c7"
+  },
+  "runnerSha256": "3e590b2d2c409dad92876f81e726d6f74ce4a8b05250698c4d84897d0c435c44",
+  "command": [
+    "/usr/bin/taskset",
+    "-c",
+    "3",
+    "/usr/bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "--test-name-pattern=^independently reviewed (scalar|structural) Fin runs in source-free installed npm packages$",
+    "tests/generic-records.test.mjs"
+  ],
+  "environment": {
+    "NO_COLOR": "1",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST": "1",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST": "1",
+    "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS": "chromium,firefox,webkit",
+    "LEAN_BRIDGE_REVIEWED_FIN_WASM_REPORT_DIR": "/app/build/vo1438-wasm-refusals-d5a61df",
+    "LEAN_BRIDGE_LAKE_RUNTIME_ROOT": "/app/build/lean-link-spike/lazy",
+    "PLAYWRIGHT_BROWSERS_PATH": "/app/.toolchains/playwright",
+    "LEAN_BRIDGE_LEAN": "/app/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2/bin/lean",
+    "LEAN_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MAKEFLAGS": "-j1"
+  },
+  "unset": [
+    "FORCE_COLOR",
+    "other LEAN_BRIDGE_* variables"
+  ],
+  "node": "v22.23.2",
+  "lean": "Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)",
+  "glibc": "glibc 2.36",
+  "freeMiB": 5209,
+  "stopFloorMiB": 1024,
+  "scope": "Local in-process real Lean/Wasm compiler, installed Node JS/TS and three browser engines; not locked Nix or hosted acceptance"
+}

@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: independently reviewed scalar Fin runs in source-free installed npm packages
+ok 1 - independently reviewed scalar Fin runs in source-free installed npm packages
+  ---
+  duration_ms: 361094.169865
+  type: 'test'
+  ...
+# reviewed scalar: WASM and npm build 1/2
+# reviewed scalar: WASM and npm build 2/2
+# fresh Lean reconciliation: tightened scalar bound
+# fresh Lean reconciliation: loosened scalar bound
+# fresh Lean reconciliation: inhabited formerly empty Fin
+# fresh Lean reconciliation: omitted input bound
+# fresh Lean reconciliation: omitted result bound
+# fresh Lean reconciliation: result bound moved to parameter
+# fresh Lean reconciliation: changed singleton bound
+# fresh Lean reconciliation: changed wide alias bound
+# fresh Lean reconciliation: invented input bound
+# fresh Lean reconciliation: omitted declaration constraints
+# Subtest: independently reviewed structural Fin runs in source-free installed npm packages
+ok 2 - independently reviewed structural Fin runs in source-free installed npm packages
+  ---
+  duration_ms: 345804.195749
+  type: 'test'
+  ...
+# reviewed structural: WASM and npm build 1/2
+# reviewed structural: WASM and npm build 2/2
+# fresh Lean reconciliation: tightened scalar bound
+# fresh Lean reconciliation: loosened scalar bound
+# fresh Lean reconciliation: inhabited formerly empty Fin
+# fresh Lean reconciliation: omitted input bound
+# fresh Lean reconciliation: omitted result bound
+# fresh Lean reconciliation: result bound moved to parameter
+# fresh Lean reconciliation: swapped nested result branches
+# fresh Lean reconciliation: changed nested array bound
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 707603.624924

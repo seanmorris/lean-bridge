@@ -1,0 +1,32 @@
+{
+  "revision": "d5a61df812a10d4cf22077048e7fa582af35accd",
+  "queueSha256": "32b12b8796335f52ba58103a58f6a3eeb557eefd795a184265b56d3d30499133",
+  "endSha256": "2cbb8f1535ceba488385639dee6698e826383dccf7879cf2006f5acb3072a08f",
+  "tapSha256": "29a60e2be5460979713d5787d99e71c97c8ccf36ca4bb21f4f6e8006fbf57841",
+  "sourcePins": 13,
+  "runtimePins": 4,
+  "minimumFreeMiB": 4475,
+  "scope": "Local in-process real Lean/Wasm compiler, installed Node JS/TS and three browser engines; not locked Nix or hosted acceptance",
+  "reports": [
+    {
+      "selection": "scalar",
+      "reportSha256": "b965a5bae959dd82c4e43405ad0ff7baba8f7d79d597012f49fd76511918281f",
+      "mismatches": 10,
+      "fieldsActuallyObserved": true,
+      "nodeExecutions": 2,
+      "browserExecutions": 12,
+      "checksPerConsumer": 50,
+      "rejectionsPerConsumer": 126
+    },
+    {
+      "selection": "structural",
+      "reportSha256": "c677620259107f876e8a01c66147e00e526505de8842d676fef10a20a2a2ba31",
+      "mismatches": 8,
+      "fieldsActuallyObserved": true,
+      "nodeExecutions": 2,
+      "browserExecutions": 12,
+      "checksPerConsumer": 200,
+      "rejectionsPerConsumer": 270
+    }
+  ]
+}
