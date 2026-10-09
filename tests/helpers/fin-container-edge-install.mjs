@@ -20,6 +20,7 @@ import { observeFinContainerEdgePublic } from "./fin-container-edge-public-obser
 import { observeFinContainerEdgePython } from "./fin-container-edge-python-observer.mjs";
 import { observeFinContainerEdgeRust } from "./fin-container-edge-rust-observer.mjs";
 import { observeFinContainerEdgeRuby } from "./fin-container-edge-ruby-observer.mjs";
+import { finContainerEdgeClosedProfiles, verifyFinContainerEdgeArchiveClosure, verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
@@ -238,6 +239,9 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	assert.equal(receipt.name, pkg.name);
 	assert.equal(receipt.version, pkg.version);
 	await verifyNativeFiles(installed, receipt.files);
+	const exactFileClosure = finContainerEdgeClosedProfiles.includes(profile);
+	const checkClosure = path => exactFileClosure ? verifyFinContainerEdgeFileClosure({ installed: path, receiptPath, receiptBytes: archiveBytes }) : null;
+	const fileClosure = await checkClosure(installed);
 	if(profile === "dotnet")
 	{
 		// The application loads the copied assembly and native libraries, not the NuGet cache originals.
@@ -265,15 +269,19 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(sha256(await readFile(command)), executable.executableSha256);
 	}
 	const moved = `${root}-relocated`;
+	assert.deepEqual(await checkClosure(installed), fileClosure, "package file set before relocation");
 	const externalCommand = ["ruby", "dotnet", "java", "kotlin", "php-native"].includes(profile);
 	assert.ok(externalCommand ? command.startsWith("/") : command.startsWith(`${root}/`));
 	await rename(root, moved);
 	await assert.rejects(access(root), { code: "ENOENT" });
 	const movedCommand = externalCommand ? command : join(moved, relative(root, command));
+	const movedInstall = join(moved, relative(root, installed));
+	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set before relocated execution");
 	const environment = profile === "ruby"
 		? { ...copiedCleanEnvironment, GEM_HOME: join(moved, "gems"), GEM_PATH: join(moved, "gems") }
 		: profile === "dotnet" ? { ...copiedCleanEnvironment, DOTNET_ROOT: dirname(command), DOTNET_CLI_HOME: join(moved, "dotnet-home"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1" } : copiedCleanEnvironment;
 	const repeated = await runCopied(movedCommand, args, moved, environment);
+	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after relocated execution");
 	assert.equal(repeated.stderr, "");
 	assert.equal(repeated.stdout, `fin-container-ok:${finContainerEdgeChecks[profile]}\n`);
 	if(profile === "php-native")
@@ -282,14 +290,13 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.equal(strict.stderr, "");
 		assert.equal(strict.stdout, repeated.stdout);
 	}
-	const movedInstall = join(moved, relative(root, installed));
 	assert.equal(await readFile(join(movedInstall, receiptPath), "utf8"), archiveBytes);
 	await verifyNativeFiles(movedInstall, receipt.files);
 	if(executable) assert.equal(sha256(await readFile(movedCommand)), executable.executableSha256);
 	for(const [path, digest] of Object.entries(deployed)) assert.equal(sha256(await readFile(join(moved, path))), digest);
 	const rawAdapter = measureDispatch ? await observeFinContainerEdgeRaw({
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
-		, expectedModelSha256, leanPrefix
+		, expectedModelSha256, leanPrefix, exactFileClosure
 		, probeRoot: join(consumer, `${profile}-edge-raw`) }) : null;
 	const publicHost = measureDispatch && ["c", "cpp"].includes(profile) ? await observeFinContainerEdgePublic({
 		installed: movedInstall, receiptPath, receiptBytes: archiveBytes
@@ -310,7 +317,9 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 					installed: movedInstall, receiptPath, receiptBytes: archiveBytes
 					, expectedModelSha256, command: movedCommand
 					, probeRoot: join(consumer, "ruby-edge-public") }) : null;
+	assert.deepEqual(await checkClosure(movedInstall), fileClosure, "package file set after observations");
 	return { relocatedInstallation: true
+		, ...(fileClosure ? { exactPackageFiles: true, packageFileSetSha256: fileClosure.packageFileSetSha256 } : {})
 		, repeatExecution: true
 		, installedFilesUnchanged: true
 		, installedFilesSha256: sha256(canonicalJson(receipt.files))
@@ -373,6 +382,7 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath, {
 				, consumer, handoff, packages, environment, dependencies
 				, fixture: {
 					source: () => consumerSource
+					, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure
 					, success: "fin-container-ok"
 					, expectedChecks: finContainerEdgeChecks[profile]
 					, wit: [

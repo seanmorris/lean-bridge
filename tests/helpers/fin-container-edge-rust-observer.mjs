@@ -88,7 +88,7 @@ export const verifyFinContainerEdgeRustDependencies = async ({ installed, depend
 export const observeFinContainerEdgeRust = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, dependencyRoot, dependencyArchive, dependencies, environment }) => {
 	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
 	await assertFinContainerEdgeProbeLocation(dependencyRoot, probeRoot);
-	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
+	const options = { installed, receiptPath, receiptBytes, expectedModelSha256, exactFileClosure: true };
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const modules = ["Cargo.toml", "Cargo.lock", "src/lib.rs", "src/__runtime.rs", "src/assets.rs"];
 	for(const path of modules) assert.ok(Object.hasOwn(before.receipt.files, path), `Rust input is not receipt-pinned: ${path}`);
@@ -133,6 +133,7 @@ export const observeFinContainerEdgeRust = async ({ installed, receiptPath, rece
 	for(const item of registry) assert.equal(await realpath(item.manifest_path), join(dependencyRoot, `${item.name}-${item.version}`, "Cargo.toml"));
 	assert.deepEqual(metadata.packages.filter(item => item.source === null).map(item => item.name).sort(), [before.receipt.name, "fin-edge-public-rust"].sort());
 	await runCopied(cargo, ["build", "--locked", "--offline", "--target", target, "--bin", "fin-edge-public-rust"], probeRoot, compile);
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "Rust compilation must not alter installed files");
 	assert.equal(await hashFile(join(probeRoot, "Cargo.lock")), lockSha256);
 	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-shared", "-fPIC", "interposer.c", "-ldl", "-o", "libedge.so"], probeRoot, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
 	const command = join(probeRoot, "target", target, "debug/fin-edge-public-rust"), executableSha256 = await hashFile(command);
@@ -141,9 +142,11 @@ export const observeFinContainerEdgeRust = async ({ installed, receiptPath, rece
 	const previousRegistry = await registryFiles();
 	await assert.rejects(() => runCopied(command, [], probeRoot, clean)
 		, error => /exited with status 2:/u.test(error.message) && error.details.stdout === "" && error.details.stderr === "edge interposer is not loaded\n");
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "negative Rust run must not alter installed files");
 	const runtime = { ...clean, LD_PRELOAD: join(probeRoot, "libedge.so") };
 	const observed = await runCopied(command, [], probeRoot, runtime);
 	assert.equal(observed.stderr, ""); const observations = readFinContainerEdgeRust(observed.stdout);
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "first Rust run must not alter installed files");
 	const repeated = await runCopied(command, [], probeRoot, runtime);
 	assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout, observed.stdout);
 	assert.deepEqual(await registryFiles(), previousRegistry, "Rust loader must clean its own extraction and registry files");

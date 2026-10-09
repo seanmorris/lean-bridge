@@ -30,7 +30,7 @@ export const observeFinContainerEdgePublic = async ({ installed, receiptPath, re
 	assert.ok(["c", "cpp"].includes(profile), "public entry observation supports only C and C++");
 	const cpp = profile === "cpp";
 	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
-	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
+	const options = { installed, receiptPath, receiptBytes, expectedModelSha256, exactFileClosure: true };
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const headers = cpp
 		? ["include/fincontainers.h", "include/fincontainers.hpp", ...Object.keys(boostSources()).filter(path => path.startsWith("include/"))]
@@ -53,8 +53,10 @@ export const observeFinContainerEdgePublic = async ({ installed, receiptPath, re
 	const linkLibraries = cpp ? [...new Set(publicSymbols.map(symbol => basename(definitions[symbol])))] : Object.keys(before.libraries);
 	const link = ["-L", before.directory, "-Wl,--no-as-needed", ...linkLibraries.map(name => `-l:${name}`), `-Wl,-rpath,${before.directory}`, "-ldl"];
 	await runCopied(cpp ? "/usr/bin/c++" : "/usr/bin/cc", [cpp ? "-std=c++20" : strict[0], ...strict.slice(1), "-I", join(installed, "include"), sourceName, ...link, "-o", "public"], probeRoot, tools);
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "public compilation must not alter installed files");
 	await assert.rejects(() => runCopied(join(probeRoot, "public"), [], probeRoot, copiedCleanEnvironment)
 		, error => /exited with status 2:/u.test(error.message) && error.details.stdout === "" && error.details.stderr === "edge interposer is not loaded\n");
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "negative public run must not alter installed files");
 	const run = await runCopied(join(probeRoot, "public"), [], probeRoot, { ...copiedCleanEnvironment, LEAN_NUM_THREADS: "1", LD_PRELOAD: join(probeRoot, "libedge.so") });
 	assert.equal(run.stderr, "");
 	const observations = (cpp ? readFinContainerEdgeCpp : readFinContainerEdgePublic)(run.stdout);

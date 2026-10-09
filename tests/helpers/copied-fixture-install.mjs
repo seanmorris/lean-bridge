@@ -64,6 +64,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	const extension = extensions[profile], source = await fixture.source(profile, extension, 64);
 	await saveLakeFile(root, `consumer.${extension}`, source);
 	let command, args, env = copiedCleanEnvironment;
+	// Optional fixture policy runs before the first package-influenced compilation and again
+	// around execution. Other fixture callers retain their existing install behavior.
+	let verifyPackage = async () => {};
 	if(profile === "python")
 	{
 		command = join(root, "venv/bin/python");
@@ -75,6 +78,8 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	{
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", archive], root);
 		const installed = join(root, `${pkg.name}-${pkg.version}-${profile}`);
+		verifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: "lean-bridge-package.json", archive, archiveSha256: pkg.artifacts[0].sha256 });
+		await verifyPackage();
 		const receipt = JSON.parse(await readFile(join(installed, "lean-bridge-package.json")));
 		await verifyNativeFiles(installed, receipt.files);
 		const tools = join(root, "tools"); await mkdir(tools);
@@ -157,6 +162,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	else if(profile === "rust")
 	{
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", archive], root);
+		const installed = join(root, `${pkg.name}-${pkg.version}`);
+		verifyPackage = () => fixture.verifyInstalledPackage?.({ profile, installed, receiptPath: "lean-bridge/package-receipt.json", archive, archiveSha256: pkg.artifacts[0].sha256 });
+		await verifyPackage();
 		const dependencyArchive = join(consumer, "dependencies", dependencies.archive);
 		assert.equal(sha256(await readFile(dependencyArchive)), dependencies.sha256);
 		await runCopied("/usr/bin/tar", ["--use-compress-program=/usr/bin/gzip", "-xf", dependencyArchive], root);
@@ -167,7 +175,9 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		command = join(root, "target/debug/consumer"); args = [];
 	}
 	else throw new Error(`Copied consumer not implemented: ${profile}`);
+	await verifyPackage();
 	const result = await runCopied(command, args, root, env);
+	await verifyPackage();
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
 	if(!fixture.parseResult) assert.match(result.stdout.trim(), new RegExp(`^${fixture.success}:[0-9]+$`));

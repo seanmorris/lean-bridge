@@ -179,7 +179,11 @@ test("full C++ consumer executes compiled Lean and refuses broken entry instrume
 	delete unpinned.files["include/boost/multiprecision/cpp_int.hpp"];
 	const unpinnedBytes = Buffer.from(JSON.stringify(unpinned));
 	await saveLakeFile(installed, "package-receipt.json", unpinnedBytes);
+	await assert.rejects(observeFinContainerEdgePublic({ ...options, receiptBytes: unpinnedBytes, probeRoot: join(root, "extra-header") }), /unrecorded or missing file/u);
+	const boostHeader = "include/boost/multiprecision/cpp_int.hpp", boostHeaderBytes = await readFile(join(installed, boostHeader));
+	await rm(join(installed, boostHeader));
 	await assert.rejects(observeFinContainerEdgePublic({ ...options, receiptBytes: unpinnedBytes, probeRoot: join(root, "unpinned-header") }), /not receipt-pinned: include\/boost\/multiprecision\/cpp_int.hpp/u);
+	await saveLakeFile(installed, boostHeader, boostHeaderBytes);
 	await saveLakeFile(installed, "package-receipt.json", receiptBytes);
 	t.diagnostic(JSON.stringify({ scope: "compiler/runtime source gate, not installed-package acceptance"
 		, originalConsumerChecks: 14099

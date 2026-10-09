@@ -10,6 +10,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve } from "node:pat
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validateNativeElf, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
+import { verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
 import { finContainerEdgeColumns, finContainerEdgeEntries, finContainerEdgeInterposer, finContainerEdgePublicSymbols, finContainerEdgeRawProbe, finContainerEdgeSourceEntries, finContainerEdgeWireSymbols, readFinContainerEdgeRaw } from "./fin-container-edge-dispatch.mjs";
 import { finContainerEntryInitializer } from "./fin-container-entry-dispatch.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -40,8 +41,11 @@ export const assertFinContainerEdgeProbeLocation = async (installed, probeRoot) 
  * @param options.receiptPath - Relative path of its receipt.
  * @param options.receiptBytes - Exact original archive member bytes, not a reconstructed receipt.
  * @param options.expectedModelSha256 - Native model digest recorded before producer deletion.
+ * @param options.exactFileClosure - Require exactly the receipt payload for supported package layouts.
  */
-export const verifyFinContainerEdgeDeployment = async ({ installed, receiptPath, receiptBytes, expectedModelSha256 }) => {
+export const verifyFinContainerEdgeDeployment = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, exactFileClosure = false }) => {
+	assert.equal(typeof exactFileClosure, "boolean");
+	const closure = exactFileClosure ? await verifyFinContainerEdgeFileClosure({ installed, receiptPath, receiptBytes }) : null;
 	assert.match(expectedModelSha256, digest);
 	assert.equal(await realpath(installed), resolve(installed));
 	assert.match(receiptPath, /^(?:[A-Za-z0-9_.+-]+\/)*[A-Za-z0-9_.+-]+\.json$/u);
@@ -67,6 +71,7 @@ export const verifyFinContainerEdgeDeployment = async ({ installed, receiptPath,
 	return { model, receipt, columns, directory
 		, libraries: Object.fromEntries(libraries.map(path => [basename(path), receipt.files[path].sha256]))
 		, identity: { receiptSha256: sha256(bytes), modelSha256: expectedModelSha256
+			, ...(closure ? { exactPackageFiles: true, packageFileSetSha256: closure.packageFileSetSha256 } : {})
 			, installedFilesSha256: sha256(canonicalJson(receipt.files)) } };
 };
 
@@ -108,10 +113,11 @@ export const finContainerEdgeDefinitions = async (deployment, { publicC = false,
  * @param options.expectedModelSha256 - Producer model digest.
  * @param options.probeRoot - New task-owned probe directory; existing directories are refused.
  * @param options.leanPrefix - Matching pinned Lean installation, used only for the raw probe header.
+ * @param options.exactFileClosure - Require an exact package-owned file set throughout the probe.
  */
-export const observeFinContainerEdgeRaw = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, leanPrefix }) => {
+export const observeFinContainerEdgeRaw = async ({ installed, receiptPath, receiptBytes, expectedModelSha256, probeRoot, leanPrefix, exactFileClosure = false }) => {
 	await assertFinContainerEdgeProbeLocation(installed, probeRoot);
-	const options = { installed, receiptPath, receiptBytes, expectedModelSha256 };
+	const options = { installed, receiptPath, receiptBytes, expectedModelSha256, exactFileClosure };
 	const before = await verifyFinContainerEdgeDeployment(options);
 	const definitions = await finContainerEdgeDefinitions(before);
 	const counted = Object.fromEntries(before.columns.map(column => [column, definitions[column]]));
@@ -124,8 +130,10 @@ export const observeFinContainerEdgeRaw = async ({ installed, receiptPath, recei
 	await runCopied("/usr/bin/cc", [...strict, "-shared", "-fPIC", "interposer.c", "-ldl", "-o", "libedge.so"], probeRoot, tools);
 	const link = ["-L", before.directory, "-Wl,--no-as-needed", ...Object.keys(before.libraries).map(name => `-l:${name}`), `-Wl,-rpath,${before.directory}`, "-ldl"];
 	await runCopied("/usr/bin/cc", [...strict, "-isystem", join(leanPrefix, "include"), "raw.c", ...link, "-o", "raw"], probeRoot, tools);
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "raw compilation must not alter installed files");
 	await assert.rejects(() => runCopied(join(probeRoot, "raw"), [], probeRoot, copiedCleanEnvironment)
 		, error => /exited with status 2:/u.test(error.message) && error.details.stdout === "" && error.details.stderr === "edge interposer is not loaded\n");
+	assert.deepEqual(await verifyFinContainerEdgeDeployment(options), before, "negative raw run must not alter installed files");
 	const run = await runCopied(join(probeRoot, "raw"), [], probeRoot, { ...copiedCleanEnvironment, LEAN_NUM_THREADS: "1", LD_PRELOAD: join(probeRoot, "libedge.so") });
 	assert.equal(run.stderr, "");
 	const observed = readFinContainerEdgeRaw(run.stdout);

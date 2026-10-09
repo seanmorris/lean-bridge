@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { copyFile, link, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink } from "node:fs/promises";
+import { access, copyFile, link, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import test from "node:test";
@@ -236,10 +236,18 @@ test("full Rust consumer measures actual Lean through verified extracted-and-unl
 		, dependencyArchive: join(root, "handoff", dependencies.archive)
 		, dependencies
 		, environment: toolchains, probeRoot: join(root, "receipt-probe") };
+	const marker = join(root, "observer-build-script-executed"), rejectedProbe = join(root, "injected-build-script");
+	await saveLakeFile(moved, "build.rs", `fn main() { std::fs::write(${JSON.stringify(marker)}, "executed").unwrap(); }\n`);
+	await assert.rejects(observeFinContainerEdgeRust({ ...options, probeRoot: rejectedProbe }), /unrecorded or missing file/u);
+	await assert.rejects(access(marker), { code: "ENOENT" });
+	await assert.rejects(access(rejectedProbe), { code: "ENOENT" });
+	await rm(join(moved, "build.rs"));
 	const report = await observeFinContainerEdgeRust(options);
 	assert.equal(report.kind, "fin-container-edge-public-rust-v1");
 	assert.equal(report.profile, "rust"); assert.equal(report.observed, true);
 	assert.equal(report.checks, 14078); assert.equal(report.measuredCalls, 12038);
+	assert.equal(report.exactPackageFiles, true);
+	assert.match(report.packageFileSetSha256, /^[a-f0-9]{64}$/u);
 	assert.deepEqual(report.observations, finContainerEdgeRustExpected);
 	assert.equal(report.stdoutSha256, sha256(observed.stdout)); assert.equal(report.probeSha256, sha256(source));
 	for(const name of ["repeatedColdProcess", "installedFilesUnchanged", "dependenciesUnchanged", "extractionCleanupUnchanged", "emptyCargoHome", "offline", "linkOnly"])
