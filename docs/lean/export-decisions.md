@@ -105,6 +105,8 @@ A [schema-3 reviewed contract](existing-package.md#compile-a-reviewed-contract) 
 
 [Inherited records](existing-package.md#export-inherited-records) retain Lean's own parent subobjects and field order. A generic parent's unnamed type requires one matching alias in the compiled source closure. Missing or ambiguous aliases stop that export; explicitly named fields keep their chosen alias.
 
+Alias-named generic records can contain arrays and appear as array elements. The [native Array checks](../evidence/generic-record-array-rollout-20261009.md) exercise `Box (Array Nat)`, `Array NatBox` and `Box (Array NatBox)` across all eleven native profiles. Name each structure instantiation with an alias; generated consumers use concrete host record and array types.
+
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
 ## Native C and C++ exports

@@ -434,7 +434,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			if(specialized.includes(cell.shape))
 			{
 				assert.deepEqual(stage.evidence, [`native-specializations-${specializationEvidence}-installed`
-					, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)]);
+					, ...genericRecordReports.map(group => `generic-record-specialized-${group}-installed`)
+					, ...(stageName === "installedExecution" ? (profile === "python" ? ["python311", "python312"] : [["java", "kotlin"].includes(profile) ? "java-kotlin" : profile]).map(group => `generic-record-array-${group}-local`) : [])]);
 				continue;
 			}
 			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);

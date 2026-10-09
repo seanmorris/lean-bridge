@@ -178,6 +178,8 @@ jobs:
           LEAN_BRIDGE_GENERIC_RECORD_PROFILES=perl node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs
           test -s build/generic-records/perl.json
           test -s build/generic-records/specialized-perl.json
+          LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=perl node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs
+          test -s build/generic-records/array-perl.json
           LEAN_BRIDGE_FIN_CONTAINER_PROFILES=perl LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=perl node --test tests/native-fin-containers.test.mjs tests/perl-fin-containers.test.mjs
           test -s build/native-fin-containers/perl.json
           test -s build/native-fin-containers/reviewed-perl.json
@@ -261,6 +263,7 @@ jobs:
             build/native-specializations/perl.json
             build/generic-records/perl.json
             build/generic-records/specialized-perl.json
+            build/generic-records/array-perl.json
             build/native-fin-containers/perl.json
             build/native-fin-containers/reviewed-perl.json
             build/native-fin-products/perl.json

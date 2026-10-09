@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeArrayRolloutSource } from "./generic-record-array-rollout-source-history.mjs";
 import { beforeGenericRefusalFixSource } from "./generic-refusal-fix-source-history.mjs";
 import { beforePerlXsBudgetSource, perlXsBudgetChangedPaths, perlXsBudgetHistoryPath, perlXsBudgetPredecessor, reversePerlXsBudgetUpdate } from "./perl-xs-budget-source-history.mjs";
 
@@ -56,7 +57,7 @@ test("Perl XS budget refreshes exactly 40 source pins without changing coverage"
 });
 
 test("the Perl XS workflow changes only its job budget and explanation", async () => {
-	const path = ".github/workflows/perl-consumer.yml", text = await readFile(path, "utf8");
+	const path = ".github/workflows/perl-consumer.yml", text = beforeArrayRolloutSource(path, await readFile(path, "utf8"));
 	const before = "    # Copied and owned package families run sequentially on each Perl ABI.\n    timeout-minutes: 120";
 	const after = "    # Copied and owned package families run sequentially on each Perl ABI; the\n    # installed Compare and Verify chain alone took up to about 105 minutes.\n    timeout-minutes: 180";
 	assert.equal(text.split(after).length, 2);

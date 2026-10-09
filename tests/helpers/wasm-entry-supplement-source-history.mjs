@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeArrayRolloutSource } from "./generic-record-array-rollout-source-history.mjs";
 
 export const wasmEntrySupplementHistoryPath = "docs/evidence/wasm-entry-supplement-source-history-20261009.json";
 export const wasmEntrySupplementPredecessor = "e8d701ead2bffc247924473f98c65b02cf909ef1";
@@ -55,6 +56,7 @@ export const reverseWasmEntrySupplementUpdate = (source, update) => {
  * @param expected - Optional exact stopping digest.
  */
 export const beforeWasmEntrySupplementSource = (path, source, expected) => {
+	source = beforeArrayRolloutSource(path, source, expected);
 	if(typeof source !== "string" || !wasmEntrySupplementChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;

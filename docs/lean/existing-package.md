@@ -186,6 +186,8 @@ An application that is not named by an alias, in a signature or as an argument o
 
 The [installed checks](../evidence/generic-record-specializations-20261007.md) cover Node/TypeScript, C, C++, Python 3.11 and 3.12, Rust, Ruby, C#, Java, Kotlin, native PHP, WIT/WASI and all four pinned Perl ABIs. They exercise direct record exports and nine configured specializations over record aliases, separate namespaces, lists and options.
 
+The [native Array supplement](../evidence/generic-record-array-rollout-20261009.md) adds `Box (Array Nat)`, `Array NatBox` and `Box (Array NatBox)` on all eleven native profiles. Give each structure application its own alias, such as `ArrayBox` and `RowBox`; the array alias `BoxRow` keeps its distinct identity. These installed consumers retain all earlier direct exports and nine specializations, and exercise empty arrays, invalid members and recovery. Both Python floors and all four pinned Perl ABIs passed locally. Hosted acceptance is tracked separately from these glibc 2.36 runs.
+
 The newer [hosted npm acceptance](../evidence/generic-record-npm-hosted-20261008/receipt.json)
 also verifies that consumers need neither the Lean project nor its build staging:
 the harness deletes both before offline installation and runs Node on a Node-only

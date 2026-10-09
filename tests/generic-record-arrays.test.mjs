@@ -1,5 +1,5 @@
 /**
- * Array fields and results over alias-named generic records in installed C, C++ and Python packages: exact source
+ * Array fields and results over alias-named generic records in every native package: exact source
  * composition and consumer controls, and a gated installed acceptance from two author roots.
  *
  * @file

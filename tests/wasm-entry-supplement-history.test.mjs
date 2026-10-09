@@ -13,6 +13,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout-source-history.mjs";
 import { supplementWasmEntryInventory, wasmEntrySupplementObservations } from "./helpers/wasm-entry-supplement.mjs";
 import { beforeWasmEntrySupplementSource, reverseWasmEntrySupplementUpdate, wasmEntrySupplementChangedPaths, wasmEntrySupplementHistoryPath, wasmEntrySupplementPredecessor } from "./helpers/wasm-entry-supplement-source-history.mjs";
 
@@ -23,7 +24,7 @@ test("Wasm entry supplement history authenticates exact source transitions and r
 	assert.deepEqual(history.updates.map(update => update.path), wasmEntrySupplementChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8"), previous = reverseWasmEntrySupplementUpdate(current, update);
+		const current = beforeArrayRolloutSource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmEntrySupplementUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmEntrySupplementSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -39,7 +40,7 @@ test("Wasm entry supplement history authenticates exact source transitions and r
 });
 
 test("Wasm entry inventory adds sixteen reports, preserves older claims and authenticates every pin", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", source = beforeArrayRolloutSource(path, await readFile(path, "utf8"));
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntrySupplementSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
 	const expected = await supplementWasmEntryInventory(previous);
@@ -61,9 +62,9 @@ test("Wasm entry inventory adds sixteen reports, preserves older claims and auth
 		assert.equal(entry.kind, "test"); assert.deepEqual(entry.artifacts, []);
 		assert.match(entry.scope, /package archives and receipt bytes are not retained here/u);
 	}
-	assert.deepEqual((await readTypeSurface()).document, current);
+	assert.deepEqual((await readTypeSurface()).document, JSON.parse(await readFile(path, "utf8")));
 	const files = new Map();
-	for(const entry of current.evidence) for(const file of entry.files)
+	for(const entry of (await readTypeSurface()).document.evidence) for(const file of entry.files)
 	{
 		if(!files.has(file.path)) files.set(file.path, sha256(await readFile(file.path)));
 		assert.equal(files.get(file.path), file.sha256, file.path);

@@ -161,6 +161,7 @@ import { wasmEntryArchiveChangedPaths } from "./wasm-entry-archive-source-histor
 import { wasmCiArrayChangedPaths } from "./wasm-ci-array-source-history.mjs";
 import { perlScalarPromotionChangedPaths } from "./perl-scalar-promotion-source-history.mjs";
 import { wasmEntrySupplementChangedPaths } from "./wasm-entry-supplement-source-history.mjs";
+import { arrayRolloutChangedPaths } from "./generic-record-array-rollout-source-history.mjs";
 import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
@@ -787,6 +788,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...wasmCiArrayChangedPaths
 	, ...perlScalarPromotionChangedPaths
 	, ...wasmEntrySupplementChangedPaths
+	, ...arrayRolloutChangedPaths
 ])].sort());
 
 /**

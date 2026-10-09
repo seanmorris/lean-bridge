@@ -16,10 +16,11 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { assertPerlScalarPromotion, perlScalarEvidenceIds, perlScalarOrdinaryId, perlScalarReviewedId, promotePerlScalarInventory, promotePerlScalarObservations } from "./helpers/perl-scalar-promotion.mjs";
 import { beforePerlScalarPromotionSource, perlScalarPromotionChangedPaths, perlScalarPromotionHistoryPath, perlScalarPromotionPredecessor, reversePerlScalarPromotionUpdate } from "./helpers/perl-scalar-promotion-source-history.mjs";
 import { beforeWasmEntrySupplementSource, wasmEntrySupplementChangedPaths } from "./helpers/wasm-entry-supplement-source-history.mjs";
+import { arrayRolloutChangedPaths } from "./helpers/generic-record-array-rollout-source-history.mjs";
 
 const historicalRead = async path => {
 	const bytes = await readFile(path);
-	return wasmEntrySupplementChangedPaths.includes(path)
+	return [...wasmEntrySupplementChangedPaths, ...arrayRolloutChangedPaths].includes(path)
 		? Buffer.from(beforeWasmEntrySupplementSource(path, bytes.toString("utf8"))) : bytes;
 };
 
