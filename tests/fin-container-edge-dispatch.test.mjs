@@ -249,6 +249,9 @@ test("fresh Lean preserves the measured calls and executes all raw cases with ac
 	assert.deepEqual(receiptObservation.observed, finContainerEdgeRawExpected);
 	assert.equal(receiptObservation.runtimeDefinitionsChecked, true);
 	assert.equal(receiptObservation.installedFilesUnchanged, true);
+	assert.equal(receiptObservation.libraryDirectory, join(installed, "lib"));
+	const recordedDefinitions = Object.fromEntries(receiptObservation.columns.map(symbol => [symbol, join(receiptObservation.libraryDirectory, receiptObservation.definitions[symbol])]));
+	assert.equal(receiptObservation.interposerSha256, sha256(finContainerEdgeInterposer(compiled, compiled.component, recordedDefinitions)));
 	assert.match(receiptObservation.caller, /not a host-language call/u);
 	await assert.rejects(observeFinContainerEdgeRaw(options), { code: "EEXIST" });
 	const columns = finContainerEdgeColumns(compiled, compiled.component);

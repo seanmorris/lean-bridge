@@ -117,6 +117,7 @@ export const observeFinContainerEdgeRaw = async ({ installed, receiptPath, recei
 		, measuredAdapters: finContainerEdgeEntries.map(name => `FinContainers.${name}`)
 		, measuredSources: finContainerEdgeSourceEntries.map(name => `FinContainers.${name}`)
 		, sourceFunctionsNotMeasured: finContainerEdgeEntries.filter(name => !finContainerEdgeSourceEntries.includes(name)).map(name => `FinContainers.${name}`)
+		, libraryDirectory: before.directory
 		, libraries: before.libraries
 		, definitions: Object.fromEntries(Object.entries(definitions).map(([symbol, path]) => [symbol, basename(path)]))
 		, ...before.identity
