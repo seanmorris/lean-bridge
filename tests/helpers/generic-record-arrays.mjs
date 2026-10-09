@@ -14,20 +14,39 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
+import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { genericRecordArrayExports, genericRecordBrowserConfiguration, genericRecordBrowserSource } from "./generic-record-browser.mjs";
 import { genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordTargets, installGenericRecordConsumer } from "./generic-record-packages.mjs";
 import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./generic-record-specializations.mjs";
 
-/** Hosts in this first Array slice; every other native host stays under the full rollout. */
-export const genericRecordArrayProfiles = Object.freeze(["c", "cpp", "python"]);
-const extensions = Object.freeze({ c: "c", cpp: "cpp", python: "py" });
+/** Every native host with a generic-record consumer: the first C, C++ and Python slice, then the remaining hosts. */
+export const genericRecordArrayProfiles = Object.freeze(["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "perl", "php-native", "wit-wasi"]);
+const extensions = Object.freeze({ c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", perl: "pl", "php-native": "php", "wit-wasi": "c" });
 // The accepted specialized consumers, pinned to the bytes the hosted specialization archive measured.
 export const genericRecordArrayBaseConsumers = Object.freeze({
 	c: { sha256: "b36971096ba246e78db0aea400943b83b9b8209968025f63df36fe2ae7b22b56", checks: 1029 }
 	, cpp: { sha256: "f4aa664ccc8c1f8de48b84561b76162cd8ef880b3d073a60844f0168a0c4bc44", checks: 1024 }
-	, python: { sha256: "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9", checks: 1036 } });
+	, python: { sha256: "cf9e5bdacee2541ff291b58aa81578f5fe5b8b7254bbbbbd4aef384dc9748ab9", checks: 1036 }
+	, rust: { sha256: "6adc6c3e6a5560deffcd99ce816c8633794459d65d0e5c552f9647463f328b14", checks: 1025 }
+	, ruby: { sha256: "d011061f351cfa303c1a5ad84a635295c9bb989f7c39d632faee9ff65cce94d6", checks: 1036 }
+	, dotnet: { sha256: "16f05809c846ee59e289ea4e74172debadb796e8823f862b1c213fdce08bb37f", checks: 1034 }
+	, java: { sha256: "815c5d86424e0f723a635072a3dcbf78861518ab411a302f87d56a6677b8623f", checks: 1034 }
+	, kotlin: { sha256: "7d30f76e6b48f396ebbb3be657743dc18c6ef9acfd7d94e081d74bc7bbdc1fd5", checks: 1030 }
+	, perl: { sha256: "9ad568c6ceb5bbd17350a68eb6fc29146906b49865d4ba90f4ccfae511466842", checks: 1040 }
+	, "php-native": { sha256: "f92290dc943fd5bfdb8ebb0c955b0fb8e9404122b104c6767c6afa9971e74054", checks: 1035 }
+	, "wit-wasi": { sha256: "ed3ca5075cf7017d591aec36289e3e0b11d2a4872ab7c4ce9008dbaace7571cc", checks: 1036 } });
 // Each language's own insertion site in the specialized consumer: before the original bump loop.
-const markers = Object.freeze({ c: "  for (unsigned long i", cpp: "  for (unsigned i", python: "for i in range(1000):" });
+const markers = Object.freeze({ c: "  for (unsigned long i"
+	, cpp: "  for (unsigned i"
+	, python: "for i in range(1000):"
+	, rust: "    for i in 0..1000u64"
+	, ruby: "1000.times do"
+	, dotnet: "        for (int i"
+	, java: "        for (long i"
+	, kotlin: "    for (i in 0L"
+	, perl: "for my $i (0 .. 999)"
+	, "php-native": "for ($i = 0;"
+	, "wit-wasi": "  for (uint64_t i" });
 
 /**
  * The cases each fragment runs, in order. Checks are the fragment's own: valid calls, rejected members with
@@ -83,7 +102,105 @@ export const genericRecordArrayCases = Object.freeze({
 			, "ArrayBox.value member -1, bool, str, float at 0..2 refused with exact class, unchanged, recovered"
 			, "BoxRow and RowBox member negative value, negative count, bool, wrong alias, tuple, int at 0..2 refused with exact class, unchanged, recovered"
 			, "non-sequence Arrays, negative and bool counts, negative rowOf, wrong record class"
+			, "1000 Array rounds"] })
+	, rust: Object.freeze({ checks: 1009
+		, cases: [
+			"pushCount nonempty with 2^70 and input unchanged"
+			, "pushCount empty"
+			, "rowTotal nonempty and empty"
+			, "BoxRow alias value unchanged"
+			, "rowOf 3, rowTotal of it and rowOf 0"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "negative Nat members do not typecheck: BigUint"
+			, "1000 Array rounds"] })
+	, ruby: Object.freeze({ checks: 1105
+		, cases: [
+			"pushCount nonempty with 2^70, frozen exact class"
+			, "pushCount empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1, true, string, float at 0..2 refused with RangeError or TypeError, unchanged, recovered"
+			, "BoxRow and RowBox member negative value, negative count, boolean, wrong alias, Array, Integer at 0..2 refused, unchanged, recovered"
+			, "non-Array Arrays, negative and boolean counts, negative rowOf, wrong record class"
+			, "1000 Array rounds"] })
+	, dotnet: Object.freeze({ checks: 1054
+		, cases: [
+			"pushCount nonempty with 2^70 and empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1 at 0..2 refused with ArgumentOutOfRangeException, unchanged, recovered"
+			, "BoxRow and RowBox member negative value, negative count, null at 0..2 refused with the exact exception, unchanged, recovered"
+			, "null Arrays and records, negative counts, negative rowOf"
+			, "1000 Array rounds"] })
+	, java: Object.freeze({ checks: 1071
+		, cases: [
+			"pushCount nonempty with 2^70 and empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1 and null at 0..2 refused with IllegalArgumentException or NullPointerException, unchanged, recovered"
+			, "BoxRow and RowBox member negative value, negative count, null field, null record at 0..2 refused, unchanged, recovered"
+			, "null Arrays, records and counts, negative counts, negative rowOf"
+			, "1000 Array rounds"] })
+	, kotlin: Object.freeze({ checks: 1037
+		, cases: [
+			"pushCount nonempty with 2^70 and empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1 at 0..2 refused with IllegalArgumentException, unchanged, recovered"
+			, "BoxRow and RowBox member negative value and count at 0..2 refused, unchanged, recovered"
+			, "negative counts and negative rowOf"
+			, "1000 Array rounds"] })
+	, perl: Object.freeze({ checks: 1105
+		, cases: [
+			"pushCount nonempty with 2^70 and empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1, plain scalars and undef at 0..2 refused with the exact croak, unchanged, recovered"
+			, "BoxRow and RowBox member negative value, negative count, plain scalar, wrong alias, array and scalar at 0..2 refused, unchanged, recovered"
+			, "non-array Arrays, negative and plain counts, negative rowOf, wrong record class"
+			, "1000 Array rounds"] })
+	, "php-native": Object.freeze({ checks: 1089
+		, cases: [
+			"pushCount nonempty with 2^70 and empty"
+			, "pushCount input unchanged"
+			, "rowTotal nonempty and empty, input unchanged"
+			, "rowOf 3 and 0, rowTotal of rowOf"
+			, "rowBoxSum nonempty, empty and rowOf field"
+			, "ArrayBox.value member -1, int, string and float at 0..2 refused by its constructor with ValueError or TypeError, unchanged, recovered"
+			, "BoxRow and RowBox member wrong alias, array, int and null at 0..2 refused with TypeError, unchanged, recovered"
+			, "non-list Arrays, negative counts, negative rowOf, wrong records, missing field"
+			, "1000 Array rounds"] })
+	, "wit-wasi": Object.freeze({ checks: 1055
+		, cases: [
+			"push-count nonempty with 2^70 and empty"
+			, "row-total nonempty and empty"
+			, "row-of 3, row-total of it and row-of 0"
+			, "row-box-sum nonempty and empty field"
+			, "array-box value member zero limb and text at 0..2 refused with the output untouched, recovered"
+			, "box-row and row-box member zero limb, missing field and text at 0..2 refused, recovered"
+			, "non-list Array field, zero-limb counts and arguments, wrong record lists"
 			, "1000 Array rounds"] }) });
+
+/** The WIT world must keep the specialized aliases and gain both Array-field records and the four Array exports. */
+export const genericRecordArrayWit = Object.freeze([/echo-left: func\([^)]*: left-box\) -> left-box/u
+	, /echo-right: func\([^)]*: right-box\) -> right-box/u
+	, /echo-optional-boxes: func\([^)]*: optional-boxes\) -> optional-boxes/u
+	, /record array-box \{/u
+	, /record row-box \{/u
+	, /push-count: func\([^)]*: array-box\) -> array-box/u
+	, /row-total: func\(/u
+	, /row-of: func\(/u
+	, /row-box-sum: func\([^)]*: row-box\) -> /u]);
 
 /**
  * Every check the composed consumer must print: the accepted specialized consumer plus the Array fragment.
@@ -259,6 +376,12 @@ export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath)
 	const module = "GenericRecords", reports = [], archives = [], authors = [];
 	const targets = Object.fromEntries(profiles.map(profile => genericRecordTargets[profile]));
 	const environment = genericRecordEnvironment(profiles);
+	// CI exports the Ruby toolchain; local runs use the pinned MRI 3.3 beside the other toolchains.
+	if(profiles.includes("ruby"))
+	{
+		environment.LEAN_BRIDGE_RUBY ??= resolve(".toolchains/ruby33/bin/ruby");
+		environment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), "gem");
+	}
 	const python = profiles.includes("python") ? await pythonIdentity(environment) : undefined;
 	const configuration = genericRecordArrayConfiguration(module);
 	for(const attempt of [0, 1])
@@ -289,6 +412,8 @@ export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath)
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
+		const dependencies = attempt === 0 && profiles.includes("rust")
+			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
 		// Install from prepared archives only. No author workspace or build staging remains.
 		await rm(directory, { recursive: true, force: true });
 		await assert.rejects(access(directory), { code: "ENOENT" });
@@ -299,7 +424,7 @@ export const checkInstalledGenericRecordArrays = async (t, profiles, reportPath)
 			const target = genericRecordTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
 			const source = await genericRecordArrayConsumer(profile);
-			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, environment, source: () => source });
+			const { command, ...observation } = await installGenericRecordConsumer({ profile, consumer, handoff, packages, dependencies, environment, source: () => source, wit: genericRecordArrayWit });
 			void command;
 			assert.equal(observation.checks, genericRecordArrayExpectedChecks(profile), `${profile} ran every Array case`);
 			assert.equal(observation.consumerSha256, sha256(source));
