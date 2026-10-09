@@ -23,6 +23,8 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { nativeFinReviewedIr } from "./helpers/reviewed-fin-fixture.mjs";
 import "./helpers/fin-callback-diagnostic-source-history-tests.mjs";
+import "./helpers/cpp-fin-dispatch-tests.mjs";
+import { observeCppFinDispatch } from "./helpers/cpp-fin-dispatch.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_FIN_TEST === "1";
 const huge = "1180591620717411303424";
@@ -296,8 +298,9 @@ const checkInstalledFin = async (t, reviewed = false) => {
 				, packages
 				, environment
 				, fixture: { source: nativeFinConsumer, success: "fin-ok" } });
-			const dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;
+			let dispatch = profile === "c" ? await observeDispatch(consumer, packages, environment.LEAN_BRIDGE_LEAN_PREFIX) : null;
 			const relocation = await relocate(profile, consumer, packages, observation);
+			if(profile === "cpp") dispatch = await observeCppFinDispatch({ consumer, packages, model });
 			reports.push({ profile
 				, path: reviewed ? "reviewed-ir" : "ordinary-source"
 				, ...observation
