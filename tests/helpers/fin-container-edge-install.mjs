@@ -1,6 +1,6 @@
 /**
- * Installed acceptance for the additive native Fin container cases. WIT/WASI is still owed;
- * other native consumers and the separate measured-dispatch supplement remain required under VO #1454.
+ * Installed acceptance for the additive native Fin container cases across all ten non-Perl hosts.
+ * Actual executions and the separate measured-dispatch supplement remain required under VO #1454.
  *
  * @file
  */
@@ -29,7 +29,8 @@ export const finContainerEdgeChecks = Object.freeze({
 	, dotnet: 2026 + 12063
 	, java: 2026 + 12063
 	, kotlin: 2025 + 12063
-	, "php-native": 2026 + 12063 });
+	, "php-native": 2026 + 12063
+	, "wit-wasi": 2033 + 12033 });
 
 /** Read exactly one receipt directly from the gem's original data member, without extracting a substitute. */
 export const finContainerEdgeGemReceipt = String.raw`require "rubygems"
@@ -92,17 +93,17 @@ export const writeFinContainerEdgeReport = async (path, report) => {
 };
 
 /**
- * Compile the installed public C/C++ consumer with an origin-relative runtime search path.
+ * Compile the installed public C/C++/Wasmtime consumer with an origin-relative runtime search path.
  * Check the actual ELF metadata, not just the compiler arguments, before moving the tree.
  *
  * @param options - Installed package and consumer paths.
- * @param options.profile - C or C++.
+ * @param options.profile - C, C++ or WIT/WASI.
  * @param options.root - Consumer directory containing the restricted assembler/linker tools.
  * @param options.directory - Single package directory beneath root.
  * @param options.pkgConfig - Receipt-pinned pkg-config name.
  */
 export const prepareFinContainerEdgeExecutable = async ({ profile, root, directory, pkgConfig }) => {
-	assert.ok(["c", "cpp"].includes(profile));
+	assert.ok(["c", "cpp", "wit-wasi"].includes(profile));
 	assert.match(directory, /^[A-Za-z0-9][A-Za-z0-9._-]*$/u);
 	const installed = join(root, directory), command = join(root, "consumer");
 	const compile = { ...copiedCleanEnvironment, PATH: join(root, "tools"), PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
@@ -200,7 +201,7 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 	}
 	else
 	{
-		assert.ok(["c", "cpp"].includes(profile));
+		assert.ok(["c", "cpp", "wit-wasi"].includes(profile));
 		const directory = `${pkg.name}-${pkg.version}-${profile}`;
 		installed = join(root, directory);
 		receiptPath = "lean-bridge-package.json";
@@ -227,8 +228,8 @@ export const repeatFinContainerEdges = async ({ profile, consumer, handoff, pack
 		assert.ok(Object.keys(deployed).some(path => path.endsWith(".so")));
 		assert.ok(Object.keys(deployed).some(path => path.endsWith(".dll") && path !== "out/Consumer.dll"));
 	}
-	const executable = ["c", "cpp"].includes(profile)
-		? await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: receipt.pkgConfig })
+	const executable = ["c", "cpp", "wit-wasi"].includes(profile)
+		? await prepareFinContainerEdgeExecutable({ profile, root, directory: basename(installed), pkgConfig: profile === "wit-wasi" ? `${pkg.name}-wit` : receipt.pkgConfig })
 		: profile === "rust" ? { executableSha256: sha256(await readFile(command)) } : null;
 	if(executable?.runtimeSearchPath)
 	{
@@ -317,7 +318,13 @@ export const checkInstalledFinContainerEdges = async (t, profiles, reportPath) =
 			const consumerSource = await finContainerEdgeConsumer(profile);
 			const { command, ...observation } = await installCopiedConsumer({ profile
 				, consumer, handoff, packages, environment, dependencies
-				, fixture: { source: () => consumerSource, success: "fin-container-ok", expectedChecks: finContainerEdgeChecks[profile] } });
+				, fixture: {
+					source: () => consumerSource
+					, success: "fin-container-ok"
+					, expectedChecks: finContainerEdgeChecks[profile]
+					, wit: ["mirror-all", "count-none", "sum-huge", "or-default"
+						, "present", "flatten", "label", "wrap-all", "empty-array"
+						, "empty-list", "empty-option", "optional-digits"].map(name => new RegExp(`${name}: func\\(`, "u")) } });
 			const repeated = await repeatFinContainerEdges({ profile, consumer, handoff, packages, command });
 			reports.push({ profile
 				, path: "ordinary-source"

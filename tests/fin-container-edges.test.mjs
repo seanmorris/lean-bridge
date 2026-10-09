@@ -19,6 +19,8 @@ import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mj
 import { renderCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { renderCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
+import { renderWitHostHeader } from "../src/backends/wit/copied-host.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finContainerEdgeConsumer, finContainerEdgeProfiles, finContainerEdgeRefinements, finContainerEdgeReviewedIr, finContainerEdgeSource, implementedFinContainerEdgeProfiles, insertFinContainerEdgeFragment } from "./helpers/fin-container-edges.mjs";
 import { finContainerRefinements } from "./helpers/fin-container-install.mjs";
@@ -73,21 +75,29 @@ test("edge insertion refuses missing, empty, repeated and fragment-supplied mark
 
 test("the development slice does not erase the remaining native hosts or replace old consumers", async () => {
 	assert.deepEqual(finContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native", "wit-wasi"]);
-	assert.deepEqual(implementedFinContainerEdgeProfiles, ["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "php-native"]);
+	assert.deepEqual(implementedFinContainerEdgeProfiles, finContainerEdgeProfiles);
 	for(const profile of implementedFinContainerEdgeProfiles)
 	{
-		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php" }[profile];
+		const extension = { c: "c", cpp: "cpp", python: "py", rust: "rs", ruby: "rb", dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" }[profile];
 		const base = await readFile(`tests/fixtures/fin-container-consumers/${profile}.${extension}`, "utf8");
 		const fragment = await readFile(`tests/fixtures/fin-container-edge-consumers/${profile}.${extension}`, "utf8");
 		const combined = await finContainerEdgeConsumer(profile);
 		assert.equal(combined.split(fragment).length, 2);
-		assert.equal(combined.replace(fragment + "\n", ""), base);
+		let restored = combined.replace(fragment + "\n", "");
+		if(profile === "wit-wasi")
+		{
+			const helpers = await readFile("tests/fixtures/fin-container-edge-consumers/wit-wasi-helpers.c", "utf8");
+			assert.equal(restored.split(helpers).length, 2);
+			restored = restored.replace(helpers + "\n", "");
+			assert.ok(combined.indexOf(fragment) < combined.indexOf("  fincontainers_wasmtime_close(session);"));
+		}
+		assert.equal(restored, base);
 		for(const method of ["emptyarray", "emptylist", "emptyoption", "optionaldigits", "present", "flatten"])
-			assert.ok(fragment.replaceAll("_", "").toLowerCase().includes(method), `${profile}: ${method}`);
+			assert.ok(fragment.replace(/[_-]/gu, "").toLowerCase().includes(method), `${profile}: ${method}`);
 		assert.match(fragment, /1000/u);
 	}
 	await assert.rejects(finContainerEdgeConsumer("perl"), /not implemented/u);
-	await assert.rejects(finContainerEdgeConsumer("wit-wasi"), /not implemented/u);
+	await assert.rejects(finContainerEdgeConsumer("php-wasm"), /not implemented/u);
 });
 
 test("structural and negative-Nat controls require their own positive diagnostic, not any bound error", async () => {
@@ -169,6 +179,20 @@ test("the complete PHP edge consumer parses in both weak and strict modes", { sk
 	}
 });
 
+test("the complete WIT edge consumer compiles against the generated public Wasmtime header", { skip: !sourceChecks }, async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-wit-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const model = compileCopiedWitModel(finContainerEdgeReviewedIr());
+	assert.equal(model.surface.prefix, "fincontainers");
+	for(const name of ["empty-array", "empty-list", "empty-option", "optional-digits"])
+		assert.ok(model.wit.includes(`${name}: func(`));
+	await saveLakeFile(root, "fincontainers_wasmtime.h", renderWitHostHeader(model));
+	await saveLakeFile(root, "consumer.c", await finContainerEdgeConsumer("wit-wasi"));
+	const wasmtime = resolve(process.env.LEAN_BRIDGE_WASMTIME_C_API ?? ".toolchains/wasmtime42");
+	const result = await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-I.", `-I${join(wasmtime, "include")}`, "consumer.c"], root);
+	assert.equal(result.stdout, ""); assert.equal(result.stderr, "");
+});
+
 test("the complete Rust edge consumer typechecks offline against generated public types", { skip: !sourceChecks }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-rust-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
@@ -223,8 +247,9 @@ test("installed edge selection is explicit and checks every assertion, including
 	assert.deepEqual(finContainerEdgeSelection("rust,ruby"), ["ruby", "rust"]);
 	assert.deepEqual(finContainerEdgeSelection("kotlin,dotnet,java"), ["dotnet", "java", "kotlin"]);
 	assert.deepEqual(finContainerEdgeSelection("php-native"), ["php-native"]);
-	for(const value of ["", "c,c", "c,", "c,perl", "wit-wasi", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
-	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088, "php-native": 14089 });
+	assert.deepEqual(finContainerEdgeSelection("wit-wasi"), ["wit-wasi"]);
+	for(const value of ["", "c,c", "c,", "c,perl", "php-wasm", " c", 0, null]) assert.throws(() => finContainerEdgeSelection(value));
+	assert.deepEqual(finContainerEdgeChecks, { c: 14114, cpp: 14099, python: 14095, rust: 14078, ruby: 14094, dotnet: 14089, java: 14089, kotlin: 14088, "php-native": 14089, "wit-wasi": 14066 });
 });
 
 test("Ruby receipt extraction reads original nested gem bytes and refuses missing or repeated members", { skip: !sourceChecks }, async t => {
@@ -273,7 +298,7 @@ test("edge C/C++ linkage survives a real directory move without an absolute runt
 	// A tiny independent shared library checks only the loader mechanism. It is not Lean acceptance.
 	const parent = await mkdtemp(join(tmpdir(), "lean-bridge-fin-edge-linkage-"));
 	t.after(() => rm(parent, { recursive: true, force: true }));
-	for(const profile of ["c", "cpp"])
+	for(const profile of ["c", "cpp", "wit-wasi"])
 	{
 		const root = join(parent, profile), directory = `linkage-1.0.0-${profile}`;
 		await mkdir(join(root, "tools"), { recursive: true });
