@@ -28,7 +28,13 @@ export const reviewedFinWasmEntryMarker = sourceEntryMarker;
  * the separate instrumented build, observed at its adapters, including the control, and at its Lean source.
  */
 export const reviewedFinWasmEntryModes = Object.freeze(["original", "probe"]);
-const entryIr = (selection, mode) => {
+/**
+ * The expected binding IR of one selection and mode.
+ *
+ * @param selection - Scalar-only or structural corpus.
+ * @param mode - Mode: original or probe.
+ */
+export const reviewedFinWasmEntryIr = (selection, mode) => {
 	assert.ok(reviewedFinWasmSelections.includes(selection), "a known selection");
 	assert.ok(reviewedFinWasmEntryModes.includes(mode), "an explicit measurement mode");
 	return mode === "original" ? reviewedFinWasmIr(selection) : instrumentReviewedFinWasmIr(selection);
@@ -58,7 +64,7 @@ const leanExports = {
  * @param selection - Scalar-only or structural corpus.
  * @param mode - Mode: original or probe.
  */
-export const reviewedFinWasmEntrySymbols = (selection, mode) => createComponentPrivateAbi(entryIr(selection, mode)).exports
+export const reviewedFinWasmEntrySymbols = (selection, mode) => createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode)).exports
 	.map(item => ({ name: item.bindingId.replace(/^lean:ReviewedFin\./u, ""), bindingId: item.bindingId, symbol: item.symbol }));
 
 /**
@@ -72,7 +78,7 @@ export const reviewedFinWasmEntrySymbols = (selection, mode) => createComponentP
  * @param options.mode - Mode: original for the unmodified package, probe for the instrumented one.
  */
 export const reviewedFinWasmEntrySelection = ({ descriptor, bytes, selection, mode }) => {
-	const expected = entryIr(selection, mode);
+	const expected = reviewedFinWasmEntryIr(selection, mode);
 	assert.equal(sha256(bytes), descriptor.integrity, "the side module is the descriptor's");
 	// The actual transport and refinement trees, not only identities: a changed bound, type or position differs.
 	assert.equal(reviewedContractDifference(expected, descriptor.bindingIr), null, `the ${mode} binding IR is the expected contract`);
@@ -149,6 +155,32 @@ const generatedPublic = async (ir, call) => {
 };
 
 /**
+ * The installed runtime's observable behaviour for one selection and mode: the real argument encoder decides
+ * whether the adapter is entered, the Lean export's bounds decide whether its source is entered, and the call
+ * then returns the export's result or fails as the runtime reports it.
+ *
+ * @param selection - Scalar-only or structural corpus.
+ * @param mode - Mode: original or probe.
+ * @param hooks - Called on adapter entry with the export and its symbol, and on source entry with the export.
+ * @param hooks.enter - Adapter entry.
+ * @param hooks.source - Lean source entry.
+ */
+export const reviewedFinWasmEntryRuntime = (selection, mode, { enter = () => {}, source = () => {} } = {}) => {
+	const abi = createComponentPrivateAbi(reviewedFinWasmEntryIr(selection, mode));
+	const signatures = new Map(abi.exports.map(item => [item.bindingId.replace(/^lean:ReviewedFin\./u, ""), item]));
+	const control = { accepts: () => true, run: ([value]) => value };
+	return (name, args) => {
+		const exported = mode === "probe" && name === reviewedFinWasmSourceControl ? control : leanExports[name];
+		assert.ok(exported && signatures.has(name), `unknown export ${name}`);
+		if(!encoderEnters(abi, signatures.get(name), args)) throw new TypeError(`The runtime's encoder refused ${name}`);
+		enter(name, signatures.get(name).symbol);
+		if(!exported.accepts(args)) throw new Error(`Component ${selection === "scalar" ? "scalar" : "copied"} call failed (${boundStatus(selection)})`);
+		source(name);
+		return exported.run(args);
+	};
+};
+
+/**
  * The exact expected call sequence of one selection and mode: every call's export, route, arguments and outcome,
  * and whether it enters the adapter and the Lean source. Probe packages add the unrefined control's calls.
  *
@@ -156,51 +188,26 @@ const generatedPublic = async (ir, call) => {
  * @param mode - Mode: original or probe.
  */
 export const expectReviewedFinWasmEntry = async (selection, mode) => {
-	const ir = entryIr(selection, mode), controls = mode === "probe" ? reviewedFinWasmSourceControls : [];
-	const abi = createComponentPrivateAbi(ir);
-	const signatures = new Map(abi.exports.map(item => [item.bindingId.replace(/^lean:ReviewedFin\./u, ""), item]));
+	const ir = reviewedFinWasmEntryIr(selection, mode), controls = mode === "probe" ? reviewedFinWasmSourceControls : [];
 	const entries = [];
-	const model = (name, args, publicCall) => {
-		const exported = leanExports[name] ?? (controls.some(([control]) => control === name) ? { accepts: () => true, run: ([value]) => value } : null);
-		assert.ok(exported, `unknown export ${name}`);
-		const enters = publicCall || !signatures.has(name) || encoderEnters(abi, signatures.get(name), args);
-		if(!enters) entries.push([0, 0]);
-		else if(!exported.accepts(args)) entries.push([1, 0]);
-		else entries.push([1, 1]);
-		const [adapter, source] = entries.at(-1);
-		if(!adapter) return null;
-		if(!source) throw new Error(`Component ${selection === "scalar" ? "scalar" : "copied"} call failed (${boundStatus(selection)})`);
-		return exported.run(args);
-	};
-	let reached = false;
-	const { api } = await generatedPublic(ir, (id, args) => {
-		reached = true;
-		return model(id.replace(/^lean:ReviewedFin\./u, ""), args, true);
-	});
-	const raw = (name, args) => {
-		const result = model(name, args, false);
-		// The real encoder refused these arguments; repeat its refusal for the corpus.
-		if(entries.at(-1)[0] === 0) throw new TypeError(`Encoder refused ${name}`);
-		return result;
-	};
-	const publicApi = new Proxy(api, { get: (target, key) => (typeof target[key] === "function" ? (...args) => {
-		reached = false;
-		const before = entries.length;
+	let current = null;
+	const call = reviewedFinWasmEntryRuntime(selection, mode, { enter: () => { current[0]++; }, source: () => { current[1]++; } });
+	const { api } = await generatedPublic(ir, (id, args) => call(id.replace(/^lean:ReviewedFin\./u, ""), args));
+	// Each top-level call starts with no entry; a generated validator that refuses never reaches the runtime.
+	const tracked = run => {
+		current = [0, 0];
 		try
-		{ return target[key](...args); }
+		{ return run(); }
 		finally
-		{
-			// The generated wrapper refused before reaching the runtime: neither adapter nor source is entered.
-			if(!reached)
-			{ assert.equal(entries.length, before); entries.push([0, 0]); }
-		}
-	} : target[key]) });
-	const controlApi = Object.fromEntries(controls.map(([name]) => [name, value => publicApi[name](value)]));
+		{ entries.push(current); current = null; }
+	};
+	const raw = (name, args) => tracked(() => call(name, args));
+	const publicApi = new Proxy(api, { get: (target, key) => (typeof target[key] === "function" ? (...args) => tracked(() => target[key](...args)) : target[key]) });
 	// The expectation's own brackets are captured, not printed; they are the measured run's, not evidence.
 	const captured = captureConsoleError();
 	let measured;
 	try
-	{ measured = measureCorpus({ module: "reviewed-fin", selection }, new Proxy({ raw }, { get: (target, key) => (key === "raw" ? raw : controlApi[key] ?? publicApi[key]) }), () => [], controls); }
+	{ measured = measureCorpus({ module: "reviewed-fin", selection }, new Proxy({ raw }, { get: (target, key) => (key === "raw" ? raw : publicApi[key]) }), () => [], controls); }
 	finally
 	{ captured.stop(); }
 	const { result, calls } = measured;
